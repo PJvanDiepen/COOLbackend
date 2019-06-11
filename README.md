@@ -8,6 +8,7 @@ Database Dummy met tables: Gebruiker en Dummy.
 - PvD zet e-mail in Gebruiker en stuurt e-mail met JSON Web Token.
 - REST api met JSON voor COOLfrontend.
 - Bekende gebruiker mag Dummy records toevoegen en bijwerken.
-Zo veel mogelijk code in MySQL. De rest in node.js.
+
+Zo veel mogelijk code in MySQL. Beetje in node.js. De rest in frontend. 
 
 Verder nginx en ubuntu 18.04. LTS (zelfde als voor www.AAAPPP.nl)
