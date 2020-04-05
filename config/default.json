@@ -1,0 +1,12 @@
+{
+  "scheme": "http",
+  "knex": {
+    "client": "mysql",
+    "connection": {
+      "host": "localhost",
+      "user": "waag",
+      "password": "",
+      "database": "waagtoren"
+    }
+  }
+}
