@@ -3,10 +3,12 @@
 Backend voor www.chessopenings.online
 
 # Install and run local
-Have a local mysql server running with
+Have a local mysql server running with:
  - a database `waagtoren`
  - with a table `spelers`
  - and a user `waag` with an empty password
+
+Now run, in the projects root directory:
 
 ```sh
 npm install
