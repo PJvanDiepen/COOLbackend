@@ -16,7 +16,7 @@ npm start
 
 ```
 
-you should now be able to visit `http://localhost:4000/spelers` and see the contents of your spelers table in json format and visit `http://localhost:4000/spelers/1`, if your spelers table has a column `id` of type integer and a record with an id value of 1.
+you should now be able to visit `http://localhost:3000/spelers` and see the contents of your spelers table in json format and visit `http://localhost:4000/spelers/1`, if your spelers table has a column `id` of type integer and a record with an id value of 1.
 
 # Deploy to chessopenings.online
 

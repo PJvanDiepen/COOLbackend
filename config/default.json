@@ -4,8 +4,8 @@
     "client": "mysql",
     "connection": {
       "host": "localhost",
-      "user": "waag",
-      "password": "",
+      "user": "root",
+      "password": "katjabosschert",
       "database": "waagtoren"
     }
   }
