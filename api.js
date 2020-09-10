@@ -15,4 +15,9 @@ module.exports = router => {
   router.get('/personen', async ctx => {
     ctx.body = await Persoon.query()
   })
+
+  router.get('/persoon/:knsbNummer/', async ctx => {
+    ctx.body = await Persoon.query().findById(ctx.params.knsbNummer);
+  })
+
 }
