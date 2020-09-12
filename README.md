@@ -20,4 +20,27 @@ you should now be able to visit `http://localhost:3000/spelers` and see the cont
 
 # Deploy to chessopenings.online
 
-Merg your work into the `production` branch on GitHub (use a pull request).
+Merge your work into the `production` branch on GitHub (use a pull request).
+
+# Database
+
+# Uitleg 
+
+https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f
+
+https://www.jakso.me/blog/objection-to-orm-hatred
+
+https://dev.to/mrscx/a-definitive-guide-to-sql-in-nodejs-with-objection-js-knex-part-1-4c2e
+
+https://blog.eperedo.com/2020/01/11/objection-js-transactions/
+
+https://dzone.com/articles/the-complete-tutorial-on-the-top-5-ways-to-query-y
+
+https://dzone.com/articles/the-complete-tutorial-on-the-top-5-ways-to-query-y-1
+
+
+
+Filmpje:
+
+https://www.youtube.com/watch?v=RyQ1MTVjYK8
+

@@ -2,10 +2,14 @@
 
 const { Model } = require('objection')
 
-class Person extends Model {
+class Speler extends Model {
   static get tableName() {
-    return 'spelers'
+    return 'speler'
+  }
+
+  static get idColumn() {
+    return ['seizoen','knsbNummer']; // primary key
   }
 }
 
-module.exports = Person
+module.exports = Speler;
