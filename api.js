@@ -2,6 +2,7 @@
 
 const Speler = require('./models/Speler')
 const Persoon = require('./models/Persoon')
+const { fn, ref } = require('objection');
 
 module.exports = router => {
   router.get('/personen', async ctx => {
@@ -17,6 +18,14 @@ module.exports = router => {
         .select('speler.*', 'persoon.*')
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
         .findById([ctx.params.seizoen, ctx.params.knsbNummer]);
+  })
+
+  router.get('/ranglijst/:seizoen/', async ctx => {
+    ctx.body = await Speler.query()
+        .select('speler.knsbNummer', 'persoon.naam', {totaal: fn('totaal', ctx.params.seizoen, ref('speler.knsbNummer'))})
+        .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
+        .where('seizoen', '=', ctx.params.seizoen)
+        .orderBy('totaal', 'desc');
   })
 
 }
