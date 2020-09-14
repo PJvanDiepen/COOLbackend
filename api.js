@@ -13,7 +13,10 @@ module.exports = router => {
   })
 
   router.get('/speler/:seizoen/:knsbNummer/', async ctx => {
-    ctx.body = await Speler.query().findById([ctx.params.seizoen, ctx.params.knsbNummer]);
+    ctx.body = await Speler.query()
+        .select('speler.*', 'persoon.*')
+        .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
+        .findById([ctx.params.seizoen, ctx.params.knsbNummer]);
   })
 
 }

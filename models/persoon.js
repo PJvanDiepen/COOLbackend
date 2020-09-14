@@ -7,8 +7,8 @@ class Persoon extends Model {
         return 'persoon';
     }
 
-    static get idColumn() {
-        return 'knsbNummer'; // primary key
+    static get idColumn() { // primary key
+        return 'knsbNummer';
     }
 }
 
