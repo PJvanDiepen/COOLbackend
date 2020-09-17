@@ -85,7 +85,7 @@ begin
 end;
 $$
 
-set @seizoen = '1819';
+set @seizoen = '1920';
 
 -- ruwe ranglijst
 
