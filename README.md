@@ -48,8 +48,9 @@ De verwerking voor de ranglijst berekening is dan als volgt: de juiste versie in
 de stored procedures / functions in MySQL installeren en vervolgens zo ongeveer alle tabellen verwerken per seizoen.
 
 Hoe de backend ranglijsten maakt, is dus helemaal in de database vastgelegd en niet in de JavaScript code van de backend.
-Op deze manier gaan we, behalve het Alkmaar Systeem, ook het Keizer Systeem en Zwitsers Systeem in `Ranglijst` vastleggen en
-hopen we dat wedstrijdleiders zelf wedstrijdsystemen kunnen aanpassen en ermee kunnen experimenteren.
+Op deze manier gaan we, behalve het Alkmaar Systeem, ook het Keizer Systeem en Zwitsers Systeem in `Ranglijst` coderen.
+Elke schaakvereniging kan dus eventueel per seizoen haar eigen reglement voor de interne competitie 
+vastleggen in `Ranglijst`. Ons doel is dat wedstrijdleiders zelf wedstrijdsystemen kunnen aanpassen en ermee kunnen experimenteren.
 
 De specificaties van de `Ranglijst` tabel ontbreken nog.  
  
@@ -78,24 +79,26 @@ Deze worden gebruikt om de uitslagen in de interne competitie compleet te maken 
 Het is de bedoeling dat leden een kalender van de ronden van de interne competitie en
 van de wedstrijden van hun eigen teams in externe competitie kunnen raadplegen en 
 dat ze zich per ronde of per wedstrijd kunnen aanmelden of afzeggen.
-Leden moeten een overzicht van hun uitslagen kunnen raadplegen en eventueel hun eigen uitslag kunnen wijzigen.
+Leden moeten ook een overzicht van hun uitslagen kunnen raadplegen en eventueel hun eigen uitslag kunnen invullen.
 De wedstrijdleider moet alle uitslagen kunnen wijzigen.
 
 Daarom moet het systeem weten welke gebruikers wat mogen doen. 
 Is de gebruiker lid van de vereniging? Is de gebruiker wedstrijdleider?
-Daarvoor moeten we het en en ander vastleggen in `Persoon`. 
-Dit moeten we nog uitwerken. Voorlopig noemen we dat `dummy`.
+Daarvoor moeten we waarschijnlijk nog wat gegevens vastleggen in `Persoon`. 
+Dit is nog niet uitgewerkt en noemen we voorlopig `dummy`.
   
 ## Seizoen
-De specificaties van de `Seizoen` tabel ontbreken nog.  
+Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
 
 Voorlopig is er 1 database van de Waagtoren met 3 seizoenen: 2018-2019, 2019-2020 en 2020-2021.
 Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`, `seizoen = '1920` en `seizoen = '2021'`.
 
-Elk seizoen heeft een verwijzing naar de juiste versie van parameters en formules 
+Elk seizoen krijgt een verwijzing naar de juiste versie van parameters en formules 
 voor de berekening van de ranglijst in `Ranglijst`. 
-Elk seizoen heeft een aantal spelers en een aantal teams in de interne en externe competitie.
-Zie verder bij `Speler` en `Team`. 
+Bij elk seizoen van een schaakvereniging hoort een aantal spelers en een aantal teams in de interne en externe competitie.
+Zie verder bij `Speler` en `Team`.
+
+De specificaties van de `Seizoen` tabel ontbreken nog.  
  
 ## Speler
 ```
@@ -117,6 +120,8 @@ een team in een onderbond competitie `nhsbTeam` en in een `subgroep` van de inte
 Volgens de reglementen geldt de `knsbRating` van 1 augustus aan het begin van het `seizoen`.
 Daarom is ook de `datumRating` vastgelegd.
 
+Omdat de Waagtoren in de NHSB onderbond speelt heet het team in de onderbond voorlopig `nhsbTeam`.  
+
 ## Team
 ```
 seizoen CHAR(4)
@@ -127,6 +132,14 @@ omschrijving VARCHAR(45)
 borden INT
 PRIMARY KEY (seizoen, teamCode)
 ```
+In elke seizoen heeft de schaakvereniging een interne competitie met `teamCode = 'int'` en
+spelen er teams in de landelijke competitie en de beker van de KNSB en
+in de regionale onderbond. Elk team heeft een unieke `teamCode` per `seizoen`.
+De Waagtoren heeft `teamCode = '1'` voor het eerste team in de KNSB,
+`teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = 'n1'` voor het eerste team in de NHSB enz.
+
+In `bond` staat een afkorting: i = intern, k = knsb en n = nhsb.
+Elk team speelt in een `poule` met een vast aantal `borden`.
 
 ## Ronde
 ```
@@ -140,6 +153,9 @@ plaats VARCHAR(45)
 datum DATE
 PRIMARY KEY (seizoen, teamCode, rondeNummer)
 ```
+
+Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander in een plaats op een bepaalde datum.
+Indien `compleet = 'c'` zijn de uitslagen van deze ronde compleet.
   
 ## Uitslag
 ```
@@ -156,6 +172,17 @@ anderTeam CHAR(3)
 PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
 ```
 
+Elke ronde heeft uitslagen voor elk bord.
+Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en voor zwart.
+Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
+een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
+Indien een speler heeft afgezegd staat in de uitslag `tegenstanderNummer = 3`.
+Voor de externe competitie staat elke uitslag een keer in `Uitslag`.
+Bij `knsbNummer` staat de speler van de eigen schaakvereniging en `tegenstanderNummer = 2` 
+voor extern.
+
+In `teamCode` staat bij welk team deze uitslag hoort.
+Indien `anderTeam = 'int'` telt deze uitslag ook mee voor de interne competitie.   
 
 # [Objection.js](https://vincit.github.io/objection.js) 
 
@@ -170,6 +197,3 @@ https://blog.eperedo.com/2020/01/11/objection-js-transactions/
 https://dzone.com/articles/the-complete-tutorial-on-the-top-5-ways-to-query-y
 
 https://dzone.com/articles/the-complete-tutorial-on-the-top-5-ways-to-query-y-1
-
-
-
