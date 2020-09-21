@@ -52,6 +52,14 @@ Op deze manier gaan we, behalve het Alkmaar Systeem, ook het Keizer Systeem en Z
 Elke schaakvereniging kan dus eventueel per seizoen haar eigen reglement voor de interne competitie 
 vastleggen in `Ranglijst`. Ons doel is dat wedstrijdleiders zelf wedstrijdsystemen kunnen aanpassen en ermee kunnen experimenteren.
 
+Voor het indelen van wie tegen wie in de interne competitie gelden ook allerlei regels,
+die per wedstrijdsysteem, per schaakvereniging en per seizoen kunnen verschillen.
+Daarom willen we ook die vastleggen in `Ranglijst` en niet in de JavaScript code van de backend.
+
+De database moet een lijst van alle mogelijke partijen produceren
+waaruit de indeling van een ronde wordt gemaakt door software (backend of frontend) 
+eventueel met interactie van een gebruiker.
+
 De specificaties van de `Ranglijst` tabel ontbreken nog.  
  
 ## Persoon
@@ -133,8 +141,9 @@ borden INT
 PRIMARY KEY (seizoen, teamCode)
 ```
 In elke seizoen heeft de schaakvereniging een interne competitie met `teamCode = 'int'` en
-spelen er teams in de landelijke competitie en de beker van de KNSB en
-in de regionale onderbond. Elk team heeft een unieke `teamCode` per `seizoen`.
+teams die spelen in de landelijke competitie en beker competitie van de KNSB en
+de competitie en beker van de regionale onderbond. 
+Elk team heeft een unieke `teamCode` per `seizoen`.
 De Waagtoren heeft `teamCode = '1'` voor het eerste team in de KNSB,
 `teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = 'n1'` voor het eerste team in de NHSB enz.
 
@@ -156,6 +165,8 @@ PRIMARY KEY (seizoen, teamCode, rondeNummer)
 
 Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander in een plaats op een bepaalde datum.
 Indien `compleet = 'c'` zijn de uitslagen van deze ronde compleet.
+
+Indien alle datums voor de ronden bekend zijn, kan de backend voor elke speler een kalender produceren.
   
 ## Uitslag
 ```
@@ -182,15 +193,20 @@ Bij `knsbNummer` staat de speler van de eigen schaakvereniging en `tegenstanderN
 voor extern.
 
 In `teamCode` staat bij welk team deze uitslag hoort.
-Indien `anderTeam = 'int'` telt deze uitslag ook mee voor de interne competitie.   
+Indien `anderTeam = 'int'` telt deze uitslag ook mee voor de interne competitie.
+
+Uitslagen voor de interne competitie verkeren in verschillende stadia:
+1. In de uitslag staat nog geen tegenstander, maar de speler is wel of niet aanwezig voor een bepaalde ronde.
+2. De (voorlopige) indeling voor een ronde is bekend oftewel `tegenstanderNummer` is ingevuld, maar `resultaat` nog niet.
+3. De uitslag is helemaal ingevuld.    
 
 # [Objection.js](https://vincit.github.io/objection.js) 
+
+https://eng.wealthfront.com/2015/06/16/an-introduction-to-commonjs/
 
 https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f
 
 https://www.jakso.me/blog/objection-to-orm-hatred
-
-https://dev.to/mrscx/a-definitive-guide-to-sql-in-nodejs-with-objection-js-knex-part-1-4c2e
 
 https://blog.eperedo.com/2020/01/11/objection-js-transactions/
 
