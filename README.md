@@ -204,11 +204,20 @@ Uitslagen voor de interne competitie verkeren in verschillende stadia:
 
 https://eng.wealthfront.com/2015/06/16/an-introduction-to-commonjs/
 
+https://www.tutorialspoint.com/koajs/index.htm
+
+https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates
+
+
+https://dev.to/ekafyi/tribute-to-swissted-part-i-setting-up-a-node-js-web-app-with-koa-and-nunjucks-ph4
+
 https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f
 
 https://www.jakso.me/blog/objection-to-orm-hatred
 
 https://blog.eperedo.com/2020/01/11/objection-js-transactions/
+
+Minder interessant:
 
 https://dzone.com/articles/the-complete-tutorial-on-the-top-5-ways-to-query-y
 
