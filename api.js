@@ -11,7 +11,7 @@ module.exports = router => {
 
   router.get('/test', getMessage)
 
-  function *getMessage() {
+  function getMessage() {  // TODO waarom werkt deze niet?
     ctx.body = "Test COOL!";
   }
 
