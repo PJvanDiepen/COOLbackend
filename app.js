@@ -15,13 +15,6 @@ Model.knex(knex)
 const router = new KoaRouter()
 const app = new Koa()
 
-var Pug = require('koa-pug'); // TODO is const i.p.v var beter ?
-var pug = new Pug({
-  viewPath: './views',
-  basedir: './views',
-  app: app //Equivalent to app.use(pug)
-});
-
 registerApi(router)
 
 app.use(bodyParser())

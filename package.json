@@ -1,7 +1,7 @@
 {
   "name": "cool_backend",
   "version": "0.0.1",
-  "description": "Backend for www.ChessOpenings.OnLine",
+  "description": "Backend for www.0-0-0.nl",
   "main": "app.js",
   "scripts": {
     "test": "mocha",
@@ -37,7 +37,6 @@
     "mysql": "^2.17.1",
     "mysql2": "^2.1.0",
     "objection": "^2.1.0",
-    "pug": "^3.0.0",
     "yarn": "^1.19.1"
   }
 }

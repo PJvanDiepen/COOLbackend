@@ -8,6 +8,6 @@
       "password": "katjabosschert",
       "database": "waagtoren"
     },
-    "debug": true
+    "debug": false
   }
 }
