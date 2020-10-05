@@ -1,26 +1,30 @@
-const Koa = require('koa')
-const KoaRouter = require('koa-router')
-const bodyParser = require('koa-bodyparser')
-const Knex = require('knex')
+// Koa.js Crash Course - Modern & Minimalist Node.js Framework https://www.youtube.com/watch?v=z84uTk5zmak
+
+const Koa = require('koa');
+const cors = require('@koa/cors');
+const KoaRouter = require('koa-router');
+const bodyParser = require('koa-bodyparser');
+const Knex = require('knex');
 
 const config = require('config');
 
-const registerApi = require('./api')
-const { Model, ForeignKeyViolationError, ValidationError } = require('objection')
+const registerApi = require('./api');
+const { Model, ForeignKeyViolationError, ValidationError } = require('objection');
 
-const knex = Knex(config.get('knex'))
+const knex = Knex(config.get('knex'));
 
-Model.knex(knex)
+Model.knex(knex);
 
-const router = new KoaRouter()
-const app = new Koa()
+const router = new KoaRouter();
+const app = new Koa();
+app.use(cors()); // Also worth mentioning that app.use(cors()) has to go before ANY routes (i.e. app.use(router.routes())).
 
-registerApi(router)
+registerApi(router);
 
-app.use(bodyParser())
-app.use(router.routes())
+app.use(bodyParser());
+app.use(router.routes());
 app.use(router.allowedMethods())
 
 const server = app.listen(3000, () => {
   console.log('COOL app listening at port %s', server.address().port)
-})
+});

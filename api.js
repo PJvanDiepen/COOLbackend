@@ -15,14 +15,6 @@ module.exports = router => {
     ctx.body = "Test COOL!";
   }
 
-  router.get('/hello', async ctx => {
-    ctx.body = await ctx.render('first_view')
-  })
-
-  // https://stackoverflow.com/questions/24024566/display-a-static-html-file-with-koa-js
-
-  // https://www.youtube.com/watch?v=z84uTk5zmak
-
   router.get('/personen', async ctx => {
     ctx.body = await Persoon.query()
   })
