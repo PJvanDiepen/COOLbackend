@@ -39,25 +39,27 @@ delimiter $$
 create function punten(eigenPunten int, seizoen char(4), teamCode char(3), tegenstander int, resultaat char(1))
 returns int deterministic
 begin
-    if teamCode <> 'int' then
-        return 4; -- niet interne competitie
-    elseif tegenstander in (1, 4, 5) then
-        return eigenPunten + 12; -- oneven, bye of reglementaire winst
-    elseif tegenstander in (2, 7) then
-        return eigenpunten; -- extern of vrijgesteld
-    elseif tegenstander = 3 then
-        return eigenpunten - 4; -- afgezegd
-    elseif tegenstander = 6 then
-        return eigenPunten - 12; -- reglementair verlies
+    if teamCode <> 'int' then -- niet interne competitie
+        return 4; 
+	elseif tegenstander = 4 then -- interne competitie: tegenstander en uitslag nog niet bekend
+        return 0;
+    elseif tegenstander in (1, 5, 8) then -- oneven, reglementaire winst of bye
+        return eigenPunten + 12;
+    elseif tegenstander in (2, 7) then -- extern of vrijgesteld
+        return eigenpunten;
+    elseif tegenstander = 3 then -- afgezegd
+        return eigenpunten - 4; 
+    elseif tegenstander = 6 then -- reglementair verlies
+        return eigenPunten - 12;
     else
-        begin
+        begin -- interne competitie: tegenstander en uitslag wel bekend 
             declare plus int;
-            if resultaat = '1' then
-                set plus = 12; -- winst
-            elseif resultaat = '0' then
-                set plus = -12; -- verlies
-            else
-                set plus = 0; --  remise
+            if resultaat = '1' then -- winst
+                set plus = 12;
+            elseif resultaat = '0' then -- verlies
+                set plus = -12;
+            else -- remise
+                set plus = 0;
             end if;
             return waardeCijfer(seizoen, tegenstander) + plus;
         end;

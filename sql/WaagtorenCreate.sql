@@ -9,20 +9,18 @@ create table persoon (
 	knsbNummer int not null,
     naam varchar(45),
     dummy varchar(45),
-    primary key (knsbNummer)
+    PRIMARY KEY (knsbNummer)
 );
 
 DROP TABLE IF EXISTS speler;
 CREATE TABLE speler (
-    seizoen char(4) NOT NULL,
+    seizoen char(4) not null,
 	nhsbTeam char(3) not null,
 	knsbTeam char(3) not null,
-    knsbNummer int NOT NULL,
-    knsbRating int NOT NULL,
-    datumRating date NOT NULL,
-    subgroep char(1) comment 'a .. h, n = niet in ranglijst',
-    vanafRondeNummer int comment 'vanaf rondeNummer in dit seizoen',
-    oneven char(1) comment 'o = oneven in vorig seizoen',
+    knsbNummer int not null,
+    knsbRating int not null,
+    datumRating date not null,
+    subgroep char(1),
     PRIMARY KEY (seizoen, knsbNummer)
 );
 
@@ -37,11 +35,11 @@ drop table if exists team;
 create table team (
 	seizoen char(4) not null,
     teamCode char(3) not null,
-    bond char(1) comment 'k = knsb, n = nhsb',
+    bond char(1),
     poule char(2),
     omschrijving varchar(45),
     borden int not null,
-    primary key (seizoen, teamCode)
+    PRIMARY KEY (seizoen, teamCode)
 );
 
 alter table speler
@@ -60,14 +58,14 @@ add CONSTRAINT fk_speler_knsb_team
 
 DROP TABLE IF EXISTS ronde;
 CREATE TABLE ronde (
-  seizoen char(4) NOT NULL,
+  seizoen char(4) not null,
   teamCode char(3) not null,
-  rondeNummer int NOT NULL,
-  compleet char(1) NOT NULL COMMENT 'c = uitslagen compleet', 
-  uithuis char(1) NOT NULL COMMENT 'u = uit, t = thuis',
-  tegenstander varchar(45) COMMENT 'blank indien intern',
+  rondeNummer int not null,
+  compleet char(1) not null, 
+  uithuis char(1) not null,
+  tegenstander varchar(45),
   plaats varchar(45),
-  datum date NOT NULL,
+  datum date not null,
   PRIMARY KEY (seizoen, teamCode, rondeNummer)
 );
 
@@ -80,15 +78,15 @@ add CONSTRAINT fk_ronde_team
 
 DROP TABLE IF EXISTS uitslag;
 CREATE TABLE uitslag (
-  seizoen char(4) NOT NULL,
+  seizoen char(4) not null,
   teamCode char(3) not null,
-  rondeNummer int NOT NULL,
-  bordNummer int NOT NULL,
-  knsbNummer int NOT NULL,
-  witZwart char(1) COMMENT 'w = wit, z = zwart',
+  rondeNummer int not null,
+  bordNummer int not null,
+  knsbNummer int not null,
+  witZwart char(1),
   tegenstanderNummer int,
-  resultaat char(1) comment '1 = winst, 0 = verlies, r = remise',
-  datum date comment 'indien op een andere datum dan wedstrijd',
+  resultaat char(1),
+  datum date comment 'indien op een andere datum dan ronde',
   anderTeam char(3),
   PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
 );
@@ -130,7 +128,7 @@ add constraint fk_uitslag_tegenstander
 
 DROP TABLE IF EXISTS ranglijst;
 CREATE TABLE ranglijst (
-  seizoen char(4) NOT NULL,
+  seizoen char(4) not null,
   teamCode char(3) not null,
   versie char(1) not null comment 'a = actueel',
   startPunten int default 300 comment 'artikel 11',
