@@ -101,8 +101,6 @@ knsbNummer INT
 knsbRating INT
 datumRating DATE
 subgroep CHAR(1)
-vanafRondeNummer INT
-oneven CHAR(1)
 PRIMARY KEY (seizoen, knsbNummer)
 ```
 
@@ -180,9 +178,20 @@ In `teamCode` staat bij welk team deze uitslag hoort.
 Indien `anderTeam = 'int'` telt deze uitslag ook mee voor de interne competitie.
 
 Uitslagen voor de interne competitie verkeren in verschillende stadia:
-1. In de uitslag staat nog geen tegenstander, maar de speler is wel of niet aanwezig voor een bepaalde ronde.
+1. In de uitslag staat `tegenstanderNummer = 4` voor intern oftewel de speler heeft zich aangemeld voor een bepaalde ronde.
 2. De (voorlopige) indeling voor een ronde is bekend oftewel `tegenstanderNummer` is ingevuld, maar `resultaat` nog niet.
 3. De uitslag is helemaal ingevuld.    
+
+Dit zijn de verschillende mogelijkheden voor `tegenstanderNummer` indien geen `knsbNummer`:
+NIEMAND = 0
+ONEVEN = 1  (Rokade WedstrijdType = 3)
+EXTERN = 2 (Rokade WedstrijdType = 11 extern op dinsdag)
+AFGEZEGD = 3 (Rokade WedstrijdType = 2)
+INTERN = 4
+REGLEMENTAIRE_WINST = 5 (Rokade WedstrijdType = 5)
+REGLEMENTAIR_VERLIES = 6 (Rokade WedstrijdType = 6)
+VRIJGESTELD = 7 (Rokade WedstrijdType = 4)
+BYE = 8
 
 # [Objection.js](https://vincit.github.io/objection.js) 
 
@@ -198,6 +207,8 @@ https://dev.to/ekafyi/tribute-to-swissted-part-i-setting-up-a-node-js-web-app-wi
 https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f
 
 https://www.jakso.me/blog/objection-to-orm-hatred
+
+https://blog.eperedo.com/2019/12/28/multiple-database-connection-objection-js-knex/
 
 https://blog.eperedo.com/2020/01/11/objection-js-transactions/
 
