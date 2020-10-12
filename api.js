@@ -10,28 +10,28 @@ const { fn, ref } = require('objection');
 module.exports = router => {
   router.get('/', ctx => {
     ctx.body = 'Hier is COOL!'
-  })
-
-  router.get('/test', getMessage)
-
-  function getMessage() {  // TODO waarom werkt deze niet?
-    ctx.body = "Test COOL!";
-  }
+  });
 
   router.get('/personen', async ctx => {
     ctx.body = await Persoon.query()
-  })
+  });
 
   router.get('/persoon/:knsbNummer/', async ctx => {
     ctx.body = await Persoon.query().findById(ctx.params.knsbNummer);
-  })
+  });
 
   router.get('/speler/:seizoen/:knsbNummer/', async ctx => {
     ctx.body = await Speler.query()
         .select('speler.*', 'persoon.*')
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
         .findById([ctx.params.seizoen, ctx.params.knsbNummer]);
-  })
+  });
+
+  router.get('/seizoenen', async ctx => {
+    ctx.body = await Speler.query()
+        .distinct('speler.seizoen')
+        .orderBy('speler.seizoen');
+  });
 
   /*
   -- ruwe ranglijst
@@ -40,14 +40,13 @@ module.exports = router => {
   where seizoen = @seizoen
   order by punten desc;
    */
-
   router.get('/ranglijst/:seizoen/', async ctx => {
     ctx.body = await Speler.query()
         .select('speler.knsbNummer', 'persoon.naam', {totaal: fn('totaal', ctx.params.seizoen, ref('speler.knsbNummer'))})
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
         .where('seizoen', '=', ctx.params.seizoen)
         .orderBy('totaal', 'desc');
-  })
+  });
 
   /*
   -- punten van alle uitslagen per speler
@@ -70,7 +69,6 @@ module.exports = router => {
   where u.seizoen = @seizoen and u.knsbNummer = @knsbNummer
   order by u.datum;
    */
-
   router.get('/uitslagen/:seizoen/:knsbNummer/', async ctx => {
     let eigenPunten = 10; // TODO await fn('waardeCijfer', ctx.params.seizoen, ctx.params.knsbNummer);
     console.log("eigenPunten: " + eigenPunten);
@@ -98,5 +96,5 @@ module.exports = router => {
         .where('uitslag.seizoen', ctx.params.seizoen)
         .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
         .orderBy('uitslag.datum');
-  })
+  });
 }
