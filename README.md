@@ -44,10 +44,15 @@ De database moet een lijst van alle mogelijke partijen produceren
 waaruit de indeling van een ronde wordt gemaakt door software (backend of frontend) 
 eventueel met interactie van een gebruiker.
 
-De specificaties van de `Ranglijst` tabel ontbreken nog.  
+De specificaties van de `Ranglijst` tabel ontbreken nog. 
+
+Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de database van de Waagtoren, maar nog niet in `Ranglijst`:
+- `waardeCijfer()` van een speler op basis van de `knsbRating` van 1 augustus aan het begin van het `seizoen` 
+- `punten()` per `Uitslag`
+- `totaal()` van punten per speler op basis van alle uitslagen van een `seizoen`    
  
 ## Persoon
-Voorlopig zijn dit de specificaties van `Persoon`.
+Voorlopig zijn dit de specificaties van `Persoon`:
 ```
 knsbNummer INT
 naam VARCHAR(45)
@@ -166,32 +171,40 @@ PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
 ```
 
 Elke ronde heeft uitslagen voor elk bord.
+
 Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en voor zwart.
 Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
 een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
-Indien een speler heeft afgezegd staat in de uitslag `tegenstanderNummer = 3`.
-Voor de externe competitie staat elke uitslag een keer in `Uitslag`.
-Bij `knsbNummer` staat de speler van de eigen schaakvereniging en `tegenstanderNummer = 2` 
-voor extern.
 
-In `teamCode` staat bij welk team deze uitslag hoort.
-Indien `anderTeam = 'int'` telt deze uitslag ook mee voor de interne competitie.
+Indien een speler heeft afgezegd staat in de uitslag `tegenstanderNummer = 3`.
+
+Voor de externe competitie zijn er twee mogelijkheden.
+1. Indien de externe partij wordt gespeeld in plaats van een interne partij 
+staat de uitslag twee keer in `Uitslag`: een keer met `teamCode = 'int'` 
+en een keer met de `teamCode` bij welke team deze uitslag hoort.
+2. Indien de externe partij op een andere dag wordt gespeeld 
+staat de uitslag een keer in `Uitslag` met de `teamCode` bij welke team deze uitslag hoort.
+
+Voor elke externe partij staat in `Uitslag` bij `knsbNummer` de speler 
+van de eigen schaakvereniging en `tegenstanderNummer = 2`.
+Indien `anderTeam = 'int'` telt deze uitslag mee voor de interne competitie.
 
 Uitslagen voor de interne competitie verkeren in verschillende stadia:
 1. In de uitslag staat `tegenstanderNummer = 4` voor intern oftewel de speler heeft zich aangemeld voor een bepaalde ronde.
 2. De (voorlopige) indeling voor een ronde is bekend oftewel `tegenstanderNummer` is ingevuld, maar `resultaat` nog niet.
 3. De uitslag is helemaal ingevuld.    
 
-Dit zijn de verschillende mogelijkheden voor `tegenstanderNummer` indien geen `knsbNummer`:
-NIEMAND = 0
-ONEVEN = 1  (Rokade WedstrijdType = 3)
-EXTERN = 2 (Rokade WedstrijdType = 11 extern op dinsdag)
-AFGEZEGD = 3 (Rokade WedstrijdType = 2)
-INTERN = 4
-REGLEMENTAIRE_WINST = 5 (Rokade WedstrijdType = 5)
-REGLEMENTAIR_VERLIES = 6 (Rokade WedstrijdType = 6)
-VRIJGESTELD = 7 (Rokade WedstrijdType = 4)
-BYE = 8
+De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
+- 0 = NIEMAND
+- 1 = ONEVEN (Rokade WedstrijdType = 3)
+- 2 = EXTERN (Rokade WedstrijdType = 11 extern op dinsdag)
+- 3 = AFGEZEGD (Rokade WedstrijdType = 2)
+- 4 = INTERN
+- 5 = REGLEMENTAIRE_WINST (Rokade WedstrijdType = 5)
+- 6 = REGLEMENTAIR_VERLIES (Rokade WedstrijdType = 6)
+- 7 = VRIJGESTELD (Rokade WedstrijdType = 4)
+- 8 = BYE
+- \> 100 = `knsbNummer` van tegenstander
 
 # [Objection.js](https://vincit.github.io/objection.js) 
 

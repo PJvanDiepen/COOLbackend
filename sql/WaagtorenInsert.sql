@@ -5,8 +5,16 @@ SET foreign_key_checks = 0;
 SET foreign_key_checks = 1;
 
 -- 107 deelnemers in alle seizoenen
-
 insert into persoon (knsbNummer, naam, dummy) values
+('0', 'niemand', ''),
+('1', 'oneven', ''),
+('2', 'extern', ''),
+('3', 'afgezegd', ''),
+('4', 'intern', ''),
+('5', 'reglementaire winst', ''),
+('6', 'reglementair verlies', ''),
+('7', 'vrijgesteld', ''),
+('8', 'bye', ''),
 ('101', 'Ramon Witte', ''),
 ('103', 'Charles Stoorvogel', ''),
 ('104', 'Sietske de Greeuw', ''),
@@ -2904,7 +2912,7 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden) values
 
 -- 101 deelnemers in seizoen 1920
 
-insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRating, subgroep, vanafRondeNummer, oneven) values
+insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRating, subgroep) values
 ('1920', '', '', '7584566', '2344', '2019-08-01', 'A'),
 ('1920', '', '', '7970094', '2269', '2019-08-01', 'A'),
 ('1920', '', '', '7657342', '2268', '2019-08-01', 'A'),
@@ -2994,7 +3002,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('1920', '', '', '7546242', '1350', '2019-08-01', 'H'),
 ('1920', '', '', '8472530', '1319', '2019-08-01', 'H'),
 ('1920', '', '', '103', '1300', '2019-08-01', 'H'),
-('1920', '', '', '105', '1300', '2019-08-01', 'H', '0', 'n'),
+('1920', '', '', '105', '1300', '2019-08-01', 'H'),
 ('1920', '', '', '7582102', '1281', '2019-08-01', 'H'),
 ('1920', '', '', '8587348', '1267', '2019-08-01', 'H'),
 ('1920', '', '', '7566031', '1245', '2019-08-01', 'H'),
