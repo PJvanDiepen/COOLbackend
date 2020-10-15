@@ -150,4 +150,4 @@ join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNum
 where u.seizoen = @seizoen
     and u.knsbNummer = @knsbNummer
     and u.anderTeam = 'int'
-order by u.datum;
+order by u.datum, u.bordNummer;

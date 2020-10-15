@@ -68,15 +68,16 @@ module.exports = router => {
   where u.seizoen = @seizoen
       and u.knsbNummer = @knsbNummer
       and u.anderTeam = 'int'
-  order by u.datum;
+  order by u.datum, u.bordNummer;
    */
   router.get('/uitslagen/:seizoen/:knsbNummer/', async ctx => {
     ctx.body = await Uitslag.query()
         .select(
             'uitslag.datum',
-            'uitslag.bordNummer',
             'uitslag.rondeNummer',
+            'uitslag.bordNummer',
             'uitslag.witZwart',
+            'uitslag.tegenstanderNummer',
             'persoon.naam',
             'uitslag.resultaat',
             'uitslag.teamCode',
@@ -97,6 +98,6 @@ module.exports = router => {
         .where('uitslag.seizoen', ctx.params.seizoen)
         .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
         .andWhere(ref('uitslag.anderTeam'), 'int')
-        .orderBy('uitslag.datum');
+        .orderBy(['uitslag.datum','uitslag.bordNummer']);
   });
 }
