@@ -27,7 +27,6 @@ door middel van stored procedures / functions in MySQL.
 Omdat het reglement van de interne competie per seizoen kan verschillen en 
 omdat het nuttig is om te kunnen experimenteren met aanpassingen van het reglement 
 willen we verschillende versies van parameters en formules voor de berekening van de ranglijst vastleggen in `Ranglijst`.
- 
 De verwerking voor de ranglijst berekening is dan als volgt: de juiste versie inlezen uit `Ranglijst`, 
 de stored procedures / functions in MySQL installeren en vervolgens zo ongeveer alle tabellen verwerken per seizoen.
 
@@ -69,7 +68,7 @@ Dit systeem kan daarom wel complete uitslagen lijsten produceren van de interne 
 maar de bij uitslagen van externe competitie staat uitsluitend de `naam` van de eigen speler, bordnummer, kleur, resultaat en
 eventueel de naam van het team van de tegenstander, want die gegevens staan in `Ronde`.
    
-Verder staan in `Persoon` een aantal records zoals `knsbNummer = 3` met `naam = 'afgezegd'`, 
+Verder staan in `Persoon`: `knsbNummer = 3` met `naam = 'afgezegd'`, 
 `knsbNummer = 1` met `naam = 'oneven'` en zo voort. 
 Deze worden gebruikt om de uitslagen in de interne competitie compleet te maken voor alle deelnemers.
 

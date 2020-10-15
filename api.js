@@ -50,19 +50,20 @@ module.exports = router => {
 
   /*
   -- punten van alle uitslagen per speler
-
-  select
-      u.datum,
+  select u.datum,
       u.rondeNummer,
+      u.bordNummer,
       u.witZwart,
-      t.naam,
+      u.tegenstanderNummer,
+      p.naam,
       u.resultaat,
       u.teamCode,
+      r.compleet,
+      r.uithuis,
       r.tegenstander,
-      r.plaats,
       punten(@seizoen, @knsbNummer, u.teamCode, u.tegenstanderNummer, u.resultaat) as punten
   from uitslag u
-  join persoon t on u.tegenstanderNummer = t.knsbNummer
+  join persoon p on u.tegenstanderNummer = p.knsbNummer
   join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
   where u.seizoen = @seizoen
       and u.knsbNummer = @knsbNummer
@@ -73,13 +74,15 @@ module.exports = router => {
     ctx.body = await Uitslag.query()
         .select(
             'uitslag.datum',
+            'uitslag.bordNummer',
             'uitslag.rondeNummer',
             'uitslag.witZwart',
             'persoon.naam',
             'uitslag.resultaat',
             'uitslag.teamCode',
+            'ronde.compleet',
+            'ronde.uithuis',
             'ronde.tegenstander',
-            'ronde.plaats',
             {punten: fn('punten',
                   ctx.params.seizoen,
                   ctx.params.knsbNummer,
@@ -92,7 +95,8 @@ module.exports = router => {
               .andOn('uitslag.teamCode', '=', 'ronde.teamCode')
               .andOn('uitslag.rondeNummer', '=', 'ronde.rondeNummer')})
         .where('uitslag.seizoen', ctx.params.seizoen)
-        .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer) // TODO and u.anderTeam = 'int'
+        .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+        .andWhere(ref('uitslag.anderTeam'), 'int')
         .orderBy('uitslag.datum');
   });
 }

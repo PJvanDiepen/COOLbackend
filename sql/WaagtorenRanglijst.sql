@@ -125,7 +125,6 @@ set @seizoen = '1819';
 set @knsbNummer = 6212404; -- Peter van Diepen
 
 -- simpele ranglijst
-
 select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as punten
 from speler s
 join persoon p on s.knsbNummer = p.knsbNummer
@@ -133,18 +132,20 @@ where seizoen = @seizoen
 order by punten desc;
 
 -- punten van alle uitslagen per speler
-
 select u.datum,
        u.rondeNummer,
+       u.bordNummer,
        u.witZwart,
-       t.naam,
+       u.tegenstanderNummer,
+       p.naam,
        u.resultaat,
        u.teamCode,
+       r.compleet,
+       r.uithuis,
        r.tegenstander,
-       r.plaats,
        punten(@seizoen, @knsbNummer, u.teamCode, u.tegenstanderNummer, u.resultaat) as punten
 from uitslag u
-join persoon t on u.tegenstanderNummer = t.knsbNummer
+join persoon p on u.tegenstanderNummer = p.knsbNummer
 join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
 where u.seizoen = @seizoen
     and u.knsbNummer = @knsbNummer
