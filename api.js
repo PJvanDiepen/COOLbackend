@@ -1,9 +1,9 @@
 'use strict'
 
-const Persoon = require('./models/Persoon');
-const Ronde = require('./models/Ronde');
-const Speler = require('./models/Speler');
-const Uitslag = require('./models/Uitslag');
+const Persoon = require('./models/persoon');
+const Ronde = require('./models/ronde');
+const Speler = require('./models/speler');
+const Uitslag = require('./models/uitslag');
 
 const { fn, ref } = require('objection');
 

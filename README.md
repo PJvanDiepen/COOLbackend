@@ -2,9 +2,18 @@
 
 Backend voor www.0-0-0.nl
 
-# Deploy to 0-0-0.nl
+# Run local
 
-Merge your work into the `production` branch on GitHub (use a pull request).
+import sql/WaagtorenCreate.sql into mysql
+
+```sh
+npm install
+npm start
+```
+
+# Deploy to 0-0-0.nl WIP
+
+TODO: Merge your work into the `production` branch on GitHub (use a pull request).
 
 # Database
 Er is een MySQL database per schaakvereniging met de volgende tabellen:
