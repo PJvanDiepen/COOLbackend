@@ -9,7 +9,7 @@ const { fn, ref } = require('objection');
 
 module.exports = router => {
   router.get('/', ctx => {
-    ctx.body = 'Hier is COOL!'
+    ctx.body = 'Hier is COOLbackend!'
   });
 
   router.get('/personen', async ctx => {
@@ -18,6 +18,14 @@ module.exports = router => {
 
   router.get('/persoon/:knsbNummer/', async ctx => {
     ctx.body = await Persoon.query().findById(ctx.params.knsbNummer);
+  });
+
+  router.get('/spelers/:seizoen/', async ctx => {
+    ctx.body = await Speler.query()
+        .select('speler.*', 'persoon.*')
+        .joinRelated('fk_speler_persoon')     // .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
+        .where('speler.seizoen', '=', ctx.params.seizoen)
+        .orderBy('naam');
   });
 
   router.get('/speler/:seizoen/:knsbNummer/', async ctx => {
