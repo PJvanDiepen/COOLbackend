@@ -3,13 +3,9 @@
 const { Model } = require('objection')
 
 class Uitslag extends Model {
-    static get tableName() {
-        return 'uitslag';
-    }
+    static tableName = 'uitslag';
 
-    static get idColumn() { // primary key
-        return ['seizoen','knsbNummer','rondeNummer','knsbNummer'];
-    }
+    static idColumn = ['seizoen','knsbNummer','rondeNummer','knsbNummer']; // primary key
 }
 
 module.exports = Uitslag;
