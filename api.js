@@ -23,7 +23,7 @@ module.exports = router => {
   router.get('/spelers/:seizoen/', async ctx => {
     ctx.body = await Speler.query()
         .select('speler.*', 'persoon.*')
-        .joinRelated('fk_speler_persoon')     // .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
+        .joinRelated('fk_speler_persoon')     // TODO in plaats van .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
         .where('speler.seizoen', '=', ctx.params.seizoen)
         .orderBy('naam');
   });
