@@ -23,7 +23,7 @@ module.exports = router => {
   router.get('/spelers/:seizoen/', async ctx => {
     ctx.body = await Speler.query()
         .select('speler.*', 'persoon.*')
-        .joinRelated('fk_speler_persoon')     // TODO in plaats van .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
+        .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
         .where('speler.seizoen', '=', ctx.params.seizoen)
         .orderBy('naam');
   });
@@ -35,6 +35,9 @@ module.exports = router => {
         .findById([ctx.params.seizoen, ctx.params.knsbNummer]);
   });
 
+  /*
+  ranglijst.js
+   */
   router.get('/seizoenen', async ctx => {
     ctx.body = await Speler.query()
         .distinct('speler.seizoen')
@@ -42,6 +45,8 @@ module.exports = router => {
   });
 
   /*
+  ranglijst.js
+
   -- ruwe ranglijst
   select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as punten
   from speler s join persoon p on s.knsbNummer = p.knsbNummer
@@ -57,6 +62,8 @@ module.exports = router => {
   });
 
   /*
+  speler.js
+
   -- punten van alle uitslagen per speler
   select u.datum,
       u.rondeNummer,
@@ -105,7 +112,40 @@ module.exports = router => {
               .andOn('uitslag.rondeNummer', '=', 'ronde.rondeNummer')})
         .where('uitslag.seizoen', ctx.params.seizoen)
         .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-        .andWhere(ref('uitslag.anderTeam'), 'int')
+        .andWhere('uitslag.anderTeam', 'int')
         .orderBy(['uitslag.datum','uitslag.bordNummer']);
+  });
+
+  /*
+  ronde.js
+
+  -- uitslagen interne competitie per ronde
+  select
+      uitslag.knsbNummer,
+      wit.naam,
+      uitslag.tegenstanderNummer,
+      zwart.naam,
+      uitslag.resultaat
+  from uitslag
+  join persoon as wit on uitslag.knsbNummer = wit.knsbNummer
+  join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
+  where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
+  order by uitslag.seizoen, rondeNummer, bordNummer;
+   */
+  router.get('/ronde/:seizoen/:rondeNummer', async ctx => {
+    ctx.body = await Uitslag.query()
+        .select(
+            'uitslag.knsbNummer',
+            {wit: ref('wit.naam')},
+            'uitslag.tegenstanderNummer',
+            {zwart: ref('zwart.naam')},
+            'resultaat')
+        .join('persoon as wit', 'uitslag.knsbNummer', 'wit.knsbNummer')
+        .join('persoon as zwart', 'uitslag.tegenstanderNummer', 'zwart.knsbNummer')
+        .where('uitslag.seizoen', ctx.params.seizoen)
+        .andWhere('uitslag.teamCode', 'int')
+        .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+        .andWhere('uitslag.witZwart', 'w')
+        .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
   });
 }
