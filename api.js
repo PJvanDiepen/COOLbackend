@@ -130,7 +130,7 @@ module.exports = router => {
   join persoon as wit on uitslag.knsbNummer = wit.knsbNummer
   join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
-  order by uitslag.seizoen, rondeNummer, bordNummer;
+  order by uitslag.seizoen, bordNummer;
    */
   router.get('/ronde/:seizoen/:rondeNummer', async ctx => {
     ctx.body = await Uitslag.query()
@@ -146,6 +146,49 @@ module.exports = router => {
         .andWhere('uitslag.teamCode', 'int')
         .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
         .andWhere('uitslag.witZwart', 'w')
+        .orderBy(['uitslag.seizoen','uitslag.bordNummer']);
+  });
+
+  /*
+  team.js
+
+  -- uitslagen externe competitie per team
+  select uitslag.rondeNummer,
+      uitslag.bordNummer,
+      uitslag.witZwart,
+      uitslag.resultaat,
+      uitslag.knsbNummer,
+      persoon.naam,
+      ronde.uithuis,
+      ronde.tegenstander,
+      ronde.plaats,
+      ronde.datum
+  from uitslag
+  join persoon on uitslag.knsbNummer = persoon.knsbNummer
+  join ronde on uitslag.seizoen = ronde.seizoen and uitslag.teamCode = ronde.teamCode and uitslag.rondeNummer = ronde.rondeNummer
+  where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
+  order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
+   */
+  router.get('/team/:seizoen/:teamCode', async ctx => {
+    ctx.body = await Uitslag.query()
+        .select(
+            'uitslag.rondeNummer',
+            'uitslag.bordNummer',
+            'uitslag.witZwart',
+            'uitslag.resultaat',
+            'uitslag.knsbNummer',
+            'persoon.naam',
+            'ronde.uithuis',
+            'ronde.tegenstander',
+            'ronde.plaats',
+            'ronde.datum')
+        .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
+        .join('ronde', function() {
+          this.on('uitslag.seizoen', '=', 'ronde.seizoen')
+              .andOn('uitslag.teamCode', '=', 'ronde.teamCode')
+              .andOn('uitslag.rondeNummer', '=', 'ronde.rondeNummer')})
+        .where('uitslag.seizoen', ctx.params.seizoen)
+        .andWhere('uitslag.teamCode', ctx.params.teamCode)
         .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
   });
 }

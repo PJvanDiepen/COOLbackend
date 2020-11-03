@@ -82,6 +82,7 @@ create function totaal(seizoen char(4), knsbNummer int) returns int deterministi
 begin
     declare totaalPunten int default 300;
     declare internePartijen int default 0;
+    declare externePartijen int default 0;
     declare afzeggingen int default 0;
     declare teamCode char(3);
     declare tegenstander int;
@@ -103,13 +104,17 @@ begin
                 set internePartijen = internePartijen + 1;
             elseif tegenstander = 3 then
                 set afzeggingen = afzeggingen + 1;
+			elseif teamCode <> 'int' then
+                set externePartijen = externePartijen + 1;
             end if;
             set totaalPunten = totaalPunten + punten(seizoen, knsbNummer, teamCode, tegenstander, resultaat);
             fetch uitslagen into teamCode, tegenstander, resultaat;
         end while;
     close uitslagen;
-    if internePartijen = 0 then
+    if internePartijen = 0 and externePartijen = 0 then
         return 0;
+	elseif internePartijen = 0 then
+        return externePartijen;
     elseif afzeggingen > 10 then
         return totaalPunten - (afzeggingen - 10) * 8;
     else
