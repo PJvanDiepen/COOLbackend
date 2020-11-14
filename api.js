@@ -3,9 +3,10 @@
 const Persoon = require('./models/persoon');
 const Ronde = require('./models/ronde');
 const Speler = require('./models/speler');
+const Team = require('./models/team');
 const Uitslag = require('./models/uitslag');
 
-const { fn, ref } = require('objection');
+const { fn, ref } = require('objection');  // TODO  joinRelated ?
 
 module.exports = router => {
   router.get('/', ctx => {
@@ -35,18 +36,31 @@ module.exports = router => {
         .findById([ctx.params.seizoen, ctx.params.knsbNummer]);
   });
 
-  /*
-  ranglijst.js
-   */
   router.get('/seizoenen', async ctx => {
     ctx.body = await Speler.query()
         .distinct('speler.seizoen')
         .orderBy('speler.seizoen');
   });
 
-  /*
-  ranglijst.js
+  router.get('/seizoenen/:teamCode', async ctx => {
+    ctx.body = await Team.query()
+        .select('team.seizoen')
+        .where('team.teamCode', '=', ctx.params.teamCode);
+  });
 
+  router.get('/teams/:seizoen', async ctx => {
+    ctx.body = await Team.query()
+        .where('team.seizoen', '=', ctx.params.seizoen);
+  });
+
+  router.get('/ronden/:seizoen/:teamCode', async ctx => {
+    ctx.body = await Ronde.query()
+        .where('ronde.seizoen', '=', ctx.params.seizoen)
+        .andWhere('ronde.teamCode','=', ctx.params.teamCode)
+        .orderBy('ronde.rondeNummer');
+  });
+
+  /*
   -- ruwe ranglijst
   select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as punten
   from speler s join persoon p on s.knsbNummer = p.knsbNummer
@@ -62,8 +76,6 @@ module.exports = router => {
   });
 
   /*
-  speler.js
-
   -- punten van alle uitslagen per speler
   select u.datum,
       u.rondeNummer,
@@ -117,8 +129,6 @@ module.exports = router => {
   });
 
   /*
-  ronde.js
-
   -- uitslagen interne competitie per ronde
   select
       uitslag.knsbNummer,
@@ -150,8 +160,6 @@ module.exports = router => {
   });
 
   /*
-  team.js
-
   -- uitslagen externe competitie per team
   select uitslag.rondeNummer,
       uitslag.bordNummer,
