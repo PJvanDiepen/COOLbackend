@@ -1,0 +1,16 @@
+ssh cool@0-0-0.nl 'bash -s' <<'ENDREMOTE'
+set -ex
+export VERSION=$(date +"%Y-%m-%d-%H%M%S")
+export DIR=~/cool/versions/$VERSION/
+export NODE_ENV=production
+
+mkdir -p $DIR
+cd $DIR
+git clone --depth 1 --single-branch --branch $NODE_ENV git@github.com:PJvanDiepen/COOLbackend.git .
+# rm -f config/$NODE_ENV.js
+# cp ~/cool/config/$NODE_ENV.js config/
+npm install
+rm -rf ~/cool/current
+ln -s $DIR ~/cool/current
+sudo systemctl restart cool
+ENDREMOTE
