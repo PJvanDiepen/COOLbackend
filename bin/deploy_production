@@ -7,8 +7,8 @@ export NODE_ENV=production
 mkdir -p $DIR
 cd $DIR
 git clone --depth 1 --single-branch --branch $NODE_ENV git@github.com:PJvanDiepen/COOLbackend.git .
-# rm -f config/$NODE_ENV.js
-# cp ~/cool/config/$NODE_ENV.js config/
+rm -f config/$NODE_ENV.js
+cp ~/cool/config/production.js config/
 npm install
 rm -rf ~/cool/current
 ln -s $DIR ~/cool/current

@@ -14,20 +14,22 @@
     </style>
 </head>
 <body>
-    <h1 id="team"></h1>
-    <h2>Uitslagen</h2>
-    <table id="uitslagen">
-        <tr>
-            <th>ronde</th>
-            <th>datum</th>
-            <th></th>
-            <th>bord</th>
-            <th>kleur</th>
-            <th></th>
-            <th>punten</th>
-            <th></th>
-        </tr>
-    </table>
-    <script src="js/team.js"></script>
+    <p id="status">status</p>
+    <hr>
+    <h1><a href="ranglijst.html" id="kop">Team</a></h1>
+    <div id="ronde1"></div>
+    <div id="ronde2"></div>
+    <div id="ronde3"></div>
+    <div id="ronde4"></div>
+    <div id="ronde5"></div>
+    <div id="ronde6"></div>
+    <div id="ronde7"></div>
+    <div id="ronde8"></div>
+    <div id="ronde9"></div>
+    <script src="js/frontend.js"></script>
+    <script>
+        const teamCode = doorgeven("team"); // knsbNummer
+        uitslagenTeam(document.getElementById("kop"));
+    </script>
 </body>
 </html>

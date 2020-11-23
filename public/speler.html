@@ -14,9 +14,11 @@
     </style>
 </head>
 <body>
-    <h1 id="naam"></h1>
-    <h2>Uitslagen</h2>
-    <table id="uitslagen">
+    <p id="status">status</p>
+    <hr>
+    <h1><a href="ranglijst.html" id="kop">Speler</a></h1>
+    <select id="seizoenSelecteren"></select>
+    <table id="tabel" class="links">
         <tr>
             <th>ronde</th>
             <th>datum</th>
@@ -25,9 +27,15 @@
             <th>kleur</th>
             <th></th>
             <th>punten</th>
-            <th></th>
+            <th>totaal</th>
         </tr>
     </table>
-    <script src="js/speler.js"></script>
+    <script src="js/frontend.js"></script>
+    <script>
+        seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
+        const speler = doorgeven("speler"); // knsbNummer
+        const naam = doorgeven("naam");
+        uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
+    </script>
 </body>
 </html>

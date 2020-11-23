@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <title>Ranglijst</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
+    <style>
+        td:nth-child(1), td:nth-child(3)  {
+            text-align: right; /* (rangnummer) en totaal */
+        }
+    </style>
 </head>
 <body>
-    <h1 id="ranglijst">Ranglijst</h1>
-    <select id="seizoenSelecteren">
-        <option value="0000">-- seizoen --</option>
-    </select>
-    <h1 id="seizoen">Seizoen</h1>
-    <table id="spelers">
+    <p id="status">status</p>
+    <hr>
+    <h1 id="kop">Ranglijst</h1>
+    <select id="seizoenSelecteren"></select>
+    <table id="tabel" class="links">
         <tr>
             <th></th>
             <th>naam</th>
             <th>totaal</th>
         </tr>
     </table>
-    <script src="js/ranglijst.js"></script>
+    <script src="js/frontend.js"></script>
+    <script>
+        seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
+        ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
+    </script>
 </body>
 </html>

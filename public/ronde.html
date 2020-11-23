@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <title>Ronde</title>
+    <link rel="stylesheet" type="text/css" href="css/aaappp.css">
+    <style>
+        td:nth-child(3) {
+            text-align: center; /* uitslag */
+        }
+    </style>
+</head>
+<body>
+    <p id="status">status</p>
+    <hr>
+    <h1><a href="ranglijst.html" id="kop">Ronde</a></h1>
+    <select id="rondeSelecteren"></select>
+    <table id="tabel" class="links">
+        <tr>
+            <th>wit</th>
+            <th>zwart</th>
+            <th></th>
+        </tr>
+    </table>
+    <script src="js/frontend.js"></script>
+    <script>
+        const rondeNummer = doorgeven("ronde");
+        ronden(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE);
+        uitslagenRonde(document.getElementById("kop"), document.getElementById("tabel"));
+    </script>
+</body>
+</html>
