@@ -31,6 +31,30 @@ function melding(tekst) {
     status.innerHTML = tekst;
 }
 
+function debugKnop(knopNaam) {
+    const knop = document.getElementById(knopNaam);
+    const knopUrl = knop.textContent;
+    knop.addEventListener("click",
+        () => {
+            console.log("click: " + knopUrl);
+            debugFetch(knopUrl);
+        });
+}
+
+async function debugFetch(url) {
+    melding("lees van database: " + url);
+    try {
+        let response = await fetch(api + url);
+        let json = await response.json();
+        console.log(json);
+        melding("json: " + url);
+        sessionStorage.setItem(url, JSON.stringify(json));
+    } catch (e) {
+        console.log("catch");
+        console.error(e);
+    }
+}
+
 function doorgeven(key) {
     let value = params.get(key) || sessionStorage.getItem(key);
     sessionStorage.setItem(key, value);

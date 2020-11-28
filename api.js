@@ -9,11 +9,11 @@ const Uitslag = require('./models/uitslag');
 const { fn, ref } = require('objection');  // TODO  joinRelated ?
 
 module.exports = router => {
-  router.get('/', ctx => {
-    ctx.body = 'Hier is COOLbackend!'
+  router.get('/personen', async ctx => {
+    ctx.body = await Persoon.query()
   });
 
-  router.get('/personen', async ctx => {
+  router.get('/testtest', async ctx => {
     ctx.body = await Persoon.query()
   });
 
@@ -21,7 +21,7 @@ module.exports = router => {
     ctx.body = await Persoon.query().findById(ctx.params.knsbNummer);
   });
 
-  router.get('/spelers/:seizoen/', async ctx => {
+  router.get('/spelers/:seizoen/', async ctx => { // TODO werkt niet online
     ctx.body = await Speler.query()
         .select('speler.*', 'persoon.*')
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
@@ -42,18 +42,18 @@ module.exports = router => {
         .orderBy('speler.seizoen');
   });
 
-  router.get('/seizoenen/:teamCode', async ctx => {
+  router.get('/seizoenen/:teamCode', async ctx => {  // TODO werkt niet online
     ctx.body = await Team.query()
         .select('team.seizoen')
         .where('team.teamCode', '=', ctx.params.teamCode);
   });
 
-  router.get('/teams/:seizoen', async ctx => {
+  router.get('/teams/:seizoen', async ctx => { // TODO werkt niet online
     ctx.body = await Team.query()
         .where('team.seizoen', '=', ctx.params.seizoen);
   });
 
-  router.get('/ronden/:seizoen/:teamCode', async ctx => {
+  router.get('/ronden/:seizoen/:teamCode', async ctx => { // TODO werkt niet online
     ctx.body = await Ronde.query()
         .where('ronde.seizoen', '=', ctx.params.seizoen)
         .andWhere('ronde.teamCode','=', ctx.params.teamCode)
@@ -142,7 +142,7 @@ module.exports = router => {
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
   order by uitslag.seizoen, bordNummer;
    */
-  router.get('/ronde/:seizoen/:rondeNummer', async ctx => {
+  router.get('/ronde/:seizoen/:rondeNummer', async ctx => { // TODO werkt niet online
     ctx.body = await Uitslag.query()
         .select(
             'uitslag.knsbNummer',
@@ -177,7 +177,7 @@ module.exports = router => {
   where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
   order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
    */
-  router.get('/team/:seizoen/:teamCode', async ctx => {
+  router.get('/team/:seizoen/:teamCode', async ctx => { // TODO werkt niet online
     ctx.body = await Uitslag.query()
         .select(
             'uitslag.rondeNummer',

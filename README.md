@@ -31,3 +31,6 @@ TODO: Merge your work into the `production` branch on GitHub (use a pull request
 - [Objection to orm hatref](https://www.jakso.me/blog/objection-to-orm-hatred)
 - [Multiple databases](https://blog.eperedo.com/2019/12/28/multiple-database-connection-objection-js-knex/)
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
+
+- [async await](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
+- [async await jason](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
