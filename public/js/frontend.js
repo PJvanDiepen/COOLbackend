@@ -31,52 +31,26 @@ function melding(tekst) {
     status.innerHTML = tekst;
 }
 
-function debugKnop(knopNaam) {
-    const knop = document.getElementById(knopNaam);
-    const knopUrl = knop.textContent;
-    knop.addEventListener("click",
-        () => {
-            console.log("click: " + knopUrl);
-            debugFetch(knopUrl);
-        });
-}
-
-async function debugFetch(url) {
-    melding("lees van database: " + url);
-    try {
-        let response = await fetch(api + url);
-        let json = await response.json();
-        console.log(json);
-        melding("json: " + url);
-        sessionStorage.setItem(url, JSON.stringify(json));
-    } catch (e) {
-        console.log("catch");
-        console.error(e);
-    }
-}
-
 function doorgeven(key) {
     let value = params.get(key) || sessionStorage.getItem(key);
     sessionStorage.setItem(key, value);
     return value
 }
 
-async function asyncFetch(url, mapFun, reduceFun) {
-    let object = JSON.parse(sessionStorage.getItem(url)) || await backendFetch(url);
-    object.map(mapFun);
-    if (reduceFun) {
-        return json.reduce(reduceFun);
+async function mapFetch(url, fun) {
+    let object = JSON.parse(sessionStorage.getItem(url));
+    if (!object) {
+        object = await serverFetch(url);
+        sessionStorage.setItem(url, JSON.stringify(object));
     }
+    object.map(fun);
 }
 
-async function backendFetch(url) {
-    melding("lees van database: " + url);
+async function serverFetch(url) {
     try {
         let response = await fetch(api + url);
-        let json = await response.json();
-        melding("json: " + url);
-        sessionStorage.setItem(url, JSON.stringify(json));
-        return json;
+        let object = await response.json();
+        return object;
     } catch (e) {
         console.error(e);
     }
@@ -134,7 +108,7 @@ function seizoenVoluit(seizoen) {
 }
 
 async function seizoenen(seizoenSelecteren, teamCode) {
-    await asyncFetch("/seizoenen/" + teamCode,
+    await mapFetch("/seizoenen/" + teamCode,
         (team) => {
             seizoenSelecteren.appendChild(option(team.seizoen, seizoenVoluit(team.seizoen)));
         });
@@ -149,7 +123,7 @@ async function seizoenen(seizoenSelecteren, teamCode) {
 }
 
 async function ronden(rondeSelecteren, teamCode) {
-    await asyncFetch("/ronden/" + seizoen + "/" + teamCode,
+    await mapFetch("/ronden/" + seizoen + "/" + teamCode,
         (ronde) => {
             rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + " ronde " + ronde.rondeNummer));
         });
@@ -165,7 +139,7 @@ async function ronden(rondeSelecteren, teamCode) {
 
 function ranglijst(kop, lijst) {
     kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen);
-    asyncFetch("/ranglijst/" + seizoen,
+    mapFetch("/ranglijst/" + seizoen,
         (speler, i) => {
             lijst.appendChild(rij(
                 i + 1,
@@ -194,7 +168,7 @@ function naarSpeler(knsbNummer, naam) {
    */
 function uitslagenRonde(kop, lijst) {
     kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + "ronde "+ rondeNummer;
-    asyncFetch("/ronde/" + seizoen + "/" + rondeNummer,
+    mapFetch("/ronde/" + seizoen + "/" + rondeNummer,
         (uitslag) => {
             lijst.appendChild(rij(
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
@@ -210,7 +184,7 @@ function uitslagenRonde(kop, lijst) {
 function uitslagenSpeler(kop, lijst) {
     kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + naam;
     let totaal = 300;
-    asyncFetch("/uitslagen/" + seizoen + "/" + speler,
+    mapFetch("/uitslagen/" + seizoen + "/" + speler,
         (uitslag) => {
             totaal = totaal + uitslag.punten;
             lijst.appendChild(uitslagRij(uitslag, totaal));
@@ -305,7 +279,7 @@ function uitslagenTeam(kop) {
     kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + teamVoluit(teamCode);
     let rondeNummer = 0;
     let lijst;
-    asyncFetch("/team/" + seizoen + "/" + teamCode,
+    mapFetch("/team/" + seizoen + "/" + teamCode,
         (uitslag) => {
             if (uitslag.rondeNummer > rondeNummer) {
                 rondeNummer = uitslag.rondeNummer;

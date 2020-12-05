@@ -13,15 +13,11 @@ module.exports = router => {
     ctx.body = await Persoon.query()
   });
 
-  router.get('/testtest', async ctx => {
-    ctx.body = await Persoon.query()
-  });
-
   router.get('/persoon/:knsbNummer/', async ctx => {
     ctx.body = await Persoon.query().findById(ctx.params.knsbNummer);
   });
 
-  router.get('/spelers/:seizoen/', async ctx => { // TODO werkt niet online
+  router.get('/spelers/:seizoen/', async ctx => {
     ctx.body = await Speler.query()
         .select('speler.*', 'persoon.*')
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
@@ -42,18 +38,18 @@ module.exports = router => {
         .orderBy('speler.seizoen');
   });
 
-  router.get('/seizoenen/:teamCode', async ctx => {  // TODO werkt niet online
+  router.get('/seizoenen/:teamCode', async ctx => {
     ctx.body = await Team.query()
         .select('team.seizoen')
         .where('team.teamCode', '=', ctx.params.teamCode);
   });
 
-  router.get('/teams/:seizoen', async ctx => { // TODO werkt niet online
+  router.get('/teams/:seizoen', async ctx => {
     ctx.body = await Team.query()
         .where('team.seizoen', '=', ctx.params.seizoen);
   });
 
-  router.get('/ronden/:seizoen/:teamCode', async ctx => { // TODO werkt niet online
+  router.get('/ronden/:seizoen/:teamCode', async ctx => {
     ctx.body = await Ronde.query()
         .where('ronde.seizoen', '=', ctx.params.seizoen)
         .andWhere('ronde.teamCode','=', ctx.params.teamCode)
@@ -142,7 +138,7 @@ module.exports = router => {
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
   order by uitslag.seizoen, bordNummer;
    */
-  router.get('/ronde/:seizoen/:rondeNummer', async ctx => { // TODO werkt niet online
+  router.get('/ronde/:seizoen/:rondeNummer', async ctx => {
     ctx.body = await Uitslag.query()
         .select(
             'uitslag.knsbNummer',
@@ -177,7 +173,7 @@ module.exports = router => {
   where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
   order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
    */
-  router.get('/team/:seizoen/:teamCode', async ctx => { // TODO werkt niet online
+  router.get('/team/:seizoen/:teamCode', async ctx => {
     ctx.body = await Uitslag.query()
         .select(
             'uitslag.rondeNummer',

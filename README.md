@@ -15,10 +15,6 @@ npm start
 
 TODO: Merge your work into the `production` branch on GitHub (use a pull request).
 
-# Wachtwoorden?
-[Wachtwoorden](https://www.smashingmagazine.com/2020/03/creating-secure-password-flows-nodejs-mysql/)
-
-
 # [Database](doc/database.md)
 
 # [Objection.js](https://vincit.github.io/objection.js) 
