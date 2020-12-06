@@ -34,23 +34,27 @@ function melding(tekst) {
 function doorgeven(key) {
     let value = params.get(key) || sessionStorage.getItem(key);
     sessionStorage.setItem(key, value);
-    return value
+    return value;
 }
 
-async function mapFetch(url, fun) {
+async function mapFetch(url, mapFun) {
+    let object = await localFetch(url);
+    object.map(mapFun);
+}
+
+async function localFetch(url) {
     let object = JSON.parse(sessionStorage.getItem(url));
     if (!object) {
         object = await serverFetch(url);
         sessionStorage.setItem(url, JSON.stringify(object));
     }
-    object.map(fun);
+    return object;
 }
 
 async function serverFetch(url) {
     try {
         let response = await fetch(api + url);
-        let object = await response.json();
-        return object;
+        return await response.json();
     } catch (e) {
         console.error(e);
     }
@@ -290,10 +294,4 @@ function uitslagenTeam(kop) {
             }
             // lijst.appendChild(uitslagRij(uitslag, totaal));
         });
-}
-
-function rondeLijst(rondeNummer, lijst, uitslag) {
-
-
-    return lijst;
 }

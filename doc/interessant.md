@@ -1,3 +1,6 @@
+Nuttig
+- [return value async function](https://stackoverflow.com/questions/49938266/how-to-return-values-from-async-functions-using-async-await-from-function)
+
 Interessant 
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 
