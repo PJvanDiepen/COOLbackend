@@ -20,13 +20,8 @@ select uitslag.rondeNummer,
     uitslag.witZwart, 
     uitslag.resultaat,
     uitslag.knsbNummer,
-    persoon.naam,
-    ronde.uithuis,
-    ronde.tegenstander,
-    ronde.plaats,
-    ronde.datum
+    persoon.naam
 from uitslag 
 join persoon on uitslag.knsbNummer = persoon.knsbNummer
-join ronde on uitslag.seizoen = ronde.seizoen and uitslag.teamCode = ronde.teamCode and uitslag.rondeNummer = ronde.rondeNummer 
 where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
 order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;

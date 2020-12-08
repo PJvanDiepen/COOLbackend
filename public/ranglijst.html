@@ -15,6 +15,7 @@
     <hr>
     <h1 id="kop">Ranglijst</h1>
     <select id="seizoenSelecteren"></select>
+    <select id="teamSelecteren"></select>
     <table id="tabel" class="links">
         <tr>
             <th></th>
@@ -25,6 +26,7 @@
     <script src="js/frontend.js"></script>
     <script>
         seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
+        teams(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
         ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>
