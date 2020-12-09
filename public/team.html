@@ -14,9 +14,8 @@
     </style>
 </head>
 <body>
-    <p id="status">status</p>
-    <hr>
     <h1><a href="ranglijst.html" id="kop">Team</a></h1>
+    <select id="teamSelecteren"></select>
     <div id="ronde1"></div>
     <div id="ronde2"></div>
     <div id="ronde3"></div>
@@ -29,6 +28,7 @@
     <script src="js/frontend.js"></script>
     <script>
         const teamCode = doorgeven("team");
+        teams(document.getElementById("teamSelecteren"), teamCode);
         uitslagenTeam(document.getElementById("kop"));
     </script>
 </body>

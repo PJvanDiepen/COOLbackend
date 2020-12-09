@@ -11,8 +11,6 @@
     </style>
 </head>
 <body>
-    <p id="status">status</p>
-    <hr>
     <h1 id="kop">Ranglijst</h1>
     <select id="seizoenSelecteren"></select>
     <select id="teamSelecteren"></select>
@@ -23,10 +21,13 @@
             <th>totaal</th>
         </tr>
     </table>
+    <p></p>
+    <select id="wedstrijdSelecteren"></select>
     <script src="js/frontend.js"></script>
     <script>
         seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
         teams(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
+        wedstrijden(document.getElementById("wedstrijdSelecteren"));
         ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>

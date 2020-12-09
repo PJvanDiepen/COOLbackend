@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 /*
 const
@@ -13,23 +13,18 @@ doorgeven:
 - seizoen
  */
 
-const status = document.getElementById("status");
-const webPage = new URL(location);
-const api = webPage.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
-const params = webPage.searchParams;
-melding(params);
+const pagina = new URL(location);
+const api = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+const params = pagina.searchParams;
 const schaakVereniging = doorgeven("schaakVereniging");
 const seizoen = doorgeven("seizoen");
 
 const INTERNE_COMPETITIE = "int";
-const KOP_SCHEIDING = " | ";
-
-function melding(tekst) {
-    status.innerHTML = tekst;
-}
+const SCHEIDING = "  ";
 
 function doorgeven(key) {
     let value = params.get(key);
+
     if (value) {
         sessionStorage.setItem(key, value);
     } else {
@@ -68,16 +63,16 @@ function element(tag, text) {
 }
 
 function option(value, text) {
-    let option = document.createElement('option');
+    let option = document.createElement("option");
     option.value = value;
     option.text = text;
     return option;
 }
 
 function rij(...kolommen) {
-    let tr = document.createElement('tr');
+    let tr = document.createElement("tr");
     kolommen.map(kolom => {
-        let td = document.createElement('td');
+        let td = document.createElement("td");
         if (kolom.nodeType === Node.ELEMENT_NODE) {
             td.appendChild(kolom);
         } else {
@@ -89,7 +84,7 @@ function rij(...kolommen) {
 }
 
 function href(text, link) {
-    let a = document.createElement('a');
+    let a = document.createElement("a");
     a.appendChild(document.createTextNode(text));
     a.href = link;
     return a;
@@ -99,12 +94,20 @@ function naarSpeler(knsbNummer, naam) {
     return href(naam,`speler.html?speler=${knsbNummer}&naam=${naam}`);
 }
 
-function naarRonde(rondeNummer, datum) {
-    return href(rondeNummer,`ronde.html?ronde=${rondeNummer}&datum=${datum}`);
+function naarRonde(tekst, rondeNummer, datum) {
+    return href(tekst,`ronde.html?ronde=${rondeNummer}&datum=${datum}`);
 }
 
 function naarTeam(u) {
     return href(wedstrijdVoluit(u),`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`);
+}
+
+function naarZelfdePagina() {
+    location.replace(pagina.pathname);
+}
+
+function naarAnderePagina(naarPagina) {
+    location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
 function datumLeesbaar(datumJson) {
@@ -136,9 +139,9 @@ function wedstrijdTeam(teamCode) {
     return schaakVereniging + (teamCode.substring(1) === "be" ? " " : " " + teamCode);
 }
 
-function wedstrijdVoluit(u) {
-    let eigenTeam = wedstrijdTeam(u.teamCode);
-    return u.uithuis === "t" ? eigenTeam + " -  " + u.tegenstander : u.tegenstander + " - " + eigenTeam;
+function wedstrijdVoluit(r) {
+    let eigenTeam = wedstrijdTeam(r.teamCode);
+    return r.uithuis === "t" ? eigenTeam + " -  " + r.tegenstander : r.tegenstander + " - " + eigenTeam;
 }
 
 async function seizoenen(seizoenSelecteren, teamCode) {
@@ -150,7 +153,7 @@ async function seizoenen(seizoenSelecteren, teamCode) {
     seizoenSelecteren.addEventListener("input",
         () => {
             sessionStorage.setItem("seizoen", seizoenSelecteren.value);
-            location.replace(webPage.pathname); // zonder searchParams
+            naarZelfdePagina();
         });
 }
 
@@ -162,26 +165,42 @@ async function teams(teamSelecteren, teamCode) {
     teamSelecteren.value = teamCode; // werkt uitsluitend na await
     teamSelecteren.addEventListener("input",
         () => {
-            console.log("teamSelecteren: " + teamSelecteren.value);
-            console.log(webPage.pathname);
+            if (teamSelecteren.value === INTERNE_COMPETITIE) {
+                naarAnderePagina("ranglijst.html");
+            } else {
+                naarAnderePagina("team.html?team=" + teamSelecteren.value);
+            }
         });
 }
 
 async function ronden(rondeSelecteren, teamCode) {
     await mapFetch("/ronden/" + seizoen + "/" + teamCode,
         (ronde) => {
-            rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + " ronde " + ronde.rondeNummer));
+            rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + "  ronde " + ronde.rondeNummer));
         });
     rondeSelecteren.value = rondeNummer; // werkt uitsluitend na await
     rondeSelecteren.addEventListener("input",
         () => {
             sessionStorage.setItem("ronde", rondeSelecteren.value);
-            location.replace(webPage.pathname); // zonder searchParams
+            naarZelfdePagina();
+        });
+}
+
+async function wedstrijden(wedstrijdenSelecteren) {
+    await mapFetch("/wedstrijden/" + seizoen,
+        (r) => {
+            wedstrijdenSelecteren.appendChild(option(r.teamCode + ":" + r.rondeNummer, datumLeesbaar(r.datum) + SCHEIDING + wedstrijdVoluit(r)));
+        });
+    wedstrijdenSelecteren.appendChild(option(0,wedstrijdenSelecteren.length + " externe wedstrijden"))
+    wedstrijdenSelecteren.value = 0; // werkt uitsluitend na await
+    wedstrijdenSelecteren.addEventListener("input",
+        () => {
+            console.log("wedstrijdenSelecteren: " + wedstrijdenSelecteren.value);
         });
 }
 
 function ranglijst(kop, lijst) {
-    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen);
+    kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen);
     mapFetch("/ranglijst/" + seizoen,
         (speler, i) => {
             lijst.appendChild(rij(
@@ -206,7 +225,7 @@ function ranglijst(kop, lijst) {
   order by uitslag.seizoen, uitslag.bordNummer;
    */
 function uitslagenRonde(kop, lijst) {
-    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + "ronde "+ rondeNummer;
+    kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "ronde "+ rondeNummer;
     mapFetch("/ronde/" + seizoen + "/" + rondeNummer,
         (uitslag) => {
             lijst.appendChild(rij(
@@ -221,7 +240,7 @@ function uitslagenRonde(kop, lijst) {
  */
 
 function uitslagenSpeler(kop, lijst) {
-    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + naam;
+    kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + naam;
     let totaal = 300;
     mapFetch("/uitslagen/" + seizoen + "/" + speler,
         (uitslag) => {
@@ -271,10 +290,12 @@ const TIJDELIJK_LID_NUMMER = 100;
 
 function uitslagRij(u, totaal) {
     let datum = datumLeesbaar(u.datum);
+    let rondeKolom = naarRonde(u.rondeNummer, u.rondeNummer, datum);
+    let datumKolom = naarRonde(datum, u.rondeNummer, datum);
     if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
-        return rij(naarRonde(u.rondeNummer, datum), datum, naarSpeler(u.tegenstanderNummer, u.naam), "", u.witZwart, u.resultaat, u.punten, totaal);
-    } else if (u.teamCode === "int") {
-        return rij(naarRonde(u.rondeNummer, datum), datum, u.naam, "", "", "", u.punten, totaal);
+        return rij(rondeKolom, datumKolom, naarSpeler(u.tegenstanderNummer, u.naam), "", u.witZwart, u.resultaat, u.punten, totaal);
+    } else if (u.teamCode === INTERNE_COMPETITIE) {
+        return rij(rondeKolom, datumKolom, u.naam, "", "", "", u.punten, totaal);
     } else {
         return rij("", datum, naarTeam(u), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
     }
@@ -298,10 +319,9 @@ join ronde on uitslag.seizoen = ronde.seizoen and uitslag.teamCode = ronde.teamC
 where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
 order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
-// router.get('/team/:seizoen/:teamCode', async ctx => {
 
 function uitslagenTeam(kop) {
-    kop.innerHTML = schaakVereniging + KOP_SCHEIDING + seizoenVoluit(seizoen) + KOP_SCHEIDING + wedstrijdTeam(teamCode);
+    kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + wedstrijdTeam(teamCode);
     let rondeNummer = 0;
     let lijst;
     mapFetch("/team/" + seizoen + "/" + teamCode,
@@ -310,7 +330,7 @@ function uitslagenTeam(kop) {
                 rondeNummer = uitslag.rondeNummer;
                 lijst = document.getElementById("ronde" + rondeNummer);
                 lijst.appendChild(element("h4",
-                    datumLeesbaar(uitslag.datum) + KOP_SCHEIDING + "Ronde " + rondeNummer + KOP_SCHEIDING + wedstrijdVoluit(uitslag)));
+                    datumLeesbaar(uitslag.datum) + SCHEIDING + "Ronde " + rondeNummer + SCHEIDING + wedstrijdVoluit(uitslag)));
                 console.log(uitslag);
             }
             // lijst.appendChild(uitslagRij(uitslag, totaal));
