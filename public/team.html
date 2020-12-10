@@ -16,6 +16,26 @@
 <body>
     <h1><a href="ranglijst.html" id="kop">Team</a></h1>
     <select id="teamSelecteren"></select>
+    <table id="ronden" class="links">
+        <tr>
+            <th>ronde</th>
+            <th>datum</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </table>
+    <template id="uitslagen">
+        <h2>Ronde</h2>
+        <table class="links">
+            <tr>
+                <th>bord</th>
+                <th></th>
+                <th>kleur</th>
+                <th></th>
+            </tr>
+        </table>
+        <br>
+    </template>
     <div id="ronde1"></div>
     <div id="ronde2"></div>
     <div id="ronde3"></div>
@@ -29,7 +49,7 @@
     <script>
         const teamCode = doorgeven("team");
         teams(document.getElementById("teamSelecteren"), teamCode);
-        uitslagenTeam(document.getElementById("kop"));
+        uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"),document.getElementById("uitslagen"));
     </script>
 </body>
 </html>

@@ -20,11 +20,10 @@ const schaakVereniging = doorgeven("schaakVereniging");
 const seizoen = doorgeven("seizoen");
 
 const INTERNE_COMPETITIE = "int";
-const SCHEIDING = "  ";
+const SCHEIDING = " ";
 
 function doorgeven(key) {
     let value = params.get(key);
-
     if (value) {
         sessionStorage.setItem(key, value);
     } else {
@@ -176,7 +175,7 @@ async function teams(teamSelecteren, teamCode) {
 async function ronden(rondeSelecteren, teamCode) {
     await mapFetch("/ronden/" + seizoen + "/" + teamCode,
         (ronde) => {
-            rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + "  ronde " + ronde.rondeNummer));
+            rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
     rondeSelecteren.value = rondeNummer; // werkt uitsluitend na await
     rondeSelecteren.addEventListener("input",
@@ -309,29 +308,28 @@ select uitslag.rondeNummer,
     uitslag.resultaat,
     uitslag.knsbNummer,
     persoon.naam,
-    ronde.uithuis,
-    ronde.tegenstander,
-    ronde.plaats,
-    ronde.datum
 from uitslag
 join persoon on uitslag.knsbNummer = persoon.knsbNummer
-join ronde on uitslag.seizoen = ronde.seizoen and uitslag.teamCode = ronde.teamCode and uitslag.rondeNummer = ronde.rondeNummer
 where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
 order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
 
-function uitslagenTeam(kop) {
+function uitslagenTeam(kop, ronden, uitslagenTemplate) {
     kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + wedstrijdTeam(teamCode);
+    let uitslagen;
     let rondeNummer = 0;
-    let lijst;
     mapFetch("/team/" + seizoen + "/" + teamCode,
         (uitslag) => {
             if (uitslag.rondeNummer > rondeNummer) {
                 rondeNummer = uitslag.rondeNummer;
-                lijst = document.getElementById("ronde" + rondeNummer);
+                uitslagen = uitslagenTemplate.content.cloneNode(true);
+                document.getElementById("ronde" + rondeNummer).appendChild(uitslagen);
+                /*
+                let lijst = document.getElementById("ronde" + rondeNummer);
                 lijst.appendChild(element("h4",
                     datumLeesbaar(uitslag.datum) + SCHEIDING + "Ronde " + rondeNummer + SCHEIDING + wedstrijdVoluit(uitslag)));
                 console.log(uitslag);
+                 */
             }
             // lijst.appendChild(uitslagRij(uitslag, totaal));
         });
