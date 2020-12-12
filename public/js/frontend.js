@@ -126,9 +126,9 @@ function teamVoluit(teamCode) {
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
     } else if (teamCode === "kbe") {
-        return schaakVereniging + " beker";
+        return schaakVereniging + " bekerteam";
     } else if (teamCode === "nbe") {
-        return schaakVereniging + " nhsb beker";
+        return schaakVereniging + " nhsb bekerteam";
     } else {
         return wedstrijdTeam(teamCode)
     }
@@ -240,7 +240,7 @@ function uitslagenRonde(kop, lijst) {
 
 function uitslagenSpeler(kop, lijst) {
     kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + naam;
-    let totaal = 300;
+    let totaal = 300; // TODO uit de MySQL database
     mapAsync("/uitslagen/" + seizoen + "/" + speler,
         (uitslag) => {
             totaal = totaal + uitslag.punten;
@@ -301,6 +301,7 @@ function uitslagRij(u, totaal) {
 }
 
 /*
+
 -- uitslagen externe competitie per team
 select uitslag.rondeNummer,
     uitslag.bordNummer,
@@ -314,26 +315,46 @@ where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
 order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
 
+/**
+ * uitslagenTeam doet fetch van JSON ronden en uitslagen per team
+ * en verwerkt die tot een tabel met ronden en een aantal tabellen met uitslagen per ronde.
+ *
+ * @param kop
+ * @param ronden
+ * @param uitslagenTemplate
+ * @returns {Promise<void>}
+ */
+
 async function uitslagenTeam(kop, ronden, uitslagenTemplate) {
     kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + wedstrijdTeam(teamCode);
     let rondeUitslagen = [];
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
         (ronde) => {
-            rondeUitslagen.push({html: uitslagenTemplate.content.cloneNode(true), ronde: ronde, punten: 0});
-            console.log("in /ronden/:seizoen/:teamCode " + ronde.tegenstander);
+            rondeUitslagen.push({ronde: ronde, punten: 0, uitslagen: []});
+            // console.log("in /ronden/:seizoen/:teamCode " + ronde.tegenstander);
         });
     console.log("na /ronden/:seizoen/:teamCode");
     console.log(rondeUitslagen);
     await mapAsync("/team/" + seizoen + "/" + teamCode,
         (uitslag) => {
-            console.log("ronde: " + uitslag.rondeNummer + " bordNummer: " + uitslag.bordNummer);
+            // console.log("ronde: " + uitslag.rondeNummer + " bordNummer: " + uitslag.bordNummer);
             let rondeUitslag = rondeUitslagen[uitslag.rondeNummer - 1];
             rondeUitslag.punten += uitslag.resultaat === "1" ? 1 : uitslag.resultaat === "0" ? 0 : 0.5;
-            let html = rondeUitslag.html;
+            rondeUitslag.uitslagen.push(teamUitslagRij(uitslag));
         });
     console.log("na /team/:seizoen/:teamCode");
     console.log(rondeUitslagen);
     for (let i = 0; i < rondeUitslagen.length; ++i) {
-        document.getElementById("ronde" + (i + 1)).appendChild(rondeUitslagen[i].html);
+        const div = document.getElementById("ronde" + (i + 1));
+        div.appendChild(uitslagenTemplate.content.cloneNode(true));
+        div.getElementsByTagName("h2")[0].innerHTML = "Ronde " + (i + 1);
+        let tabel = div.getElementsByTagName("table")[0];
+        for (let uitslag of rondeUitslagen[i].uitslagen) {
+            tabel.appendChild(uitslag);
+        }
     }
+}
+
+function teamUitslagRij(u) {
+    return rij(u.bordNummer, naarSpeler(u.knsbNummer, u.naam), u.witZwart, u.resultaat);
 }
