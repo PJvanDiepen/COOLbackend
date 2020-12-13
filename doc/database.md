@@ -188,11 +188,12 @@ Uitslagen voor de interne competitie verkeren in verschillende stadia:
 De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
 - 0 = NIEMAND
 - 1 = ONEVEN (Rokade WedstrijdType = 3)
-- 2 = EXTERN (Rokade WedstrijdType = 11 extern op dinsdag)
+- 2 = EXTERNE_WEDSTRIJD (Rokade WedstrijdType = 11 extern op dinsdag)
 - 3 = AFGEZEGD (Rokade WedstrijdType = 2)
-- 4 = INTERN
+- 4 = INTERNE_PARTIJ
 - 5 = REGLEMENTAIRE_WINST (Rokade WedstrijdType = 5)
 - 6 = REGLEMENTAIR_VERLIES (Rokade WedstrijdType = 6)
 - 7 = VRIJGESTELD (Rokade WedstrijdType = 4)
 - 8 = BYE
-- \> 100 = `knsbNummer` van tegenstander
+- tot en met 100 = TIJDELIJK_LID_NUMMER
+- vanaf 100 = `knsbNummer` van tegenstander
