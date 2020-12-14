@@ -256,17 +256,7 @@ function uitslagenRonde(kop, lijst) {
       and u.knsbNummer = @knsbNummer
       and u.anderTeam = 'int'
   order by u.datum, u.bordNummer;
-
-kolommen in lijst
-1. rondeNummer + link naar interne ronde indien interne ronde
-2. datum + link naar interne ronde indien interne ronde
-3. link naar interne tegenstander of link naar externe wedstrijd of andere tekst
-4. externe bord
-5. kleur
-6. resultaat
-7. punten
-8. voortschrijdend totaal
- */
+  */
 
 const TIJDELIJK_LID_NUMMER = 100;
 const EXTERNE_WEDSTRIJD = 2;
@@ -281,36 +271,52 @@ function uitslagenSpeler(kop, lijst) {
             if (uitslag.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
                 lijst.appendChild(internePartij(uitslag, totaal));
             } else if (uitslag.teamCode === INTERNE_COMPETITIE && uitslag.tegenstanderNummer === EXTERNE_WEDSTRIJD) {
-                vorigeUitslag = uitslag; // externeWedstrijd in plaats van internePartij
+                vorigeUitslag = uitslag;
             } else if (uitslag.teamCode === INTERNE_COMPETITIE) {
                 lijst.appendChild(geenPartij(uitslag, totaal));
+            } else if (vorigeUitslag && vorigeUitslag.datum === uitslag.datum) {
+                lijst.appendChild(externePartijTijdensInterneRonde(vorigeUitslag, uitslag, totaal))
             } else {
-                lijst.appendChild(externePartij(vorigeUitslag, uitslag, totaal));
+                lijst.appendChild(externePartij(uitslag, totaal));
             }
         });
 }
 
+/*
+kolommen in lijst
+1. rondeNummer + link naar interne ronde indien interne ronde
+2. datum + link naar interne ronde indien interne ronde
+3. link naar interne tegenstander of link naar externe wedstrijd of andere tekst
+4. externe bord
+5. kleur
+6. resultaat
+7. punten
+8. voortschrijdend totaal
+ */
+
 function internePartij(u, totaal) {
-    let datum = datumLeesbaar(u.datum);
     let rondeKolom = naarRonde(u.rondeNummer, u);
-    let datumKolom = naarRonde(datum, u);
-    return rij(rondeKolom, datumKolom, naarSpeler(u.tegenstanderNummer, u.naam), "", u.witZwart, u.resultaat, u.punten, totaal);
+    let datumKolom = naarRonde(datumLeesbaar(u.datum), u);
+    let tegenstanderKolom = naarSpeler(u.tegenstanderNummer, u.naam);
+    return rij(rondeKolom, datumKolom, tegenstanderKolom, "", u.witZwart, u.resultaat, u.punten, totaal);
 }
 
 function geenPartij(u, totaal) {
-    let datum = datumLeesbaar(u.datum);
     let rondeKolom = naarRonde(u.rondeNummer, u);
-    let datumKolom = naarRonde(datum, u);
+    let datumKolom = naarRonde(datumLeesbaar(u.datum), u);
     return rij(rondeKolom, datumKolom, u.naam, "", "", "", u.punten, totaal);
 }
 
-function externePartij(vorigeUitslag, u, totaal) {
-    let datum = datumLeesbaar(u.datum);
-    let interneRonde = vorigeUitslag && u.datum === vorigeUitslag.datum;
-    let rondeKolom = interneRonde ? naarRonde(vorigeUitslag.rondeNummer, vorigeUitslag) : "";
-    let datumKolom = interneRonde ? naarRonde(datum, vorigeUitslag) : datum;
-    let punten = interneRonde ? vorigeUitslag.punten + u.punten : u.punten;
-    return rij(rondeKolom, datumKolom, naarTeam(u), u.bordNummer, u.witZwart, u.resultaat, punten, totaal);
+function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {
+    let rondeKolom = naarRonde(vorigeUitslag.rondeNummer, vorigeUitslag);
+    let datumKolom = naarRonde(datumLeesbaar(u.datum), vorigeUitslag);
+    let tegenstanderKolom = naarTeam(u);
+    let puntenKolom = vorigeUitslag.punten + u.punten;
+    return rij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
+}
+
+function externePartij(u, totaal) {
+    return rij("", datumLeesbaar(u.datum), naarTeam(u), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
 }
 
 /*
