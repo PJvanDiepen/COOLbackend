@@ -5,18 +5,18 @@
     <title>Team</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(1), td:nth-child(4), td:nth-child(5), td:nth-child(6) {
-            text-align: center; /* ronde, bord, kleur en resultaat */
+        td:nth-child(4) {
+            text-align: center; /* resultaat */
         }
-        td:nth-child(7), td:nth-child(8)  {
-            text-align: right; /* punten en totaal */
+        td:nth-child(1), td:nth-child(8)  {
+            text-align: right; /* bord */
         }
     </style>
 </head>
 <body>
     <h1><a href="ranglijst.html" id="kop">Team</a></h1>
-    <select id="teamSelecteren"></select>
-    <table id="ronden" class="links">
+    <select id="teamSelecteren" class = "rechts"></select>
+    <table id="ronden">
         <tr>
             <th>ronde</th>
             <th>datum</th>
@@ -37,7 +37,7 @@
     <script>
         const teamCode = doorgeven("team");
         teams(document.getElementById("teamSelecteren"), teamCode);
-        uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"),document.getElementById("uitslagen"));
+        uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
     </script>
 </body>
 </html>
