@@ -5,11 +5,8 @@
     <title>Team</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(4) {
-            text-align: center; /* resultaat */
-        }
-        td:nth-child(1), td:nth-child(8)  {
-            text-align: right; /* bord */
+        td:nth-child(1), td:nth-child(4) {
+            text-align: center; /* bord, resultaat */
         }
     </style>
 </head>
@@ -33,7 +30,7 @@
     <div id="ronde7"></div>
     <div id="ronde8"></div>
     <div id="ronde9"></div>
-    <script src="js/frontend.js"></script>
+    <script src="js/uitslagen.js"></script>
     <script>
         const teamCode = doorgeven("team");
         teams(document.getElementById("teamSelecteren"), teamCode);
