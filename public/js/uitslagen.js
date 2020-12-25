@@ -140,6 +140,29 @@ function wedstrijdVoluit(r) {
     return r.uithuis === THUIS ? eigenTeam + " - " + r.tegenstander : r.tegenstander + " - " + eigenTeam;
 }
 
+const REMISE = "½";
+const WINST  = "1";
+const VERLIES = "0";
+const THUIS = "t";
+const UIT = "u";
+
+function wedstrijdUitslag(thuis, uit, remise) {
+    while (remise >= 2) {
+        thuis += 1;
+        uit += 1;
+        remise -= 2;
+    }
+    if (remise === 0) {
+        return thuis + " - " + uit;
+    } else if (thuis === 0) {
+        return REMISE + " - " + uit + REMISE;
+    } else if (uit === 0) {
+        return thuis + REMISE + " - " + REMISE;
+    } else {
+        return thuis + REMISE + " - " + uit + REMISE;
+    }
+}
+
 async function seizoenen(seizoenSelecteren, teamCode) {
     await mapAsync("/seizoenen/" + teamCode,
         (team) => {
@@ -378,31 +401,12 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
         let uitslag = u.ronde.uithuis === THUIS ? wedstrijdUitslag(u.winst, u.verlies, u.remise) : wedstrijdUitslag(u.verlies, u.winst, u.remise);
         rondenTabel.appendChild(rij(u.ronde.rondeNummer, datum, naarTeam(u.ronde), uitslag));
         tabel.appendChild(rij(datum, wedstrijdVoluit(u.ronde), "", uitslag));
-        for (let uitslag of u.uitslagen) {
-            tabel.appendChild(uitslag);
+        if (u.uitslagen.length) {
+            for (let uitslag of u.uitslagen) {
+                tabel.appendChild(uitslag);
+            }
+        } else {
+            tabel.appendChild(rij("","geen uitslagen","",""));
         }
-    }
-}
-
-const REMISE = "½";
-const WINST  = "1";
-const VERLIES = "0";
-const THUIS = "t";
-const UIT = "u";
-
-function wedstrijdUitslag(thuis, uit, remise) {
-    while (remise >= 2) {
-        thuis += 1;
-        uit += 1;
-        remise -= 2;
-    }
-    if (remise === 0) {
-        return thuis + " - " + uit;
-    } else if (thuis === 0) {
-        return REMISE + " - " + uit + REMISE;
-    } else if (uit === 0) {
-        return thuis + REMISE + " - " + REMISE;
-    } else {
-        return thuis + REMISE + " - " + uit + REMISE;
     }
 }

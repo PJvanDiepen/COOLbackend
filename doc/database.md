@@ -50,11 +50,13 @@ naam VARCHAR(45)
 dummy VARCHAR(45)
 PRIMARY KEY (knsbNummer)
 ```
-In dit systeem willen we zo min mogelijk persoonsgegevens vastleggen. Het `knsbNummer` komt uit OLA.
+In dit systeem willen we zo min mogelijk persoonsgegevens vastleggen.
+Het `knsbNummer` komt uit [OLA](https://www.schaakbond.nl/voor-clubs/ledenadministratie), 
+de Online Leden Administratie van de KNSB.
 Voor uitslagen en ranglijsten is `naam` voldoende. 
 Andere persoonsgegevens staan in OLA en worden beheerd door de secretaris en de penningmeester en niet door de wedstrijdleider.
 
-In `Persoon` staan uitsluitend leden van de eigen schaakvereniging. 
+In `Persoon` staan uitsluitend leden van de eigen schaakvereniging.
 Tegenstanders in de externe competitie hebben `knsbNummer = 2` en `naam = 'extern'`. 
 Dit systeem kan daarom wel complete uitslagen lijsten produceren van de interne competitie, 
 maar de bij uitslagen van externe competitie staat uitsluitend de `naam` van de eigen speler, bordnummer, kleur, resultaat en
@@ -62,7 +64,13 @@ eventueel de naam van het team van de tegenstander, want die gegevens staan in `
    
 Verder staan in `Persoon`: `knsbNummer = 3` met `naam = 'afgezegd'`, 
 `knsbNummer = 1` met `naam = 'oneven'` en zo voort. 
-Deze worden gebruikt om de uitslagen in de interne competitie compleet te maken voor alle deelnemers.
+Deze nummers worden gebruikt om de uitslagen in de interne competitie compleet te maken.
+De reeks van `knsbNummer = 0` tot en met `knsbNummer = 100` zijn dus labels bij het berekenen van de ranglijst.
+Ze staan in `Persoon` tabel, zodat verschillende schaakverenigingen verschillende labels kunnen gebruiken.
+
+Een `knsbNummer` bestaat uit 7 cijfers en die krijgt een lid van de KNSB.
+Leden van de schaakvereniging, die nog niet een officieel `knsbNummer` hebben krijgen een tijdelijk nummer
+in de reeks vanaf `knsbNummer = 100` tot `knsbNummer = 1000000`.
 
 Het is de bedoeling dat leden een kalender van de ronden van de interne competitie en
 van de wedstrijden van hun eigen teams in externe competitie kunnen raadplegen en 
@@ -196,4 +204,3 @@ De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
 - 7 = VRIJGESTELD (Rokade WedstrijdType = 4)
 - 8 = BYE
 - tot en met 100 = TIJDELIJK_LID_NUMMER
-- vanaf 100 = `knsbNummer` van tegenstander
