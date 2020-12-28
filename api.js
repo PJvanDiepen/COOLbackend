@@ -62,7 +62,7 @@ module.exports = router => {
 
   /*
   -- ranglijst
-  select s.knsbNummer, naam, subgroep, internTotalen(@seizoen, s.knsbNummer) as totalen
+  select s.knsbNummer, naam, subgroep, knsbRating, internTotalen(@seizoen, s.knsbNummer) as totalen
   from speler s
   join persoon p on s.knsbNummer = p.knsbNummer
   where seizoen = @seizoen
@@ -76,7 +76,8 @@ module.exports = router => {
             'speler.knsbNummer',
             'persoon.naam',
             'speler.subgroep',
-            {totalen: fn('internTotalen', ctx.params.seizoen, ref('speler.knsbNummer'))})
+            'speler.knsbRating',
+            {totalen: fn('totalen', ctx.params.seizoen, ref('speler.knsbNummer'))})
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
         .where('seizoen', '=', ctx.params.seizoen)
         .orderBy('totalen', 'desc');

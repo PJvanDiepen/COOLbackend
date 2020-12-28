@@ -136,33 +136,38 @@ where seizoen = @seizoen
 order by totaal desc;
 
 -- ranglijst
-select s.knsbNummer, naam, subgroep, internTotalen(@seizoen, s.knsbNummer) as totalen
+select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, s.knsbNummer) as totalen
 from speler s
 join persoon p on s.knsbNummer = p.knsbNummer
 where seizoen = @seizoen
 order by totalen desc;
 
-drop function internTotalen;
+drop function totalen;
 
 delimiter $$
 
-create function internTotalen(seizoen char(4), knsbNummer int) returns varchar(45) deterministic
+create function totalen(seizoen char(4), knsbNummer int) returns varchar(45) deterministic
 begin
     declare totaal int default 0;
     declare startPunten int default 300; -- reglement artikel 11
     declare maximumAfzeggingen int default 10; -- reglement artikel 12
     declare aftrek int default 0;
     declare minimumInternePartijen int default 20; -- reglement artikel 2
-    declare prijs int default 1; 
+    declare prijs int default 1;
+    declare sorteer int default 0;
     declare eigenWaardeCijfer int;
-	declare externePartijen int default 0;
     declare oneven int default 0;
 	declare afzeggingen int default 0;
-    declare winst int default 0; 
-	declare remise int default 0; 
-    declare verlies int default 0; 
-    declare wit int default 0; 
-    declare zwart int default 0;
+    declare winstIntern int default 0;
+	declare remiseIntern int default 0;
+    declare verliesIntern int default 0;
+    declare witIntern int default 0;
+    declare zwartIntern int default 0;
+    declare winstExtern int default 0;
+    declare remiseExtern int default 0;
+    declare verliesExtern int default 0;
+    declare witExtern int default 0;
+    declare zwartExtern int default 0;
     declare teamCode char(3);
     declare tegenstander int;
     declare witZwart char(1);
@@ -182,45 +187,71 @@ begin
     while found
         do
             if teamCode <> 'int' then
-                set externePartijen = externePartijen + 1;
+                if resultaat = '1' then
+                    set winstExtern = winstExtern + 1;
+                elseif resultaat = '0' then
+                    set verliesExtern = verliesExtern + 1;
+                else
+                    set remiseExtern = remiseExtern + 1;
+                end if;
+                if witZwart = 'w' then
+                    set witExtern = witExtern + 1;
+                else
+                    set zwartExtern = zwartExtern + 1;
+                end if;
             elseif tegenstander = 1  then
                 set oneven = oneven + 1;
 			elseif tegenstander = 3 then
                 set afzeggingen = afzeggingen + 1;
             elseif tegenstander > 100 then
                 if resultaat = '1' then
-					set winst = winst + 1;
+					set winstIntern = winstIntern + 1;
 				elseif resultaat = '0' then
-					set verlies = verlies + 1;
+					set verliesIntern = verliesIntern + 1;
 				else
-					set remise = remise + 1;
+					set remiseIntern = remiseIntern + 1;
 				end if;
 				if witZwart = 'w' then
-					set wit = wit + 1;
+					set witIntern = witIntern + 1;
 				else
-                    set zwart = zwart + 1;
+                    set zwartIntern = zwartIntern + 1;
                 end if;
             end if;
             set totaal = totaal + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, tegenstander, resultaat);
             fetch uitslagen into teamCode, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
-    if wit = 0 and zwart = 0 then
-        if externePartijen > 9 then
-			return concat('0', externePartijen);
-		else
-			return concat('00', externePartijen);
-		end if;
+    if witIntern = 0 and zwartIntern = 0 then
+        set prijs = 0;
+        set sorteer = witExtern + zwartExtern;
 	else
 		if afzeggingen > maximumAfzeggingen then
 			set aftrek = (afzeggingen - maximumAfzeggingen) * 8;
 		end if;
-        if (wit + zwart) < minimumInternePartijen then
+        if (witIntern + zwartIntern) < minimumInternePartijen then
 			set prijs = 0;
 		end if;
-        set totaal = totaal + startPunten - aftrek;
-		return concat(totaal, ' ', prijs, ' ', winst, ' ', remise, ' ', verlies, ' ', wit, ' ', zwart, ' ', oneven, ' ', afzeggingen, ' ', aftrek, ' ', startPunten);
+        set sorteer  = startPunten + totaal - aftrek;
     end if;
+    return concat(
+        lpad(sorteer,3,'0'), ' ',
+        prijs, ' ',
+        winstIntern, ' ',
+        remiseIntern, ' ',
+        verliesIntern, ' ',
+        witIntern, ' ',
+        zwartIntern, ' ',
+        oneven, ' ',
+        afzeggingen, ' ',
+        aftrek, ' ',
+        totaal, ' ',
+        startPunten, ' ',
+        winstExtern, ' ',
+        remiseExtern, ' ',
+        verliesExtern, ' ',
+        witExtern, ' ',
+        zwartExtern);
+
 end;
 $$
 
