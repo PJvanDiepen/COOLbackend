@@ -45,11 +45,12 @@ module.exports = router => {
   });
 
   /*
-  -- ruwe ranglijst
-  select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as punten
-  from speler s join persoon p on s.knsbNummer = p.knsbNummer
+  -- simpele ranglijst
+  select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as totaal
+  from speler s
+  join persoon p on s.knsbNummer = p.knsbNummer
   where seizoen = @seizoen
-  order by punten desc;
+  order by totaal desc;
    */
   router.get('/ranglijst/:seizoen/', async ctx => {
     ctx.body = await Speler.query()
@@ -57,6 +58,28 @@ module.exports = router => {
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
         .where('seizoen', '=', ctx.params.seizoen)
         .orderBy('totaal', 'desc');
+  });
+
+  /*
+  -- ranglijst
+  select s.knsbNummer, naam, subgroep, internTotalen(@seizoen, s.knsbNummer) as totalen
+  from speler s
+  join persoon p on s.knsbNummer = p.knsbNummer
+  where seizoen = @seizoen
+  order by totalen desc;
+
+  concat(totaal, ' ', prijs, ' ', winst, ' ', remise, ' ', verlies, ' ', wit, ' ', zwart, ' ', oneven, ' ', afzeggingen, ' ', aftrek, ' ', startPunten);
+   */
+  router.get('/intern/:seizoen/', async ctx => {
+    ctx.body = await Speler.query()
+        .select(
+            'speler.knsbNummer',
+            'persoon.naam',
+            'speler.subgroep',
+            {totalen: fn('internTotalen', ctx.params.seizoen, ref('speler.knsbNummer'))})
+        .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
+        .where('seizoen', '=', ctx.params.seizoen)
+        .orderBy('totalen', 'desc');
   });
 
   /*

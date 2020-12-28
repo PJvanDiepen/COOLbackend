@@ -4,7 +4,8 @@ drop function waardeCijfer;
 
 delimiter $$
 
-create function waardeCijfer(seizoen char(4), knsbNummer int) returns int deterministic
+create function waardeCijfer(seizoen char(4), knsbNummer int) 
+returns int deterministic -- reglement artikel 10
 begin
     declare subgroep char(1);
     select s.subgroep
@@ -41,7 +42,7 @@ drop function punten;
 delimiter $$
 
 create function punten(seizoen char(4), knsbNummer int, eigenWaardeCijfer int, teamCode char(3), tegenstander int, resultaat char(1))
-    returns int deterministic
+    returns int deterministic -- reglement artikel 12
 begin
     declare plus int default 0;
     if teamCode <> 'int' then -- niet interne competitie
@@ -128,11 +129,102 @@ set @seizoen = '1819';
 set @knsbNummer = 6212404; -- Peter van Diepen
 
 -- simpele ranglijst
-select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as punten
+select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as totaal
 from speler s
 join persoon p on s.knsbNummer = p.knsbNummer
 where seizoen = @seizoen
-order by punten desc;
+order by totaal desc;
+
+-- ranglijst
+select s.knsbNummer, naam, subgroep, internTotalen(@seizoen, s.knsbNummer) as totalen
+from speler s
+join persoon p on s.knsbNummer = p.knsbNummer
+where seizoen = @seizoen
+order by totalen desc;
+
+drop function internTotalen;
+
+delimiter $$
+
+create function internTotalen(seizoen char(4), knsbNummer int) returns varchar(45) deterministic
+begin
+    declare totaal int default 0;
+    declare startPunten int default 300; -- reglement artikel 11
+    declare maximumAfzeggingen int default 10; -- reglement artikel 12
+    declare aftrek int default 0;
+    declare minimumInternePartijen int default 20; -- reglement artikel 2
+    declare prijs int default 1; 
+    declare eigenWaardeCijfer int;
+	declare externePartijen int default 0;
+    declare oneven int default 0;
+	declare afzeggingen int default 0;
+    declare winst int default 0; 
+	declare remise int default 0; 
+    declare verlies int default 0; 
+    declare wit int default 0; 
+    declare zwart int default 0;
+    declare teamCode char(3);
+    declare tegenstander int;
+    declare witZwart char(1);
+    declare resultaat char(1);
+    declare found boolean default true;
+    declare uitslagen cursor for
+        select u.teamCode, u.tegenstanderNummer, u.witZwart, u.resultaat
+        from uitslag u
+        where u.seizoen = seizoen
+            and u.knsbNummer = knsbNummer
+            and u.anderTeam = 'int';
+    declare continue handler for not found
+    set found = false;
+    set eigenWaardeCijfer = waardeCijfer(seizoen, knsbNummer);
+    open uitslagen;
+    fetch uitslagen into teamCode, tegenstander, witZwart, resultaat;
+    while found
+        do
+            if teamCode <> 'int' then
+                set externePartijen = externePartijen + 1;
+            elseif tegenstander = 1  then
+                set oneven = oneven + 1;
+			elseif tegenstander = 3 then
+                set afzeggingen = afzeggingen + 1;
+            elseif tegenstander > 100 then
+                if resultaat = '1' then
+					set winst = winst + 1;
+				elseif resultaat = '0' then
+					set verlies = verlies + 1;
+				else
+					set remise = remise + 1;
+				end if;
+				if witZwart = 'w' then
+					set wit = wit + 1;
+				else
+                    set zwart = zwart + 1;
+                end if;
+            end if;
+            set totaal = totaal + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, tegenstander, resultaat);
+            fetch uitslagen into teamCode, tegenstander, witZwart, resultaat;
+        end while; 
+    close uitslagen;
+    if wit = 0 and zwart = 0 then
+        if externePartijen > 9 then
+			return concat('0', externePartijen);
+		else
+			return concat('00', externePartijen);
+		end if;
+	else
+		if afzeggingen > maximumAfzeggingen then
+			set aftrek = (afzeggingen - maximumAfzeggingen) * 8;
+		end if;
+        if (wit + zwart) < minimumInternePartijen then
+			set prijs = 0;
+		end if;
+        set totaal = totaal + startPunten - aftrek;
+		return concat(totaal, ' ', prijs, ' ', winst, ' ', remise, ' ', verlies, ' ', wit, ' ', zwart, ' ', oneven, ' ', afzeggingen, ' ', aftrek, ' ', startPunten);
+    end if;
+end;
+$$
+
+delimiter ;
 
 -- punten van alle uitslagen per speler
 select u.datum,
@@ -154,92 +246,3 @@ where u.seizoen = @seizoen
     and u.knsbNummer = @knsbNummer
     and u.anderTeam = 'int'
 order by u.datum, u.bordNummer;
-
-
-set @seizoen = '1819';
-
-set @knsbNummer = 6212404; -- Peter van Diepen
-
-call totalen(@seizoen, @knsbNummer, @punten, @winst, @remise, @verlies, @wit, @zwart, @extern, @afzeggingen, @oneven); 
-select @seizoen, @knsbNummer, @punten, @winst, @remise, @verlies, @wit, @zwart, @extern, @afzeggingen, @oneven;
-
--- experiment
-drop procedure totalen;
-
-delimiter //
-
-create procedure totalen(in seizoen char(4), in knsbNummer int,
-    out punten int, out winst int, out remise int, out verlies int,
-    out wit int, out zwart int, out extern int, out afzeggingen int, out oneven int)
-begin
-    declare eigenWaardeCijfer int;
-    declare teamCode char(3);
-    declare witZwart char(1);
-    declare tegenstander int;
-    declare resultaat char(1);
-    declare found boolean default true;
-    declare uitslagen cursor for
-        select uitslag.teamCode, uitslag.witZwart, uitslag.tegenstanderNummer, uitslag.resultaat
-        from uitslag
-        where uitslag.seizoen = seizoen
-          and uitslag.knsbNummer = knsbNummer
-          and uitslag.anderTeam = 'int';
-    declare continue handler for not found
-        set found = false;
-    set punten = 300;
-    set winst = 0;
-    set remise = 0;
-    set verlies = 0;
-    set wit = 0;
-    set zwart = 0;
-    set extern = 0;
-    set afzeggingen = 0;
-    set oneven = 0;
-    set eigenWaardeCijfer = waardeCijfer(seizoen, knsbNummer);
-    open uitslagen;
-    fetch uitslagen into teamCode, witZwart, tegenstander, resultaat;
-    while found
-        do
-            if teamCode <> 'int' then -- niet interne competitie
-                set extern = extern + 1;
-                set punten = punten + 4;
-            elseif tegenstander > 100 then -- interne partij
-                if resultaat = '1' then
-                    set winst = winst + 1;
-                    set punten = punten + 12;
-                elseif resultaat = '0' then
-                    set verlies = verlies + 1;
-                    set punten = punten - 12;
-                else
-                    set remise = remise + 1;
-                end if;
-                set punten = punten + waardeCijfer(seizoen, tegenstander);
-                if witZwart = 'w' then
-                    set wit = wit + 1;
-                elseif witZwart = 'z' then
-                    set zwart = zwart + 1;
-                end if;
-            else
-                if tegenstander = 1 then -- oneven
-                    set oneven = oneven + 1;
-                    set punten = punten + 12;
-                elseif tegenstander = 5 or tegenstander = 8 then -- reglementaire winst of bye
-                    set punten = punten + 12;
-                elseif tegenstander = 3 then -- afgezegd
-                    set afzeggingen = afzeggingen + 1;
-                    set punten = punten - 4;
-                elseif tegenstander = 6 then -- reglementair verlies
-                    set punten = punten - 12;
-                end if; -- else extern of vrijgesteld
-                set punten = punten + eigenWaardeCijfer;
-            end if;
-            fetch uitslagen into teamCode, witZwart, tegenstander, resultaat;
-        end while;
-    close uitslagen;
-    if winst = 0 and remise = 0 and verlies = 0 then
-        set punten = extern;
-    elseif afzeggingen > 10 then
-        set punten = punten - (afzeggingen - 10) * 8;
-    end if;
-end;
-//
