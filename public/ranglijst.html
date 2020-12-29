@@ -5,8 +5,11 @@
     <title>Ranglijst</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(1), td:nth-child(3)  {
-            text-align: right; /* (rangnummer) en totaal */
+        td:nth-child(1), td:nth-child(3), td:nth-child(10)  {
+            text-align: right; /* (rangnummer), (sorteer) en rating */
+        }
+        td:nth-child(5), td:nth-child(6), td:nth-child(7), td:nth-child(8), td:nth-child(9) {
+            text-align: center; /* intern, w-z, afzeg, oneven en extern */
         }
     </style>
 </head>
@@ -17,8 +20,15 @@
     <table id="tabel" class="links">
         <tr>
             <th></th>
-            <th>naam</th>
+            <th></th>
             <th>totaal</th>
+            <th></th>
+            <th>intern</th>
+            <th>w-z</th>
+            <th>afz</th>
+            <th>on</th>
+            <th>extern</th>
+            <th>rating</th>
         </tr>
     </table>
     <p></p>

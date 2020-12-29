@@ -71,77 +71,6 @@ $$
 
 delimiter ;
 
-drop function totaal;
-
-delimiter $$
-
-create function totaal(seizoen char(4), knsbNummer int) returns int deterministic
-begin
-    declare totaalPunten int default 300;
-    declare eigenWaardeCijfer int;
-    declare internePartijen int default 0;
-    declare externePartijen int default 0;
-    declare afzeggingen int default 0;
-    declare teamCode char(3);
-    declare tegenstander int;
-    declare resultaat char(1);
-    declare found boolean default true;
-    declare uitslagen cursor for
-        select u.teamCode, u.tegenstanderNummer, u.resultaat
-        from uitslag u
-        where u.seizoen = seizoen
-            and u.knsbNummer = knsbNummer
-            and u.anderTeam = 'int';
-    declare continue handler for not found
-    set found = false;
-    set eigenWaardeCijfer = waardeCijfer(seizoen, knsbNummer);
-    open uitslagen;
-    fetch uitslagen into teamCode, tegenstander, resultaat;
-    while found
-        do
-            if tegenstander > 100 then
-                set internePartijen = internePartijen + 1;
-            elseif tegenstander = 3 then
-                set afzeggingen = afzeggingen + 1;
-			elseif teamCode <> 'int' then
-                set externePartijen = externePartijen + 1;
-            end if;
-            set totaalPunten = totaalPunten + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, tegenstander, resultaat);
-            fetch uitslagen into teamCode, tegenstander, resultaat;
-        end while;
-    close uitslagen;
-    if internePartijen = 0 and externePartijen = 0 then
-        return 0;
-	elseif internePartijen = 0 then
-        return externePartijen;
-    elseif afzeggingen > 10 then
-        return totaalPunten - (afzeggingen - 10) * 8;
-    else
-        return totaalPunten;
-    end if;
-end;
-$$
-
-delimiter ;
-
-set @seizoen = '1819';
-
-set @knsbNummer = 6212404; -- Peter van Diepen
-
--- simpele ranglijst
-select s.knsbNummer, naam, totaal(@seizoen, s.knsbNummer) as totaal
-from speler s
-join persoon p on s.knsbNummer = p.knsbNummer
-where seizoen = @seizoen
-order by totaal desc;
-
--- ranglijst
-select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, s.knsbNummer) as totalen
-from speler s
-join persoon p on s.knsbNummer = p.knsbNummer
-where seizoen = @seizoen
-order by totalen desc;
-
 drop function totalen;
 
 delimiter $$
@@ -234,28 +163,39 @@ begin
         set sorteer  = startPunten + totaal - aftrek;
     end if;
     return concat(
-        lpad(sorteer,3,'0'), ' ',
-        prijs, ' ',
-        winstIntern, ' ',
-        remiseIntern, ' ',
-        verliesIntern, ' ',
-        witIntern, ' ',
-        zwartIntern, ' ',
-        oneven, ' ',
-        afzeggingen, ' ',
-        aftrek, ' ',
-        totaal, ' ',
-        startPunten, ' ',
-        winstExtern, ' ',
-        remiseExtern, ' ',
-        verliesExtern, ' ',
-        witExtern, ' ',
-        zwartExtern);
+        lpad(sorteer,3,'0'), ' ', -- 0
+        prijs, ' ', -- 1
+        winstIntern, ' ', -- 2
+        remiseIntern, ' ', -- 3
+        verliesIntern, ' ', -- 4
+        witIntern, ' ', -- 5
+        zwartIntern, ' ', -- 6
+        oneven, ' ', -- 7
+        afzeggingen, ' ', -- 8
+        aftrek, ' ', -- 9
+        totaal, ' ', -- 10
+        startPunten, ' ', -- 11
+        winstExtern, ' ', -- 12
+        remiseExtern, ' ', -- 13
+        verliesExtern, ' ', -- 14
+        witExtern, ' ', -- 15
+        zwartExtern); -- 16
 
 end;
 $$
 
 delimiter ;
+
+set @seizoen = '1819';
+
+set @knsbNummer = 6212404; -- Peter van Diepen
+
+-- ranglijst
+select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, s.knsbNummer) as totalen
+from speler s
+         join persoon p on s.knsbNummer = p.knsbNummer
+where seizoen = @seizoen
+order by totalen desc;
 
 -- punten van alle uitslagen per speler
 select u.datum,

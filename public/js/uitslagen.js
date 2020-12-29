@@ -163,6 +163,20 @@ function wedstrijdUitslag(thuis, uit, remise) {
     }
 }
 
+function score(winst, remise, verlies) {
+    while (remise >= 2) {
+        winst += 1;
+        remise -= 2;
+    }
+    if (remise === 0) {
+        return winst + " / " + (winst + remise + verlies);
+    } else if (winst === 0) {
+        return REMISE + " / " + (winst + remise + verlies);
+    } else {
+        return winst + REMISE + " / " + (winst + remise + verlies);
+    }
+}
+
 async function seizoenen(seizoenSelecteren, teamCode) {
     await mapAsync("/seizoenen/" + teamCode,
         (team) => {
@@ -222,11 +236,19 @@ function ranglijst(kop, lijst) {
     kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen);
     mapAsync("/ranglijst/" + seizoen,
         (speler, i) => {
-            if (speler.totaal > 0) {
+            let totaal = speler.totalen.split(" ").map(Number);
+            if (totaal[0] > 0) {
                 lijst.appendChild(rij(
                     i + 1,
                     naarSpeler(speler.knsbNummer, speler.naam),
-                    speler.totaal));
+                    totaal[0],
+                    speler.subgroep,
+                    score(totaal[2],totaal[3],totaal[4]),
+                    totaal[5] - totaal[6],
+                    totaal[8],
+                    totaal[7] ? totaal[7] : "",
+                    score(totaal[12],totaal[13],totaal[14]),
+                    speler.knsbRating));
             }});
 }
 
