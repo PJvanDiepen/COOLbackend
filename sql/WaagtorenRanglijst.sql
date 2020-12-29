@@ -63,7 +63,7 @@ begin
 			set plus = - 4;
 		elseif tegenstander = 6 then -- reglementair verlies
 			set plus = - 12;
-		end if; -- extern of vrijgesteld
+		end if; -- tegenstander = 2 extern of tegenstander = 7 vrijgesteld
             return eigenWaardeCijfer + plus;
     end if;
 end;
@@ -82,6 +82,8 @@ begin
     declare maximumAfzeggingen int default 10; -- reglement artikel 12
     declare aftrek int default 0;
     declare minimumInternePartijen int default 20; -- reglement artikel 2
+    declare reglementairGewonnen int default 0;
+    declare externTijdensInterneRonde int default 0;
     declare prijs int default 1;
     declare sorteer int default 0;
     declare eigenWaardeCijfer int;
@@ -130,8 +132,12 @@ begin
                 end if;
             elseif tegenstander = 1  then
                 set oneven = oneven + 1;
+            elseif tegenstander = 2 then
+                set externTijdensInterneRonde = externTijdensInterneRonde + 1;
 			elseif tegenstander = 3 then
                 set afzeggingen = afzeggingen + 1;
+            elseif tegenstander in (5, 8) then
+                set reglementairGewonnen = reglementairGewonnen + 1;
             elseif tegenstander > 100 then
                 if resultaat = '1' then
 					set winstIntern = winstIntern + 1;
@@ -157,7 +163,7 @@ begin
 		if afzeggingen > maximumAfzeggingen then
 			set aftrek = (afzeggingen - maximumAfzeggingen) * 8;
 		end if;
-        if (witIntern + zwartIntern) < minimumInternePartijen then
+        if (witIntern + zwartIntern + oneven + reglementairGewonnen + externTijdensInterneRonde) < minimumInternePartijen then
 			set prijs = 0;
 		end if;
         set sorteer  = startPunten + totaal - aftrek;

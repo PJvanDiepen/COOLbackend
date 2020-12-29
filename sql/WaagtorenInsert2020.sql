@@ -1,3 +1,5 @@
+-- uitslagen seizoen 2020-2021 tot einde 2020
+
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden) values
 ('2021', '', '', '', 'geen team', '0'),
 ('2021', '1', 'k', '2?', 'KNSB 2?', '8'),

@@ -9,27 +9,12 @@ const Uitslag = require('./models/uitslag');
 const { fn, ref } = require('objection');  // TODO joinRelated ?
 
 module.exports = router => {
-  router.get('/personen', async ctx => { // TODO verwijderen?
-    ctx.body = await Persoon.query()
-  });
-
-  router.get('/persoon/:knsbNummer/', async ctx => { // TODO verwijderen?
-    ctx.body = await Persoon.query().findById(ctx.params.knsbNummer);
-  });
-
-  router.get('/spelers/:seizoen/', async ctx => { // TODO verwijderen?
+  router.get('/spelers/:seizoen/', async ctx => {
     ctx.body = await Speler.query()
         .select('speler.*', 'persoon.*')
         .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
         .where('speler.seizoen', '=', ctx.params.seizoen)
         .orderBy('naam');
-  });
-
-  router.get('/speler/:seizoen/:knsbNummer/', async ctx => { // TODO verwijderen?
-    ctx.body = await Speler.query()
-        .select('speler.*', 'persoon.*')
-        .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
-        .findById([ctx.params.seizoen, ctx.params.knsbNummer]);
   });
 
   router.get('/seizoenen/:teamCode', async ctx => {

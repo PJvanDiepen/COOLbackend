@@ -232,8 +232,32 @@ async function wedstrijden(wedstrijdenSelecteren) {
         });
 }
 
+/*
+In JSON staat knsbNummer, naam, subgroep, knsbRating en totalen
+
+In totalen staan de volgende kolommen:
+[0] sorteer (3 posities eventueel voorloopnullen)
+[1] prijs (0 = geen prijs, 1 = wel prijs)
+[2] winstIntern
+[3] remiseIntern
+[4] verliesIntern
+[5] witIntern
+[6] zwartIntern
+[7] oneven
+[8] afzeggingen
+[9] aftrek
+[10] totaal
+[11] startPunten
+[12] winstExtern
+[13] remiseExtern
+[14] verliesExtern
+[15] witExtern
+[16] zwartExtern)
+ */
+
 function ranglijst(kop, lijst) {
     kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen);
+    let winnaars = {};
     mapAsync("/ranglijst/" + seizoen,
         (speler, i) => {
             let totaal = speler.totalen.split(" ").map(Number);
@@ -241,8 +265,8 @@ function ranglijst(kop, lijst) {
                 lijst.appendChild(rij(
                     i + 1,
                     naarSpeler(speler.knsbNummer, speler.naam),
-                    totaal[0],
-                    speler.subgroep,
+                    totaal[0], //
+                    winnaarSubgroep(winnaars, speler.subgroep, totaal[1]),
                     score(totaal[2],totaal[3],totaal[4]),
                     totaal[5] - totaal[6],
                     totaal[8],
@@ -250,6 +274,17 @@ function ranglijst(kop, lijst) {
                     score(totaal[12],totaal[13],totaal[14]),
                     speler.knsbRating));
             }});
+}
+
+function winnaarSubgroep(winnaars, subgroep, prijs) {
+    if (winnaars[subgroep]) {
+        return subgroep;
+    } else if (prijs) {
+        winnaars[subgroep] = true;
+        return subgroep + "*";
+    } else {
+        return subgroep + "-"; // geen prijs
+    }
 }
 
 /*
