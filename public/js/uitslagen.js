@@ -164,16 +164,31 @@ function wedstrijdUitslag(thuis, uit, remise) {
 }
 
 function score(winst, remise, verlies) {
-    while (remise >= 2) {
-        winst += 1;
-        remise -= 2;
-    }
-    if (remise === 0) {
-        return winst + " / " + (winst + remise + verlies);
-    } else if (winst === 0) {
-        return REMISE + " / " + (winst + remise + verlies);
+    let partijen = winst + remise + verlies;
+    if (partijen) {
+        while (remise >= 2) {
+            winst += 1;
+            remise -= 2;
+        }
+        if (remise === 0) {
+            return winst + " / " + partijen;
+        } else if (winst === 0) {
+            return REMISE + " / " + partijen;
+        } else {
+            return winst + REMISE + " / " + partijen;
+        }
     } else {
-        return winst + REMISE + " / " + (winst + remise + verlies);
+        return "";
+    }
+
+}
+
+function percentage(winst, remise, verlies) {
+    let partijen = winst + remise + verlies;
+    if (partijen) {
+        return (100 * (winst + remise / 2) / partijen).toFixed() + "%";
+    } else {
+        return "";
     }
 }
 
@@ -232,10 +247,31 @@ async function wedstrijden(wedstrijdenSelecteren) {
         });
 }
 
-/*
-In JSON staat knsbNummer, naam, subgroep, knsbRating en totalen
+function ranglijst(kop, lijst) {
+    kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen);
+    let winnaars = {};
+    mapAsync("/ranglijst/" + seizoen,
+        (speler, i) => {
+            let t = totalen(speler.totalen);
+            if (t.inRanglijst()) {
+                lijst.appendChild(rij(
+                    i + 1,
+                    naarSpeler(speler.knsbNummer, speler.naam),
+                    t.punten(),
+                    t.winnaarSubgroep(winnaars, speler.subgroep),
+                    t.scoreIntern(),
+                    t.percentageIntern(),
+                    t.saldoWitZwart(),
+                    t.afzeggingen(),
+                    t.oneven(),
+                    t.scoreExtern(),
+                    t.percentageExtern(),
+                    speler.knsbRating));
+            }});
+}
 
-In totalen staan de volgende kolommen:
+/*
+totaal
 [0] sorteer (3 posities eventueel voorloopnullen)
 [1] prijs (0 = geen prijs, 1 = wel prijs)
 [2] winstIntern
@@ -254,37 +290,71 @@ In totalen staan de volgende kolommen:
 [15] witExtern
 [16] zwartExtern)
  */
+function totalen(alleTotalen) {
+    let totaal = alleTotalen.split(" ").map(Number);
+    let intern = totaal[2] | totaal[3] | totaal[4];
 
-function ranglijst(kop, lijst) {
-    kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen);
-    let winnaars = {};
-    mapAsync("/ranglijst/" + seizoen,
-        (speler, i) => {
-            let totaal = speler.totalen.split(" ").map(Number);
-            if (totaal[0] > 0) {
-                lijst.appendChild(rij(
-                    i + 1,
-                    naarSpeler(speler.knsbNummer, speler.naam),
-                    totaal[0], //
-                    winnaarSubgroep(winnaars, speler.subgroep, totaal[1]),
-                    score(totaal[2],totaal[3],totaal[4]),
-                    totaal[5] - totaal[6],
-                    totaal[8],
-                    totaal[7] ? totaal[7] : "",
-                    score(totaal[12],totaal[13],totaal[14]),
-                    speler.knsbRating));
-            }});
-}
-
-function winnaarSubgroep(winnaars, subgroep, prijs) {
-    if (winnaars[subgroep]) {
-        return subgroep;
-    } else if (prijs) {
-        winnaars[subgroep] = true;
-        return subgroep + "*";
-    } else {
-        return subgroep + "-"; // geen prijs
+    function inRanglijst() {
+        return totaal[0] > 0;
     }
+
+    function punten() {
+        return intern ? totaal[0] : "";
+    }
+
+    function winnaarSubgroep(winnaars, subgroep) {
+        if (!intern) {
+            return "";
+        } else if (winnaars[subgroep]) {
+            return subgroep;
+        } else if (totaal[1]) {
+            winnaars[subgroep] = true;
+            return subgroep + "*";
+        } else {
+            return subgroep + "-"; // geen prijs
+        }
+    }
+
+    function scoreIntern() {
+        return score(totaal[2],totaal[3],totaal[4]);
+    }
+
+    function percentageIntern() {
+        return percentage(totaal[2],totaal[3],totaal[4]);
+    }
+
+    function saldoWitZwart() {
+        return intern ? totaal[5] - totaal[6] : "";
+    }
+
+    function afzeggingen() {
+        return intern ? totaal[8] : "";
+    }
+
+    function oneven() {
+        return totaal[7] ? totaal[7] : "";
+    }
+
+    function scoreExtern() {
+        return score(totaal[12],totaal[13],totaal[14]);
+    }
+
+    function percentageExtern() {
+        return percentage(totaal[12],totaal[13],totaal[14]);
+    }
+
+    return Object.freeze({ // Zie blz. 17.1 Douglas Crockford: How JavaScript Works
+        inRanglijst,
+        punten,
+        winnaarSubgroep,
+        scoreIntern,
+        percentageIntern,
+        saldoWitZwart,
+        afzeggingen,
+        oneven,
+        scoreExtern,
+        percentageExtern,
+    });
 }
 
 /*
@@ -338,9 +408,17 @@ function uitslagenRonde(kop, lijst) {
 const TIJDELIJK_LID_NUMMER = 100;
 const EXTERNE_WEDSTRIJD = 2;
 
+function startPunten(seizoen, speler) {
+    console.log("startpunten");
+    return 300;
+}
+
 function uitslagenSpeler(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), naam].join(SCHEIDING);
-    let totaal = 300; // TODO uit de MySQL database
+    let totaal = startPunten(seizoen, speler);
+    if (totaal) {
+        lijst.appendChild(rij("", "", "startpunten", "", "", "", totaal, totaal))
+    }
     let vorigeUitslag;
     mapAsync("/uitslagen/" + seizoen + "/" + speler,
         (uitslag) => {
@@ -370,6 +448,10 @@ kolommen in lijst
 7. punten
 8. voortschrijdend totaal
  */
+
+function ranglijstRij(tekst, punten, totaal) {
+    return ;
+}
 
 function internePartij(u, totaal) {
     let rondeKolom = naarRonde(u.rondeNummer, u);
