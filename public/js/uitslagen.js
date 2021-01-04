@@ -1,23 +1,14 @@
 "use strict";
 
-/*
-const
-- webPage
-- api
-- params
-- schaakVereniging
-- seizoen
-
-doorgeven:
-- schaakVereniging
-- seizoen
- */
-
 const pagina = new URL(location);
 const api = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 const schaakVereniging = doorgeven("schaakVereniging");
 const seizoen = doorgeven("seizoen");
+const teamCode = doorgeven("team");
+const speler = doorgeven("speler"); // knsbNummer
+const naam = doorgeven("naam");
+const rondeNummer = doorgeven("ronde");
 
 const INTERNE_COMPETITIE = "int";
 const SCHEIDING = " » ";
@@ -95,8 +86,7 @@ function naarSpeler(knsbNummer, naam) {
 }
 
 function naarRonde(tekst, u) {
-    let datum = datumLeesbaar(u.datum);
-    return href(`ronde.html?ronde=${u.rondeNummer}&datum=${datum}`, tekst);
+    return href(`ronde.html?ronde=${u.rondeNummer}`, tekst);
 }
 
 function naarTeam(u) {
@@ -231,24 +221,10 @@ async function ronden(rondeSelecteren, teamCode) {
         (ronde) => {
             rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
-    rondeSelecteren.value = rondeNummer; // werkt uitsluitend na await
+    rondeSelecteren.value = rondeNummer ? rondeNummer : 1; // werkt uitsluitend na await
     rondeSelecteren.addEventListener("input",
         () => {
-            sessionStorage.setItem("ronde", rondeSelecteren.value);
-            naarZelfdePagina();
-        });
-}
-
-async function wedstrijden(wedstrijdenSelecteren) {
-    await mapAsync("/wedstrijden/" + seizoen,
-        (r) => {
-            wedstrijdenSelecteren.appendChild(option(r.teamCode + ":" + r.rondeNummer, datumLeesbaar(r.datum) + SCHEIDING + wedstrijdVoluit(r)));
-        });
-    wedstrijdenSelecteren.appendChild(option(0,wedstrijdenSelecteren.length + " externe wedstrijden"))
-    wedstrijdenSelecteren.value = 0; // werkt uitsluitend na await
-    wedstrijdenSelecteren.addEventListener("input",
-        () => {
-            console.log("wedstrijdenSelecteren: " + wedstrijdenSelecteren.value);
+            naarAnderePagina("ronde.html?ronde=" + rondeSelecteren.value);
         });
 }
 
@@ -284,7 +260,6 @@ function ranglijst(kop, lijst) {
 }
 
 async function totalenSpeler(seizoen, knsbNummer) {
-    console.log("totalenSpeler: " + knsbNummer + " " + (typeof knsbNummer));
     let alleTotalen;
     await findAsync("/ranglijst/" + seizoen,
         (speler) => {
@@ -317,18 +292,21 @@ totaal
  */
 function totalen(alleTotalen) {
     let totaal = alleTotalen.split(" ").map(Number);
-    let intern = totaal[2] | totaal[3] | totaal[4];
+
+    function intern() {
+        return totaal[2] || totaal[3] || totaal[4];
+    }
 
     function inRanglijst() {
         return totaal[0] > 0;
     }
 
     function punten() {
-        return intern ? totaal[0] : "";
+        return intern() ? totaal[0] : "";
     }
 
     function winnaarSubgroep(winnaars, subgroep) {
-        if (!intern) {
+        if (!intern()) {
             return "";
         } else if (winnaars[subgroep]) {
             return subgroep;
@@ -349,7 +327,7 @@ function totalen(alleTotalen) {
     }
 
     function saldoWitZwart() {
-        return intern ? totaal[5] - totaal[6] : "";
+        return intern() ? totaal[5] - totaal[6] : "";
     }
 
     function oneven() {
@@ -377,6 +355,7 @@ function totalen(alleTotalen) {
     }
 
     return Object.freeze({ // Zie blz. 17.1 Douglas Crockford: How JavaScript Works
+        intern,
         inRanglijst,
         punten,
         winnaarSubgroep,
@@ -407,7 +386,7 @@ function totalen(alleTotalen) {
   order by uitslag.seizoen, uitslag.bordNummer;
    */
 function uitslagenRonde(kop, lijst) {
-    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), "ronde "+ rondeNummer].join(SCHEIDING);
+    kop.innerHTML = "Ronde " + rondeNummer;
     mapAsync("/ronde/" + seizoen + "/" + rondeNummer,
         (uitslag) => {
             lijst.appendChild(rij(
@@ -415,6 +394,27 @@ function uitslagenRonde(kop, lijst) {
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
                 uitslag.resultaat === "1" ? "1-0" : uitslag.resultaat === "0" ? "0-1" : "½-½"));
         });
+}
+
+async function wedstrijdenBijRonde(kop, lijst) {
+    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), "ronde " + rondeNummer].join(SCHEIDING);
+    let wedstrijden = [];
+    await findAsync("/wedstrijden/" + seizoen,
+        (r) => {
+            if (r.teamCode === INTERNE_COMPETITIE && r.rondeNummer == rondeNummer) {
+                wedstrijden.push(r); // deze interne ronde is de laatste
+                return true;
+            } else if (r.teamCode === INTERNE_COMPETITIE) {
+                wedstrijden = []; // de externe wedstrijden vanaf deze interne ronde
+            } else {
+                wedstrijden.push(r);
+            }
+        });
+    for (let r of wedstrijden) {
+        let wedstrijd = r.teamCode === INTERNE_COMPETITIE ? ("interne competitie ronde " + rondeNummer) : wedstrijdVoluit(r);
+        lijst.appendChild(rij(datumLeesbaar(r.datum), wedstrijd));
+
+    }
 }
 
 /*
@@ -440,19 +440,26 @@ function uitslagenRonde(kop, lijst) {
   order by u.datum, u.bordNummer;
   */
 
+const AFGEZEGD = 3;
 const TIJDELIJK_LID_NUMMER = 100;
 const EXTERNE_WEDSTRIJD = 2;
 
 async function uitslagenSpeler(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), naam].join(SCHEIDING);
     let t = await totalenSpeler(seizoen, speler);
-    let totaal = t.startPunten();
-    lijst.appendChild(rij("", "", "startpunten", "", "", "", totaal, totaal))
+    let totaal = t.intern() ? t.startPunten() : "";
+    if (t.intern()) {
+        lijst.appendChild(rij("", "", "startpunten", "", "", "", totaal, totaal));
+    }
     let vorigeUitslag;
     await mapAsync("/uitslagen/" + seizoen + "/" + speler,
         (uitslag) => {
-            totaal += uitslag.punten;
-            if (uitslag.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
+            if (t.intern()) {
+                totaal += uitslag.punten;
+            }
+            if (!t.intern() && uitslag.tegenstanderNummer === AFGEZEGD) {
+                // deze uitslag overslaan TODO deze uitslag verwijderen
+            } else if (uitslag.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
                 lijst.appendChild(internePartij(uitslag, totaal));
             } else if (uitslag.teamCode === INTERNE_COMPETITIE && uitslag.tegenstanderNummer === EXTERNE_WEDSTRIJD) {
                 vorigeUitslag = uitslag; // deze uitslag overslaan en combineren met volgende uitslag

@@ -15,6 +15,7 @@
 </head>
 <body>
     <h1 id="kop">Ranglijst</h1>
+    <select id="rondeSelecteren" class = "rechts"></select>
     <select id="teamSelecteren" class = "rechts"></select>
     <select id="seizoenSelecteren" class = "rechts"></select>
     <table id="tabel">
@@ -34,12 +35,11 @@
         </tr>
     </table>
     <p></p>
-    <select id="wedstrijdSelecteren" class = "rechts"></select>
     <script src="js/uitslagen.js"></script>
     <script>
         seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
         teams(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
-        wedstrijden(document.getElementById("wedstrijdSelecteren"));
+        ronden(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE);
         ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>
