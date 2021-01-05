@@ -43,6 +43,9 @@ insert into ronde (seizoen, teamCode, rondeNummer, compleet, uithuis, tegenstand
 ('2021', 'int', '33', '', 't', '', 'Alkmaar', '2021-05-25');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2021', 'int', '1', '0', '8587337', '', '3', '', '2020-08-25', 'int'),
+('2021', 'int', '1', '0', '7809285', '', '3', '', '2020-08-25', 'int'),
+('2021', 'int', '1', '0', '102', '', '3', '', '2020-08-25', 'int'),
 ('2021', 'int', '1', '0', '101', '', '3', '', '2020-08-25', 'int'),
 ('2021', 'int', '1', '10', '103', 'z', '7321534', '0', '2020-08-25', 'int'),
 ('2021', 'int', '1', '11', '107', 'w', '7691728', '0', '2020-08-25', 'int'),

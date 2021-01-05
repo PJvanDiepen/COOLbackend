@@ -216,15 +216,18 @@ async function teams(teamSelecteren, teamCode) {
         });
 }
 
-async function ronden(rondeSelecteren, teamCode) {
+async function ronden(rondeSelecteren, teamCode, rondeNummer) {
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
         (ronde) => {
             rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
-    rondeSelecteren.value = rondeNummer ? rondeNummer : 1; // werkt uitsluitend na await
+    rondeSelecteren.appendChild(option(0, rondeSelecteren.length + " ronden"))
+    rondeSelecteren.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
     rondeSelecteren.addEventListener("input",
         () => {
-            naarAnderePagina("ronde.html?ronde=" + rondeSelecteren.value);
+            if (rondeSelecteren.value) {
+                naarAnderePagina("ronde.html?ronde=" + rondeSelecteren.value);
+            }
         });
 }
 
