@@ -26,6 +26,8 @@ Interessant
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [Symbols and why they're awesome](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/)
 - [How to debug websites on Android with different browsers?](https://www.javacodegeeks.com/2021/01/how-to-debug-websites-on-android-with-different-browsers.html)
+- [The Import On Interaction Pattern](https://addyosmani.com/blog/import-on-interaction/)
+- [From Callback Hell to Callback Heaven](https://dev.to/loreanvictor/from-callback-hell-to-callback-heaven-4i0c)
 
 Later:
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)

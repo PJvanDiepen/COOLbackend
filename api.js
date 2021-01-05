@@ -175,6 +175,7 @@ module.exports = router => {
   router.get('/wedstrijden/:seizoen', async ctx => {
     ctx.body = await Ronde.query()
         .where('ronde.seizoen', '=', ctx.params.seizoen)
+        .andWhere('ronde.teamCode','<>', 'int')
         .orderBy('ronde.datum', 'ronde.teamCode');
   });
 }

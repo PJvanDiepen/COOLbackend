@@ -251,7 +251,7 @@ function ranglijst(kop, lijst) {
                     t.scoreIntern(),
                     t.percentageIntern(),
                     t.saldoWitZwart(),
-                    t.afzeggingen(),
+                    t.intern() ? t.afzeggingen() : "", // TODO afzeggingen verwijderen indien geen interne partijen
                     t.oneven(),
                     t.scoreExtern(),
                     t.percentageExtern(),
@@ -398,22 +398,24 @@ function uitslagenRonde(kop, lijst) {
 
 async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), "ronde " + rondeNummer].join(SCHEIDING);
-    let wedstrijden = [];
-    await findAsync("/wedstrijden/" + seizoen,
-        (r) => {
-            if (r.teamCode === INTERNE_COMPETITIE && r.rondeNummer == rondeNummer) {
-                wedstrijden.push(r); // deze interne ronde is de laatste
-                return true;
-            } else if (r.teamCode === INTERNE_COMPETITIE) {
-                wedstrijden = []; // de externe wedstrijden vanaf deze interne ronde
-            } else {
-                wedstrijden.push(r);
+    let ronden = await localFetch("/ronden/" + seizoen + "/int");
+    let dezeDatum = ronden[rondeNummer - 1].datum;
+    await mapAsync("/wedstrijden/" + seizoen,
+        (wedstrijd) => {
+            if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
+                lijst.appendChild(rij(datumLeesbaar(wedstrijd.datum), naarTeam(wedstrijd)));
             }
         });
-    for (let r of wedstrijden) {
-        let wedstrijd = r.teamCode === INTERNE_COMPETITIE ? ("interne competitie ronde " + rondeNummer) : wedstrijdVoluit(r);
-        lijst.appendChild(rij(datumLeesbaar(r.datum), wedstrijd));
+    lijst.appendChild(rij(datumLeesbaar(dezeDatum), "interne competitie ronde " + rondeNummer));
+}
 
+function wedstrijdBijRonde(datum, ronden) {
+    if (rondeNummer == 1) {
+        return datum <= ronden[0].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
+    } else if (rondeNummer === ronden.length) {
+        return datum > ronden[rondeNummer - 2].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
+    } else {
+        return datum > ronden[rondeNummer - 2].datum && datum <= ronden[rondeNummer - 1].datum;
     }
 }
 
