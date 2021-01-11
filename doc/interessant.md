@@ -4,6 +4,10 @@ Nuttig
 - [async await jason](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
 - [Introduction common.js](https://eng.wealthfront.com/2015/06/16/an-introduction-to-commonjs/)
+- [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
+- [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
+- [Why is learning JavaScript so hard?](https://www.quora.com/Why-is-learning-JavaScript-so-hard)
+
 
 Objection / Knex
 - [MySQL Stored Procedures That Return Multiple Values](https://www.mysqltutorial.org/mysql-stored-procedures-return-multiple-values/)

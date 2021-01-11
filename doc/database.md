@@ -1,7 +1,7 @@
 # Database
 Er is een MySQL database per schaakvereniging met de volgende tabellen:
-- `Ranglijst` berekenen van de ranglijst van de interne competitie per seizoen
-- `Persoon` leden van de schaakvereniging
+- `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie
+- `Persoon` leden van de schaakvereniging en eventueel van tegenstanders in de externe competitie
 - `Seizoen` seizoensgegevens van de schaakvereniging 
 - `Speler` spelers per seizoen
 - `Team` teams of interne competitie (`teamCode = 'int'`) per seizoen
@@ -13,34 +13,34 @@ vanuit de Online Leden Administratie (OLA) van de KNSB naar `Persoon` en `Speler
 vanuit Rokade, het informatiesysteem voor de interne competitie naar `Ronde` en `Uitslag` en
 vanuit de KNSB en de NHSB websites voor de externe competitie naar `Team`, `Ronde` en `Uitslag`.
 
-## Ranglijst
+## Reglement
 De ranglijst van de Waagtoren wordt berekend volgens het [Alkmaar Systeem](https://www.waagtoren.nl/historie/alksys.html) 
 door middel van stored procedures / functions in MySQL. 
 Omdat het reglement van de interne competie per seizoen kan verschillen en 
 omdat het nuttig is om te kunnen experimenteren met aanpassingen van het reglement 
-willen we verschillende versies van parameters en formules voor de berekening van de ranglijst vastleggen in `Ranglijst`.
-De verwerking voor de ranglijst berekening is dan als volgt: de juiste versie inlezen uit `Ranglijst`, 
+willen we verschillende versies van parameters en formules voor de berekening van de ranglijst vastleggen in `Reglement`.
+De verwerking voor de ranglijst berekening is dan als volgt: de juiste versie inlezen uit `Reglement`, 
 de stored procedures / functions in MySQL installeren en vervolgens zo ongeveer alle tabellen verwerken per seizoen.
 
 Hoe de backend ranglijsten maakt, is dus helemaal in de database vastgelegd en niet in de JavaScript code van de backend.
-Op deze manier gaan we, behalve het Alkmaar Systeem, ook het Keizer Systeem en Zwitsers Systeem in `Ranglijst` coderen.
+Op deze manier gaan we, behalve het Alkmaar Systeem, ook het Keizer Systeem en Zwitsers Systeem in `Reglement` coderen.
 Elke schaakvereniging kan dus eventueel per seizoen haar eigen reglement voor de interne competitie 
-vastleggen in `Ranglijst`. Ons doel is dat wedstrijdleiders zelf wedstrijdsystemen kunnen aanpassen en ermee kunnen experimenteren.
+vastleggen in `Reglement`. Ons doel is dat wedstrijdleiders zelf wedstrijdsystemen kunnen aanpassen en ermee kunnen experimenteren.
 
 Voor het indelen van wie tegen wie in de interne competitie gelden ook allerlei regels,
 die per wedstrijdsysteem, per schaakvereniging en per seizoen kunnen verschillen.
-Daarom willen we ook die vastleggen in `Ranglijst` en niet in de JavaScript code van de backend.
+Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de backend.
 
 De database moet een lijst van alle mogelijke partijen produceren
 waaruit de indeling van een ronde wordt gemaakt door software (backend of frontend) 
 eventueel met interactie van een gebruiker.
 
-De specificaties van de `Ranglijst` tabel ontbreken nog. 
+De specificaties van de `Reglement` tabel ontbreken nog. 
 
-Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de database van de Waagtoren, maar nog niet in `Ranglijst`:
+Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de database van de Waagtoren, maar nog niet in `Reglement`:
 - `waardeCijfer()` van een speler op basis van de `knsbRating` van 1 augustus aan het begin van het `seizoen` 
 - `punten()` per `Uitslag`
-- `totaal()` van punten per speler op basis van alle uitslagen van een `seizoen`    
+- `totalen()` van punten en andere totalen per speler op basis van alle uitslagen van een `seizoen`    
  
 ## Persoon
 Voorlopig zijn dit de specificaties van `Persoon`:
@@ -56,7 +56,7 @@ de Online Leden Administratie van de KNSB.
 Voor uitslagen en ranglijsten is `naam` voldoende. 
 Andere persoonsgegevens staan in OLA en worden beheerd door de secretaris en de penningmeester en niet door de wedstrijdleider.
 
-In `Persoon` staan uitsluitend leden van de eigen schaakvereniging.
+In `Persoon` staan voorlopig uitsluitend leden van de eigen schaakvereniging.
 Tegenstanders in de externe competitie hebben `knsbNummer = 2` en `naam = 'extern'`. 
 Dit systeem kan daarom wel complete uitslagen lijsten produceren van de interne competitie, 
 maar de bij uitslagen van externe competitie staat uitsluitend de `naam` van de eigen speler, bordnummer, kleur, resultaat en
@@ -90,7 +90,7 @@ Voorlopig is er 1 database van de Waagtoren met 3 seizoenen: 2018-2019, 2019-202
 Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`, `seizoen = '1920` en `seizoen = '2021'`.
 
 Elk seizoen krijgt een verwijzing naar de juiste versie van parameters en formules 
-voor de berekening van de ranglijst in `Ranglijst`. 
+voor de berekening van de ranglijst in `Reglement`. 
 Bij elk seizoen van een schaakvereniging hoort een aantal spelers en een aantal teams in de interne en externe competitie.
 Zie verder bij `Speler` en `Team`.
 

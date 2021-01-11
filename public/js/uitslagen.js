@@ -60,7 +60,7 @@ function option(value, text) {
 
 function rij(...kolommen) {
     let tr = document.createElement("tr");
-    kolommen.map((kolom) => {
+    kolommen.map(function (kolom) {
         let td = document.createElement("td");
         if (kolom.nodeType === Node.ELEMENT_NODE) {
             td.appendChild(kolom);
@@ -189,12 +189,12 @@ function percentage(winst, remise, verlies) {
 
 async function seizoenen(seizoenSelecteren, teamCode) {
     await mapAsync("/seizoenen/" + teamCode,
-        (team) => {
+        function (team) {
             seizoenSelecteren.appendChild(option(team.seizoen, seizoenVoluit(team.seizoen)));
         });
     seizoenSelecteren.value = seizoen; // werkt uitsluitend na await
     seizoenSelecteren.addEventListener("input",
-        () => {
+        function () {
             sessionStorage.setItem("seizoen", seizoenSelecteren.value);
             naarZelfdePagina();
         });
@@ -202,12 +202,12 @@ async function seizoenen(seizoenSelecteren, teamCode) {
 
 async function teams(teamSelecteren, teamCode) {
     await mapAsync("/teams/" + seizoen,
-        (team) => {
+        function (team) {
             teamSelecteren.appendChild(option(team.teamCode, teamVoluit(team.teamCode)));
         });
     teamSelecteren.value = teamCode; // werkt uitsluitend na await
     teamSelecteren.addEventListener("input",
-        () => {
+        function () {
             if (teamSelecteren.value === INTERNE_COMPETITIE) {
                 naarAnderePagina("ranglijst.html");
             } else {
@@ -218,13 +218,13 @@ async function teams(teamSelecteren, teamCode) {
 
 async function ronden(rondeSelecteren, teamCode, rondeNummer) {
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
-        (ronde) => {
+        function (ronde) {
             rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
     rondeSelecteren.appendChild(option(0, rondeSelecteren.length + " ronden"))
     rondeSelecteren.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
     rondeSelecteren.addEventListener("input",
-        () => {
+        function () {
             if (rondeSelecteren.value) {
                 naarAnderePagina("ronde.html?ronde=" + rondeSelecteren.value);
             }
@@ -243,7 +243,7 @@ function ranglijst(kop, lijst) {
     kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen);
     let winnaars = {};
     mapAsync("/ranglijst/" + seizoen,
-        (speler, i) => {
+        function (speler, i) {
             let t = totalen(speler.totalen);
             if (t.inRanglijst()) {
                 lijst.appendChild(rij(
@@ -265,7 +265,7 @@ function ranglijst(kop, lijst) {
 async function totalenSpeler(seizoen, knsbNummer) {
     let alleTotalen;
     await findAsync("/ranglijst/" + seizoen,
-        (speler) => {
+        function (speler) {
             if (speler.knsbNummer === Number(knsbNummer)) { // knsbNummer blijkt string
                 alleTotalen = speler.totalen;
                 return true; // stop findAsync()
@@ -391,7 +391,7 @@ function totalen(alleTotalen) {
 function uitslagenRonde(kop, lijst) {
     kop.innerHTML = "Ronde " + rondeNummer;
     mapAsync("/ronde/" + seizoen + "/" + rondeNummer,
-        (uitslag) => {
+        function (uitslag) {
             lijst.appendChild(rij(
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
@@ -404,7 +404,7 @@ async function wedstrijdenBijRonde(kop, lijst) {
     let ronden = await localFetch("/ronden/" + seizoen + "/int");
     let dezeDatum = ronden[rondeNummer - 1].datum;
     await mapAsync("/wedstrijden/" + seizoen,
-        (wedstrijd) => {
+        function (wedstrijd) {
             if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
                 lijst.appendChild(rij(datumLeesbaar(wedstrijd.datum), naarTeam(wedstrijd)));
             }
@@ -458,7 +458,7 @@ async function uitslagenSpeler(kop, lijst) {
     }
     let vorigeUitslag;
     await mapAsync("/uitslagen/" + seizoen + "/" + speler,
-        (uitslag) => {
+        function (uitslag) {
             if (t.intern()) {
                 totaal += uitslag.punten;
             }
@@ -544,7 +544,7 @@ order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
 
 async function uitslagenTeam(kop, rondenTabel) {
     await findAsync("/teams/" + seizoen,
-        (team) => {
+        function (team) {
             if (team.teamCode === teamCode) {
                 kop.innerHTML = [wedstrijdTeam(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
                 return true;
@@ -552,11 +552,11 @@ async function uitslagenTeam(kop, rondenTabel) {
         });
     let rondeUitslagen = [];
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
-        (ronde) => {
+        function (ronde) {
             rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, verlies: 0, remise: 0, uitslagen: []};
         });
     await mapAsync("/team/" + seizoen + "/" + teamCode,
-        (u) => {
+        function (u) {
             let rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
             if (u.resultaat === WINST) {
                 rondeUitslag.winst += 1;
