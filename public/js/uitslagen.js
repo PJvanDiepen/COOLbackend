@@ -494,23 +494,23 @@ kolommen in lijst
  */
 
 function internePartij(u, totaal) {
-    let rondeKolom = naarRonde(u.rondeNummer, u);
-    let datumKolom = naarRonde(datumLeesbaar(u.datum), u);
-    let tegenstanderKolom = naarSpeler(u.tegenstanderNummer, u.naam);
+    const rondeKolom = naarRonde(u.rondeNummer, u);
+    const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
+    const tegenstanderKolom = naarSpeler(u.tegenstanderNummer, u.naam);
     return rij(rondeKolom, datumKolom, tegenstanderKolom, "", u.witZwart, u.resultaat, u.punten, totaal);
 }
 
 function geenPartij(u, totaal) {
-    let rondeKolom = naarRonde(u.rondeNummer, u);
-    let datumKolom = naarRonde(datumLeesbaar(u.datum), u);
+    const rondeKolom = naarRonde(u.rondeNummer, u);
+    const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
     return rij(rondeKolom, datumKolom, u.naam, "", "", "", u.punten, totaal);
 }
 
 function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {
-    let rondeKolom = naarRonde(vorigeUitslag.rondeNummer, vorigeUitslag);
-    let datumKolom = naarRonde(datumLeesbaar(u.datum), vorigeUitslag);
-    let tegenstanderKolom = naarTeam(u);
-    let puntenKolom = vorigeUitslag.punten + u.punten;
+    const rondeKolom = naarRonde(vorigeUitslag.rondeNummer, vorigeUitslag);
+    const datumKolom = naarRonde(datumLeesbaar(u.datum), vorigeUitslag);
+    const tegenstanderKolom = naarTeam(u);
+    const puntenKolom = vorigeUitslag.punten + u.punten;
     return rij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
 }
 
