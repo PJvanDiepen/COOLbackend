@@ -11,22 +11,33 @@
     </style>
 </head>
 <body>
-    <h1>Tweede Kamerverkiezingen</h1>
-    <lu>
-        <li>
-            <a href="tk.html?VVD=33&PVV=20&CDA=19&D66=19&GL=14&SP=14&PvdA=9&CU=5&PvdD=5&50plus=4&SGP=3&Denk=3&FvD=2"
-               >Tweede Kamerverkiezing 2017
-            </a>
-        </li>
-        <li>
-            <a href="tk.html?VVD=39&PVV=19&CDA=17&D66=15&GL=11&SP=10&PvdA=13&CU=6&PvdD=6&50plus=3&SGP=3&Denk=2&FvD=4&Bij1=0&JA21=1&CodeOranje=0&Volt=1"
-            >Tweede Kamerverkiezing 2021 (peiling 9 maart)</a>
-        </li>
-    </lu>
-    <h2>Zetels per partij</h2>
+    <h1>Tweede Kamer Verkiezingen</h1>
+    <figure id="plaatje" class="rechts">
+        <h2 id="kabinet"></h2>
+    </figure>
+    <p id="jaren">
+        Klik op een jaar:
+    </p>
+    <h2 id="kop" >Zetels per partij</h2>
     <table id="lijsten"></table>
     <h2>Meerderheidskabinetten</h2>
-    <table id="kabinetten"></table>
+    <table id="kabinetten">
+        <tr>
+            <th></th>
+            <th></th>
+            <th>partijen</th>
+            <th>zetels</th>
+        </tr>
+    </table>
     <script src="js/tk.js"></script>
+    <script>
+        verkiezingsJaren(document.getElementById("jaren"));
+        uitslagenVerwerken(
+            document.getElementById("kabinet"),
+            document.getElementById("plaatje"),
+            document.getElementById("kop"),
+            document.getElementById("lijsten"));
+        kabinetFormeren(document.getElementById("kabinetten"))
+    </script>
 </body>
 </html>
