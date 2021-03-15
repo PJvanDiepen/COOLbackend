@@ -19,24 +19,15 @@ const tk = [
     },
     {jaar: 2021,
         zetels: "VVD=39&PVV=19&CDA=17&D66=15&GL=11&SP=10&PvdA=13&CU=6&PvdD=6&50plus=3&SGP=3&Denk=2&FvD=4&Bij1=0&JA21=1&CodeOranje=0&Volt=1",
-        kabinet: "Partijen",
-        coalitie: "klik voor peilingwijzer",
+        kabinet: "Peiling",
+        coalitie: "peilingwijzer",
         breed: 600,
         hoog: 430,
         link: "https://peilingwijzer.tomlouwerse.nl/p/laatste-cijfers.html"
     }
 ]
 
-console.log(tk);
-const pagina = new URL(location);
-console.log(pagina.search);
-
-const uitslagen = new URLSearchParams(pagina.search);
-const lijsten = [];
-let jaar = 0;
-const kabinetten = [];
-
-function verkiezingsJaren(jaren) {
+function jarenVerwerken(jaren) {
     let komma = " ";
     for (const verkiezing of tk) {
         jaren.appendChild(htmlLink("tk.html?jaar=" + verkiezing.jaar, komma + verkiezing.jaar));
@@ -44,43 +35,54 @@ function verkiezingsJaren(jaren) {
     }
 }
 
+const pagina = new URL(location);
+const params = new URLSearchParams(pagina.search);
+const jaar = jaarVerwerken();
+console.log(jaar);
+
+function jaarVerwerken() {
+    const jaar = Number(params.get("jaar"));
+    if (jaar) {
+        sessionStorage.clear();
+        sessionStorage.setItem("jaar", jaar);
+        return jaar;
+    }
+    return sessionStorage.getItem("jaar") || tk[tk.length - 1].jaar;
+}
+
+function klikVerwerken() {
+    const partij = params.get("klik");
+    if (sessionStorage.getItem(partij)) {
+        sessionStorage.removeItem(partij);
+    } else {
+        sessionStorage.setItem(partij,"klik");
+    }
+}
+
+const lijsten = [];
+const kabinetten = [];
+
 function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
-    for (const [key, value] of uitslagen) {
-        if (key.startsWith("_")) {
-            laatsteTweedeKamerVerkiezingen(kop, deLijsten);
-            break;
-        } else if (key === "jaar") {
-            jaar = Number(value);
-        } else if (key === "klik") {
-            lijsten[lijsten.indexOf(value)].wel = partijDoetMee(value);
-        } else {
-            const wel  = Number(value) > 1;
-            lijsten.push({partij: key, zetels: Number(value), wel: wel, coalitie: false});
-        }
+    let i= 0;
+    while (jaar > tk[i].jaar) {
+        i++;
+    }
+    kop.innerHTML = "Zetels per partij in " + jaar;
+    kabinet.appendChild(htmlLink(tk[i].link, tk[i].kabinet+": "+tk[i].coalitie, true));
+    plaatje.appendChild(htmlPlaatje("images/tk/"+tk[i].kabinet+".jpg", tk[i].breed, tk[i].hoog));
+    const uitslagen = new URLSearchParams(tk[i].zetels);
+    for (const [partij, zetels] of uitslagen) {
+        console.log(partij + " = " + zetels);
+        const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
+        lijsten.push({partij: partij, zetels: Number(zetels), wel: wel, coalitie: false});
     }
     let nummer = 0;
     for (const lijst of lijsten) {
-        deLijsten.appendChild(htmlRij(++nummer, lijst.partij, lijst.zetels, lijst.wel ? " ✔ " : " - ")); // TODO klik
-    }
-}
-
-function laatsteTweedeKamerVerkiezingen(kop, deLijsten) {
-    kabinet.appendChild(htmlLink("https://nl.wikipedia.org/wiki/Kabinet-Rutte_III", "Rutte3: VVD, CDA, D66, CU", true));
-    plaatje.appendChild(htmlPlaatje("images/tk/Rutte3.jpg", 830, 553));
-    deLijsten.appendChild(htmlRij("klik op een jaar"));
-}
-
-function klik(knsbNummer, naam) {
-    return htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
-}
-
-function partijDoetMee(partij) {
-    if (sessionStorage.getItem(partij)) {
-        sessionStorage.removeItem(partij);
-        return false;
-    } else {
-        sessionStorage.setItem(partij);
-        return true;
+        deLijsten.appendChild(htmlRij(
+            ++nummer,
+            lijst.partij,
+            lijst.zetels,
+            htmlLink("tk.html?klik=" + lijst.partij, lijst.wel ? "✔" : "_")));
     }
 }
 
@@ -106,7 +108,7 @@ function kabinetFormeren(deKabinetten) {
 function kabinet(vanaf, coalitieZetels) {
     if (coalitieZetels < 76) {
         while (vanaf < lijsten.length) {
-            if (lijsten[vanaf].zetels > 1) {
+            if (lijsten[vanaf].wel) {
                 lijsten[vanaf].coalitie = true;
                 kabinet(vanaf + 1, coalitieZetels + lijsten[vanaf].zetels);
                 lijsten[vanaf].coalitie = false;
@@ -124,18 +126,15 @@ function kabinet(vanaf, coalitieZetels) {
     }
 }
 
-function htmlOptie(value, text) {
-    const option = document.createElement("option");
-    option.value = value;
-    option.text = text;
-    return option;
-}
-
 function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
         const td = document.createElement("td");
-        td.innerHTML = kolom;
+        if (kolom.nodeType === Node.ELEMENT_NODE) {
+            td.appendChild(kolom);
+        } else {
+            td.innerHTML = kolom;
+        }
         tr.appendChild(td);
     });
     return tr;
