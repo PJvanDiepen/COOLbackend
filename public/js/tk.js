@@ -70,7 +70,6 @@ function jarenVerwerken(jaren) {
 const pagina = new URL(location);
 const params = new URLSearchParams(pagina.search);
 const jaar = jaarVerwerken();
-console.log(jaar);
 
 function jaarVerwerken() {
     const jaar = Number(params.get("jaar"));
@@ -101,10 +100,9 @@ function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
     }
     kop.innerHTML = "Zetels per partij in " + jaar;
     kabinet.appendChild(htmlLink(tk[i].link, tk[i].kabinet+": "+tk[i].coalitie, true));
-    plaatje.appendChild(htmlPlaatje("images/tk/"+tk[i].kabinet+".jpg", tk[i].breed, tk[i].hoog));
+    plaatje.appendChild(htmlPlaatje("images/tk/"+tk[i].kabinet+".jpg", 50, tk[i].breed, tk[i].hoog));
     const uitslagen = new URLSearchParams(tk[i].zetels);
     for (const [partij, zetels] of uitslagen) {
-        console.log(partij + " = " + zetels);
         const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
         lijsten.push({partij: partij, zetels: Number(zetels), wel: wel, coalitie: false});
     }
@@ -185,10 +183,11 @@ function htmlLink(link, tekst, tabblad) {
     return a;
 }
 
-function htmlPlaatje(plaatje, breed, hoog) {
+function htmlPlaatje(plaatje, percentage, breed, hoog) {
     const img = document.createElement("img");
     img.src = plaatje;
-    img.width = breed;
-    img.height = hoog;
+    const factor = (window.innerWidth * percentage / 100) / breed; // percentage maximale breedte
+    img.width = Math.round(breed * factor);
+    img.height = Math.round(hoog * factor);
     return img;
 }
