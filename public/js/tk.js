@@ -1,6 +1,46 @@
 "use strict";
 
 const tk = [
+    {jaar: 1982,
+        zetels: "PvdA=47&CDA=45&VVD=36&D66=6&PSP=3&SGP=3&CPN=3&PPR=2&RPF=2&CP=1&GPV=1&EVP=1",
+        kabinet: "Lubbers1",
+        coalitie: "CDA, VVD",
+        breed: 738,
+        hoog: 476,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Lubbers_I"
+    },
+    {jaar: 1986,
+        zetels: "CDA=54&PvdA=52&VVD=27&D66=9&SGP=3&PPR=2&PSP=1&GPV=1&RPF=1",
+        kabinet: "Lubbers2",
+        coalitie: "CDA, PvdA",
+        breed: 1280,
+        hoog: 791,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Lubbers_II"
+    },
+    {jaar: 1989,
+        zetels: "CDA=54&PvdA=49&VVD=22&D66=12&GL=6&SGP=3&GPV=2&RPF=1&CD=1",
+        kabinet: "Lubbers3",
+        coalitie: "CDA, PvdA",
+        breed: 792,
+        hoog: 429,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Lubbers_III"
+    },
+    {jaar: 1994,
+        zetels: "PvdA=37&CDA=34&VVD=31&D66=24&AOV=6&GL=5&CD=3&RPF=3&SGP=2&GPV=2&SP=2&Unie55plus=1",
+        kabinet: "Kok1",
+        coalitie: "PvdA, VVD, D66",
+        breed: 1280,
+        hoog: 625,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Kok_I"
+    },
+    {jaar: 1998,
+        zetels: "PvdA=45&VVD=38&CDA=29&D66=14&GL=11&SP=5&RPF=3&SGP=3&GPV=2",
+        kabinet: "Kok2",
+        coalitie: "PvdA, VVD, D66",
+        breed: 429,
+        hoog: 317,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Kok_II"
+    },
     {jaar: 2002,
         zetels: "CDA=43&LPF=26&VVD=24&PvdA=23&GL=10&SP=9&D66=7&CU=4&SGP=2&LN=2",
         kabinet: "Balkenende1",
@@ -50,7 +90,7 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
     {jaar: 2021,
-        zetels: "VVD=39&PVV=19&CDA=17&D66=15&GL=11&SP=10&PvdA=13&CU=6&PvdD=6&50plus=3&SGP=3&Denk=2&FvD=4&Bij1=0&JA21=1&CodeOranje=0&Volt=1",
+        zetels: "VVD=35&PVV=20&CDA=17&D66=16&GL=11&SP=11&PvdA=12&CU=6&PvdD=6&50plus=2&SGP=3&Denk=2&FvD=4&Bij1=0&JA21=2&CodeOranje=0&Volt=3",
         kabinet: "Onbekend",
         coalitie: "peilingwijzer",
         breed: 600,
@@ -60,10 +100,11 @@ const tk = [
 ]
 
 function jarenVerwerken(jaren) {
-    let komma = " ";
+    const laatsteJaar = tk[tk.length - 1].jaar;
     for (const verkiezing of tk) {
-        jaren.appendChild(htmlLink("tk.html?jaar=" + verkiezing.jaar, komma + verkiezing.jaar));
-        komma = ", ";
+        jaren.appendChild(htmlLink(
+            "tk.html?jaar=" + verkiezing.jaar,
+            " " + verkiezing.jaar + (verkiezing.jaar < laatsteJaar ? "," : ".")));
     }
 }
 
@@ -107,13 +148,16 @@ function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
         lijsten.push({partij: partij, zetels: Number(zetels), wel: wel, coalitie: false});
     }
     let nummer = 0;
+    let kamer = 0;
     for (const lijst of lijsten) {
+        kamer = kamer + lijst.zetels;
         deLijsten.appendChild(htmlRij(
             ++nummer,
             lijst.partij,
             lijst.zetels,
             htmlLink("tk.html?klik=" + lijst.partij, lijst.wel ? "✔" : "_")));
     }
+    console.assert(kamer === 150, "kamer = " + kamer);
 }
 
 function kabinetFormeren(deKabinetten) {
@@ -187,6 +231,13 @@ function htmlPlaatje(plaatje, percentage, breed, hoog) {
     const img = document.createElement("img");
     img.src = plaatje;
     const factor = (window.innerWidth * percentage / 100) / breed; // percentage maximale breedte
+    if (factor > 1.0) {
+        img.width = breed;
+        img.height = hoog;
+    } else {
+        img.width = Math.round(breed * factor);
+        img.height = Math.round(hoog * factor);
+    }
     img.width = Math.round(breed * factor);
     img.height = Math.round(hoog * factor);
     return img;
