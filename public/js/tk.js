@@ -1,7 +1,111 @@
 "use strict";
 
 const tk = [
+    {jaar: 1956,
+        zetels: "PvdA=50&KVP=49&ARP=15&VVD=13&CHU=13&CPN=7&SGP=3",
+        kabinet: "Drees3",
+        coalitie: "PvdA, KVP, ARP, CHU",
+        breed: 732,
+        hoog: 555,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Drees_III"
+    },
+    {jaar: 1958,
+        zetels: "PvdA=50&KVP=49&ARP=15&VVD=13&CHU=13&CPN=7&SGP=3", // geen vk
+        kabinet: "Beel2",
+        coalitie: "KVP, ARP, CHU",
+        breed: 3243,
+        hoog: 2006,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Beel_II"
+    },
+    {jaar: 1959,
+        zetels: "KVP=50&PvdA=43&VVD=16&ARP=13&CHU=13&PSP=4&CPN=4&SGP=3&BP=3&GPV=1",
+        kabinet: "DeQuay",
+        coalitie: "KVP, VVD, ARP, CHU",
+        breed: 3064,
+        hoog: 1960,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-De_Quay"
+    },
+    {jaar: 1963,
+        zetels: "KVP=50&PvdA=43&VVD=16&ARP=13&CHU=13&PSP=4&CPN=4&SGP=3&BP=3&GPV=1",
+        kabinet: "Marijnen",
+        coalitie: "KVP, VVD, ARP, CHU",
+        breed: 3005,
+        hoog: 1737,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Marijnen"
+    },
+    {jaar: 1965,
+        zetels: "KVP=50&PvdA=43&VVD=16&ARP=13&CHU=13&PSP=4&CPN=4&SGP=3&BP=3&GPV=1", // geen tk
+        kabinet: "Cals",
+        coalitie: "KVP, PvdA, ARP",
+        breed: 768,
+        hoog: 582,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Cals"
+    },
+    {jaar: 1966,
+        zetels: "KVP=50&PvdA=43&VVD=16&ARP=13&CHU=13&PSP=4&CPN=4&SGP=3&BP=3&GPV=1", // geen tk
+        kabinet: "Zijlstra",
+        coalitie: "KVP, ARP",
+        breed: 901,
+        hoog: 452,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Zijlstra"
+    },
+    {jaar: 1967,
+        zetels: "KVP=42&PvdA=37&VVD=17&ARP=15&CHU=12&BP=7&D’66=7&CPN=5&PSP=4&SGP=3&GPV=1",
+        kabinet: "DeJong",
+        coalitie: "KVP, VVD, ARP, CHU",
+        breed: 3268,
+        hoog: 1636,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-De_Jong"
+    },
+    {jaar: 1971,
+        zetels: "PvdA=39&KVP=35&VVD=16&ARP=13&D’66=11&CHU=10&DS'70=8&CPN=6&SGP=3&PPR=2&GPV=2&NMP=2&PSP=2&BP=1",
+        kabinet: "Biesheuvel1",
+        coalitie: "KVP, VVD, ARP, CHU, DS'70",
+        breed: 3388,
+        hoog: 1624,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Biesheuvel_I"
+    },
+    {jaar: 1972,
+        zetels: "PvdA=39&KVP=35&VVD=16&ARP=13&D’66=11&CHU=10&DS'70=8&CPN=6&SGP=3&PPR=2&GPV=2&NMP=2&PSP=2&BP=1", // geen tk
+        kabinet: "Biesheuvel2",
+        coalitie: "KVP, VVD, ARP, CHU",
+        breed: 3684,
+        hoog: 2451,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Biesheuvel_II"
+    },
+    {jaar: 1972.1,
+        zetels: "PvdA=43&KVP=27&VVD=22&ARP=14&PPR=7&CHU=7&CPN=7&D’66=6&DS'70=6&SGP=3&BP=3&GPV=2&PSP=2&RKPN=1",
+        kabinet: "DenUyl",
+        coalitie: "PvdA, KVP, ARP, PPR, D'66",
+        breed: 2656,
+        hoog: 1234,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Den_Uyl"
+    },
+    {jaar: 1977,
+        zetels: "PvdA=53&CDA=49&VVD=28&D’66=8&SGP=3&PPR=3&CPN=2&GPV=1&PSP=1&BP=1&DS'70=1",
+        kabinet: "VanAgt1",
+        coalitie: "CDA, VVD",
+        breed: 2922,
+        hoog: 1887,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Van_Agt_I"
+    },
+    {jaar: 1981,
+        zetels: "CDA=48&PvdA=44&VVD=26&D’66=17&PSP=3&CPN=3&SGP=3&PPR=3&RPF=2&GPV=1",
+        kabinet: "VanAgt2",
+        coalitie: "CDA, PvdA, D'66",
+        breed: 1022,
+        hoog: 632,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Van_Agt_II"
+    },
     {jaar: 1982,
+        zetels: "CDA=48&PvdA=44&VVD=26&D’66=17&PSP=3&CPN=3&SGP=3&PPR=3&RPF=2&GPV=1", // geen tk
+        kabinet: "VanAgt3",
+        coalitie: "CDA, D'66",
+        breed: 1180,
+        hoog: 884,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Van_Agt_III"
+    },
+    {jaar: 1982.1,
         zetels: "PvdA=47&CDA=45&VVD=36&D66=6&PSP=3&SGP=3&CPN=3&PPR=2&RPF=2&CP=1&GPV=1&EVP=1",
         kabinet: "Lubbers1",
         coalitie: "CDA, VVD",
@@ -58,6 +162,14 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Balkenende_II"
     },
     {jaar: 2006,
+        zetels: "CDA=44&PvdA=42&VVD=28&SP=9&LPF=8&GL=8&D66=6&CU=3&SGP=2", // geen tk
+        kabinet: "Balkenende3",
+        coalitie: "CDA, VVD",
+        breed: 960,
+        hoog: 637,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Balkenende_III"
+    },
+    {jaar: 2006.1,
         zetels: "CDA=41&PvdA=33&SP=25&VVD=22&PVV=9&GL=7&CU=6&D66=3&PvdD=2&SGP=2",
         kabinet: "Balkenende4",
         coalitie: "CDA, PvdA, CU",
@@ -68,7 +180,7 @@ const tk = [
     {jaar: 2010,
         zetels: "VVD=31&PvdA=30&PVV=24&CDA=21&SP=15&D66=10&GL=10&CU=5&SGP=2&PvdD=2",
         kabinet: "Rutte1",
-        coalitie: "VVD, CDA",
+        coalitie: "VVD, CDA, (PVV)",
         breed: 1280,
         hoog: 658,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_I"
@@ -124,10 +236,12 @@ function jaarVerwerken() {
 
 function klikVerwerken() {
     const partij = params.get("klik");
-    if (sessionStorage.getItem(partij)) {
-        sessionStorage.removeItem(partij);
-    } else {
-        sessionStorage.setItem(partij,"klik");
+    if (partij) {
+        if (sessionStorage.getItem(partij)) {
+            sessionStorage.removeItem(partij);
+        } else {
+            sessionStorage.setItem(partij,"klik");
+        }
     }
 }
 
