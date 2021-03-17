@@ -202,7 +202,7 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
     {jaar: 2021,
-        zetels: "VVD=35&D66=27&PVV=17&CDA=14&PvdA=9&GL=8&SP=8&FvD=7&PvdD=6&Volt=4&SGP=3&JA21=3&Denk=2&CU=1&50plus=1&BBB=1&Bij1=n",
+        zetels: "VVD=36&D66=27&PVV=17&CDA=14&PvdA=9&GL=8&SP=8&FvD=8&PvdD=5&Volt=3&SGP=3&JA21=3&Denk=2&CU=1&50plus=1&BBB=1&Bij1=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
@@ -267,7 +267,8 @@ function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
             ++nummer,
             lijst.partij,
             lijst.zetels,
-            htmlLink("tk.html?klik=" + lijst.partij, lijst.wel ? "✔" : "_")));
+            htmlLink("tk.html?klik=" + lijst.partij +"#lijsten", lijst.wel ? "✔" : "_"),
+            kamer));
     }
     console.assert(kamer === 150, "kamer = " + kamer);
 }
