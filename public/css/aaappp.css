@@ -22,12 +22,13 @@ table {
   border-collapse: collapse; /* dubbele rand wordt enkele rand */
 }
 
-hr, select, table, th, td {
-   border: 1px solid maroon;
+hr {
+    border: 1px solid maroon;
 }
 
-th, tr, td {
-  padding: 5px;
+.randje, select, table, th, td {
+    border: 1px solid maroon;
+    padding: 5px;
 }
 
 pre {

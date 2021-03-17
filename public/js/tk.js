@@ -11,7 +11,6 @@ const tk = [
     },
     {jaar: 1958,
         verkiezing: 1956,
-        zetels: "PvdA=50&KVP=49&ARP=15&VVD=13&CHU=13&CPN=7&SGP=3", // TODO verwijderen
         kabinet: "Beel2",
         coalitie: "KVP, ARP, CHU",
         breed: 3243,
@@ -36,7 +35,6 @@ const tk = [
     },
     {jaar: 1965,
         verkiezing: 1963,
-        zetels: "KVP=50&PvdA=43&VVD=16&ARP=13&CHU=13&PSP=4&CPN=4&SGP=3&BP=3&GPV=1", // TODO verwijderen
         kabinet: "Cals",
         coalitie: "KVP, PvdA, ARP",
         breed: 768,
@@ -45,7 +43,6 @@ const tk = [
     },
     {jaar: 1966,
         verkiezing: 1963,
-        zetels: "KVP=50&PvdA=43&VVD=16&ARP=13&CHU=13&PSP=4&CPN=4&SGP=3&BP=3&GPV=1", // TODO verwijderen
         kabinet: "Zijlstra",
         coalitie: "KVP, ARP",
         breed: 901,
@@ -70,7 +67,6 @@ const tk = [
     },
     {jaar: 1972,
         verkiezing: 1971,
-        zetels: "PvdA=39&KVP=35&VVD=16&ARP=13&D’66=11&CHU=10&DS'70=8&CPN=6&SGP=3&PPR=2&GPV=2&NMP=2&PSP=2&BP=1", // TODO verwijderen
         kabinet: "Biesheuvel2",
         coalitie: "KVP, VVD, ARP, CHU",
         breed: 3684,
@@ -103,7 +99,6 @@ const tk = [
     },
     {jaar: 1982,
         verkiezing: 1981,
-        zetels: "CDA=48&PvdA=44&VVD=26&D’66=17&PSP=3&CPN=3&SGP=3&PPR=3&RPF=2&GPV=1", // TODO verwijderen
         kabinet: "VanAgt3",
         coalitie: "CDA, D'66",
         breed: 1180,
@@ -168,7 +163,6 @@ const tk = [
     },
     {jaar: 2006,
         verkiezing: 2003,
-        zetels: "CDA=44&PvdA=42&VVD=28&SP=9&LPF=8&GL=8&D66=6&CU=3&SGP=2", // TODO verwijderen
         kabinet: "Balkenende3",
         coalitie: "CDA, VVD",
         breed: 960,
@@ -186,7 +180,7 @@ const tk = [
     {jaar: 2010,
         zetels: "VVD=31&PvdA=30&PVV=24&CDA=21&SP=15&D66=10&GL=10&CU=5&SGP=2&PvdD=2",
         kabinet: "Rutte1",
-        coalitie: "VVD, CDA, (PVV)",
+        coalitie: "VVD, CDA",
         breed: 1280,
         hoog: 658,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_I"
@@ -208,12 +202,11 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
     {jaar: 2021,
-        zetels: "VVD=35&PVV=19&CDA=17&D66=18&GL=10&SP=11&PvdA=12&CU=6&PvdD=5&50plus=1&SGP=3&Denk=2&FvD=5&JA21=2&Volt=3&&BBB=1",
-        kabinet: "Onbekend",
-        coalitie: "peilingwijzer",
+        zetels: "VVD=35&D66=27&PVV=17&CDA=14&PvdA=9&GL=8&SP=8&FvD=7&PvdD=6&Volt=4&SGP=3&JA21=3&Denk=2&CU=1&50plus=1&BBB=1&Bij1=n",
+        kabinet: "Nog geen kabinet",
         breed: 600,
-        hoog: 430,
-        link: "https://peilingwijzer.tomlouwerse.nl/p/laatste-cijfers.html"
+        hoog: 338,
+        link: "https://www.ipsos.com/nl-nl/tweede-kamerverkiezing-2021-de-exitpoll"
     }
 ]
 
@@ -251,18 +244,17 @@ function klikVerwerken() {
     }
 }
 
+const DEEL = 55; // plaatje als percentage van window
 const lijsten = [];
 const kabinetten = [];
 
 function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
-    let i= 0;
-    while (jaar > tk[i].jaar) {
-        i++;
-    }
+    let i = jaarIndex(jaar);
     kop.innerHTML = "Zetels per partij in " + Math.round(jaar);
-    kabinet.appendChild(htmlLink(tk[i].link, tk[i].kabinet+": "+tk[i].coalitie, true));
-    plaatje.appendChild(htmlPlaatje("images/tk/"+tk[i].kabinet+".jpg", 50, tk[i].breed, tk[i].hoog));
-    const uitslagen = new URLSearchParams(tk[i].zetels);
+    const coalitie = tk[i].coalitie ? ": " + tk[i].coalitie : "";
+    kabinet.appendChild(htmlLink(tk[i].link, tk[i].kabinet + coalitie, true));
+    plaatje.appendChild(htmlPlaatje("images/tk/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog));
+    const uitslagen = new URLSearchParams(tk[tk[i].verkiezing ? jaarIndex(tk[i].verkiezing) : i].zetels);
     for (const [partij, zetels] of uitslagen) {
         const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
         lijsten.push({partij: partij, zetels: Number(zetels), wel: wel, coalitie: false});
@@ -278,6 +270,14 @@ function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
             htmlLink("tk.html?klik=" + lijst.partij, lijst.wel ? "✔" : "_")));
     }
     console.assert(kamer === 150, "kamer = " + kamer);
+}
+
+function jaarIndex(jaar) {
+    let index = 0;
+    while (jaar > tk[index].jaar) {
+        index++;
+    }
+    return index;
 }
 
 function kabinetFormeren(deKabinetten) {
