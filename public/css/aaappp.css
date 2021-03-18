@@ -29,6 +29,7 @@ hr {
 .randje, select, table, th, td {
     border: 1px solid maroon;
     padding: 5px;
+    font-size: 100%; /* van 120%  TODO poging even groot */
 }
 
 pre {

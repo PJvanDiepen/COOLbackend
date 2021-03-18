@@ -202,7 +202,7 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
     {jaar: 2021,
-        zetels: "VVD=35&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=7&PvdD=6&CU=5&JA21=4&SGP=3&Volt=3&Denk=2&50plus=1&Bij1=1&BBB=1",
+        zetels: "VVD=35&D66=23&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
@@ -219,38 +219,36 @@ function jarenVerwerken(jaren) {
     }
 }
 
-const pagina = new URL(location);
-const params = new URLSearchParams(pagina.search);
-const jaar = jaarVerwerken();
+let jaar = Number(sessionStorage.getItem("jaar")) || tk[tk.length - 1].jaar;
 
-function jaarVerwerken() {
-    const jaar = Number(params.get("jaar"));
-    if (jaar) {
+function parametersVerwerken() {
+    const pagina = new URL(location);
+    const parameters = new URLSearchParams(pagina.search);
+    const anderJaar = Number(parameters.get("jaar"));
+    if (anderJaar) {
         sessionStorage.clear();
-        sessionStorage.setItem("jaar", jaar);
-        return jaar;
+        sessionStorage.setItem("jaar", anderJaar);
+        jaar = anderJaar;
     }
-    return sessionStorage.getItem("jaar") || tk[tk.length - 1].jaar;
-}
-
-// TODO 2 x klikken op dezelfde partij lukt niet
-
-function klikVerwerken() {
-    const partij = params.get("klik");
-    if (partij) {
-        if (sessionStorage.getItem(partij)) {
-            sessionStorage.removeItem(partij);
-        } else {
-            sessionStorage.setItem(partij,"klik");
-        }
+    const welPartij = parameters.get("wel");
+    if (welPartij) {
+        sessionStorage.removeItem(welPartij);
+    }
+    const nietPartij = parameters.get("niet");
+    if (nietPartij) {
+        sessionStorage.setItem(nietPartij,"niet");
     }
 }
 
 const DEEL = 55; // plaatje als percentage van window
+const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
+const STREEP = "___";
 const lijsten = [];
 const kabinetten = [];
 
 // TODO klik op div van kabinet (kop + plaatje)
+
+// TODO tekst in tabellen even groot als gewone tekst
 
 function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
     let i = jaarIndex(jaar);
@@ -271,7 +269,9 @@ function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
             ++nummer,
             lijst.partij,
             lijst.zetels,
-            htmlLink("tk.html?klik=" + lijst.partij +"#kop", lijst.wel ? "✔" : "_")));
+            lijst.wel
+                ? htmlLink("tk.html?niet=" + lijst.partij +"#h2lijsten", VINKJE)
+                : htmlLink("tk.html?wel=" + lijst.partij +"#h2lijsten", STREEP)));
     }
     if (kamer < 150 || kamer > 150) {
         deLijsten.appendChild(htmlRij("", "", kamer, "?"));
@@ -286,7 +286,8 @@ function jaarIndex(jaar) {
     return index;
 }
 
-function kabinetFormeren(deKabinetten) {
+function kabinetFormeren(kop, deKabinetten) {
+    kop.innerHTML = "Meerderheidskabinetten in " + Math.round(jaar);
     kabinet(0, 0);
     let nummer = 0;
     while (kabinetten.length > 0) {
