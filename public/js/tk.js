@@ -202,11 +202,11 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
     {jaar: 2021,
-        zetels: "VVD=35&D66=26&PVV=18&CDA=14&PvdA=9&GL=8&SP=8&FvD=8&PvdD=5&CU=4&JA21=4&SGP=3&Volt=3&Denk=2&50plus=1&BBB=1&Bij1=1",
+        zetels: "VVD=35&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=7&PvdD=6&CU=5&JA21=4&SGP=3&Volt=3&Denk=2&50plus=1&Bij1=1&BBB=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
-        link: "https://www.ipsos.com/nl-nl/tweede-kamerverkiezing-2021-de-exitpoll"
+        link: "https://www.verkiezingensite.nl"
     }
 ]
 
@@ -233,6 +233,8 @@ function jaarVerwerken() {
     return sessionStorage.getItem("jaar") || tk[tk.length - 1].jaar;
 }
 
+// TODO 2 x klikken op dezelfde partij lukt niet
+
 function klikVerwerken() {
     const partij = params.get("klik");
     if (partij) {
@@ -247,6 +249,8 @@ function klikVerwerken() {
 const DEEL = 55; // plaatje als percentage van window
 const lijsten = [];
 const kabinetten = [];
+
+// TODO klik op div van kabinet (kop + plaatje)
 
 function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
     let i = jaarIndex(jaar);
@@ -267,7 +271,7 @@ function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
             ++nummer,
             lijst.partij,
             lijst.zetels,
-            htmlLink("tk.html?klik=" + lijst.partij +"#lijsten", lijst.wel ? "✔" : "_")));
+            htmlLink("tk.html?klik=" + lijst.partij +"#kop", lijst.wel ? "✔" : "_")));
     }
     if (kamer < 150 || kamer > 150) {
         deLijsten.appendChild(htmlRij("", "", kamer, "?"));
