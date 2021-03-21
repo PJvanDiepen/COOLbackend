@@ -2,62 +2,11 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0;URL=https://0-0-0.nl/tk">
     <title>kabinetsformatie</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
-    <style>
-        td:nth-child(1), td:nth-child(3), td:nth-child(4) {
-            text-align: right;
-        }
-    </style>
 </head>
 <body>
     <h1>Tweede Kamer verkiezingen</h1>
-    <p>
-        Deze webpagina formeert meerderheidskabinetten naar aanleiding van de uitslagen van Tweede Kamer verkiezingen.
-    </p>
-    <div id="plaatje" class="rechts randje">
-        <h2 id="kabinet"></h2>
-    </div>
-    <p id="jaren">
-        U kunt de uitslagen van verschillende jaren laten verwerken. Klik op een jaar:
-    </p>
-    <p>
-        In jaren met een sterretje waren geen nieuwe verkiezingen, maar wel een nieuw kabinet.
-        De uitslag van 2021 is nog niet definitief. De andere uitslagen zijn overgenomen uit de
-        <a href="https://nl.wikipedia.org/wiki/Historische_zetelverdeling_Tweede_Kamer#1982_tot_heden">Wikipedia</a>.
-        Indien u toch een fout vindt, stel ik het op prijs als u een e-mail stuurt naar pvdiepen@gmail.com,
-        zodat ik die fout kan herstellen.
-    </p>
-    <p>
-        Rechts verschijnt het kabinet dat uiteindelijk tot stand is gekomen naar aanleiding van
-        de uitslagen van het geselecteerde jaar en hieronder verschijnen de kabinetten die ook mogelijk waren.
-        <br>
-        Eventueel kunt een partij uitsluiten voor de kabinetsformatie door op het vinkje van die partij te klikken.
-        Een streepje bij een partij betekent dat die partij niet meedoet.
-    </p>
-    <h2 id="h2lijsten"></h2>
-    <table id="lijsten"></table>
-    <h2 id="h2kabinetten"></h2>
-    <table id="kabinetten">
-        <tr>
-            <th></th>
-            <th></th>
-            <th>partijen</th>
-            <th>zetels</th>
-        </tr>
-    </table>
-    <script src="js/tk.js"></script>
-    <script>
-        jarenVerwerken(document.getElementById("jaren"));
-        parametersVerwerken();
-        uitslagenVerwerken(
-            document.getElementById("kabinet"),
-            document.getElementById("plaatje"),
-            document.getElementById("h2lijsten"),
-            document.getElementById("lijsten"));
-        kabinetFormeren(
-            document.getElementById("h2kabinetten"),
-            document.getElementById("kabinetten"));
-    </script>
 </body>
 </html>

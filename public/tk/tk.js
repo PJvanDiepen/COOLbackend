@@ -3,7 +3,7 @@
 const tk = [
     {jaar: 1956,
         zetels: "PvdA=50&KVP=49&ARP=15&VVD=13&CHU=13&CPN=7&SGP=3",
-        kabinet: "Drees3",
+        kabinet: "Drees 3",
         coalitie: "PvdA, KVP, ARP, CHU",
         breed: 732,
         hoog: 555,
@@ -11,7 +11,7 @@ const tk = [
     },
     {jaar: 1958,
         verkiezing: 1956,
-        kabinet: "Beel2",
+        kabinet: "Beel 2",
         coalitie: "KVP, ARP, CHU",
         breed: 3243,
         hoog: 2006,
@@ -19,7 +19,7 @@ const tk = [
     },
     {jaar: 1959,
         zetels: "KVP=49&PvdA=48&VVD=19&ARP=14&CHU=12&CPN=3&SGP=3&PSP=2",
-        kabinet: "DeQuay",
+        kabinet: "De Quay",
         coalitie: "KVP, VVD, ARP, CHU",
         breed: 3064,
         hoog: 1960,
@@ -51,7 +51,7 @@ const tk = [
     },
     {jaar: 1967,
         zetels: "KVP=42&PvdA=37&VVD=17&ARP=15&CHU=12&BP=7&D’66=7&CPN=5&PSP=4&SGP=3&GPV=1",
-        kabinet: "DeJong",
+        kabinet: "De Jong",
         coalitie: "KVP, VVD, ARP, CHU",
         breed: 3268,
         hoog: 1636,
@@ -59,7 +59,7 @@ const tk = [
     },
     {jaar: 1971,
         zetels: "PvdA=39&KVP=35&VVD=16&ARP=13&D’66=11&CHU=10&DS'70=8&CPN=6&SGP=3&PPR=2&GPV=2&NMP=2&PSP=2&BP=1",
-        kabinet: "Biesheuvel1",
+        kabinet: "Biesheuvel 1",
         coalitie: "KVP, VVD, ARP, CHU, DS'70",
         breed: 3388,
         hoog: 1624,
@@ -67,7 +67,7 @@ const tk = [
     },
     {jaar: 1972,
         verkiezing: 1971,
-        kabinet: "Biesheuvel2",
+        kabinet: "Biesheuvel 2",
         coalitie: "KVP, VVD, ARP, CHU",
         breed: 3684,
         hoog: 2451,
@@ -75,7 +75,7 @@ const tk = [
     },
     {jaar: 1972.1,
         zetels: "PvdA=43&KVP=27&VVD=22&ARP=14&PPR=7&CHU=7&CPN=7&D’66=6&DS'70=6&SGP=3&BP=3&GPV=2&PSP=2&RKPN=1",
-        kabinet: "DenUyl",
+        kabinet: "Den Uyl",
         coalitie: "PvdA, KVP, ARP, PPR, D'66",
         breed: 2656,
         hoog: 1234,
@@ -83,7 +83,7 @@ const tk = [
     },
     {jaar: 1977,
         zetels: "PvdA=53&CDA=49&VVD=28&D’66=8&SGP=3&PPR=3&CPN=2&GPV=1&PSP=1&BP=1&DS'70=1",
-        kabinet: "VanAgt1",
+        kabinet: "Van Agt 1",
         coalitie: "CDA, VVD",
         breed: 2922,
         hoog: 1887,
@@ -91,7 +91,7 @@ const tk = [
     },
     {jaar: 1981,
         zetels: "CDA=48&PvdA=44&VVD=26&D’66=17&PSP=3&CPN=3&SGP=3&PPR=3&RPF=2&GPV=1",
-        kabinet: "VanAgt2",
+        kabinet: "Van Agt 2",
         coalitie: "CDA, PvdA, D'66",
         breed: 1022,
         hoog: 632,
@@ -99,7 +99,7 @@ const tk = [
     },
     {jaar: 1982,
         verkiezing: 1981,
-        kabinet: "VanAgt3",
+        kabinet: "Van Agt 3",
         coalitie: "CDA, D'66",
         breed: 1180,
         hoog: 884,
@@ -107,7 +107,7 @@ const tk = [
     },
     {jaar: 1982.1,
         zetels: "PvdA=47&CDA=45&VVD=36&D66=6&PSP=3&SGP=3&CPN=3&PPR=2&RPF=2&CP=1&GPV=1&EVP=1",
-        kabinet: "Lubbers1",
+        kabinet: "Lubbers 1",
         coalitie: "CDA, VVD",
         breed: 738,
         hoog: 476,
@@ -115,7 +115,7 @@ const tk = [
     },
     {jaar: 1986,
         zetels: "CDA=54&PvdA=52&VVD=27&D66=9&SGP=3&PPR=2&PSP=1&GPV=1&RPF=1",
-        kabinet: "Lubbers2",
+        kabinet: "Lubbers 2",
         coalitie: "CDA, PvdA",
         breed: 1280,
         hoog: 791,
@@ -123,7 +123,7 @@ const tk = [
     },
     {jaar: 1989,
         zetels: "CDA=54&PvdA=49&VVD=22&D66=12&GL=6&SGP=3&GPV=2&RPF=1&CD=1",
-        kabinet: "Lubbers3",
+        kabinet: "Lubbers 3",
         coalitie: "CDA, PvdA",
         breed: 792,
         hoog: 429,
@@ -131,7 +131,7 @@ const tk = [
     },
     {jaar: 1994,
         zetels: "PvdA=37&CDA=34&VVD=31&D66=24&AOV=6&GL=5&CD=3&RPF=3&SGP=2&GPV=2&SP=2&Unie55plus=1",
-        kabinet: "Kok1",
+        kabinet: "Kok 1",
         coalitie: "PvdA, VVD, D66",
         breed: 1280,
         hoog: 625,
@@ -139,7 +139,7 @@ const tk = [
     },
     {jaar: 1998,
         zetels: "PvdA=45&VVD=38&CDA=29&D66=14&GL=11&SP=5&RPF=3&SGP=3&GPV=2",
-        kabinet: "Kok2",
+        kabinet: "Kok 2",
         coalitie: "PvdA, VVD, D66",
         breed: 429,
         hoog: 317,
@@ -147,7 +147,7 @@ const tk = [
     },
     {jaar: 2002,
         zetels: "CDA=43&LPF=26&VVD=24&PvdA=23&GL=10&SP=9&D66=7&CU=4&SGP=2&LN=2",
-        kabinet: "Balkenende1",
+        kabinet: "Balkenende 1",
         coalitie: "CDA, LPF, VVD",
         breed: 1280,
         hoog: 720,
@@ -155,7 +155,7 @@ const tk = [
     },
     {jaar: 2003,
         zetels: "CDA=44&PvdA=42&VVD=28&SP=9&LPF=8&GL=8&D66=6&CU=3&SGP=2",
-        kabinet: "Balkenende2",
+        kabinet: "Balkenende 2",
         coalitie: "CDA, VVD, D66",
         breed: 1280,
         hoog: 754,
@@ -163,7 +163,7 @@ const tk = [
     },
     {jaar: 2006,
         verkiezing: 2003,
-        kabinet: "Balkenende3",
+        kabinet: "Balkenende 3",
         coalitie: "CDA, VVD",
         breed: 960,
         hoog: 637,
@@ -171,7 +171,7 @@ const tk = [
     },
     {jaar: 2006.1,
         zetels: "CDA=41&PvdA=33&SP=25&VVD=22&PVV=9&GL=7&CU=6&D66=3&PvdD=2&SGP=2",
-        kabinet: "Balkenende4",
+        kabinet: "Balkenende 4",
         coalitie: "CDA, PvdA, CU",
         breed: 960,
         hoog: 629,
@@ -179,7 +179,7 @@ const tk = [
     },
     {jaar: 2010,
         zetels: "VVD=31&PvdA=30&PVV=24&CDA=21&SP=15&D66=10&GL=10&CU=5&SGP=2&PvdD=2",
-        kabinet: "Rutte1",
+        kabinet: "Rutte 1",
         coalitie: "VVD, CDA",
         breed: 1280,
         hoog: 658,
@@ -187,7 +187,7 @@ const tk = [
     },
     {jaar: 2012,
         zetels: "VVD=41&PvdA=38&PVV=15&SP=15&CDA=13&D66=12&CU=5&GL=4&SGP=3&PvdD=2&50plus=2",
-        kabinet: "Rutte2",
+        kabinet: "Rutte 2",
         coalitie: "VVD, PvdA",
         breed: 1024,
         hoog: 580,
@@ -195,8 +195,8 @@ const tk = [
     },
     {jaar: 2017,
         zetels: "VVD=33&PVV=20&CDA=19&D66=19&GL=14&SP=14&PvdA=9&CU=5&PvdD=5&50plus=4&SGP=3&Denk=3&FvD=2",
-        kabinet: "Rutte3",
-        coalitie: "VVD, VVD, CDA, D66, CU",
+        kabinet: "Rutte 3",
+        coalitie: "VVD, CDA, D66, CU",
         breed: 830,
         hoog: 553,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
@@ -214,7 +214,7 @@ function jarenVerwerken(jaren) {
     const laatsteJaar = tk[tk.length - 1].jaar;
     for (const kabinet of tk) {
         jaren.appendChild(htmlLink(
-            "tk.html?jaar=" + kabinet.jaar,
+            "index.html?jaar=" + kabinet.jaar,
             " " + Math.round(kabinet.jaar) + (kabinet.verkiezing ? "*" : "") + (kabinet.jaar < laatsteJaar ? "," : ".")));
     }
 }
@@ -246,16 +246,12 @@ const STREEP = "___";
 const lijsten = [];
 const kabinetten = [];
 
-// TODO klik op div van kabinet (kop + plaatje)
-
-// TODO tekst in tabellen even groot als gewone tekst
-
 function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
     let i = jaarIndex(jaar);
     kop.innerHTML = "Zetels per partij in " + Math.round(jaar);
     const coalitie = tk[i].coalitie ? ": " + tk[i].coalitie : "";
     kabinet.appendChild(htmlLink(tk[i].link, tk[i].kabinet + coalitie, true));
-    plaatje.appendChild(htmlPlaatje("images/tk/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog));
+    plaatje.appendChild(htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog));
     const uitslagen = new URLSearchParams(tk[tk[i].verkiezing ? jaarIndex(tk[i].verkiezing) : i].zetels);
     for (const [partij, zetels] of uitslagen) {
         const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
@@ -270,8 +266,8 @@ function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
             lijst.partij,
             lijst.zetels,
             lijst.wel
-                ? htmlLink("tk.html?niet=" + lijst.partij +"#h2lijsten", VINKJE)
-                : htmlLink("tk.html?wel=" + lijst.partij +"#h2lijsten", STREEP)));
+                ? htmlLink("index.html?niet=" + lijst.partij +"#h2lijsten", VINKJE)
+                : htmlLink("index.html?wel=" + lijst.partij +"#h2lijsten", STREEP)));
     }
     if (kamer < 150 || kamer > 150) {
         deLijsten.appendChild(htmlRij("", "", kamer, "?"));
