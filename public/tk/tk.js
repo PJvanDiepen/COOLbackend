@@ -202,7 +202,7 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
     {jaar: 2021,
-        zetels: "VVD=35&D66=23&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
+        zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
@@ -240,18 +240,22 @@ function parametersVerwerken() {
     }
 }
 
+function kabinetVerwerken(kader, kop) {
+    const i = jaarIndex(jaar);
+    kop.innerHTML = "Kabinet in " + Math.round(jaar);
+    kader.appendChild(htmlLink(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog), true));
+    kader.appendChild(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
+}
+
 const DEEL = 55; // plaatje als percentage van window
 const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
 const STREEP = "___";
 const lijsten = [];
 const kabinetten = [];
 
-function uitslagenVerwerken(kabinet, plaatje, kop, deLijsten) {
-    let i = jaarIndex(jaar);
+function uitslagenVerwerken(kop, deLijsten) {
+    const i = jaarIndex(jaar);
     kop.innerHTML = "Zetels per partij in " + Math.round(jaar);
-    const coalitie = tk[i].coalitie ? ": " + tk[i].coalitie : "";
-    kabinet.appendChild(htmlLink(tk[i].link, tk[i].kabinet + coalitie, true));
-    plaatje.appendChild(htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog));
     const uitslagen = new URLSearchParams(tk[tk[i].verkiezing ? jaarIndex(tk[i].verkiezing) : i].zetels);
     for (const [partij, zetels] of uitslagen) {
         const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
@@ -323,15 +327,21 @@ function kabinet(vanaf, coalitieZetels) {
     }
 }
 
+function htmlTekst(tekst) {
+    return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
+}
+
+function htmlParagraaf(tekst) {
+    const p = document.createElement("p");
+    p.appendChild(htmlTekst(tekst));
+    return p;
+}
+
 function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
         const td = document.createElement("td");
-        if (kolom.nodeType === Node.ELEMENT_NODE) {
-            td.appendChild(kolom);
-        } else {
-            td.innerHTML = kolom;
-        }
+        td.appendChild(htmlTekst(kolom));
         tr.appendChild(td);
     });
     return tr;
@@ -339,9 +349,7 @@ function htmlRij(...kolommen) {
 
 function htmlLink(link, tekst, tabblad) {
     const a = document.createElement("a");
-    if (tekst) {
-        a.appendChild(document.createTextNode(tekst));
-    }
+    a.appendChild(htmlTekst(tekst));
     a.href = link;
     if (tabblad) { // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
         a.target = "_blank";

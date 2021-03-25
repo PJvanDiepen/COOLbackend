@@ -83,6 +83,7 @@ CREATE TABLE uitslag (
   rondeNummer int not null,
   bordNummer int not null,
   knsbNummer int not null,
+  partij char(1),
   witZwart char(1),
   tegenstanderNummer int,
   resultaat char(1),

@@ -16,9 +16,9 @@
     <p>
         Deze webpagina formeert meerderheidskabinetten naar aanleiding van de uitslagen van Tweede Kamer verkiezingen.
     </p>
-    <div id="plaatje" class="rechts randje">
-        <h2 id="kabinet"></h2>
-    </div>
+    <aside id="kader" class="rechts randje">
+        <h2 id="h2kabinet"></h2>
+    </aside>
     <p id="jaren">
         U kunt de uitslagen van verschillende jaren laten verwerken. Klik op een jaar:
     </p>
@@ -51,14 +51,9 @@
     <script>
         jarenVerwerken(document.getElementById("jaren"));
         parametersVerwerken();
-        uitslagenVerwerken(
-            document.getElementById("kabinet"),
-            document.getElementById("plaatje"),
-            document.getElementById("h2lijsten"),
-            document.getElementById("lijsten"));
-        kabinetFormeren(
-            document.getElementById("h2kabinetten"),
-            document.getElementById("kabinetten"));
+        kabinetVerwerken(document.getElementById("kader"), document.getElementById("h2kabinet"));
+        uitslagenVerwerken(document.getElementById("h2lijsten"), document.getElementById("lijsten"));
+        kabinetFormeren(document.getElementById("h2kabinetten"), document.getElementById("kabinetten"));
     </script>
 </body>
 </html>

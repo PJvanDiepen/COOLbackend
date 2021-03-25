@@ -161,6 +161,7 @@ teamCode CHAR(3)
 rondeNummer INT
 bordNummer INT
 knsbNummer INT
+partij CHAR(1)
 witZwart CHAR(1)
 tegenstanderNummer INT
 resultaat CHAR(1)
@@ -169,13 +170,21 @@ anderTeam CHAR(3)
 PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
 ```
 
-Elke ronde heeft uitslagen voor elk bord.
+Elke ronde heeft uitslagen voor elk bord. (TODO niet bij interne competitie)
 
 Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en voor zwart.
 Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
 een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
 
-Indien een speler heeft afgezegd staat in de uitslag `tegenstanderNummer = 3`.
+De verschillende mogelijkheden voor `partij` zijn: (TODO zie `tegenstanderNummer` )
+- a = AFWEZIG (TODO = 3) (Rokade WedstrijdType = 2)   
+- b = BYE (TODO = 8)
+- e = EXTERNE_WEDSTRIJD (TODO = 2) (Rokade WedstrijdType = 11 extern op dinsdag)
+- i = INTERNE_PARTIJ (TODO = 4)
+- o = ONEVEN (TODO = 1) (Rokade WedstrijdType = 3)
+- t = TEAMLEIDER (TODO 7) (Rokade WedstrijdType = 4)
+- v = REGLEMENTAIR_VERLIES (TODO = 6) (Rokade WedstrijdType = 6)
+- w = REGLEMENTAIRE_WINST (TODO = 5) (Rokade WedstrijdType = 5)
 
 Voor de externe competitie zijn er twee mogelijkheden.
 1. Indien de externe partij wordt gespeeld in plaats van een interne partij 
@@ -185,22 +194,22 @@ en een keer met de `teamCode` bij welke team deze uitslag hoort.
 staat de uitslag een keer in `Uitslag` met de `teamCode` bij welke team deze uitslag hoort.
 
 Voor elke externe partij staat in `Uitslag` bij `knsbNummer` de speler 
-van de eigen schaakvereniging en `tegenstanderNummer = 2`.
+van de eigen schaakvereniging en meestal `tegenstanderNummer = 0`.
+Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstijd 
+tegen een team van de eigen schaakvereniging 
+(of als je alle tegenstanders ook in `Persoon` wilt opslaan).  
 Indien `anderTeam = 'int'` telt deze uitslag mee voor de interne competitie.
 
-Uitslagen voor de interne competitie verkeren in verschillende stadia:
-1. In de uitslag staat `tegenstanderNummer = 4` voor intern oftewel de speler heeft zich aangemeld voor een bepaalde ronde.
-2. De (voorlopige) indeling voor een ronde is bekend oftewel `tegenstanderNummer` is ingevuld, maar `resultaat` nog niet.
-3. De uitslag is helemaal ingevuld.    
-
 De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
-- 0 = NIEMAND
-- 1 = ONEVEN (Rokade WedstrijdType = 3)
-- 2 = EXTERNE_WEDSTRIJD (Rokade WedstrijdType = 11 extern op dinsdag)
-- 3 = AFGEZEGD (Rokade WedstrijdType = 2)
-- 4 = INTERNE_PARTIJ
-- 5 = REGLEMENTAIRE_WINST (Rokade WedstrijdType = 5)
-- 6 = REGLEMENTAIR_VERLIES (Rokade WedstrijdType = 6)
-- 7 = VRIJGESTELD (Rokade WedstrijdType = 4)
-- 8 = BYE
-- tot en met 100 = TIJDELIJK_LID_NUMMER
+- ONBEKEND = 0
+- 0 = niemand (TODO verwijderen tot en met 8 = bye)
+- 1 = oneven
+- 2 = externe wedstrijd
+- 3 = afgezegd
+- 4 = interne partij
+- 5 = reglementaire winst
+- 6 = reglementair verlies
+- 7 = vrijgesteld
+- 8 = bye
+- TIJDELIJK_LID_NUMMER > 100
+- KNSB_NUMMER > 1000000
