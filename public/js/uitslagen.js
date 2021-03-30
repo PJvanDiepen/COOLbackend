@@ -51,46 +51,54 @@ async function serverFetch(url) {
     }
 }
 
-function option(value, text) {
+function htmlOptie(value, text) {
     const option = document.createElement("option");
     option.value = value;
     option.text = text;
     return option;
 }
 
-function rij(...kolommen) {
+function htmlTekst(tekst) {
+    return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
+}
+
+function htmlParagraaf(tekst) {
+    const p = document.createElement("p");
+    p.appendChild(htmlTekst(tekst));
+    return p;
+}
+
+function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
         const td = document.createElement("td");
-        if (kolom.nodeType === Node.ELEMENT_NODE) {
-            td.appendChild(kolom);
-        } else {
-            td.innerHTML = kolom;
-        }
+        td.appendChild(htmlTekst(kolom));
         tr.appendChild(td);
     });
     return tr;
 }
 
-function href(link, text) {
+function htmlLink(link, tekst, tabblad) {
     const a = document.createElement("a");
-    if (text) {
-        a.appendChild(document.createTextNode(text));
-    }
+    a.appendChild(htmlTekst(tekst));
     a.href = link;
+    if (tabblad) { // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
+        a.target = "_blank";
+        a.rel = "noopener noreferrer"
+    }
     return a;
 }
 
 function naarSpeler(knsbNummer, naam) {
-    return href(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
+    return htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
 }
 
 function naarRonde(tekst, u) {
-    return href(`ronde.html?ronde=${u.rondeNummer}`, tekst);
+    return htmlLink(`ronde.html?ronde=${u.rondeNummer}`, tekst);
 }
 
 function naarTeam(u) {
-    return href(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, wedstrijdVoluit(u));
+    return htmlLink(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, wedstrijdVoluit(u));
 }
 
 function naarZelfdePagina() {
@@ -190,7 +198,7 @@ function percentage(winst, remise, verlies) {
 async function seizoenen(seizoenSelecteren, teamCode) {
     await mapAsync("/seizoenen/" + teamCode,
         function (team) {
-            seizoenSelecteren.appendChild(option(team.seizoen, seizoenVoluit(team.seizoen)));
+            seizoenSelecteren.appendChild(htmlOptie(team.seizoen, seizoenVoluit(team.seizoen)));
         });
     seizoenSelecteren.value = seizoen; // werkt uitsluitend na await
     seizoenSelecteren.addEventListener("input",
@@ -203,7 +211,7 @@ async function seizoenen(seizoenSelecteren, teamCode) {
 async function teams(teamSelecteren, teamCode) {
     await mapAsync("/teams/" + seizoen,
         function (team) {
-            teamSelecteren.appendChild(option(team.teamCode, teamVoluit(team.teamCode)));
+            teamSelecteren.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
         });
     teamSelecteren.value = teamCode; // werkt uitsluitend na await
     teamSelecteren.addEventListener("input",
@@ -219,9 +227,9 @@ async function teams(teamSelecteren, teamCode) {
 async function ronden(rondeSelecteren, teamCode, rondeNummer) {
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
         function (ronde) {
-            rondeSelecteren.appendChild(option(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
+            rondeSelecteren.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
-    rondeSelecteren.appendChild(option(0, rondeSelecteren.length + " ronden"))
+    rondeSelecteren.appendChild(htmlOptie(0, rondeSelecteren.length + " ronden"))
     rondeSelecteren.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
     rondeSelecteren.addEventListener("input",
         function () {
@@ -246,7 +254,7 @@ function ranglijst(kop, lijst) {
         function (speler, i) {
             const t = totalen(speler.totalen);
             if (t.inRanglijst()) {
-                lijst.appendChild(rij(
+                lijst.appendChild(htmlRij(
                     i + 1,
                     naarSpeler(speler.knsbNummer, speler.naam),
                     t.punten(),
@@ -392,7 +400,7 @@ function uitslagenRonde(kop, lijst) {
     kop.innerHTML = "Ronde " + rondeNummer;
     mapAsync("/ronde/" + seizoen + "/" + rondeNummer,
         function (uitslag) {
-            lijst.appendChild(rij(
+            lijst.appendChild(htmlRij(
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
                 uitslag.resultaat === "1" ? "1-0" : uitslag.resultaat === "0" ? "0-1" : "½-½"));
@@ -400,20 +408,20 @@ function uitslagenRonde(kop, lijst) {
 }
 
 async function wedstrijdenBijRonde(kop, lijst) {
-    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), "ronde " + rondeNummer].join(SCHEIDING);
+    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
     const ronden = await localFetch("/ronden/" + seizoen + "/int");
     const dezeDatum = ronden[rondeNummer - 1].datum;
     await mapAsync("/wedstrijden/" + seizoen,
         function (wedstrijd) {
             if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
-                lijst.appendChild(rij(datumLeesbaar(wedstrijd.datum), naarTeam(wedstrijd)));
+                lijst.appendChild(htmlRij(datumLeesbaar(wedstrijd.datum), naarTeam(wedstrijd)));
             }
         });
-    lijst.appendChild(rij(datumLeesbaar(dezeDatum), "interne competitie ronde " + rondeNummer));
+    lijst.appendChild(htmlRij(datumLeesbaar(dezeDatum), "interne competitie ronde " + rondeNummer));
 }
 
 function wedstrijdBijRonde(datum, ronden) {
-    if (rondeNummer == 1) {
+    if (rondeNummer === 1) {
         return datum <= ronden[0].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
     } else if (rondeNummer === ronden.length) {
         return datum > ronden[rondeNummer - 2].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
@@ -454,7 +462,7 @@ async function uitslagenSpeler(kop, lijst) {
     const t = await totalenSpeler(seizoen, speler);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
-        lijst.appendChild(rij("", "", "startpunten", "", "", "", totaal, totaal));
+        lijst.appendChild(htmlRij("", "", "startpunten", "", "", "", totaal, totaal));
     }
     let vorigeUitslag;
     await mapAsync("/uitslagen/" + seizoen + "/" + speler,
@@ -477,7 +485,7 @@ async function uitslagenSpeler(kop, lijst) {
             }
         });
     if (t.aftrek()) {
-        lijst.appendChild(rij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
+        lijst.appendChild(htmlRij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
     }
 }
 
@@ -497,13 +505,13 @@ function internePartij(u, totaal) {
     const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
     const tegenstanderKolom = naarSpeler(u.tegenstanderNummer, u.naam);
-    return rij(rondeKolom, datumKolom, tegenstanderKolom, "", u.witZwart, u.resultaat, u.punten, totaal);
+    return htmlRij(rondeKolom, datumKolom, tegenstanderKolom, "", u.witZwart, u.resultaat, u.punten, totaal);
 }
 
 function geenPartij(u, totaal) {
     const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
-    return rij(rondeKolom, datumKolom, u.naam, "", "", "", u.punten, totaal);
+    return htmlRij(rondeKolom, datumKolom, u.naam, "", "", "", u.punten, totaal);
 }
 
 function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {
@@ -511,11 +519,11 @@ function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {
     const datumKolom = naarRonde(datumLeesbaar(u.datum), vorigeUitslag);
     const tegenstanderKolom = naarTeam(u);
     const puntenKolom = vorigeUitslag.punten + u.punten;
-    return rij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
+    return htmlRij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
 }
 
 function externePartij(u, totaal) {
-    return rij("", datumLeesbaar(u.datum), naarTeam(u), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+    return htmlRij("", datumLeesbaar(u.datum), naarTeam(u), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
 }
 
 /*
@@ -565,7 +573,7 @@ async function uitslagenTeam(kop, rondenTabel) {
             } else {
                 rondeUitslag.remise += 1;
             }
-            rondeUitslag.uitslagen.push(rij(u.bordNummer, naarSpeler(u.knsbNummer, u.naam), u.witZwart, u.resultaat));
+            rondeUitslag.uitslagen.push(htmlRij(u.bordNummer, naarSpeler(u.knsbNummer, u.naam), u.witZwart, u.resultaat));
         });
     for (let i = 0; i < rondeUitslagen.length; ++i) {
         uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
@@ -579,14 +587,21 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
         const tabel = div.appendChild(document.createElement("table"));
         const datum = datumLeesbaar(u.ronde.datum);
         const uitslag = u.ronde.uithuis === THUIS ? wedstrijdUitslag(u.winst, u.verlies, u.remise) : wedstrijdUitslag(u.verlies, u.winst, u.remise);
-        rondenTabel.appendChild(rij(u.ronde.rondeNummer, datum, naarTeam(u.ronde), uitslag));
-        tabel.appendChild(rij(datum, wedstrijdVoluit(u.ronde), "", uitslag));
+        rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datum, naarTeam(u.ronde), uitslag));
+        tabel.appendChild(htmlRij(datum, wedstrijdVoluit(u.ronde), "", uitslag));
         if (u.uitslagen.length) {
             for (let uitslag of u.uitslagen) {
                 tabel.appendChild(uitslag);
             }
         } else {
-            tabel.appendChild(rij("","geen uitslagen","",""));
+            tabel.appendChild(htmlRij("","geen uitslagen","",""));
         }
     }
+}
+
+function knop(deKnop, teken) {
+    deKnop.addEventListener("click",
+        function () {
+            console.log("knop: " + teken);
+        });
 }

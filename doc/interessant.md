@@ -45,6 +45,11 @@ Interessant
 
 Later:
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
+- [Klikmenu](https://css-tricks.com/in-praise-of-the-unambiguous-click-menu/)
+- [Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
+- [Guide to Grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
+- [Flexbox cheatsheet](https://www.freecodecamp.org/news/flexbox-the-ultimate-css-flex-cheatsheet/)
+- [Grids vs Flexbox vs Floats vs Position](https://medium.com/@madhur.taneja/css-layouts-cced6c7a8764)
 
 
 Misschien:

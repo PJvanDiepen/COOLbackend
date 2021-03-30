@@ -177,7 +177,7 @@ Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstan
 een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
 
 De verschillende mogelijkheden voor `partij` zijn: (TODO zie `tegenstanderNummer` )
-- a = AFWEZIG (TODO = 3) (Rokade WedstrijdType = 2)   
+- a = AFGEZEGD (TODO = 3) (Rokade WedstrijdType = 2)   
 - b = BYE (TODO = 8)
 - e = EXTERNE_WEDSTRIJD (TODO = 2) (Rokade WedstrijdType = 11 extern op dinsdag)
 - i = INTERNE_PARTIJ (TODO = 4)
