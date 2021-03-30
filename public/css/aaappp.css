@@ -4,31 +4,28 @@ https://github.com/necolas/normalize.css/blob/master/normalize.css ?
 */
 
 body {
-  font-family: sans-serif;
-  font-size: 120%;
+    font-family: sans-serif;
 }
 
 h1, h2, h3, h4 {
-  color: maroon;           
-}
-
-button, select {
-  margin: 5px;
-  padding: 5px;
-  font-size: 100%; /* van 120% */
+    color: maroon;
 }
 
 table {
-  border-collapse: collapse; /* dubbele rand wordt enkele rand */
+    border-collapse: collapse; /* dubbele rand wordt enkele rand */
 }
 
 hr {
     border: 1px solid maroon;
 }
 
-.randje, select, table, th, td {
+.randje, button, select, table, th, td {
     border: 1px solid maroon;
     padding: 5px;
+}
+
+button, select {
+	font-size: 100%; /* anders wordt font-size kleiner */
 }
 
 pre {
@@ -47,6 +44,10 @@ pre {
 .links {
 	float: left;
 	margin-right: 20px;
+}
+
+.onder {
+    clear: both;
 }
 
 .onzichtbaar { 
