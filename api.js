@@ -178,4 +178,9 @@ module.exports = router => {
             .andWhere('ronde.teamCode','<>', 'int')
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
+
+    router.get('/partij/:teken', async ctx => {
+        ctx.body = await Uitslag.query()
+            .patch({partij: ctx.params.teken});
+    });
 }

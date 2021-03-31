@@ -23,6 +23,15 @@ function doorgeven(key) {
     return value;
 }
 
+function knop(deKnop, teken) {
+    deKnop.addEventListener("click",
+        async function () {
+            console.log("knop: " + teken);
+            const mutaties = await serverFetch("/partij/" + teken);
+            console.log("knop: " + mutaties);
+        });
+}
+
 async function findAsync(url, findFun) {
     const objects = await localFetch(url);
     objects.find(findFun); // verwerk en stop indien gevonden
@@ -597,11 +606,4 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
             tabel.appendChild(htmlRij("","geen uitslagen","",""));
         }
     }
-}
-
-function knop(deKnop, teken) {
-    deKnop.addEventListener("click",
-        function () {
-            console.log("knop: " + teken);
-        });
 }
