@@ -109,6 +109,10 @@ function naarAnderePagina(naarPagina) {
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
+function naarRanglijst() {
+    naarAnderePagina("ranglijst.html");
+}
+
 function datumLeesbaar(jsonDatum) {
     const d = new Date(jsonDatum);
     return `${voorloopNul(d.getDate())}-${voorloopNul(d.getMonth()+1)}-${d.getFullYear()}`;
@@ -195,84 +199,59 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-function menu(actieSelecteren) {
-    let test = function() {
-        console.log("test!");
-    };
-    test();
-    console.log(typeof test);
-    let acties = [];
-
-    acties.push(function() {
-        console.log("selecteer actie");
-    });
-    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "selecteer actie"));
-
-    acties.push(function() {
-        console.log("menu!");
-    });
-    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "menu!"));
-
-    acties.push(async function () {
-        console.log("partij = x");
-        const mutaties = await serverFetch("/partij/x");
-        console.log("mutaties: " + mutaties);
-    });
-    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "partij = x"));
-
-    acties.push(async function () {
-        console.log("partij = y");
-        const mutaties = await serverFetch("/partij/y");
-        console.log("mutaties: " + mutaties);
-    });
-    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "partij = y"));
-
-    actieSelecteren.addEventListener("input",
+function actieSelecteren(acties, ...actieLijst) {
+    let functies = [];
+    for (let actie of actieLijst) {
+        let tekst, functie;
+        [tekst, functie] = actie;
+        acties.appendChild(htmlOptie(functies.length, tekst));
+        functies.push(functie ? functie :
+            function () {
+                console.log(tekst);
+            });
+    }
+    acties.addEventListener("input",
         function() {
-            acties[actieSelecteren.value]();
+            functies[acties.value]();
         });
 }
 
-async function seizoenen(seizoenSelecteren, teamCode) {
+async function seizoenSelecteren(seizoenen, teamCode) {
     await mapAsync("/seizoenen/" + teamCode,
         function (team) {
-            seizoenSelecteren.appendChild(htmlOptie(team.seizoen, seizoenVoluit(team.seizoen)));
+            seizoenen.appendChild(htmlOptie(team.seizoen, seizoenVoluit(team.seizoen)));
         });
-    seizoenSelecteren.value = seizoen; // werkt uitsluitend na await
-    seizoenSelecteren.addEventListener("input",
+    seizoenen.value = seizoen; // werkt uitsluitend na await
+    seizoenen.addEventListener("input",
         function () {
-            sessionStorage.setItem("seizoen", seizoenSelecteren.value);
+            sessionStorage.setItem("seizoen", seizoenen.value);
             naarZelfdePagina();
         });
 }
 
-async function teams(teamSelecteren, teamCode) {
+async function teamSelecteren(teams, teamCode) {
     await mapAsync("/teams/" + seizoen,
         function (team) {
-            teamSelecteren.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
         });
-    teamSelecteren.value = teamCode; // werkt uitsluitend na await
-    teamSelecteren.addEventListener("input",
+    teams.value = teamCode; // werkt uitsluitend na await
+    teams.addEventListener("input",
         function () {
-            if (teamSelecteren.value === INTERNE_COMPETITIE) {
-                naarAnderePagina("ranglijst.html");
-            } else {
-                naarAnderePagina("team.html?team=" + teamSelecteren.value);
-            }
+            naarAnderePagina(teams.value === INTERNE_COMPETITIE ? "ranglijst.html" : "team.html?team=" + teams.value);
         });
 }
 
-async function ronden(rondeSelecteren, teamCode, rondeNummer) {
+async function rondeSelecteren(ronden, teamCode, rondeNummer) {
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
         function (ronde) {
-            rondeSelecteren.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
+            ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
-    rondeSelecteren.appendChild(htmlOptie(0, rondeSelecteren.length + " ronden"))
-    rondeSelecteren.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
-    rondeSelecteren.addEventListener("input",
+    ronden.appendChild(htmlOptie(0, ronden.length + " ronden"))
+    ronden.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
+    ronden.addEventListener("input",
         function () {
-            if (rondeSelecteren.value) {
-                naarAnderePagina("ronde.html?ronde=" + rondeSelecteren.value);
+            if (ronden.value) {
+                naarAnderePagina("ronde.html?ronde=" + ronden.value);
             }
         });
 }

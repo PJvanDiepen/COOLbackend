@@ -38,10 +38,23 @@
     </table>
     <script src="js/uitslagen.js"></script>
     <script>
-        menu(document.getElementById("actieSelecteren"));
-        seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
-        teams(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
-        ronden(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, 0);
+        actieSelecteren(document.getElementById("actieSelecteren"),
+            ["actie selecteren"],
+            ["partij = x",
+                async function () {
+                    const mutaties = await serverFetch("/partij/x");
+                    console.log("partij = x: " + mutaties);
+                }],
+            ["partij = y",
+                async function () {
+                    const mutaties = await serverFetch("/partij/y");
+                    console.log("partij = y: " + mutaties);
+                }],
+            ["????"]
+        );
+        seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
+        teamSelecteren(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
+        rondeSelecteren(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, 0);
         ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>
