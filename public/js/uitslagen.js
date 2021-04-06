@@ -23,15 +23,6 @@ function doorgeven(key) {
     return value;
 }
 
-function knop(deKnop, teken) {
-    deKnop.addEventListener("click",
-        async function () {
-            console.log("knop: " + teken);
-            const mutaties = await serverFetch("/partij/" + teken);
-            console.log("knop: " + mutaties);
-        });
-}
-
 async function findAsync(url, findFun) {
     const objects = await localFetch(url);
     objects.find(findFun); // verwerk en stop indien gevonden
@@ -202,6 +193,44 @@ function percentage(winst, remise, verlies) {
     } else {
         return "";
     }
+}
+
+function menu(actieSelecteren) {
+    let test = function() {
+        console.log("test!");
+    };
+    test();
+    console.log(typeof test);
+    let acties = [];
+
+    acties.push(function() {
+        console.log("selecteer actie");
+    });
+    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "selecteer actie"));
+
+    acties.push(function() {
+        console.log("menu!");
+    });
+    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "menu!"));
+
+    acties.push(async function () {
+        console.log("partij = x");
+        const mutaties = await serverFetch("/partij/x");
+        console.log("mutaties: " + mutaties);
+    });
+    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "partij = x"));
+
+    acties.push(async function () {
+        console.log("partij = y");
+        const mutaties = await serverFetch("/partij/y");
+        console.log("mutaties: " + mutaties);
+    });
+    actieSelecteren.appendChild(htmlOptie(acties.length - 1, "partij = y"));
+
+    actieSelecteren.addEventListener("input",
+        function() {
+            acties[actieSelecteren.value]();
+        });
 }
 
 async function seizoenen(seizoenSelecteren, teamCode) {

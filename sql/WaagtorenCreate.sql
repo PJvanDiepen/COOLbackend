@@ -12,6 +12,22 @@ create table persoon (
     PRIMARY KEY (knsbNummer)
 );
 
+drop table if exists gebruiker;
+create table gebruiker (
+	knsbNummer int not null,
+    mutatieRechten int not null,
+    uuidToken varbinary(16),
+    ipAddress varbinary(16),
+    primary key (knsbNummer)
+);
+
+alter table gebruiker
+add constraint fk_gebruiker_persoon
+    foreign key (knsbNummer)
+    references persoon (knsbNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
+
 DROP TABLE IF EXISTS speler;
 CREATE TABLE speler (
     seizoen char(4) not null,
@@ -58,15 +74,15 @@ add CONSTRAINT fk_speler_knsb_team
 
 DROP TABLE IF EXISTS ronde;
 CREATE TABLE ronde (
-  seizoen char(4) not null,
-  teamCode char(3) not null,
-  rondeNummer int not null,
-  compleet char(1) not null, 
-  uithuis char(1) not null,
-  tegenstander varchar(45),
-  plaats varchar(45),
-  datum date not null,
-  PRIMARY KEY (seizoen, teamCode, rondeNummer)
+    seizoen char(4) not null,
+    teamCode char(3) not null,
+    rondeNummer int not null,
+    compleet char(1) not null, 
+    uithuis char(1) not null,
+    tegenstander varchar(45),
+    plaats varchar(45),
+    datum date not null,
+    PRIMARY KEY (seizoen, teamCode, rondeNummer)
 );
 
 alter table ronde
@@ -78,18 +94,18 @@ add CONSTRAINT fk_ronde_team
 
 DROP TABLE IF EXISTS uitslag;
 CREATE TABLE uitslag (
-  seizoen char(4) not null,
-  teamCode char(3) not null,
-  rondeNummer int not null,
-  bordNummer int not null,
-  knsbNummer int not null,
-  partij char(1),
-  witZwart char(1),
-  tegenstanderNummer int,
-  resultaat char(1),
-  datum date comment 'indien op een andere datum dan ronde',
-  anderTeam char(3),
-  PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
+    seizoen char(4) not null,
+    teamCode char(3) not null,
+    rondeNummer int not null,
+    bordNummer int not null,
+    knsbNummer int not null,
+    partij char(1),
+    witZwart char(1),
+    tegenstanderNummer int,
+    resultaat char(1),
+    datum date comment 'indien op een andere datum dan ronde',
+    anderTeam char(3),
+    PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
 );
 
 alter table uitslag
@@ -120,6 +136,7 @@ add constraint fk_uitslag_persoon
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
+-- TODO verwijder fk_uitslag_tegenstander
 alter table uitslag
 add constraint fk_uitslag_tegenstander
     foreign key (tegenstanderNummer)
@@ -129,12 +146,32 @@ add constraint fk_uitslag_tegenstander
 
 DROP TABLE IF EXISTS ranglijst;
 CREATE TABLE ranglijst (
-  seizoen char(4) not null,
-  teamCode char(3) not null,
-  versie char(1) not null comment 'a = actueel',
-  startPunten int default 300 comment 'artikel 11',
-  berekening varchar(300) comment 'SQL function', 
-  PRIMARY KEY (seizoen, teamCode, versie)
+    seizoen char(4) not null,
+    teamCode char(3) not null,
+    versie char(1) not null comment 'a = actueel',
+    startPunten int default 300 comment 'artikel 11',
+    berekening varchar(300) comment 'SQL function', 
+    PRIMARY KEY (seizoen, teamCode, versie)
 );
+
+drop table if exists mutatie;
+create table mutatie (
+	knsbNummer int not null,
+    tijdstip datetime not null comment 'geen tijdzone conversie',
+    ipAddress varbinary(16),
+    seizoen char(4),
+    teamCode char(3),
+    rondeNummer int,
+    mutatieTabel varchar(45),
+    mutatieAantal int,
+    primary key (knsbNummer)
+);
+
+alter table mutatie
+add constraint fk_mutatie_persoon
+    foreign key (knsbNummer)
+    references persoon (knsbNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
 
 show tables;

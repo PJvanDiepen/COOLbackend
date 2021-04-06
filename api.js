@@ -183,4 +183,8 @@ module.exports = router => {
         ctx.body = await Uitslag.query()
             .patch({partij: ctx.params.teken});
     });
+
+    router.get('/ipaddress', async ctx => {
+        ctx.body = ctx.url + " = " + ctx.request.ip;
+    });
 }

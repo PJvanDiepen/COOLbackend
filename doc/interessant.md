@@ -9,6 +9,8 @@ Nuttig
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [Why is learning JavaScript so hard?](https://www.quora.com/Why-is-learning-JavaScript-so-hard)
 - [Wachtwoorden](https://www.smashingmagazine.com/2020/03/creating-secure-password-flows-nodejs-mysql/)
+- [MySQL uuid](https://www.mysqltutorial.org/mysql-uuid/)
+- [JSON Web Token](https://www.digitalocean.com/community/tutorials/nodejs-jwt-expressjs)
 - [Deploy a static website](https://www.ditalocean.com/community/tutorials/how-to-deploy-a-static-website-to-the-cloud-with-digitalocean-app-platform?utm_medium=email&utm_source=IaaN&utm_campaign=10082020)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Naming variables](https://github.com/kettanaito/naming-cheatsheet)
@@ -46,10 +48,15 @@ Interessant
 Later:
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
 - [Klikmenu](https://css-tricks.com/in-praise-of-the-unambiguous-click-menu/)
+- [Hamburger CSS](https://medium.com/@heyoka/responsive-pure-css-off-canvas-hamburger-menu-aebc8d11d793)
+- [Hamburger CSS](https://leewarrick.com/blog/css-only-menus/)
+- [Dropdown menu best practise](https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212)
 - [Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
 - [Guide to Grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [Flexbox cheatsheet](https://www.freecodecamp.org/news/flexbox-the-ultimate-css-flex-cheatsheet/)
 - [Grids vs Flexbox vs Floats vs Position](https://medium.com/@madhur.taneja/css-layouts-cced6c7a8764)
+- [JS scrape data](https://beshaimakes.com/js-scrape-data)
+- 
 
 
 Misschien:

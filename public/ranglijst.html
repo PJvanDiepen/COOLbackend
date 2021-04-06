@@ -15,11 +15,10 @@
     </style>
 </head>
 <body>
+    <select id="actieSelecteren"></select>
     <select id="seizoenSelecteren"></select>
     <select id="teamSelecteren"></select>
     <select id="rondeSelecteren"></select>
-    <button id="vraagteken">x</button>
-    <button id="uitroepteken">y</button>
     <h1 id="kop">Ranglijst</h1>
     <table id="tabel">
         <tr>
@@ -39,12 +38,11 @@
     </table>
     <script src="js/uitslagen.js"></script>
     <script>
+        menu(document.getElementById("actieSelecteren"));
         seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
         teams(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
         ronden(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, 0);
         ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
-        knop(document.getElementById("vraagteken"), "x");
-        knop(document.getElementById("uitroepteken"), "y");
     </script>
 </body>
 </html>
