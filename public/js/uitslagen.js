@@ -97,20 +97,8 @@ function naarRonde(tekst, u) {
     return htmlLink(`ronde.html?ronde=${u.rondeNummer}`, tekst);
 }
 
-function naarTeam(u) {
-    return htmlLink(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, wedstrijdVoluit(u));
-}
-
-function naarZelfdePagina() {
-    location.replace(pagina.pathname);
-}
-
-function naarAnderePagina(naarPagina) {
-    location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
-}
-
-function naarRanglijst() {
-    naarAnderePagina("ranglijst.html");
+function naarTeam(tekst, u) {
+    return htmlLink(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, tekst);
 }
 
 function datumLeesbaar(jsonDatum) {
@@ -153,23 +141,6 @@ const VERLIES = "0";
 const THUIS = "t";
 const UIT = "u";
 
-function wedstrijdUitslag(thuis, uit, remise) {
-    while (remise >= 2) {
-        thuis += 1;
-        uit += 1;
-        remise -= 2;
-    }
-    if (remise === 0) {
-        return thuis + " - " + uit;
-    } else if (thuis === 0) {
-        return REMISE + " - " + uit + REMISE;
-    } else if (uit === 0) {
-        return thuis + REMISE + " - " + REMISE;
-    } else {
-        return thuis + REMISE + " - " + uit + REMISE;
-    }
-}
-
 function score(winst, remise, verlies) {
     const partijen = winst + remise + verlies;
     if (partijen) {
@@ -187,7 +158,27 @@ function score(winst, remise, verlies) {
     } else {
         return "";
     }
+}
 
+function wedstrijdUitslag(winst, remise, verlies) {
+    while (remise >= 2) {
+        winst += 1;
+        verlies += 1;
+        remise -= 2;
+    }
+    if (remise === 0) {
+        return winst + " - " + verlies;
+    } else if (winst === 0) {
+        return REMISE + " - " + verlies + REMISE;
+    } else if (verlies === 0) {
+        return winst + REMISE + " - " + REMISE;
+    } else {
+        return winst + REMISE + " - " + verlies + REMISE;
+    }
+}
+
+function uitslagTeam(uithuis, winst, verlies, remise) {
+    return uithuis === THUIS ? wedstrijdUitslag(winst, remise, verlies) : wedstrijdUitslag(verlies, remise, winst);
 }
 
 function percentage(winst, remise, verlies) {
@@ -199,11 +190,9 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-function actieSelecteren(acties, ...actieLijst) {
+function actieSelecteren(acties, ...menu) {
     let functies = [];
-    for (let actie of actieLijst) {
-        let tekst, functie;
-        [tekst, functie] = actie;
+    for (let [tekst, functie] of menu) {
         acties.appendChild(htmlOptie(functies.length, tekst));
         functies.push(functie ? functie :
             function () {
@@ -213,7 +202,26 @@ function actieSelecteren(acties, ...actieLijst) {
     acties.addEventListener("input",
         function() {
             functies[acties.value]();
+            acties.value = 0;
         });
+}
+
+const hamburgerMenu = ["\u2630", function () { }];
+
+const terugNaar = ["\uD83E\uDC68", function() {
+    history.back();
+}];
+
+const naarRanglijst = ["ranglijst", function () {
+    naarAnderePagina("ranglijst.html");
+}];
+
+function naarZelfdePagina() {
+    location.replace(pagina.pathname);
+}
+
+function naarAnderePagina(naarPagina) {
+    location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
 async function seizoenSelecteren(seizoenen, teamCode) {
@@ -428,13 +436,18 @@ async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
     const ronden = await localFetch("/ronden/" + seizoen + "/int");
     const dezeDatum = ronden[rondeNummer - 1].datum;
-    await mapAsync("/wedstrijden/" + seizoen,
-        function (wedstrijd) {
-            if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
-                lijst.appendChild(htmlRij(datumLeesbaar(wedstrijd.datum), naarTeam(wedstrijd)));
-            }
-        });
-    lijst.appendChild(htmlRij(datumLeesbaar(dezeDatum), "interne competitie ronde " + rondeNummer));
+    const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
+    for (const wedstrijd of wedstrijden) {
+        if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
+            const datumKolom = datumLeesbaar(wedstrijd.datum);
+            const wedstrijdKolom = naarTeam(wedstrijdVoluit(wedstrijd), wedstrijd);
+            const rondeUitslagen = await uitslagenTeamAlleRonden(wedstrijd.teamCode);
+            const u = rondeUitslagen[wedstrijd.rondeNummer - 1];
+            const uitslagKolom = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
+            lijst.appendChild(htmlRij(datumKolom, wedstrijdKolom, uitslagKolom));
+        }
+    }
+    lijst.appendChild(htmlRij(datumLeesbaar(dezeDatum), "interne competitie ronde " + rondeNummer, ""));
 }
 
 function wedstrijdBijRonde(datum, ronden) {
@@ -534,17 +547,19 @@ function geenPartij(u, totaal) {
 function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {
     const rondeKolom = naarRonde(vorigeUitslag.rondeNummer, vorigeUitslag);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), vorigeUitslag);
-    const tegenstanderKolom = naarTeam(u);
+    const tegenstanderKolom = naarTeam(wedstrijdVoluit(u), u);
     const puntenKolom = vorigeUitslag.punten + u.punten;
     return htmlRij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
 }
 
 function externePartij(u, totaal) {
-    return htmlRij("", datumLeesbaar(u.datum), naarTeam(u), u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+    const rondeKolom = "";
+    const datumKolom = datumLeesbaar(u.datum);
+    const tegenstanderKolom = naarTeam(wedstrijdVoluit(u), u);
+    return htmlRij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
 }
 
 /*
-
 -- uitslagen externe competitie per team
 select uitslag.rondeNummer,
     uitslag.bordNummer,
@@ -558,23 +573,7 @@ where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
 order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
 
-/**
- * uitslagenTeam doet fetch van JSON ronden en uitslagen per team
- * en verwerkt die tot een tabel met ronden en een aantal tabellen met uitslagen per ronde.
- *
- * @param kop
- * @param rondenTabel
- * @returns {Promise<void>}
- */
-
-async function uitslagenTeam(kop, rondenTabel) {
-    await findAsync("/teams/" + seizoen,
-        function (team) {
-            if (team.teamCode === teamCode) {
-                kop.innerHTML = [wedstrijdTeam(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
-                return true;
-            }
-        });
+async function uitslagenTeamAlleRonden(teamCode) {
     const rondeUitslagen = [];
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
         function (ronde) {
@@ -592,6 +591,18 @@ async function uitslagenTeam(kop, rondenTabel) {
             }
             rondeUitslag.uitslagen.push(htmlRij(u.bordNummer, naarSpeler(u.knsbNummer, u.naam), u.witZwart, u.resultaat));
         });
+    return rondeUitslagen;
+}
+
+async function uitslagenTeam(kop, rondenTabel) {
+    await findAsync("/teams/" + seizoen,
+        function (team) {
+            if (team.teamCode === teamCode) {
+                kop.innerHTML = [wedstrijdTeam(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
+                return true;
+            }
+        });
+    const rondeUitslagen = await uitslagenTeamAlleRonden(teamCode);
     for (let i = 0; i < rondeUitslagen.length; ++i) {
         uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
     }
@@ -601,11 +612,12 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
     const div = document.getElementById("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
     div.appendChild(document.createElement("h2")).innerHTML = "Ronde " + rondeNummer;
     if (u) {
-        const tabel = div.appendChild(document.createElement("table"));
         const datum = datumLeesbaar(u.ronde.datum);
-        const uitslag = u.ronde.uithuis === THUIS ? wedstrijdUitslag(u.winst, u.verlies, u.remise) : wedstrijdUitslag(u.verlies, u.winst, u.remise);
-        rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datum, naarTeam(u.ronde), uitslag));
-        tabel.appendChild(htmlRij(datum, wedstrijdVoluit(u.ronde), "", uitslag));
+        const wedstrijd = wedstrijdVoluit(u.ronde);
+        const uitslag = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
+        rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datum, naarTeam(wedstrijd, u.ronde), uitslag));
+        const tabel = div.appendChild(document.createElement("table"));
+        tabel.appendChild(htmlRij(datum, wedstrijd, "", uitslag));
         if (u.uitslagen.length) {
             for (let uitslag of u.uitslagen) {
                 tabel.appendChild(uitslag);

@@ -12,13 +12,14 @@
     </style>
 </head>
 <body>
-    <table class="links"><tr><td><a href="ranglijst.html">Ranglijst</a></td></tr></table>
+    <select id="actieSelecteren"></select>
     <select id="rondeSelecteren"></select>
-    <h1 class="onder" id="kop">Ronde</h1>
+    <h1 id="kop">Ronde</h1>
     <table id="wedstrijden">
         <tr>
             <th>datum</th>
             <th>wedstrijd</th>
+            <th></th>
         </tr>
     </table>
     <h2 id="subkop">Ronde</h2>
@@ -31,6 +32,12 @@
     </table>
     <script src="js/uitslagen.js"></script>
     <script>
+        actieSelecteren(document.getElementById("actieSelecteren"),
+            hamburgerMenu,
+            naarRanglijst,
+            ["wijzigen..."],
+            terugNaar
+        );
         rondeSelecteren(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, rondeNummer);
         wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
         uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));

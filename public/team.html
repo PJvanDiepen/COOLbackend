@@ -12,9 +12,9 @@
     </style>
 </head>
 <body>
-    <table class="links"><tr><td><a href="ranglijst.html">Ranglijst</a></td></tr></table>
+    <select id="actieSelecteren"></select>
     <select id="teamSelecteren"></select>
-    <h1 class="onder" id="kop">Team</h1>
+    <h1 id="kop">Team</h1>
     <table id="ronden">
         <tr>
             <th>ronde</th>
@@ -34,6 +34,12 @@
     <div id="ronde9"></div>
     <script src="js/uitslagen.js"></script>
     <script>
+        actieSelecteren(document.getElementById("actieSelecteren"),
+            hamburgerMenu,
+            naarRanglijst,
+            ["wijzigen..."],
+            terugNaar
+        );
         teamSelecteren(document.getElementById("teamSelecteren"), teamCode);
         uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
     </script>

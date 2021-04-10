@@ -39,7 +39,8 @@
     <script src="js/uitslagen.js"></script>
     <script>
         actieSelecteren(document.getElementById("actieSelecteren"),
-            ["actie selecteren"],
+            hamburgerMenu,
+            ["kalender..."],
             ["partij = x",
                 async function () {
                     const mutaties = await serverFetch("/partij/x");
@@ -50,7 +51,7 @@
                     const mutaties = await serverFetch("/partij/y");
                     console.log("partij = y: " + mutaties);
                 }],
-            ["????"]
+            terugNaar
         );
         seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
         teamSelecteren(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);

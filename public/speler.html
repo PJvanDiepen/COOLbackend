@@ -15,9 +15,9 @@
     </style>
 </head>
 <body>
-    <table class="links"><tr><td><a href="ranglijst.html">Ranglijst</a></td></tr></table>
+    <select id="actieSelecteren"></select>
     <select id="seizoenSelecteren"></select>
-    <h1 class="onder" id="kop">Speler</h1>
+    <h1 id="kop">Speler</h1>
     <table id="tabel">
         <tr>
             <th>ronde</th>
@@ -32,6 +32,13 @@
     </table>
     <script src="js/uitslagen.js"></script>
     <script>
+        actieSelecteren(document.getElementById("actieSelecteren"),
+            hamburgerMenu,
+            ["kalender..."],
+            naarRanglijst,
+            ["wijzigen..."],
+            terugNaar
+        );
         seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
         uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
