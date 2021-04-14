@@ -1,10 +1,13 @@
 'use strict'
 
+const Gebruiker = require('./models/gebruiker');
 const Persoon = require('./models/persoon');
 const Ronde = require('./models/ronde');
 const Speler = require('./models/speler');
 const Team = require('./models/team');
 const Uitslag = require('./models/uitslag');
+
+const { v4: uuidv4 } = require('uuid');
 
 const { fn, ref } = require('objection');  // TODO joinRelated ?
 
@@ -179,12 +182,28 @@ module.exports = router => {
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
+    router.get('/gebruikers', async ctx =>  {
+        ctx.body = await Gebruiker.query();
+    });
+
+    router.get('/registreer/:knsbNummer/:email', async ctx => {
+        const uuidToken = uuidv4();
+        ctx.body = await Gebruiker.query().insertAndFetch({
+            knsbNummer: ctx.params.knsbNummer,
+            mutatieRechten: 1,
+            uuidToken: uuidToken,
+            email: ctx.params.email}
+        );
+    });
+
     router.get('/partij/:teken', async ctx => {
         ctx.body = await Uitslag.query()
             .patch({partij: ctx.params.teken});
     });
 
     router.get('/ipaddress', async ctx => {
+        console.log(ctx.request);
         ctx.body = ctx.url + " = " + ctx.request.ip;
     });
+
 }

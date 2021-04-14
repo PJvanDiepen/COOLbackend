@@ -3,45 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Speler</title>
+    <title>Agenda</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
-    <style>
-        td:nth-child(1), td:nth-child(4), td:nth-child(5), td:nth-child(6) {
-            text-align: center; /* ronde, bord, kleur en resultaat */
-        }
-        td:nth-child(7), td:nth-child(8)  {
-            text-align: right; /* punten en totaal */
-        }
-    </style>
 </head>
 <body>
     <select id="actieSelecteren"></select>
     <select id="seizoenSelecteren"></select>
-    <h1 id="kop">Speler</h1>
+    <h1 id="kop">Agenda</h1>
     <table id="tabel">
         <tr>
-            <th>ronde</th>
             <th>datum</th>
+            <th>wedstrijd</th>
             <th></th>
-            <th>bord</th>
-            <th>kleur</th>
-            <th></th>
-            <th>punten</th>
-            <th>totaal</th>
         </tr>
     </table>
     <script src="js/uitslagen.js"></script>
     <script>
         actieSelecteren(document.getElementById("actieSelecteren"),
             hamburgerMenu,
-            naarAgenda,
             naarRanglijst,
-            naarRegisteren,
-            ["wijzigen..."],
+            ["jaaroverzicht"],
             terugNaar
         );
         seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
-        uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
+        agenda(document.getElementById("kop"), document.getElementById("tabel"));
     </script>
 </body>
 </html>

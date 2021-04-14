@@ -14,6 +14,8 @@ Nuttig
 - [Deploy a static website](https://www.ditalocean.com/community/tutorials/how-to-deploy-a-static-website-to-the-cloud-with-digitalocean-app-platform?utm_medium=email&utm_source=IaaN&utm_campaign=10082020)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Naming variables](https://github.com/kettanaito/naming-cheatsheet)
+- [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
+- [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
 
 Objection / Knex
 - [MySQL Stored Procedures That Return Multiple Values](https://www.mysqltutorial.org/mysql-stored-procedures-return-multiple-values/)
@@ -37,6 +39,7 @@ Interessant
 - [Accelerate JS development](https://blog.techmagic.co/how-to-accelerate-js-development-with-the-right-approach-techmagic-case-studies/)
 - [case against web frameworks](https://thenewstack.io/case-against-web-frameworks/)
 - [Symbols and why they're awesome](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/)
+- [Vanilla JavaScript snippets](https://www.smashingmagazine.com/2021/04/vanilla-javascript-code-snippets/)
 - [How to debug websites on Android with different browsers?](https://www.javacodegeeks.com/2021/01/how-to-debug-websites-on-android-with-different-browsers.html)
 - [The Import On Interaction Pattern](https://addyosmani.com/blog/import-on-interaction/)
 - [From Callback Hell to Callback Heaven](https://dev.to/loreanvictor/from-callback-hell-to-callback-heaven-4i0c)

@@ -10,8 +10,18 @@ const speler = doorgeven("speler"); // knsbNummer
 const naam = doorgeven("naam");
 const rondeNummer = doorgeven("ronde");
 
+const [gebruiker, mutatieRechten] = leesGebruiker();
+console.log("gebruiker: " + gebruiker);
+console.log("mutatieRechten: " + mutatieRechten)
+
 const INTERNE_COMPETITIE = "int";
 const SCHEIDING = " » ";
+
+function leesGebruiker() {
+    const gebruiker = doorgeven("gebruiker") || "Peter";
+    const mutatieRechten = doorgeven("mutatieRechten") || 9;
+    return [gebruiker, mutatieRechten];
+}
 
 function doorgeven(key) {
     let value = params.get(key);
@@ -212,8 +222,16 @@ const terugNaar = ["\uD83E\uDC68", function() {
     history.back();
 }];
 
+const naarAgenda = ["aanmelden / afzeggen", function () {
+    naarAnderePagina("agenda.html");
+}];
+
 const naarRanglijst = ["ranglijst", function () {
     naarAnderePagina("ranglijst.html");
+}];
+
+const naarRegisteren = ["registreren", function () {
+    naarAnderePagina("registreren.html");
 }];
 
 function naarZelfdePagina() {
@@ -577,17 +595,17 @@ async function uitslagenTeamAlleRonden(teamCode) {
     const rondeUitslagen = [];
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
         function (ronde) {
-            rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, verlies: 0, remise: 0, uitslagen: []};
+            rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
         });
     await mapAsync("/team/" + seizoen + "/" + teamCode,
         function (u) {
             const rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
             if (u.resultaat === WINST) {
                 rondeUitslag.winst += 1;
+            } else if (u.resultaat === REMISE) {
+                rondeUitslag.remise += 1;
             } else if (u.resultaat === VERLIES) {
                 rondeUitslag.verlies += 1;
-            } else {
-                rondeUitslag.remise += 1;
             }
             rondeUitslag.uitslagen.push(htmlRij(u.bordNummer, naarSpeler(u.knsbNummer, u.naam), u.witZwart, u.resultaat));
         });
@@ -609,21 +627,23 @@ async function uitslagenTeam(kop, rondenTabel) {
 }
 
 function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
+    const datum = datumLeesbaar(u.ronde.datum);
+    const wedstrijd = wedstrijdVoluit(u.ronde);
+    const uitslag = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
+    rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datum, naarTeam(wedstrijd, u.ronde), uitslag));
     const div = document.getElementById("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
-    div.appendChild(document.createElement("h2")).innerHTML = "Ronde " + rondeNummer;
-    if (u) {
-        const datum = datumLeesbaar(u.ronde.datum);
-        const wedstrijd = wedstrijdVoluit(u.ronde);
-        const uitslag = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
-        rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datum, naarTeam(wedstrijd, u.ronde), uitslag));
-        const tabel = div.appendChild(document.createElement("table"));
-        tabel.appendChild(htmlRij(datum, wedstrijd, "", uitslag));
-        if (u.uitslagen.length) {
-            for (let uitslag of u.uitslagen) {
-                tabel.appendChild(uitslag);
-            }
-        } else {
-            tabel.appendChild(htmlRij("","geen uitslagen","",""));
+    div.appendChild(document.createElement("h2")).innerHTML = ["Ronde " + rondeNummer, datum].join(SCHEIDING);
+    const tabel = div.appendChild(document.createElement("table"));
+    tabel.appendChild(htmlRij("", wedstrijd, "", uitslag));
+    if (u.uitslagen.length) {
+        for (let uitslag of u.uitslagen) {
+            tabel.appendChild(uitslag);
         }
+    } else {
+        tabel.appendChild(htmlRij("","geen uitslagen","",""));
     }
+}
+
+function agenda(kop, tabel) {
+
 }

@@ -16,17 +16,10 @@ drop table if exists gebruiker;
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,
-    uuidToken varbinary(16),
-    ipAddress varbinary(16),
-    primary key (knsbNummer)
+    uuidToken char(36),
+    email varchar(100),
+    primary key (uuidToken)
 );
-
-alter table gebruiker
-add constraint fk_gebruiker_persoon
-    foreign key (knsbNummer)
-    references persoon (knsbNummer)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS speler;
 CREATE TABLE speler (
