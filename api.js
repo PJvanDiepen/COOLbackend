@@ -7,12 +7,10 @@ const Speler = require('./models/speler');
 const Team = require('./models/team');
 const Uitslag = require('./models/uitslag');
 
-const { v4: uuidv4 } = require('uuid');
-
-const { fn, ref } = require('objection');  // TODO joinRelated ?
+const { fn, ref } = require('objection');
 
 module.exports = router => {
-    router.get('/spelers/:seizoen/', async ctx => {
+    router.get('/spelers/:seizoen/', async function (ctx) {
         ctx.body = await Speler.query()
             .select('speler.*', 'persoon.*')
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
@@ -20,13 +18,13 @@ module.exports = router => {
             .orderBy('naam');
     });
 
-    router.get('/seizoenen/:teamCode', async ctx => {
+    router.get('/seizoenen/:teamCode', async function (ctx) {
         ctx.body = await Team.query()
             .select('team.seizoen')
             .where('team.teamCode', '=', ctx.params.teamCode);
     });
 
-    router.get('/teams/:seizoen', async ctx => {
+    router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
             .where('team.seizoen', '=', ctx.params.seizoen)
             .andWhere('team.teamCode', '<>', ''); // niet geen team
@@ -42,7 +40,7 @@ module.exports = router => {
 
     concat(totaal, ' ', prijs, ' ', winst, ' ', remise, ' ', verlies, ' ', wit, ' ', zwart, ' ', oneven, ' ', afzeggingen, ' ', aftrek, ' ', startPunten);
      */
-    router.get('/ranglijst/:seizoen/', async ctx => {
+    router.get('/ranglijst/:seizoen/', async function (ctx) {
         ctx.body = await Speler.query()
             .select(
                 'speler.knsbNummer',
@@ -77,7 +75,7 @@ module.exports = router => {
         and u.anderTeam = 'int'
     order by u.datum, u.bordNummer;
      */
-    router.get('/uitslagen/:seizoen/:knsbNummer/', async ctx => {
+    router.get('/uitslagen/:seizoen/:knsbNummer/', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.datum',
@@ -123,7 +121,7 @@ module.exports = router => {
     where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
     order by uitslag.seizoen, bordNummer;
      */
-    router.get('/ronde/:seizoen/:rondeNummer', async ctx => {
+    router.get('/ronde/:seizoen/:rondeNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.knsbNummer',
@@ -153,7 +151,7 @@ module.exports = router => {
     where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
     order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
      */
-    router.get('/team/:seizoen/:teamCode', async ctx => {
+    router.get('/team/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.rondeNummer',
@@ -168,40 +166,51 @@ module.exports = router => {
             .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
     });
 
-    router.get('/ronden/:seizoen/:teamCode', async ctx => {
+    router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', '=', ctx.params.seizoen)
             .andWhere('ronde.teamCode','=', ctx.params.teamCode)
             .orderBy('ronde.rondeNummer');
     });
 
-    router.get('/wedstrijden/:seizoen', async ctx => {
+    router.get('/wedstrijden/:seizoen', async function (ctx) {
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', '=', ctx.params.seizoen)
             .andWhere('ronde.teamCode','<>', 'int')
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
-    router.get('/gebruikers', async ctx =>  {
-        ctx.body = await Gebruiker.query();
+    router.get('/email/:uuidToken', async  ctx => {
+        ctx.body = await Gebruiker.query()
+            .findById(ctx.params.uuidToken)
+            .patch({datumEmail: fn('curdate')});
     });
 
-    router.get('/registreer/:knsbNummer/:email', async ctx => {
-        const uuidToken = uuidv4();
-        ctx.body = await Gebruiker.query().insertAndFetch({
-            knsbNummer: ctx.params.knsbNummer,
-            mutatieRechten: 1,
-            uuidToken: uuidToken,
-            email: ctx.params.email}
-        );
+    router.get('/registreer/:knsbNummer/:email', async function (ctx) {
+        ctx.body = await Gebruiker.query()
+            .select('mutatieRechten', 'uuidToken')
+            .insertAndFetch({
+                knsbNummer: ctx.params.knsbNummer,
+                mutatieRechten: 1,
+                uuidToken: fn('uuid'),
+                email: ctx.params.email});
     });
 
-    router.get('/partij/:teken', async ctx => {
+    router.get('/xxx/:knsbNummer/:email', async function (ctx) {
+        ctx.body = await Gebruiker.query()
+            .insert({
+                knsbNummer: ctx.params.knsbNummer,
+                mutatieRechten: 1,
+            uuidToken: fn('uuid'),
+            email: ctx.params.email});
+    });
+
+    router.get('/partij/:teken', async function (ctx) {
         ctx.body = await Uitslag.query()
             .patch({partij: ctx.params.teken});
     });
 
-    router.get('/ipaddress', async ctx => {
+    router.get('/ipaddress', async function (ctx) {
         console.log(ctx.request);
         ctx.body = ctx.url + " = " + ctx.request.ip;
     });

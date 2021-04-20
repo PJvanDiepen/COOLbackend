@@ -37,26 +37,6 @@
         </tr>
     </table>
     <script src="js/uitslagen.js"></script>
-    <script>
-        actieSelecteren(document.getElementById("actieSelecteren"),
-            hamburgerMenu,
-            naarAgenda,
-            ["partij = x",
-                async function () {
-                    const mutaties = await serverFetch("/partij/x");
-                    console.log("partij = x: " + mutaties);
-                }],
-            ["partij = y",
-                async function () {
-                    const mutaties = await serverFetch("/partij/y");
-                    console.log("partij = y: " + mutaties);
-                }],
-            terugNaar
-        );
-        seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
-        teamSelecteren(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
-        rondeSelecteren(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, 0);
-        ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
-    </script>
+    <script src="js/ranglijst.js"></script>
 </body>
 </html>

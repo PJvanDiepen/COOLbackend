@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>UUID</title>
+    <link rel="stylesheet" type="text/css" href="css/aaappp.css">
+</head>
+<body>
+    <h1 id="kop">UUID</h1>
+    <script>
+        "use strict";
+
+        const pagina = new URL(location);
+        const api = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+        const params = pagina.searchParams;
+        const schaakVereniging = params.get("schaakVereniging");
+        const uuidToken = params.get("uuidToken");
+        if (schaakVereniging && uuidToken) {
+            localStorage.setItem(schaakVereniging, uuidToken);  // overschrijf, geen controle
+            sessionStorage.setItem("schaakVereniging", schaakVereniging);
+            serverFetch("/email/" + uuidToken);
+            naarAnderePagina("ranglijst.html");
+        } else {
+            naarAnderePagina("index.html");
+        }
+
+        async function serverFetch(url) {
+            try {
+                const response = await fetch(api + url);
+                return await response.json();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function naarAnderePagina(naarPagina) {
+            location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
+        }
+
+    </script>
+</body>
+</html>

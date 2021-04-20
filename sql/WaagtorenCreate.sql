@@ -18,8 +18,16 @@ create table gebruiker (
     mutatieRechten int not null,
     uuidToken char(36),
     email varchar(100),
+    datumEmail date,
     primary key (uuidToken)
 );
+
+alter table gebruiker
+add constraint fk_gebruiker_persoon
+    foreign key (knsbNummer)
+    references persoon (knsbNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS speler;
 CREATE TABLE speler (
@@ -150,8 +158,7 @@ CREATE TABLE ranglijst (
 drop table if exists mutatie;
 create table mutatie (
 	knsbNummer int not null,
-    tijdstip datetime not null comment 'geen tijdzone conversie',
-    ipAddress varbinary(16),
+    tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
     seizoen char(4),
     teamCode char(3),
     rondeNummer int,
