@@ -12,9 +12,9 @@ uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel
 
 async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
-    const ronden = await localFetch("/ronden/" + seizoen + "/int");
+    const ronden = await databaseFetch("/ronden/" + seizoen + "/int");
     const dezeDatum = ronden[rondeNummer - 1].datum;
-    const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
+    const wedstrijden = await databaseFetch("/wedstrijden/" + seizoen);
     for (const wedstrijd of wedstrijden) {
         if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
             const datumKolom = datumLeesbaar(wedstrijd.datum);
@@ -29,7 +29,7 @@ async function wedstrijdenBijRonde(kop, lijst) {
 }
 
 function wedstrijdBijRonde(datum, ronden) {
-    if (rondeNummer === 1) {
+    if (rondeNummer === 1) {  // TODO Number()
         return datum <= ronden[0].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
     } else if (rondeNummer === ronden.length) {
         return datum > ronden[rondeNummer - 2].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde

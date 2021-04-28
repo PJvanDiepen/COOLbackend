@@ -10,7 +10,16 @@ const Uitslag = require('./models/uitslag');
 const { fn, ref } = require('objection');
 
 module.exports = router => {
-    router.get('/spelers/:seizoen/', async function (ctx) {
+
+    // geeft 1 object in plaats van array met objects
+    router.get('/gebruiker/:uuidToken', async function (ctx) {
+        ctx.body = await Gebruiker.query()
+            .findById(ctx.params.uuidToken)
+            .select('knsbNummer', 'mutatieRechten');
+    });
+
+    // geeft array met objects
+    router.get('/spelers/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
             .select('speler.*', 'persoon.*')
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
@@ -40,7 +49,7 @@ module.exports = router => {
 
     concat(totaal, ' ', prijs, ' ', winst, ' ', remise, ' ', verlies, ' ', wit, ' ', zwart, ' ', oneven, ' ', afzeggingen, ' ', aftrek, ' ', startPunten);
      */
-    router.get('/ranglijst/:seizoen/', async function (ctx) {
+    router.get('/ranglijst/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
             .select(
                 'speler.knsbNummer',
@@ -75,7 +84,7 @@ module.exports = router => {
         and u.anderTeam = 'int'
     order by u.datum, u.bordNummer;
      */
-    router.get('/uitslagen/:seizoen/:knsbNummer/', async function (ctx) {
+    router.get('/uitslagen/:seizoen/:knsbNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.datum',
@@ -180,7 +189,7 @@ module.exports = router => {
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
-    router.get('/email/:uuidToken', async  ctx => {
+    router.get('/email/:uuidToken', async function (ctx) {
         ctx.body = await Gebruiker.query()
             .findById(ctx.params.uuidToken)
             .patch({datumEmail: fn('curdate')});

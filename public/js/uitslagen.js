@@ -1,27 +1,21 @@
 "use strict";
 
 const pagina = new URL(location);
-const api = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
-const schaakVereniging = doorgeven("schaakVereniging");
-const seizoen = doorgeven("seizoen");
-const teamCode = doorgeven("team");
-const speler = doorgeven("speler"); // knsbNummer
-const naam = doorgeven("naam");
-const rondeNummer = doorgeven("ronde");
-
-const [gebruiker, mutatieRechten] = leesGebruiker();
-console.log("gebruiker: " + gebruiker);
-console.log("mutatieRechten: " + mutatieRechten)
-
+const schaakVereniging = doorgeven("schaakVereniging") || "Waagtoren";
+const seizoen = doorgeven("seizoen") || "2021";
 const INTERNE_COMPETITIE = "int";
-const SCHEIDING = " » ";
+const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
+const speler = doorgeven("speler"); // knsbNummer TODO Number()
+const naam = doorgeven("naam");
+const rondeNummer = doorgeven("ronde"); // TODO Number()
 
-function leesGebruiker() {
-    const gebruiker = doorgeven("gebruiker") || "Peter";
-    const mutatieRechten = doorgeven("mutatieRechten") || 9;
-    return [gebruiker, mutatieRechten];
-}
+let gebruiker = 0;
+let mutatieRechten = 0;
+leesGebruiker();
+
+const SCHEIDING = " \u232A ";
 
 function doorgeven(key) {
     let value = params.get(key);
@@ -33,17 +27,26 @@ function doorgeven(key) {
     return value;
 }
 
+async function leesGebruiker() {
+    const uuidToken = localStorage.getItem(schaakVereniging);
+    if (uuidToken) {
+        const object = await databaseFetch("/gebruiker/" + uuidToken);
+        gebruiker = object.knsbNummer;
+        mutatieRechten = object.mutatieRechten;
+    }
+}
+
 async function findAsync(url, findFun) {
-    const objects = await localFetch(url);
+    const objects = await databaseFetch(url);
     objects.find(findFun); // verwerk en stop indien gevonden
 }
 
 async function mapAsync(url, mapFun) {
-    const objects = await localFetch(url);
+    const objects = await databaseFetch(url);
     objects.map(mapFun); // verwerk ze allemaal
 }
 
-async function localFetch(url) {
+async function databaseFetch(url) {
     let object = JSON.parse(sessionStorage.getItem(url));
     if (!object) {
         object = await serverFetch(url);
@@ -54,7 +57,7 @@ async function localFetch(url) {
 
 async function serverFetch(url) {
     try {
-        const response = await fetch(api + url);
+        const response = await fetch(server + url);
         return await response.json();
     } catch (e) {
         console.error(e);
@@ -216,7 +219,7 @@ function actieSelecteren(acties, ...menu) {
         });
 }
 
-const hamburgerMenu = ["\u2630", function () { }];
+const hamburgerMenu = ["\u2630 menu", function () { }];
 
 const terugNaar = ["\uD83E\uDC68", function() {
     history.back();

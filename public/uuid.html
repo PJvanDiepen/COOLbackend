@@ -12,9 +12,9 @@
         "use strict";
 
         const pagina = new URL(location);
-        const api = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+        const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
         const params = pagina.searchParams;
-        const schaakVereniging = params.get("schaakVereniging");
+        const schaakVereniging = params.get("schaakVereniging") || "Waagtoren";
         const uuidToken = params.get("uuidToken");
         if (schaakVereniging && uuidToken) {
             localStorage.setItem(schaakVereniging, uuidToken);  // overschrijf, geen controle
@@ -27,7 +27,7 @@
 
         async function serverFetch(url) {
             try {
-                const response = await fetch(api + url);
+                const response = await fetch(server + url);
                 return await response.json();
             } catch (e) {
                 console.error(e);

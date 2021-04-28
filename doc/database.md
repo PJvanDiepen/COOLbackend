@@ -2,6 +2,7 @@
 Er is een MySQL database per schaakvereniging met de volgende tabellen:
 - `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie
 - `Persoon` leden van de schaakvereniging en eventueel van tegenstanders in de externe competitie
+- `Gebruiker` leden van de schaakvereniging, die gegevens in de database mogen wijzigen
 - `Seizoen` seizoensgegevens van de schaakvereniging 
 - `Speler` spelers per seizoen
 - `Team` teams of interne competitie (`teamCode = 'int'`) per seizoen
@@ -82,7 +83,25 @@ Daarom moet het systeem weten welke gebruikers wat mogen doen.
 Is de gebruiker lid van de vereniging? Is de gebruiker wedstrijdleider?
 Daarvoor moeten we waarschijnlijk nog wat gegevens vastleggen in `Persoon`. 
 Dit is nog niet uitgewerkt en noemen we voorlopig `dummy`.
-  
+
+## Gebruiker
+```
+knsbNummer INT`
+mutatieRechten INT
+uuidToken CHAR(36)
+email VARCHAR(100)
+datumEmail DATE
+PRIMARY KEY (uuidToken)
+```
+Leden van de schaakvereniging mogen gegevens in de database wijzigen afhankelijk van hun `mutatieRechten`. 
+Gewone leden kunnen zich aanmelden of afzeggen.
+Een wedstrijdleider kan uitslagen invoeren en ronden aanmaken.
+
+Het systeem herkent een gebruiker aan het `uuidToken`, wat is opgeslagen op de computer van de gebruiker.
+Een lid van de schaakvereniging kan zich als gebruiker registreren met een `email`.
+Via die `email` ontvangt zo'n gebruiker een link om het `uuidToken` te activeren.
+Dit wordt vastgelegd in `datumEmail`.
+
 ## Seizoen
 Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
 

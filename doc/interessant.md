@@ -12,6 +12,7 @@ Nuttig
 - [MySQL uuid](https://www.mysqltutorial.org/mysql-uuid/)
 - [JSON Web Token](https://www.digitalocean.com/community/tutorials/nodejs-jwt-expressjs)
 - [Deploy a static website](https://www.ditalocean.com/community/tutorials/how-to-deploy-a-static-website-to-the-cloud-with-digitalocean-app-platform?utm_medium=email&utm_source=IaaN&utm_campaign=10082020)
+- [CSS display](https://bitsofco.de/how-display-contents-works/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Naming variables](https://github.com/kettanaito/naming-cheatsheet)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
@@ -46,20 +47,30 @@ Interessant
 - [Promise Memoization](https://www.jonmellman.com/posts/promise-memoization)
 - [retry an async operation](https://advancedweb.hu/how-to-implement-an-exponential-backoff-retry-strategy-in-javascript/)
 - [Function callback risks](https://jakearchibald.com/2021/function-callback-risks/)
+- [DevTools](https://blog.asayer.io/15-devtool-secrets-for-javascript-developers)
 
 
 Later:
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
+- [Label Form](https://bitsofco.de/labelling-form-elements/)
+- [Form validation 1](https://bitsofco.de/form-validation-techniques/)
+- [Form validation 2](https://bitsofco.de/form-validation-techniques/)
 - [Klikmenu](https://css-tricks.com/in-praise-of-the-unambiguous-click-menu/)
 - [Hamburger CSS](https://medium.com/@heyoka/responsive-pure-css-off-canvas-hamburger-menu-aebc8d11d793)
 - [Hamburger CSS](https://leewarrick.com/blog/css-only-menus/)
 - [Dropdown menu best practise](https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212)
+- [Dropdown menu](https://bitsofco.de/accessible-multi-level-dropdown-navigation/)
 - [Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
 - [Guide to Grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [Flexbox cheatsheet](https://www.freecodecamp.org/news/flexbox-the-ultimate-css-flex-cheatsheet/)
 - [Grids vs Flexbox vs Floats vs Position](https://medium.com/@madhur.taneja/css-layouts-cced6c7a8764)
 - [JS scrape data](https://beshaimakes.com/js-scrape-data)
-- 
+- [CSS reset](https://bitsofco.de/my-css-reset-base/)
+- [CSS font sizing](https://bitsofco.de/css-font-sizing/)
+- [CSS alternatives to floating](https://bitsofco.de/alternatives-to-floating/)
+- [CSS hiding elements](https://bitsofco.de/hiding-elements-with-css/)
+- [Uitleg over Grid Layout](https://bitsofco.de/github-contribution-graph-css-grid/)
+- [EM vs REM vs PX](https://engageinteractive.co.uk/blog/em-vs-rem-vs-px)
 
 
 Misschien:
@@ -71,3 +82,5 @@ Misschien:
 - [Denon alternatief voor node.js](https://opensource.com/article/21/2/deno)
 - [Spaceinvaders](https://github.com/kubowania/space-invaders) 
 - [pipe](https://www.obvibase.com/dev-blog/i-ve-used-the-pipe-function-2-560-times-and-i-can-tell-you-it-s-good)
+- [Kaart met legenda](https://codepen.io/haakseth/pen/KQbjdO)
+- [alle JavaScript events](https://www.perimeterx.com/tech-blog/2019/list-every-event-that-exists-in-the-browser/)

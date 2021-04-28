@@ -19,13 +19,27 @@ hr {
     border: 1px solid maroon;
 }
 
-.randje, button, select, table, th, td {
+.randje, button, fieldset, legend, select, table, th, td {
     border: 1px solid maroon;
     padding: 5px;
 }
 
-button, select {
+button, input, select {
 	font-size: 100%; /* anders wordt font-size kleiner */
+	margin: 2px;
+}
+
+.marge-boven, label {
+	margin-top: 20px;
+	display: block;
+}
+
+fieldset {
+	width: fit-content;
+}
+
+button, legend, select {
+	border-radius: 5px;
 }
 
 pre {
