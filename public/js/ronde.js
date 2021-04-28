@@ -29,7 +29,7 @@ async function wedstrijdenBijRonde(kop, lijst) {
 }
 
 function wedstrijdBijRonde(datum, ronden) {
-    if (rondeNummer === 1) {  // TODO Number()
+    if (rondeNummer === 1) {
         return datum <= ronden[0].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
     } else if (rondeNummer === ronden.length) {
         return datum > ronden[rondeNummer - 2].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde

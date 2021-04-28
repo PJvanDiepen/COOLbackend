@@ -7,9 +7,9 @@ const schaakVereniging = doorgeven("schaakVereniging") || "Waagtoren";
 const seizoen = doorgeven("seizoen") || "2021";
 const INTERNE_COMPETITIE = "int";
 const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
-const speler = doorgeven("speler"); // knsbNummer TODO Number()
+const speler = Number(doorgeven("speler")); // knsbNummer
 const naam = doorgeven("naam");
-const rondeNummer = doorgeven("ronde"); // TODO Number()
+const rondeNummer = Number(doorgeven("ronde"));
 
 let gebruiker = 0;
 let mutatieRechten = 0;
@@ -31,8 +31,8 @@ async function leesGebruiker() {
     const uuidToken = localStorage.getItem(schaakVereniging);
     if (uuidToken) {
         const object = await databaseFetch("/gebruiker/" + uuidToken);
-        gebruiker = object.knsbNummer;
-        mutatieRechten = object.mutatieRechten;
+        gebruiker = Number(object.knsbNummer);
+        mutatieRechten = Nuber(object.mutatieRechten);
     }
 }
 
