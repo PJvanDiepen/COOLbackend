@@ -32,7 +32,7 @@ async function leesGebruiker() {
     if (uuidToken) {
         const object = await databaseFetch("/gebruiker/" + uuidToken);
         gebruiker = Number(object.knsbNummer);
-        mutatieRechten = Nuber(object.mutatieRechten);
+        mutatieRechten = Number(object.mutatieRechten);
     }
 }
 
@@ -205,12 +205,14 @@ function percentage(winst, remise, verlies) {
 
 function actieSelecteren(acties, ...menu) {
     let functies = [];
-    for (let [tekst, functie] of menu) {
-        acties.appendChild(htmlOptie(functies.length, tekst));
-        functies.push(functie ? functie :
-            function () {
-                console.log(tekst);
-            });
+    for (let [mutatieNivo, tekst, functie] of menu) {
+        if (mutatieRechten >= mutatieNivo) {
+            acties.appendChild(htmlOptie(functies.length, tekst));
+            functies.push(functie ? functie :
+                function () {
+                    console.log(tekst);
+                });
+        }
     }
     acties.addEventListener("input",
         function() {
@@ -219,21 +221,21 @@ function actieSelecteren(acties, ...menu) {
         });
 }
 
-const hamburgerMenu = ["\u2630 menu", function () { }];
+const hamburgerMenu = [0, "\u2630 menu", function () { }];
 
-const terugNaar = ["\uD83E\uDC68", function() {
+const terugNaar = [0, "\uD83E\uDC68", function() {
     history.back();
 }];
 
-const naarAgenda = ["aanmelden / afzeggen", function () {
+const naarAgenda = [1, "aanmelden / afzeggen", function () {
     naarAnderePagina("agenda.html");
 }];
 
-const naarRanglijst = ["ranglijst", function () {
+const naarRanglijst = [0, "ranglijst", function () {
     naarAnderePagina("ranglijst.html");
 }];
 
-const naarGebruiker = ["registreren", function () {
+const naarGebruiker = [0, "registreren", function () {
     naarAnderePagina("gebruiker.html");
 }];
 

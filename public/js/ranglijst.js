@@ -3,12 +3,12 @@
 actieSelecteren(document.getElementById("actieSelecteren"),
     hamburgerMenu,
     naarAgenda,
-    ["partij = x",
+    [10, "partij = x",
         async function () {
             const mutaties = await serverFetch("/partij/x");
             console.log("partij = x: " + mutaties);
         }],
-    ["partij = y",
+    [9, "partij = y",
         async function () {
             const mutaties = await serverFetch("/partij/y");
             console.log("partij = y: " + mutaties);

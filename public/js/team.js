@@ -3,7 +3,7 @@
 actieSelecteren(document.getElementById("actieSelecteren"),
     hamburgerMenu,
     naarRanglijst,
-    ["wijzigen..."],
+    [1, "wijzigen..."],
     terugNaar
 );
 teamSelecteren(document.getElementById("teamSelecteren"), teamCode);

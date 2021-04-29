@@ -3,7 +3,7 @@
 actieSelecteren(document.getElementById("actieSelecteren"),
     hamburgerMenu,
     naarRanglijst,
-    ["wijzigen..."],
+    [1, "wijzigen..."],
     terugNaar
 );
 rondeSelecteren(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, rondeNummer);

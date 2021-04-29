@@ -5,7 +5,7 @@ actieSelecteren(document.getElementById("actieSelecteren"),
     naarAgenda,
     naarRanglijst,
     naarGebruiker,
-    ["wijzigen..."],
+    [1, "wijzigen..."],
     terugNaar
 );
 seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);

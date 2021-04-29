@@ -3,7 +3,7 @@
 actieSelecteren(document.getElementById("actieSelecteren"),
     hamburgerMenu,
     naarRanglijst,
-    ["jaaroverzicht"],
+    [0, "jaaroverzicht"],
     terugNaar
 );
 seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
