@@ -7,20 +7,78 @@
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
 </head>
 <body>
-    <select id="actieSelecteren"></select>
-    <h1 id="kop">Speler</h1>
-    <form action="speler.html">
+    <h1>Registreren</h1>
+    <p>
+        Leden van de schaakvereniging kunnen zich registreren als gebruiker.
+    </p>
+    <p>
+        Een geregistreerde gebruiker heeft op 0-0-0.nl een persoonlijke agenda,
+        kan zich per ronde aanmelden of afzeggen en kan de voorlopige indeling van de komende ronde zien.
+    </p>
+    <form action="speler.html" id="formulier">
         <fieldset>
-            <legend>als gebruiker registreren</legend>
+            <legend>registratieformulier</legend>
             <label for="naam">Naam:</label>
-            <input type="text" id="naam" name="naam" disabled>
+            <input type="text" id="naam" name="naam" size="50" disabled>
             <label for="knsbNummer">KNSB nummer:</label>
             <input type="number" id="knsbNummer" name="knsbNummer" disabled>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            <button type="submit" class="marge-boven">registratie versturen</button>
+            <label for="email">E-mail:</label>
+            <input type="email" id="email" name="email" size="50" required>
+            <label for="status">Status:</label>
+            <input type="text" id="status" name="status" size="50" disabled>
+            <button type="submit" class="marge-boven">registratie aanvragen</button>
         </fieldset>
     </form>
+    <p>
+        De registratie gaat in een aantal stappen:
+    </p>
+    <details>
+        <summary>Selecteer je naam</summary>
+        <p>
+            Omdat alleen leden van de schaakvereniging zich kunnen registreren, moet je naam in de ranglijst staan.
+            Klik op je naam in de ranglijst. Dan verschijnt het overzicht met de uitslagen van jouw partijen.
+            Klik in het menu op de optie registeren.
+            Je naam en je KNSB nummer worden automatisch ingevuld op het registratieformulier.
+        </p>
+    </details>
+    <details>
+        <summary>Vul je e-mail in en klik op registratie aanvragen</summary>
+        <p>
+            We hebben je e-mail nodig om je een link met een unieke code op te sturen waarmee 0-0-0.nl je herkent.
+            Indien 0-0-0.nl je niet meer herkent, kan je opnieuw een registratie aanvragen.
+        </p>
+    </details>
+    <details>
+        <summary>Je aanvraag wordt gecontroleerd</summary>
+        <p>
+            Je aanvraag wordt niet onmiddellijk verwerkt, want we controleren eerst je e-mail.
+            Bovendien krijg je uitsluitend per e-mail een link met een unieke code.
+            0-0-0.nl stuurt dus nooit een unieke code.
+            Het is de bedoeling dat het apparaat waarmee je 0-0-0.nl gebruikt,
+            je unieke code als gebruiker automatisch naar 0-0-0.nl stuurt.
+        </p>
+    </details>
+    <details>
+        <summary>Klik op de link, die je per e-mail hebt gekregen</summary>
+        <p>
+            0-0-0.nl genereert voor elk lid van de schaakvereniging een unieke code.
+            Die unieke code krijg je per e-mail met een link.
+            Pas als je op die link hebt geklikt, wordt de unieke code geactiveerd en
+            kan 0-0-0.nl je herkennen als geregistreerd gebruiker.
+            Indien je 0-0-0.nl gebruikt op verschillende apparaten (computer, tablet of smartphone),
+            moet je op elk apparaat dezelfde unieke code activeren.
+        </p>
+    </details>
+    <details>
+        <summary>0-0-0.nl herkent je als geregistreerd gebruiker</summary>
+        <p>
+            Als je een geregistreerd gebruiker bent, staat een unieke code op elk apparaat waarop je de registratie hebt geactiveerd.
+            Indien je met dat apparaat 0-0-0.nl gebruikt, stuur je automatisch die unieke code naar 0-0-0.nl.
+            Met de unieke code zoekt 0-0-0.nl je naam en KNSB nummer en
+            heb je een persoonlijke agenda, kan je je per ronde aanmelden of afzeggen
+            en kan je de voorlopige indeling van de komende ronde zien.
+        </p>
+    </details>
     <script src="js/uitslagen.js"></script>
     <script src="js/gebruiker.js"></script>
 </body>

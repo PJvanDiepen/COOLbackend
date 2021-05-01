@@ -11,13 +11,6 @@ const { fn, ref } = require('objection');
 
 module.exports = router => {
 
-    // geeft 1 object in plaats van array met objects
-    router.get('/gebruiker/:uuidToken', async function (ctx) {
-        ctx.body = await Gebruiker.query()
-            .findById(ctx.params.uuidToken)
-            .select('knsbNummer', 'mutatieRechten');
-    });
-
     // geeft array met objects
     router.get('/spelers/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
@@ -189,39 +182,39 @@ module.exports = router => {
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
+    /*
+    registratie aanvragen voor gebruiker
+     */
+    router.get('/registreer/:knsbNummer/:email', async function (ctx) {
+        ctx.body = await Gebruiker.query()
+            .insert({knsbNummer: ctx.params.knsbNummer,
+                mutatieRechten: 1,
+                uuidToken: fn('uuid'),
+                email: ctx.params.email});
+    });
+
+    /*
+    registratie voor gebruiker activeren
+     */
     router.get('/email/:uuidToken', async function (ctx) {
         ctx.body = await Gebruiker.query()
             .findById(ctx.params.uuidToken)
             .patch({datumEmail: fn('curdate')});
     });
 
-    router.get('/registreer/:knsbNummer/:email', async function (ctx) {
+    /*
+    knsbNummer, naam en mutatieRechten van gebruiker opzoeken
+     */
+    router.get('/gebruiker/:uuidToken', async function (ctx) {
         ctx.body = await Gebruiker.query()
-            .select('mutatieRechten', 'uuidToken')
-            .insertAndFetch({
-                knsbNummer: ctx.params.knsbNummer,
-                mutatieRechten: 1,
-                uuidToken: fn('uuid'),
-                email: ctx.params.email});
-    });
-
-    router.get('/xxx/:knsbNummer/:email', async function (ctx) {
-        ctx.body = await Gebruiker.query()
-            .insert({
-                knsbNummer: ctx.params.knsbNummer,
-                mutatieRechten: 1,
-            uuidToken: fn('uuid'),
-            email: ctx.params.email});
+            .findById(ctx.params.uuidToken)
+            .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
+            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
     });
 
     router.get('/partij/:teken', async function (ctx) {
         ctx.body = await Uitslag.query()
             .patch({partij: ctx.params.teken});
-    });
-
-    router.get('/ipaddress', async function (ctx) {
-        console.log(ctx.request);
-        ctx.body = ctx.url + " = " + ctx.request.ip;
     });
 
 }

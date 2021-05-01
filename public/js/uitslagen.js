@@ -8,10 +8,11 @@ const seizoen = doorgeven("seizoen") || "2021";
 const INTERNE_COMPETITIE = "int";
 const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
 const speler = Number(doorgeven("speler")); // knsbNummer
-const naam = doorgeven("naam");
+const naamSpeler = doorgeven("naam");
 const rondeNummer = Number(doorgeven("ronde"));
 
 let gebruiker = 0;
+let naamGebruiker = "onbekend";
 let mutatieRechten = 0;
 leesGebruiker();
 
@@ -32,6 +33,7 @@ async function leesGebruiker() {
     if (uuidToken) {
         const object = await databaseFetch("/gebruiker/" + uuidToken);
         gebruiker = Number(object.knsbNummer);
+        naamGebruiker = object.naam;
         mutatieRechten = Number(object.mutatieRechten);
     }
 }
@@ -60,7 +62,7 @@ async function serverFetch(url) {
         const response = await fetch(server + url);
         return await response.json();
     } catch (e) {
-        console.error(e);
+        console.error(e); // TODO per sessie fouten verzamelen
     }
 }
 

@@ -24,6 +24,10 @@ hr {
     padding: 5px;
 }
 
+button, details {
+	cursor: pointer;
+}
+
 button, input, select {
 	font-size: 100%; /* anders wordt font-size kleiner */
 	margin: 2px;
@@ -43,7 +47,7 @@ button, legend, select {
 }
 
 pre {
-  width: fit-content; /* werkt niet in Explorer en Edge */
+  width: fit-content;
   padding: 10px;
   background: seashell;
   border: 1px solid maroon;

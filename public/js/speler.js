@@ -39,7 +39,7 @@ const TIJDELIJK_LID_NUMMER = 100;
 const EXTERNE_WEDSTRIJD = 2;
 
 async function uitslagenSpeler(kop, lijst) {
-    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), naam].join(SCHEIDING);
+    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), naamSpeler].join(SCHEIDING);
     const t = await totalenSpeler(seizoen, speler);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {

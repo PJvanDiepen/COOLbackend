@@ -17,10 +17,10 @@
         const schaakVereniging = params.get("schaakVereniging") || "Waagtoren";
         const uuidToken = params.get("uuidToken");
         if (schaakVereniging && uuidToken) {
-            localStorage.setItem(schaakVereniging, uuidToken);  // overschrijf, geen controle
+            localStorage.setItem(schaakVereniging, uuidToken);
             sessionStorage.setItem("schaakVereniging", schaakVereniging);
             serverFetch("/email/" + uuidToken);
-            naarAnderePagina("ranglijst.html");
+            naarAnderePagina("agenda.html");
         } else {
             naarAnderePagina("index.html");
         }
