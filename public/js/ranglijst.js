@@ -3,15 +3,24 @@
 actieSelecteren(document.getElementById("actieSelecteren"),
     hamburgerMenu,
     naarAgenda,
-    [10, "partij = x",
+    [9, "conversie tegenstanderNummer naar partij",
         async function () {
-            const mutaties = await serverFetch("/partij/x");
-            console.log("partij = x: " + mutaties);
-        }],
-    [9, "partij = y",
-        async function () {
-            const mutaties = await serverFetch("/partij/y");
-            console.log("partij = y: " + mutaties);
+            let mutaties = await serverFetch("/partij/3/3/a");
+            console.log("partij = AFWEZIG: " + mutaties);
+            mutaties = await serverFetch("/partij/8/8/b");
+            console.log("partij = BYE: " + mutaties);
+            mutaties = await serverFetch("/partij/2/2/e");
+            console.log("partij = EXTERNE_PARTIJ: " + mutaties);
+            mutaties = await serverFetch("/partij/9/9999999/i");
+            console.log("partij = INTERNE_PARTIJ: " + mutaties);
+            mutaties = await serverFetch("/partij/1/1/o");
+            console.log("partij = ONEVEN: " + mutaties);
+            mutaties = await serverFetch("/partij/7/7/t");
+            console.log("partij = TEAMLEIDER: " + mutaties);
+            mutaties = await serverFetch("/partij/6/6/v");
+            console.log("partij = REGLEMENTAIR_VERLIES: " + mutaties);
+            mutaties = await serverFetch("/partij/5/5/w");
+            console.log("partij = REGLEMENTAIRE_WINST: " + mutaties);
         }],
     terugNaar
 );

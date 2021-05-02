@@ -212,9 +212,13 @@ module.exports = router => {
             .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
     });
 
-    router.get('/partij/:teken', async function (ctx) {
+    /*
+    conversie tegenstanderNummer [van, tot] naar partij = letter
+     */
+    router.get('/partij/:van/:tot/:letter', async function (ctx) {
         ctx.body = await Uitslag.query()
-            .patch({partij: ctx.params.teken});
+            .whereBetween('uitslag.tegenstanderNummer', [ctx.params.van, ctx.params.tot])
+            .patch({partij: ctx.params.letter});
     });
 
 }
