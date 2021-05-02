@@ -41,7 +41,7 @@ drop function punten;
 
 delimiter $$
 
-create function punten(seizoen char(4), knsbNummer int, eigenWaardeCijfer int, teamCode char(3), tegenstander int, resultaat char(1))
+create function punten(seizoen char(4), knsbNummer int, eigenWaardeCijfer int, teamCode char(3), partij char(1), tegenstander int, resultaat char(1))
     returns int deterministic -- reglement artikel 12
 begin
     declare plus int default 0;
@@ -100,12 +100,13 @@ begin
     declare witExtern int default 0;
     declare zwartExtern int default 0;
     declare teamCode char(3);
+    declare partij char(1);
     declare tegenstander int;
     declare witZwart char(1);
     declare resultaat char(1);
     declare found boolean default true;
     declare uitslagen cursor for
-        select u.teamCode, u.tegenstanderNummer, u.witZwart, u.resultaat
+        select u.teamCode, u.partij, u.tegenstanderNummer, u.witZwart, u.resultaat
         from uitslag u
         where u.seizoen = seizoen
             and u.knsbNummer = knsbNummer
@@ -114,7 +115,7 @@ begin
     set found = false;
     set eigenWaardeCijfer = waardeCijfer(seizoen, knsbNummer);
     open uitslagen;
-    fetch uitslagen into teamCode, tegenstander, witZwart, resultaat;
+    fetch uitslagen into teamCode, partij, tegenstander, witZwart, resultaat;
     while found
         do
             if teamCode <> 'int' then
@@ -152,8 +153,8 @@ begin
                     set zwartIntern = zwartIntern + 1;
                 end if;
             end if;
-            set totaal = totaal + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, tegenstander, resultaat);
-            fetch uitslagen into teamCode, tegenstander, witZwart, resultaat;
+            set totaal = totaal + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, partij, tegenstander, resultaat);
+            fetch uitslagen into teamCode, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
     if witIntern = 0 and zwartIntern = 0 then
@@ -199,7 +200,7 @@ set @knsbNummer = 6212404; -- Peter van Diepen
 -- ranglijst
 select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, s.knsbNummer) as totalen
 from speler s
-         join persoon p on s.knsbNummer = p.knsbNummer
+join persoon p on s.knsbNummer = p.knsbNummer
 where seizoen = @seizoen
 order by totalen desc;
 
@@ -212,10 +213,11 @@ select u.datum,
        p.naam,
        u.resultaat,
        u.teamCode,
+       u.partij,
        r.compleet,
        r.uithuis,
        r.tegenstander,
-       punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.tegenstanderNummer, u.resultaat) as punten
+       punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.partij, u.tegenstanderNummer, u.resultaat) as punten
 from uitslag u
 join persoon p on u.tegenstanderNummer = p.knsbNummer
 join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer

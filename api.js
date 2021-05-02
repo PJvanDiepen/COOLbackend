@@ -65,10 +65,11 @@ module.exports = router => {
         p.naam,
         u.resultaat,
         u.teamCode,
+        u.partij,
         r.compleet,
         r.uithuis,
         r.tegenstander,
-        punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.tegenstanderNummer, u.resultaat) as punten
+        punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.partij, u.tegenstanderNummer, u.resultaat) as punten
     from uitslag u
     join persoon p on u.tegenstanderNummer = p.knsbNummer
     join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
@@ -88,6 +89,7 @@ module.exports = router => {
                 'persoon.naam',
                 'uitslag.resultaat',
                 'uitslag.teamCode',
+                'uitslag.partij',
                 'ronde.compleet',
                 'ronde.uithuis',
                 'ronde.tegenstander',
@@ -96,6 +98,7 @@ module.exports = router => {
                         ctx.params.knsbNummer,
                         fn('waardeCijfer', ctx.params.seizoen, ctx.params.knsbNummer),
                         ref('uitslag.teamCode'),
+                        ref('uitslag.partij'),
                         ref('uitslag.tegenstanderNummer'),
                         ref('uitslag.resultaat'))})
             .join('persoon', 'persoon.knsbNummer', 'uitslag.tegenstanderNummer')
