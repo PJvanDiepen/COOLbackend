@@ -1,7 +1,6 @@
 "use strict";
 
-actieSelecteren(document.getElementById("actieSelecteren"),
-    hamburgerMenu,
+actieSelecteren(
     naarAgenda,
     [9, "conversie tegenstanderNummer naar partij",
         async function () {
@@ -24,9 +23,9 @@ actieSelecteren(document.getElementById("actieSelecteren"),
         }],
     terugNaar
 );
-seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
-teamSelecteren(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
-rondeSelecteren(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, 0);
+seizoenSelecteren(INTERNE_COMPETITIE);
+teamSelecteren(INTERNE_COMPETITIE);
+rondeSelecteren(INTERNE_COMPETITIE, 0);
 ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
 
 /*

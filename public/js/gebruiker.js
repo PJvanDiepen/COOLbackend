@@ -1,5 +1,14 @@
 "use strict";
 
+actieSelecteren(
+    [9, "andere gebruiker",
+        function () {
+            document.getElementById("naam").value = naamSpeler;
+            document.getElementById("knsbNummer").value = speler;
+            document.getElementById("status").value = "";
+        }],
+    terugNaar
+);
 gebruikerFormulier(document.getElementById("formulier"),
     document.getElementById("naam"),
     document.getElementById("knsbNummer"),

@@ -1,14 +1,13 @@
 "use strict";
 
-actieSelecteren(document.getElementById("actieSelecteren"),
-    hamburgerMenu,
+actieSelecteren(
     naarAgenda,
     naarRanglijst,
     naarGebruiker,
     [1, "wijzigen..."],
     terugNaar
 );
-seizoenSelecteren(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
+seizoenSelecteren(INTERNE_COMPETITIE);
 uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
 
 /*

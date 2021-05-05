@@ -184,9 +184,11 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-async function actieSelecteren(acties, ...menu) {
-    let mutatieRechten = await mutatieRechtenGebruiker();
-    let functies = [];
+async function actieSelecteren(...menu) {
+    const acties = document.getElementById("actieSelecteren");
+    acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
+    let functies = [function () { }];
+    const mutatieRechten = await mutatieRechtenGebruiker();
     for (let [mutatieNivo, tekst, functie] of menu) {
         if (mutatieRechten >= mutatieNivo) {
             acties.appendChild(htmlOptie(functies.length, tekst));
@@ -230,8 +232,6 @@ async function naamGebruiker() {
     }
 }
 
-const hamburgerMenu = [0, "\u2630 menu", function () { }];
-
 const terugNaar = [0, "\uD83E\uDC68", function() {
     history.back();
 }];
@@ -256,7 +256,8 @@ function naarAnderePagina(naarPagina) {
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
-async function seizoenSelecteren(seizoenen, teamCode) {
+async function seizoenSelecteren(teamCode) {
+    const seizoenen = document.getElementById("seizoenSelecteren");
     await mapAsync("/seizoenen/" + teamCode,
         function (team) {
             seizoenen.appendChild(htmlOptie(team.seizoen, seizoenVoluit(team.seizoen)));
@@ -269,7 +270,8 @@ async function seizoenSelecteren(seizoenen, teamCode) {
         });
 }
 
-async function teamSelecteren(teams, teamCode) {
+async function teamSelecteren(teamCode) {
+    const teams = document.getElementById("teamSelecteren");
     await mapAsync("/teams/" + seizoen,
         function (team) {
             teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
@@ -281,7 +283,8 @@ async function teamSelecteren(teams, teamCode) {
         });
 }
 
-async function rondeSelecteren(ronden, teamCode, rondeNummer) {
+async function rondeSelecteren(teamCode, rondeNummer) {
+    const ronden = document.getElementById("rondeSelecteren");
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,
         function (ronde) {
             ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));

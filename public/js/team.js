@@ -1,12 +1,11 @@
 "use strict";
 
-actieSelecteren(document.getElementById("actieSelecteren"),
-    hamburgerMenu,
+actieSelecteren(
     naarRanglijst,
     [1, "wijzigen..."],
     terugNaar
 );
-teamSelecteren(document.getElementById("teamSelecteren"), teamCode);
+teamSelecteren(teamCode);
 uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
 
 async function uitslagenTeam(kop, rondenTabel) {

@@ -1,12 +1,11 @@
 "use strict";
 
-actieSelecteren(document.getElementById("actieSelecteren"),
-    hamburgerMenu,
+actieSelecteren(
     naarRanglijst,
     [1, "wijzigen..."],
     terugNaar
 );
-rondeSelecteren(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, rondeNummer);
+rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
 wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
 uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
 
