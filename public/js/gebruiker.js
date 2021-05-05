@@ -6,10 +6,10 @@ gebruikerFormulier(document.getElementById("formulier"),
     document.getElementById("email"),
     document.getElementById("status"));
 
-function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
-    if (gebruiker) {
-        naam.value = naamGebruiker;
-        knsbNummer.value = gebruiker;
+async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
+    if (uuidToken) {
+        naam.value = await naamGebruiker();
+        knsbNummer.value = await knsbNummerGebruiker();
         status.value = "gebruiker is geregistreerd bij " + schaakVereniging;
     } else {
         naam.value = naamSpeler;
