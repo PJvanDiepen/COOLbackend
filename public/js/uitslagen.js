@@ -10,13 +10,8 @@ const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
 const speler = Number(doorgeven("speler")); // knsbNummer
 const naamSpeler = doorgeven("naam");
 const rondeNummer = Number(doorgeven("ronde"));
-
-let gebruiker = 0;
-let naamGebruiker = "onbekend";
-let mutatieRechten = 0;
-leesGebruiker();
-
 const SCHEIDING = " \u232A ";
+const uuidToken = localStorage.getItem(schaakVereniging);
 
 function doorgeven(key) {
     let value = params.get(key);
@@ -26,16 +21,6 @@ function doorgeven(key) {
         value = sessionStorage.getItem(key);
     }
     return value;
-}
-
-async function leesGebruiker() {
-    const uuidToken = localStorage.getItem(schaakVereniging);
-    if (uuidToken) {
-        const object = await databaseFetch("/gebruiker/" + uuidToken);
-        gebruiker = Number(object.knsbNummer);
-        naamGebruiker = object.naam;
-        mutatieRechten = Number(object.mutatieRechten);
-    }
 }
 
 async function findAsync(url, findFun) {
@@ -62,7 +47,7 @@ async function serverFetch(url) {
         const response = await fetch(server + url);
         return await response.json();
     } catch (e) {
-        console.error(e); // TODO per sessie fouten verzamelen
+        console.error(e); // TODO per sessie fouten verzamelen?
     }
 }
 
@@ -75,12 +60,6 @@ function htmlOptie(value, text) {
 
 function htmlTekst(tekst) {
     return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
-}
-
-function htmlParagraaf(tekst) {
-    const p = document.createElement("p");
-    p.appendChild(htmlTekst(tekst));
-    return p;
 }
 
 function htmlRij(...kolommen) {
@@ -205,7 +184,8 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-function actieSelecteren(acties, ...menu) {
+async function actieSelecteren(acties, ...menu) {
+    let mutatieRechten = await mutatieRechtenGebruiker();
     let functies = [];
     for (let [mutatieNivo, tekst, functie] of menu) {
         if (mutatieRechten >= mutatieNivo) {
@@ -221,6 +201,33 @@ function actieSelecteren(acties, ...menu) {
             functies[acties.value]();
             acties.value = 0;
         });
+}
+
+async function mutatieRechtenGebruiker() {
+    if (uuidToken) {
+        const object = await databaseFetch("/gebruiker/" + uuidToken);
+        return Number(object.mutatieRechten);
+    } else {
+        return 0;
+    }
+}
+
+async function knsbNummerGebruiker() {
+    if (uuidToken) {
+        const object = await databaseFetch("/gebruiker/" + uuidToken);
+        return Number(object.knsbNummer);
+    } else {
+        return 0;
+    }
+}
+
+async function naamGebruiker() {
+    if (uuidToken) {
+        const object = await databaseFetch("/gebruiker/" + uuidToken);
+        return object.naam;
+    } else {
+        return "onbekend";
+    }
 }
 
 const hamburgerMenu = [0, "\u2630 menu", function () { }];
