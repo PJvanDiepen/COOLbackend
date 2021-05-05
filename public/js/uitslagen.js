@@ -10,8 +10,26 @@ const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
 const speler = Number(doorgeven("speler")); // knsbNummer
 const naamSpeler = doorgeven("naam");
 const rondeNummer = Number(doorgeven("ronde"));
-const SCHEIDING = " \u232A ";
 const uuidToken = localStorage.getItem(schaakVereniging);
+
+// uitslag.partij
+const AFGEZEGD = "a";
+const BYE = "b";
+const EXTERNE_WEDSTRIJD = "e";
+const INTERNE_PARTIJ = "i";
+const ONEVEN = "o";
+const TEAMLEIDER = "o";
+const REGLEMENTAIR_VERLIES = "v";
+const REGLEMENTAIRE_WINST = "w";
+// uitslag.resultaat
+const REMISE = "½";
+const WINST  = "1";
+const VERLIES = "0";
+// uitslag.uithuis
+const THUIS = "t";
+const UIT = "u";
+// kop
+const SCHEIDING = " \u232A ";
 
 function doorgeven(key) {
     let value = params.get(key);
@@ -128,12 +146,6 @@ function wedstrijdVoluit(r) {
     const eigenTeam = wedstrijdTeam(r.teamCode);
     return r.uithuis === THUIS ? eigenTeam + " - " + r.tegenstander : r.tegenstander + " - " + eigenTeam;
 }
-
-const REMISE = "½";
-const WINST  = "1";
-const VERLIES = "0";
-const THUIS = "t";
-const UIT = "u";
 
 function score(winst, remise, verlies) {
     const partijen = winst + remise + verlies;
