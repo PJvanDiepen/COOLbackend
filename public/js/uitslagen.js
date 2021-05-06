@@ -13,14 +13,14 @@ const rondeNummer = Number(doorgeven("ronde"));
 const uuidToken = localStorage.getItem(schaakVereniging);
 
 // uitslag.partij
-const AFGEZEGD = "a";
-const BYE = "b";
-const EXTERNE_WEDSTRIJD = "e";
-const INTERNE_PARTIJ = "i";
-const ONEVEN = "o";
-const TEAMLEIDER = "o";
+const AFGEZEGD             = "a";
+const BYE                  = "b";
+const EXTERNE_WEDSTRIJD    = "e";
+const INTERNE_PARTIJ       = "i";
+const ONEVEN               = "o";
+const TEAMLEIDER           = "t";
 const REGLEMENTAIR_VERLIES = "v";
-const REGLEMENTAIRE_WINST = "w";
+const REGLEMENTAIRE_WINST  = "w";
 // uitslag.resultaat
 const REMISE = "½";
 const WINST  = "1";

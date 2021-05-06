@@ -21,6 +21,16 @@ actieSelecteren(
             mutaties = await serverFetch("/partij/5/5/w");
             console.log("partij = REGLEMENTAIRE_WINST: " + mutaties);
         }],
+    [9, "conversie tegenstanderNummer < 100 naar 0",
+        async function () {
+            let mutaties = await serverFetch("/tegenstander/1/99");
+            console.log("tegenstanderNummer = 0: " + mutaties);
+        }],
+    [9, "verwijder persoon tegenstanderNummer tussen 1 en 100",
+        async function () {
+            let mutaties = await serverFetch("/verwijder/persoon/1/99");
+            console.log("verwijder/persoon: " + mutaties);
+        }],
     terugNaar
 );
 seizoenSelecteren(INTERNE_COMPETITIE);

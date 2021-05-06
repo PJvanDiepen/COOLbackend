@@ -101,7 +101,15 @@ function internePartij(u, totaal) {
 function geenPartij(u, totaal) {
     const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
-    return htmlRij(rondeKolom, datumKolom, u.naam, "", "", "", u.punten, totaal);
+    const omschrijving = u.partij === AFGEZEGD             ? "afgezegd"
+                       : u.partij === BYE                  ? "bye"
+                       : u.partij === EXTERNE_WEDSTRIJD    ? "extern"
+                       : u.partij === INTERNE_PARTIJ       ? "intern"
+                       : u.partij === ONEVEN               ? "oneven"
+                       : u.partij === TEAMLEIDER           ? "vrijgesteld"
+                       : u.partij === REGLEMENTAIR_VERLIES ? "reglementair verlies"
+                       : u.partij === REGLEMENTAIRE_WINST  ? "reglementaire winst" : "fout!!!";
+    return htmlRij(rondeKolom, datumKolom, omschrijving, "", "", "", u.punten, totaal);
 }
 
 function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {

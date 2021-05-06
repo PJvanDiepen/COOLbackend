@@ -224,4 +224,24 @@ module.exports = router => {
             .patch({partij: ctx.params.letter});
     });
 
+    /*
+    conversie tegenstanderNummer [van, tot] naar tegenstanderNummer = 0
+     */
+    router.get('/tegenstander/:van/:tot', async function (ctx) {
+        ctx.body = await Uitslag.query()
+            .whereBetween('uitslag.tegenstanderNummer', [ctx.params.van, ctx.params.tot])
+            .patch({tegenstanderNummer: 0});
+    });
+
+    /*
+    verwijder Persoon tegenstanderNummer [van, tot]
+     */
+    router.get('/verwijder/persoon/:van/:tot', async function (ctx) {
+        ctx.body = await Persoon.query()
+            .delete()
+            .whereBetween('knsbNummer', [ctx.params.van, ctx.params.tot]);
+    });
+
+
+
 }
