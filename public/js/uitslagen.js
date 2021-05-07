@@ -10,11 +10,11 @@ const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
 const speler = Number(doorgeven("speler")); // knsbNummer
 const naamSpeler = doorgeven("naam");
 const rondeNummer = Number(doorgeven("ronde"));
+const informatieNivo = Number(doorgeven("informatie"));
 const uuidToken = localStorage.getItem(schaakVereniging);
 
 // uitslag.partij
 const AFGEZEGD             = "a";
-const BYE                  = "b";
 const EXTERNE_WEDSTRIJD    = "e";
 const INTERNE_PARTIJ       = "i";
 const ONEVEN               = "o";
@@ -339,7 +339,7 @@ function totalen(alleTotalen) {
     }
 
     function inRanglijst() {
-        return totaal[0] > 0;
+        return totaal[0];
     }
 
     function punten() {

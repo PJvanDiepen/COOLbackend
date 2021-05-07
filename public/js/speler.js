@@ -2,6 +2,12 @@
 
 actieSelecteren(
     naarAgenda,
+    [9, "meer informatie", function () {
+        naarAnderePagina("speler.html?informatie=9");
+    }],
+    [9, "minder informatie", function () {
+        naarAnderePagina("speler.html?informatie=0");
+    }],
     naarRanglijst,
     naarGebruiker,
     [1, "wijzigen..."],
@@ -49,7 +55,7 @@ async function uitslagenSpeler(kop, lijst) {
             if (t.intern()) {
                 totaal += u.punten;
             }
-            if (!t.intern() && u.partij === AFGEZEGD) {
+            if (!t.intern() && u.partij === AFGEZEGD && informatieNivo === 0) {
                 // deze uitslag overslaan TODO deze uitslag verwijderen
             } else if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
                 lijst.appendChild(internePartij(u, totaal));
@@ -102,7 +108,6 @@ function geenPartij(u, totaal) {
     const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
     const omschrijving = u.partij === AFGEZEGD             ? "afgezegd"
-                       : u.partij === BYE                  ? "bye"
                        : u.partij === EXTERNE_WEDSTRIJD    ? "extern"
                        : u.partij === INTERNE_PARTIJ       ? "intern"
                        : u.partij === ONEVEN               ? "oneven"

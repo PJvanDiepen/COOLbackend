@@ -2,35 +2,34 @@
 
 actieSelecteren(
     naarAgenda,
-    [9, "conversie tegenstanderNummer naar partij",
-        async function () {
-            let mutaties = await serverFetch("/partij/3/3/a");
-            console.log("partij = AFWEZIG: " + mutaties);
-            mutaties = await serverFetch("/partij/8/8/b");
-            console.log("partij = BYE: " + mutaties);
-            mutaties = await serverFetch("/partij/2/2/e");
-            console.log("partij = EXTERNE_PARTIJ: " + mutaties);
-            mutaties = await serverFetch("/partij/9/9999999/i");
-            console.log("partij = INTERNE_PARTIJ: " + mutaties);
-            mutaties = await serverFetch("/partij/1/1/o");
-            console.log("partij = ONEVEN: " + mutaties);
-            mutaties = await serverFetch("/partij/7/7/t");
-            console.log("partij = TEAMLEIDER: " + mutaties);
-            mutaties = await serverFetch("/partij/6/6/v");
-            console.log("partij = REGLEMENTAIR_VERLIES: " + mutaties);
-            mutaties = await serverFetch("/partij/5/5/w");
-            console.log("partij = REGLEMENTAIRE_WINST: " + mutaties);
-        }],
-    [9, "conversie tegenstanderNummer < 100 naar 0",
-        async function () {
-            let mutaties = await serverFetch("/tegenstander/1/99");
-            console.log("tegenstanderNummer = 0: " + mutaties);
-        }],
-    [9, "verwijder persoon tegenstanderNummer tussen 1 en 100",
-        async function () {
-            let mutaties = await serverFetch("/verwijder/persoon/1/99");
-            console.log("verwijder/persoon: " + mutaties);
-        }],
+    [9, "meer informatie", function () {
+        naarAnderePagina("ranglijst.html?informatie=9");
+    }],
+    [9, "minder informatie", function () {
+        naarAnderePagina("ranglijst.html?informatie=0");
+    }],
+    [9, "conversie tegenstanderNummer naar partij", async function () {
+        let mutaties = await serverFetch("/partij/3/3/a");
+        console.log("partij = AFWEZIG: " + mutaties);
+        mutaties = await serverFetch("/partij/8/8/b");
+        console.log("partij = BYE: " + mutaties);
+        mutaties = await serverFetch("/partij/2/2/e");
+        console.log("partij = EXTERNE_PARTIJ: " + mutaties);
+        mutaties = await serverFetch("/partij/9/9999999/i");
+        console.log("partij = INTERNE_PARTIJ: " + mutaties);
+        mutaties = await serverFetch("/partij/1/1/o");
+        console.log("partij = ONEVEN: " + mutaties);
+        mutaties = await serverFetch("/partij/7/7/t");
+        console.log("partij = TEAMLEIDER: " + mutaties);
+        mutaties = await serverFetch("/partij/6/6/v");
+        console.log("partij = REGLEMENTAIR_VERLIES: " + mutaties);
+        mutaties = await serverFetch("/partij/5/5/w");
+        console.log("partij = REGLEMENTAIRE_WINST: " + mutaties);
+        mutaties = await serverFetch("/tegenstander/1/99");
+        console.log("tegenstanderNummer = 0: " + mutaties);
+        mutaties = await serverFetch("/verwijder/persoon/1/99");
+        console.log("verwijder/persoon: " + mutaties);
+    }],
     terugNaar
 );
 seizoenSelecteren(INTERNE_COMPETITIE);
@@ -52,7 +51,7 @@ function ranglijst(kop, lijst) {
     mapAsync("/ranglijst/" + seizoen,
         function (speler, i) {
             const t = totalen(speler.totalen);
-            if (t.inRanglijst()) {
+            if (t.inRanglijst() || informatieNivo > 0) {
                 lijst.appendChild(htmlRij(
                     i + 1,
                     naarSpeler(speler.knsbNummer, speler.naam),

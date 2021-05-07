@@ -44,27 +44,28 @@ delimiter $$
 create function punten(seizoen char(4), knsbNummer int, eigenWaardeCijfer int, teamCode char(3), partij char(1), tegenstander int, resultaat char(1))
     returns int deterministic -- reglement artikel 12
 begin
-    declare plus int default 0;
-    if teamCode <> 'int' then -- niet interne competitie
+    if partij = 'i' and resultaat = '1' then
+        return waardeCijfer(seizoen, tegenstander) + 12;
+    elseif partij = 'i' and resultaat = '½' then
+        return waardeCijfer(seizoen, tegenstander);
+    elseif partij = 'i' and resultaat = '0' then
+        return waardeCijfer(seizoen, tegenstander) - 12;
+    elseif partij = 'a' then -- afwezig
+        return eigenWaardeCijfer - 4;
+    elseif partij = 't' then -- teamleider
+        return eigenWaardeCijfer;
+    elseif partij = 'o' then -- oneven
+		return eigenWaardeCijfer + 12;
+    elseif partij = 'w' then -- reglementaire winst
+        return eigenWaardeCijfer + 12;
+	elseif partij = 'v' then -- reglementair verlies
+		return eigenWaardeCijfer - 12;
+    elseif partij = 'e' and teamCode = 'int' then -- externe partij tijdens interne ronde
+        return eigenWaardeCijfer;
+	elseif partij = 'e' then -- elke externe partij
         return 4;
-    elseif tegenstander = 4 then -- interne competitie: tegenstander en uitslag zijn nog niet bekend
-        return 0;
-    elseif tegenstander > 100 then -- interne competitie: tegenstander en uitslag zijn bekend
-		if resultaat = '1' then -- winst
-            set plus = 12;
-		elseif resultaat = '0' then -- verlies
-			set plus = -12;
-		end if; -- remise
-        return waardeCijfer(seizoen, tegenstander) + plus;
-    else
-		if tegenstander in (1, 5, 8) then -- oneven, reglementaire winst of bye
-			set plus = 12;
-		elseif tegenstander = 3 then -- afgezegd
-			set plus = - 4;
-		elseif tegenstander = 6 then -- reglementair verlies
-			set plus = - 12;
-		end if; -- tegenstander = 2 extern of tegenstander = 7 vrijgesteld
-            return eigenWaardeCijfer + plus;
+	else
+		return 0;   
     end if;
 end;
 $$
@@ -118,40 +119,35 @@ begin
     fetch uitslagen into teamCode, partij, tegenstander, witZwart, resultaat;
     while found
         do
-            if teamCode <> 'int' then
-                if resultaat = '1' then
-                    set winstExtern = winstExtern + 1;
-                elseif resultaat = '0' then
-                    set verliesExtern = verliesExtern + 1;
-                else
-                    set remiseExtern = remiseExtern + 1;
-                end if;
-                if witZwart = 'w' then
-                    set witExtern = witExtern + 1;
-                else
-                    set zwartExtern = zwartExtern + 1;
-                end if;
-            elseif tegenstander = 1  then
-                set oneven = oneven + 1;
-            elseif tegenstander = 2 then
-                set externTijdensInterneRonde = externTijdensInterneRonde + 1;
-			elseif tegenstander = 3 then
+            if partij = 'i' and resultaat = '1' then
+                set winstIntern = winstIntern + 1;
+            elseif partij = 'i' and resultaat = '½' then
+                set remiseIntern = remiseIntern + 1;
+            elseif partij = 'i' and resultaat = '0' then
+                set verliesIntern = verliesIntern + 1;
+            elseif partij = 'a' then
                 set afzeggingen = afzeggingen + 1;
-            elseif tegenstander in (5, 8) then
+            elseif partij = 'o' then
+                set oneven = oneven + 1;
+            elseif partij = 'w' then
                 set reglementairGewonnen = reglementairGewonnen + 1;
-            elseif tegenstander > 100 then
-                if resultaat = '1' then
-					set winstIntern = winstIntern + 1;
-				elseif resultaat = '0' then
-					set verliesIntern = verliesIntern + 1;
-				else
-					set remiseIntern = remiseIntern + 1;
-				end if;
-				if witZwart = 'w' then
-					set witIntern = witIntern + 1;
-				else
-                    set zwartIntern = zwartIntern + 1;
-                end if;
+            elseif partij = 'e' and teamCode = 'int' then
+                set externTijdensInterneRonde = externTijdensInterneRonde + 1;
+            elseif partij = 'e' and resultaat = '1' then
+                set winstExtern = winstExtern + 1;
+            elseif partij = 'e' and resultaat = '½' then
+                set remiseExtern = remiseExtern + 1;
+            elseif partij = 'e' and resultaat = '0' then
+                set verliesExtern = verliesExtern + 1;
+            end if;
+            if partij = 'i' and witZwart = 'w' then
+                set witIntern = witIntern + 1;
+            elseif partij = 'i' and witZwart = 'z' then
+                set zwartIntern = zwartIntern + 1;
+            elseif partij = 'e' and witZwart = 'w' then
+                set witExtern = witExtern + 1;
+            elseif partij = 'e' and witZwart = 'z' then
+                set zwartExtern = zwartExtern + 1;
             end if;
             set totaal = totaal + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, partij, tegenstander, resultaat);
             fetch uitslagen into teamCode, partij, tegenstander, witZwart, resultaat;

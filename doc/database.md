@@ -195,15 +195,14 @@ Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en
 Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
 een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
 
-De verschillende mogelijkheden voor `partij` zijn: (TODO zie `tegenstanderNummer` )
-- a = AFGEZEGD (TODO = 3) (Rokade WedstrijdType = 2)   
-- b = BYE (TODO = 8)
-- e = EXTERNE_WEDSTRIJD (TODO = 2) (Rokade WedstrijdType = 11 extern op dinsdag)
-- i = INTERNE_PARTIJ (TODO = 4)
-- o = ONEVEN (TODO = 1) (Rokade WedstrijdType = 3)
-- t = TEAMLEIDER (TODO 7) (Rokade WedstrijdType = 4)
-- v = REGLEMENTAIR_VERLIES (TODO = 6) (Rokade WedstrijdType = 6)
-- w = REGLEMENTAIRE_WINST (TODO = 5) (Rokade WedstrijdType = 5)
+De verschillende mogelijkheden voor `partij` zijn:
+- a = AFGEZEGD (Rokade WedstrijdType = 2)   
+- e = EXTERNE_WEDSTRIJD (Rokade WedstrijdType = 11 extern op dinsdag)
+- i = INTERNE_PARTIJ
+- o = ONEVEN (Rokade WedstrijdType = 3)
+- t = TEAMLEIDER (Rokade WedstrijdType = 4)
+- v = REGLEMENTAIR_VERLIES (Rokade WedstrijdType = 6)
+- w = REGLEMENTAIRE_WINST (Rokade WedstrijdType = 5)
 
 Voor de externe competitie zijn er twee mogelijkheden.
 1. Indien de externe partij wordt gespeeld in plaats van een interne partij 
@@ -220,15 +219,6 @@ tegen een team van de eigen schaakvereniging
 Indien `anderTeam = 'int'` telt deze uitslag mee voor de interne competitie.
 
 De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
-- ONBEKEND = 0
-- 0 = niemand (TODO verwijderen tot en met 8 = bye)
-- 1 = oneven
-- 2 = externe wedstrijd
-- 3 = afgezegd
-- 4 = interne partij
-- 5 = reglementaire winst
-- 6 = reglementair verlies
-- 7 = vrijgesteld
-- 8 = bye
+- 0 = onbekend
 - TIJDELIJK_LID_NUMMER > 100
 - KNSB_NUMMER > 1000000
