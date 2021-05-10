@@ -8,6 +8,14 @@ actieSelecteren(
     [9, "minder informatie", function () {
         naarAnderePagina("speler.html?informatie=0");
     }],
+    [9, "speler verwijderen", async function () {
+        const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
+        if (mutaties) {
+            sessionStorage.removeItem(`/uitslagen/${seizoen}/${speler}`);
+            sessionStorage.removeItem(`/ranglijst/${seizoen}`);
+            naarAnderePagina("ranglijst.html");
+        }
+    }],
     naarRanglijst,
     naarGebruiker,
     [1, "wijzigen..."],
@@ -71,6 +79,13 @@ async function uitslagenSpeler(kop, lijst) {
         });
     if (t.aftrek()) {
         lijst.appendChild(htmlRij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
+    }
+    if (!t.intern() && t.afzeggingen() && informatieNivo) {
+        lijst.appendChild(htmlRij("", "", "uitsluitend afzeggingen", "", "", "", "", ""));
+    }
+
+    if (!t.intern() && !t.extern() && informatieNivo) {
+        lijst.appendChild(htmlRij("", "", "geen interne en geen externe partijen", "", "", "", "", ""));
     }
 }
 

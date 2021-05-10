@@ -1,6 +1,7 @@
 'use strict'
 
 const Gebruiker = require('./models/gebruiker');
+const Mutatie = require('./models/mutatie');
 const Persoon = require('./models/persoon');
 const Ronde = require('./models/ronde');
 const Speler = require('./models/speler');
@@ -209,11 +210,37 @@ module.exports = router => {
     knsbNummer, naam en mutatieRechten van gebruiker opzoeken
      */
     router.get('/gebruiker/:uuidToken', async function (ctx) {
-        ctx.body = await Gebruiker.query()
-            .findById(ctx.params.uuidToken)
-            .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
-            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
+        ctx.body = await leesGebruiker(ctx.params.uuidToken);
     });
+
+    router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
+        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
+        if (9 > Number(gebruiker.mutatieRechten)) {
+            ctx.body = 0; // TODO foutboodschap?
+        } else {
+            const aantal = await Speler.query()
+                .delete()
+                .where('seizoen', ctx.params.seizoen)
+                .andWhere('knsbNummer',ctx.params.knsbNummer);
+            if (aantal) {
+                await Mutatie.query()
+                    .insert({knsbNummer: Number(gebruiker.knsbNummer),
+                        seizoen: ctx.params.seizoen,
+                        // teamCode
+                        // rondeNummer
+                        mutatieSoort: `verwijder/speler/${ctx.params.seizoen}/${ctx.params.knsbNummer}`,
+                        mutatieAantal: aantal});
+            }
+            ctx.body = aantal;
+        }
+    });
+
+    // TODO indien alleen afwezig uitslagen verwijderen
+
+    // TODO indien nieuwe speler afwezig toevoegen voor eerdere ronden
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /*
     conversie tegenstanderNummer [van, tot] naar partij = letter
@@ -234,14 +261,18 @@ module.exports = router => {
     });
 
     /*
-    verwijder Persoon tegenstanderNummer [van, tot]
+    conversie: verwijder Persoon tegenstanderNummer [van, tot]
      */
     router.get('/verwijder/persoon/:van/:tot', async function (ctx) {
         ctx.body = await Persoon.query()
             .delete()
             .whereBetween('knsbNummer', [ctx.params.van, ctx.params.tot]);
     });
+}
 
-
-
+async function leesGebruiker(uuidToken) {
+    return Gebruiker.query()
+        .findById(uuidToken)
+        .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
+        .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
 }

@@ -155,6 +155,7 @@ create table mutatie (
     teamCode char(3),
     rondeNummer int,
     mutatieTabel varchar(45),
+    mutatieSoort varchar(45),
     mutatieAantal int,
     primary key (knsbNummer)
 );

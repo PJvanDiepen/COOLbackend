@@ -202,7 +202,7 @@ async function actieSelecteren(...menu) {
     let functies = [function () { }];
     const mutatieRechten = await mutatieRechtenGebruiker();
     for (let [mutatieNivo, tekst, functie] of menu) {
-        if (mutatieRechten >= mutatieNivo) {
+        if (mutatieNivo <= mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
             functies.push(functie ? functie :
                 function () {
@@ -219,8 +219,8 @@ async function actieSelecteren(...menu) {
 
 async function mutatieRechtenGebruiker() {
     if (uuidToken) {
-        const object = await databaseFetch("/gebruiker/" + uuidToken);
-        return Number(object.mutatieRechten);
+        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        return Number(gebruiker.mutatieRechten);
     } else {
         return 0;
     }
@@ -228,8 +228,8 @@ async function mutatieRechtenGebruiker() {
 
 async function knsbNummerGebruiker() {
     if (uuidToken) {
-        const object = await databaseFetch("/gebruiker/" + uuidToken);
-        return Number(object.knsbNummer);
+        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        return Number(gebruiker.knsbNummer);
     } else {
         return 0;
     }
@@ -237,8 +237,8 @@ async function knsbNummerGebruiker() {
 
 async function naamGebruiker() {
     if (uuidToken) {
-        const object = await databaseFetch("/gebruiker/" + uuidToken);
-        return object.naam;
+        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        return gebruiker.naam;
     } else {
         return "onbekend";
     }
@@ -387,6 +387,10 @@ function totalen(alleTotalen) {
         return totaal[11];
     }
 
+    function extern() {
+        return totaal[12] || totaal[13] || totaal[14];
+    }
+
     function scoreExtern() {
         return score(totaal[12],totaal[13],totaal[14]);
     }
@@ -407,6 +411,7 @@ function totalen(alleTotalen) {
         afzeggingen,
         aftrek,
         startPunten,
+        extern,
         scoreExtern,
         percentageExtern,
     });
