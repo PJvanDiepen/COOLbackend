@@ -9,7 +9,9 @@ actieSelecteren(
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
     [9, "conversie tegenstanderNummer naar partij", async function () {
-        let mutaties = await serverFetch("/partij/3/3/a");
+        let mutaties = await serverFetch("/verwijder/persoon/1/99"); // verwijder overbodige personen
+        console.log("verwijder/persoon: " + mutaties);
+        mutaties = await serverFetch("/partij/3/3/a");
         console.log("partij = AFWEZIG: " + mutaties);
         mutaties = await serverFetch("/partij/8/8/b");
         console.log("partij = BYE: " + mutaties);
@@ -27,8 +29,6 @@ actieSelecteren(
         console.log("partij = REGLEMENTAIRE_WINST: " + mutaties);
         mutaties = await serverFetch("/tegenstander/1/99");
         console.log("tegenstanderNummer = 0: " + mutaties);
-        mutaties = await serverFetch("/verwijder/persoon/1/99");
-        console.log("verwijder/persoon: " + mutaties);
     }],
     terugNaar
 );

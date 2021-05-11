@@ -17,19 +17,19 @@ module.exports = router => {
         ctx.body = await Speler.query()
             .select('speler.*', 'persoon.*')
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
-            .where('speler.seizoen', '=', ctx.params.seizoen)
+            .where('speler.seizoen', ctx.params.seizoen)
             .orderBy('naam');
     });
 
     router.get('/seizoenen/:teamCode', async function (ctx) {
         ctx.body = await Team.query()
             .select('team.seizoen')
-            .where('team.teamCode', '=', ctx.params.teamCode);
+            .where('team.teamCode', ctx.params.teamCode);
     });
 
     router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
-            .where('team.seizoen', '=', ctx.params.seizoen)
+            .where('team.seizoen', ctx.params.seizoen)
             .andWhere('team.teamCode', '<>', ''); // niet geen team
     });
 
@@ -52,7 +52,7 @@ module.exports = router => {
                 'speler.knsbRating',
                 {totalen: fn('totalen', ctx.params.seizoen, ref('speler.knsbNummer'))})
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
-            .where('seizoen', '=', ctx.params.seizoen)
+            .where('seizoen', ctx.params.seizoen)
             .orderBy('totalen', 'desc');
     });
 
@@ -174,14 +174,14 @@ module.exports = router => {
 
     router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Ronde.query()
-            .where('ronde.seizoen', '=', ctx.params.seizoen)
-            .andWhere('ronde.teamCode','=', ctx.params.teamCode)
+            .where('ronde.seizoen', ctx.params.seizoen)
+            .andWhere('ronde.teamCode', ctx.params.teamCode)
             .orderBy('ronde.rondeNummer');
     });
 
     router.get('/wedstrijden/:seizoen', async function (ctx) {
         ctx.body = await Ronde.query()
-            .where('ronde.seizoen', '=', ctx.params.seizoen)
+            .where('ronde.seizoen', ctx.params.seizoen)
             .andWhere('ronde.teamCode','<>', 'int')
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
@@ -216,29 +216,43 @@ module.exports = router => {
     router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await leesGebruiker(ctx.params.uuidToken);
         if (9 > Number(gebruiker.mutatieRechten)) {
-            ctx.body = 0; // TODO foutboodschap?
+            ctx.body = 0;
         } else {
             const aantal = await Speler.query()
                 .delete()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer);
-            if (aantal) {
-                await Mutatie.query()
-                    .insert({knsbNummer: Number(gebruiker.knsbNummer),
-                        seizoen: ctx.params.seizoen,
-                        // teamCode
-                        // rondeNummer
-                        mutatieSoort: `verwijder/speler/${ctx.params.seizoen}/${ctx.params.knsbNummer}`,
-                        mutatieAantal: aantal});
-            }
+            seizoenMutatie(gebruiker.knsbNummer, ctx.params.seizoen, 'verwijder/speler', aantal, ctx.params.knsbNummer);
             ctx.body = aantal;
         }
     });
 
-    // TODO indien alleen afwezig uitslagen verwijderen
+    router.get('/:uuidToken/verwijder/afzeggingen/:seizoen/:knsbNummer', async function (ctx) {
+        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
+        if (9 > Number(gebruiker.mutatieRechten)) {
+            ctx.body = 0;
+        } else {
+            const intern = await Uitslag.query()
+                .where('seizoen', ctx.params.seizoen)
+                .andWhere('knsbNummer',ctx.params.knsbNummer)
+                .andWhere('partij', 'i')
+                .limit(1);
+            if (intern.length) {
+                ctx.body = 0; // indien interne partijen dan geen afzeggingen verwijderen
+            } else {
+                const aantal = await Uitslag.query()
+                    .delete()
+                    .where('seizoen', ctx.params.seizoen)
+                    .andWhere('knsbNummer',ctx.params.knsbNummer)
+                    .andWhere('partij', 'a');
+                console.log("verwijderd: " + aantal);
+                seizoenMutatie(gebruiker.knsbNummer, ctx.params.seizoen, 'verwijder/afzeggingen', aantal, ctx.params.knsbNummer);
+                ctx.body = aantal;
+            }
+        }
+    });
 
     // TODO indien nieuwe speler afwezig toevoegen voor eerdere ronden
-
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -275,4 +289,20 @@ async function leesGebruiker(uuidToken) {
         .findById(uuidToken)
         .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
         .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
+}
+
+async function seizoenMutatie(gebruiker, seizoen, mutatieSoort, aantal, ...velden) {
+    if (aantal) {
+        let soort = mutatieSoort + "/" + seizoen;
+        for (let veld of velden) {
+            soort = soort + "/" + veld;
+        }
+        await Mutatie.query() // await is noodzakelijk, want anders geen insert
+            .insert({knsbNummer: Number(gebruiker),
+                seizoen: seizoen,
+                // teamCode
+                // rondeNummer
+                mutatieSoort: soort,
+                mutatieAantal: aantal});
+    }
 }

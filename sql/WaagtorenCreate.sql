@@ -154,10 +154,9 @@ create table mutatie (
     seizoen char(4),
     teamCode char(3),
     rondeNummer int,
-    mutatieTabel varchar(45),
-    mutatieSoort varchar(45),
+    mutatieSoort varchar(100),
     mutatieAantal int,
-    primary key (knsbNummer)
+    primary key (knsbNummer, tijdstip)
 );
 
 alter table mutatie

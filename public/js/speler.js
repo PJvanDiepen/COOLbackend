@@ -8,6 +8,14 @@ actieSelecteren(
     [9, "minder informatie", function () {
         naarAnderePagina("speler.html?informatie=0");
     }],
+    [9, "afzeggingen verwijderen", async function () {
+        const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
+        if (mutaties) {
+            sessionStorage.removeItem(`/uitslagen/${seizoen}/${speler}`);
+            sessionStorage.removeItem(`/ranglijst/${seizoen}`);
+            naarZelfdePagina();
+        }
+    }],
     [9, "speler verwijderen", async function () {
         const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
         if (mutaties) {
