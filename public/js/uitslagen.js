@@ -172,7 +172,9 @@ function wedstrijdUitslag(winst, remise, verlies) {
         verlies += 1;
         remise -= 2;
     }
-    if (remise === 0) {
+    if (winst === 0 && remise === 0 && verlies === 0) {
+        return "";
+    } else if (remise === 0) {
         return winst + " - " + verlies;
     } else if (winst === 0) {
         return REMISE + " - " + verlies + REMISE;

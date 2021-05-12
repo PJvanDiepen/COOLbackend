@@ -245,7 +245,6 @@ module.exports = router => {
                     .where('seizoen', ctx.params.seizoen)
                     .andWhere('knsbNummer',ctx.params.knsbNummer)
                     .andWhere('partij', 'a');
-                console.log("verwijderd: " + aantal);
                 seizoenMutatie(gebruiker.knsbNummer, ctx.params.seizoen, 'verwijder/afzeggingen', aantal, ctx.params.knsbNummer);
                 ctx.body = aantal;
             }
