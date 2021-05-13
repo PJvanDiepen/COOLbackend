@@ -1,13 +1,7 @@
 "use strict";
 
-actieSelecteren(
+menu(
     naarAgenda,
-    [9, "meer informatie", function () {
-        naarAnderePagina("speler.html?informatie=9");
-    }],
-    [9, "minder informatie", function () {
-        naarAnderePagina("speler.html?informatie=0");
-    }],
     [9, "afzeggingen verwijderen", async function () {
         const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
         if (mutaties) {
@@ -71,16 +65,14 @@ async function uitslagenSpeler(kop, lijst) {
             if (t.intern()) {
                 totaal += u.punten;
             }
-            if (!t.intern() && u.partij === AFGEZEGD && informatieNivo === 0) {
-                // deze uitslag overslaan TODO deze uitslag verwijderen
-            } else if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
+            if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
                 lijst.appendChild(internePartij(u, totaal));
             } else if (u.teamCode === INTERNE_COMPETITIE && u.partij === EXTERNE_WEDSTRIJD) {
                 vorigeUitslag = u; // deze uitslag overslaan en combineren met volgende uitslag
             } else if (u.teamCode === INTERNE_COMPETITIE) {
                 lijst.appendChild(geenPartij(u, totaal));
             } else if (vorigeUitslag && vorigeUitslag.datum === u.datum) {
-                lijst.appendChild(externePartijTijdensInterneRonde(vorigeUitslag, u, totaal))
+                lijst.appendChild(externePartijTijdensInterneRonde(vorigeUitslag, u, totaal));
             } else {
                 lijst.appendChild(externePartij(u, totaal));
             }

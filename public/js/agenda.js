@@ -1,6 +1,6 @@
 "use strict";
 
-actieSelecteren(
+menu(
     [0, "jaaroverzicht"],
     terugNaar
 );

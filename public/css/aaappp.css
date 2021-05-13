@@ -46,6 +46,11 @@ button, legend, select {
 	border-radius: 5px;
 }
 
+#menu {
+	position: sticky;
+	top: 10px;
+}
+
 pre {
   width: fit-content;
   padding: 10px;

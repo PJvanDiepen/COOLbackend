@@ -1,6 +1,6 @@
 "use strict";
 
-actieSelecteren(
+menu(
     naarRanglijst,
     [1, "wijzigen..."],
     terugNaar

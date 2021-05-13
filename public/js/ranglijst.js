@@ -1,11 +1,11 @@
 "use strict";
 
-actieSelecteren(
+menu(
     naarAgenda,
-    [9, "meer informatie", function () {
+    [9, "inclusief niet actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=9");
     }],
-    [9, "minder informatie", function () {
+    [9, "actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
     [9, "conversie tegenstanderNummer naar partij", async function () {

@@ -1,6 +1,6 @@
 "use strict";
 
-actieSelecteren(
+menu(
     [9, "andere gebruiker",
         function () {
             document.getElementById("naam").value = naamSpeler;

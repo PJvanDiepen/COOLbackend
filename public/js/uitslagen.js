@@ -198,12 +198,12 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-async function actieSelecteren(...menu) {
-    const acties = document.getElementById("actieSelecteren");
+async function menu(...menuKeuzes) {
+    const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () { }];
     const mutatieRechten = await mutatieRechtenGebruiker();
-    for (let [mutatieNivo, tekst, functie] of menu) {
+    for (let [mutatieNivo, tekst, functie] of menuKeuzes) {
         if (mutatieNivo <= mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
             functies.push(functie ? functie :
