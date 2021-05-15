@@ -83,21 +83,20 @@ async function uitslagenSpeler(kop, lijst) {
     if (!t.intern() && t.afzeggingen() && informatieNivo) {
         lijst.appendChild(htmlRij("", "", "uitsluitend afzeggingen", "", "", "", "", ""));
     }
-
+    console.log(t);
     if (!t.intern() && !t.extern() && informatieNivo) {
         lijst.appendChild(htmlRij("", "", "geen interne en geen externe partijen", "", "", "", "", ""));
     }
 }
 
 async function totalenSpeler(seizoen, knsbNummer) {
-    let alleTotalen = {};
-    await findAsync("/ranglijst/" + seizoen,
-        function (speler) {
-            if (speler.knsbNummer === knsbNummer) {
-                alleTotalen = speler.totalen;
-                return true; // stop findAsync()
-            }});
-    return totalen(alleTotalen);
+    const spelers = await databaseFetch("/ranglijst/" + seizoen);
+    for (const speler of spelers) {
+        if (speler.knsbNummer === knsbNummer) {
+            return totalen(speler.totalen);
+        }
+    }
+    return totalen("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
 }
 
 /*

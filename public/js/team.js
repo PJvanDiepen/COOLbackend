@@ -9,13 +9,13 @@ teamSelecteren(teamCode);
 uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
 
 async function uitslagenTeam(kop, rondenTabel) {
-    await findAsync("/teams/" + seizoen,
-        function (team) {
-            if (team.teamCode === teamCode) {
-                kop.innerHTML = [wedstrijdTeam(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
-                return true;
-            }
-        });
+    const teams = await databaseFetch("/teams/" + seizoen);
+    for (const team of teams) {
+        if (team.teamCode === teamCode) {
+            kop.innerHTML = [wedstrijdTeam(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
+            break;
+        }
+    }
     const rondeUitslagen = await uitslagenTeamAlleRonden(teamCode);
     for (let i = 0; i < rondeUitslagen.length; ++i) {
         uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);

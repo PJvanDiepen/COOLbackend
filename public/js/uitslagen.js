@@ -41,14 +41,9 @@ function doorgeven(key) {
     return value;
 }
 
-async function findAsync(url, findFun) {
-    const objects = await databaseFetch(url);
-    objects.find(findFun); // verwerk en stop indien gevonden
-}
-
 async function mapAsync(url, mapFun) {
     const objects = await databaseFetch(url);
-    objects.map(mapFun); // verwerk ze allemaal
+    objects.map(mapFun);
 }
 
 async function databaseFetch(url) {
