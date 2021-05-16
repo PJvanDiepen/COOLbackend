@@ -83,7 +83,6 @@ async function uitslagenSpeler(kop, lijst) {
     if (!t.intern() && t.afzeggingen() && informatieNivo) {
         lijst.appendChild(htmlRij("", "", "uitsluitend afzeggingen", "", "", "", "", ""));
     }
-    console.log(t);
     if (!t.intern() && !t.extern() && informatieNivo) {
         lijst.appendChild(htmlRij("", "", "geen interne en geen externe partijen", "", "", "", "", ""));
     }

@@ -18,7 +18,9 @@ async function uitslagenTeam(kop, rondenTabel) {
     }
     const rondeUitslagen = await uitslagenTeamAlleRonden(teamCode);
     for (let i = 0; i < rondeUitslagen.length; ++i) {
-        uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
+        if (rondeUitslagen[i]) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
+            uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
+        }
     }
 }
 

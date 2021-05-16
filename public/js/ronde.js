@@ -12,7 +12,9 @@ uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel
 async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
     const ronden = await databaseFetch("/ronden/" + seizoen + "/int");
-    const dezeDatum = ronden[rondeNummer - 1].datum;
+    if (rondeNummer > 1) {
+        lijst.appendChild(htmlRij(rondeNummer - 1, datumLeesbaar(ronden[rondeNummer - 2].datum), "interne competitie", ""));
+    }
     const wedstrijden = await databaseFetch("/wedstrijden/" + seizoen);
     for (const wedstrijd of wedstrijden) {
         if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
@@ -21,10 +23,10 @@ async function wedstrijdenBijRonde(kop, lijst) {
             const rondeUitslagen = await uitslagenTeamAlleRonden(wedstrijd.teamCode);
             const u = rondeUitslagen[wedstrijd.rondeNummer - 1];
             const uitslagKolom = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
-            lijst.appendChild(htmlRij(datumKolom, wedstrijdKolom, uitslagKolom));
+            lijst.appendChild(htmlRij("", datumKolom, wedstrijdKolom, uitslagKolom));
         }
     }
-    lijst.appendChild(htmlRij(datumLeesbaar(dezeDatum), "interne competitie ronde " + rondeNummer, ""));
+    lijst.appendChild(htmlRij(rondeNummer, datumLeesbaar(ronden[rondeNummer - 1].datum), "interne competitie", ""));
 }
 
 function wedstrijdBijRonde(datum, ronden) {
