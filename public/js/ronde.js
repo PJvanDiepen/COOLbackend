@@ -53,13 +53,18 @@ function wedstrijdBijRonde(datum, ronden) {
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
   order by uitslag.seizoen, uitslag.bordNummer;
    */
-function uitslagenRonde(kop, lijst) {
+async function uitslagenRonde(kop, lijst) {
     kop.innerHTML = "Ronde " + rondeNummer;
-    mapAsync("/ronde/" + seizoen + "/" + rondeNummer,
+    let geenUitslagen = true;
+    await mapAsync("/ronde/" + seizoen + "/" + rondeNummer,
         function (uitslag) {
+        geenUitslagen = false;
             lijst.appendChild(htmlRij(
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
                 uitslag.resultaat === "1" ? "1-0" : uitslag.resultaat === "0" ? "0-1" : "½-½"));
         });
+    if (geenUitslagen) {
+        lijst.appendChild(htmlRij("geen", "uitslagen", ""));
+    }
 }
