@@ -11,7 +11,7 @@ const speler = Number(doorgeven("speler")); // knsbNummer
 const naamSpeler = doorgeven("naam");
 const rondeNummer = Number(doorgeven("ronde"));
 const informatieNivo = Number(doorgeven("informatie"));
-const uuidToken = localStorage.getItem(schaakVereniging);
+const uuidToken = sessionStorage.getItem("uuidToken") || localStorage.getItem(schaakVereniging);
 
 // uitslag.partij
 const AFGEZEGD             = "a";

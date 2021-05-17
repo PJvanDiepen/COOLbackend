@@ -8,6 +8,7 @@ Er is een MySQL database per schaakvereniging met de volgende tabellen:
 - `Team` teams of interne competitie (`teamCode = 'int'`) per seizoen
 - `Ronde` ronden per team per seizoen
 - `Uitslag` uitslagen per ronde per team per seizoen
+- `Mutatie` chronologie van alle mutaties per gebruiker
  
 Voorlopig is er 1 database van schaakvereniging de Waagtoren, die offline is gevuld 
 vanuit de Online Leden Administratie (OLA) van de KNSB naar `Persoon` en `Speler` en
@@ -222,3 +223,18 @@ De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
 - 0 = onbekend
 - TIJDELIJK_LID_NUMMER > 100
 - KNSB_NUMMER > 1000000
+
+## Mutatie
+```
+knsbNummer INT
+tijdstip DATETIME
+seizoen CHAR(4)
+teamCode CHAR(3)
+rondeNummer INT
+mutatieSoort VARCHAR(100)
+mutatieAantal INT
+PRIMARY KEY (knsbNummer, tijdstip)
+```
+
+In `mutaties` wordt vastgelegd welke gebruiker en wanneer iets muteert in tabellen van de database.
+In `mutatieSoort` staat de omschrijving in api-vorm. In `mutatieAantal` staat hoeveel rijen zijn gemuteerd.

@@ -17,6 +17,7 @@ gebruikerFormulier(document.getElementById("formulier"),
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
     if (uuidToken) {
+        knsbNummer.value = await knsbNummerGebruiker();
         naam.value = await naamGebruiker();
         knsbNummer.value = await knsbNummerGebruiker();
         status.value = "gebruiker is geregistreerd bij " + schaakVereniging;
