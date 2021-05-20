@@ -279,6 +279,23 @@ async function seizoenSelecteren(teamCode) {
         });
 }
 
+async function spelerSelecteren() {
+    const spelers = document.getElementById("spelerSelecteren");
+    spelers.appendChild(htmlOptie(0, "selecteer naam"));
+    await mapAsync("/spelers/" + seizoen,
+        function (persoon) {
+            spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), persoon.naam));
+        });
+    spelers.value = speler; // werkt uitsluitend na await
+    spelers.addEventListener("input",
+        function () {
+            const i = spelers.selectedIndex;
+            sessionStorage.setItem("speler", spelers.options[i].value); // = spelers.value;
+            sessionStorage.setItem("naam", spelers.options[i].text )
+            naarZelfdePagina();
+        });
+}
+
 async function teamSelecteren(teamCode) {
     const teams = document.getElementById("teamSelecteren");
     await mapAsync("/teams/" + seizoen,

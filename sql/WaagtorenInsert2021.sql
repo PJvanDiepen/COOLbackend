@@ -98,10 +98,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2021', '', '', '8865549', '500', '2020-08-01', 'H');
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden) values
-('2021', '', '', '', 'geen team', '0'),
-('2021', '1', 'k', '2?', 'KNSB 2?', '8'),
-('2021', '2', 'k', '3?', 'KNSB 3?', '8'),
-('2021', '3', 'k', '4?', 'KNSB 4?', '8'),
+('1819', '', '', '', 'geen team', '0'),
 ('2021', 'int', 'i', 'nt', 'interne competitie', '0');
 
 insert into ronde (seizoen, teamCode, rondeNummer, compleet, uithuis, tegenstander, plaats, datum) values
@@ -113,31 +110,15 @@ insert into ronde (seizoen, teamCode, rondeNummer, compleet, uithuis, tegenstand
 ('2021', 'int', '6', '', 't', '', 'Alkmaar', '2020-09-29'),
 ('2021', 'int', '7', '', 't', '', 'Alkmaar', '2020-10-06'),
 ('2021', 'int', '8', '', 't', '', 'Alkmaar', '2020-10-13'),
-('2021', 'int', '9', '', 't', '', 'Alkmaar', '2020-10-20'),
-('2021', 'int', '10', '', 't', '', 'Alkmaar', '2020-10-27'),
-('2021', 'int', '11', '', 't', '', 'Alkmaar', '2020-11-03'),
-('2021', 'int', '12', '', 't', '', 'Alkmaar', '2020-11-10'),
-('2021', 'int', '13', '', 't', '', 'Alkmaar', '2020-11-17'),
-('2021', 'int', '14', '', 't', '', 'Alkmaar', '2020-11-24'),
-('2021', 'int', '15', '', 't', '', 'Alkmaar', '2020-12-08'),
-('2021', 'int', '16', '', 't', '', 'Alkmaar', '2020-12-15'),
-('2021', 'int', '17', '', 't', '', 'Alkmaar', '2021-01-05'),
-('2021', 'int', '18', '', 't', '', 'Alkmaar', '2021-01-12'),
-('2021', 'int', '19', '', 't', '', 'Alkmaar', '2021-01-19'),
-('2021', 'int', '20', '', 't', '', 'Alkmaar', '2021-02-02'),
-('2021', 'int', '21', '', 't', '', 'Alkmaar', '2021-02-09'),
-('2021', 'int', '22', '', 't', '', 'Alkmaar', '2021-02-16'),
-('2021', 'int', '23', '', 't', '', 'Alkmaar', '2021-03-02'),
-('2021', 'int', '24', '', 't', '', 'Alkmaar', '2021-03-09'),
-('2021', 'int', '25', '', 't', '', 'Alkmaar', '2021-03-16'),
-('2021', 'int', '26', '', 't', '', 'Alkmaar', '2021-03-23'),
-('2021', 'int', '27', '', 't', '', 'Alkmaar', '2021-03-30'),
-('2021', 'int', '28', '', 't', '', 'Alkmaar', '2021-04-06'),
-('2021', 'int', '29', '', 't', '', 'Alkmaar', '2021-04-13'),
-('2021', 'int', '30', '', 't', '', 'Alkmaar', '2021-04-20'),
-('2021', 'int', '31', '', 't', '', 'Alkmaar', '2021-05-11'),
-('2021', 'int', '32', '', 't', '', 'Alkmaar', '2021-05-18'),
-('2021', 'int', '33', '', 't', '', 'Alkmaar', '2021-05-25');
+('2021', 'int', '9', '', 't', '', 'Alkmaar', '2021-05-25'),
+('2021', 'int', '10', '', 't', '', 'Alkmaar', '2021-06-01'),
+('2021', 'int', '11', '', 't', '', 'Alkmaar', '2021-06-08'),
+('2021', 'int', '12', '', 't', '', 'Alkmaar', '2021-06-15'),
+('2021', 'int', '13', '', 't', '', 'Alkmaar', '2021-06-22'),
+('2021', 'int', '14', '', 't', '', 'Alkmaar', '2021-06-29'),
+('2021', 'int', '15', '', 't', '', 'Alkmaar', '2021-07-06'),
+('2021', 'int', '16', '', 't', '', 'Alkmaar', '2021-07-13'),
+('2021', 'int', '17', '', 't', '', 'Alkmaar', '2021-07-20');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),

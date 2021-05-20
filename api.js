@@ -12,10 +12,9 @@ const { fn, ref } = require('objection');
 
 module.exports = router => {
 
-    // geeft array met objects
     router.get('/spelers/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
-            .select('speler.*', 'persoon.*')
+            .select('naam', 'persoon.knsbNummer')
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
             .where('speler.seizoen', ctx.params.seizoen)
             .orderBy('naam');

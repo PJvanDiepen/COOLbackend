@@ -9,6 +9,7 @@ menu(
         }],
     terugNaar
 );
+spelerSelecteren();
 gebruikerFormulier(document.getElementById("formulier"),
     document.getElementById("naam"),
     document.getElementById("knsbNummer"),

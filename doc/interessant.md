@@ -1,6 +1,7 @@
 Nuttig
 - [MySQL tutorial](https://www.mysqltutorial.org/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
+- [sort an aaray of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await jason](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
