@@ -50,8 +50,6 @@ uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel")
   order by u.datum, u.bordNummer;
   */
 
-const TIJDELIJK_LID_NUMMER = 100;
-
 async function uitslagenSpeler(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), naamSpeler].join(SCHEIDING);
     const t = await totalenSpeler(seizoen, speler);
@@ -65,7 +63,7 @@ async function uitslagenSpeler(kop, lijst) {
             if (t.intern()) {
                 totaal += u.punten;
             }
-            if (u.tegenstanderNummer > TIJDELIJK_LID_NUMMER) {
+            if (u.tegenstanderNummer > 0) {
                 lijst.appendChild(internePartij(u, totaal));
             } else if (u.teamCode === INTERNE_COMPETITIE && u.partij === EXTERNE_WEDSTRIJD) {
                 vorigeUitslag = u; // deze uitslag overslaan en combineren met volgende uitslag

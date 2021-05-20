@@ -124,13 +124,6 @@ add CONSTRAINT fk_uitslag_ander_team
     ON UPDATE CASCADE;
     
 alter table uitslag
-add constraint fk_uitslag_speler
-    foreign key (seizoen, knsbNummer)
-    references speler (seizoen, knsbNummer)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;
-    
-alter table uitslag
 add constraint fk_uitslag_persoon
     foreign key (knsbNummer)
     references persoon (knsbNummer)
