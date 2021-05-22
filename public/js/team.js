@@ -1,9 +1,9 @@
 "use strict";
 
-menu(
+menu(naarAgenda,
     naarRanglijst,
-    terugNaar
-);
+    naarGebruiker,
+    terugNaar);
 teamSelecteren(teamCode);
 uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
 

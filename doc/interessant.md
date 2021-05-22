@@ -1,13 +1,15 @@
 Nuttig
 - [MySQL tutorial](https://www.mysqltutorial.org/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
-- [sort an aaray of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
+- [DOM events](https://domevents.dev/)
+- [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await jason](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
 - [Introduction common.js](https://eng.wealthfront.com/2015/06/16/an-introduction-to-commonjs/)
 - [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
+- [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
@@ -57,6 +59,7 @@ Later:
 - [CSS alternatives to floating](https://bitsofco.de/alternatives-to-floating/)
 - [CSS hiding elements](https://bitsofco.de/hiding-elements-with-css/)
 - [Uitleg over Grid Layout](https://bitsofco.de/github-contribution-graph-css-grid/)
+- [vertical alignment with css subgrid](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [EM vs REM vs PX](https://engageinteractive.co.uk/blog/em-vs-rem-vs-px)
 
 
@@ -70,5 +73,6 @@ Misschien:
 - [Spaceinvaders](https://github.com/kubowania/space-invaders) 
 - [pipe](https://www.obvibase.com/dev-blog/i-ve-used-the-pipe-function-2-560-times-and-i-can-tell-you-it-s-good)
 - [Kaart met legenda](https://codepen.io/haakseth/pen/KQbjdO)
+- [TypeScript](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/)
 - [alle JavaScript events](https://www.perimeterx.com/tech-blog/2019/list-every-event-that-exists-in-the-browser/)
 - [IntelliJ klokje](https://www.jetbrains.com/company/contacts/#headquarters-international-sales)

@@ -4,7 +4,7 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 const schaakVereniging = doorgeven("schaakVereniging") || "Waagtoren";
-const seizoen = doorgeven("seizoen") || "2021";
+const seizoen = doorgeven("seizoen") || ditSeizoen();
 const INTERNE_COMPETITIE = "int";
 const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
 const speler = Number(doorgeven("speler")); // knsbNummer
@@ -39,6 +39,78 @@ function doorgeven(key) {
         value = sessionStorage.getItem(key);
     }
     return value;
+}
+
+async function menu(...menuKeuzes) {
+    const acties = document.getElementById("menu");
+    acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
+    let functies = [function () { }];
+    const mutatieRechten = await mutatieRechtenGebruiker();
+    for (let [mutatieNivo, tekst, functie] of menuKeuzes) {
+        if (mutatieNivo <= mutatieRechten) {
+            acties.appendChild(htmlOptie(functies.length, tekst));
+            functies.push(functie ? functie :
+                function () {
+                    console.log(tekst);
+                });
+        }
+    }
+    acties.addEventListener("input",
+        function() {
+            functies[acties.value]();
+            acties.value = 0;
+        });
+}
+
+async function mutatieRechtenGebruiker() {
+    if (uuidToken) {
+        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        return Number(gebruiker.mutatieRechten);
+    } else {
+        return 0;
+    }
+}
+
+async function knsbNummerGebruiker() {
+    if (uuidToken) {
+        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        return Number(gebruiker.knsbNummer);
+    } else {
+        return 0;
+    }
+}
+
+async function naamGebruiker() {
+    if (uuidToken) {
+        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        return gebruiker.naam;
+    } else {
+        return "onbekend";
+    }
+}
+
+const terugNaar = [0, "\uD83E\uDC68", function() {
+    history.back();
+}];
+
+const naarAgenda = [1, "aanmelden / afzeggen", function () {
+    naarAnderePagina("agenda.html");
+}];
+
+const naarRanglijst = [0, "ranglijst", function () {
+    naarAnderePagina("ranglijst.html");
+}];
+
+const naarGebruiker = [0, "registreren", function () {
+    naarAnderePagina("gebruiker.html");
+}];
+
+function naarAnderePagina(naarPagina) {
+    location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
+}
+
+function naarZelfdePagina() {
+    location.replace(pagina.pathname);
 }
 
 async function mapAsync(url, mapFun) {
@@ -108,17 +180,24 @@ function naarTeam(tekst, u) {
     return htmlLink(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, tekst);
 }
 
+
+function seizoenVoluit(seizoen) {
+    return "20" + seizoen.substring(0,2) + "-20" +  seizoen.substring(2,4);
+}
+
+function ditSeizoen() {
+    const datum = new Date();
+    const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001); // na juli dit jaar anders vorig jaar
+    return `${voorloopNul(i)}${voorloopNul(i+1)}`;
+}
+
 function datumLeesbaar(jsonDatum) {
-    const d = new Date(jsonDatum);
-    return `${voorloopNul(d.getDate())}-${voorloopNul(d.getMonth()+1)}-${d.getFullYear()}`;
+    const datum = new Date(jsonDatum);
+    return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
 
 function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
-}
-
-function seizoenVoluit(seizoen) {
-    return "20" + seizoen.substring(0,2) + "-20" +  seizoen.substring(2,4);
 }
 
 function teamVoluit(teamCode) {
@@ -137,9 +216,9 @@ function wedstrijdTeam(teamCode) {
     return schaakVereniging + (teamCode.substring(1) === "be" ? " " : " " + teamCode);
 }
 
-function wedstrijdVoluit(r) {
-    const eigenTeam = wedstrijdTeam(r.teamCode);
-    return r.uithuis === THUIS ? eigenTeam + " - " + r.tegenstander : r.tegenstander + " - " + eigenTeam;
+function wedstrijdVoluit(ronde) {
+    const eigenTeam = wedstrijdTeam(ronde.teamCode);
+    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
 }
 
 function score(winst, remise, verlies) {
@@ -191,78 +270,6 @@ function percentage(winst, remise, verlies) {
     } else {
         return "";
     }
-}
-
-async function menu(...menuKeuzes) {
-    const acties = document.getElementById("menu");
-    acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
-    let functies = [function () { }];
-    const mutatieRechten = await mutatieRechtenGebruiker();
-    for (let [mutatieNivo, tekst, functie] of menuKeuzes) {
-        if (mutatieNivo <= mutatieRechten) {
-            acties.appendChild(htmlOptie(functies.length, tekst));
-            functies.push(functie ? functie :
-                function () {
-                    console.log(tekst);
-                });
-        }
-    }
-    acties.addEventListener("input",
-        function() {
-            functies[acties.value]();
-            acties.value = 0;
-        });
-}
-
-async function mutatieRechtenGebruiker() {
-    if (uuidToken) {
-        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
-        return Number(gebruiker.mutatieRechten);
-    } else {
-        return 0;
-    }
-}
-
-async function knsbNummerGebruiker() {
-    if (uuidToken) {
-        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
-        return Number(gebruiker.knsbNummer);
-    } else {
-        return 0;
-    }
-}
-
-async function naamGebruiker() {
-    if (uuidToken) {
-        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
-        return gebruiker.naam;
-    } else {
-        return "onbekend";
-    }
-}
-
-const terugNaar = [0, "\uD83E\uDC68", function() {
-    history.back();
-}];
-
-const naarAgenda = [1, "aanmelden / afzeggen", function () {
-    naarAnderePagina("agenda.html");
-}];
-
-const naarRanglijst = [0, "ranglijst", function () {
-    naarAnderePagina("ranglijst.html");
-}];
-
-const naarGebruiker = [0, "registreren", function () {
-    naarAnderePagina("gebruiker.html");
-}];
-
-function naarZelfdePagina() {
-    location.replace(pagina.pathname);
-}
-
-function naarAnderePagina(naarPagina) {
-    location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
 async function seizoenSelecteren(teamCode) {
@@ -444,7 +451,6 @@ join persoon on uitslag.knsbNummer = persoon.knsbNummer
 where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
 order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
-
 async function uitslagenTeamAlleRonden(teamCode) {
     const rondeUitslagen = [];
     await mapAsync("/ronden/" + seizoen + "/" + teamCode,

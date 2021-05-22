@@ -1,10 +1,10 @@
 "use strict";
 
-menu(
+menu(naarAgenda,
     naarRanglijst,
+    naarGebruiker,
     [1, "wijzigen..."],
-    terugNaar
-);
+    terugNaar);
 rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
 wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
 uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));

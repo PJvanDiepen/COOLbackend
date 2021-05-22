@@ -1,7 +1,7 @@
 "use strict";
 
-menu(
-    naarAgenda,
+menu(naarAgenda,
+    naarGebruiker,
     [9, "uitsluitend actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
@@ -42,8 +42,7 @@ menu(
         mutaties = await serverFetch("/tegenstander/1/99");
         console.log("tegenstanderNummer = 0: " + mutaties);
     }],
-    terugNaar
-);
+    terugNaar);
 seizoenSelecteren(INTERNE_COMPETITIE);
 teamSelecteren(INTERNE_COMPETITIE);
 rondeSelecteren(INTERNE_COMPETITIE, 0);

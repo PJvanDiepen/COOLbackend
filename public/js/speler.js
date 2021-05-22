@@ -1,7 +1,8 @@
 "use strict";
 
-menu(
-    naarAgenda,
+menu(naarAgenda,
+    naarRanglijst,
+    naarGebruiker,
     [9, "afzeggingen verwijderen", async function () {
         const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
         if (mutaties) {
@@ -18,11 +19,7 @@ menu(
             naarAnderePagina("ranglijst.html");
         }
     }],
-    naarRanglijst,
-    naarGebruiker,
-    [1, "wijzigen..."],
-    terugNaar
-);
+    terugNaar);
 seizoenSelecteren(INTERNE_COMPETITIE);
 uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
 
