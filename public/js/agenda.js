@@ -32,6 +32,7 @@ function agenda(kop, lijst) {
 
 function agendaMutatie() {
     const partij = params.get("partij");
+    let mutaties = 0;
     if (partij) {
         console.log("agendaMutatie");
         /*
@@ -43,10 +44,8 @@ function agendaMutatie() {
             rondeNummer = parameter
             knsbNummer = knsbNummerGebruiker()
          */
-        return true; // TODO indien gelukt
-    } else {
-        return false;
     }
+    return mutaties;
 }
 
 function agendaVerwijderen() {
@@ -59,6 +58,7 @@ function agendaVerwijderen() {
 
 function agendaLezen() {
     console.log("agendaLezen");
+    const wedstrijden = [];
     /*
     TODO
     lees speler
@@ -71,8 +71,10 @@ function agendaLezen() {
         seizoen = speler.seizoen
         teamCode = ronde.teamCode
         rondeNummer = ronde.rondeNummer
+     where
         knsbNummer = speler.knsbNummer
      */
+    return wedstrijden;
 }
 
 function agendaAanvullen(wedstrijden) {
@@ -90,7 +92,7 @@ function agendaAanvullen(wedstrijden) {
             }
         }
     }
-    return aanvullingen > 0;
+    return aanvullingen;
 }
 
 function mogelijkeTegenstanders(lijst) {

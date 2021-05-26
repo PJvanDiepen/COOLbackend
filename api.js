@@ -102,14 +102,37 @@ module.exports = router => {
                         ref('uitslag.tegenstanderNummer'),
                         ref('uitslag.resultaat'))})
             .join('persoon', 'persoon.knsbNummer', 'uitslag.tegenstanderNummer')
-            .join('ronde', function() {
-                this.on('uitslag.seizoen', '=', 'ronde.seizoen')
-                    .andOn('uitslag.teamCode', '=', 'ronde.teamCode')
-                    .andOn('uitslag.rondeNummer', '=', 'ronde.rondeNummer')})
+            .join('ronde', function(cb) {
+                cb.on('uitslag.seizoen', 'ronde.seizoen')
+                    .andOn('uitslag.teamCode', 'ronde.teamCode')
+                    .andOn('uitslag.rondeNummer','ronde.rondeNummer')})
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
             .andWhere('uitslag.anderTeam', 'int')
             .orderBy(['uitslag.datum','uitslag.bordNummer']);
+    });
+
+
+    /*
+    with u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
+    select * from ronde r
+    left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
+    where r.seizoen = @seizoen;
+     */
+    router.get('/agenda/:seizoen/:knsbNummer', async function (ctx) {
+        ctx.body = await Ronde.query()
+            .with('u',function (qb) {
+                qb.select('*',)
+                    .from('uitslag')
+                    .where('uitslag.seizoen', ctx.params.seizoen)
+                    .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+            })
+            .select('ronde.*', 'u.bordNummer', 'u.partij', 'u.witZwart', 'u.tegenstanderNummer', 'u.resultaat')
+            .leftJoin('u', function(cb) {
+                cb.on('u.seizoen', 'ronde.seizoen')
+                    .andOn('u.teamCode', 'ronde.teamCode')
+                    .andOn('u.rondeNummer', 'ronde.rondeNummer')})
+            .where('ronde.seizoen', ctx.params.seizoen);
     });
 
     /*
