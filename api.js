@@ -102,8 +102,8 @@ module.exports = router => {
                         ref('uitslag.tegenstanderNummer'),
                         ref('uitslag.resultaat'))})
             .join('persoon', 'persoon.knsbNummer', 'uitslag.tegenstanderNummer')
-            .join('ronde', function(cb) {
-                cb.on('uitslag.seizoen', 'ronde.seizoen')
+            .join('ronde', function(join) {
+                join.on('uitslag.seizoen', 'ronde.seizoen')
                     .andOn('uitslag.teamCode', 'ronde.teamCode')
                     .andOn('uitslag.rondeNummer','ronde.rondeNummer')})
             .where('uitslag.seizoen', ctx.params.seizoen)
@@ -114,25 +114,42 @@ module.exports = router => {
 
 
     /*
-    with u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
-    select * from ronde r
+    with
+      s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
+      u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
+    select r.*, u.bordNummer, u.partij, u.witZwart, u.tegenstanderNummer, u.resultaat
+      from ronde r
+    join s on r.seizoen = s.seizoen
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen;
+    where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam)
+    order by r.datum;
      */
     router.get('/agenda/:seizoen/:knsbNummer', async function (ctx) {
         ctx.body = await Ronde.query()
+            .with('s', function (qb) {
+                qb.from('speler')
+                    .where('speler.seizoen', ctx.params.seizoen)
+                    .andWhere('speler.knsbNummer', ctx.params.knsbNummer)
+            })
             .with('u',function (qb) {
-                qb.select('*',)
-                    .from('uitslag')
+                qb.from('uitslag')
                     .where('uitslag.seizoen', ctx.params.seizoen)
                     .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
             })
-            .select('ronde.*', 'u.bordNummer', 'u.partij', 'u.witZwart', 'u.tegenstanderNummer', 'u.resultaat')
-            .leftJoin('u', function(cb) {
-                cb.on('u.seizoen', 'ronde.seizoen')
+            .select('ronde.*',
+                'u.bordNummer',
+                'u.partij',
+                'u.witZwart',
+                'u.tegenstanderNummer',
+                'u.resultaat')
+            .join('s', 's.seizoen', 'ronde.seizoen')
+            .leftJoin('u', function(join) {
+                join.on('u.seizoen', 'ronde.seizoen')
                     .andOn('u.teamCode', 'ronde.teamCode')
                     .andOn('u.rondeNummer', 'ronde.rondeNummer')})
-            .where('ronde.seizoen', ctx.params.seizoen);
+            .whereIn('ronde.teamCode', ['int', ref('s.knsbTeam'), ref('s.nhsbTeam')])
+            .andWhere('ronde.seizoen', ctx.params.seizoen)
+            .orderBy('ronde.datum');
     });
 
     /*
@@ -273,12 +290,10 @@ module.exports = router => {
         }
     });
 
-    // TODO indien nieuwe speler afwezig toevoegen voor eerdere ronden
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////
 
     /*
-    conversie tegenstanderNummer [van, tot] naar partij = letter
+    TODO verwijder conversie tegenstanderNummer [van, tot] naar partij = letter
      */
     router.get('/partij/:van/:tot/:letter', async function (ctx) {
         ctx.body = await Uitslag.query()
@@ -287,7 +302,7 @@ module.exports = router => {
     });
 
     /*
-    conversie tegenstanderNummer [van, tot] naar tegenstanderNummer = 0
+    TODO verwijder conversie tegenstanderNummer [van, tot] naar tegenstanderNummer = 0
      */
     router.get('/tegenstander/:van/:tot', async function (ctx) {
         ctx.body = await Uitslag.query()
@@ -296,7 +311,7 @@ module.exports = router => {
     });
 
     /*
-    conversie: verwijder Persoon tegenstanderNummer [van, tot]
+    TODO verwijder conversie Persoon tegenstanderNummer [van, tot]
      */
     router.get('/verwijder/persoon/:van/:tot', async function (ctx) {
         ctx.body = await Persoon.query()
@@ -304,6 +319,8 @@ module.exports = router => {
             .whereBetween('knsbNummer', [ctx.params.van, ctx.params.tot]);
     });
 }
+
+///////////////////////////////////////////////////////////////////
 
 async function leesGebruiker(uuidToken) {
     return Gebruiker.query()

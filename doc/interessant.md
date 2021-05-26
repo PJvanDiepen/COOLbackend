@@ -1,5 +1,6 @@
 Nuttig
 - [MySQL tutorial](https://www.mysqltutorial.org/)
+- [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [DOM events](https://domevents.dev/)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
