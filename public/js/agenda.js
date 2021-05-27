@@ -10,21 +10,24 @@ if (uuidToken) {
     naarAnderePagina("gebruiker.html");
 }
 
-function agenda(kop, lijst) {
+async function agenda(kop, lijst) {
+    kop.innerHTML = ["Agenda", await naamGebruiker()].join(SCHEIDING);
     if (agendaMutatie()) {
         agendaVerwijderen();
     }
-    let wedstrijden = agendaLezen();
-    if (agendaAanvullen(wedstrijden)) {
+    const gebruiker = await knsbNummerGebruiker();
+    let wedstrijden = await agendaLezen(gebruiker);
+    if (await agendaAanvullen(gebruiker, wedstrijden)) {
         agendaVerwijderen();
-        wedstrijden = agendaLezen();
+        wedstrijden = await agendaLezen(gebruiker);
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         console.log(w);
         if (true) { // TODO reeds gespeelde ronde overslaan
             /*
             TODO
-            htmlLink naar agenda.html?teamCode= &rondeNummer= &partij= i, e,of a
+            if (ronde.resultaat !== WINST && ronde.resultaat !== REMISE && ronde.resultaat !== VERLIES) {
+            htmlLink naar agenda.html?teamCode= &rondeNummer= &partij= i, e, of a
              */
         }
     }
@@ -56,38 +59,28 @@ function agendaVerwijderen() {
      */
 }
 
-function agendaLezen() {
-    console.log("agendaLezen");
+async function agendaLezen(gebruiker) {
     const wedstrijden = [];
-    /*
-    TODO
-    lees speler
-        seizoen = ditSeizoen()
-        knsbNummer = knsbNummerGebruiker()
-    lees ronde
-        seizoen = speler.seizoen
-        teamCode = 'int' or speler.knsbTeam or speler.nhsbTeam
-    left join uitslag
-        seizoen = speler.seizoen
-        teamCode = ronde.teamCode
-        rondeNummer = ronde.rondeNummer
-     where
-        knsbNummer = speler.knsbNummer
-     */
-    return wedstrijden;
+    await mapAsync("/agenda/" + ditSeizoen() + "/" + gebruiker,
+        function (wedstrijd) {
+            wedstrijden.push(wedstrijd);
+        });
+    return wedstrijden; // werkt uitsluitend na await
 }
 
-function agendaAanvullen(wedstrijden) {
+function agendaAanvullen(gebruiker, wedstrijden) {
     console.log("agendaAanvullen");
     let aanvullingen = 0;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
-        console.log(w);
-        if (true) { // TODO indien w.partij ontbreekt
+        if (!w.partij) {
+            console.log(w);
             /*
             TODO
             insert uitslag met partij = a
+                router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:datum/:anderTeam', async function (ctx) {
+
              */
-            if (true) { // TODO uitslag is toegevoegd
+            if (false) { // TODO uitslag is toegevoegd
                 aanvullingen++;
             }
         }

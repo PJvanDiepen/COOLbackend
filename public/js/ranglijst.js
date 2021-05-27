@@ -2,7 +2,7 @@
 
 menu(naarAgenda,
     naarGebruiker,
-    [9, "uitsluitend actieve spelers", function () {
+    [9, "zonder niet actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
     [9, "inclusief niet actieve spelers", function () {

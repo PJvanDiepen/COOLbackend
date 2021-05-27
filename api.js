@@ -252,6 +252,36 @@ module.exports = router => {
         ctx.body = await leesGebruiker(ctx.params.uuidToken);
     });
 
+    router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:datum/:anderTeam', async function (ctx) {
+        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
+        if (1 > Number(gebruiker.mutatieRechten)) {
+            ctx.body = 0;
+        } else {
+            const uitslag = await Uitslag.query()
+                .insert({seizoen: ctx.params.seizoen,
+                    teamCode: ctx.params.teamCode,
+                    rondeNummer: ctx.params.rondeNummer,
+                    bordNummer: 0,
+                    knsbNummer: ctx.params.knsbNummer,
+                    partij: "a", //  afwezig
+                    witZwart: "",
+                    tegenstanderNummer: 0,
+                    resultaat: "",
+                    datum: ctx.params.datum,
+                    anderTeam: ctx.params.anderTeam});
+            rondeMutatie(
+                gebruiker.knsbNummer,
+                ctx.params.seizoen,
+                ctx.params.teamCode,
+                ctx.params.rondeNummer,
+                'afwezig',
+                1,
+                ctx.params.knsbNummer,
+                ctx.params.anderTeam);
+            ctx.body = 1;
+        }
+    });
+
     router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await leesGebruiker(ctx.params.uuidToken);
         if (9 > Number(gebruiker.mutatieRechten)) {
@@ -261,7 +291,12 @@ module.exports = router => {
                 .delete()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer);
-            seizoenMutatie(gebruiker.knsbNummer, ctx.params.seizoen, 'verwijder/speler', aantal, ctx.params.knsbNummer);
+            seizoenMutatie(
+                gebruiker.knsbNummer,
+                ctx.params.seizoen,
+                'verwijder/speler',
+                aantal,
+                ctx.params.knsbNummer);
             ctx.body = aantal;
         }
     });
@@ -284,7 +319,12 @@ module.exports = router => {
                     .where('seizoen', ctx.params.seizoen)
                     .andWhere('knsbNummer',ctx.params.knsbNummer)
                     .andWhere('partij', 'a');
-                seizoenMutatie(gebruiker.knsbNummer, ctx.params.seizoen, 'verwijder/afzeggingen', aantal, ctx.params.knsbNummer);
+                seizoenMutatie(
+                    gebruiker.knsbNummer,
+                    ctx.params.seizoen,
+                    'verwijder/afzeggingen',
+                    aantal,
+                    ctx.params.knsbNummer);
                 ctx.body = aantal;
             }
         }
@@ -340,6 +380,22 @@ async function seizoenMutatie(gebruiker, seizoen, mutatieSoort, aantal, ...velde
                 seizoen: seizoen,
                 // teamCode
                 // rondeNummer
+                mutatieSoort: soort,
+                mutatieAantal: aantal});
+    }
+}
+
+async function rondeMutatie(gebruiker, seizoen, teamCode, rondeNummer, mutatieSoort, aantal, ...velden) {
+    if (aantal) {
+        let soort = mutatieSoort + "/" + seizoen + "/" + teamCode + "/" + rondeNummer;
+        for (let veld of velden) {
+            soort = soort + "/" + veld;
+        }
+        await Mutatie.query() // await is noodzakelijk, want anders geen insert
+            .insert({knsbNummer: Number(gebruiker),
+                seizoen: seizoen,
+                teamCode: teamCode,
+                rondeNummer: rondeNummer,
                 mutatieSoort: soort,
                 mutatieAantal: aantal});
     }
