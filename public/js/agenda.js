@@ -10,25 +10,28 @@ if (uuidToken) {
     naarAnderePagina("gebruiker.html");
 }
 
+const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
+
 async function agenda(kop, lijst) {
     kop.innerHTML = ["Agenda", await naamGebruiker()].join(SCHEIDING);
-    if (agendaMutatie()) {
-        agendaVerwijderen();
-    }
     const gebruiker = await knsbNummerGebruiker();
+    if (agendaMutatie()) {
+        agendaVerwijderen(gebruiker);
+    }
     let wedstrijden = await agendaLezen(gebruiker);
     if (await agendaAanvullen(gebruiker, wedstrijden)) {
-        agendaVerwijderen();
+        agendaVerwijderen(gebruiker);
         wedstrijden = await agendaLezen(gebruiker);
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         console.log(w);
-        if (true) { // TODO reeds gespeelde ronde overslaan
-            /*
-            TODO
-            if (ronde.resultaat !== WINST && ronde.resultaat !== REMISE && ronde.resultaat !== VERLIES) {
-            htmlLink naar agenda.html?teamCode= &rondeNummer= &partij= i, e, of a
-             */
+        if (w.resultaat !== WINST && w.resultaat !== REMISE && w.resultaat !== VERLIES) {
+            const partij = w.partij === AFGEZEGD ? INTERNE_PARTIJ : AFGEZEGD;
+            const aanwezig = w.partij === AFGEZEGD ? "afgezegd" : VINKJE;
+            lijst.appendChild(htmlRij(
+                w.rondeNummer,
+                datumLeesbaar(w.datum),
+                htmlLink(`agenda.html?teamCode=${w.teamCode}&rondeNummer=${w.rondeNummer}&partij=${partij}`, aanwezig)));
         }
     }
 }
@@ -51,12 +54,9 @@ function agendaMutatie() {
     return mutaties;
 }
 
-function agendaVerwijderen() {
+function agendaVerwijderen(gebruiker) {
     console.log("agendaVerwijderen");
-    /*
-    TODO
-    verwijder localStorage, die werd ingelezen door agendaLezen()
-     */
+    sessionStorage.removeItem(`/agenda/${ditSeizoen()}/${gebruiker}`);
 }
 
 async function agendaLezen(gebruiker) {
@@ -68,21 +68,15 @@ async function agendaLezen(gebruiker) {
     return wedstrijden; // werkt uitsluitend na await
 }
 
-function agendaAanvullen(gebruiker, wedstrijden) {
+async function agendaAanvullen(gebruiker, wedstrijden) {
     console.log("agendaAanvullen");
     let aanvullingen = 0;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (!w.partij) {
             console.log(w);
-            /*
-            TODO
-            insert uitslag met partij = a
-                router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:datum/:anderTeam', async function (ctx) {
-
-             */
-            if (false) { // TODO uitslag is toegevoegd
-                aanvullingen++;
-            }
+            const mutaties = await serverFetch(
+                `/${uuidToken}/afwezig/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${gebruiker}/${datumSQL(w.datum)}/int`);
+            aanvullingen += mutaties;
         }
     }
     return aanvullingen;

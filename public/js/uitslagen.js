@@ -196,6 +196,11 @@ function datumLeesbaar(jsonDatum) {
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
 
+function datumSQL(jsonDatum) {
+    const datum = new Date(jsonDatum);
+    return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
+}
+
 function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
