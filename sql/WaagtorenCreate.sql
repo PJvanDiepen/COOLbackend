@@ -144,10 +144,9 @@ drop table if exists mutatie;
 create table mutatie (
 	knsbNummer int not null,
     tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
-    uniek char(50),
-    soort varchar(100),
+    url varchar(100),
     aantal int,
-    primary key (knsbNummer, tijdstip, uniek)
+    primary key (knsbNummer, tijdstip, url)
 );
 
 alter table mutatie

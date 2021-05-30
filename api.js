@@ -269,7 +269,7 @@ module.exports = router => {
                     resultaat: "",
                     datum: ctx.params.datum,
                     anderTeam: ctx.params.anderTeam});
-            await mutatie(gebruiker, ctx, "afwezig", 1);
+            await mutatie(gebruiker, ctx, 1);
             ctx.body = 1;
         }
     });
@@ -283,7 +283,7 @@ module.exports = router => {
                 .delete()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer);
-            await mutatie(gebruiker, ctx, 'verwijder/speler', aantal);
+            await mutatie(gebruiker, ctx, aantal);
             ctx.body = aantal;
         }
     });
@@ -306,7 +306,7 @@ module.exports = router => {
                     .where('seizoen', ctx.params.seizoen)
                     .andWhere('knsbNummer',ctx.params.knsbNummer)
                     .andWhere('partij', 'a');
-                await mutatie(gebruiker, ctx, 'verwijder/afzeggingen', aantal);
+                await mutatie(gebruiker, ctx, aantal);
                 ctx.body = aantal;
             }
         }
@@ -345,19 +345,17 @@ module.exports = router => {
 ///////////////////////////////////////////////////////////////////
 
 async function leesGebruiker(uuidToken) {
-    return Gebruiker.query()
+    return Gebruiker.query()// TODO waarom is await hier niet noodzakelijk?
         .findById(uuidToken)
         .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
         .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
 }
 
-async function mutatie(gebruiker, ctx, soort, aantal) {
-    console.log("mutatie -----------------------------------------");
+async function mutatie(gebruiker, ctx, aantal) {
     if (aantal) {
-        await Mutatie.query().insert({
+        await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
             knsbNummer: gebruiker.knsbNummer,
-            uniek: Object.values(ctx.params).splice(1).join("/"), // zonder uuidToken
-            soort: soort,
+            url: ctx.request.url.substring(38), // zonder uuidToken
             aantal: aantal});
     }
 }
