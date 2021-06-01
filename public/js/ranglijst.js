@@ -23,21 +23,21 @@ menu(naarAgenda,
     [9, "conversie tegenstanderNummer naar partij", async function () {
         let mutaties = await serverFetch("/verwijder/persoon/1/99"); // verwijder overbodige personen
         console.log("verwijder/persoon: " + mutaties);
-        mutaties = await serverFetch("/partij/3/3/a");
+        mutaties = await serverFetch("/partijconversie/3/3/a");
         console.log("partij = AFWEZIG: " + mutaties);
-        mutaties = await serverFetch("/partij/8/8/b");
+        mutaties = await serverFetch("/partijconversie/8/8/b");
         console.log("partij = BYE: " + mutaties);
-        mutaties = await serverFetch("/partij/2/2/e");
+        mutaties = await serverFetch("/partijconversie/2/2/e");
         console.log("partij = EXTERNE_PARTIJ: " + mutaties);
-        mutaties = await serverFetch("/partij/9/9999999/i");
+        mutaties = await serverFetch("/partijconversie/9/9999999/i");
         console.log("partij = INTERNE_PARTIJ: " + mutaties);
-        mutaties = await serverFetch("/partij/1/1/o");
+        mutaties = await serverFetch("/partijconversie/1/1/o");
         console.log("partij = ONEVEN: " + mutaties);
-        mutaties = await serverFetch("/partij/7/7/t");
+        mutaties = await serverFetch("/partijconversie/7/7/t");
         console.log("partij = TEAMLEIDER: " + mutaties);
-        mutaties = await serverFetch("/partij/6/6/v");
+        mutaties = await serverFetch("/partijconversie/6/6/v");
         console.log("partij = REGLEMENTAIR_VERLIES: " + mutaties);
-        mutaties = await serverFetch("/partij/5/5/w");
+        mutaties = await serverFetch("/partijconversie/5/5/w");
         console.log("partij = REGLEMENTAIRE_WINST: " + mutaties);
         mutaties = await serverFetch("/tegenstander/1/99");
         console.log("tegenstanderNummer = 0: " + mutaties);

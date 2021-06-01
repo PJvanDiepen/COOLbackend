@@ -6,6 +6,7 @@ insert into persoon (knsbNummer, naam, dummy) values
 ('107', 'Joris Beerda', ''),
 ('109', 'Ron van den Bogert', ''),
 ('110', 'Tansu Madencioglu', ''),
+('111', 'Sander Jagersma', ''),
 ('6192098', 'Nico Brugman', ''),
 ('6212404', 'Peter van Diepen', ''),
 ('6214153', 'Jan Poland', ''),
@@ -98,6 +99,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2021', '', '', '107', '1000', '2020-08-01', 'H'),
 ('2021', '', '', '109', '1000', '2020-08-01', 'H'),
 ('2021', '', '', '110', '1000', '2021-05-20', 'H'),
+('2021', '', '', '111', '1000', '2021-06-01', 'H'),
 ('2021', '', '', '7566031', '500', '2020-08-01', 'H'),
 ('2021', '', '', '8865549', '500', '2020-08-01', 'H');
 

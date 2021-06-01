@@ -115,7 +115,7 @@ function internePartij(u, totaal) {
 function geenPartij(u, totaal) {
     const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
-    const omschrijving = u.partij === AFGEZEGD             ? "afgezegd"
+    const omschrijving = u.partij === AFWEZIG             ? "afgezegd"
                        : u.partij === EXTERNE_WEDSTRIJD    ? "extern"
                        : u.partij === INTERNE_PARTIJ       ? "intern"
                        : u.partij === ONEVEN               ? "oneven"

@@ -252,7 +252,7 @@ module.exports = router => {
         ctx.body = await leesGebruiker(ctx.params.uuidToken);
     });
 
-    router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:datum/:anderTeam', async function (ctx) {
+    router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {
         const gebruiker = await leesGebruiker(ctx.params.uuidToken);
         if (1 > Number(gebruiker.mutatieRechten)) {
             ctx.body = 0;
@@ -263,7 +263,7 @@ module.exports = router => {
                     rondeNummer: ctx.params.rondeNummer,
                     bordNummer: 0,
                     knsbNummer: ctx.params.knsbNummer,
-                    partij: "a", //  afwezig
+                    partij: ctx.params.partij,
                     witZwart: "",
                     tegenstanderNummer: 0,
                     resultaat: "",
@@ -271,6 +271,22 @@ module.exports = router => {
                     anderTeam: ctx.params.anderTeam});
             await mutatie(gebruiker, ctx, 1);
             ctx.body = 1;
+        }
+    });
+
+    router.get('/:uuidToken/partij/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
+        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
+        if (1 > Number(gebruiker.mutatieRechten)) {
+            ctx.body = 0;
+        } else {
+            const aantal = await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                .patch({partij: ctx.params.partij});
+            await mutatie(gebruiker, ctx, aantal);
+            ctx.body = aantal;
         }
     });
 
@@ -317,7 +333,7 @@ module.exports = router => {
     /*
     TODO verwijder conversie tegenstanderNummer [van, tot] naar partij = letter
      */
-    router.get('/partij/:van/:tot/:letter', async function (ctx) {
+    router.get('/partijconversie/:van/:tot/:letter', async function (ctx) {
         ctx.body = await Uitslag.query()
             .whereBetween('uitslag.tegenstanderNummer', [ctx.params.van, ctx.params.tot])
             .patch({partij: ctx.params.letter});
@@ -345,7 +361,7 @@ module.exports = router => {
 ///////////////////////////////////////////////////////////////////
 
 async function leesGebruiker(uuidToken) {
-    return Gebruiker.query()// TODO waarom is await hier niet noodzakelijk?
+    return await Gebruiker.query()// TODO waarom is await hier niet noodzakelijk?
         .findById(uuidToken)
         .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
         .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');

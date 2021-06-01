@@ -14,9 +14,11 @@ const informatieNivo = Number(doorgeven("informatie"));
 const uuidToken = sessionStorage.getItem("uuidToken") || localStorage.getItem(schaakVereniging);
 
 // uitslag.partij
-const AFGEZEGD             = "a";
+const AFWEZIG              = "a";
 const EXTERNE_WEDSTRIJD    = "e";
 const INTERNE_PARTIJ       = "i";
+const MEEDOEN              = "m"; // na aanmelden
+const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
 const TEAMLEIDER           = "t";
 const REGLEMENTAIR_VERLIES = "v";
@@ -199,6 +201,10 @@ function datumLeesbaar(jsonDatum) {
 function datumSQL(jsonDatum) {
     const datum = new Date(jsonDatum);
     return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
+}
+
+function datumLater(jsonDatum, andereDatum) {
+    return new Date(jsonDatum) > andereDatum ? new Date(andereDatum) : new Date();
 }
 
 function voorloopNul(getal) {

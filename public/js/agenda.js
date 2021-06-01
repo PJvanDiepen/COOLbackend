@@ -11,11 +11,12 @@ if (uuidToken) {
 }
 
 const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
+const STREEP = "___";
 
 async function agenda(kop, lijst) {
     kop.innerHTML = ["Agenda", await naamGebruiker()].join(SCHEIDING);
     const gebruiker = await knsbNummerGebruiker();
-    if (agendaMutatie()) {
+    if (await agendaMutatie(gebruiker)) {
         agendaVerwijderen(gebruiker);
     }
     let wedstrijden = await agendaLezen(gebruiker);
@@ -24,58 +25,47 @@ async function agenda(kop, lijst) {
         wedstrijden = await agendaLezen(gebruiker);
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
-        console.log(w);
-        if (w.resultaat !== WINST && w.resultaat !== REMISE && w.resultaat !== VERLIES) {
-            const partij = w.partij === AFGEZEGD ? INTERNE_PARTIJ : AFGEZEGD;
-            const aanwezig = w.partij === AFGEZEGD ? "afgezegd" : VINKJE;
+        if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
+            const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
+            const aanwezig = w.partij === MEEDOEN ? VINKJE : STREEP;
             lijst.appendChild(htmlRij(
                 w.rondeNummer,
                 datumLeesbaar(w.datum),
-                htmlLink(`agenda.html?teamCode=${w.teamCode}&rondeNummer=${w.rondeNummer}&partij=${partij}`, aanwezig)));
+                htmlLink(`agenda.html?teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig)));
         }
     }
 }
 
-function agendaMutatie() {
+async function agendaMutatie(knsbNummer) {
     const partij = params.get("partij");
     let mutaties = 0;
     if (partij) {
-        console.log("agendaMutatie");
-        /*
-        TODO
-        patch uitslag partij = i, e of a
-            uuidToken
-            seizoen = ditSeizoen()
-            teamCode = parameter
-            rondeNummer = parameter
-            knsbNummer = knsbNummerGebruiker()
-         */
+        mutaties = await serverFetch(
+            `/${uuidToken}/partij/${seizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
-    return mutaties;
+    return mutaties; // werkt uitsluitend na await
 }
 
-function agendaVerwijderen(gebruiker) {
-    console.log("agendaVerwijderen");
-    sessionStorage.removeItem(`/agenda/${ditSeizoen()}/${gebruiker}`);
+function agendaVerwijderen(knsbNummer) {
+    sessionStorage.removeItem(`/agenda/${ditSeizoen()}/${knsbNummer}`);
 }
 
-async function agendaLezen(gebruiker) {
+async function agendaLezen(knsbNummer) {
     const wedstrijden = [];
-    await mapAsync("/agenda/" + ditSeizoen() + "/" + gebruiker,
+    await mapAsync(`/agenda/${ditSeizoen()}/${knsbNummer}`,
         function (wedstrijd) {
             wedstrijden.push(wedstrijd);
         });
     return wedstrijden; // werkt uitsluitend na await
 }
 
-async function agendaAanvullen(gebruiker, wedstrijden) {
-    console.log("agendaAanvullen");
+async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
-    for (const w of wedstrijden) { // verwerk ronde / uitslag
+    for (const w of wedstrijden) {
         if (!w.partij) {
-            console.log(w);
+            const afwezig = datumLater(w.datum) ? NIET_MEEDOEN : AFWEZIG;
             const mutaties = await serverFetch(
-                `/${uuidToken}/afwezig/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${gebruiker}/${datumSQL(w.datum)}/int`);
+                `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datumSQL(w.datum)}/int`);
             aanvullingen += mutaties;
         }
     }
@@ -83,5 +73,5 @@ async function agendaAanvullen(gebruiker, wedstrijden) {
 }
 
 function mogelijkeTegenstanders(lijst) {
-
+    console.log("mogelijkeTegenstanders");
 }
