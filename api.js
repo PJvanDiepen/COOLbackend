@@ -211,6 +211,16 @@ module.exports = router => {
             .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
     });
 
+    router.get('/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        ctx.body = await Uitslag.query()
+            .select('uitslag.knsbNummer', 'persoon.naam')
+            .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
+            .where('uitslag.seizoen', ctx.params.seizoen)
+            .andWhere('uitslag.teamCode', ctx.params.teamCode)
+            .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+            .andWhere('uitslag.partij', 'm'); // MEEDOEN
+    });
+
     router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', ctx.params.seizoen)
@@ -295,12 +305,20 @@ module.exports = router => {
         if (9 > Number(gebruiker.mutatieRechten)) {
             ctx.body = 0;
         } else {
-            const aantal = await Speler.query()
-                .delete()
+            const uitslagen = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
-                .andWhere('knsbNummer',ctx.params.knsbNummer);
-            await mutatie(gebruiker, ctx, aantal);
-            ctx.body = aantal;
+                .andWhere('knsbNummer',ctx.params.knsbNummer)
+                .limit(1);
+            if (uitslagen.length) {
+                ctx.body = 0; // indien uitslagen dan geen speler verwijderen
+            } else {
+                const aantal = await Speler.query()
+                    .delete()
+                    .where('seizoen', ctx.params.seizoen)
+                    .andWhere('knsbNummer',ctx.params.knsbNummer);
+                await mutatie(gebruiker, ctx, aantal);
+                ctx.body = aantal;
+            }
         }
     });
 
@@ -328,44 +346,17 @@ module.exports = router => {
         }
     });
 
-    ///////////////////////////////////////////////////////////////////////////
-
-    /*
-    TODO verwijder conversie tegenstanderNummer [van, tot] naar partij = letter
-     */
-    router.get('/partijconversie/:van/:tot/:letter', async function (ctx) {
-        ctx.body = await Uitslag.query()
-            .whereBetween('uitslag.tegenstanderNummer', [ctx.params.van, ctx.params.tot])
-            .patch({partij: ctx.params.letter});
-    });
-
-    /*
-    TODO verwijder conversie tegenstanderNummer [van, tot] naar tegenstanderNummer = 0
-     */
-    router.get('/tegenstander/:van/:tot', async function (ctx) {
-        ctx.body = await Uitslag.query()
-            .whereBetween('uitslag.tegenstanderNummer', [ctx.params.van, ctx.params.tot])
-            .patch({tegenstanderNummer: 0});
-    });
-
-    /*
-    TODO verwijder conversie Persoon tegenstanderNummer [van, tot]
-     */
-    router.get('/verwijder/persoon/:van/:tot', async function (ctx) {
-        ctx.body = await Persoon.query()
-            .delete()
-            .whereBetween('knsbNummer', [ctx.params.van, ctx.params.tot]);
-    });
 }
 
-///////////////////////////////////////////////////////////////////
-
+// TODO test mutatieRechten: vergelijk minimumRechten met die van gebruiker anders return 0
 async function leesGebruiker(uuidToken) {
-    return await Gebruiker.query()// TODO waarom is await hier niet noodzakelijk?
+    return await Gebruiker.query()
         .findById(uuidToken)
         .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
         .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
 }
+
+// TODO test mutatieRechten: vergelijk parameter met die van gebruiker
 
 async function mutatie(gebruiker, ctx, aantal) {
     if (aantal) {

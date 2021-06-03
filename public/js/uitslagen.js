@@ -32,6 +32,8 @@ const THUIS = "t";
 const UIT = "u";
 // kop
 const SCHEIDING = " \u232A ";
+// score
+const PUNTEN_UIT = " uit ";
 
 function doorgeven(key) {
     let value = params.get(key);
@@ -103,7 +105,7 @@ const naarRanglijst = [0, "ranglijst", function () {
     naarAnderePagina("ranglijst.html");
 }];
 
-const naarGebruiker = [0, "registreren", function () {
+const naarGebruiker = [0, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
     naarAnderePagina("gebruiker.html");
 }];
 
@@ -240,11 +242,11 @@ function score(winst, remise, verlies) {
             remise -= 2;
         }
         if (remise === 0) {
-            return winst + " / " + partijen;
+            return winst + PUNTEN_UIT + partijen;
         } else if (winst === 0) {
-            return REMISE + " / " + partijen;
+            return REMISE + PUNTEN_UIT + partijen;
         } else {
-            return winst + REMISE + " / " + partijen;
+            return winst + REMISE + PUNTEN_UIT + partijen;
         }
     } else {
         return "";

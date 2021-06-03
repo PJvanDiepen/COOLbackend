@@ -2,10 +2,10 @@
 
 menu(naarAgenda,
     naarGebruiker,
-    [9, "zonder niet actieve spelers", function () {
+    [8, "zonder niet actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
-    [9, "inclusief niet actieve spelers", function () {
+    [8, "inclusief niet actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=9");
     }],
     [9, "Arie Boots / mutatieRechten = 1", function () {
@@ -19,28 +19,6 @@ menu(naarAgenda,
     [9, "onbekend / mutatieRechten = 0", function () {
         sessionStorage.setItem("uuidToken", "f77cf407-af70-11eb-947d-7c0507c81823");
         naarAnderePagina("ranglijst.html?informatie=0");
-    }],
-    [9, "conversie tegenstanderNummer naar partij", async function () {
-        let mutaties = await serverFetch("/verwijder/persoon/1/99"); // verwijder overbodige personen
-        console.log("verwijder/persoon: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/3/3/a");
-        console.log("partij = AFWEZIG: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/8/8/b");
-        console.log("partij = BYE: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/2/2/e");
-        console.log("partij = EXTERNE_PARTIJ: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/9/9999999/i");
-        console.log("partij = INTERNE_PARTIJ: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/1/1/o");
-        console.log("partij = ONEVEN: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/7/7/t");
-        console.log("partij = TEAMLEIDER: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/6/6/v");
-        console.log("partij = REGLEMENTAIR_VERLIES: " + mutaties);
-        mutaties = await serverFetch("/partijconversie/5/5/w");
-        console.log("partij = REGLEMENTAIRE_WINST: " + mutaties);
-        mutaties = await serverFetch("/tegenstander/1/99");
-        console.log("tegenstanderNummer = 0: " + mutaties);
     }],
     terugNaar);
 seizoenSelecteren(INTERNE_COMPETITIE);

@@ -11,7 +11,7 @@ menu(naarAgenda,
             naarZelfdePagina();
         }
     }],
-    [9, "speler verwijderen", async function () {
+    [9, `${naamSpeler} verwijderen`, async function () {
         const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
         if (mutaties) {
             sessionStorage.removeItem(`/uitslagen/${seizoen}/${speler}`);
@@ -62,6 +62,8 @@ async function uitslagenSpeler(kop, lijst) {
             }
             if (u.tegenstanderNummer > 0) {
                 lijst.appendChild(internePartij(u, totaal));
+            } else if (u.partij === MEEDOEN || u.partij === NIET_MEEDOEN) {
+                // geen uitslag, geplande partij overslaan
             } else if (u.teamCode === INTERNE_COMPETITIE && u.partij === EXTERNE_WEDSTRIJD) {
                 vorigeUitslag = u; // deze uitslag overslaan en combineren met volgende uitslag
             } else if (u.teamCode === INTERNE_COMPETITIE) {
@@ -121,7 +123,7 @@ function geenPartij(u, totaal) {
                        : u.partij === ONEVEN               ? "oneven"
                        : u.partij === TEAMLEIDER           ? "vrijgesteld"
                        : u.partij === REGLEMENTAIR_VERLIES ? "reglementair verlies"
-                       : u.partij === REGLEMENTAIRE_WINST  ? "reglementaire winst" : "fout!!!";
+                       : u.partij === REGLEMENTAIRE_WINST  ? "reglementaire winst" : "geenPartij?";
     return htmlRij(rondeKolom, datumKolom, omschrijving, "", "", "", u.punten, totaal);
 }
 

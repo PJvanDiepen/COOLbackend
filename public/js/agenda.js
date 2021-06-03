@@ -1,6 +1,11 @@
 "use strict";
 
 menu(naarRanglijst,
+    [8, `agenda van ${naamSpeler}`, function () {
+        if (speler) {
+            naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
+        }
+    }],
     naarGebruiker,
     terugNaar);
 if (uuidToken) {
@@ -31,6 +36,7 @@ async function agenda(kop, lijst) {
             lijst.appendChild(htmlRij(
                 w.rondeNummer,
                 datumLeesbaar(w.datum),
+                "",
                 htmlLink(`agenda.html?teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig)));
         }
     }
@@ -51,12 +57,7 @@ function agendaVerwijderen(knsbNummer) {
 }
 
 async function agendaLezen(knsbNummer) {
-    const wedstrijden = [];
-    await mapAsync(`/agenda/${ditSeizoen()}/${knsbNummer}`,
-        function (wedstrijd) {
-            wedstrijden.push(wedstrijd);
-        });
-    return wedstrijden; // werkt uitsluitend na await
+    return await databaseFetch(`/agenda/${ditSeizoen()}/${knsbNummer}`);
 }
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {

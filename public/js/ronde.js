@@ -3,7 +3,6 @@
 menu(naarAgenda,
     naarRanglijst,
     naarGebruiker,
-    [1, "wijzigen..."],
     terugNaar);
 rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
 wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));

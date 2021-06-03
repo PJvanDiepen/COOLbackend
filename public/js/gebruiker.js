@@ -2,12 +2,11 @@
 
 menu(naarAgenda,
     naarRanglijst,
-    [9, "andere gebruiker",
-        function () {
-            document.getElementById("naam").value = naamSpeler;
-            document.getElementById("knsbNummer").value = speler;
-            document.getElementById("status").value = "";
-        }],
+    [9, `formulier van ${naamSpeler}`, function () {
+        document.getElementById("naam").value = naamSpeler;
+        document.getElementById("knsbNummer").value = speler;
+        document.getElementById("status").value = "";
+    }],
     terugNaar);
 spelerSelecteren();
 gebruikerFormulier(document.getElementById("formulier"),
