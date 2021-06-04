@@ -259,14 +259,13 @@ module.exports = router => {
     knsbNummer, naam en mutatieRechten van gebruiker opzoeken
      */
     router.get('/gebruiker/:uuidToken', async function (ctx) {
-        ctx.body = await leesGebruiker(ctx.params.uuidToken);
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        ctx.body = gebruiker.dader;
     });
 
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {
-        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
-        if (1 > Number(gebruiker.mutatieRechten)) {
-            ctx.body = 0;
-        } else {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.juisteRechten(1)) {
             const uitslag = await Uitslag.query()
                 .insert({seizoen: ctx.params.seizoen,
                     teamCode: ctx.params.teamCode,
@@ -281,23 +280,21 @@ module.exports = router => {
                     anderTeam: ctx.params.anderTeam});
             await mutatie(gebruiker, ctx, 1);
             ctx.body = 1;
+        } else {
+            ctx.body = 0;
         }
     });
 
     router.get('/:uuidToken/partij/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
-        const g = await gebruikerRechten(ctx.params.uuidToken);
-        console.log(g.juisteRechten(8));
-        console.log(g.juisteRechten(1));
-        console.log(g.zelfdeNummer(ctx.params.knsbNummer));
-        console.log("-----------------------")
-        if (g.juisteRechten(8) || (g.juisteRechten(1) && g.zelfdeNummer(ctx.params.knsbNummer))) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.juisteRechten(8) || gebruiker.eigenData(1, ctx.params.knsbNummer)) {
             const aantal = await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .patch({partij: ctx.params.partij});
-            await mutatie(g.dader, ctx, aantal);
+            await mutatie(gebruiker, ctx, aantal);
             ctx.body = aantal;
         } else {
             ctx.body = 0;
@@ -305,10 +302,8 @@ module.exports = router => {
     });
 
     router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
-        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
-        if (9 > Number(gebruiker.mutatieRechten)) {
-            ctx.body = 0;
-        } else {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.vorigSeizoen(9, ctx.params.seizoen)) {
             const uitslagen = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer)
@@ -323,14 +318,14 @@ module.exports = router => {
                 await mutatie(gebruiker, ctx, aantal);
                 ctx.body = aantal;
             }
+        } else {
+            ctx.body = 0;
         }
     });
 
     router.get('/:uuidToken/verwijder/afzeggingen/:seizoen/:knsbNummer', async function (ctx) {
-        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
-        if (9 > Number(gebruiker.mutatieRechten)) {
-            ctx.body = 0;
-        } else {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.vorigSeizoen(9, ctx.params.seizoen)) {
             const intern = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer)
@@ -347,46 +342,49 @@ module.exports = router => {
                 await mutatie(gebruiker, ctx, aantal);
                 ctx.body = aantal;
             }
+        } else {
+            ctx.body = 0;
         }
     });
 
 }
 
-// TODO test mutatieRechten: vergelijk minimumRechten met die van gebruiker anders return 0
-async function leesGebruiker(uuidToken) {
-    return await Gebruiker.query()
-        .findById(uuidToken)
-        .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
-        .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
-}
-
 async function gebruikerRechten(uuidToken) {
-    console.log("gebruikerRechten");
     const dader = await Gebruiker.query()
         .findById(uuidToken)
         .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
         .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
-    console.log(dader);
 
     function juisteRechten(minimum) {
         return Number(dader.mutatieRechten) >= minimum;
     }
 
-    function zelfdeNummer(knsbNummer) {
-        return dader.knsbNummer === knsbNummer;
+    function eigenData(minimum, knsbNummer) {
+        return juisteRechten(minimum) && dader.knsbNummer === knsbNummer;
     }
 
-    return Object.freeze({dader, juisteRechten, zelfdeNummer});
-}
+    function vorigSeizoen(minimum, seizoen) {
+        return juisteRechten(minimum) && ditSeizoen() !== seizoen;
+    }
 
-// TODO test mutatieRechten: vergelijk parameter met die van gebruiker
+    function ditSeizoen() {  // TODO zie uitslagen.js
+        const datum = new Date();
+        const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001); // na juli dit jaar anders vorig jaar
+        return `${voorloopNul(i)}${voorloopNul(i+1)}`;
+    }
+
+    function voorloopNul(getal) { // TODO zie uitslagen.js
+        return getal < 10 ? "0" + getal : getal;
+    }
+
+    return Object.freeze({dader, juisteRechten, eigenData, vorigSeizoen});
+}
 
 async function mutatie(gebruiker, ctx, aantal) {
     if (aantal) {
         await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
-            knsbNummer: gebruiker.knsbNummer,
+            knsbNummer: gebruiker.dader.knsbNummer,
             url: ctx.request.url.substring(38), // zonder uuidToken
             aantal: aantal});
     }
 }
-

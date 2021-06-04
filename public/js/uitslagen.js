@@ -122,6 +122,13 @@ async function mapAsync(url, mapFun) {
     objects.map(mapFun);
 }
 
+/**
+ * localFetch optimaliseert de verbinding met de database op de server
+ * door het antwoord van de server ook lokaal op te slaan
+ *
+ * @param url de vraag aan de database op de server
+ * @returns {Promise<any>} het antwoord van de server
+ */
 async function localFetch(url) {
     let object = JSON.parse(sessionStorage.getItem(url));
     if (!object) {
@@ -383,13 +390,13 @@ function totalen(alleTotalen) {
     function winnaarSubgroep(winnaars, subgroep) {
         if (!intern()) {
             return "";
-        } else if (winnaars[subgroep]) {
+        } else if (winnaars[subgroep]) { // indien winnaar van subgroep al bekend
             return subgroep;
-        } else if (totaal[1]) {
+        } else if (totaal[1]) { // indien recht op prijs dan is dit winnaar van de subgroep
             winnaars[subgroep] = true;
-            return subgroep + "*";
+            return subgroep + "*"; // winnaar
         } else {
-            return subgroep + "-"; // geen prijs
+            return subgroep + "-"; // geen recht op prijs
         }
     }
 

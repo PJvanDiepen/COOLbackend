@@ -1,7 +1,7 @@
 "use strict";
 
 menu(naarRanglijst,
-    [8, `agenda van ${speler ? naamSpeler : "te selecteren speler"}`, function () {
+    [8, `agenda van ${speler ? naamSpeler : "nog te selecteren speler"}`, function () {
         if (speler) {
             naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
         }
@@ -47,7 +47,7 @@ async function agenda(kop, lijst) {
 async function agendaMutatie(knsbNummer) {
     const partij = params.get("partij");
     if (partij) {
-        await serverFetch(`/${uuidToken}/partij/${seizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
+        await serverFetch(`/${uuidToken}/partij/${ditSeizoen()}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
 }
 
