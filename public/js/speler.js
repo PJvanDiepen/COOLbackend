@@ -1,6 +1,9 @@
 "use strict";
 
 menu(naarAgenda,
+    [8, `agenda van ${naamSpeler}`, function () {
+        naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
+    }],
     naarRanglijst,
     naarGebruiker,
     [9, "afzeggingen verwijderen", async function () {
