@@ -1,7 +1,7 @@
 "use strict";
 
 menu(naarRanglijst,
-    [8, `agenda van ${naamSpeler}`, function () {
+    [8, `agenda van ${speler ? naamSpeler : "te selecteren speler"}`, function () {
         if (speler) {
             naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
         }
@@ -19,45 +19,40 @@ const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
 const STREEP = "___";
 
 async function agenda(kop, lijst) {
-    kop.innerHTML = ["Agenda", await naamGebruiker()].join(SCHEIDING);
-    const gebruiker = await knsbNummerGebruiker();
-    if (await agendaMutatie(gebruiker)) {
-        agendaVerwijderen(gebruiker);
-    }
+    const gebruiker = params.get("gebruiker") || await knsbNummerGebruiker();
+    await agendaMutatie(gebruiker);
+    const naam = params.get("naamGebruiker") || await naamGebruiker();
+    kop.innerHTML = "Agenda" + SCHEIDING + naam;
     let wedstrijden = await agendaLezen(gebruiker);
     if (await agendaAanvullen(gebruiker, wedstrijden)) {
-        agendaVerwijderen(gebruiker);
         wedstrijden = await agendaLezen(gebruiker);
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
+            const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
+            console.log(deelnemers);
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : STREEP;
             lijst.appendChild(htmlRij(
                 w.rondeNummer,
                 datumLeesbaar(w.datum),
-                "",
-                htmlLink(`agenda.html?teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig)));
+                deelnemers.length,
+                htmlLink(
+                    `agenda.html?gebruiker=${gebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`,
+                    aanwezig)));
         }
     }
 }
 
 async function agendaMutatie(knsbNummer) {
     const partij = params.get("partij");
-    let mutaties = 0;
     if (partij) {
-        mutaties = await serverFetch(
-            `/${uuidToken}/partij/${seizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
+        await serverFetch(`/${uuidToken}/partij/${seizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
-    return mutaties; // werkt uitsluitend na await
-}
-
-function agendaVerwijderen(knsbNummer) {
-    sessionStorage.removeItem(`/agenda/${ditSeizoen()}/${knsbNummer}`);
 }
 
 async function agendaLezen(knsbNummer) {
-    return await databaseFetch(`/agenda/${ditSeizoen()}/${knsbNummer}`);
+    return await serverFetch(`/agenda/${ditSeizoen()}/${knsbNummer}`);
 }
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {

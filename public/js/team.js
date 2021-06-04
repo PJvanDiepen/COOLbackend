@@ -8,7 +8,7 @@ teamSelecteren(teamCode);
 uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
 
 async function uitslagenTeam(kop, rondenTabel) {
-    const teams = await databaseFetch("/teams/" + seizoen);
+    const teams = await localFetch("/teams/" + seizoen);
     for (const team of teams) {
         if (team.teamCode === teamCode) {
             kop.innerHTML = [wedstrijdTeam(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);

@@ -2,7 +2,7 @@
 
 menu(naarAgenda,
     naarRanglijst,
-    [9, `formulier van ${naamSpeler}`, function () {
+    [9, "formulier van geselecteerde speler", function () {
         document.getElementById("naam").value = naamSpeler;
         document.getElementById("knsbNummer").value = speler;
         document.getElementById("status").value = "";

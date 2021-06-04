@@ -68,7 +68,7 @@ async function menu(...menuKeuzes) {
 
 async function mutatieRechtenGebruiker() {
     if (uuidToken) {
-        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        const gebruiker = await localFetch("/gebruiker/" + uuidToken);
         return Number(gebruiker.mutatieRechten);
     } else {
         return 0;
@@ -77,7 +77,7 @@ async function mutatieRechtenGebruiker() {
 
 async function knsbNummerGebruiker() {
     if (uuidToken) {
-        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        const gebruiker = await localFetch("/gebruiker/" + uuidToken);
         return Number(gebruiker.knsbNummer);
     } else {
         return 0;
@@ -86,7 +86,7 @@ async function knsbNummerGebruiker() {
 
 async function naamGebruiker() {
     if (uuidToken) {
-        const gebruiker = await databaseFetch("/gebruiker/" + uuidToken);
+        const gebruiker = await localFetch("/gebruiker/" + uuidToken);
         return gebruiker.naam;
     } else {
         return "onbekend";
@@ -118,11 +118,11 @@ function naarZelfdePagina() {
 }
 
 async function mapAsync(url, mapFun) {
-    const objects = await databaseFetch(url);
+    const objects = await localFetch(url);
     objects.map(mapFun);
 }
 
-async function databaseFetch(url) {
+async function localFetch(url) {
     let object = JSON.parse(sessionStorage.getItem(url));
     if (!object) {
         object = await serverFetch(url);
@@ -447,7 +447,7 @@ function totalen(alleTotalen) {
         startPunten,
         extern,
         scoreExtern,
-        percentageExtern,
+        percentageExtern
     });
 }
 

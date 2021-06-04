@@ -285,18 +285,22 @@ module.exports = router => {
     });
 
     router.get('/:uuidToken/partij/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
-        const gebruiker = await leesGebruiker(ctx.params.uuidToken);
-        if (1 > Number(gebruiker.mutatieRechten)) {
-            ctx.body = 0;
-        } else {
+        const g = await gebruikerRechten(ctx.params.uuidToken);
+        console.log(g.juisteRechten(8));
+        console.log(g.juisteRechten(1));
+        console.log(g.zelfdeNummer(ctx.params.knsbNummer));
+        console.log("-----------------------")
+        if (g.juisteRechten(8) || (g.juisteRechten(1) && g.zelfdeNummer(ctx.params.knsbNummer))) {
             const aantal = await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .patch({partij: ctx.params.partij});
-            await mutatie(gebruiker, ctx, aantal);
+            await mutatie(g.dader, ctx, aantal);
             ctx.body = aantal;
+        } else {
+            ctx.body = 0;
         }
     });
 
@@ -310,7 +314,7 @@ module.exports = router => {
                 .andWhere('knsbNummer',ctx.params.knsbNummer)
                 .limit(1);
             if (uitslagen.length) {
-                ctx.body = 0; // indien uitslagen dan geen speler verwijderen
+                ctx.body = 0; // indien uitslagen van speler dan niet speler verwijderen
             } else {
                 const aantal = await Speler.query()
                     .delete()
@@ -354,6 +358,25 @@ async function leesGebruiker(uuidToken) {
         .findById(uuidToken)
         .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
         .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
+}
+
+async function gebruikerRechten(uuidToken) {
+    console.log("gebruikerRechten");
+    const dader = await Gebruiker.query()
+        .findById(uuidToken)
+        .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
+        .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
+    console.log(dader);
+
+    function juisteRechten(minimum) {
+        return Number(dader.mutatieRechten) >= minimum;
+    }
+
+    function zelfdeNummer(knsbNummer) {
+        return dader.knsbNummer === knsbNummer;
+    }
+
+    return Object.freeze({dader, juisteRechten, zelfdeNummer});
 }
 
 // TODO test mutatieRechten: vergelijk parameter met die van gebruiker

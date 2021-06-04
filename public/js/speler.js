@@ -86,7 +86,7 @@ async function uitslagenSpeler(kop, lijst) {
 }
 
 async function totalenSpeler(seizoen, knsbNummer) {
-    const spelers = await databaseFetch("/ranglijst/" + seizoen);
+    const spelers = await localFetch("/ranglijst/" + seizoen);
     for (const speler of spelers) {
         if (speler.knsbNummer === knsbNummer) {
             return totalen(speler.totalen);

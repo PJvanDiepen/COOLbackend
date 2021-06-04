@@ -10,11 +10,11 @@ uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel
 
 async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
-    const ronden = await databaseFetch("/ronden/" + seizoen + "/int");
+    const ronden = await localFetch("/ronden/" + seizoen + "/int");
     if (rondeNummer > 1) {
         lijst.appendChild(htmlRij(rondeNummer - 1, datumLeesbaar(ronden[rondeNummer - 2].datum), "interne competitie", ""));
     }
-    const wedstrijden = await databaseFetch("/wedstrijden/" + seizoen);
+    const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
     for (const wedstrijd of wedstrijden) {
         if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
             const datumKolom = datumLeesbaar(wedstrijd.datum);
