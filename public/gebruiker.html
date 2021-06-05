@@ -81,6 +81,23 @@
             heb je een persoonlijke agenda, kan je je per ronde aanmelden of afzeggen
             en kan je de voorlopige indeling van de komende ronde zien.
         </p>
+        <details>
+            <summary>Technische uitleg</summary>
+            <p>
+                0-0-0.nl gebruikt <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API">localStorage en sessionStorage</a>
+                (DOM storage), een moderne en veilige techniek om gegevens van de server op je lokale computer, telefoon of tablet op te slaan.
+                0-0-0.nl gebruikt geen ouderwetse, onveilige cookie's!
+            </p>
+            <p>
+                0-0-0.nl gebruikt sessionStorage om ranglijsten en uitslagen tijdelijk op te slaan,
+                zodat het oproepen van verschillende ranglijsten en uitslagen van meer spelers sneller gaat,
+                omdat je browser niet steeds opnieuw een verbinding hoeft te maken met de server.
+                Na het sluiten van je sessie met je browser staan die ranglijsten en uitslagen niet meer in het geheugen van je apparaat.
+                0-0-0.nl gebruikt localStorage alleen voor de unieke code om jou te herkennen als geregistreerd gebruiker.
+                Deze unieke code blijft daarom wel in het geheugen van je apparaat staan,
+                maar is uitsluitend zichtbaar voor 0-0-0.nl en niet voor andere websites dankzij je browser.
+            </p>
+        </details>
     </details>
     <script src="js/uitslagen.js"></script>
     <script src="js/gebruiker.js"></script>

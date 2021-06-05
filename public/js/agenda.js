@@ -1,11 +1,6 @@
 "use strict";
 
 menu(naarRanglijst,
-    [8, `agenda van ${speler ? naamSpeler : "nog te selecteren speler"}`, function () {
-        if (speler) {
-            naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
-        }
-    }],
     naarGebruiker,
     terugNaar);
 if (uuidToken) {

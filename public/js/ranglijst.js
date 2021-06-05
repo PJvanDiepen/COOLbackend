@@ -49,7 +49,7 @@ function ranglijst(kop, lijst) {
                     t.scoreIntern(),
                     t.percentageIntern(),
                     t.saldoWitZwart(),
-                    t.intern() ? t.afzeggingen() : "", // TODO afzeggingen verwijderen indien geen interne partijen
+                    t.intern() ? t.afzeggingen() : "",
                     t.oneven(),
                     t.scoreExtern(),
                     t.percentageExtern(),
