@@ -145,6 +145,7 @@ create table mutatie (
     tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
     url varchar(100),
     aantal int,
+    invloed int,
     primary key (knsbNummer, tijdstip, url)
 );
 

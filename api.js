@@ -276,7 +276,7 @@ module.exports = router => {
                     resultaat: "",
                     datum: ctx.params.datum,
                     anderTeam: ctx.params.anderTeam});
-            await mutatie(gebruiker, ctx, 1);
+            await mutatie(gebruiker, ctx, 1, GEEN_INVLOED);
             ctx.body = 1;
         } else {
             ctx.body = 0;
@@ -292,7 +292,7 @@ module.exports = router => {
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .patch({partij: ctx.params.partij});
-            await mutatie(gebruiker, ctx, aantal);
+            await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
             ctx.body = aantal;
         } else {
             ctx.body = 0;
@@ -313,7 +313,7 @@ module.exports = router => {
                     .delete()
                     .where('seizoen', ctx.params.seizoen)
                     .andWhere('knsbNummer',ctx.params.knsbNummer);
-                await mutatie(gebruiker, ctx, aantal);
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
                 ctx.body = aantal;
             }
         } else {
@@ -337,7 +337,7 @@ module.exports = router => {
                     .where('seizoen', ctx.params.seizoen)
                     .andWhere('knsbNummer',ctx.params.knsbNummer)
                     .andWhere('partij', 'a');
-                await mutatie(gebruiker, ctx, aantal);
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
                 ctx.body = aantal;
             }
         } else {
@@ -378,11 +378,17 @@ async function gebruikerRechten(uuidToken) {
     return Object.freeze({dader, juisteRechten, eigenData, vorigSeizoen});
 }
 
-async function mutatie(gebruiker, ctx, aantal) {
+// mutatie.invloed
+const GEEN_INVLOED = 0;
+const OPNIEUW_INDELEN = 1;
+const NIEUWE_RANGLIJST = 2;
+
+async function mutatie(gebruiker, ctx, aantal, invloed) {
     if (aantal) {
         await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
             knsbNummer: gebruiker.dader.knsbNummer,
             url: ctx.request.url.substring(38), // zonder uuidToken
-            aantal: aantal});
+            aantal: aantal,
+            invloed: invloed});
     }
 }
