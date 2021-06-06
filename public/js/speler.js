@@ -37,7 +37,6 @@ uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel")
       u.resultaat,
       u.teamCode,
       u.partij,
-      r.compleet,
       r.uithuis,
       r.tegenstander,
       punten(@seizoen, @knsbNummer, u.teamCode, u.partij, u.tegenstanderNummer, u.resultaat) as punten

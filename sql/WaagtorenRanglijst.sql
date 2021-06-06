@@ -210,7 +210,6 @@ select u.datum,
        u.resultaat,
        u.teamCode,
        u.partij,
-       r.compleet,
        r.uithuis,
        r.tegenstander,
        punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.partij, u.tegenstanderNummer, u.resultaat) as punten

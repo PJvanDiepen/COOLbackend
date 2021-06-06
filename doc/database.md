@@ -64,12 +64,6 @@ Dit systeem kan daarom wel complete uitslagen lijsten produceren van de interne 
 maar de bij uitslagen van externe competitie staat uitsluitend de `naam` van de eigen speler, bordnummer, kleur, resultaat en
 eventueel de naam van het team van de tegenstander, want die gegevens staan in `Ronde`.
    
-Verder staan in `Persoon`: `knsbNummer = 3` met `naam = 'afgezegd'`, 
-`knsbNummer = 1` met `naam = 'oneven'` en zo voort. 
-Deze nummers worden gebruikt om de uitslagen in de interne competitie compleet te maken.
-De reeks van `knsbNummer = 0` tot en met `knsbNummer = 100` zijn dus labels bij het berekenen van de ranglijst.
-Ze staan in `Persoon` tabel, zodat verschillende schaakverenigingen verschillende labels kunnen gebruiken.
-
 Een `knsbNummer` bestaat uit 7 cijfers en die krijgt een lid van de KNSB.
 Leden van de schaakvereniging, die nog niet een officieel `knsbNummer` hebben krijgen een tijdelijk nummer
 in de reeks vanaf `knsbNummer = 100` tot `knsbNummer = 1000000`.
@@ -161,7 +155,6 @@ Elk team speelt in een `poule` met een vast aantal `borden`.
 seizoen CHAR(4)
 teamCode CHAR(3)
 rondeNummer INT
-compleet CHAR(1) 
 uithuis CHAR(1)
 tegenstander VARCHAR(45)
 plaats VARCHAR(45)
@@ -170,8 +163,6 @@ PRIMARY KEY (seizoen, teamCode, rondeNummer)
 ```
 
 Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander in een plaats op een bepaalde datum.
-Indien `compleet = 'c'` zijn de uitslagen van deze ronde compleet.
-
 Indien alle datums voor de ronden bekend zijn, kan de backend voor elke speler een kalender produceren.
   
 ## Uitslag

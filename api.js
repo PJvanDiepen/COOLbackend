@@ -66,7 +66,6 @@ module.exports = router => {
         u.resultaat,
         u.teamCode,
         u.partij,
-        r.compleet,
         r.uithuis,
         r.tegenstander,
         punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.partij, u.tegenstanderNummer, u.resultaat) as punten
@@ -90,7 +89,6 @@ module.exports = router => {
                 'uitslag.resultaat',
                 'uitslag.teamCode',
                 'uitslag.partij',
-                'ronde.compleet',
                 'ronde.uithuis',
                 'ronde.tegenstander',
                 {punten: fn('punten',

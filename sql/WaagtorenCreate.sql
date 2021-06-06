@@ -78,7 +78,6 @@ CREATE TABLE ronde (
     seizoen char(4) not null,
     teamCode char(3) not null,
     rondeNummer int not null,
-    compleet char(1) not null, 
     uithuis char(1) not null,
     tegenstander varchar(45),
     plaats varchar(45),
