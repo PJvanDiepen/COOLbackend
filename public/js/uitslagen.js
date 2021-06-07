@@ -101,6 +101,10 @@ const naarAgenda = [1, "aanmelden / afzeggen", function () {
     naarAnderePagina("agenda.html");
 }];
 
+const naarBeheer = [9, "gebruikers en mutaties", function () {
+    naarAnderePagina("beheer.html");
+}];
+
 const naarRanglijst = [0, "ranglijst", function () {
     naarAnderePagina("ranglijst.html");
 }];
@@ -202,6 +206,39 @@ function ditSeizoen() {
     return `${voorloopNul(i)}${voorloopNul(i+1)}`;
 }
 
+function tijdGeleden(jsonDatum) {
+    const seconden = (new Date() - new Date(jsonDatum)) / 1000;
+    if (seconden < 60) {
+        return Math.round(seconden) + " sec";
+    }
+    const minuten = seconden / 60;
+    if (minuten < 60) {
+        return Math.round(minuten) + " min";
+    }
+    const uren = minuten / 60;
+    if (uren < 24) {
+        return Math.round(uren) + " uur";
+    }
+    const dagen = uren / 24;
+    if (dagen < 2) {
+        return "1 dag";
+    } else if (dagen < 7) {
+        return Math.round(dagen) + " dagen";
+    }
+    const weken = dagen / 7;
+    if (weken < 2) {
+        return "1 week";
+    } else if (dagen < 365) {
+        return Math.round(weken) + " weken";
+    } else {
+        return "langer dan 1 jaar";
+    }
+}
+
+function datumLater(jsonDatum, andereDatum) {
+    return new Date(jsonDatum) > andereDatum ? new Date(andereDatum) : new Date();
+}
+
 function datumLeesbaar(jsonDatum) {
     const datum = new Date(jsonDatum);
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
@@ -210,10 +247,6 @@ function datumLeesbaar(jsonDatum) {
 function datumSQL(jsonDatum) {
     const datum = new Date(jsonDatum);
     return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
-}
-
-function datumLater(jsonDatum, andereDatum) {
-    return new Date(jsonDatum) > andereDatum ? new Date(andereDatum) : new Date();
 }
 
 function voorloopNul(getal) {

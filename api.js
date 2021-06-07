@@ -112,13 +112,14 @@ module.exports = router => {
 
 
     /*
+    -- agenda voor alle interne en externe ronden per speler
     with
       s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
       u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
     select r.*, u.bordNummer, u.partij, u.witZwart, u.tegenstanderNummer, u.resultaat
       from ronde r
-    join s on r.seizoen = s.seizoen
-    left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
+      join s on r.seizoen = s.seizoen
+      left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam)
     order by r.datum;
      */
@@ -259,6 +260,22 @@ module.exports = router => {
     router.get('/gebruiker/:uuidToken', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         ctx.body = gebruiker.dader;
+    });
+
+    router.get('/gebruikers', async function (ctx) {
+       ctx.body = await Gebruiker.query()
+           .select('gebruiker.knsbNummer', 'naam', 'datumEmail')
+           .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
+           .orderBy('naam');
+    });
+
+    router.get('/mutaties/:van/:tot/:aantal', async function (ctx) {
+        ctx.body = await Mutatie.query()
+            .select('naam', 'mutatie.*')
+            .join('persoon', 'mutatie.knsbNummer', 'persoon.knsbNummer')
+            .whereBetween('invloed', [ctx.params.van, ctx.params.tot])
+            .orderBy('tijdstip', 'desc')
+            .limit(ctx.params.aantal);
     });
 
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {

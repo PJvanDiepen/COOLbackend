@@ -76,7 +76,7 @@ drop function totalen;
 
 delimiter $$
 
-create function totalen(seizoen char(4), knsbNummer int) returns varchar(45) deterministic
+create function totalen(seizoen char(4), knsbNummer int) returns varchar(600) deterministic
 begin
     declare totaal int default 0;
     declare startPunten int default 300; -- reglement artikel 11
@@ -100,14 +100,17 @@ begin
     declare verliesExtern int default 0;
     declare witExtern int default 0;
     declare zwartExtern int default 0;
+    declare rondenVerschil int default 7; -- reglement artikel 3
+    declare tegenstanders varchar(500) default '';
     declare teamCode char(3);
+    declare rondeNummer int;
     declare partij char(1);
     declare tegenstander int;
     declare witZwart char(1);
     declare resultaat char(1);
     declare found boolean default true;
     declare uitslagen cursor for
-        select u.teamCode, u.partij, u.tegenstanderNummer, u.witZwart, u.resultaat
+        select u.teamCode, u.rondeNummer, u.partij, u.tegenstanderNummer, u.witZwart, u.resultaat
         from uitslag u
         where u.seizoen = seizoen
             and u.knsbNummer = knsbNummer
@@ -116,7 +119,7 @@ begin
     set found = false;
     set eigenWaardeCijfer = waardeCijfer(seizoen, knsbNummer);
     open uitslagen;
-    fetch uitslagen into teamCode, partij, tegenstander, witZwart, resultaat;
+    fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
     while found
         do
             if partij = 'i' and resultaat = '1' then
@@ -142,15 +145,17 @@ begin
             end if;
             if partij = 'i' and witZwart = 'w' then
                 set witIntern = witIntern + 1;
+                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 1 ', tegenstander);
             elseif partij = 'i' and witZwart = 'z' then
                 set zwartIntern = zwartIntern + 1;
+                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 ', tegenstander);
             elseif partij = 'e' and witZwart = 'w' then
                 set witExtern = witExtern + 1;
             elseif partij = 'e' and witZwart = 'z' then
                 set zwartExtern = zwartExtern + 1;
             end if;
             set totaal = totaal + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, partij, tegenstander, resultaat);
-            fetch uitslagen into teamCode, partij, tegenstander, witZwart, resultaat;
+            fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
     if witIntern = 0 and zwartIntern = 0 then
@@ -182,7 +187,9 @@ begin
         remiseExtern, ' ', -- 13
         verliesExtern, ' ', -- 14
         witExtern, ' ', -- 15
-        zwartExtern); -- 16
+        zwartExtern, ' ', -- 16
+        rondenverschil, -- 17
+        tegenstanders);
 
 end;
 $$
@@ -220,3 +227,14 @@ where u.seizoen = @seizoen
     and u.knsbNummer = @knsbNummer
     and u.anderTeam = 'int'
 order by u.datum, u.bordNummer;
+
+-- agenda voor alle interne en externe ronden per speler
+with
+  s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
+  u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
+select r.*, u.bordNummer, u.partij, u.witZwart, u.tegenstanderNummer, u.resultaat
+  from ronde r
+  join s on r.seizoen = s.seizoen
+  left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
+where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam)
+order by r.datum;

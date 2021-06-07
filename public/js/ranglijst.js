@@ -1,24 +1,13 @@
 "use strict";
 
-menu(naarAgenda,
+menu(naarBeheer,
+    naarAgenda,
     naarGebruiker,
     [8, "zonder niet actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
     [8, "inclusief niet actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=9");
-    }],
-    [9, "Arie Boots / mutatieRechten = 1", function () {
-        sessionStorage.setItem("uuidToken", "d94400be-adb3-11eb-947d-7c0507c81823");
-        naarAnderePagina("ranglijst.html?informatie=0");
-    }],
-    [9, "Aad Schuit / mutatieRechten = 0", function () {
-        sessionStorage.setItem("uuidToken", "1eb9375f-adb9-11eb-947d-7c0507c81823");
-        naarAnderePagina("ranglijst.html?informatie=0");
-    }],
-    [9, "onbekend / mutatieRechten = 0", function () {
-        sessionStorage.setItem("uuidToken", "f77cf407-af70-11eb-947d-7c0507c81823");
-        naarAnderePagina("ranglijst.html?informatie=0");
     }],
     terugNaar);
 seizoenSelecteren(INTERNE_COMPETITIE);

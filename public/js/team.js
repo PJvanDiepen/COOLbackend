@@ -1,6 +1,7 @@
 "use strict";
 
-menu(naarAgenda,
+menu(naarBeheer,
+    naarAgenda,
     naarRanglijst,
     naarGebruiker,
     terugNaar);

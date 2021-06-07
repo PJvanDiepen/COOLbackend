@@ -1,6 +1,7 @@
 "use strict";
 
-menu(naarRanglijst,
+menu(naarBeheer,
+    naarRanglijst,
     naarGebruiker,
     terugNaar);
 if (uuidToken) {
