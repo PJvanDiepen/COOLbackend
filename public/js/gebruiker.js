@@ -6,8 +6,9 @@ menu(naarBeheer,
     [9, "formulier van geselecteerde speler", function () {
         document.getElementById("naam").value = naamSpeler;
         document.getElementById("knsbNummer").value = speler;
-        document.getElementById("status").value = "";
+        document.getElementById("status").value = "iemand anders registreren";
     }],
+    debugAlerts,
     terugNaar);
 spelerSelecteren();
 gebruikerFormulier(document.getElementById("formulier"),
@@ -25,6 +26,13 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
     } else {
         naam.value = naamSpeler;
         knsbNummer.value = speler;
+        try {
+            localStorage.setItem("test", "test");
+            localStorage.removeItem("test");
+            status.value = "dit apparaat is geschikt voor 0-0-0.nl"
+        } catch (error) {
+            status.value = "dit apparaat heeft geen localStorage";
+        }
     }
     formulier.addEventListener("submit", async function (event) {
         if (knsbNummer.value) {
@@ -33,6 +41,6 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
         } else {
             status.value = "selecteer je naam";
         }
-        event.preventDefault();
+        event.preventDefault(); // TODO is dit goed?
     });
 }

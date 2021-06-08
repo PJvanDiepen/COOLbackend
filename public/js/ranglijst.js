@@ -9,6 +9,7 @@ menu(naarBeheer,
     [8, "inclusief niet actieve spelers", function () {
         naarAnderePagina("ranglijst.html?informatie=9");
     }],
+    debugAlerts,
     terugNaar);
 seizoenSelecteren(INTERNE_COMPETITIE);
 teamSelecteren(INTERNE_COMPETITIE);

@@ -93,6 +93,14 @@ async function naamGebruiker() {
     }
 }
 
+const debugAlerts = [9, "debug alerts", function () {
+    if (confirm("0-0-0.nl zal nog meer van dit soort debug alerts laten zien")) {
+        sessionStorage.setItem("debug", 1);
+    } else {
+        sessionStorage.removeItem("debug");
+    }
+}];
+
 const terugNaar = [0, "\uD83E\uDC68", function() {
     history.back();
 }];
@@ -146,8 +154,13 @@ async function serverFetch(url) {
     try {
         const response = await fetch(server + url);
         return await response.json();
-    } catch (e) {
-        console.error(e); // TODO per sessie fouten verzamelen?
+    } catch (error) {
+        if (sessionStorage.getItem("debug")) {
+            alert(`serverFetch("${url}")
+            ${error}`);
+        } else {
+            console.error(error); // TODO per sessie fouten verzamelen?
+        }
     }
 }
 

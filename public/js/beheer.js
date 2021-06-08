@@ -14,6 +14,7 @@ menu(naarAgenda,
         sessionStorage.setItem("uuidToken", "f77cf407-af70-11eb-947d-7c0507c81823");
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
+    debugAlerts,
     terugNaar);
 gebruikers(document.getElementById("gebruikers"));
 laatsteMutaties(document.getElementById("mutaties"))
@@ -21,9 +22,8 @@ laatsteMutaties(document.getElementById("mutaties"))
 async function gebruikers(lijst) {
     const gebruikers = await serverFetch("/gebruikers");
     for (const gebruiker of gebruikers) {
-        console.log(gebruiker);
         lijst.appendChild(htmlRij(
-            gebruiker.datumEmail ? datumLeesbaar(gebruiker.datumEmail) : "AANVRAAG",
+            gebruiker.datumEmail ? datumLeesbaar(gebruiker.datumEmail) : "---",
             gebruiker.knsbNummer,
             gebruiker.naam));
     }
@@ -33,7 +33,6 @@ async function laatsteMutaties(lijst) {
     const mutaties = await serverFetch("/mutaties/0/9/100"); // laatste 100 mutaties
     let vorige = 0;
     for (const mutatie of mutaties) {
-        console.log(mutatie);
         lijst.appendChild(htmlRij(
             tijdGeleden(mutatie.tijdstip),
             mutatie.knsbNummer === vorige ? "" : mutatie.knsbNummer,

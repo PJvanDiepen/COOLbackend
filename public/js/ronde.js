@@ -4,6 +4,7 @@ menu(naarBeheer,
     naarAgenda,
     naarRanglijst,
     naarGebruiker,
+    debugAlerts,
     terugNaar);
 rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
 wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));

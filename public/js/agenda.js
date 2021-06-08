@@ -3,6 +3,7 @@
 menu(naarBeheer,
     naarRanglijst,
     naarGebruiker,
+    debugAlerts,
     terugNaar);
 if (uuidToken) {
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
@@ -26,7 +27,6 @@ async function agenda(kop, lijst) {
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
             const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
-            console.log(deelnemers);
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : STREEP;
             lijst.appendChild(htmlRij(

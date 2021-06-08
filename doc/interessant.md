@@ -3,6 +3,7 @@ Nuttig
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [DOM events](https://domevents.dev/)
+- [localStorage vs Cookies](https://academind.com/tutorials/localstorage-vs-cookies-xss/)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await jason](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
