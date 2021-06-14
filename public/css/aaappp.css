@@ -28,7 +28,8 @@ button, details {
 	cursor: pointer;
 }
 
-button, input, select {
+button, input, select, textarea {
+	font-family: inherit; /* https://developer.mozilla.org/en-US/docs/Learn/Forms/Styling_web_forms */
 	font-size: 100%; /* anders wordt font-size kleiner */
 	margin: 2px;
 }

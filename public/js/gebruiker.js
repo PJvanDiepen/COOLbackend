@@ -17,12 +17,24 @@ gebruikerFormulier(document.getElementById("formulier"),
     document.getElementById("email"),
     document.getElementById("status"));
 
+// TODO goed testen
+// https://dexie.org/docs/StorageManager
+// https://web.dev/storage-for-the-web/
+// https://web.dev/persistent-storage/
+// https://stackoverflow.com/questions/63761182/can-not-activate-navigator-storage-persist-in-firefox-for-android
+// https://stackoverflow.com/questions/51657388/request-persistent-storage-permissions
+navigator.storage.estimate().then(
+    ({usage, quota}) => console.log(`using ${usage} out of ${quota}`),
+    error => console.warn(`error estimating quota: ${error.name}: ${error.message}`)
+);
+
+
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
     if (uuidToken) {
         knsbNummer.value = await knsbNummerGebruiker();
         naam.value = await naamGebruiker();
         knsbNummer.value = await knsbNummerGebruiker();
-        status.value = "je bent als gebruiker geregistreerd bij " + schaakVereniging;
+        status.value = "je bent als gebruiker geregistreerd bij " + vereniging;
     } else {
         naam.value = naamSpeler;
         knsbNummer.value = speler;

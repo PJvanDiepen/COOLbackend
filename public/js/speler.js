@@ -51,7 +51,7 @@ uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel")
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen), naamSpeler].join(SCHEIDING);
+    kop.innerHTML = [vereniging, seizoenVoluit(seizoen), naamSpeler].join(SCHEIDING);
     const t = await totalenSpeler(seizoen, speler);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {

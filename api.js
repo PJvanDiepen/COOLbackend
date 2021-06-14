@@ -42,7 +42,7 @@ module.exports = router => {
 
     concat(totaal, ' ', prijs, ' ', winst, ' ', remise, ' ', verlies, ' ', wit, ' ', zwart, ' ', oneven, ' ', afzeggingen, ' ', aftrek, ' ', startPunten);
      */
-    router.get('/ranglijst/:seizoen', async function (ctx) {
+    router.get('/ranglijst/:seizoen', async function (ctx) {  // TODO datumTot
         ctx.body = await Speler.query()
             .select(
                 'speler.knsbNummer',
@@ -237,7 +237,7 @@ module.exports = router => {
     /*
     registratie aanvragen voor gebruiker
      */
-    router.get('/registreer/:knsbNummer/:email', async function (ctx) {
+    router.get('/registreer/:knsbNummer/:email', async function (ctx) { // TODO fout invullen
         ctx.body = await Gebruiker.query()
             .insert({knsbNummer: ctx.params.knsbNummer,
                 mutatieRechten: 1,

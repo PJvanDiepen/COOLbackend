@@ -11,7 +11,7 @@ wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wed
 uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
 
 async function wedstrijdenBijRonde(kop, lijst) {
-    kop.innerHTML = [schaakVereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
+    kop.innerHTML = [vereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
     const ronden = await localFetch("/ronden/" + seizoen + "/int");
     if (rondeNummer > 1) {
         lijst.appendChild(htmlRij(rondeNummer - 1, datumLeesbaar(ronden[rondeNummer - 2].datum), "interne competitie", ""));

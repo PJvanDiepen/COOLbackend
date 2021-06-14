@@ -25,7 +25,7 @@ ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
  order by totalen desc;
   */
 function ranglijst(kop, lijst) {
-    kop.innerHTML = schaakVereniging + SCHEIDING + seizoenVoluit(seizoen);
+    kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     const winnaars = {};
     mapAsync("/ranglijst/" + seizoen,
         function (speler, i) {

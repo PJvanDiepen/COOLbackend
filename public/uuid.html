@@ -14,11 +14,11 @@
         const pagina = new URL(location);
         const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
         const params = pagina.searchParams;
-        const schaakVereniging = params.get("schaakVereniging") || "Waagtoren";
+        const vereniging = params.get("vereniging") || "Waagtoren";
         const uuidToken = params.get("uuidToken");
-        if (schaakVereniging && uuidToken) {
-            localStorage.setItem(schaakVereniging, uuidToken);
-            sessionStorage.setItem("schaakVereniging", schaakVereniging);
+        if (vereniging && uuidToken) {
+            localStorage.setItem(vereniging, uuidToken);
+            sessionStorage.setItem("vereniging", vereniging);
             serverFetch("/email/" + uuidToken);
             naarAnderePagina("agenda.html");
         } else {

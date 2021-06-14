@@ -3,7 +3,7 @@
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
-const schaakVereniging = doorgeven("schaakVereniging") || "Waagtoren";
+const vereniging = doorgeven("vereniging") || "Waagtoren";
 const seizoen = doorgeven("seizoen") || ditSeizoen();
 const INTERNE_COMPETITIE = "int";
 const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
@@ -11,7 +11,11 @@ const speler = Number(doorgeven("speler")); // knsbNummer
 const naamSpeler = doorgeven("naam");
 const rondeNummer = Number(doorgeven("ronde"));
 const informatieNivo = Number(doorgeven("informatie"));
-const uuidToken = sessionStorage.getItem("uuidToken") || localStorage.getItem(schaakVereniging);
+
+const uuidToken = uuidInvullen();
+const gebruik = localFetch("/gebruiker/" + uuidToken);
+console.log(gebruik);
+
 
 // uitslag.partij
 const AFWEZIG              = "a";
@@ -43,6 +47,20 @@ function doorgeven(key) {
         value = sessionStorage.getItem(key);
     }
     return value;
+}
+
+function uuidInvullen() {
+    const vorigeSessie = localStorage.getItem(vereniging);
+    if (typeof vorigeSessie === "string") { // string met uuidToken
+        return vorigeSessie;
+    } else if (vorigeSessie) { // indien object met knsbNummer, naam en email
+        vorigeSessie.mutatieRechten = 0;
+        sessionStorage.setItem("/gebruiker/", JSON.stringify(vorigeSessie));
+        return "";
+    } else {
+        sessionStorage.setItem("/gebruiker/", JSON.stringify({knsbNummer: 0, naam: "onbekend", mutatieRechten: 0}));
+        return "";
+    }
 }
 
 async function menu(...menuKeuzes) {
@@ -270,16 +288,16 @@ function teamVoluit(teamCode) {
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
     } else if (teamCode === "kbe") {
-        return schaakVereniging + " bekerteam";
+        return vereniging + " bekerteam";
     } else if (teamCode === "nbe") {
-        return schaakVereniging + " nhsb bekerteam";
+        return vereniging + " nhsb bekerteam";
     } else {
         return wedstrijdTeam(teamCode)
     }
 }
 
 function wedstrijdTeam(teamCode) {
-    return schaakVereniging + (teamCode.substring(1) === "be" ? " " : " " + teamCode);
+    return vereniging + (teamCode.substring(1) === "be" ? " " : " " + teamCode);
 }
 
 function wedstrijdVoluit(ronde) {
