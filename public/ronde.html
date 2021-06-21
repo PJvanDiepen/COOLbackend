@@ -6,8 +6,11 @@
     <title>Ronde</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        #tabel td:nth-child(3), #wedstrijden td:nth-child(4) {
-            text-align: center; /* uitslag */
+        #tabel td:nth-child(1) {
+            text-align: right; /* bordnummer */
+        }
+        #wedstrijden td:nth-child(1), td:nth-child(4) {
+            text-align: center; /* ronde, uitslag */
         }
     </style>
 </head>
@@ -26,6 +29,7 @@
     <h2 id="subkop">Ronde</h2>
     <table id="tabel">
         <tr>
+            <th></th>
             <th>wit</th>
             <th>zwart</th>
             <th></th>

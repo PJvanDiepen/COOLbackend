@@ -14,10 +14,29 @@ menu(naarAgenda,
         sessionStorage.setItem("uuidToken", "f77cf407-af70-11eb-947d-7c0507c81823");
         naarAnderePagina("ranglijst.html?informatie=0");
     }],
-    debugAlerts,
     terugNaar);
+debugNivoInstellen(document.getElementById("debug"));
+beheerders(document.getElementById("beheerders"));
 gebruikers(document.getElementById("gebruikers"));
-laatsteMutaties(document.getElementById("mutaties"))
+laatsteMutaties(document.getElementById("mutaties"));
+
+function debugNivoInstellen(niveaux) {
+    niveaux.appendChild(htmlOptie(0, "geen debug-berichten"));
+    niveaux.appendChild(htmlOptie(9, "alle debug-alerts"));
+    niveaux.value = debugNivo;
+    niveaux.addEventListener("input",
+        function () {
+            sessionStorage.setItem("debug", niveaux.value);
+            naarZelfdePagina();
+        });
+}
+
+async function beheerders(lijst) {
+    const beheerders = await serverFetch("/beheerders");
+    for (const beheerder of beheerders) {
+        lijst.appendChild(htmlRij(beheerder.naam, beheerder.email));
+    }
+}
 
 async function gebruikers(lijst) {
     const gebruikers = await serverFetch("/gebruikers");

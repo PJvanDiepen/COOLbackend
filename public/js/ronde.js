@@ -4,10 +4,10 @@ menu(naarBeheer,
     naarAgenda,
     naarRanglijst,
     naarGebruiker,
-    debugAlerts,
     terugNaar);
 rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
 wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
+// TODO ranglijst tot deze ronde
 uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
 
 async function wedstrijdenBijRonde(kop, lijst) {
@@ -43,6 +43,7 @@ function wedstrijdBijRonde(datum, ronden) {
 /*
   -- uitslagen interne competitie per ronde
   select
+      uitslag.bordNummer,
       uitslag.knsbNummer,
       wit.naam,
       uitslag.tegenstanderNummer,
@@ -61,11 +62,12 @@ async function uitslagenRonde(kop, lijst) {
         function (uitslag) {
         geenUitslagen = false;
             lijst.appendChild(htmlRij(
+                uitslag.bordNummer,
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
                 uitslag.resultaat === "1" ? "1-0" : uitslag.resultaat === "0" ? "0-1" : "½-½"));
         });
     if (geenUitslagen) {
-        lijst.appendChild(htmlRij("geen", "uitslagen", ""));
+        lijst.appendChild(htmlRij("", "geen", "uitslagen", ""));
     }
 }

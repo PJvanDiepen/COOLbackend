@@ -1,22 +1,9 @@
 "use strict";
 
-const pagina = new URL(location);
-const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
-const params = pagina.searchParams;
-const vereniging = doorgeven("vereniging") || "Waagtoren";
-const seizoen = doorgeven("seizoen") || ditSeizoen();
+// TODO https://developer.chrome.com/blog/migrating-to-js-modules/
+
+// teamCode
 const INTERNE_COMPETITIE = "int";
-const teamCode = doorgeven("team") || INTERNE_COMPETITIE;
-const speler = Number(doorgeven("speler")); // knsbNummer
-const naamSpeler = doorgeven("naam");
-const rondeNummer = Number(doorgeven("ronde"));
-const informatieNivo = Number(doorgeven("informatie"));
-
-const uuidToken = uuidInvullen();
-const gebruik = localFetch("/gebruiker/" + uuidToken);
-console.log(gebruik);
-
-
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_WEDSTRIJD    = "e";
@@ -34,26 +21,57 @@ const VERLIES = "0";
 // uitslag.uithuis
 const THUIS = "t";
 const UIT = "u";
-// kop
-const SCHEIDING = " \u232A ";
 // score
 const PUNTEN_UIT = " uit ";
+// kop
+const SCHEIDING = " \u232A ";
+const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
+const STREEP = "___";
+const KRUISJE = "&nbsp&nbsp✖&nbsp&nbsp"; // met no break spaces
 
-function doorgeven(key) {
+const pagina = new URL(location);
+const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+const params = pagina.searchParams;
+const vereniging = doorgeven("vereniging", "Waagtoren");
+const uuidToken = uuidInvullen("vereniging");
+const seizoen = doorgeven("seizoen", ditSeizoen());
+const teamCode = doorgeven("team", INTERNE_COMPETITIE);
+const speler = Number(doorgeven("speler")); // knsbNummer
+const naamSpeler = doorgeven("naam");
+const rondeNummer = Number(doorgeven("ronde"));
+const informatieNivo = Number(doorgeven("informatie"));
+const debugNivo = Number(doorgeven("debug", 9)); // TODO debug = 0!
+
+function doorgeven(key, defaultValue) {
     let value = params.get(key);
     if (value) {
         sessionStorage.setItem(key, value);
     } else {
         value = sessionStorage.getItem(key);
     }
-    return value;
+    return value || defaultValue;
 }
 
-function uuidInvullen() {
-    const vorigeSessie = localStorage.getItem(vereniging);
+/**
+ * 0-0-0.nl genereert een uuid om de gebruiker te herkennen.
+ * De gebruiker krijgt uuid via email tijdens een vorigeSessie en legt uuid vast in localStorage.
+ * Door uuidInvullen is deze uuid beschikbaar om knsbNummer, naam en mutatieRechten van gebruiker te lezen.
+ *
+ * De gebruiker moet een uuid aanvragen door zich te registreren.
+ * Bij het registreren tijdens een vorigeSessie zijn knsbNummer, naam en email vastgelegd in localStorage.
+ * Voorlopig zorgt uuidInvullen dat deze gegevens met mutatieRechten = 0 van gebruiker worden gelezen.
+ * 0-0-0.nl herkent de gebruiker nog niet, maar ziet dat een aanvraag in behandeling is.
+ *
+ * Indien de gebruiker tijdens een vorigeSessie zich niet heeft geregistreert,
+ * zorgt uuidInvullen dat gegevens van onbekende gebruiker met knsbNummer = 0 en mutatieRechten = 0 worden gelezen.
+ *
+ * @returns {string} uuidToken
+ */
+function uuidInvullen(key) {
+    const vorigeSessie = localStorage.getItem(key);
     if (typeof vorigeSessie === "string") { // string met uuidToken
         return vorigeSessie;
-    } else if (vorigeSessie) { // indien object met knsbNummer, naam en email
+    } else if (vorigeSessie) { // object met knsbNummer, naam en email
         vorigeSessie.mutatieRechten = 0;
         sessionStorage.setItem("/gebruiker/", JSON.stringify(vorigeSessie));
         return "";
@@ -63,6 +81,19 @@ function uuidInvullen() {
     }
 }
 
+/**
+ * menu verwerkt alle menuKeuzes tot een select-menu met htmlOptie's en zet een eventListener klaar.
+ *
+ * Elke menuKeuze bestaat uit [ <minimum mutatieRechten>, <menuKeuze tekst>, <bijhorende functie> ].
+ * Indien gebruiker niet voldoende mutatieRechten heeft, komt de menuKeuze niet in het menu.
+ * Elke htmlOptie krijgt een tekst en een volgnummer.
+ * Het volgnummer verwijst naar de bijbehorende functie in functies.
+ *
+ * De eventListener krijgt het het volgnummer door en start de bijbehorende functie.
+ *
+ * @param menuKeuzes
+ * @returns {Promise<void>}
+ */
 async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
@@ -85,39 +116,24 @@ async function menu(...menuKeuzes) {
 }
 
 async function mutatieRechtenGebruiker() {
-    if (uuidToken) {
-        const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-        return Number(gebruiker.mutatieRechten);
-    } else {
-        return 0;
-    }
+    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
+    return Number(gebruiker.mutatieRechten);
 }
 
 async function knsbNummerGebruiker() {
-    if (uuidToken) {
-        const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-        return Number(gebruiker.knsbNummer);
-    } else {
-        return 0;
-    }
+    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
+    return Number(gebruiker.knsbNummer);
 }
 
 async function naamGebruiker() {
-    if (uuidToken) {
-        const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-        return gebruiker.naam;
-    } else {
-        return "onbekend";
-    }
+    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
+    return gebruiker.naam;
 }
 
-const debugAlerts = [9, "debug alerts", function () {
-    if (confirm("0-0-0.nl zal nog meer van dit soort debug alerts laten zien")) {
-        sessionStorage.setItem("debug", 1);
-    } else {
-        sessionStorage.removeItem("debug");
-    }
-}];
+async function emailGebruiker() {
+    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
+    return gebruiker.naam;
+}
 
 const terugNaar = [0, "\uD83E\uDC68", function() {
     history.back();
@@ -127,7 +143,7 @@ const naarAgenda = [1, "aanmelden / afzeggen", function () {
     naarAnderePagina("agenda.html");
 }];
 
-const naarBeheer = [9, "gebruikers en mutaties", function () {
+const naarBeheer = [0, "testen", function () {
     naarAnderePagina("beheer.html");
 }];
 
@@ -140,6 +156,9 @@ const naarGebruiker = [0, `${uuidToken ? "opnieuw " : ""}registreren`, function 
 }];
 
 function naarAnderePagina(naarPagina) {
+    if (debugNivo > 1) {
+        alert(`naarAnderePagina("${naarPagina}")`);
+    }
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
@@ -173,12 +192,11 @@ async function serverFetch(url) {
         const response = await fetch(server + url);
         return await response.json();
     } catch (error) {
-        if (sessionStorage.getItem("debug")) {
+        if (debugNivo > 1) {
             alert(`serverFetch("${url}")
             ${error}`);
-        } else {
-            console.error(error); // TODO per sessie fouten verzamelen?
         }
+        console.error(error); // TODO per sessie fouten verzamelen?
     }
 }
 
@@ -266,6 +284,15 @@ function tijdGeleden(jsonDatum) {
     }
 }
 
+/**
+ * Is deze datumLater dan vandaag?
+ *
+ * Of is deze datumLater dan andereDatum (indien ingevuld)?
+ *
+ * @param jsonDatum deze datum
+ * @param andereDatum of vandaag
+ * @returns {Date} indien datumLater
+ */
 function datumLater(jsonDatum, andereDatum) {
     return new Date(jsonDatum) > andereDatum ? new Date(andereDatum) : new Date();
 }
@@ -275,8 +302,11 @@ function datumLeesbaar(jsonDatum) {
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
 
-function datumSQL(jsonDatum) {
-    const datum = new Date(jsonDatum);
+function datumSQL(jsonDatum, dagen) {
+    let datum = new Date(jsonDatum);
+    if (dagen) {
+        datum.setDate(datum.setDate() + dagen);
+    }
     return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
 }
 
@@ -430,11 +460,22 @@ totaal
 [9] aftrek
 [10] totaal
 [11] startPunten
-[12] winstExtern
-[13] remiseExtern
-[14] verliesExtern
-[15] witExtern
-[16] zwartExtern)
+[12] eigenWaardeCijfer (TODO vanaf hier nog verwerken)
+[13] winstExtern
+[14] remiseExtern
+[15] verliesExtern
+[16] witExtern
+[17] zwartExtern
+[18] rondenverschil
+tegenstanders met n = 0, 1, 2, enz.
+[19 + n] rondeNummer
+[20 + n] kleur (wit = 1, zwart = 0)
+[21 + n] tegenstander
+einde indien rondeNummer = 0
+[19 + n] rondeNummer = 0
+[20 + n] knsbNummer
+verboden tegenstanders met  m = 1, 2, 3, enz.
+[20 + n + m] tegenstander
  */
 function totalen(alleTotalen) {
     const totaal = alleTotalen.split(" ").map(Number);

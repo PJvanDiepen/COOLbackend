@@ -39,8 +39,6 @@ module.exports = router => {
     join persoon p on s.knsbNummer = p.knsbNummer
     where seizoen = @seizoen
     order by totalen desc;
-
-    concat(totaal, ' ', prijs, ' ', winst, ' ', remise, ' ', verlies, ' ', wit, ' ', zwart, ' ', oneven, ' ', afzeggingen, ' ', aftrek, ' ', startPunten);
      */
     router.get('/ranglijst/:seizoen', async function (ctx) {  // TODO datumTot
         ctx.body = await Speler.query()
@@ -154,6 +152,7 @@ module.exports = router => {
     /*
     -- uitslagen interne competitie per ronde
     select
+        uitslag.bordNummer,
         uitslag.knsbNummer,
         wit.naam,
         uitslag.tegenstanderNummer,
@@ -168,6 +167,7 @@ module.exports = router => {
     router.get('/ronde/:seizoen/:rondeNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
+                'uitslag.bordNummer',
                 'uitslag.knsbNummer',
                 {wit: ref('wit.naam')},
                 'uitslag.tegenstanderNummer',
@@ -267,6 +267,13 @@ module.exports = router => {
            .select('gebruiker.knsbNummer', 'naam', 'datumEmail')
            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
            .orderBy('naam');
+    });
+
+    router.get('/beheerders', async function (ctx) {
+        ctx.body = await Gebruiker.query()
+            .select('gebruiker.knsbNummer', 'naam', 'email')
+            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
+            .where('mutatieRechten', '>=', 9);
     });
 
     router.get('/mutaties/:van/:tot/:aantal', async function (ctx) {

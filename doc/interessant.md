@@ -1,9 +1,12 @@
 Nuttig
+
 - [MySQL tutorial](https://www.mysqltutorial.org/)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
+- [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [DOM events](https://domevents.dev/)
 - [localStorage vs Cookies](https://academind.com/tutorials/localstorage-vs-cookies-xss/)
+- [Browser Storage!!!](https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/11-Client_Side_Testing/12-Testing_Browser_Storage)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await jason](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
@@ -78,3 +81,6 @@ Misschien:
 - [TypeScript](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/)
 - [alle JavaScript events](https://www.perimeterx.com/tech-blog/2019/list-every-event-that-exists-in-the-browser/)
 - [IntelliJ klokje](https://www.jetbrains.com/company/contacts/#headquarters-international-sales)
+- [MongoDb](https://www.quora.com/Which-one-would-you-prefer-to-use-MongoDB-or-MySQL-Why/answer/MongoDB-15)
+- [@property CSS](https://css-tricks.com/exploring-property-and-its-animating-powers/)
+- [scroll-snap-stop CSS](https://css-tricks.com/almanac/properties/s/scroll-snap-stop/)

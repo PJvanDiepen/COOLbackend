@@ -8,7 +8,6 @@ menu(naarBeheer,
         document.getElementById("knsbNummer").value = speler;
         document.getElementById("status").value = "iemand anders registreren";
     }],
-    debugAlerts,
     terugNaar);
 spelerSelecteren();
 gebruikerFormulier(document.getElementById("formulier"),
@@ -30,6 +29,7 @@ navigator.storage.estimate().then(
 
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
+    alert("gebruikerFormulier");
     if (uuidToken) {
         knsbNummer.value = await knsbNummerGebruiker();
         naam.value = await naamGebruiker();

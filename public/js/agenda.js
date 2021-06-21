@@ -3,17 +3,14 @@
 menu(naarBeheer,
     naarRanglijst,
     naarGebruiker,
-    debugAlerts,
     terugNaar);
 if (uuidToken) {
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
+    // TODO klik op deelnemers voor bijbehorende ronde
     mogelijkeTegenstanders(document.getElementById("tabel"));
 } else {
     naarAnderePagina("gebruiker.html");
 }
-
-const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
-const STREEP = "___";
 
 async function agenda(kop, lijst) {
     const gebruiker = params.get("gebruiker") || await knsbNummerGebruiker();
@@ -65,5 +62,6 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
 }
 
 function mogelijkeTegenstanders(lijst) {
+    // TODO voor bepaalde ronde (zie vorige TODO)
     console.log("mogelijkeTegenstanders");
 }

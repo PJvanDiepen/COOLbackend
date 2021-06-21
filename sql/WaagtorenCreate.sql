@@ -18,6 +18,7 @@ create table gebruiker (
     mutatieRechten int not null,
     uuidToken char(36),
     email varchar(100),
+    fout varchar(100),
     datumEmail date,
     primary key (uuidToken)
 );
@@ -28,6 +29,28 @@ add constraint fk_gebruiker_persoon
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
+    
+drop table if exists paring;  -- TODO lezen in WaagtorenRanglijst totalen
+create table paring (
+	knsbNummer int not null,
+    tegenstanderNummer int not null,
+    voorkeur int,
+    primary key (knsbNummer, tegenstanderNummer)
+); 
+
+alter table paring
+add constraint fk_paring_persoon
+    foreign key (knsbNummer)
+    references persoon (knsbNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;   
+    
+alter table paring
+add constraint fk_paring_tegenstander
+    foreign key (tegenstanderNummer)
+    references persoon (knsbNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;       
 
 DROP TABLE IF EXISTS speler;
 CREATE TABLE speler (
@@ -47,7 +70,7 @@ add constraint fk_speler_persoon
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-
+    
 drop table if exists team;
 create table team (
 	seizoen char(4) not null,

@@ -158,6 +158,7 @@ begin
             fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
+    set tegenstanders = concat(tegenstanders, ' 0 ', knsbNummer); -- TODO lees paring voor voorkeuren 
     if witIntern = 0 and zwartIntern = 0 then
         set prijs = 0;
         set sorteer = witExtern + zwartExtern;
@@ -168,7 +169,7 @@ begin
         if (witIntern + zwartIntern + oneven + reglementairGewonnen + externTijdensInterneRonde) < minimumInternePartijen then
 			set prijs = 0;
 		end if;
-        set sorteer  = startPunten + totaal - aftrek;
+        set sorteer = startPunten + totaal - aftrek;
     end if;
     return concat(
         lpad(sorteer,3,'0'), ' ', -- 0
@@ -183,14 +184,14 @@ begin
         aftrek, ' ', -- 9
         totaal, ' ', -- 10
         startPunten, ' ', -- 11
-        winstExtern, ' ', -- 12
-        remiseExtern, ' ', -- 13
-        verliesExtern, ' ', -- 14
-        witExtern, ' ', -- 15
-        zwartExtern, ' ', -- 16
-        rondenverschil, -- 17
+        -- TODO eigenWaardeCijfer, ' ', -- 12
+        winstExtern, ' ', -- 13
+        remiseExtern, ' ', -- 14
+        verliesExtern, ' ', -- 15
+        witExtern, ' ', -- 16
+        zwartExtern, ' ', -- 17
+        rondenverschil, -- 18
         tegenstanders);
-
 end;
 $$
 

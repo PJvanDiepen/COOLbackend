@@ -208,6 +208,8 @@ const tk = [
         hoog: 338,
         link: "https://www.verkiezingensite.nl"
     }
+    // TODO is dit ooit tijdens de kabinetsformatie gebeurt?
+    // CDA 14, FvD 5, Fractie De Haan i.p.v. 50plus, Groep van Haga 3 en Pieter Omzigt 1
 ]
 
 function jarenVerwerken(jaren) {
@@ -252,6 +254,8 @@ const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
 const STREEP = "___";
 const lijsten = [];
 const kabinetten = [];
+
+// TODO kolom winst/verlies door vergelijken met vorige verkiezingen
 
 function uitslagenVerwerken(kop, deLijsten) {
     const i = jaarIndex(jaar);

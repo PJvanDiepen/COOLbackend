@@ -4,7 +4,6 @@ menu(naarBeheer,
     naarAgenda,
     naarRanglijst,
     naarGebruiker,
-    debugAlerts,
     terugNaar);
 teamSelecteren(teamCode);
 uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
