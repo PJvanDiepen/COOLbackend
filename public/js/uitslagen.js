@@ -27,7 +27,7 @@ const PUNTEN_UIT = " uit ";
 const SCHEIDING = " \u232A ";
 const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
 const STREEP = "___";
-const KRUISJE = "&nbsp&nbsp✖&nbsp&nbsp"; // met no break spaces
+const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
 
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
@@ -36,10 +36,10 @@ const vereniging = doorgeven("vereniging", "Waagtoren");
 const uuidToken = uuidInvullen("vereniging");
 const seizoen = doorgeven("seizoen", ditSeizoen());
 const teamCode = doorgeven("team", INTERNE_COMPETITIE);
-const speler = Number(doorgeven("speler")); // knsbNummer
-const naamSpeler = doorgeven("naam");
-const rondeNummer = Number(doorgeven("ronde"));
-const informatieNivo = Number(doorgeven("informatie"));
+const speler = Number(doorgeven("speler", 0)); // knsbNummer
+const naamSpeler = doorgeven("naam", "onbekend");
+const rondeNummer = Number(doorgeven("ronde", 0));
+const informatieNivo = Number(doorgeven("informatie", 0));
 const debugNivo = Number(doorgeven("debug", 9)); // TODO debug = 0!
 
 function doorgeven(key, defaultValue) {
@@ -132,7 +132,7 @@ async function naamGebruiker() {
 
 async function emailGebruiker() {
     const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-    return gebruiker.naam;
+    return gebruiker.email;
 }
 
 const terugNaar = [0, "\uD83E\uDC68", function() {

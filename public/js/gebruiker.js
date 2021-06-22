@@ -17,19 +17,68 @@ gebruikerFormulier(document.getElementById("formulier"),
     document.getElementById("status"));
 
 // TODO goed testen
-// https://dexie.org/docs/StorageManager
-// https://web.dev/storage-for-the-web/
-// https://web.dev/persistent-storage/
-// https://stackoverflow.com/questions/63761182/can-not-activate-navigator-storage-persist-in-firefox-for-android
-// https://stackoverflow.com/questions/51657388/request-persistent-storage-permissions
+
 navigator.storage.estimate().then(
     ({usage, quota}) => console.log(`using ${usage} out of ${quota}`),
     error => console.warn(`error estimating quota: ${error.name}: ${error.message}`)
 );
+initStoragePersistence();
+console.log('------------------------');
+/*
+https://dexie.org/docs/StorageManager
 
+ Tries to persist storage without ever prompting user.
+ @returns {Promise<string>}
+ "never" In case persisting is not ever possible. Caller don't bother
+ asking user for permission.
+ "prompt" In case persisting would be possible if prompting user first.
+ "persisted" In case this call successfully silently persisted the storage,
+ or if it was already persisted.
+ */
+async function tryPersistWithoutPromtingUser() {
+    if (!navigator.storage || !navigator.storage.persisted) {
+        return "never";
+    }
+    let persisted = await navigator.storage.persisted();
+    if (persisted) {
+        return "persisted";
+    }
+    if (!navigator.permissions || !navigator.permissions.query) {
+        return "prompt"; // It MAY be successful to prompt. Don't know.
+    }
+    const permission = await navigator.permissions.query({
+        name: "persistent-storage"
+    });
+    if (permission.state === "granted") {
+        persisted = await navigator.storage.persist();
+        if (persisted) {
+            return "persisted";
+        } else {
+            throw new Error("Failed to persist");
+        }
+    }
+    if (permission.state === "prompt") {
+        return "prompt";
+    }
+    return "never";
+}
+
+async function initStoragePersistence() {
+    const persist = await tryPersistWithoutPromtingUser();
+    switch (persist) {
+        case "never":
+            console.log("Not possible to persist storage");
+            break;
+        case "persisted":
+            console.log("Successfully persisted storage silently");
+            break;
+        case "prompt":
+            console.log("Not persisted, but we may prompt user when we want to.");
+            break;
+    }
+}
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
-    alert("gebruikerFormulier");
     if (uuidToken) {
         knsbNummer.value = await knsbNummerGebruiker();
         naam.value = await naamGebruiker();
