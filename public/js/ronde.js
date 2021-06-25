@@ -68,6 +68,6 @@ async function uitslagenRonde(kop, lijst) {
                 uitslag.resultaat === "1" ? "1-0" : uitslag.resultaat === "0" ? "0-1" : "½-½"));
         });
     if (geenUitslagen) {
-        lijst.appendChild(htmlRij("", "geen", "uitslagen", ""));
+        lijst.appendChild(htmlRij("nog", "geen", "uitslagen", ""));
     }
 }

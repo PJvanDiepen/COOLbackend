@@ -15,6 +15,7 @@ h1, h2, h3, h4 {
 
 table {
     border-collapse: collapse; /* dubbele rand wordt enkele rand */
+	overflow: auto;
 }
 
 hr {

@@ -18,7 +18,6 @@ create table gebruiker (
     mutatieRechten int not null,
     uuidToken char(36),
     email varchar(100),
-    fout varchar(100),
     datumEmail date,
     primary key (uuidToken)
 );

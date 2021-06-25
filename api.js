@@ -262,7 +262,7 @@ module.exports = router => {
         ctx.body = gebruiker.dader;
     });
 
-    router.get('/gebruikers', async function (ctx) {
+    router.get('/gebruikers', async function (ctx) { // TODO met uuidToken!
        ctx.body = await Gebruiker.query()
            .select('gebruiker.knsbNummer', 'naam', 'datumEmail')
            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
@@ -276,7 +276,7 @@ module.exports = router => {
             .where('mutatieRechten', '>=', 9);
     });
 
-    router.get('/mutaties/:van/:tot/:aantal', async function (ctx) {
+    router.get('/mutaties/:van/:tot/:aantal', async function (ctx) { // TODO met uuidToken!
         ctx.body = await Mutatie.query()
             .select('naam', 'mutatie.*')
             .join('persoon', 'mutatie.knsbNummer', 'persoon.knsbNummer')

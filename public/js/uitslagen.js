@@ -33,7 +33,8 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 const vereniging = doorgeven("vereniging", "Waagtoren");
-const uuidToken = uuidInvullen("vereniging");
+const gebruiker = {};
+const uuidToken = uuidInvullen(vereniging);
 const seizoen = doorgeven("seizoen", ditSeizoen());
 const teamCode = doorgeven("team", INTERNE_COMPETITIE);
 const speler = Number(doorgeven("speler", 0)); // knsbNummer
@@ -68,16 +69,49 @@ function doorgeven(key, defaultValue) {
  * @returns {string} uuidToken
  */
 function uuidInvullen(key) {
-    const vorigeSessie = localStorage.getItem(key);
+    const vorigeSessie = JSON.parse(localStorage.getItem(key));
+    console.log("vorigeSessie:");
+    console.log(vorigeSessie);
+    console.log(typeof vorigeSessie);
+    console.log(typeof vorigeSessie === "string");
     if (typeof vorigeSessie === "string") { // string met uuidToken
+        console.log("gebruikerLezen");
+        gebruikerLezen(vorigeSessie);
         return vorigeSessie;
-    } else if (vorigeSessie) { // object met knsbNummer, naam en email
-        vorigeSessie.mutatieRechten = 0;
-        sessionStorage.setItem("/gebruiker/", JSON.stringify(vorigeSessie));
+    } else if (vorigeSessie) {
+        console.log("gebruikerBijwerken uit vorigeSessie");
+        gebruikerBijwerken(vorigeSessie.knsbNummer, vorigeSessie.naam, vorigeSessie.email);
         return "";
     } else {
-        sessionStorage.setItem("/gebruiker/", JSON.stringify({knsbNummer: 0, naam: "onbekend", mutatieRechten: 0}));
+        console.log("gebruikerBijwerken zonder vorigeSessie");
+        gebruikerBijwerken(0, "onbekend", "");
         return "";
+    }
+}
+
+async function gebruikerLezen(uuidToken) {
+    const registratie = await localFetch("/gebruiker/" + uuidToken);
+    gebruiker.knsbNummer = Number(registratie.knsbNummer);
+    gebruiker.naam = registratie.naam;
+    gebruiker.email = ""; // 0-0-0.nl stuurt geen email
+    gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
+}
+
+function gebruikerBijwerken(knsbNummer, naam, email) {
+    gebruiker.knsbNummer = Number(knsbNummer);
+    gebruiker.naam = naam;
+    gebruiker.email = email;
+    gebruiker.mutatieRechten = 0;
+    const json = JSON.stringify(gebruiker);
+    sessionStorage.setItem("/gebruiker/", json);
+    try {
+        localStorage.setItem(vereniging, json);
+    } catch (error) {
+        if (debugNivo > 1) {
+            alert(`dit apparaat heeft geen localStorage")
+            ${error}`);
+        }
+        console.error(error); // TODO per sessie fouten verzamelen?
     }
 }
 
@@ -98,7 +132,7 @@ async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () { }];
-    const mutatieRechten = await mutatieRechtenGebruiker();
+    const mutatieRechten = (await gebruiker).mutatieRechten;
     for (let [mutatieNivo, tekst, functie] of menuKeuzes) {
         if (mutatieNivo <= mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
@@ -115,27 +149,7 @@ async function menu(...menuKeuzes) {
         });
 }
 
-async function mutatieRechtenGebruiker() {
-    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-    return Number(gebruiker.mutatieRechten);
-}
-
-async function knsbNummerGebruiker() {
-    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-    return Number(gebruiker.knsbNummer);
-}
-
-async function naamGebruiker() {
-    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-    return gebruiker.naam;
-}
-
-async function emailGebruiker() {
-    const gebruiker = await localFetch("/gebruiker/" + uuidToken);
-    return gebruiker.email;
-}
-
-const terugNaar = [0, "\uD83E\uDC68", function() {
+const terugNaar = [0, "\uD83E\uDC68", function() { // wide-headed leftwards barb arrow
     history.back();
 }];
 
@@ -163,6 +177,9 @@ function naarAnderePagina(naarPagina) {
 }
 
 function naarZelfdePagina() {
+    if (debugNivo > 1) {
+        alert("naarZelfdePagina()");
+    }
     location.replace(pagina.pathname);
 }
 
@@ -469,7 +486,7 @@ totaal
 [18] rondenverschil
 tegenstanders met n = 0, 1, 2, enz.
 [19 + n] rondeNummer
-[20 + n] kleur (wit = 1, zwart = 0)
+[20 + n] kleur (1 = wit, 0 = zwart)
 [21 + n] tegenstander
 einde indien rondeNummer = 0
 [19 + n] rondeNummer = 0

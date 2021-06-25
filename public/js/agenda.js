@@ -13,13 +13,13 @@ if (uuidToken) {
 }
 
 async function agenda(kop, lijst) {
-    const gebruiker = params.get("gebruiker") || await knsbNummerGebruiker();
-    await agendaMutatie(gebruiker);
-    const naam = params.get("naamGebruiker") || await naamGebruiker();
+    const andereGebruiker = params.get("gebruiker") || (await gebruiker).knsbNummer;
+    await agendaMutatie(andereGebruiker);
+    const naam = params.get("naamGebruiker") || (await gebruiker).naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;
-    let wedstrijden = await agendaLezen(gebruiker);
-    if (await agendaAanvullen(gebruiker, wedstrijden)) {
-        wedstrijden = await agendaLezen(gebruiker);
+    let wedstrijden = await agendaLezen(andereGebruiker);
+    if (await agendaAanvullen(andereGebruiker, wedstrijden)) {
+        wedstrijden = await agendaLezen(andereGebruiker);
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
@@ -31,7 +31,7 @@ async function agenda(kop, lijst) {
                 datumLeesbaar(w.datum),
                 deelnemers.length,
                 htmlLink(
-                    `agenda.html?gebruiker=${gebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`,
+                    `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`,
                     aanwezig)));
         }
     }

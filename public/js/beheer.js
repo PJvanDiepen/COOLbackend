@@ -20,6 +20,18 @@ beheerders(document.getElementById("beheerders"));
 gebruikers(document.getElementById("gebruikers"));
 laatsteMutaties(document.getElementById("mutaties"));
 
+try {
+    localStorage.setItem("test", "test");
+    localStorage.removeItem("test");
+    if (debugNivo > 1) {
+        alert("dit apparaat is geschikt voor 0-0-0.nl");
+    }
+} catch (error) {
+    if (debugNivo > 1) {
+        alert("dit apparaat heeft geen localStorage");
+    }
+}
+
 function debugNivoInstellen(niveaux) {
     niveaux.appendChild(htmlOptie(0, "geen debug-berichten"));
     niveaux.appendChild(htmlOptie(9, "alle debug-alerts"));
