@@ -69,17 +69,14 @@ function doorgeven(key, defaultValue) {
  * @returns {string} uuidToken
  */
 function uuidInvullen(key) {
-    const vorigeSessie = JSON.parse(localStorage.getItem(key));
-    console.log("vorigeSessie:");
-    console.log(vorigeSessie);
-    console.log(typeof vorigeSessie);
-    console.log(typeof vorigeSessie === "string");
-    if (typeof vorigeSessie === "string") { // string met uuidToken
+    const uuid = localStorage.getItem(key);
+    if (/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid)) {
         console.log("gebruikerLezen");
-        gebruikerLezen(vorigeSessie);
-        return vorigeSessie;
+        gebruikerLezen(uuid);
+        return uuid;
     } else if (vorigeSessie) {
         console.log("gebruikerBijwerken uit vorigeSessie");
+        const vorigeSessie = JSON.parse(uuid);
         gebruikerBijwerken(vorigeSessie.knsbNummer, vorigeSessie.naam, vorigeSessie.email);
         return "";
     } else {
@@ -132,7 +129,7 @@ async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () { }];
-    const mutatieRechten = (await gebruiker).mutatieRechten;
+    const mutatieRechten = gebruiker.mutatieRechten;
     for (let [mutatieNivo, tekst, functie] of menuKeuzes) {
         if (mutatieNivo <= mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
@@ -154,6 +151,7 @@ const terugNaar = [0, "\uD83E\uDC68", function() { // wide-headed leftwards barb
 }];
 
 const naarAgenda = [1, "aanmelden / afzeggen", function () {
+
     naarAnderePagina("agenda.html");
 }];
 

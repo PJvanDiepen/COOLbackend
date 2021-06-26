@@ -237,12 +237,13 @@ module.exports = router => {
     /*
     registratie aanvragen voor gebruiker
      */
-    router.get('/registreer/:knsbNummer/:email', async function (ctx) { // TODO fout invullen
-        ctx.body = await Gebruiker.query()
+    router.get('/registreer/:knsbNummer/:email', async function (ctx) {
+        await Gebruiker.query()
             .insert({knsbNummer: ctx.params.knsbNummer,
                 mutatieRechten: 1,
                 uuidToken: fn('uuid'),
                 email: ctx.params.email});
+        ctx.body = 1;
     });
 
     /*
@@ -288,7 +289,7 @@ module.exports = router => {
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(1)) {
-            const uitslag = await Uitslag.query()
+            await Uitslag.query()
                 .insert({seizoen: ctx.params.seizoen,
                     teamCode: ctx.params.teamCode,
                     rondeNummer: ctx.params.rondeNummer,

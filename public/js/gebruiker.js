@@ -17,25 +17,29 @@ gebruikerFormulier(document.getElementById("formulier"),
     document.getElementById("status"));
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
-    if (uuidToken) {
-        knsbNummer.value = gebruiker.knsbNummer;
-        naam.value = gebruiker.naam;
-        status.value = "je bent als gebruiker geregistreerd bij " + vereniging;
-    } else if (speler) {
+    if (speler) {
         knsbNummer.value = speler;
         naam.value = naamSpeler;
-    } else {
-        knsbNummer.value = gebruiker.knsbNummer;
-        naam.value = gebruiker.naam;
+        // TODO alle mogelijkheden uitschrijven
+    }
+    knsbNummer.value = speler ? speler : gebruiker.knsbNummer;
+    naam.value = speler ? naamSpeler : gebruiker.naam;
+    if (uuidToken) {
+        status.value = `${gebruiker.naam} is als gebruiker geregistreerd bij ${vereniging}`;
+    } else if (gebruiker.email) {
         email.value = gebruiker.email;
-        status.value = knsbNummer.value ? "selecteer je naam" : "je aanvraag wordt gecontroleerd";
+        status.value = `${gebruiker.naam} heeft al een aanvraag verstuurd`;
+    } else if (!speler) {
+        status.value = "selecteer je naam";
     }
     formulier.addEventListener("submit", async function (event) {
         event.preventDefault(); // TODO is dit goed?
+        console.log("submit gebruikerFormulier");
         if (knsbNummer.value) {
             gebruikerBijwerken(knsbNummer.value, naam.value, email.value);
             status.value = "je aanvraag is verstuurd voor controle";
             const mutaties = await serverFetch(`/registreer/${knsbNummer.value}/${email.value}`);
+            console.log(mutaties);
             alert("mutaties: " + mutaties);
             if (!mutaties && debugNivo > 1) {
                 alert("registreren is mislukt");
