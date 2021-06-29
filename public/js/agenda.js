@@ -3,7 +3,8 @@
 inVolgorde();
 
 async function inVolgorde() {
-    await menu(naarBeheer,
+    await gebruikerVerwerken();
+    menu(naarBeheer,
         naarRanglijst,
         naarGebruiker,
         terugNaar);
@@ -12,9 +13,7 @@ async function inVolgorde() {
 }
 
 async function agenda(kop, lijst) {
-    console.log("agenda");
     const andereGebruiker = params.get("gebruiker") || gebruiker.knsbNummer;
-    console.log("andereGebruiker: " + andereGebruiker);
     await agendaMutatie(andereGebruiker);
     const naam = params.get("naamGebruiker") || gebruiker.naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;

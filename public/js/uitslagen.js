@@ -41,13 +41,10 @@ const speler = Number(doorgeven("speler", 0)); // knsbNummer
 const naamSpeler = doorgeven("naam", "onbekend");
 
 const uuidActiveren = params.get("uuid");
-console.log("uuidActiveren: " + uuidActiveren);
 const vorigeSessie = localStorage.getItem(vereniging);
-console.log("vorigeSessie: " + vorigeSessie);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 const gebruiker = {};
 const informatieNivo = Number(doorgeven("informatie", 0));
-const debugNivo = Number(doorgeven("debug", 9)); // TODO debug = 0!!
 
 function doorgeven(key, defaultValue) {
     let value = params.get(key);
@@ -72,45 +69,34 @@ function doorgeven(key, defaultValue) {
  * Indien de gebruiker tijdens een vorigeSessie zich niet heeft geregistreert,
  * leest gebruikerVerwerken gegevens van een onbekende gebruiker met knsbNummer = 0 en mutatieRechten = 0.
  *
- * @returns {Promise<number>} gebruikerRechten
+ * @returns {Promise<void>}
  */
 async function gebruikerVerwerken() {
-    console.log("gebruiker Activeren");
-    console.log(uuidActiveren);
-    console.log(uuidToken);
     if (uuidActiveren && uuidActiveren === uuidToken) {
-        console.log("uuid Activeren");
-        await serverFetch("/email/" + uuidToken).then(console.log("email uuid Activeren"));
+        await serverFetch("/email/" + uuidToken);
         volgendeSessie(uuidToken);
-        console.log("einde uuid Activeren")
     }
     if (uuidToken) {
-        console.log("gebruiker lezen");
-        const registratie = await localFetch("/gebruiker/" + uuidToken).then(console.log("registratie gebruiker lezen"));
+        const registratie = await localFetch("/gebruiker/" + uuidToken);
         gebruiker.knsbNummer = Number(registratie.knsbNummer);
         gebruiker.naam = registratie.naam;
         gebruiker.email = ""; // 0-0-0.nl stuurt geen email
         gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
-        console.log("einde gebruiker lezen")
     } else if (vorigeSessie) {
-        console.log("gebruiker uit vorigeSessie");
         const json = JSON.parse(vorigeSessie);
         gebruiker.knsbNummer = Number(json.knsbNummer);
         gebruiker.naam = json.naam;
         gebruiker.email = json.email;
         gebruiker.mutatieRechten = 0;
     } else {
-        console.log("gebruiker zonder vorigeSessie");
         gebruiker.knsbNummer = 0;
         gebruiker.naam = "onbekend";
         gebruiker.email = "";
         gebruiker.mutatieRechten = 0;
     }
-    return gebruiker.mutatieRechten;
 }
 
 function uuidCorrect(uuid) {
-    console.log("uuidCorrect: " + uuid);
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
@@ -118,10 +104,6 @@ function volgendeSessie(json) {
     try {
         localStorage.setItem(vereniging, json);
     } catch (error) {
-        if (debugNivo > 1) {
-            alert(`dit apparaat heeft geen localStorage")
-            ${error}`);
-        }
         console.error(error); // TODO per sessie fouten verzamelen?
     }
 }
@@ -140,13 +122,11 @@ function volgendeSessie(json) {
  * @returns {Promise<void>}
  */
 async function menu(...menuKeuzes) {
-    console.log("menu");
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () { }];
-    const gebruikerRechten = await gebruikerVerwerken();
     for (let [minimumRechten, tekst, functie] of menuKeuzes) {
-        if (minimumRechten <= gebruikerRechten) {
+        if (minimumRechten <= gebruiker.mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
             functies.push(functie ? functie :
                 function () {
@@ -183,16 +163,10 @@ const naarGebruiker = [0, `${uuidToken ? "opnieuw " : ""}registreren`, function 
 }];
 
 function naarAnderePagina(naarPagina) {
-    if (debugNivo > 1) {
-        alert(`naarAnderePagina("${naarPagina}")`);
-    }
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
 function naarZelfdePagina() {
-    if (debugNivo > 1) {
-        alert("naarZelfdePagina()");
-    }
     location.replace(pagina.pathname);
 }
 
@@ -222,10 +196,6 @@ async function serverFetch(url) {
         const response = await fetch(server + url);
         return await response.json();
     } catch (error) {
-        if (debugNivo > 1) {
-            alert(`serverFetch("${url}")
-            ${error}`);
-        }
         console.error(error); // TODO per sessie fouten verzamelen?
     }
 }

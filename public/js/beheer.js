@@ -1,46 +1,27 @@
 "use strict";
 
-menu(naarAgenda,
-    naarRanglijst,
-    [9, "Arie Boots / mutatieRechten = 1", function () {
-        sessionStorage.setItem("uuidToken", "d94400be-adb3-11eb-947d-7c0507c81823");
-        naarAnderePagina("ranglijst.html?informatie=0");
-    }],
-    [9, "Aad Schuit / mutatieRechten = 0", function () {
-        sessionStorage.setItem("uuidToken", "1eb9375f-adb9-11eb-947d-7c0507c81823");
-        naarAnderePagina("ranglijst.html?informatie=0");
-    }],
-    [9, "onbekend / mutatieRechten = 0", function () {
-        sessionStorage.setItem("uuidToken", "f77cf407-af70-11eb-947d-7c0507c81823");
-        naarAnderePagina("ranglijst.html?informatie=0");
-    }],
-    terugNaar);
-debugNivoInstellen(document.getElementById("debug"));
-beheerders(document.getElementById("beheerders"));
-gebruikers(document.getElementById("gebruikers"));
-laatsteMutaties(document.getElementById("mutaties"));
+inVolgorde();
 
-try {
-    localStorage.setItem("test", "test");
-    localStorage.removeItem("test");
-    if (debugNivo > 1) {
-        alert("dit apparaat is geschikt voor 0-0-0.nl");
-    }
-} catch (error) {
-    if (debugNivo > 1) {
-        alert("dit apparaat heeft geen localStorage");
-    }
-}
-
-function debugNivoInstellen(niveaux) {
-    niveaux.appendChild(htmlOptie(0, "geen debug-berichten"));
-    niveaux.appendChild(htmlOptie(9, "alle debug-alerts"));
-    niveaux.value = debugNivo;
-    niveaux.addEventListener("input",
-        function () {
-            sessionStorage.setItem("debug", niveaux.value);
-            naarZelfdePagina();
-        });
+async function inVolgorde() {
+    await gebruikerVerwerken();
+    menu(naarAgenda,
+        naarRanglijst,
+        [9, "Arie Boots / mutatieRechten = 1", function () {
+            sessionStorage.setItem("uuidToken", "d94400be-adb3-11eb-947d-7c0507c81823");
+            naarAnderePagina("ranglijst.html?informatie=0");
+        }],
+        [9, "Aad Schuit / mutatieRechten = 0", function () {
+            sessionStorage.setItem("uuidToken", "1eb9375f-adb9-11eb-947d-7c0507c81823");
+            naarAnderePagina("ranglijst.html?informatie=0");
+        }],
+        [9, "onbekend / mutatieRechten = 0", function () {
+            sessionStorage.setItem("uuidToken", "f77cf407-af70-11eb-947d-7c0507c81823");
+            naarAnderePagina("ranglijst.html?informatie=0");
+        }],
+        terugNaar);
+    beheerders(document.getElementById("beheerders"));
+    gebruikers(document.getElementById("gebruikers"));
+    laatsteMutaties(document.getElementById("mutaties"));
 }
 
 async function beheerders(lijst) {

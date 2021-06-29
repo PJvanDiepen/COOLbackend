@@ -1,30 +1,35 @@
 "use strict";
 
-menu(naarAgenda,
-    [8, `agenda van ${naamSpeler}`, function () {
-        naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
-    }],
-    naarRanglijst,
-    naarGebruiker,
-    [9, "afzeggingen verwijderen", async function () {
-        const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
-        if (mutaties) {
-            sessionStorage.removeItem(`/uitslagen/${seizoen}/${speler}`);
-            sessionStorage.removeItem(`/ranglijst/${seizoen}`);
-            naarZelfdePagina();
-        }
-    }],
-    [9, `${naamSpeler} verwijderen`, async function () {
-        const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
-        if (mutaties) {
-            sessionStorage.removeItem(`/uitslagen/${seizoen}/${speler}`);
-            sessionStorage.removeItem(`/ranglijst/${seizoen}`);
-            naarAnderePagina("ranglijst.html");
-        }
-    }],
-    terugNaar);
-seizoenSelecteren(INTERNE_COMPETITIE);
-uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
+inVolgorde();
+
+async function inVolgorde() {
+    await gebruikerVerwerken();
+    menu(naarAgenda,
+        [8, `agenda van ${naamSpeler}`, function () {
+            naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
+        }],
+        naarRanglijst,
+        naarGebruiker,
+        [9, "afzeggingen verwijderen", async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
+            if (mutaties) {
+                sessionStorage.removeItem(`/uitslagen/${seizoen}/${speler}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}`);
+                naarZelfdePagina();
+            }
+        }],
+        [9, `${naamSpeler} verwijderen`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
+            if (mutaties) {
+                sessionStorage.removeItem(`/uitslagen/${seizoen}/${speler}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}`);
+                naarAnderePagina("ranglijst.html");
+            }
+        }],
+        terugNaar);
+    seizoenSelecteren(INTERNE_COMPETITIE);
+    uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
+}
 
 /*
   -- punten van alle uitslagen per speler

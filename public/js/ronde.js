@@ -1,14 +1,19 @@
 "use strict";
 
-menu(naarBeheer,
-    naarAgenda,
-    naarRanglijst,
-    naarGebruiker,
-    terugNaar);
-rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
-wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
+inVolgorde();
+
+async function inVolgorde() {
+    await gebruikerVerwerken();
+    menu(naarBeheer,
+        naarAgenda,
+        naarRanglijst,
+        naarGebruiker,
+        terugNaar);
+    rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
+    wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
 // TODO ranglijst tot deze ronde
-uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
+    uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
+}
 
 async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [vereniging, seizoenVoluit(seizoen)].join(SCHEIDING);

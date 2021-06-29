@@ -3,7 +3,8 @@
 inVolgorde();
 
 async function inVolgorde() {
-    await menu(naarBeheer,
+    await gebruikerVerwerken();
+    menu(naarBeheer,
         naarAgenda,
         naarRanglijst,
         [9, "formulier van geselecteerde speler", function () {
@@ -22,11 +23,9 @@ async function inVolgorde() {
 }
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
-    console.log("gebruikersFormulier");
     if (speler) {
         knsbNummer.value = speler;
         naam.value = naamSpeler;
-        // TODO alle mogelijkheden uitschrijven
     }
     knsbNummer.value = speler ? speler : gebruiker.knsbNummer;
     naam.value = speler ? naamSpeler : gebruiker.naam;
@@ -39,8 +38,7 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
         status.value = "selecteer je naam";
     }
     formulier.addEventListener("submit", async function (event) {
-        event.preventDefault(); // TODO is dit goed?
-        console.log("submit gebruikerFormulier");
+        event.preventDefault();
         if (knsbNummer.value) {
             gebruiker.knsbNummer = Number(knsbNummer.value);
             gebruiker.naam = naam.value;
@@ -49,14 +47,8 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
             const json = JSON.stringify(gebruiker);
             sessionStorage.setItem("/gebruiker/", json); // voorlopig zonder uuidToken
             volgendeSessie(json); // overschrijf eventueel uuidToken
-            console.log("einde gebruikerBijwerken");
             status.value = "je aanvraag is verstuurd voor controle";
             const mutaties = await serverFetch(`/registreer/${knsbNummer.value}/${email.value}`);
-            console.log(mutaties);
-            alert("mutaties: " + mutaties);
-            if (!mutaties && debugNivo > 1) {
-                alert("registreren is mislukt");
-            }
         } else {
             status.value = "selecteer je naam";
         }

@@ -1,21 +1,26 @@
 "use strict";
 
-menu(naarBeheer,
-    naarAgenda,
-    naarGebruiker,
-    [8, "zonder niet actieve spelers", function () {
-        naarAnderePagina("ranglijst.html?informatie=0");
-    }],
-    [8, "inclusief niet actieve spelers", function () {
-        naarAnderePagina("ranglijst.html?informatie=9");
-    }],
-    terugNaar);
-seizoenSelecteren(INTERNE_COMPETITIE);
-teamSelecteren(INTERNE_COMPETITIE);
-rondeSelecteren(INTERNE_COMPETITIE, 0);
+inVolgorde();
+
+async function inVolgorde() {
+    await gebruikerVerwerken();
+    menu(naarBeheer,
+        naarAgenda,
+        naarGebruiker,
+        [8, "zonder niet actieve spelers", function () {
+            naarAnderePagina("ranglijst.html?informatie=0");
+        }],
+        [8, "inclusief niet actieve spelers", function () {
+            naarAnderePagina("ranglijst.html?informatie=9");
+        }],
+        terugNaar);
+    seizoenSelecteren(INTERNE_COMPETITIE);
+    teamSelecteren(INTERNE_COMPETITIE);
+    rondeSelecteren(INTERNE_COMPETITIE, 0);
 // TODO ranglijst tot bepaalde datum (zie ronde.js)
 // TODO bijbehorende voorlopige indeling
-ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
+    ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
+}
 
 /*
  -- ranglijst
