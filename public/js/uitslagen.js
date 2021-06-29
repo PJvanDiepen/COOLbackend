@@ -533,16 +533,20 @@ function totalen(alleTotalen) {
         return totaal[11];
     }
 
+    function eigenWaardeCijfer() {
+        return intern() ? totaal[12] : "";
+    }
+
     function extern() {
-        return totaal[12] || totaal[13] || totaal[14];
+        return totaal[13] || totaal[14] || totaal[15];
     }
 
     function scoreExtern() {
-        return score(totaal[12],totaal[13],totaal[14]);
+        return score(totaal[13],totaal[14],totaal[15]);
     }
 
     function percentageExtern() {
-        return percentage(totaal[12],totaal[13],totaal[14]);
+        return percentage(totaal[13],totaal[14],totaal[15]);
     }
 
     return Object.freeze({ // Zie blz. 17.1 Douglas Crockford: How JavaScript Works
@@ -557,6 +561,7 @@ function totalen(alleTotalen) {
         afzeggingen,
         aftrek,
         startPunten,
+        eigenWaardeCijfer,
         extern,
         scoreExtern,
         percentageExtern

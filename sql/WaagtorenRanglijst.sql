@@ -184,7 +184,7 @@ begin
         aftrek, ' ', -- 9
         totaal, ' ', -- 10
         startPunten, ' ', -- 11
-        -- TODO eigenWaardeCijfer, ' ', -- 12
+        eigenWaardeCijfer, ' ', -- 12
         winstExtern, ' ', -- 13
         remiseExtern, ' ', -- 14
         verliesExtern, ' ', -- 15

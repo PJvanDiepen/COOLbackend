@@ -41,6 +41,7 @@ function ranglijst(kop, lijst) {
                     i + 1,
                     naarSpeler(speler.knsbNummer, speler.naam),
                     t.punten(),
+                    t.eigenWaardeCijfer(),
                     t.winnaarSubgroep(winnaars, speler.subgroep),
                     t.scoreIntern(),
                     t.percentageIntern(),
