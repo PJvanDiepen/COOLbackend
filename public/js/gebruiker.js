@@ -1,22 +1,28 @@
 "use strict";
 
-menu(naarBeheer,
-    naarAgenda,
-    naarRanglijst,
-    [9, "formulier van geselecteerde speler", function () {
-        document.getElementById("naam").value = naamSpeler;
-        document.getElementById("knsbNummer").value = speler;
-        document.getElementById("status").value = "iemand anders registreren";
-    }],
-    terugNaar);
-spelerSelecteren();
-gebruikerFormulier(document.getElementById("formulier"),
-    document.getElementById("naam"),
-    document.getElementById("knsbNummer"),
-    document.getElementById("email"),
-    document.getElementById("status"));
+inVolgorde();
+
+async function inVolgorde() {
+    await menu(naarBeheer,
+        naarAgenda,
+        naarRanglijst,
+        [9, "formulier van geselecteerde speler", function () {
+            document.getElementById("naam").value = naamSpeler;
+            document.getElementById("knsbNummer").value = speler;
+            document.getElementById("status").value = "iemand anders registreren";
+        }],
+        terugNaar);
+    spelerSelecteren();
+    gebruikerFormulier(
+        document.getElementById("formulier"),
+        document.getElementById("naam"),
+        document.getElementById("knsbNummer"),
+        document.getElementById("email"),
+        document.getElementById("status"));
+}
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
+    console.log("gebruikersFormulier");
     if (speler) {
         knsbNummer.value = speler;
         naam.value = naamSpeler;
@@ -36,7 +42,14 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
         event.preventDefault(); // TODO is dit goed?
         console.log("submit gebruikerFormulier");
         if (knsbNummer.value) {
-            gebruikerBijwerken(knsbNummer.value, naam.value, email.value);
+            gebruiker.knsbNummer = Number(knsbNummer.value);
+            gebruiker.naam = naam.value;
+            gebruiker.email = email.value;
+            gebruiker.mutatieRechten = 0;
+            const json = JSON.stringify(gebruiker);
+            sessionStorage.setItem("/gebruiker/", json); // voorlopig zonder uuidToken
+            volgendeSessie(json); // overschrijf eventueel uuidToken
+            console.log("einde gebruikerBijwerken");
             status.value = "je aanvraag is verstuurd voor controle";
             const mutaties = await serverFetch(`/registreer/${knsbNummer.value}/${email.value}`);
             console.log(mutaties);

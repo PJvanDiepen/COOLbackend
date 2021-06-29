@@ -1,21 +1,22 @@
 "use strict";
 
-menu(naarBeheer,
-    naarRanglijst,
-    naarGebruiker,
-    terugNaar);
-if (uuidToken) {
+inVolgorde();
+
+async function inVolgorde() {
+    await menu(naarBeheer,
+        naarRanglijst,
+        naarGebruiker,
+        terugNaar);
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
-    // TODO klik op deelnemers voor bijbehorende ronde
     mogelijkeTegenstanders(document.getElementById("tabel"));
-} else {
-    naarAnderePagina("gebruiker.html");
 }
 
 async function agenda(kop, lijst) {
-    const andereGebruiker = params.get("gebruiker") || (await gebruiker).knsbNummer;
+    console.log("agenda");
+    const andereGebruiker = params.get("gebruiker") || gebruiker.knsbNummer;
+    console.log("andereGebruiker: " + andereGebruiker);
     await agendaMutatie(andereGebruiker);
-    const naam = params.get("naamGebruiker") || (await gebruiker).naam;
+    const naam = params.get("naamGebruiker") || gebruiker.naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;
     let wedstrijden = await agendaLezen(andereGebruiker);
     if (await agendaAanvullen(andereGebruiker, wedstrijden)) {

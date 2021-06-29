@@ -32,16 +32,22 @@ const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
+
 const vereniging = doorgeven("vereniging", "Waagtoren");
-const gebruiker = {};
-const uuidToken = uuidInvullen(vereniging);
 const seizoen = doorgeven("seizoen", ditSeizoen());
 const teamCode = doorgeven("team", INTERNE_COMPETITIE);
+const rondeNummer = Number(doorgeven("ronde", 0));
 const speler = Number(doorgeven("speler", 0)); // knsbNummer
 const naamSpeler = doorgeven("naam", "onbekend");
-const rondeNummer = Number(doorgeven("ronde", 0));
+
+const uuidActiveren = params.get("uuid");
+console.log("uuidActiveren: " + uuidActiveren);
+const vorigeSessie = localStorage.getItem(vereniging);
+console.log("vorigeSessie: " + vorigeSessie);
+const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
+const gebruiker = {};
 const informatieNivo = Number(doorgeven("informatie", 0));
-const debugNivo = Number(doorgeven("debug", 9)); // TODO debug = 0!
+const debugNivo = Number(doorgeven("debug", 9)); // TODO debug = 0!!
 
 function doorgeven(key, defaultValue) {
     let value = params.get(key);
@@ -55,52 +61,60 @@ function doorgeven(key, defaultValue) {
 
 /**
  * 0-0-0.nl genereert een uuid om de gebruiker te herkennen.
- * De gebruiker krijgt uuid via email tijdens een vorigeSessie en legt uuid vast in localStorage.
- * Door uuidInvullen is deze uuid beschikbaar om knsbNummer, naam en mutatieRechten van gebruiker te lezen.
+ * De gebruiker krijgt uuid via email, moet uuidActiveren en legt uuid vast in localStorage.
+ * gebruikerVerwerken geeft de uuid van een geregistreerde gebruiker om knsbNummer, naam en mutatieRechten van gebruiker te lezen.
  *
  * De gebruiker moet een uuid aanvragen door zich te registreren.
  * Bij het registreren tijdens een vorigeSessie zijn knsbNummer, naam en email vastgelegd in localStorage.
- * Voorlopig zorgt uuidInvullen dat deze gegevens met mutatieRechten = 0 van gebruiker worden gelezen.
+ * In een volgende sessie leest gebruikerVerwerken deze gegevens met mutatieRechten = 0.
  * 0-0-0.nl herkent de gebruiker nog niet, maar ziet dat een aanvraag in behandeling is.
  *
  * Indien de gebruiker tijdens een vorigeSessie zich niet heeft geregistreert,
- * zorgt uuidInvullen dat gegevens van onbekende gebruiker met knsbNummer = 0 en mutatieRechten = 0 worden gelezen.
+ * leest gebruikerVerwerken gegevens van een onbekende gebruiker met knsbNummer = 0 en mutatieRechten = 0.
  *
- * @returns {string} uuidToken
+ * @returns {Promise<number>} gebruikerRechten
  */
-function uuidInvullen(key) {
-    const uuid = localStorage.getItem(key);
-    if (/^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid)) {
-        console.log("gebruikerLezen");
-        gebruikerLezen(uuid);
-        return uuid;
-    } else if (vorigeSessie) {
-        console.log("gebruikerBijwerken uit vorigeSessie");
-        const vorigeSessie = JSON.parse(uuid);
-        gebruikerBijwerken(vorigeSessie.knsbNummer, vorigeSessie.naam, vorigeSessie.email);
-        return "";
-    } else {
-        console.log("gebruikerBijwerken zonder vorigeSessie");
-        gebruikerBijwerken(0, "onbekend", "");
-        return "";
+async function gebruikerVerwerken() {
+    console.log("gebruiker Activeren");
+    console.log(uuidActiveren);
+    console.log(uuidToken);
+    if (uuidActiveren && uuidActiveren === uuidToken) {
+        console.log("uuid Activeren");
+        await serverFetch("/email/" + uuidToken).then(console.log("email uuid Activeren"));
+        volgendeSessie(uuidToken);
+        console.log("einde uuid Activeren")
     }
+    if (uuidToken) {
+        console.log("gebruiker lezen");
+        const registratie = await localFetch("/gebruiker/" + uuidToken).then(console.log("registratie gebruiker lezen"));
+        gebruiker.knsbNummer = Number(registratie.knsbNummer);
+        gebruiker.naam = registratie.naam;
+        gebruiker.email = ""; // 0-0-0.nl stuurt geen email
+        gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
+        console.log("einde gebruiker lezen")
+    } else if (vorigeSessie) {
+        console.log("gebruiker uit vorigeSessie");
+        const json = JSON.parse(vorigeSessie);
+        gebruiker.knsbNummer = Number(json.knsbNummer);
+        gebruiker.naam = json.naam;
+        gebruiker.email = json.email;
+        gebruiker.mutatieRechten = 0;
+    } else {
+        console.log("gebruiker zonder vorigeSessie");
+        gebruiker.knsbNummer = 0;
+        gebruiker.naam = "onbekend";
+        gebruiker.email = "";
+        gebruiker.mutatieRechten = 0;
+    }
+    return gebruiker.mutatieRechten;
 }
 
-async function gebruikerLezen(uuidToken) {
-    const registratie = await localFetch("/gebruiker/" + uuidToken);
-    gebruiker.knsbNummer = Number(registratie.knsbNummer);
-    gebruiker.naam = registratie.naam;
-    gebruiker.email = ""; // 0-0-0.nl stuurt geen email
-    gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
+function uuidCorrect(uuid) {
+    console.log("uuidCorrect: " + uuid);
+    return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
-function gebruikerBijwerken(knsbNummer, naam, email) {
-    gebruiker.knsbNummer = Number(knsbNummer);
-    gebruiker.naam = naam;
-    gebruiker.email = email;
-    gebruiker.mutatieRechten = 0;
-    const json = JSON.stringify(gebruiker);
-    sessionStorage.setItem("/gebruiker/", json);
+function volgendeSessie(json) {
     try {
         localStorage.setItem(vereniging, json);
     } catch (error) {
@@ -115,7 +129,7 @@ function gebruikerBijwerken(knsbNummer, naam, email) {
 /**
  * menu verwerkt alle menuKeuzes tot een select-menu met htmlOptie's en zet een eventListener klaar.
  *
- * Elke menuKeuze bestaat uit [ <minimum mutatieRechten>, <menuKeuze tekst>, <bijhorende functie> ].
+ * Elke menuKeuze bestaat uit [ <minimumRechten>, <menuKeuze tekst>, <bijhorende functie> ].
  * Indien gebruiker niet voldoende mutatieRechten heeft, komt de menuKeuze niet in het menu.
  * Elke htmlOptie krijgt een tekst en een volgnummer.
  * Het volgnummer verwijst naar de bijbehorende functie in functies.
@@ -126,12 +140,13 @@ function gebruikerBijwerken(knsbNummer, naam, email) {
  * @returns {Promise<void>}
  */
 async function menu(...menuKeuzes) {
+    console.log("menu");
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () { }];
-    const mutatieRechten = gebruiker.mutatieRechten;
-    for (let [mutatieNivo, tekst, functie] of menuKeuzes) {
-        if (mutatieNivo <= mutatieRechten) {
+    const gebruikerRechten = await gebruikerVerwerken();
+    for (let [minimumRechten, tekst, functie] of menuKeuzes) {
+        if (minimumRechten <= gebruikerRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
             functies.push(functie ? functie :
                 function () {
