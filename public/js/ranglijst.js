@@ -1,8 +1,6 @@
 "use strict";
 
-inVolgorde();
-
-async function inVolgorde() {
+(async function() {
     await gebruikerVerwerken();
     menu(naarBeheer,
         naarAgenda,
@@ -20,7 +18,7 @@ async function inVolgorde() {
 // TODO ranglijst tot bepaalde datum (zie ronde.js)
 // TODO bijbehorende voorlopige indeling
     ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
-}
+})();
 
 /*
  -- ranglijst

@@ -1,8 +1,6 @@
 "use strict";
 
-inVolgorde();
-
-async function inVolgorde() {
+(async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
         naarRanglijst,
@@ -22,7 +20,7 @@ async function inVolgorde() {
     beheerders(document.getElementById("beheerders"));
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
-}
+})();
 
 async function beheerders(lijst) {
     const beheerders = await serverFetch("/beheerders");

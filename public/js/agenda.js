@@ -1,8 +1,6 @@
 "use strict";
 
-inVolgorde();
-
-async function inVolgorde() {
+(async function() {
     await gebruikerVerwerken();
     menu(naarBeheer,
         naarRanglijst,
@@ -10,7 +8,7 @@ async function inVolgorde() {
         terugNaar);
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
     mogelijkeTegenstanders(document.getElementById("tabel"));
-}
+})();
 
 async function agenda(kop, lijst) {
     const andereGebruiker = params.get("gebruiker") || gebruiker.knsbNummer;

@@ -1,8 +1,6 @@
 "use strict";
 
-inVolgorde();
-
-async function inVolgorde() {
+(async function() {
     await gebruikerVerwerken();
     menu(naarBeheer,
         naarAgenda,
@@ -13,7 +11,7 @@ async function inVolgorde() {
     wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
 // TODO ranglijst tot deze ronde
     uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
-}
+})();
 
 async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [vereniging, seizoenVoluit(seizoen)].join(SCHEIDING);

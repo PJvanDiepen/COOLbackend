@@ -1,8 +1,6 @@
 "use strict";
 
-inVolgorde();
-
-async function inVolgorde() {
+(async function() {
     await gebruikerVerwerken();
     menu(naarBeheer,
         naarAgenda,
@@ -20,7 +18,7 @@ async function inVolgorde() {
         document.getElementById("knsbNummer"),
         document.getElementById("email"),
         document.getElementById("status"));
-}
+})();
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
     if (speler) {

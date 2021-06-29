@@ -1,8 +1,6 @@
 "use strict";
 
-inVolgorde();
-
-async function inVolgorde() {
+(async function() {
     await gebruikerVerwerken();
     menu(naarBeheer,
         naarAgenda,
@@ -11,7 +9,7 @@ async function inVolgorde() {
         terugNaar);
     teamSelecteren(teamCode);
     uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
-}
+})();
 
 async function uitslagenTeam(kop, rondenTabel) {
     const teams = await localFetch("/teams/" + seizoen);

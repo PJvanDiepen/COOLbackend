@@ -43,7 +43,7 @@ const naamSpeler = doorgeven("naam", "onbekend");
 const uuidActiveren = params.get("uuid");
 const vorigeSessie = localStorage.getItem(vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
-const gebruiker = {};
+const gebruiker = {}; // gebruikerInvullen
 const informatieNivo = Number(doorgeven("informatie", 0));
 
 function doorgeven(key, defaultValue) {
