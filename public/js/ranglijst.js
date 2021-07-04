@@ -33,14 +33,14 @@ function ranglijst(kop, lijst) {
     const winnaars = {};
     mapAsync("/ranglijst/" + seizoen,
         function (speler, i) {
-            const t = totalen(speler.totalen);
+            const t = spelerTotalen(speler);
             if (t.inRanglijst() || informatieNivo > 0) {
                 lijst.appendChild(htmlRij(
                     i + 1,
                     naarSpeler(speler.knsbNummer, speler.naam),
                     t.punten(),
                     t.eigenWaardeCijfer(),
-                    t.winnaarSubgroep(winnaars, speler.subgroep),
+                    t.winnaarSubgroep(winnaars),
                     t.scoreIntern(),
                     t.percentageIntern(),
                     t.saldoWitZwart(),

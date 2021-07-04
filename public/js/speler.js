@@ -1,8 +1,6 @@
 "use strict";
 
-inVolgorde();
-
-async function inVolgorde() {
+(async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
         [8, `agenda van ${naamSpeler}`, function () {
@@ -29,7 +27,7 @@ async function inVolgorde() {
         terugNaar);
     seizoenSelecteren(INTERNE_COMPETITIE);
     uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
-}
+})();
 
 /*
   -- punten van alle uitslagen per speler
@@ -56,7 +54,7 @@ async function inVolgorde() {
 
 async function uitslagenSpeler(kop, lijst) {
     kop.innerHTML = [vereniging, seizoenVoluit(seizoen), naamSpeler].join(SCHEIDING);
-    const t = await totalenSpeler(seizoen, speler);
+    const t = spelerTotalen(await spelerUitRanglijst(seizoen, speler));
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
         lijst.appendChild(htmlRij("", "", "startpunten", "", "", "", totaal, totaal));
@@ -90,16 +88,6 @@ async function uitslagenSpeler(kop, lijst) {
     if (!t.intern() && !t.extern() && informatieNivo) {
         lijst.appendChild(htmlRij("", "", "geen interne en geen externe partijen", "", "", "", "", ""));
     }
-}
-
-async function totalenSpeler(seizoen, knsbNummer) {
-    const spelers = await localFetch("/ranglijst/" + seizoen);
-    for (const speler of spelers) {
-        if (speler.knsbNummer === knsbNummer) {
-            return totalen(speler.totalen);
-        }
-    }
-    return totalen("0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0");
 }
 
 /*

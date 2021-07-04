@@ -446,6 +446,15 @@ async function rondeSelecteren(teamCode, rondeNummer) {
         });
 }
 
+async function spelerUitRanglijst(seizoen, knsbNummer) {
+    const spelers = await localFetch("/ranglijst/" + seizoen);
+    for (const speler of spelers) {
+        if (speler.knsbNummer === knsbNummer) {
+            return speler;
+        }
+    }
+}
+
 /*
 totaal
 [0] sorteer (3 posities eventueel voorloopnullen)
@@ -460,13 +469,13 @@ totaal
 [9] aftrek
 [10] totaal
 [11] startPunten
-[12] eigenWaardeCijfer (TODO vanaf hier nog verwerken)
+[12] eigenWaardeCijfer
 [13] winstExtern
 [14] remiseExtern
 [15] verliesExtern
 [16] witExtern
 [17] zwartExtern
-[18] rondenverschil
+[18] rondenVerschil
 tegenstanders met n = 0, 1, 2, enz.
 [19 + n] rondeNummer
 [20 + n] kleur (1 = wit, 0 = zwart)
@@ -477,8 +486,12 @@ einde indien rondeNummer = 0
 verboden tegenstanders met  m = 1, 2, 3, enz.
 [20 + n + m] tegenstander
  */
-function totalen(alleTotalen) {
-    const totaal = alleTotalen.split(" ").map(Number);
+function spelerTotalen(speler) {
+    const knsbNummer = Number(speler.knsbNummer);
+    const naam = speler.naam;
+    const subgroep = speler.subgroep;
+    const knsbRating = Number(speler.knsbRating);
+    const totaal = speler.totalen.split(" ").map(Number);
 
     function intern() {
         return totaal[2] || totaal[3] || totaal[4];
@@ -492,7 +505,7 @@ function totalen(alleTotalen) {
         return intern() ? totaal[0] : "";
     }
 
-    function winnaarSubgroep(winnaars, subgroep) {
+    function winnaarSubgroep(winnaars) {
         if (!intern()) {
             return "";
         } else if (winnaars[subgroep]) { // indien winnaar van subgroep al bekend
@@ -549,7 +562,33 @@ function totalen(alleTotalen) {
         return percentage(totaal[13],totaal[14],totaal[15]);
     }
 
+    function saldoWitZwartExtern() {
+        return extern() ? totaal[16] - totaal[17] : "";
+    }
+
+    function rondenVerschil() {
+        return totaal[18];
+    }
+
+
+/*  TODO functions maken voor:
+
+    tegenstanders met n = 0, 1, 2, enz.
+        [19 + n] rondeNummer
+        [20 + n] kleur (1 = wit, 0 = zwart)
+        [21 + n] tegenstander
+    einde indien rondeNummer = 0
+        [19 + n] rondeNummer = 0
+        [20 + n] knsbNummer
+    verboden tegenstanders met  m = 1, 2, 3, enz.
+        [20 + n + m] tegenstander
+    */
+
     return Object.freeze({ // Zie blz. 17.1 Douglas Crockford: How JavaScript Works
+        knsbNummer,
+        naam,
+        subgroep,
+        knsbRating,
         intern,
         inRanglijst,
         punten,
@@ -564,7 +603,9 @@ function totalen(alleTotalen) {
         eigenWaardeCijfer,
         extern,
         scoreExtern,
-        percentageExtern
+        percentageExtern,
+        saldoWitZwartExtern,
+        rondenVerschil
     });
 }
 

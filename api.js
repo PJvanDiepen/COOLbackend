@@ -34,7 +34,7 @@ module.exports = router => {
 
     /*
     -- ranglijst
-    select s.knsbNummer, naam, subgroep, knsbRating, internTotalen(@seizoen, s.knsbNummer) as totalen
+    select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, s.knsbNummer) as totalen
     from speler s
     join persoon p on s.knsbNummer = p.knsbNummer
     where seizoen = @seizoen
@@ -212,8 +212,7 @@ module.exports = router => {
 
     router.get('/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
-            .select('uitslag.knsbNummer', 'persoon.naam')
-            .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
+            .select('uitslag.knsbNummer')
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.teamCode', ctx.params.teamCode)
             .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
