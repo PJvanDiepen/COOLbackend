@@ -528,7 +528,7 @@ function spelerTotalen(speler) {
     }
 
     function saldoWitZwart() {
-        return intern() ? totaal[5] - totaal[6] : "";
+        return totaal[5] - totaal[6];
     }
 
     function oneven() {
@@ -564,26 +564,44 @@ function spelerTotalen(speler) {
     }
 
     function saldoWitZwartExtern() {
-        return extern() ? totaal[16] - totaal[17] : "";
+        return totaal[16] - totaal[17];
     }
 
     function rondenVerschil() {
         return totaal[18];
     }
 
+    function vorigeKeer(tegenstander) {
+        let i = 19;
+        let j = 0;
+        while (totaal[i]) { // indien rondeNummer
+            if (totaal[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
+                j = i;
+            }
+            i = i + 3; // volgende rondeNummer, kleur en knsbNummer
+        }
+        return j; // vorigeKeer zelfde tegenstander of 0
+    }
 
-/*  TODO functions maken voor:
+    function tegen(tegenstander, rondeNummer)  {
+        const i = vorigeKeer(tegenstander);
+        if (i) {
+            return rondeNummer - totaal[i] > rondenVerschil();
+        } else {
+            return true; // nog niet tegen gespeeld
+        }
+    }
 
-    tegenstanders met n = 0, 1, 2, enz.
-        [19 + n] rondeNummer
-        [20 + n] kleur (1 = wit, 0 = zwart)
-        [21 + n] tegenstander
-    einde indien rondeNummer = 0
-        [19 + n] rondeNummer = 0
-        [20 + n] knsbNummer
-    verboden tegenstanders met  m = 1, 2, 3, enz.
-        [20 + n + m] tegenstander
-    */
+    function kleur(tegenstander) {
+        const i = vorigeKeer(tegenstander);
+        if (i) {
+            return totaal[i + 1] ? "zwart" : "wit"; // indien vorige keer met wit
+        } else if (saldoWitZwart() === tegenstander.saldoWitZwart()) {
+            return punten() > tegenstander.punten() ? "zwart" : "wit";
+        } else {
+            return saldoWitZwart() > tegenstander.saldoWitZwart() ? "zwart" : "wit";
+        }
+    }
 
     return Object.freeze({ // Zie blz. 17.1 Douglas Crockford: How JavaScript Works
         knsbNummer,
@@ -606,7 +624,9 @@ function spelerTotalen(speler) {
         scoreExtern,
         percentageExtern,
         saldoWitZwartExtern,
-        rondenVerschil
+        rondenVerschil,
+        tegen,
+        kleur
     });
 }
 
