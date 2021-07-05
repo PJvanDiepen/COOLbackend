@@ -12,18 +12,33 @@ const { fn, ref } = require('objection');
 
 module.exports = router => {
 
+    // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
+
+    router.get('/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const deelnemers = await Uitslag.query()
+            .select('uitslag.knsbNummer')
+            .where('uitslag.seizoen', ctx.params.seizoen)
+            .andWhere('uitslag.teamCode', ctx.params.teamCode)
+            .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+            .andWhere('uitslag.partij', 'm'); // MEEDOEN
+        ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
+    });
+
+    router.get('/seizoenen/:teamCode', async function (ctx) {
+        const seizoenen = await Team.query()
+            .select('team.seizoen')
+            .where('team.teamCode', ctx.params.teamCode);
+        ctx.body = seizoenen.map(function(team) {return team.seizoen});
+    });
+
+    // geef key - value paren per kolom --------------------------------------------------------------------------------
+
     router.get('/spelers/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
             .select('naam', 'persoon.knsbNummer')
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer') // TODO .joinRelated('fk_speler_persoon')
             .where('speler.seizoen', ctx.params.seizoen)
             .orderBy('naam');
-    });
-
-    router.get('/seizoenen/:teamCode', async function (ctx) {
-        ctx.body = await Team.query()
-            .select('team.seizoen')
-            .where('team.teamCode', ctx.params.teamCode);
     });
 
     router.get('/teams/:seizoen', async function (ctx) {
@@ -107,7 +122,6 @@ module.exports = router => {
             .andWhere('uitslag.anderTeam', 'int')
             .orderBy(['uitslag.datum','uitslag.bordNummer']);
     });
-
 
     /*
     -- agenda voor alle interne en externe ronden per speler
@@ -210,15 +224,6 @@ module.exports = router => {
             .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
     });
 
-    router.get('/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
-        ctx.body = await Uitslag.query()
-            .select('uitslag.knsbNummer')
-            .where('uitslag.seizoen', ctx.params.seizoen)
-            .andWhere('uitslag.teamCode', ctx.params.teamCode)
-            .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-            .andWhere('uitslag.partij', 'm'); // MEEDOEN
-    });
-
     router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', ctx.params.seizoen)
@@ -232,6 +237,8 @@ module.exports = router => {
             .andWhere('ronde.teamCode','<>', 'int')
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
+
+    // geef aantal mutaties --------------------------------------------------------------------------------------------
 
     /*
     registratie aanvragen voor gebruiker

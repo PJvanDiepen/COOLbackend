@@ -150,7 +150,7 @@ const naarAgenda = [1, "aanmelden / afzeggen", function () {
     naarAnderePagina("agenda.html");
 }];
 
-const naarBeheer = [0, "testen", function () {
+const naarBeheer = [9, "testen", function () { // TODO 0 i.p.v. 9
     naarAnderePagina("beheer.html");
 }];
 
@@ -389,8 +389,8 @@ function percentage(winst, remise, verlies) {
 async function seizoenSelecteren(teamCode) {
     const seizoenen = document.getElementById("seizoenSelecteren");
     await mapAsync("/seizoenen/" + teamCode,
-        function (team) {
-            seizoenen.appendChild(htmlOptie(team.seizoen, seizoenVoluit(team.seizoen)));
+        function (seizoen) {
+            seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
         });
     seizoenen.value = seizoen; // werkt uitsluitend na await
     seizoenen.addEventListener("input",
@@ -448,11 +448,12 @@ async function rondeSelecteren(teamCode, rondeNummer) {
 
 async function spelerUitRanglijst(seizoen, knsbNummer) {
     const spelers = await localFetch("/ranglijst/" + seizoen);
-    for (const speler of spelers) {
-        if (speler.knsbNummer === knsbNummer) {
-            return speler;
-        }
-    }
+    return spelers.find(function (speler) {return speler.knsbNummer === knsbNummer});
+}
+
+async function spelersUitRanglijst(seizoen, knsbNummers) {
+    const spelers = await localFetch("/ranglijst/" + seizoen);
+    return spelers.filter(function (speler) {return knsbNummers.includes(speler.knsbNummer)});
 }
 
 /*

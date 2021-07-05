@@ -6,11 +6,10 @@
         naarRanglijst,
         naarGebruiker,
         terugNaar);
-    agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
-    mogelijkeTegenstanders(document.getElementById("tabel"));
+    agenda(document.getElementById("kop"), document.getElementById("wedstrijden"), document.getElementById("tabel"));
 })();
 
-async function agenda(kop, lijst) {
+async function agenda(kop, lijst, deelnemersLijst) {
     const andereGebruiker = params.get("gebruiker") || gebruiker.knsbNummer;
     await agendaMutatie(andereGebruiker);
     const naam = params.get("naamGebruiker") || gebruiker.naam;
@@ -19,9 +18,10 @@ async function agenda(kop, lijst) {
     if (await agendaAanvullen(andereGebruiker, wedstrijden)) {
         wedstrijden = await agendaLezen(andereGebruiker);
     }
+    let volgendeRonde = 0;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
-            const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
+            const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/int/${w.rondeNummer}`);
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : STREEP;
             lijst.appendChild(htmlRij(
@@ -31,8 +31,12 @@ async function agenda(kop, lijst) {
                 htmlLink(
                     `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`,
                     aanwezig)));
+            if (!volgendeRonde && deelnemers.length) {
+                volgendeRonde = w.rondeNummer;
+            }
         }
     }
+    mogelijkeTegenstanders(deelnemersLijst, andereGebruiker, volgendeRonde);
 }
 
 async function agendaMutatie(knsbNummer) {
@@ -59,7 +63,16 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     return aanvullingen;
 }
 
-function mogelijkeTegenstanders(lijst) {
+async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
     // TODO voor bepaalde ronde (zie vorige TODO)
     console.log("mogelijkeTegenstanders");
+    console.log("knsbNummer: " + knsbNummer);
+    console.log("rondeNummer: "+ rondeNummer);
+    const deelnemers = await serverFetch(`/deelnemers/${ditSeizoen()}/int/${rondeNummer}`);
+
+    const t = spelerTotalen(await spelerUitRanglijst(ditSeizoen(), knsbNummer));
+    const tegenstanders = await spelersUitRanglijst(ditSeizoen(), deelnemers);
+    console.log(tegenstanders);
+
+
 }
