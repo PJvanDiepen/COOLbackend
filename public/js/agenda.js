@@ -65,14 +65,17 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
 
 async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
     // TODO voor bepaalde ronde (zie vorige TODO)
-    console.log("mogelijkeTegenstanders");
-    console.log("knsbNummer: " + knsbNummer);
-    console.log("rondeNummer: "+ rondeNummer);
     const deelnemers = await serverFetch(`/deelnemers/${ditSeizoen()}/int/${rondeNummer}`);
-
-    const t = spelerTotalen(await spelerUitRanglijst(ditSeizoen(), knsbNummer));
+    const s = spelerTotalen(await spelerUitRanglijst(ditSeizoen(), knsbNummer));
     const tegenstanders = await spelersUitRanglijst(ditSeizoen(), deelnemers);
-    console.log(tegenstanders);
-
-
+    for (const tegenstander of tegenstanders) {
+        if (s.knsbNummer !== tegenstander.knsbNummer) {
+            const t = spelerTotalen(await spelerUitRanglijst(ditSeizoen(), tegenstander.knsbNummer));
+            lijst.appendChild(htmlRij(
+                naarSpeler(t.knsbNummer, t.naam),
+                s.kleur(t),
+                t.punten() - s.punten(), // afstand
+                s.tegen(t) ? VINKJE : KRUISJE));  // artikel 3
+        }
+    }
 }
