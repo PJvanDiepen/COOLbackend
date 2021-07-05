@@ -6,7 +6,6 @@ Nuttig
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [DOM events](https://domevents.dev/)
 - [localStorage vs Cookies](https://academind.com/tutorials/localstorage-vs-cookies-xss/)
-- [Browser Storage!!!](https://owasp.org/www-project-web-security-testing-guide/v41/4-Web_Application_Security_Testing/11-Client_Side_Testing/12-Testing_Browser_Storage)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await jason](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)

@@ -2,6 +2,9 @@
 
 (async function() {
     await gebruikerVerwerken();
+    if (!gebruiker.knsbNummer) {
+        naarAnderePagina("gebruiker.html");
+    }
     menu(naarBeheer,
         naarRanglijst,
         naarGebruiker,
