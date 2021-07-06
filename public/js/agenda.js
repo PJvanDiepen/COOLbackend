@@ -2,9 +2,6 @@
 
 (async function() {
     await gebruikerVerwerken();
-    if (!gebruiker.knsbNummer) {
-        naarAnderePagina("gebruiker.html");
-    }
     menu(naarBeheer,
         naarRanglijst,
         naarGebruiker,
@@ -78,7 +75,7 @@ async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
                 naarSpeler(t.knsbNummer, t.naam),
                 s.kleur(t),
                 t.punten() - s.punten(), // afstand
-                s.tegen(t, rondeNummer) ? VINKJE : KRUISJE));  // artikel 3
+                s.tegen(t, rondeNummer) ? "" : KRUISJE));  // artikel 3
         }
     }
 }
