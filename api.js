@@ -389,7 +389,7 @@ async function gebruikerRechten(uuidToken) {
     }
 
     function eigenData(minimum, knsbNummer) {
-        return juisteRechten(minimum) && dader.knsbNummer === knsbNummer;
+        return juisteRechten(minimum) && dader.knsbNummer === Number(knsbNummer);
     }
 
     function vorigSeizoen(minimum, seizoen) {
