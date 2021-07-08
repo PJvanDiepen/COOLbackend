@@ -4,23 +4,26 @@
     await gebruikerVerwerken();
     menu(naarAgenda,
         naarRanglijst,
-        [9, "Arie Boots / mutatieRechten = 1", function () {
-            sessionStorage.setItem("uuidToken", "d94400be-adb3-11eb-947d-7c0507c81823");
-            naarAnderePagina("ranglijst.html?informatie=0");
-        }],
-        [9, "Aad Schuit / mutatieRechten = 0", function () {
-            sessionStorage.setItem("uuidToken", "1eb9375f-adb9-11eb-947d-7c0507c81823");
-            naarAnderePagina("ranglijst.html?informatie=0");
-        }],
-        [9, "onbekend / mutatieRechten = 0", function () {
-            sessionStorage.setItem("uuidToken", "f77cf407-af70-11eb-947d-7c0507c81823");
-            naarAnderePagina("ranglijst.html?informatie=0");
-        }],
         terugNaar);
     beheerders(document.getElementById("beheerders"));
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
+    console.log("Operating System: " + navigator.platform);
+    console.log("Browser: " + navigator.vendor);
+    showEstimatedQuota();
 })();
+
+
+// https://dexie.org/docs/StorageManager
+async function showEstimatedQuota() {
+    if (navigator.storage && navigator.storage.estimate) {
+        const estimation = await navigator.storage.estimate();
+        console.log(`Quota: ${estimation.quota}`);
+        console.log(`Usage: ${estimation.usage}`);
+    } else {
+        console.error("StorageManager not found");
+    }
+}
 
 async function beheerders(lijst) {
     const beheerders = await serverFetch("/beheerders");

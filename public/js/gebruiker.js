@@ -37,7 +37,7 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
     }
     formulier.addEventListener("submit", async function (event) {
         event.preventDefault();
-        if (knsbNummer.value) {
+        if (Number(knsbNummer.value)) {
             gebruiker.knsbNummer = Number(knsbNummer.value);
             gebruiker.naam = naam.value;
             gebruiker.email = email.value;

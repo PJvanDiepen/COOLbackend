@@ -10,7 +10,7 @@
 })();
 
 async function agenda(kop, lijst, deelnemersLijst) {
-    const andereGebruiker = params.get("gebruiker") || gebruiker.knsbNummer;
+    const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
     await agendaMutatie(andereGebruiker);
     const naam = params.get("naamGebruiker") || gebruiker.naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;
@@ -64,7 +64,6 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
 }
 
 async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
-    // TODO voor bepaalde ronde (zie vorige TODO)
     const deelnemers = await serverFetch(`/deelnemers/${ditSeizoen()}/int/${rondeNummer}`);
     const s = spelerTotalen(await spelerUitRanglijst(ditSeizoen(), knsbNummer));
     const tegenstanders = await spelersUitRanglijst(ditSeizoen(), deelnemers);
