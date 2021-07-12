@@ -5,11 +5,17 @@
     menu(naarBeheer,
         naarAgenda,
         naarGebruiker,
-        [8, "zonder niet actieve spelers", function () {
+        [8, "alleen actieve spelers", function () {
             naarAnderePagina("ranglijst.html?informatie=0");
         }],
         [8, "inclusief niet actieve spelers", function () {
             naarAnderePagina("ranglijst.html?informatie=9");
+        }],
+        [8, "met aftrek (na 10x afzeggen)", function () {
+            naarAnderePagina("ranglijst.html?metAftrek=1");
+        }],
+        [8, "zonder aftrek (na 10x afzeggen)", function () {
+            naarAnderePagina("ranglijst.html?metAftrek=0");
         }],
         terugNaar);
     seizoenSelecteren(INTERNE_COMPETITIE);
@@ -43,9 +49,9 @@ function ranglijst(kop, lijst) {
                     t.winnaarSubgroep(winnaars),
                     t.scoreIntern(),
                     t.percentageIntern(),
-                    t.saldoWitZwart(),
-                    t.intern() ? t.afzeggingen() : "",
-                    t.oneven(),
+                    t.saldoWitZwart() ? t.saldoWitZwart() : "",
+                    t.intern() && t.afzeggingen() ? t.afzeggingen() : "",
+                    t.oneven() ? t.oneven() : "",
                     t.scoreExtern(),
                     t.percentageExtern(),
                     speler.knsbRating));

@@ -45,6 +45,7 @@ const vorigeSessie = localStorage.getItem(vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 const gebruiker = {}; // gebruikerInvullen
 const informatieNivo = Number(doorgeven("informatie", 0));
+const metAftrek = Number(doorgeven("metAftrek", 1));
 
 function doorgeven(key, defaultValue) {
     let value = params.get(key);
@@ -503,7 +504,13 @@ function spelerTotalen(speler) {
     }
 
     function punten() {
-        return intern() ? totaal[0] : "";
+        if (!intern()) {
+            return "";
+        } else if (metAftrek || totaal[9] === 0) {
+            return totaal[0];
+        } else {
+            return `${totaal[0] + totaal[9]} - ${totaal[9]} = ${totaal[0]}`;
+        }
     }
 
     function winnaarSubgroep(winnaars) {
@@ -532,7 +539,7 @@ function spelerTotalen(speler) {
     }
 
     function oneven() {
-        return totaal[7] ? totaal[7] : "";
+        return totaal[7];
     }
 
     function afzeggingen() {

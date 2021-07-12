@@ -238,6 +238,67 @@ module.exports = router => {
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
+    // TODO Afhankelijk van gebruiker, meer of minder info
+
+    router.get('/:uuidToken/gebruikers', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.juisteRechten(9)) {
+            ctx.body = await Gebruiker.query()
+                .select('gebruiker.knsbNummer', 'naam', 'datumEmail')
+                .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
+                .orderBy('naam');
+        } else {
+            ctx.body = {};
+        }
+    });
+
+    // TODO /beheerders en /gebruikers combineren?
+
+    router.get('/beheerders', async function (ctx) {
+        ctx.body = await Gebruiker.query()
+            .select('gebruiker.knsbNummer', 'naam', 'email')
+            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
+            .where('mutatieRechten', '>=', 9);
+    });
+
+    router.get('/:uuidToken/mutaties/:van/:tot/:aantal', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.juisteRechten(9)) {
+            ctx.body = await Mutatie.query()
+                .select('naam', 'mutatie.*')
+                .join('persoon', 'mutatie.knsbNummer', 'persoon.knsbNummer')
+                .whereBetween('invloed', [ctx.params.van, ctx.params.tot])
+                .orderBy('tijdstip', 'desc')
+                .limit(ctx.params.aantal);
+        } else {
+            ctx.body = {};
+        }
+    });
+
+    /*
+    email aan gebruiker om registratie te activeren
+     */
+    router.get('/:uuidToken/activeer/:knsbNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.juisteRechten(9)) {
+            ctx.body = await Gebruiker.query()
+                .select('naam', 'email', 'uuidToken')
+                .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
+                .where('gebruiker.knsbNummer', ctx.params.knsbNummer)
+                .whereNotNull('datumEmail');
+        } else {
+            ctx.body = {};
+        }
+    });
+
+    /*
+    knsbNummer, naam en mutatieRechten van gebruiker opzoeken
+    */
+    router.get('/gebruiker/:uuidToken', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        ctx.body = gebruiker.dader;
+    });
+
     // geef aantal mutaties --------------------------------------------------------------------------------------------
 
     /*
@@ -259,37 +320,6 @@ module.exports = router => {
         ctx.body = await Gebruiker.query()
             .findById(ctx.params.uuidToken)
             .patch({datumEmail: fn('curdate')});
-    });
-
-    /*
-    knsbNummer, naam en mutatieRechten van gebruiker opzoeken
-     */
-    router.get('/gebruiker/:uuidToken', async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        ctx.body = gebruiker.dader;
-    });
-
-    router.get('/gebruikers', async function (ctx) { // TODO met uuidToken!
-       ctx.body = await Gebruiker.query()
-           .select('gebruiker.knsbNummer', 'naam', 'datumEmail')
-           .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
-           .orderBy('naam');
-    });
-
-    router.get('/beheerders', async function (ctx) {
-        ctx.body = await Gebruiker.query()
-            .select('gebruiker.knsbNummer', 'naam', 'email')
-            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
-            .where('mutatieRechten', '>=', 9);
-    });
-
-    router.get('/mutaties/:van/:tot/:aantal', async function (ctx) { // TODO met uuidToken!
-        ctx.body = await Mutatie.query()
-            .select('naam', 'mutatie.*')
-            .join('persoon', 'mutatie.knsbNummer', 'persoon.knsbNummer')
-            .whereBetween('invloed', [ctx.params.van, ctx.params.tot])
-            .orderBy('tijdstip', 'desc')
-            .limit(ctx.params.aantal);
     });
 
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {

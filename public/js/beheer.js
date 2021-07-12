@@ -33,7 +33,7 @@ async function beheerders(lijst) {
 }
 
 async function gebruikers(lijst) {
-    const gebruikers = await serverFetch("/gebruikers");
+    const gebruikers = await serverFetch(`/${uuidToken}/gebruikers`);
     for (const gebruiker of gebruikers) {
         lijst.appendChild(htmlRij(
             gebruiker.datumEmail ? datumLeesbaar(gebruiker.datumEmail) : "---",
@@ -43,7 +43,7 @@ async function gebruikers(lijst) {
 }
 
 async function laatsteMutaties(lijst) {
-    const mutaties = await serverFetch("/mutaties/0/9/100"); // laatste 100 mutaties
+    const mutaties = await serverFetch(`/${uuidToken}/mutaties/0/9/100`); // laatste 100 mutaties
     let vorige = 0;
     for (const mutatie of mutaties) {
         lijst.appendChild(htmlRij(
