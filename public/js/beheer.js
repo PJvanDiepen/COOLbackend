@@ -5,14 +5,12 @@
     menu(naarAgenda,
         naarRanglijst,
         terugNaar);
-    beheerders(document.getElementById("beheerders"));
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
-    console.log("Operating System: " + navigator.platform);
-    console.log("Browser: " + navigator.vendor);
+    document.getElementById("computer").appendChild(
+        htmlTekst(`Operating System: ${navigator.platform} Browser: ${navigator.vendor}`));
     showEstimatedQuota();
 })();
-
 
 // https://dexie.org/docs/StorageManager
 async function showEstimatedQuota() {
@@ -25,20 +23,25 @@ async function showEstimatedQuota() {
     }
 }
 
-async function beheerders(lijst) {
-    const beheerders = await serverFetch("/beheerders");
-    for (const beheerder of beheerders) {
-        lijst.appendChild(htmlRij(beheerder.naam, beheerder.email));
+async function gebruikers(lijst) {
+    const leden = await serverFetch(`/${uuidToken}/gebruikers`);
+    for (const lid of leden) {
+        lijst.appendChild(htmlRij(
+            lid.naam,
+            gebruiker.mutatieRechten === BEHEERDER ? htmlLink(`email.html?speler=${gebruiker.knsbNummer}`, lid.email) : lid.email,
+            gebruikerRol(lid)));
     }
 }
 
-async function gebruikers(lijst) {
-    const gebruikers = await serverFetch(`/${uuidToken}/gebruikers`);
-    for (const gebruiker of gebruikers) {
-        lijst.appendChild(htmlRij(
-            gebruiker.datumEmail ? datumLeesbaar(gebruiker.datumEmail) : "---",
-            gebruiker.knsbNummer,
-            gebruiker.naam));
+function gebruikerRol(lid) {
+    if (lid.datumEmail && Number(lid.mutatieRechten) === GEREGISTREERD) {
+        return datumLeesbaar(lid.datumEmail);
+    } else if (lid.datumEmail && Number(lid.mutatieRechten) === BEHEERDER) {
+        return "systeembeheerder";
+    } else if (lid.datumEmail && Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
+        return "wedstrijdleider";
+    } else {
+        return KRUISJE;
     }
 }
 
@@ -48,8 +51,8 @@ async function laatsteMutaties(lijst) {
     for (const mutatie of mutaties) {
         lijst.appendChild(htmlRij(
             tijdGeleden(mutatie.tijdstip),
-            mutatie.knsbNummer === vorige ? "" : mutatie.knsbNummer,
             mutatie.knsbNummer === vorige ? "" : mutatie.naam,
+            mutatie.knsbNummer === vorige ? "" : mutatie.knsbNummer,
             mutatie.url,
             mutatie.aantal,
             mutatie.invloed));

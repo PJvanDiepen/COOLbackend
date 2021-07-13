@@ -5,35 +5,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Beheer</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
+    <style>
+        td:nth-child(3) {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
     <select id="menu"></select>
-    <h1 id="kop">Beheer</h1>
-    <table id="beheerders">
-        <tr>
-            <th>beheerder</th>
-            <th>e-mail</th>
-        </tr>
-    </table>
-    <p>&nbsp;</p>
+    <h1>Gebruikers</h1>
     <table id="gebruikers">
         <tr>
-            <th>datum</th>
-            <th>knsb-nr</th>
+            <th>gebruiker</th>
+            <th>e-mail</th>
             <th></th>
         </tr>
     </table>
-    <p>&nbsp;</p>
+    <h1>Mutaties</h1>
     <table id="mutaties">
         <tr>
             <th>geleden</th>
-            <th>knsb-nr</th>
             <th></th>
+            <th>knsb-nr</th>
             <th>mutatie</th>
             <th></th>
             <th></th>
         </tr>
     </table>
+    <p id="computer"></p>
     <script src="js/uitslagen.js"></script>
     <script src="js/beheer.js"></script>
 </body>

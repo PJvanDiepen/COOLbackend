@@ -238,32 +238,24 @@ module.exports = router => {
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
-    // TODO Afhankelijk van gebruiker, meer of minder info
-
     router.get('/:uuidToken/gebruikers', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(9)) {
+        if (gebruiker.juisteRechten(BEHEERDER)) {
             ctx.body = await Gebruiker.query()
-                .select('gebruiker.knsbNummer', 'naam', 'datumEmail')
+                .select('gebruiker.knsbNummer', 'naam', 'email', 'mutatieRechten', 'datumEmail')
                 .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
                 .orderBy('naam');
         } else {
-            ctx.body = {};
+            ctx.body = await Gebruiker.query()
+                .select('gebruiker.knsbNummer', 'naam', 'email', 'mutatieRechten', 'datumEmail')
+                .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
+                .where('mutatieRechten', '>=', BEHEERDER);
         }
-    });
-
-    // TODO /beheerders en /gebruikers combineren?
-
-    router.get('/beheerders', async function (ctx) {
-        ctx.body = await Gebruiker.query()
-            .select('gebruiker.knsbNummer', 'naam', 'email')
-            .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
-            .where('mutatieRechten', '>=', 9);
     });
 
     router.get('/:uuidToken/mutaties/:van/:tot/:aantal', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(9)) {
+        if (gebruiker.juisteRechten(BEHEERDER)) {
             ctx.body = await Mutatie.query()
                 .select('naam', 'mutatie.*')
                 .join('persoon', 'mutatie.knsbNummer', 'persoon.knsbNummer')
@@ -271,7 +263,13 @@ module.exports = router => {
                 .orderBy('tijdstip', 'desc')
                 .limit(ctx.params.aantal);
         } else {
-            ctx.body = {};
+            ctx.body = await Mutatie.query()
+                .select('naam', 'mutatie.*')
+                .join('persoon', 'mutatie.knsbNummer', 'persoon.knsbNummer')
+                .whereBetween('invloed', [ctx.params.van, ctx.params.tot])
+                .andWhere('mutatie.knsbNummer', gebruiker.dader.knsbNummer)
+                .orderBy('tijdstip', 'desc')
+                .limit(ctx.params.aantal);
         }
     });
 
@@ -280,7 +278,7 @@ module.exports = router => {
      */
     router.get('/:uuidToken/activeer/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(9)) {
+        if (gebruiker.juisteRechten(BEHEERDER)) {
             ctx.body = await Gebruiker.query()
                 .select('naam', 'email', 'uuidToken')
                 .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
@@ -307,7 +305,7 @@ module.exports = router => {
     router.get('/registreer/:knsbNummer/:email', async function (ctx) {
         await Gebruiker.query()
             .insert({knsbNummer: ctx.params.knsbNummer,
-                mutatieRechten: 1,
+                mutatieRechten: GEREGISTREERD,
                 uuidToken: fn('uuid'),
                 email: ctx.params.email});
         ctx.body = 1;
@@ -324,7 +322,7 @@ module.exports = router => {
 
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(1)) {
+        if (gebruiker.juisteRechten(GEREGISTREERD)) {
             await Uitslag.query()
                 .insert({seizoen: ctx.params.seizoen,
                     teamCode: ctx.params.teamCode,
@@ -346,7 +344,7 @@ module.exports = router => {
 
     router.get('/:uuidToken/partij/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(8) || gebruiker.eigenData(1, ctx.params.knsbNummer)) {
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) {
             const aantal = await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
@@ -362,7 +360,7 @@ module.exports = router => {
 
     router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.vorigSeizoen(9, ctx.params.seizoen)) {
+        if (gebruiker.vorigSeizoen(BEHEERDER, ctx.params.seizoen)) {
             const uitslagen = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer)
@@ -384,7 +382,7 @@ module.exports = router => {
 
     router.get('/:uuidToken/verwijder/afzeggingen/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.vorigSeizoen(9, ctx.params.seizoen)) {
+        if (gebruiker.vorigSeizoen(BEHEERDER, ctx.params.seizoen)) {
             const intern = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer)
@@ -407,6 +405,12 @@ module.exports = router => {
     });
 
 }
+
+// gebruiker.mutatieRechten
+const GEEN_LID = 0;
+const GEREGISTREERD = 1;
+const WEDSTRIJDLEIDER = 8;
+const BEHEERDER = 9;
 
 async function gebruikerRechten(uuidToken) {
     const dader = await Gebruiker.query()

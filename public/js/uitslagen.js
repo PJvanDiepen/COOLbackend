@@ -44,8 +44,14 @@ const uuidActiveren = params.get("uuid");
 const vorigeSessie = localStorage.getItem(vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 const gebruiker = {}; // gebruikerInvullen
+// gebruiker.mutatieRechten
+const GEEN_LID = 0;
+const GEREGISTREERD = 1;
+const WEDSTRIJDLEIDER = 8;
+const BEHEERDER = 9;
+
 const informatieNivo = Number(doorgeven("informatie", 0));
-const metAftrek = Number(doorgeven("metAftrek", 1));
+const metAftrek = Number(doorgeven("metAftrek", 1)); // TODO hoort in ranglijst.sql
 
 function doorgeven(key, defaultValue) {
     let value = params.get(key);
@@ -142,24 +148,24 @@ async function menu(...menuKeuzes) {
         });
 }
 
-const terugNaar = [0, "\uD83E\uDC68", function() { // wide-headed leftwards barb arrow
+const terugNaar = [GEEN_LID, "\uD83E\uDC68", function() { // wide-headed leftwards barb arrow
     history.back();
 }];
 
-const naarAgenda = [1, "aanmelden / afzeggen", function () {
+const naarAgenda = [GEREGISTREERD, "aanmelden / afzeggen", function () {
 
     naarAnderePagina("agenda.html");
 }];
 
-const naarBeheer = [9, "testen", function () { // TODO 0 i.p.v. 9
+const naarBeheer = [GEREGISTREERD, "systeembeheer", function () {
     naarAnderePagina("beheer.html");
 }];
 
-const naarRanglijst = [0, "ranglijst", function () {
+const naarRanglijst = [GEEN_LID, "ranglijst", function () {
     naarAnderePagina("ranglijst.html");
 }];
 
-const naarGebruiker = [0, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
+const naarGebruiker = [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
     naarAnderePagina("gebruiker.html");
 }];
 

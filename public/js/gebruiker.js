@@ -5,7 +5,7 @@
     menu(naarBeheer,
         naarAgenda,
         naarRanglijst,
-        [9, "formulier van geselecteerde speler", function () {
+        [BEHEERDER, "formulier van geselecteerde speler", function () {
             document.getElementById("naam").value = naamSpeler;
             document.getElementById("knsbNummer").value = speler;
             document.getElementById("status").value = "iemand anders registreren";

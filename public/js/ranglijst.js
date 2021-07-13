@@ -5,16 +5,16 @@
     menu(naarBeheer,
         naarAgenda,
         naarGebruiker,
-        [8, "alleen actieve spelers", function () {
+        [WEDSTRIJDLEIDER, "alleen actieve spelers", function () {
             naarAnderePagina("ranglijst.html?informatie=0");
         }],
-        [8, "inclusief niet actieve spelers", function () {
+        [WEDSTRIJDLEIDER, "inclusief niet actieve spelers", function () {
             naarAnderePagina("ranglijst.html?informatie=9");
         }],
-        [8, "met aftrek (na 10x afzeggen)", function () {
+        [WEDSTRIJDLEIDER, "met aftrek (na 10x afzeggen)", function () {
             naarAnderePagina("ranglijst.html?metAftrek=1");
         }],
-        [8, "zonder aftrek (na 10x afzeggen)", function () {
+        [WEDSTRIJDLEIDER, "zonder aftrek (na 10x afzeggen)", function () {
             naarAnderePagina("ranglijst.html?metAftrek=0");
         }],
         terugNaar);
