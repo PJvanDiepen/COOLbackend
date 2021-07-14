@@ -28,7 +28,7 @@ async function gebruikers(lijst) {
     for (const lid of leden) {
         lijst.appendChild(htmlRij(
             lid.naam,
-            gebruiker.mutatieRechten === BEHEERDER ? htmlLink(`email.html?speler=${gebruiker.knsbNummer}`, lid.email) : lid.email,
+            gebruiker.mutatieRechten === BEHEERDER ? htmlLink(`email.html?speler=${lid.knsbNummer}`, lid.email) : lid.email,
             gebruikerRol(lid)));
     }
 }
