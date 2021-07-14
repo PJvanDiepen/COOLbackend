@@ -11,7 +11,7 @@ const INTERNE_PARTIJ       = "i";
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
-const TEAMLEIDER           = "t";
+const REGLEMENTAIRE_REMISE = "t"; // vrijgesteld
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 // uitslag.resultaat
@@ -47,6 +47,8 @@ const gebruiker = {}; // gebruikerInvullen
 // gebruiker.mutatieRechten
 const GEEN_LID = 0;
 const GEREGISTREERD = 1;
+const TEAMLEIDER = 2;
+const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 8;
 const BEHEERDER = 9;
 
@@ -80,7 +82,7 @@ function doorgeven(key, defaultValue) {
  */
 async function gebruikerVerwerken() {
     if (uuidActiveren && uuidActiveren === uuidToken) {
-        await serverFetch("/email/" + uuidToken);
+        await serverFetch("/activeer/" + uuidToken);
         volgendeSessie(uuidToken);
     }
     if (uuidToken) {

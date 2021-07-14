@@ -189,7 +189,7 @@ De verschillende mogelijkheden voor `partij` zijn:
 - m = MEEDOEN na aanmelden
 - n = NIET_MEEDOEN na afzeggen
 - o = ONEVEN (Rokade WedstrijdType = 3)
-- t = TEAMLEIDER (Rokade WedstrijdType = 4)
+- t = REGLEMENTAIRE_REMISE of vrijgesteld (Rokade WedstrijdType = 4)
 - v = REGLEMENTAIR_VERLIES (Rokade WedstrijdType = 6)
 - w = REGLEMENTAIRE_WINST (Rokade WedstrijdType = 5)
 

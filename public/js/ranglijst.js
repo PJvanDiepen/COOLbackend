@@ -11,10 +11,10 @@
         [WEDSTRIJDLEIDER, "inclusief niet actieve spelers", function () {
             naarAnderePagina("ranglijst.html?informatie=9");
         }],
-        [WEDSTRIJDLEIDER, "met aftrek (na 10x afzeggen)", function () {
+        [BESTUUR, "huidige artikel 12: aftrek na 10x afzeggen", function () {
             naarAnderePagina("ranglijst.html?metAftrek=1");
         }],
-        [WEDSTRIJDLEIDER, "zonder aftrek (na 10x afzeggen)", function () {
+        [BESTUUR, "na wijziging artikel 12: geen aftrek voor afzeggen", function () {
             naarAnderePagina("ranglijst.html?metAftrek=0");
         }],
         terugNaar);

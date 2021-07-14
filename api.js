@@ -276,14 +276,13 @@ module.exports = router => {
     /*
     email aan gebruiker om registratie te activeren
      */
-    router.get('/:uuidToken/activeer/:knsbNummer', async function (ctx) {
+    router.get('/:uuidToken/email/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(BEHEERDER)) {
             ctx.body = await Gebruiker.query()
                 .select('naam', 'email', 'uuidToken')
                 .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer')
-                .where('gebruiker.knsbNummer', ctx.params.knsbNummer)
-                .whereNotNull('datumEmail');
+                .where('gebruiker.knsbNummer', ctx.params.knsbNummer);
         } else {
             ctx.body = {};
         }
@@ -314,7 +313,7 @@ module.exports = router => {
     /*
     registratie voor gebruiker activeren
      */
-    router.get('/email/:uuidToken', async function (ctx) {
+    router.get('/activeer/:uuidToken', async function (ctx) {
         ctx.body = await Gebruiker.query()
             .findById(ctx.params.uuidToken)
             .patch({datumEmail: fn('curdate')});
@@ -409,6 +408,8 @@ module.exports = router => {
 // gebruiker.mutatieRechten
 const GEEN_LID = 0;
 const GEREGISTREERD = 1;
+const TEAMLEIDER = 2;
+const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 8;
 const BEHEERDER = 9;
 

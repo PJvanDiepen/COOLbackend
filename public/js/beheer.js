@@ -9,39 +9,37 @@
     laatsteMutaties(document.getElementById("mutaties"));
     document.getElementById("computer").appendChild(
         htmlTekst(`Operating System: ${navigator.platform} Browser: ${navigator.vendor}`));
-    showEstimatedQuota();
 })();
-
-// https://dexie.org/docs/StorageManager
-async function showEstimatedQuota() {
-    if (navigator.storage && navigator.storage.estimate) {
-        const estimation = await navigator.storage.estimate();
-        console.log(`Quota: ${estimation.quota}`);
-        console.log(`Usage: ${estimation.usage}`);
-    } else {
-        console.error("StorageManager not found");
-    }
-}
 
 async function gebruikers(lijst) {
     const leden = await serverFetch(`/${uuidToken}/gebruikers`);
     for (const lid of leden) {
         lijst.appendChild(htmlRij(
             lid.naam,
-            gebruiker.mutatieRechten === BEHEERDER ? htmlLink(`email.html?speler=${lid.knsbNummer}`, lid.email) : lid.email,
-            gebruikerRol(lid)));
+            gebruiker.mutatieRechten === BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
+            gebruikerFunctie(lid)));
     }
 }
 
-function gebruikerRol(lid) {
-    if (lid.datumEmail && Number(lid.mutatieRechten) === GEREGISTREERD) {
-        return datumLeesbaar(lid.datumEmail);
-    } else if (lid.datumEmail && Number(lid.mutatieRechten) === BEHEERDER) {
-        return "systeembeheerder";
-    } else if (lid.datumEmail && Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
-        return "wedstrijdleider";
-    } else {
+function gebruikerEmailSturen(lid) {
+    return htmlLink(`email.html?speler=${lid.knsbNummer}&email=${lid.email}`, lid.email);
+}
+
+function gebruikerFunctie(lid) {
+    if (!lid.datumEmail) {
         return KRUISJE;
+    } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
+        return datumLeesbaar(lid.datumEmail);
+    } else if (Number(lid.mutatieRechten) === BEHEERDER) {
+        return "systeembeheerder";
+    } else if (Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
+        return "wedstrijdleider";
+    } else if (Number(lid.mutatieRechten) === TEAMLEIDER) {
+        return "teamleider";
+    } else if (Number(lid.mutatieRechten) === BESTUUR) {
+        return "bestuur";
+    } else {
+        return "???"
     }
 }
 
