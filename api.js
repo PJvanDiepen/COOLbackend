@@ -49,20 +49,24 @@ module.exports = router => {
 
     /*
     -- ranglijst
-    select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, s.knsbNummer) as totalen
+    select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, @versie, s.knsbNummer, @datum) as totalen
     from speler s
     join persoon p on s.knsbNummer = p.knsbNummer
     where seizoen = @seizoen
     order by totalen desc;
      */
-    router.get('/ranglijst/:seizoen', async function (ctx) {  // TODO datumTot
+    router.get('/ranglijst/:seizoen/:versie/:datum', async function (ctx) {
         ctx.body = await Speler.query()
             .select(
                 'speler.knsbNummer',
                 'persoon.naam',
                 'speler.subgroep',
                 'speler.knsbRating',
-                {totalen: fn('totalen', ctx.params.seizoen, ref('speler.knsbNummer'))})
+                {totalen: fn('totalen',
+                        ctx.params.seizoen,
+                        ctx.params.versie,
+                        ref('speler.knsbNummer'),
+                        ctx.params.datum)})
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
             .where('seizoen', ctx.params.seizoen)
             .orderBy('totalen', 'desc');
@@ -90,7 +94,7 @@ module.exports = router => {
         and u.anderTeam = 'int'
     order by u.datum, u.bordNummer;
      */
-    router.get('/uitslagen/:seizoen/:knsbNummer', async function (ctx) {
+    router.get('/uitslagen/:seizoen/:versie/:knsbNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.datum',

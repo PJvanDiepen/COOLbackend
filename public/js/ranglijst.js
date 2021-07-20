@@ -37,7 +37,7 @@
 function ranglijst(kop, lijst) {
     kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     const winnaars = {};
-    mapAsync("/ranglijst/" + seizoen,
+    mapAsync(`/ranglijst/${seizoen}/0/${datumSQL()}`,
         function (speler, i) {
             const t = spelerTotalen(speler);
             if (t.inRanglijst() || informatieNivo > 0) {

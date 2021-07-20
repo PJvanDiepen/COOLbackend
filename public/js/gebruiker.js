@@ -20,6 +20,8 @@
         document.getElementById("status"));
 })();
 
+// TODO voor iemand anders aanvraag doen (uitsluitend door systeembeheerder)
+
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
     if (speler) {
         knsbNummer.value = speler;

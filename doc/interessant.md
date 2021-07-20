@@ -1,6 +1,7 @@
 Nuttig
 
 - [MySQL tutorial](https://www.mysqltutorial.org/)
+- [MySQL query cache](https://www.digitalocean.com/community/tutorials/how-to-optimize-mysql-with-query-cache-on-ubuntu-18-04)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
@@ -18,6 +19,7 @@ Nuttig
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
 - [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
+- [Swiss pairings](https://senseis.xmp.net/?SwissPairing)
 
 Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)

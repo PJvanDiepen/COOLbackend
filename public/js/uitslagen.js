@@ -311,10 +311,19 @@ function datumLeesbaar(jsonDatum) {
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
 
+/**
+ * datumSQL maakt datum, die geschikt is voor SQL om door te geven aan de backend
+ * indien er een gegeven datum is, moet het een jsonDatum zijn die komt van de backend
+ * indien geen er geen datum of null is, wordt de datum vandaag
+ *
+ * @param jsonDatum of vandaag
+ * @param dagen optellen bij gegeven datum
+ * @returns {string} jjjj-mm-dd evenetueel met voorloopNul voor maand en dag
+ */
 function datumSQL(jsonDatum, dagen) {
-    let datum = new Date(jsonDatum);
+    const datum = jsonDatum ? new Date(jsonDatum) : new Date();
     if (dagen) {
-        datum.setDate(datum.setDate() + dagen);
+        datum.setDate(datum.getDate() + dagen);
     }
     return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
 }
@@ -456,12 +465,12 @@ async function rondeSelecteren(teamCode, rondeNummer) {
 }
 
 async function spelerUitRanglijst(seizoen, knsbNummer) {
-    const spelers = await localFetch("/ranglijst/" + seizoen);
+    const spelers = await localFetch(`/ranglijst/${seizoen}/0/${datumSQL()}`);
     return spelers.find(function (speler) {return speler.knsbNummer === knsbNummer});
 }
 
 async function spelersUitRanglijst(seizoen, knsbNummers) {
-    const spelers = await localFetch("/ranglijst/" + seizoen);
+    const spelers = await localFetch(`/ranglijst/${seizoen}/0/${datumSQL()}`);
     return spelers.filter(function (speler) {return knsbNummers.includes(speler.knsbNummer)});
 }
 

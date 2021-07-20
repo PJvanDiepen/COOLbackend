@@ -25,9 +25,12 @@ function gebruikerEmailSturen(lid) {
     return htmlLink(`email.html?speler=${lid.knsbNummer}&email=${lid.email}`, lid.email);
 }
 
+// TODO email corrigeren
+// TODO gebruiker hoger of lagere functie geven
+
 function gebruikerFunctie(lid) {
     if (!lid.datumEmail) {
-        return KRUISJE;
+        return KRUISJE; // TODO eventueel verwijderen
     } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
         return datumLeesbaar(lid.datumEmail);
     } else if (Number(lid.mutatieRechten) === BEHEERDER) {

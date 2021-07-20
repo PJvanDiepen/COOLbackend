@@ -8,7 +8,7 @@ create function waardeCijfer(seizoen char(4), knsbNummer int)
 returns int deterministic -- reglement artikel 10
 begin
     declare subgroep char(1);
-    select s.subgroep
+    select s.subgroep -- TODO s.waardeCijfer, zodat subgroep vertalen naar waardeCijfer overbodig wordt
     into subgroep
     from speler s
     where s.seizoen = seizoen
@@ -76,7 +76,9 @@ drop function totalen;
 
 delimiter $$
 
-create function totalen(seizoen char(4), knsbNummer int) returns varchar(600) deterministic
+-- versie 0 maximumAfzeggingen = 10
+-- versie 1 geen maximumAfzeggingen
+create function totalen(seizoen char(4), versie int, knsbNummer int, totDatum date) returns varchar(600) deterministic
 begin
     declare totaal int default 0;
     declare startPunten int default 300; -- reglement artikel 11
@@ -114,7 +116,8 @@ begin
         from uitslag u
         where u.seizoen = seizoen
             and u.knsbNummer = knsbNummer
-            and u.anderTeam = 'int';
+            and u.anderTeam = 'int'
+            and u.datum < totDatum;
     declare continue handler for not found
     set found = false;
     set eigenWaardeCijfer = waardeCijfer(seizoen, knsbNummer);
@@ -163,7 +166,7 @@ begin
         set prijs = 0;
         set sorteer = witExtern + zwartExtern;
 	else
-		if afzeggingen > maximumAfzeggingen then
+		if versie = 0 and afzeggingen > maximumAfzeggingen then
 			set aftrek = (afzeggingen - maximumAfzeggingen) * 8;
 		end if;
         if (witIntern + zwartIntern + oneven + reglementairGewonnen + externTijdensInterneRonde) < minimumInternePartijen then

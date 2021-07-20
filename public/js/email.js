@@ -20,4 +20,3 @@ async function gebruikerTekst(emailAan, naamAan, link) {
     naamAan.appendChild(htmlTekst(`${lid.naam},`));
     link.appendChild(htmlTekst(`https://0-0-0.nl/agenda.html?vereniging=${vereniging}&uuid=${lid.uuidToken}`));
 }
-
