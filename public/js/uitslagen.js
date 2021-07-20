@@ -478,17 +478,17 @@ async function spelersUitRanglijst(seizoen, knsbNummers) {
 totaal
 [0] sorteer (3 posities eventueel voorloopnullen)
 [1] prijs (0 = geen prijs, 1 = wel prijs)
-[2] winstIntern
-[3] remiseIntern
-[4] verliesIntern
-[5] witIntern
-[6] zwartIntern
-[7] oneven
-[8] afzeggingen
-[9] aftrek
-[10] totaal
-[11] startPunten
-[12] eigenWaardeCijfer
+[2] winstIntern (2 posities eventueel voorloopnul)
+[3] eigenWaardeCijfer (2 posities eventueel voorloopnul)
+[4] remiseIntern
+[5] verliesIntern
+[6] witIntern
+[7] zwartIntern
+[8] oneven
+[9] afzeggingen
+[10] aftrek
+[11] totaal
+[12] startPunten
 [13] winstExtern
 [14] remiseExtern
 [15] verliesExtern
@@ -512,10 +512,6 @@ function spelerTotalen(speler) {
     const knsbRating = Number(speler.knsbRating);
     const totaal = speler.totalen.split(" ").map(Number);
 
-    function intern() {
-        return totaal[2] || totaal[3] || totaal[4];
-    }
-
     function inRanglijst() {
         return totaal[0];
     }
@@ -523,10 +519,10 @@ function spelerTotalen(speler) {
     function punten() {
         if (!intern()) {
             return "";
-        } else if (metAftrek || totaal[9] === 0) {
+        } else if (metAftrek || totaal[10] === 0) {
             return totaal[0];
         } else {
-            return `${totaal[0] + totaal[9]} - ${totaal[9]} = ${totaal[0]}`;
+            return `${totaal[0] + totaal[10]} - ${totaal[10]} = ${totaal[0]}`;
         }
     }
 
@@ -543,36 +539,40 @@ function spelerTotalen(speler) {
         }
     }
 
+    function eigenWaardeCijfer() {
+        return intern() ? totaal[3] : "";
+    }
+
+    function intern() {
+        return totaal[2] || totaal[4] || totaal[5];
+    }
+
     function scoreIntern() {
-        return score(totaal[2],totaal[3],totaal[4]);
+        return score(totaal[2],totaal[4],totaal[5]);
     }
 
     function percentageIntern() {
-        return percentage(totaal[2],totaal[3],totaal[4]);
+        return percentage(totaal[2],totaal[4],totaal[5]);
     }
 
     function saldoWitZwart() {
-        return totaal[5] - totaal[6];
+        return totaal[6] - totaal[7];
     }
 
     function oneven() {
-        return totaal[7];
-    }
-
-    function afzeggingen() {
         return totaal[8];
     }
 
+    function afzeggingen() {
+        return totaal[9];
+    }
+
     function aftrek() {
-        return - totaal[9];
+        return - totaal[10];
     }
 
     function startPunten() {
         return totaal[11];
-    }
-
-    function eigenWaardeCijfer() {
-        return intern() ? totaal[12] : "";
     }
 
     function extern() {

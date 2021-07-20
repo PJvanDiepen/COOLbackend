@@ -76,8 +76,8 @@ drop function totalen;
 
 delimiter $$
 
--- versie 0 maximumAfzeggingen = 10
--- versie 1 geen maximumAfzeggingen
+-- versie 0 maximumAfzeggingen = 10 in seizoen = 1819, 1920, 2021
+-- versie 1 geen maximumAfzeggingen in seizoen = 2122
 create function totalen(seizoen char(4), versie int, knsbNummer int, totDatum date) returns varchar(600) deterministic
 begin
     declare totaal int default 0;
@@ -177,17 +177,17 @@ begin
     return concat(
         lpad(sorteer,3,'0'), ' ', -- 0
         prijs, ' ', -- 1
-        winstIntern, ' ', -- 2
-        remiseIntern, ' ', -- 3
-        verliesIntern, ' ', -- 4
-        witIntern, ' ', -- 5
-        zwartIntern, ' ', -- 6
-        oneven, ' ', -- 7
-        afzeggingen, ' ', -- 8
-        aftrek, ' ', -- 9
-        totaal, ' ', -- 10
-        startPunten, ' ', -- 11
-        eigenWaardeCijfer, ' ', -- 12
+        lpad(winstIntern,2,'0'), ' ', -- 2
+        lpad(eigenWaardeCijfer,2,'0'), ' ', -- 3
+        remiseIntern, ' ', -- 4
+        verliesIntern, ' ', -- 5
+        witIntern, ' ', -- 6
+        zwartIntern, ' ', -- 7
+        oneven, ' ', -- 8
+        afzeggingen, ' ', -- 9
+        aftrek, ' ', -- 10 
+        totaal, ' ', -- 11
+        startPunten, ' ', -- 12
         winstExtern, ' ', -- 13
         remiseExtern, ' ', -- 14
         verliesExtern, ' ', -- 15
