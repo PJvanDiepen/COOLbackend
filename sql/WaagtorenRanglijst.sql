@@ -178,17 +178,17 @@ begin
         lpad(sorteer,3,'0'), ' ', -- 0
         prijs, ' ', -- 1
         lpad(winstIntern,2,'0'), ' ', -- 2
-        lpad(eigenWaardeCijfer,2,'0'), ' ', -- 3
-        remiseIntern, ' ', -- 4
-        verliesIntern, ' ', -- 5
-        witIntern, ' ', -- 6
-        zwartIntern, ' ', -- 7
-        oneven, ' ', -- 8
-        afzeggingen, ' ', -- 9
-        aftrek, ' ', -- 10 
-        totaal, ' ', -- 11
-        startPunten, ' ', -- 12
-        winstExtern, ' ', -- 13
+        lpad(winstExtern,2,'0'), ' ', -- 3
+        lpad(eigenWaardeCijfer,2,'0'), ' ', -- 4
+        remiseIntern, ' ', -- 5
+        verliesIntern, ' ', -- 6
+        witIntern, ' ', -- 7
+        zwartIntern, ' ', -- 8
+        oneven, ' ', -- 9
+        afzeggingen, ' ', -- 10
+        aftrek, ' ', -- 11
+        totaal, ' ', -- 12
+        startPunten, ' ', -- 13
         remiseExtern, ' ', -- 14
         verliesExtern, ' ', -- 15
         witExtern, ' ', -- 16

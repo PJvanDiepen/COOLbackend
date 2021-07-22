@@ -488,20 +488,17 @@ totaal
 [0] sorteer (3 posities eventueel voorloopnullen)
 [1] prijs (0 = geen prijs, 1 = wel prijs)
 [2] winstIntern (2 posities eventueel voorloopnul)
-
-[3] winstExtern (2 posities eventueel voorloopnul) TODO alles opschuiven en ook in WaagtorenRanglijst.sql totalen
-
-[3] eigenWaardeCijfer (2 posities eventueel voorloopnul)
-[4] remiseIntern
-[5] verliesIntern
-[6] witIntern
-[7] zwartIntern
-[8] oneven
-[9] afzeggingen
-[10] aftrek
-[11] totaal
-[12] startPunten
-[13] winstExtern
+[3] winstExtern (2 posities eventueel voorloopnul)
+[4] eigenWaardeCijfer (2 posities eventueel voorloopnul)
+[5] remiseIntern
+[6] verliesIntern
+[7] witIntern
+[8] zwartIntern
+[9] oneven
+[10] afzeggingen
+[11] aftrek
+[12] totaal
+[13] startPunten
 [14] remiseExtern
 [15] verliesExtern
 [16] witExtern
@@ -531,10 +528,10 @@ function spelerTotalen(speler) {
     function punten() {
         if (!intern()) {
             return "";
-        } else if (metAftrek || totaal[10] === 0) {
+        } else if (metAftrek || totaal[11] === 0) {
             return totaal[0];
         } else {
-            return `${totaal[0] + totaal[10]} - ${totaal[10]} = ${totaal[0]}`;
+            return `${totaal[0] + totaal[11]} - ${totaal[11]} = ${totaal[0]}`;
         }
     }
 
@@ -552,51 +549,51 @@ function spelerTotalen(speler) {
     }
 
     function eigenWaardeCijfer() {
-        return intern() ? totaal[3] : "";
+        return intern() ? totaal[4] : "";
     }
 
     function intern() {
-        return totaal[2] || totaal[4] || totaal[5];
+        return totaal[2] || totaal[5] || totaal[6];
     }
 
     function scoreIntern() {
-        return score(totaal[2],totaal[4],totaal[5]);
+        return score(totaal[2],totaal[5],totaal[6]);
     }
 
     function percentageIntern() {
-        return percentage(totaal[2],totaal[4],totaal[5]);
+        return percentage(totaal[2],totaal[5],totaal[6]);
     }
 
     function saldoWitZwart() {
-        return totaal[6] - totaal[7];
+        return totaal[7] - totaal[8];
     }
 
     function oneven() {
-        return totaal[8];
-    }
-
-    function afzeggingen() {
         return totaal[9];
     }
 
+    function afzeggingen() {
+        return totaal[10];
+    }
+
     function aftrek() {
-        return - totaal[10];
+        return - totaal[11];
     }
 
     function startPunten() {
-        return totaal[12];
+        return totaal[13];
     }
 
     function extern() {
-        return totaal[13] || totaal[14] || totaal[15];
+        return totaal[3] || totaal[14] || totaal[15];
     }
 
     function scoreExtern() {
-        return score(totaal[13],totaal[14],totaal[15]);
+        return score(totaal[3],totaal[14],totaal[15]);
     }
 
     function percentageExtern() {
-        return percentage(totaal[13],totaal[14],totaal[15]);
+        return percentage(totaal[3],totaal[14],totaal[15]);
     }
 
     function saldoWitZwartExtern() {
