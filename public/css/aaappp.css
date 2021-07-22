@@ -37,8 +37,8 @@ button, input, select, textarea {
 	margin: 2px;
 }
 
-.marge-boven, label {
-	margin-top: 20px;
+.marge-boven, label, details {
+	margin-top: 10px;
 	display: block;
 }
 
@@ -95,6 +95,10 @@ a {
 
 a:link {
 	color: inherit;
+}
+
+p a:link {
+	border-bottom: 1px solid; /* lijntje onder link in paragraaf */
 }
 
 a:visited {

@@ -11,16 +11,16 @@
         [9, "afzeggingen verwijderen", async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${seizoen}/0/${speler}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/0/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
                 naarZelfdePagina();
             }
         }],
         [9, `${naamSpeler} verwijderen`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${seizoen}/0/${speler}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/0/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
                 naarAnderePagina("ranglijst.html");
             }
         }],
@@ -60,7 +60,7 @@ async function uitslagenSpeler(kop, lijst) {
         lijst.appendChild(htmlRij("", "", "startpunten", "", "", "", totaal, totaal));
     }
     let vorigeUitslag;
-    await mapAsync(`/uitslagen/${seizoen}/0/${speler}`,
+    await mapAsync(`/uitslagen/${seizoen}/${versie}/${speler}`,
         function (u) {
             if (t.intern()) {
                 totaal += u.punten;

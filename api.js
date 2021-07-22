@@ -94,7 +94,7 @@ module.exports = router => {
         and u.anderTeam = 'int'
     order by u.datum, u.bordNummer;
      */
-    router.get('/uitslagen/:seizoen/:versie/:knsbNummer', async function (ctx) {
+    router.get('/uitslagen/:seizoen/:versie/:knsbNummer', async function (ctx) { // TODO versie wordt nog niet gebruikt
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.datum',

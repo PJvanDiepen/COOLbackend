@@ -35,6 +35,7 @@ const params = pagina.searchParams;
 
 const vereniging = doorgeven("vereniging", "Waagtoren");
 const seizoen = doorgeven("seizoen", ditSeizoen());
+const versie = Number(params.get("versie")); // TODO lees seizoengegevens
 const teamCode = doorgeven("team", INTERNE_COMPETITIE);
 const rondeNummer = Number(doorgeven("ronde", 0));
 const speler = Number(doorgeven("speler", 0)); // knsbNummer
@@ -55,6 +56,14 @@ const BEHEERDER = 9;
 const informatieNivo = Number(doorgeven("informatie", 0));
 const metAftrek = Number(doorgeven("metAftrek", 1)); // TODO hoort in ranglijst.sql
 
+/**
+ * Sommige parameters van de url zijn specifiek voor een pagina.
+ * Andere parameters kan je doorgeven voor alle pagina's.
+ *
+ * @param key parameter naam
+ * @param defaultValue indien geen waarde is gevonden
+ * @returns {string} waarde
+ */
 function doorgeven(key, defaultValue) {
     let value = params.get(key);
     if (value) {
@@ -465,12 +474,12 @@ async function rondeSelecteren(teamCode, rondeNummer) {
 }
 
 async function spelerUitRanglijst(seizoen, knsbNummer) {
-    const spelers = await localFetch(`/ranglijst/${seizoen}/0/${datumSQL()}`);
+    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
     return spelers.find(function (speler) {return speler.knsbNummer === knsbNummer});
 }
 
 async function spelersUitRanglijst(seizoen, knsbNummers) {
-    const spelers = await localFetch(`/ranglijst/${seizoen}/0/${datumSQL()}`);
+    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
     return spelers.filter(function (speler) {return knsbNummers.includes(speler.knsbNummer)});
 }
 
@@ -479,6 +488,9 @@ totaal
 [0] sorteer (3 posities eventueel voorloopnullen)
 [1] prijs (0 = geen prijs, 1 = wel prijs)
 [2] winstIntern (2 posities eventueel voorloopnul)
+
+[3] winstExtern (2 posities eventueel voorloopnul) TODO alles opschuiven en ook in WaagtorenRanglijst.sql totalen
+
 [3] eigenWaardeCijfer (2 posities eventueel voorloopnul)
 [4] remiseIntern
 [5] verliesIntern
@@ -572,7 +584,7 @@ function spelerTotalen(speler) {
     }
 
     function startPunten() {
-        return totaal[11];
+        return totaal[12];
     }
 
     function extern() {
@@ -610,7 +622,7 @@ function spelerTotalen(speler) {
     function tegen(tegenstander, rondeNummer)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            return rondeNummer - totaal[i] > rondenVerschil();
+            return (rondeNummer - totaal[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
         }

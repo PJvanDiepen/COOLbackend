@@ -17,7 +17,7 @@ async function wedstrijdenBijRonde(kop, lijst) {
     kop.innerHTML = [vereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
     const ronden = await localFetch("/ronden/" + seizoen + "/int");
     if (rondeNummer > 1) {
-        lijst.appendChild(htmlRij(rondeNummer - 1, datumLeesbaar(ronden[rondeNummer - 2].datum), "interne competitie", ""));
+        lijst.appendChild(htmlRij(rondeNummer - 1, ranglijstTotDatum(ronden[rondeNummer - 2].datum), "interne competitie", ""));
     }
     const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
     for (const wedstrijd of wedstrijden) {
@@ -30,7 +30,11 @@ async function wedstrijdenBijRonde(kop, lijst) {
             lijst.appendChild(htmlRij("", datumKolom, wedstrijdKolom, uitslagKolom));
         }
     }
-    lijst.appendChild(htmlRij(rondeNummer, datumLeesbaar(ronden[rondeNummer - 1].datum), "interne competitie", ""));
+    lijst.appendChild(htmlRij(rondeNummer, ranglijstTotDatum(ronden[rondeNummer - 1].datum), "interne competitie", ""));
+}
+
+function ranglijstTotDatum(datum) {
+    return htmlLink(`ranglijst.html?datum=${datumSQL(datum)}`, datumLeesbaar(datum));
 }
 
 function wedstrijdBijRonde(datum, ronden) {

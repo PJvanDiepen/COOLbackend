@@ -73,7 +73,6 @@ knsbNummer INT`
 mutatieRechten INT
 uuidToken CHAR(36)
 email VARCHAR(100)
-fout VARCHAR(100)
 datumEmail DATE
 PRIMARY KEY (uuidToken)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
@@ -89,17 +88,23 @@ Na het activeren wordt dit vastgelegd in `datumEmail`.
 In `fout` wordt eventueel vastgelegd als er iets misgaat tijdens het registreren of activeren.
 
 ## Seizoen
+```
+seizoen CHAR(4)
+versie INT
+datumCompleet DATE
+```
+
 Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
 
 Voorlopig is er 1 database namelijk van de Waagtoren en zijn er 3 seizoenen: 2018-2019, 2019-2020 en 2020-2021.
 Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`, `seizoen = '1920` en `seizoen = '2021'`.
 
-Elk seizoen krijgt een verwijzing naar de juiste versie van parameters en formules 
+Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules 
 voor de berekening van de ranglijst in `Reglement`. 
 Bij elk seizoen van een schaakvereniging hoort een aantal spelers en een aantal teams in de interne en externe competitie.
 Zie verder bij `Speler` en `Team`.
 
-De specificaties van de `Seizoen` tabel zijn nog niet uitgewerkt.  
+De specificaties van de `Seizoen` tabel zijn nog niet verder uitgewerkt.
 
 ## Speler
 ```
