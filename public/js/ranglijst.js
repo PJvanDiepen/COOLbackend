@@ -1,28 +1,18 @@
 "use strict";
 
+const alleLeden = Number(params.get("leden"));
+
 (async function() {
     await gebruikerVerwerken();
     menu(naarBeheer,
         naarAgenda,
         naarGebruiker,
-        [WEDSTRIJDLEIDER, "alleen actieve spelers", function () {
-            naarAnderePagina("ranglijst.html?informatie=0");
-        }],
-        [WEDSTRIJDLEIDER, "inclusief niet actieve spelers", function () {
-            naarAnderePagina("ranglijst.html?informatie=9");
-        }],
-        [BESTUUR, "huidige artikel 12: aftrek na 10x afzeggen", function () {
-            naarAnderePagina("ranglijst.html?metAftrek=1");
-        }],
-        [BESTUUR, "na wijziging artikel 12: geen aftrek voor afzeggen", function () {
-            naarAnderePagina("ranglijst.html?metAftrek=0");
-        }],
         terugNaar);
     seizoenSelecteren(INTERNE_COMPETITIE);
     teamSelecteren(INTERNE_COMPETITIE);
     rondeSelecteren(INTERNE_COMPETITIE, 0);
     versieSelecteren(document.getElementById("versies"));
-// TODO ranglijst tot bepaalde datum (zie ronde.js)
+    ledenSelecteren(document.getElementById("leden"));
 // TODO bijbehorende voorlopige indeling
     ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
 })();
@@ -38,7 +28,7 @@
 function ranglijst(kop, lijst) {
     let datumTot = params.get("datum");
     if (datumTot) {
-        kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + datumLeesbaar(datumTot);
+        kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "tot ronde " + rondeNummer;
     } else {
         datumTot = datumSQL();
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
@@ -47,7 +37,7 @@ function ranglijst(kop, lijst) {
     mapAsync(`/ranglijst/${seizoen}/${versie}/${datumTot}`,
         function (speler, i) {
             const t = spelerTotalen(speler);
-            if (t.inRanglijst() || informatieNivo > 0) {
+            if (t.inRanglijst() || alleLeden) {
                 lijst.appendChild(htmlRij(
                     i + 1,
                     naarSpeler(speler.knsbNummer, speler.naam),
@@ -71,6 +61,16 @@ async function versieSelecteren(versies) {
     versies.value = versie;
     versies.addEventListener("input",
         function () {
-            naarAnderePagina("ranglijst.html?versie=" + versies.value);
+            naarZelfdePagina("?versie=" + versies.value);
         });
+}
+
+function ledenSelecteren(leden) {
+    leden.appendChild(htmlOptie(0, "alleen actieve leden"));
+    leden.appendChild(htmlOptie(1, "inclusief niet actieve spelers"));
+    leden.value = alleLeden;
+    leden.addEventListener("input",
+        function () {
+            naarZelfdePagina("?leden=" + leden.value);
+        })
 }

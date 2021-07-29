@@ -6,6 +6,7 @@ Nuttig
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [DOM events](https://domevents.dev/)
+- [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [localStorage vs Cookies](https://academind.com/tutorials/localstorage-vs-cookies-xss/)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)

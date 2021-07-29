@@ -53,9 +53,6 @@ const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 8;
 const BEHEERDER = 9;
 
-const informatieNivo = Number(doorgeven("informatie", 0));
-const metAftrek = Number(doorgeven("metAftrek", 1)); // TODO hoort in ranglijst.sql
-
 /**
  * Sommige parameters van de url zijn specifiek voor een pagina.
  * Andere parameters kan je doorgeven voor alle pagina's.
@@ -184,8 +181,8 @@ function naarAnderePagina(naarPagina) {
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
-function naarZelfdePagina() {
-    location.replace(pagina.pathname);
+function naarZelfdePagina(parameters) {
+    location.replace(pagina.pathname + (parameters ? parameters : ""));
 }
 
 async function mapAsync(url, mapFun) {
@@ -528,10 +525,8 @@ function spelerTotalen(speler) {
     function punten() {
         if (!intern()) {
             return "";
-        } else if (metAftrek || totaal[11] === 0) {
-            return totaal[0];
         } else {
-            return `${totaal[0] + totaal[11]} - ${totaal[11]} = ${totaal[0]}`;
+            return totaal[0];
         }
     }
 

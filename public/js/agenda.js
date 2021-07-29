@@ -17,7 +17,7 @@ async function wedstrijdSelecteren(wedstrijden) {
     wedstrijden.value = params.get("wedstrijden") || "eigen";
     wedstrijden.addEventListener("input",
         function () {
-            naarAnderePagina("agenda.html?wedstrijden=" + wedstrijden.value);
+            naarZelfdePagina("?wedstrijden=" + wedstrijden.value);
         });
 }
 

@@ -2,22 +2,26 @@
 
 (async function() {
     await gebruikerVerwerken();
+    const ronden = await localFetch("/ronden/" + seizoen + "/int");
+    const datumTot = ronden[rondeNummer - 1].datum;
     menu(naarBeheer,
         naarAgenda,
         naarRanglijst,
+        [WEDSTRIJDLEIDER, `ranglijst tot ronde ${rondeNummer}`, function() {
+            naarAnderePagina(`ranglijst.html?datum=${datumSQL(datumTot)}`);
+        }],
         naarGebruiker,
         terugNaar);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
-    wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
-// TODO ranglijst tot deze ronde
-    uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
+    wedstrijdenBijRonde(ronden, document.getElementById("kop"), document.getElementById("wedstrijden"));
+    document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
+    uitslagenRonde(document.getElementById("tabel"));
 })();
 
-async function wedstrijdenBijRonde(kop, lijst) {
-    kop.innerHTML = [vereniging, seizoenVoluit(seizoen)].join(SCHEIDING);
-    const ronden = await localFetch("/ronden/" + seizoen + "/int");
+async function wedstrijdenBijRonde(ronden, kop, lijst) {
+    kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     if (rondeNummer > 1) {
-        lijst.appendChild(htmlRij(rondeNummer - 1, ranglijstTotDatum(ronden[rondeNummer - 2].datum), "interne competitie", ""));
+        lijst.appendChild(ranglijstTot(rondeNummer - 1, ronden[rondeNummer - 2].datum));
     }
     const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
     for (const wedstrijd of wedstrijden) {
@@ -30,11 +34,11 @@ async function wedstrijdenBijRonde(kop, lijst) {
             lijst.appendChild(htmlRij("", datumKolom, wedstrijdKolom, uitslagKolom));
         }
     }
-    lijst.appendChild(htmlRij(rondeNummer, ranglijstTotDatum(ronden[rondeNummer - 1].datum), "interne competitie", ""));
+    lijst.appendChild(ranglijstTot(rondeNummer, ronden[rondeNummer - 1].datum));
 }
 
-function ranglijstTotDatum(datum) {
-    return htmlLink(`ranglijst.html?datum=${datumSQL(datum)}`, datumLeesbaar(datum));
+function ranglijstTot(ronde, datum) {
+    return htmlRij(ronde, datumLeesbaar(datum), "interne competitie", "");
 }
 
 function wedstrijdBijRonde(datum, ronden) {
@@ -62,8 +66,7 @@ function wedstrijdBijRonde(datum, ronden) {
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
   order by uitslag.seizoen, uitslag.bordNummer;
    */
-async function uitslagenRonde(kop, lijst) {
-    kop.innerHTML = "Ronde " + rondeNummer;
+async function uitslagenRonde(lijst) {
     let geenUitslagen = true;
     await mapAsync("/ronde/" + seizoen + "/" + rondeNummer,
         function (uitslag) {
