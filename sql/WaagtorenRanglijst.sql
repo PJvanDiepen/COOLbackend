@@ -1,36 +1,75 @@
 use waagtoren;
 
+drop function rating;
+
+delimiter $$
+
+create function rating(seizoen char(4), knsbNummer int) 
+returns int deterministic
+begin
+    declare knsbRating int;
+    select s.knsbRating
+    into knsbRating
+    from speler s
+    where s.seizoen = seizoen and s.knsbNummer = knsbNummer;
+    return knsbRating;
+end;
+$$
+
+delimiter ;
+
 drop function waardeCijfer;
 
 delimiter $$
 
-create function waardeCijfer(seizoen char(4), knsbNummer int) 
-returns int deterministic -- reglement artikel 10
+create function waardeCijfer(versie int, knsbRating int) 
+returns int deterministic
 begin
-    declare subgroep char(1);
-    select s.subgroep -- TODO s.waardeCijfer, zodat subgroep vertalen naar waardeCijfer overbodig wordt
-    into subgroep
-    from speler s
-    where s.seizoen = seizoen
-      and s.knsbNummer = knsbNummer;
-    if subgroep = 'A' then
-        return 12;
-    elseif subgroep = 'B' then
-        return 11;
-    elseif subgroep = 'C' then
-        return 10;
-    elseif subgroep = 'D' then
-        return 9;
-    elseif subgroep = 'E' then
-        return 8;
-    elseif subgroep = 'F' then
-        return 7;
-    elseif subgroep = 'G' then
-        return 6;
-    elseif subgroep = 'H' then
-        return 5;
+    if knsbRating < 1400 then
+        return 5; -- H
+	elseif knsbRating < 1500 then
+        return 6; -- G
+	elseif knsbRating < 1600 then
+        return 7; -- F
+    elseif knsbRating < 1700 then
+        return 8; -- E
+    elseif knsbRating < 1800 then
+        return 9; -- D
+    elseif knsbRating < 1900 then
+        return 10; -- C
+    elseif knsbRating < 2000 then
+        return 11; -- B
     else
-        return 0;
+        return 12; -- A
+    end if;
+end;
+$$
+
+delimiter ;
+
+drop function groep;
+
+delimiter $$
+
+create function groep(knsbRating int) 
+returns char(1) deterministic
+begin
+    if knsbRating < 1400 then
+        return 'H';
+	elseif knsbRating < 1500 then
+        return 'G';
+	elseif knsbRating < 1600 then
+        return 'F';
+    elseif knsbRating < 1700 then
+        return 'E';
+    elseif knsbRating < 1800 then
+        return 'D';
+    elseif knsbRating < 1900 then
+        return 'C';
+    elseif knsbRating < 2000 then
+        return 'B';
+    else
+        return 'A';
     end if;
 end;
 $$
@@ -41,15 +80,15 @@ drop function punten;
 
 delimiter $$
 
-create function punten(seizoen char(4), knsbNummer int, eigenWaardeCijfer int, teamCode char(3), partij char(1), tegenstander int, resultaat char(1))
+create function punten(seizoen char(4), versie int, knsbNummer int, eigenWaardeCijfer int, teamCode char(3), partij char(1), tegenstander int, resultaat char(1))
     returns int deterministic -- reglement artikel 12
 begin
     if partij = 'i' and resultaat = '1' then
-        return waardeCijfer(seizoen, tegenstander) + 12;
+        return waardeCijfer(versie, rating(seizoen, tegenstander)) + 12;
     elseif partij = 'i' and resultaat = '½' then
-        return waardeCijfer(seizoen, tegenstander);
+        return waardeCijfer(versie, rating(seizoen, tegenstander));
     elseif partij = 'i' and resultaat = '0' then
-        return waardeCijfer(seizoen, tegenstander) - 12;
+        return waardeCijfer(versie, rating(seizoen, tegenstander)) - 12;
     elseif partij = 'a' then -- afwezig
         return eigenWaardeCijfer - 4;
     elseif partij = 't' then -- reglementaire remise of vrijgesteld
@@ -89,6 +128,7 @@ begin
     declare externTijdensInterneRonde int default 0;
     declare prijs int default 1;
     declare sorteer int default 0;
+    declare knsbRating int;
     declare eigenWaardeCijfer int;
     declare oneven int default 0;
 	declare afzeggingen int default 0;
@@ -120,7 +160,8 @@ begin
             and u.datum < totDatum;
     declare continue handler for not found
     set found = false;
-    set eigenWaardeCijfer = waardeCijfer(seizoen, knsbNummer);
+    set knsbRating = rating(seizoen, knsbNummer); 
+    set eigenWaardeCijfer = waardeCijfer(versie, knsbRating);
     open uitslagen;
     fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
     while found
@@ -157,7 +198,7 @@ begin
             elseif partij = 'e' and witZwart = 'z' then
                 set zwartExtern = zwartExtern + 1;
             end if;
-            set totaal = totaal + punten(seizoen, knsbNummer, eigenWaardeCijfer, teamCode, partij, tegenstander, resultaat);
+            set totaal = totaal + punten(seizoen, versie, knsbNummer, eigenWaardeCijfer, teamCode, partij, tegenstander, resultaat);
             fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
@@ -179,7 +220,7 @@ begin
         prijs, ' ', -- 1
         lpad(winstIntern,2,'0'), ' ', -- 2
         lpad(winstExtern,2,'0'), ' ', -- 3
-        lpad(eigenWaardeCijfer,2,'0'), ' ', -- 4
+        lpad(knsbRating,4, '0'), ' ', -- 4
         remiseIntern, ' ', -- 5
         verliesIntern, ' ', -- 6
         witIntern, ' ', -- 7
@@ -189,12 +230,13 @@ begin
         aftrek, ' ', -- 11
         totaal, ' ', -- 12
         startPunten, ' ', -- 13
-        remiseExtern, ' ', -- 14
-        verliesExtern, ' ', -- 15
-        witExtern, ' ', -- 16
-        zwartExtern, ' ', -- 17
-        rondenverschil, -- 18
-        tegenstanders);
+        eigenWaardeCijfer, ' ', -- 14
+        remiseExtern, ' ', -- 15
+        verliesExtern, ' ', -- 16
+        witExtern, ' ', -- 17
+        zwartExtern, ' ', -- 18
+        rondenverschil, -- 19
+        tegenstanders); -- 20
 end;
 $$
 

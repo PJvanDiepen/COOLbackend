@@ -486,7 +486,7 @@ totaal
 [1] prijs (0 = geen prijs, 1 = wel prijs)
 [2] winstIntern (2 posities eventueel voorloopnul)
 [3] winstExtern (2 posities eventueel voorloopnul)
-[4] eigenWaardeCijfer (2 posities eventueel voorloopnul)
+[4] rating (4 posities eventueel voorloopnul)
 [5] remiseIntern
 [6] verliesIntern
 [7] witIntern
@@ -496,20 +496,21 @@ totaal
 [11] aftrek
 [12] totaal
 [13] startPunten
-[14] remiseExtern
-[15] verliesExtern
-[16] witExtern
-[17] zwartExtern
-[18] rondenVerschil
+[14] eigenWaardeCijfer
+[15] remiseExtern
+[16] verliesExtern
+[17] witExtern
+[18] zwartExtern
+[19] rondenVerschil
 tegenstanders met n = 0, 1, 2, enz.
-[19 + n] rondeNummer
-[20 + n] kleur (1 = wit, 0 = zwart)
-[21 + n] tegenstander
+[20 + n] rondeNummer
+[21 + n] kleur (1 = wit, 0 = zwart)
+[22 + n] tegenstander
 einde indien rondeNummer = 0
-[19 + n] rondeNummer = 0
-[20 + n] knsbNummer
+[20 + n] rondeNummer = 0
+[21 + n] knsbNummer
 verboden tegenstanders met  m = 1, 2, 3, enz.
-[20 + n + m] tegenstander
+[22 + n + m] tegenstander
  */
 function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
@@ -543,8 +544,8 @@ function spelerTotalen(speler) {
         }
     }
 
-    function eigenWaardeCijfer() {
-        return intern() ? totaal[4] : "";
+    function rating() {
+        return totaal[4];
     }
 
     function intern() {
@@ -579,28 +580,32 @@ function spelerTotalen(speler) {
         return totaal[13];
     }
 
+    function eigenWaardeCijfer() {
+        return intern() ? totaal[14] : "";
+    }
+
     function extern() {
-        return totaal[3] || totaal[14] || totaal[15];
+        return totaal[3] || totaal[15] || totaal[16];
     }
 
     function scoreExtern() {
-        return score(totaal[3],totaal[14],totaal[15]);
+        return score(totaal[3],totaal[15],totaal[16]);
     }
 
     function percentageExtern() {
-        return percentage(totaal[3],totaal[14],totaal[15]);
+        return percentage(totaal[3],totaal[15],totaal[16]);
     }
 
     function saldoWitZwartExtern() {
-        return totaal[16] - totaal[17];
+        return totaal[17] - totaal[18];
     }
 
     function rondenVerschil() {
-        return totaal[18];
+        return totaal[19];
     }
 
     function vorigeKeer(tegenstander) {
-        let i = 19;
+        let i = 20;
         let j = 0;
         while (totaal[i]) { // indien rondeNummer
             if (totaal[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander

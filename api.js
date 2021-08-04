@@ -85,7 +85,14 @@ module.exports = router => {
         u.partij,
         r.uithuis,
         r.tegenstander,
-        punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.partij, u.tegenstanderNummer, u.resultaat) as punten
+        punten(
+          @seizoen,
+          @knsbNummer,
+          waardeCijfer(@versie, rating(@seizoen, @knsbNummer)),
+          u.teamCode,
+          u.partij,
+          u.tegenstanderNummer,
+          u.resultaat) as punten
     from uitslag u
     join persoon p on u.tegenstanderNummer = p.knsbNummer
     join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
@@ -94,7 +101,7 @@ module.exports = router => {
         and u.anderTeam = 'int'
     order by u.datum, u.bordNummer;
      */
-    router.get('/uitslagen/:seizoen/:versie/:knsbNummer', async function (ctx) { // TODO versie wordt nog niet gebruikt
+    router.get('/uitslagen/:seizoen/:versie/:knsbNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.datum',
@@ -110,8 +117,9 @@ module.exports = router => {
                 'ronde.tegenstander',
                 {punten: fn('punten',
                         ctx.params.seizoen,
+                        ctx.params.versie,
                         ctx.params.knsbNummer,
-                        fn('waardeCijfer', ctx.params.seizoen, ctx.params.knsbNummer),
+                        fn('waardeCijfer', ctx.params.versie, fn('rating', ctx.params.seizoen, ctx.params.knsbNummer)),
                         ref('uitslag.teamCode'),
                         ref('uitslag.partij'),
                         ref('uitslag.tegenstanderNummer'),
