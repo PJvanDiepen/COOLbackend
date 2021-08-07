@@ -15,6 +15,8 @@ Nuttig
 - [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
+- [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
+- [PDF](https://github.com/bpampuch/pdfmake)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
@@ -32,6 +34,7 @@ Objection / Knex
 Interessant 
 
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
+- [resilient js ui](https://www.smashingmagazine.com/2021/08/build-resilient-javascript-ui/)
 - [Accelerate JS development](https://blog.techmagic.co/how-to-accelerate-js-development-with-the-right-approach-techmagic-case-studies/)
 - [case against web frameworks](https://thenewstack.io/case-against-web-frameworks/)
 - [Symbols and why they're awesome](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/)
