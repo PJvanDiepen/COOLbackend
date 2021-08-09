@@ -18,6 +18,42 @@ $$
 
 delimiter ;
 
+-- subgroep, waardeCijfer, punten en totalen bevatten de logica voor verschillende reglementen voor de interne competie van de Waagtoren
+-- ze bevatten verschillende versies 
+-- versie 0 maximumAfzeggingen = 10 in seizoen = 1819, 1920, 2021
+-- versie 1 geen maximumAfzeggingen in seizoen = 2122
+
+drop function subgroep;
+
+delimiter $$
+
+create function subgroep(seizoen char(4), versie int, knsbNummer int) 
+returns char(1) deterministic
+begin
+    declare knsbRating int;
+    set knsbRating = rating(seizoen, knsbNummer); 
+	if knsbRating < 1400 then
+        return 'H';
+	elseif knsbRating < 1500 then
+        return 'G';
+	elseif knsbRating < 1600 then
+        return 'F';
+    elseif knsbRating < 1700 then
+        return 'E';
+    elseif knsbRating < 1800 then
+        return 'D';
+    elseif knsbRating < 1900 then
+        return 'C';
+    elseif knsbRating < 2000 then
+        return 'B';
+    else
+        return 'A';
+    end if;
+end;
+$$
+
+delimiter ;
+
 drop function waardeCijfer;
 
 delimiter $$
@@ -41,35 +77,6 @@ begin
         return 11; -- B
     else
         return 12; -- A
-    end if;
-end;
-$$
-
-delimiter ;
-
-drop function groep;
-
-delimiter $$
-
-create function groep(knsbRating int) 
-returns char(1) deterministic
-begin
-    if knsbRating < 1400 then
-        return 'H';
-	elseif knsbRating < 1500 then
-        return 'G';
-	elseif knsbRating < 1600 then
-        return 'F';
-    elseif knsbRating < 1700 then
-        return 'E';
-    elseif knsbRating < 1800 then
-        return 'D';
-    elseif knsbRating < 1900 then
-        return 'C';
-    elseif knsbRating < 2000 then
-        return 'B';
-    else
-        return 'A';
     end if;
 end;
 $$
@@ -115,8 +122,6 @@ drop function totalen;
 
 delimiter $$
 
--- versie 0 maximumAfzeggingen = 10 in seizoen = 1819, 1920, 2021
--- versie 1 geen maximumAfzeggingen in seizoen = 2122
 create function totalen(seizoen char(4), versie int, knsbNummer int, totDatum date) returns varchar(600) deterministic
 begin
     declare totaal int default 0;
@@ -247,7 +252,11 @@ set @seizoen = '1819';
 set @knsbNummer = 6212404; -- Peter van Diepen
 
 -- ranglijst
-select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, s.knsbNummer) as totalen
+select
+  s.knsbNummer,
+  naam,
+  subgroep(@seizoen, @versie, s.knsbNummer) as subgroep,
+  totalen(@seizoen, @versie, s.knsbNummer, @datum) as totalen
 from speler s
 join persoon p on s.knsbNummer = p.knsbNummer
 where seizoen = @seizoen
@@ -265,7 +274,15 @@ select u.datum,
        u.partij,
        r.uithuis,
        r.tegenstander,
-       punten(@seizoen, @knsbNummer, waardeCijfer(@seizoen, @knsbNummer), u.teamCode, u.partij, u.tegenstanderNummer, u.resultaat) as punten
+       punten(
+          @seizoen,
+          @versie,
+          @knsbNummer,
+          waardeCijfer(@versie, rating(@seizoen, @knsbNummer)),
+          u.teamCode,
+          u.partij,
+          u.tegenstanderNummer,
+          u.resultaat) as punten
 from uitslag u
 join persoon p on u.tegenstanderNummer = p.knsbNummer
 join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer

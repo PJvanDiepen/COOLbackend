@@ -516,7 +516,6 @@ function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
     const naam = speler.naam;
     const subgroep = speler.subgroep;
-    const knsbRating = Number(speler.knsbRating);
     const totaal = speler.totalen.split(" ").map(Number);
 
     function inRanglijst() {
@@ -640,7 +639,7 @@ function spelerTotalen(speler) {
         knsbNummer,
         naam,
         subgroep,
-        knsbRating,
+        rating,
         intern,
         inRanglijst,
         punten,

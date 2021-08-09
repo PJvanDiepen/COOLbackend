@@ -17,14 +17,6 @@ const alleLeden = Number(params.get("leden"));
     ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
 })();
 
-/*
- -- ranglijst
- select s.knsbNummer, naam, subgroep, knsbRating, internTotalen(@seizoen, s.knsbNummer) as totalen
- from speler s
- join persoon p on s.knsbNummer = p.knsbNummer
- where seizoen = @seizoen
- order by totalen desc;
-  */
 function ranglijst(kop, lijst) {
     let datumTot = params.get("datum");
     if (datumTot) {
@@ -51,11 +43,11 @@ function ranglijst(kop, lijst) {
                     t.oneven() ? t.oneven() : "",
                     t.scoreExtern(),
                     t.percentageExtern(),
-                    speler.knsbRating));
+                    t.rating()));
             }});
 }
 
-async function versieSelecteren(versies) {
+async function versieSelecteren(versies) {  // TODO: versies en teksten in database
     versies.appendChild(htmlOptie(0, "versie 0 volgens huidige reglement"));
     versies.appendChild(htmlOptie(1, "versie 1 zonder aftrek na 10x afzeggen"));
     versies.value = versie;

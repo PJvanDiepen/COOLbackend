@@ -49,7 +49,11 @@ module.exports = router => {
 
     /*
     -- ranglijst
-    select s.knsbNummer, naam, subgroep, knsbRating, totalen(@seizoen, @versie, s.knsbNummer, @datum) as totalen
+    select
+      s.knsbNummer,
+      naam,
+      subgroep(@seizoen, @versie, s.knsbNummer) as subgroep,
+      totalen(@seizoen, @versie, s.knsbNummer, @datum) as totalen
     from speler s
     join persoon p on s.knsbNummer = p.knsbNummer
     where seizoen = @seizoen
@@ -64,7 +68,6 @@ module.exports = router => {
                         ctx.params.seizoen,
                         ctx.params.versie,
                         ref('speler.knsbNummer'))},
-                'speler.knsbRating',
                 {totalen: fn('totalen',
                         ctx.params.seizoen,
                         ctx.params.versie,
@@ -90,6 +93,7 @@ module.exports = router => {
         r.tegenstander,
         punten(
           @seizoen,
+          @versie,
           @knsbNummer,
           waardeCijfer(@versie, rating(@seizoen, @knsbNummer)),
           u.teamCode,
