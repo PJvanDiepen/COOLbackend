@@ -91,7 +91,7 @@ begin
         return waardeCijfer(versie, rating(seizoen, tegenstander)) - 12;
     elseif partij = 'a' then -- afwezig
         return eigenWaardeCijfer - 4;
-    elseif partij = 't' then -- reglementaire remise of vrijgesteld
+    elseif partij = 'r' then -- reglementaire remise of vrijgesteld
         return eigenWaardeCijfer;
     elseif partij = 'o' then -- oneven
 		return eigenWaardeCijfer + 12;

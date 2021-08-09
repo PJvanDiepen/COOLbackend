@@ -60,7 +60,10 @@ module.exports = router => {
             .select(
                 'speler.knsbNummer',
                 'persoon.naam',
-                'speler.subgroep',
+                {subgroep: fn('subgroep',
+                        ctx.params.seizoen,
+                        ctx.params.versie,
+                        ref('speler.knsbNummer'))},
                 'speler.knsbRating',
                 {totalen: fn('totalen',
                         ctx.params.seizoen,

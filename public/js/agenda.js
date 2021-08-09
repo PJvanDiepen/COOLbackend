@@ -32,13 +32,15 @@ async function agenda(kop, lijst, deelnemersLijst) {
     }
     let volgendeRonde = 0;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
+        console.log(w);
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
-            const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/int/${w.rondeNummer}`);
+            const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : STREEP;
             lijst.appendChild(htmlRij(
-                w.rondeNummer,
+                w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
                 datumLeesbaar(w.datum),
+                w.teamCode === INTERNE_COMPETITIE ? "interne competitie" : wedstrijdVoluit(w),
                 deelnemers.length,
                 htmlLink(
                     `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`,

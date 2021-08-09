@@ -11,7 +11,7 @@ const INTERNE_PARTIJ       = "i";
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
-const REGLEMENTAIRE_REMISE = "t"; // vrijgesteld
+const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 // uitslag.resultaat

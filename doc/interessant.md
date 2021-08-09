@@ -35,6 +35,7 @@ Interessant
 
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [resilient js ui](https://www.smashingmagazine.com/2021/08/build-resilient-javascript-ui/)
+- [SPA](http://singlepageappbook.com/index.html)
 - [Accelerate JS development](https://blog.techmagic.co/how-to-accelerate-js-development-with-the-right-approach-techmagic-case-studies/)
 - [case against web frameworks](https://thenewstack.io/case-against-web-frameworks/)
 - [Symbols and why they're awesome](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/)

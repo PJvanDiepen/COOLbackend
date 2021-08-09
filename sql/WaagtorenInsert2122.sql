@@ -144,7 +144,7 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '1', '6', 'u', 'Caissa-Eenhoorn 1', 'Hoorn', '2022-02-05'),
 ('2122', '1', '7', 't', 'Groninger Combinatie 2', 'Alkmaar', '2022-03-12'),
 ('2122', '1', '8', 'u', 'SG Max Euwe 1', 'Enschede', '2022-04-02'),
-('2122', '1', '9', 't', 'Zukertort Amstelveen 1', 'Alkmaar', '2021-04-23'),
+('2122', '1', '9', 't', 'Zukertort Amstelveen 1', 'Alkmaar', '2022-04-23'),
 ('2122', '2', '1', 'u', 'ZSC-Saende 1', 'Zaandam', '2021-09-18'),
 ('2122', '2', '2', 't', 'Laurierboom-Gambiet 1', 'Alkmaar', '2021-10-09'),
 ('2122', '2', '3', 't', 'HWP Haarlem 2', 'Alkmaar', '2021-11-06'),
@@ -153,7 +153,7 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '2', '6', 'u', 'Caissa-Eenhoorn 2', 'Hoorn', '2022-02-05'),
 ('2122', '2', '7', 't', 'Caissa 3', 'Alkmaar', '2022-03-12'),
 ('2122', '2', '8', 'u', 'Santpoort 1', 'Velserbroek', '2022-04-02'),
-('2122', '2', '9', 't', 'Fischer Z 1', 'Alkmaar', '2021-04-23'),
+('2122', '2', '9', 't', 'Fischer Z 1', 'Alkmaar', '2022-04-23'),
 ('2122', '3', '1', 'u', 'Bergen 1', 'Bergen', '2021-09-18'),
 ('2122', '3', '2', 't', 'De Uil 1', 'Alkmaar', '2021-10-09'),
 ('2122', '3', '3', 't', 'HWP Haarlem 3', 'Alkmaar', '2021-11-06'),
@@ -162,7 +162,7 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '3', '6', 'u', 'Caissa-Eenhoorn 3', 'Zwaag', '2022-02-05'),
 ('2122', '3', '7', 't', 'vrije ronde', 'Alkmaar', '2022-03-12'),
 ('2122', '3', '8', 'u', 'Kennemer Combinatie 3', 'Haarlem', '2022-04-02'),
-('2122', '3', '9', 't', 'Het Spaarne 1', 'Alkmaar', '2021-04-23');
+('2122', '3', '9', 't', 'Het Spaarne 1', 'Alkmaar', '2022-04-23');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam);
 
