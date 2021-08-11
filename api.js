@@ -14,13 +14,13 @@ module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
-    router.get('/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+    router.get('/deelnemers/:seizoen/:teamCode/:rondeNummer/:partij', async function (ctx) {
         const deelnemers = await Uitslag.query()
             .select('uitslag.knsbNummer')
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.teamCode', ctx.params.teamCode)
             .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-            .andWhere('uitslag.partij', 'm'); // MEEDOEN
+            .andWhere('uitslag.partij', ctx.params.partij);
         ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
     });
 

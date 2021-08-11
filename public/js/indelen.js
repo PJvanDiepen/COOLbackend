@@ -1,5 +1,11 @@
 "use strict";
 
+/*
+TODO deelnemers voor deze ronde
+TODO indeling alsof het de eerste ronde is
+ */
+
+
 (async function() {
     await gebruikerVerwerken();
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
@@ -18,8 +24,23 @@
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(ronden, document.getElementById("kop"), document.getElementById("wedstrijden"));
     document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
-    uitslagenRonde(document.getElementById("tabel"));
+    aanwezigeSpelers(document.getElementById("tabel"), datumTot);
 })();
+
+async function aanwezigeSpelers(lijst, datumTot) {
+    console.log(`/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}/${MEEDOEN}`);
+    let deelnemers = await serverFetch(`/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}/${MEEDOEN}`);
+    if (deelnemers.length === 0) {
+        deelnemers = await serverFetch(`/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}/${INTERNE_PARTIJ}`);
+    }
+    console.log(deelnemers);
+    const tegenstanders = await spelersUitRanglijst(seizoen, deelnemers, datumTot);
+    console.log(tegenstanders);
+    for (let i = 0; i < tegenstanders.length; i++) {
+        const t = spelerTotalen(tegenstanders[i]);
+        lijst.appendChild(htmlRij(i + 1, t.naam, t.punten(), t.rating()));
+    }
+}
 
 async function wedstrijdenBijRonde(ronden, kop, lijst) {
     kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);

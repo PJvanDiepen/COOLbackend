@@ -470,13 +470,13 @@ async function rondeSelecteren(teamCode, rondeNummer) {
         });
 }
 
-async function spelerUitRanglijst(seizoen, knsbNummer) {
-    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
+async function spelerUitRanglijst(seizoen, knsbNummer, datumTot) {
+    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(datumTot)}`);
     return spelers.find(function (speler) {return speler.knsbNummer === knsbNummer});
 }
 
-async function spelersUitRanglijst(seizoen, knsbNummers) {
-    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
+async function spelersUitRanglijst(seizoen, knsbNummers, datumTot) {
+    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(datumTot)}`);
     return spelers.filter(function (speler) {return knsbNummers.includes(speler.knsbNummer)});
 }
 
