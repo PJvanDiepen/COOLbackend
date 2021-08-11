@@ -69,7 +69,7 @@ async function uitslagenSpeler(kop, lijst) {
                 lijst.appendChild(internePartij(u, totaal));
             } else if (u.partij === MEEDOEN || u.partij === NIET_MEEDOEN) {
                 // geen uitslag, geplande partij overslaan
-            } else if (u.teamCode === INTERNE_COMPETITIE && u.partij === EXTERNE_WEDSTRIJD) {
+            } else if (u.teamCode === INTERNE_COMPETITIE && u.partij === EXTERNE_PARTIJ) {
                 vorigeUitslag = u; // deze uitslag overslaan en combineren met volgende uitslag
             } else if (u.teamCode === INTERNE_COMPETITIE) {
                 lijst.appendChild(geenPartij(u, totaal));
@@ -113,7 +113,7 @@ function geenPartij(u, totaal) {
     const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
     const omschrijving = u.partij === AFWEZIG              ? "afgezegd"
-                       : u.partij === EXTERNE_WEDSTRIJD    ? "extern"
+                       : u.partij === EXTERNE_PARTIJ    ? "extern"
                        : u.partij === INTERNE_PARTIJ       ? "intern"
                        : u.partij === ONEVEN               ? "oneven"
                        : u.partij === REGLEMENTAIRE_REMISE ? "vrijgesteld"

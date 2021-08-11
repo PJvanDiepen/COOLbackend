@@ -160,8 +160,8 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '3', '4', 'u', 'Aartswoud 1', 'Hoogwoud', '2021-11-27'),
 ('2122', '3', '5', 't', 'Volendam 1', 'Alkmaar', '2021-12-18'),
 ('2122', '3', '6', 'u', 'Caissa-Eenhoorn 3', 'Zwaag', '2022-02-05'),
-('2122', '3', '7', 't', 'vrije ronde', 'Alkmaar', '2022-03-12'),
-('2122', '3', '8', 'u', 'Kennemer Combinatie 3', 'Haarlem', '2022-04-02'),
+('2122', '3', '7', 't', 'Kennemer Combinatie 3', 'Alkmaar', '2022-03-12'),
+('2122', '3', '8', 'u', 'vrije ronde', '', '2022-04-02'),
 ('2122', '3', '9', 't', 'Het Spaarne 1', 'Alkmaar', '2022-04-23');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam);

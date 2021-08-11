@@ -6,7 +6,7 @@
 const INTERNE_COMPETITIE = "int";
 // uitslag.partij
 const AFWEZIG              = "a";
-const EXTERNE_WEDSTRIJD    = "e";
+const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
@@ -14,9 +14,12 @@ const ONEVEN               = "o";
 const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
+// uitslag.witZwart
+const WIT = "w";
+const ZWART = "z";
 // uitslag.resultaat
 const REMISE = "½";
-const WINST  = "1";
+const WINST = "1";
 const VERLIES = "0";
 // uitslag.uithuis
 const THUIS = "t";

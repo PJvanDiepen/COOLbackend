@@ -138,7 +138,7 @@ module.exports = router => {
                     .andOn('uitslag.rondeNummer','ronde.rondeNummer')})
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-            .andWhere('uitslag.anderTeam', 'int')
+            .andWhere('uitslag.anderTeam', INTERNE_COMPETITIE)
             .orderBy(['uitslag.datum','uitslag.bordNummer']);
     });
 
@@ -177,7 +177,7 @@ module.exports = router => {
                 join.on('u.seizoen', 'ronde.seizoen')
                     .andOn('u.teamCode', 'ronde.teamCode')
                     .andOn('u.rondeNummer', 'ronde.rondeNummer')})
-            .whereIn('ronde.teamCode', ['int', ref('s.knsbTeam'), ref('s.nhsbTeam')])
+            .whereIn('ronde.teamCode', [INTERNE_COMPETITIE, ref('s.knsbTeam'), ref('s.nhsbTeam')])
             .andWhere('ronde.seizoen', ctx.params.seizoen)
             .orderBy('ronde.datum');
     });
@@ -209,9 +209,9 @@ module.exports = router => {
             .join('persoon as wit', 'uitslag.knsbNummer', 'wit.knsbNummer')
             .join('persoon as zwart', 'uitslag.tegenstanderNummer', 'zwart.knsbNummer')
             .where('uitslag.seizoen', ctx.params.seizoen)
-            .andWhere('uitslag.teamCode', 'int')
+            .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
             .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-            .andWhere('uitslag.witZwart', 'w')
+            .andWhere('uitslag.witZwart', WIT)
             .orderBy(['uitslag.seizoen','uitslag.bordNummer']);
     });
 
@@ -225,7 +225,7 @@ module.exports = router => {
         persoon.naam,
     from uitslag
     join persoon on uitslag.knsbNummer = persoon.knsbNummer
-    where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
+    where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode and uitslag.team = 'e'
     order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
      */
     router.get('/team/:seizoen/:teamCode', async function (ctx) {
@@ -240,6 +240,7 @@ module.exports = router => {
             .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.teamCode', ctx.params.teamCode)
+            .andWhere('uitslag.partij', EXTERNE_PARTIJ)
             .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
     });
 
@@ -253,7 +254,7 @@ module.exports = router => {
     router.get('/wedstrijden/:seizoen', async function (ctx) {
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', ctx.params.seizoen)
-            .andWhere('ronde.teamCode','<>', 'int')
+            .andWhere('ronde.teamCode','<>', INTERNE_COMPETITIE)
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
@@ -404,7 +405,7 @@ module.exports = router => {
             const intern = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer)
-                .andWhere('partij', 'i')
+                .andWhere('partij', INTERNE_PARTIJ)
                 .limit(1);
             if (intern.length) {
                 ctx.body = 0; // indien interne partijen dan geen afzeggingen verwijderen
@@ -413,7 +414,7 @@ module.exports = router => {
                     .delete()
                     .where('seizoen', ctx.params.seizoen)
                     .andWhere('knsbNummer',ctx.params.knsbNummer)
-                    .andWhere('partij', 'a');
+                    .andWhere('partij', AFWEZIG);
                 await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
                 ctx.body = aantal;
             }
@@ -423,6 +424,24 @@ module.exports = router => {
     });
 
 }
+
+// TODO const.js
+
+// teamCode
+const INTERNE_COMPETITIE = "int";
+// uitslag.partij
+const AFWEZIG              = "a";
+const EXTERNE_PARTIJ       = "e";
+const INTERNE_PARTIJ       = "i";
+const MEEDOEN              = "m"; // na aanmelden
+const NIET_MEEDOEN         = "n"; // na afzeggen
+const ONEVEN               = "o";
+const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
+const REGLEMENTAIR_VERLIES = "v";
+const REGLEMENTAIRE_WINST  = "w";
+// uitslag.witZwart
+const WIT = "w";
+const ZWART = "z";
 
 // gebruiker.mutatieRechten
 const GEEN_LID = 0;

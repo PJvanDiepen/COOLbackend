@@ -1,7 +1,6 @@
 "use strict";
 
 /*
-TODO deelnemers voor deze ronde
 TODO indeling alsof het de eerste ronde is
  */
 
