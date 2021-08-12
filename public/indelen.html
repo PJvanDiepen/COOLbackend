@@ -6,7 +6,7 @@
     <title>Indelen</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(1), td:nth-child(3), td:nth-child(4) {
+        td:nth-child(1), #tabel td:nth-child(3), #tabel td:nth-child(4) {
             text-align: right;
         }
     </style>
@@ -14,7 +14,15 @@
 <body>
     <select id="menu"></select>
     <select id="rondeSelecteren"></select>
-    <h1 id="kop">Ronde</h1>
+    <h1 id="subkop">Ronde</h1>
+    <table id="partijen">
+        <tr>
+            <th></th>
+            <th>wit</th>
+            <th>zwart</th>
+            <th></th>
+        </tr>
+    </table>
     <h2>Deelnemers</h2>
     <table id="tabel">
         <tr>
@@ -22,15 +30,6 @@
             <th>naam</th>
             <th>punten</th>
             <th>rating</th>
-        </tr>
-    </table>
-    <h2 id="subkop">Ronde</h2>
-    <table id="wedstrijden">
-        <tr>
-            <th>ronde</th>
-            <th>datum</th>
-            <th>wedstrijd</th>
-            <th>uitslag</th>
         </tr>
     </table>
     <script src="js/uitslagen.js"></script>
