@@ -188,14 +188,6 @@ function naarZelfdePagina(parameters) {
     location.replace(pagina.pathname + (parameters ? parameters : ""));
 }
 
-// TODO forEach i.p.v. map
-// https://advancedweb.hu/asynchronous-array-functions-in-javascript/
-
-async function mapAsync(url, fun) {
-    const objects = await localFetch(url);
-    objects.forEach(fun);
-}
-
 /**
  * localFetch optimaliseert de verbinding met de database op de server
  * door het antwoord van de server ook lokaal op te slaan
@@ -418,7 +410,7 @@ function percentage(winst, remise, verlies) {
 
 async function seizoenSelecteren(teamCode) {
     const seizoenen = document.getElementById("seizoenSelecteren");
-    await mapAsync("/seizoenen/" + teamCode,
+    (await localFetch("/seizoenen/" + teamCode)).forEach(
         function (seizoen) {
             seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
         });
@@ -433,7 +425,7 @@ async function seizoenSelecteren(teamCode) {
 async function spelerSelecteren() {
     const spelers = document.getElementById("spelerSelecteren");
     spelers.appendChild(htmlOptie(0, "selecteer naam"));
-    await mapAsync("/spelers/" + seizoen,
+    (await localFetch("/spelers/" + seizoen)).forEach(
         function (persoon) {
             spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), persoon.naam));
         });
@@ -449,7 +441,7 @@ async function spelerSelecteren() {
 
 async function teamSelecteren(teamCode) {
     const teams = document.getElementById("teamSelecteren");
-    await mapAsync("/teams/" + seizoen,
+    (await localFetch("/teams/" + seizoen)).forEach(
         function (team) {
             teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
         });
@@ -462,7 +454,7 @@ async function teamSelecteren(teamCode) {
 
 async function rondeSelecteren(teamCode, rondeNummer) {
     const ronden = document.getElementById("rondeSelecteren");
-    await mapAsync("/ronden/" + seizoen + "/" + teamCode,
+    (await localFetch("/ronden/" + seizoen + "/" + teamCode)).forEach(
         function (ronde) {
             ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
@@ -681,11 +673,11 @@ order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
 async function uitslagenTeamAlleRonden(teamCode) {
     const rondeUitslagen = [];
-    await mapAsync("/ronden/" + seizoen + "/" + teamCode,
+    (await localFetch("/ronden/" + seizoen + "/" + teamCode)).forEach(
         function (ronde) {
             rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
         });
-    await mapAsync("/team/" + seizoen + "/" + teamCode,
+    (await localFetch("/team/" + seizoen + "/" + teamCode)).forEach(
         function (u) {
             const rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
             if (u.resultaat === WINST) {

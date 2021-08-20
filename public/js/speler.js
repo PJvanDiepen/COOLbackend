@@ -60,7 +60,7 @@ async function uitslagenSpeler(kop, lijst) {
         lijst.appendChild(htmlRij("", "", "startpunten", "", "", "", totaal, totaal));
     }
     let vorigeUitslag;
-    await mapAsync(`/uitslagen/${seizoen}/${versie}/${speler}`,
+    (await localFetch(`/uitslagen/${seizoen}/${versie}/${speler}`)).forEach(
         function (u) {
             if (t.intern()) {
                 totaal += u.punten;

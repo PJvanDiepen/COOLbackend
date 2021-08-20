@@ -71,7 +71,7 @@ function wedstrijdBijRonde(datum, ronden) {
    */
 async function uitslagenRonde(lijst) {
     let geenUitslagen = true;
-    await mapAsync("/ronde/" + seizoen + "/" + rondeNummer,
+    (await localFetch("/ronde/" + seizoen + "/" + rondeNummer)).forEach(
         function (uitslag) {
         geenUitslagen = false;
             lijst.appendChild(htmlRij(
