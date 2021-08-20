@@ -32,7 +32,6 @@ async function agenda(kop, lijst, deelnemersLijst) {
     }
     let volgendeRonde = 0;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
-        console.log(w);
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
             const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${MEEDOEN}`);
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
@@ -78,12 +77,11 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
 }
 
 async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
+    const s = (await ranglijst(ditSeizoen(), versie, null, [knsbNummer]))[0];
     const deelnemers = await serverFetch(`/deelnemers/${ditSeizoen()}/${INTERNE_COMPETITIE}/${rondeNummer}/${MEEDOEN}`);
-    const s = spelerTotalen(await spelerUitRanglijst(ditSeizoen(), knsbNummer));
-    const tegenstanders = await spelersUitRanglijst(ditSeizoen(), deelnemers);
-    for (const tegenstander of tegenstanders) {
-        if (s.knsbNummer !== tegenstander.knsbNummer) {
-            const t = spelerTotalen(tegenstander);
+    const tegenstanders = await ranglijst(ditSeizoen(), versie, null, deelnemers);
+    for (const t of tegenstanders) {
+        if (s.knsbNummer !== t.knsbNummer) {
             lijst.appendChild(htmlRij(
                 naarSpeler(t.knsbNummer, t.naam),
                 s.kleur(t),

@@ -32,12 +32,12 @@ async function ranglijstDeelnemers(datumTot) {
     if (deelnemers.length === 0) {
         deelnemers = await serverFetch(`/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}/${INTERNE_PARTIJ}`);
     }
-    return spelersUitRanglijst(seizoen, deelnemers, datumTot);
+    return await ranglijst(seizoen, versie, datumTot, deelnemers);
 }
 
 function deelnemers(lijst, ranglijst) {
     for (let i = 0; i < ranglijst.length; i++) {
-        const t = spelerTotalen(ranglijst[i]);
+        const t = ranglijst[i];
         lijst.appendChild(htmlRij(i + 1, t.naam, t.punten(), t.rating()));
     }
 }
@@ -45,8 +45,8 @@ function deelnemers(lijst, ranglijst) {
 function partijen(lijst, ranglijst) {
     const helft = ranglijst.length / 2;
     for (let i = 0; i < helft; i++) {
-        const s = spelerTotalen(ranglijst[i]);
-        const t = spelerTotalen(ranglijst[i + helft]);
+        const s = ranglijst[i];
+        const t = ranglijst[i + helft];
         lijst.appendChild(htmlRij(i + 1, s.naam, t.naam, `${i+1} - ${i+helft+1}`));
     }
 }

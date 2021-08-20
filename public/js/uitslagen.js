@@ -188,9 +188,12 @@ function naarZelfdePagina(parameters) {
     location.replace(pagina.pathname + (parameters ? parameters : ""));
 }
 
-async function mapAsync(url, mapFun) {
+// TODO forEach i.p.v. map
+// https://advancedweb.hu/asynchronous-array-functions-in-javascript/
+
+async function mapAsync(url, fun) {
     const objects = await localFetch(url);
-    objects.map(mapFun);
+    objects.forEach(fun);
 }
 
 /**
@@ -473,14 +476,12 @@ async function rondeSelecteren(teamCode, rondeNummer) {
         });
 }
 
-async function spelerUitRanglijst(seizoen, knsbNummer, datumTot) {
-    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(datumTot)}`);
-    return spelers.find(function (speler) {return speler.knsbNummer === knsbNummer});
-}
-
-async function spelersUitRanglijst(seizoen, knsbNummers, datumTot) {
-    const spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(datumTot)}`);
-    return spelers.filter(function (speler) {return knsbNummers.includes(speler.knsbNummer)});
+async function ranglijst(seizoen, versie, datumTot, selectie) {
+    let spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(datumTot)}`);
+    if (selectie) {
+        spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
+    }
+    return spelers.map(spelerTotalen);
 }
 
 /*

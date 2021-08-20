@@ -14,10 +14,10 @@ const alleLeden = Number(params.get("leden"));
     versieSelecteren(document.getElementById("versies"));
     ledenSelecteren(document.getElementById("leden"));
 // TODO bijbehorende voorlopige indeling
-    ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
+    spelersLijst(document.getElementById("kop"), document.getElementById("tabel"));
 })();
 
-function ranglijst(kop, lijst) {
+async function spelersLijst(kop, lijst) {
     let datumTot = params.get("datum");
     if (datumTot) {
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "tot ronde " + rondeNummer;
@@ -26,25 +26,24 @@ function ranglijst(kop, lijst) {
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     }
     const winnaars = {};
-    mapAsync(`/ranglijst/${seizoen}/${versie}/${datumTot}`,
-        function (speler, i) {
-            const t = spelerTotalen(speler);
-            if (t.inRanglijst() || alleLeden) {
-                lijst.appendChild(htmlRij(
-                    i + 1,
-                    naarSpeler(speler.knsbNummer, speler.naam),
-                    t.punten() ? t.punten() : "",
-                    t.eigenWaardeCijfer(),
-                    t.winnaarSubgroep(winnaars),
-                    t.scoreIntern(),
-                    t.percentageIntern(),
-                    t.saldoWitZwart() ? t.saldoWitZwart() : "",
-                    t.intern() && t.afzeggingen() ? t.afzeggingen() : "",
-                    t.oneven() ? t.oneven() : "",
-                    t.scoreExtern(),
-                    t.percentageExtern(),
-                    t.rating()));
-            }});
+    (await ranglijst(seizoen, versie, datumTot)).forEach(function (t, i) {
+        if (t.inRanglijst() || alleLeden) {
+            lijst.appendChild(htmlRij(
+                i + 1,
+                naarSpeler(t.knsbNummer, t.naam),
+                t.punten() ? t.punten() : "",
+                t.eigenWaardeCijfer(),
+                t.winnaarSubgroep(winnaars),
+                t.scoreIntern(),
+                t.percentageIntern(),
+                t.saldoWitZwart() ? t.saldoWitZwart() : "",
+                t.intern() && t.afzeggingen() ? t.afzeggingen() : "",
+                t.oneven() ? t.oneven() : "",
+                t.scoreExtern(),
+                t.percentageExtern(),
+                t.rating()));
+        }
+    });
 }
 
 async function versieSelecteren(versies) {  // TODO: versies en teksten in database
