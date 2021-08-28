@@ -363,101 +363,87 @@ module.exports = router => {
 
     router.get('/:uuidToken/partij/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) {
-            const aantal = await Uitslag.query()
+            aantal = await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .patch({partij: ctx.params.partij});
             await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
-            ctx.body = aantal;
-        } else {
-            ctx.body = 0;
         }
+        ctx.body = aantal;
     });
 
     router.get('/:uuidToken/uitslag/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer/:resultaat', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        console.log("uitslag");
-        console.log(gebruiker);
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) ||
             gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer) ||
             gebruiker.eigenData(GEREGISTREERD, ctx.params.tegenstanderNummer)) {
-            const speler = await Uitslag.query()
+            if (await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-                .patch({resultaat: ctx.params.resultaat});
-            console.log(speler);
-            console.log("witspeler " + ctx.params.knsbNummer);
-            aantal++;
-            if (Number(ctx.params.tegenstanderNummer) > 0) {
-                const tegenstander = await Uitslag.query()
-                    .where('uitslag.seizoen', ctx.params.seizoen)
-                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
-                    .patch({resultaat: resultaatTegenstander(ctx.params.resultaat)});
-                console.log(tegenstander);
-                console.log("zwartspeler " + ctx.params.tegenstanderNummer);
+                .patch({resultaat: ctx.params.resultaat})) {
                 aantal++;
+                if (Number(ctx.params.tegenstanderNummer) > 0) {
+                    if (await Uitslag.query()
+                        .where('uitslag.seizoen', ctx.params.seizoen)
+                        .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                        .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                        .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                        .patch({resultaat: resultaatTegenstander(ctx.params.resultaat)})) {
+                        aantal++;
+                    }
+                }
             }
-            if (aantal) {
-                await mutatie(gebruiker, ctx, aantal, NIEUWE_RANGLIJST);
-            }
+            await mutatie(gebruiker, ctx, aantal, NIEUWE_RANGLIJST);
         }
         ctx.body = aantal;
     });
 
     router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
         if (gebruiker.vorigSeizoen(BEHEERDER, ctx.params.seizoen)) {
             const uitslagen = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
-                .andWhere('knsbNummer',ctx.params.knsbNummer)
+                .andWhere('knsbNummer', ctx.params.knsbNummer)
                 .limit(1);
-            if (uitslagen.length) {
-                ctx.body = 0; // indien uitslagen van speler dan niet speler verwijderen
-            } else {
-                const aantal = await Speler.query()
+            if (uitslagen.length === 0) { // speler verwijderen indien geen uitslagen
+                aantal = await Speler.query()
                     .delete()
                     .where('seizoen', ctx.params.seizoen)
-                    .andWhere('knsbNummer',ctx.params.knsbNummer);
+                    .andWhere('knsbNummer', ctx.params.knsbNummer);
                 await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
-                ctx.body = aantal;
             }
-        } else {
-            ctx.body = 0;
         }
+        ctx.body = aantal;
     });
 
     router.get('/:uuidToken/verwijder/afzeggingen/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
         if (gebruiker.vorigSeizoen(BEHEERDER, ctx.params.seizoen)) {
             const intern = await Uitslag.query()
                 .where('seizoen', ctx.params.seizoen)
                 .andWhere('knsbNummer',ctx.params.knsbNummer)
                 .andWhere('partij', INTERNE_PARTIJ)
                 .limit(1);
-            if (intern.length) {
-                ctx.body = 0; // indien interne partijen dan geen afzeggingen verwijderen
-            } else {
-                const aantal = await Uitslag.query()
+            if (intern.length === 0) { // afzeggingen verwijderen indien geen interne partijen
+                aantal = await Uitslag.query()
                     .delete()
                     .where('seizoen', ctx.params.seizoen)
                     .andWhere('knsbNummer',ctx.params.knsbNummer)
                     .andWhere('partij', AFWEZIG);
                 await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
-                ctx.body = aantal;
             }
-        } else {
-            ctx.body = 0;
         }
+        ctx.body = aantal;
     });
-
 }
 
 // TODO const.js
