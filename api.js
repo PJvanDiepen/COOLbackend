@@ -377,6 +377,41 @@ module.exports = router => {
         }
     });
 
+    router.get('/:uuidToken/uitslag/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer/:resultaat', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        console.log("uitslag");
+        console.log(gebruiker);
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) ||
+            gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer) ||
+            gebruiker.eigenData(GEREGISTREERD, ctx.params.tegenstanderNummer)) {
+            const speler = await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                .patch({resultaat: ctx.params.resultaat});
+            console.log(speler);
+            console.log("witspeler " + ctx.params.knsbNummer);
+            aantal++;
+            if (Number(ctx.params.tegenstanderNummer) > 0) {
+                const tegenstander = await Uitslag.query()
+                    .where('uitslag.seizoen', ctx.params.seizoen)
+                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                    .patch({resultaat: resultaatTegenstander(ctx.params.resultaat)});
+                console.log(tegenstander);
+                console.log("zwartspeler " + ctx.params.tegenstanderNummer);
+                aantal++;
+            }
+            if (aantal) {
+                await mutatie(gebruiker, ctx, aantal, NIEUWE_RANGLIJST);
+            }
+        }
+        ctx.body = aantal;
+    });
+
     router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.vorigSeizoen(BEHEERDER, ctx.params.seizoen)) {
@@ -442,6 +477,20 @@ const REGLEMENTAIRE_WINST  = "w";
 // uitslag.witZwart
 const WIT = "w";
 const ZWART = "z";
+// uitslag.resultaat
+const REMISE = "½";
+const WINST = "1";
+const VERLIES = "0";
+
+function resultaatTegenstander(resultaat) {
+    if (resultaat === WINST) {
+        return VERLIES;
+    } else if (resultaat === VERLIES) {
+        return WINST;
+    } else {
+        return resultaat; // remise of wissen
+    }
+}
 
 // gebruiker.mutatieRechten
 const GEEN_LID = 0;

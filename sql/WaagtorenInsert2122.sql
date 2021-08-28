@@ -36,6 +36,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2122', '', '', '6225934', '1943', '2021-08-01', 'B'),
 ('2122', '', '', '7665834', '1939', '2021-08-01', 'B'),
 ('2122', '', '', '6572511', '1907', '2021-08-01', 'B'),
+('2122', '', '', '7063881', '1903', '2021-08-01', 'B'),
 ('2122', '', '', '7739314', '1902', '2021-08-01', 'B'),
 ('2122', '', '', '8112654', '1890', '2021-08-01', 'C'),
 ('2122', '', '', '7529522', '1889', '2021-08-01', 'C'),
@@ -168,7 +169,7 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam);
 
--- 113 deelnemers in alle seizoenen
+-- 116 deelnemers in alle seizoenen
 insert into persoon (knsbNummer, naam, dummy) values
 ('101', 'Ramon Witte', ''),
 ('102', 'Ellen van der Hoeven', ''),
@@ -193,6 +194,7 @@ insert into persoon (knsbNummer, naam, dummy) values
 ('6661721', 'Herman Nijhuis', ''),
 ('6930957', 'Leo van Steenoven', ''),
 ('6951362', 'Johan Plooijer', ''),
+('7063881', 'Wim van Dijk', ''),
 ('7079743', 'Juan de Roda Husman', ''),
 ('7099620', 'Peter Hoekstra', ''),
 ('7099950', 'Jos Vlaming', ''),

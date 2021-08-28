@@ -27,6 +27,11 @@ hr {
     padding: 5px;
 }
 
+table select {
+	border: none;
+	padding: 0px;
+}
+
 button, details {
 	cursor: pointer;
 }
