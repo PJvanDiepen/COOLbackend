@@ -68,19 +68,63 @@ function wedstrijdBijRonde(datum, ronden) {
   join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
   order by uitslag.seizoen, uitslag.bordNummer;
-   */
+ */
 async function uitslagenRonde(lijst) {
     let geenUitslagen = true;
     (await localFetch("/ronde/" + seizoen + "/" + rondeNummer)).forEach(
         function (uitslag) {
-        geenUitslagen = false;
+            geenUitslagen = false;
             lijst.appendChild(htmlRij(
                 uitslag.bordNummer,
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
-                uitslag.resultaat === "1" ? "1-0" : uitslag.resultaat === "0" ? "0-1" : "½-½"));
+                uitslagVerwerken(uitslag)));
         });
     if (geenUitslagen) {
         lijst.appendChild(htmlRij("nog", "geen", "uitslagen", ""));
     }
+}
+
+function uitslagVerwerken(uitslag) {
+    if (uitslagWijzigen(uitslag)) {
+        return uitslagSelecteren(uitslag)
+    } else if (uitslag.resultaat === WINST) {
+        return "1-0";
+    } else if (uitslag.resultaat === REMISE) {
+        return "½-½";
+    } else if (uitslag.resultaat === VERLIES) {
+        return "0-1";
+    } else if (uitslag.knsbNummer === gebruiker.knsbNummer || uitslag.tegenstanderNummer === gebruiker.knsbNummer) {
+        return uitslagWijzigen(uitslag);
+    } else {
+        return "";
+    }
+}
+
+function uitslagWijzigen(uitslag)  {
+    if (WEDSTRIJDLEIDER <= gebruiker.mutatieRechten) {
+        return true;
+    } else if (GEREGISTREERD <= gebruiker.mutatieRechten && uitslag.resultaat === "") {
+        return uitslag.knsbNummer === gebruiker.knsbNummer || uitslag.tegenstanderNummer === gebruiker.knsbNummer
+    } else {
+        return false;
+    }
+}
+
+function uitslagSelecteren(uitslag) {
+    const select = document.createElement("select");
+    select.appendChild(htmlOptie(WINST, "1-0"));
+    select.appendChild(htmlOptie(REMISE, "½-½"));
+    select.appendChild(htmlOptie(VERLIES, "0-1"));
+    select.appendChild(htmlOptie("", ""));
+    select.value = uitslag.resultaat;
+    select.addEventListener("input",function () {
+        if (select.value === uitslag.resultaat) {
+            alert("geen andere uitslag");
+        } else {
+            alert("andere uitslag");
+            // const mutaties = await serverFetch(`/${uuidToken}/uitslag/afzeggingen/${seizoen}/${speler}`);
+        }
+    });
+    return select;
 }
