@@ -11,7 +11,7 @@
             naarAnderePagina(`ranglijst.html?datum=${datumSQL(datumTot)}`);
         }],
         [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
-            naarAnderePagina(`indelen.html?${datumSQL(datumTot)}`);
+            naarAnderePagina(`indelen.html?datum${datumSQL(datumTot)}`);
         }],
         naarGebruiker,
         terugNaar);
@@ -118,13 +118,9 @@ function uitslagSelecteren(uitslag) {
     select.appendChild(htmlOptie(VERLIES, "0-1"));
     select.appendChild(htmlOptie("", ""));
     select.value = uitslag.resultaat;
-    select.addEventListener("input",function () {
-        if (select.value === uitslag.resultaat) {
-            alert("geen andere uitslag");
-        } else {
-            alert("andere uitslag");
-            // const mutaties = await serverFetch(`/${uuidToken}/uitslag/afzeggingen/${seizoen}/${speler}`);
-        }
+    select.addEventListener("input",async function () {
+        const mutaties = await serverFetch( // TODO ranglijst opnieuw inlezen
+            `/${uuidToken}/uitslag/${seizoen}/int/${rondeNummer}/${uitslag.knsbNummer}/${uitslag.tegenstanderNummer}/${select.value}`);
     });
     return select;
 }

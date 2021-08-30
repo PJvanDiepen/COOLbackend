@@ -14,13 +14,25 @@ module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
-    router.get('/deelnemers/:seizoen/:teamCode/:rondeNummer/:partij', async function (ctx) {
-        const deelnemers = await Uitslag.query()
-            .select('uitslag.knsbNummer')
-            .where('uitslag.seizoen', ctx.params.seizoen)
-            .andWhere('uitslag.teamCode', ctx.params.teamCode)
-            .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-            .andWhere('uitslag.partij', ctx.params.partij);
+    router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let deelnemers = {};
+        if (gebruiker.juisteRechten(GEREGISTREERD)) {
+            deelnemers = await Uitslag.query()
+                .select('uitslag.knsbNummer')
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.partij', MEEDOEN);
+        }
+        if (deelnemers.length === 0 && gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+            deelnemers = await Uitslag.query()
+                .select('uitslag.knsbNummer')
+                .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
+        }
         ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
     });
 
@@ -526,7 +538,7 @@ async function mutatie(gebruiker, ctx, aantal, invloed) {
     if (aantal) {
         await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
             knsbNummer: gebruiker.dader.knsbNummer,
-            url: ctx.request.url.substring(38), // zonder uuidToken
+            url: ctx.request.url.substring(38), // zonder uuidToken TODO %C2%BD vervangen door ½
             aantal: aantal,
             invloed: invloed});
     }

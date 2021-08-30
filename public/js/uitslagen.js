@@ -164,7 +164,6 @@ const terugNaar = [GEEN_LID, "\uD83E\uDC68", function() { // wide-headed leftwar
 }];
 
 const naarAgenda = [GEREGISTREERD, "aanmelden / afzeggen", function () {
-
     naarAnderePagina("agenda.html");
 }];
 

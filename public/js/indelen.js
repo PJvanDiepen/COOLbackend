@@ -17,36 +17,33 @@
         terugNaar);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
-    const ranglijst = await ranglijstDeelnemers(datumTot);
-    deelnemers(document.getElementById("tabel"), ranglijst);
-    partijen(document.getElementById("partijen"), ranglijst);
+    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
+    const deelnemersRanglijst = await ranglijst(seizoen, versie, datumTot, deelnemers);
+    deelnemersLijst(document.getElementById("tabel"), deelnemersRanglijst);
+    partijen(document.getElementById("partijen"), deelnemersRanglijst);
 })();
 
-async function ranglijstDeelnemers(datumTot) {
-    let deelnemers = await serverFetch(`/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}/${MEEDOEN}`);
-    if (deelnemers.length === 0) {
-        deelnemers = await serverFetch(`/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}/${INTERNE_PARTIJ}`); // TODO oneven e.a. toevoegen
-    }
-    return await ranglijst(seizoen, versie, datumTot, deelnemers);
-}
-
-function deelnemers(lijst, ranglijst) {
+function deelnemersLijst(lijst, ranglijst) {
     ranglijst.forEach(function(t, i) {
         lijst.appendChild(htmlRij(i + 1, t.naam, t.punten(), t.rating()));
     });
 }
 
 function partijen(lijst, ranglijst) {
+    const oneven = ranglijst.length % 2 === 0 ? 0 : ranglijst.length;  // laatste speler is oneven
     let wit = [];
     let zwart = [];
     indelenEersteRonde(evenAantal(ranglijst.length), 3, wit, zwart);
     for (let i = 0; i < wit.length; i++) {
         lijst.appendChild(htmlRij(i + 1, ranglijst[wit[i]].naam, ranglijst[zwart[i]].naam, `${wit[i]+1} - ${zwart[i]+1}`));
     }
+    if (oneven) {
+        lijst.appendChild(htmlRij("", ranglijst[oneven - 1].naam, "", "oneven"));
+    }
 }
 
 function evenAantal(aantal) {
-    return aantal % 2 === 0 ? aantal : aantal + 1;
+    return aantal % 2 === 0 ? aantal : aantal - 1;
 }
 
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
@@ -57,11 +54,7 @@ function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
     for (let van = 0; van < tot; van += helftGroep) {
         groepIndelenEersteRonde(van, van + helftGroep, wit, zwart);
     }
-    if (tot < aantalPartijen) { // TODO conditie verwijderen
-        groepIndelenEersteRonde(tot, aantalPartijen, wit, zwart);
-    } else {
-        alert("tot = gelijk of groter");
-    }
+    groepIndelenEersteRonde(tot, aantalPartijen, wit, zwart);
 }
 
 function juisteAantalGroepen(aantalGroepen, aantalSpelers) {
@@ -80,7 +73,7 @@ function juisteAantalGroepen(aantalGroepen, aantalSpelers) {
 
 function groepIndelenEersteRonde(van, tot, wit, zwart) {
     for (let i = van; i < tot; i++) {
-        if (i % 2 == 0) { // op even borden heeft de sterkste speler zwart
+        if (i % 2 === 0) { // op even borden heeft de sterkste speler zwart
             wit[i] = i + tot;
             zwart[i] = i + van;
         } else {

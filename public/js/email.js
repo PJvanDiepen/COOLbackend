@@ -13,7 +13,6 @@
 
 async function gebruikerTekst(emailAan, naamAan, link) {
     const leden = await serverFetch(`/${uuidToken}/email/${speler}`);
-    console.log(leden);
     const email = params.get("email");
     const lid = leden[0];  // TODO vergelijken met email
     emailAan.appendChild(htmlTekst(lid.email));

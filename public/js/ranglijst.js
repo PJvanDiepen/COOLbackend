@@ -13,7 +13,6 @@ const alleLeden = Number(params.get("leden"));
     rondeSelecteren(INTERNE_COMPETITIE, 0);
     versieSelecteren(document.getElementById("versies"));
     ledenSelecteren(document.getElementById("leden"));
-// TODO bijbehorende voorlopige indeling
     spelersLijst(document.getElementById("kop"), document.getElementById("tabel"));
 })();
 
