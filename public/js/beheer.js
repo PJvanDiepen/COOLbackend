@@ -3,8 +3,10 @@
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
+        naarIndelen,
         naarRanglijst,
-        terugNaar);
+        naarGebruiker,
+        naarBeheer);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     document.getElementById("computer").appendChild(

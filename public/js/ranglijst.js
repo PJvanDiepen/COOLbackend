@@ -4,10 +4,10 @@ const alleLeden = Number(params.get("leden"));
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarBeheer,
-        naarAgenda,
+    menu(naarAgenda,
+        naarIndelen,
         naarGebruiker,
-        terugNaar);
+        naarBeheer);
     seizoenSelecteren(INTERNE_COMPETITIE);
     teamSelecteren(INTERNE_COMPETITIE);
     rondeSelecteren(INTERNE_COMPETITIE, 0);

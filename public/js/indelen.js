@@ -4,17 +4,10 @@
     await gebruikerVerwerken();
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
     const datumTot = ronden[rondeNummer - 1].datum;
-    menu(naarBeheer,
-        naarAgenda,
+    menu(naarAgenda,
         naarRanglijst,
-        [WEDSTRIJDLEIDER, `ranglijst tot ronde ${rondeNummer}`, function() {
-            naarAnderePagina(`ranglijst.html?datum=${datumSQL(datumTot)}`);
-        }],
-        [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
-            naarAnderePagina(`indelen.html?${datumSQL(datumTot)}`);
-        }],
         naarGebruiker,
-        terugNaar);
+        naarBeheer);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
     const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
@@ -79,6 +72,23 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
         } else {
             wit[i] = i + van;
             zwart[i] = i + tot;
+        }
+    }
+}
+
+// TODO mogelijkeTegenstanders aanroepen
+
+async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
+    const s = (await ranglijst(ditSeizoen(), versie, null, [knsbNummer]))[0];
+    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${ditSeizoen()}/${INTERNE_COMPETITIE}/${rondeNummer}`);
+    const tegenstanders = await ranglijst(ditSeizoen(), versie, null, deelnemers);
+    for (const t of tegenstanders) {
+        if (s.knsbNummer !== t.knsbNummer) {
+            lijst.appendChild(htmlRij(
+                naarSpeler(t.knsbNummer, t.naam),
+                s.kleur(t),
+                t.punten() - s.punten(), // afstand
+                s.tegen(t, rondeNummer) ? "" : KRUISJE));  // artikel 3
         }
     }
 }

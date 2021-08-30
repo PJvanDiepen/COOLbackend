@@ -159,10 +159,6 @@ async function menu(...menuKeuzes) {
         });
 }
 
-const terugNaar = [GEEN_LID, "\uD83E\uDC68", function() { // wide-headed leftwards barb arrow
-    history.back();
-}];
-
 const naarAgenda = [GEREGISTREERD, "aanmelden / afzeggen", function () {
     naarAnderePagina("agenda.html");
 }];
@@ -177,6 +173,10 @@ const naarRanglijst = [GEEN_LID, "ranglijst", function () {
 
 const naarGebruiker = [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
     naarAnderePagina("gebruiker.html");
+}];
+
+const naarIndelen = [GEREGISTREERD, "voorlopige indeling" , function () {
+    naarAnderePagina("indelen.html?seizoen=2122&ronde=1"); // TODO 0 = volgendeRonde
 }];
 
 function naarAnderePagina(naarPagina) {

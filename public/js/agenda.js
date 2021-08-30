@@ -2,12 +2,12 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarBeheer,
+    menu(naarIndelen,
         naarRanglijst,
         naarGebruiker,
-        terugNaar);
+        naarBeheer);
     wedstrijdSelecteren(document.getElementById("extern"));
-    agenda(document.getElementById("kop"), document.getElementById("wedstrijden"), document.getElementById("tabel"));
+    agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
 })();
 
 async function wedstrijdSelecteren(wedstrijden) {
@@ -21,7 +21,7 @@ async function wedstrijdSelecteren(wedstrijden) {
         });
 }
 
-async function agenda(kop, lijst, deelnemersLijst) {
+async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
     await agendaMutatie(andereGebruiker);
     const naam = params.get("naamGebruiker") || gebruiker.naam;
@@ -33,7 +33,7 @@ async function agenda(kop, lijst, deelnemersLijst) {
     let volgendeRonde = 0;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
-            const deelnemers = await serverFetch(`/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${MEEDOEN}`);
+            const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : STREEP;
             lijst.appendChild(htmlRij(
@@ -49,7 +49,6 @@ async function agenda(kop, lijst, deelnemersLijst) {
             }
         }
     }
-    mogelijkeTegenstanders(deelnemersLijst, andereGebruiker, volgendeRonde);
 }
 
 async function agendaMutatie(knsbNummer) {
@@ -74,19 +73,4 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
         }
     }
     return aanvullingen;
-}
-
-async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
-    const s = (await ranglijst(ditSeizoen(), versie, null, [knsbNummer]))[0];
-    const deelnemers = await serverFetch(`/deelnemers/${ditSeizoen()}/${INTERNE_COMPETITIE}/${rondeNummer}/${MEEDOEN}`);
-    const tegenstanders = await ranglijst(ditSeizoen(), versie, null, deelnemers);
-    for (const t of tegenstanders) {
-        if (s.knsbNummer !== t.knsbNummer) {
-            lijst.appendChild(htmlRij(
-                naarSpeler(t.knsbNummer, t.naam),
-                s.kleur(t),
-                t.punten() - s.punten(), // afstand
-                s.tegen(t, rondeNummer) ? "" : KRUISJE));  // artikel 3
-        }
-    }
 }

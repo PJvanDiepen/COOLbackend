@@ -4,17 +4,17 @@
     await gebruikerVerwerken();
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
     const datumTot = ronden[rondeNummer - 1].datum;
-    menu(naarBeheer,
-        naarAgenda,
+    menu(naarAgenda,
+        naarIndelen,
         naarRanglijst,
+        naarGebruiker,
+        naarBeheer,
         [WEDSTRIJDLEIDER, `ranglijst tot ronde ${rondeNummer}`, function() {
             naarAnderePagina(`ranglijst.html?datum=${datumSQL(datumTot)}`);
         }],
         [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
             naarAnderePagina(`indelen.html?datum${datumSQL(datumTot)}`);
-        }],
-        naarGebruiker,
-        terugNaar);
+        }]);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(ronden, document.getElementById("kop"), document.getElementById("wedstrijden"));
     document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);

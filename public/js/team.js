@@ -2,8 +2,7 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarBeheer,
-        naarAgenda,
+    menu(naarAgenda,
         naarRanglijst,
         naarGebruiker,
         terugNaar);

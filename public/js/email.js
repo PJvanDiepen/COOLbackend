@@ -3,8 +3,10 @@
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
+        naarIndelen,
         naarRanglijst,
-        terugNaar);
+        naarGebruiker,
+        naarBeheer);
     gebruikerTekst(
         document.getElementById("emailAan"),
         document.getElementById("naamAan"),

@@ -2,15 +2,15 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarBeheer,
-        naarAgenda,
+    menu(naarAgenda,
+        naarIndelen,
         naarRanglijst,
+        naarBeheer,
         [BEHEERDER, "formulier van geselecteerde speler", function () {
             document.getElementById("naam").value = naamSpeler;
             document.getElementById("knsbNummer").value = speler;
             document.getElementById("status").value = "iemand anders registreren";
-        }],
-        terugNaar);
+        }]);
     spelerSelecteren();
     gebruikerFormulier(
         document.getElementById("formulier"),

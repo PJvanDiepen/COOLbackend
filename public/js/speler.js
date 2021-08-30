@@ -3,12 +3,14 @@
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
-        [8, `agenda van ${naamSpeler}`, function () {
+        [WEDSTRIJDLEIDER, `agenda van ${naamSpeler}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
         }],
+        naarIndelen,
         naarRanglijst,
         naarGebruiker,
-        [9, "afzeggingen verwijderen", async function () {
+        naarBeheer,
+        [BEHEERDER, "afzeggingen verwijderen", async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
             if (mutaties) {
                 sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}`);
@@ -16,15 +18,14 @@
                 naarZelfdePagina();
             }
         }],
-        [9, `${naamSpeler} verwijderen`, async function () {
+        [BEHEERDER, `${naamSpeler} verwijderen`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
             if (mutaties) {
                 sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}`);
                 sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
                 naarAnderePagina("ranglijst.html");
             }
-        }],
-        terugNaar);
+        }]);
     seizoenSelecteren(INTERNE_COMPETITIE);
     uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
 })();
