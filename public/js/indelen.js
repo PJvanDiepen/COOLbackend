@@ -4,29 +4,40 @@
     await gebruikerVerwerken();
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
     const datumTot = ronden[rondeNummer - 1].datum;
+    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
+    const r = await ranglijst(seizoen, versie, datumTot, deelnemers);
+    let wit = [];
+    let zwart = [];
+    const oneven = r.length % 2 === 0 ? 0 : r.length;  // laatste speler is oneven
+    indelenEersteRonde(evenAantal(r.length), 3, wit, zwart);
+    partijen(document.getElementById("partijen"), r, wit, zwart, oneven);
     menu(naarAgenda,
         naarRanglijst,
         naarGebruiker,
-        naarBeheer);
-    rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
-    document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
-    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
-    const deelnemersRanglijst = await ranglijst(seizoen, versie, datumTot, deelnemers);
-    deelnemersLijst(document.getElementById("tabel"), deelnemersRanglijst);
-    partijen(document.getElementById("partijen"), deelnemersRanglijst);
+        naarBeheer,
+        [BEHEERDER, "indeling definitief maken", async function () {
+            console.log("hoe?");
+            console.log(r);
+            console.log(wit);
+            console.log(zwart);
+            console.log(oneven);
+            for (let i = 0; i < wit.length; i++) {
+                const mutaties = await serverFetch(
+                    `/${uuidToken}/indelen/${seizoen}/int/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`);
+            }
+            naarAnderePagina("ronde.html?ronde=" + rondeNummer);
+        }]);
+    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
+    deelnemersLijst(document.getElementById("tabel"), r);
 })();
 
 function deelnemersLijst(lijst, ranglijst) {
     ranglijst.forEach(function(t, i) {
-        lijst.appendChild(htmlRij(i + 1, t.naam, t.punten(), t.rating()));
+        lijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), t.punten(), t.rating()));
     });
 }
 
-function partijen(lijst, ranglijst) {
-    const oneven = ranglijst.length % 2 === 0 ? 0 : ranglijst.length;  // laatste speler is oneven
-    let wit = [];
-    let zwart = [];
-    indelenEersteRonde(evenAantal(ranglijst.length), 3, wit, zwart);
+function partijen(lijst, ranglijst, wit, zwart, oneven) {
     for (let i = 0; i < wit.length; i++) {
         lijst.appendChild(htmlRij(i + 1, ranglijst[wit[i]].naam, ranglijst[zwart[i]].naam, `${wit[i]+1} - ${zwart[i]+1}`));
     }

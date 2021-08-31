@@ -388,6 +388,41 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    router.get('/:uuidToken/indelen/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        console.log("hoera");
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+            if (await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                .patch({bordNummer: ctx.params.bordNummer,
+                    partij: INTERNE_PARTIJ,
+                    witZwart: WIT,
+                    tegenstanderNummer: ctx.params.tegenstanderNummer,
+                    resultaat: ""})) {
+                aantal++;
+                if (await Uitslag.query()
+                    .where('uitslag.seizoen', ctx.params.seizoen)
+                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                    .patch({bordNummer: ctx.params.bordNummer,
+                        partij: INTERNE_PARTIJ,
+                        witZwart: ZWART,
+                        tegenstanderNummer: ctx.params.knsbNummer,
+                        resultaat: ""})) {
+                    aantal++;
+                }
+            }
+            console.log(aantal);
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
     router.get('/:uuidToken/uitslag/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer/:resultaat', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
