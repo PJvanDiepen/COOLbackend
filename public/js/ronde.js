@@ -14,6 +14,14 @@
         }],
         [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
             naarAnderePagina(`indelen.html?datum${datumSQL(datumTot)}`);
+        }],
+        [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);
+            if (mutaties) {
+                sessionStorage.removeItem(`/ronde/${seizoen}/${rondeNummer}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
+                naarAnderePagina("ronde.html?ronde=" + rondeNummer);
+            }
         }]);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(ronden, document.getElementById("kop"), document.getElementById("wedstrijden"));
@@ -71,7 +79,7 @@ function wedstrijdBijRonde(datum, ronden) {
  */
 async function uitslagenRonde(lijst) {
     let geenUitslagen = true;
-    (await localFetch("/ronde/" + seizoen + "/" + rondeNummer)).forEach(
+    (await localFetch(`/ronde/${seizoen}/${rondeNummer}`)).forEach(
         function (uitslag) {
             geenUitslagen = false;
             lijst.appendChild(htmlRij(

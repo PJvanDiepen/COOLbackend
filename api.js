@@ -391,7 +391,6 @@ module.exports = router => {
     router.get('/:uuidToken/indelen/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        console.log("hoera");
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
             if (await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
@@ -417,7 +416,25 @@ module.exports = router => {
                     aantal++;
                 }
             }
-            console.log(aantal);
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    router.get('/:uuidToken/verwijder/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+            aantal = await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.partij', INTERNE_PARTIJ)
+                .patch({bordNummer: 0,
+                    partij: MEEDOEN,
+                    witZwart: "",
+                    tegenstanderNummer: 0,
+                    resultaat: ""});
             await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
         }
         ctx.body = aantal;

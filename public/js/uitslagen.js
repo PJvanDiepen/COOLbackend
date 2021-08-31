@@ -179,11 +179,11 @@ const naarIndelen = [GEREGISTREERD, "voorlopige indeling" , function () {
     naarAnderePagina("indelen.html?seizoen=2122&ronde=1"); // TODO 0 = volgendeRonde
 }];
 
-function naarAnderePagina(naarPagina) {
+function naarAnderePagina(naarPagina) { // TODO naarPagina i.p.v. naarAndere/ZelfdePagina
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
-function naarZelfdePagina(parameters) {
+function naarZelfdePagina(parameters) { // TODO naarPagina i.p.v. naarAndere/ZelfdePagina
     location.replace(pagina.pathname + (parameters ? parameters : ""));
 }
 

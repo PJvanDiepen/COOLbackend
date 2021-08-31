@@ -16,11 +16,6 @@
         naarGebruiker,
         naarBeheer,
         [BEHEERDER, "indeling definitief maken", async function () {
-            console.log("hoe?");
-            console.log(r);
-            console.log(wit);
-            console.log(zwart);
-            console.log(oneven);
             for (let i = 0; i < wit.length; i++) {
                 const mutaties = await serverFetch(
                     `/${uuidToken}/indelen/${seizoen}/int/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`);
