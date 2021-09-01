@@ -4,13 +4,10 @@
     await gebruikerVerwerken();
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
     const datumTot = ronden[rondeNummer - 1].datum;
-    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
-    const r = await ranglijst(seizoen, versie, datumTot, deelnemers);
-    let wit = [];
-    let zwart = [];
-    const oneven = r.length % 2 === 0 ? 0 : r.length;  // laatste speler is oneven
-    indelenEersteRonde(evenAantal(r.length), 3, wit, zwart);
-    partijen(document.getElementById("partijen"), r, wit, zwart, oneven);
+    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
+    if (GEREGISTREERD <= gebruiker.mutatieRechten) {
+        indelen(datumTot, document.getElementById("partijen"), document.getElementById("tabel"))
+    }
     menu(naarAgenda,
         naarRanglijst,
         naarGebruiker,
@@ -22,23 +19,24 @@
             }
             naarAnderePagina("ronde.html?ronde=" + rondeNummer);
         }]);
-    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
-    deelnemersLijst(document.getElementById("tabel"), r);
 })();
 
-function deelnemersLijst(lijst, ranglijst) {
-    ranglijst.forEach(function(t, i) {
-        lijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), t.punten(), t.rating()));
-    });
-}
-
-function partijen(lijst, ranglijst, wit, zwart, oneven) {
+async function indelen(datumTot, partijenLijst, deelnemersLijst) {
+    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
+    const r = await ranglijst(seizoen, versie, datumTot, deelnemers);
+    let wit = [];
+    let zwart = [];
+    const oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
+    indelenEersteRonde(evenAantal(r.length), 3, wit, zwart);
     for (let i = 0; i < wit.length; i++) {
-        lijst.appendChild(htmlRij(i + 1, ranglijst[wit[i]].naam, ranglijst[zwart[i]].naam, `${wit[i]+1} - ${zwart[i]+1}`));
+        partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, `${wit[i]+1} - ${zwart[i]+1}`));
     }
     if (oneven) {
-        lijst.appendChild(htmlRij("", ranglijst[oneven - 1].naam, "", "oneven"));
+        partijenLijst.appendChild(htmlRij("", r[oneven - 1].naam, "", "oneven"));
     }
+    r.forEach(function(t, i) {
+        deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), t.punten(), t.rating()));
+    });
 }
 
 function evenAantal(aantal) {

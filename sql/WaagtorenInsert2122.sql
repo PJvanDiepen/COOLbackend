@@ -14,6 +14,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2122', '', '', 110, 1000, '2021-08-06', 'H'),
 ('2122', '', '', 111, 1000, '2021-08-19', 'H'),
 ('2122', '', '', 112, 1000, '2021-08-19', 'H'),
+('2122', '', '', 113, 1000, '2021-09-01', 'H'),
 ('2122', '', '', '7584566', '2333', '2021-08-01', 'A'),
 ('2122', '', '', '7657342', '2299', '2021-08-01', 'A'),
 ('2122', '', '', '7970094', '2271', '2021-08-01', 'A'),
@@ -169,7 +170,7 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam);
 
--- 116 deelnemers in alle seizoenen
+-- 117 deelnemers in alle seizoenen
 insert into persoon (knsbNummer, naam, dummy) values
 ('101', 'Ramon Witte', ''),
 ('102', 'Ellen van der Hoeven', ''),
@@ -183,6 +184,7 @@ insert into persoon (knsbNummer, naam, dummy) values
 ('110', 'Tansu Madencioglu', ''),
 ('111', 'Jorn Visser', ''),
 ('112', 'Thea Veldhuis', ''),
+('113', 'Ralph Versluis', ''),
 ('6187885', 'Bob de Mon', ''),
 ('6192098', 'Nico Brugman', ''),
 ('6212404', 'Peter van Diepen', ''),

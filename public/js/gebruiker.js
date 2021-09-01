@@ -46,7 +46,7 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
             gebruiker.mutatieRechten = 0;
             const json = JSON.stringify(gebruiker);
             sessionStorage.setItem("/gebruiker/", json); // voorlopig zonder uuidToken
-            volgendeSessie(json); // overschrijf eventueel uuidToken
+            volgendeSessie(json); // overschrijf eventueel uuidToken??
             status.value = "je aanvraag is verstuurd voor controle";
             const mutaties = await serverFetch(`/registreer/${knsbNummer.value}/${email.value}`);
         } else {
