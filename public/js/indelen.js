@@ -27,12 +27,16 @@ async function indelen(datumTot, partijenLijst, deelnemersLijst) {
     let wit = [];
     let zwart = [];
     const oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
-    indelenEersteRonde(evenAantal(r.length), 3, wit, zwart);
+    if (rondeNummer === 1) {
+        indelenEersteRonde(evenAantal(r.length), 3, wit, zwart);
+    } else {
+        indelenAndereRonde(r, wit, zwart);
+    }
     for (let i = 0; i < wit.length; i++) {
         partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, `${wit[i]+1} - ${zwart[i]+1}`));
     }
     if (oneven) {
-        partijenLijst.appendChild(htmlRij("", r[oneven - 1].naam, "", "oneven"));
+        partijenLijst.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));
     }
     r.forEach(function(t, i) {
         deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), t.punten(), t.rating()));
@@ -78,6 +82,13 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
             zwart[i] = i + tot;
         }
     }
+}
+
+function indelenAndereRonde(r, wit, zwart) {
+    console.log(r);
+    console.log("indelenAndereRonde()"); // TODO uitwerken
+    console.log(wit);
+    console.log(zwart);
 }
 
 // TODO mogelijkeTegenstanders aanroepen
