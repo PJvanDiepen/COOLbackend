@@ -46,7 +46,7 @@
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
     const aantalPartijen = aantalSpelers / 2;
     aantalGroepen = juisteAantalGroepen(aantalGroepen, aantalSpelers);
-    const helftGroep = Math.ceil(aantalPartijen / aantalGroepen);
+    const helftGroep = Math.floor(aantalPartijen / aantalGroepen);
     const tot = (aantalGroepen - 1) * helftGroep; // tot laatste groep
     for (let van = 0; van < tot; van += helftGroep) {
         groepIndelenEersteRonde(van, van + helftGroep, wit, zwart);
@@ -69,8 +69,9 @@ function juisteAantalGroepen(aantalGroepen, aantalSpelers) {
 }
 
 function groepIndelenEersteRonde(van, tot, wit, zwart) {
+    const sterkste = van % 2;
     for (let i = van; i < tot; i++) {
-        if (i % 2 === 0) { // op even borden heeft de sterkste speler zwart
+        if (i % 2 === sterkste) { // op van, van + 2, van + 4 heeft de sterkste speler zwart
             wit[i] = i + tot;
             zwart[i] = i + van;
         } else {
