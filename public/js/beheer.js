@@ -5,19 +5,18 @@
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
-        naarGebruiker,
-        naarBeheer);
+        naarGebruiker);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     document.getElementById("computer").appendChild(
-        htmlTekst(`Operating System: ${navigator.platform} Browser: ${navigator.vendor}`));
+        htmlTekst(`Operating System: ${navigator.platform} Browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function gebruikers(lijst) {
     const leden = await serverFetch(`/${uuidToken}/gebruikers`);
     for (const lid of leden) {
         lijst.appendChild(htmlRij(
-            lid.naam,
+            naarSpeler(lid.knsbNummer, lid.naam),
             gebruiker.mutatieRechten === BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
             gebruikerFunctie(lid)));
     }

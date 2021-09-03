@@ -3,9 +3,10 @@
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
+        naarIndelen,
         naarRanglijst,
         naarGebruiker,
-        terugNaar);
+        naarBeheer);
     teamSelecteren(teamCode);
     uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
 })();

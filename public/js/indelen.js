@@ -5,9 +5,31 @@
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
     const datumTot = ronden[rondeNummer - 1].datum;
     document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
+    let deelnemers = [0];
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        indelen(datumTot, document.getElementById("partijen"), document.getElementById("tabel"))
+        deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
     }
+    const r = await ranglijst(seizoen, versie, datumTot, deelnemers);
+    const wit = [];
+    const zwart = [];
+    let oneven = 0;
+    if (rondeNummer === 1) {
+        oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
+        indelenEersteRonde(oneven ? oneven : r.length, 3, wit, zwart);
+    } else {
+        oneven = indelenRonde(r, wit, zwart);
+    }
+    const partijenLijst = document.getElementById("partijen");
+    for (let i = 0; i < wit.length; i++) {
+        partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, `${wit[i]+1} - ${zwart[i]+1}`));
+    }
+    if (oneven) {
+        partijenLijst.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));
+    }
+    const deelnemersLijst = document.getElementById("tabel");
+    r.forEach(function(t, i) {
+        deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), t.punten(), t.rating()));
+    });
     menu(naarAgenda,
         naarRanglijst,
         naarGebruiker,
@@ -20,32 +42,6 @@
             naarAnderePagina("ronde.html?ronde=" + rondeNummer);
         }]);
 })();
-
-async function indelen(datumTot, partijenLijst, deelnemersLijst) {
-    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
-    const r = await ranglijst(seizoen, versie, datumTot, deelnemers);
-    let wit = [];
-    let zwart = [];
-    const oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
-    if (rondeNummer === 1) {
-        indelenEersteRonde(evenAantal(r.length), 3, wit, zwart);
-    } else {
-        indelenAndereRonde(r, wit, zwart);
-    }
-    for (let i = 0; i < wit.length; i++) {
-        partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, `${wit[i]+1} - ${zwart[i]+1}`));
-    }
-    if (oneven) {
-        partijenLijst.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));
-    }
-    r.forEach(function(t, i) {
-        deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), t.punten(), t.rating()));
-    });
-}
-
-function evenAantal(aantal) {
-    return aantal % 2 === 0 ? aantal : aantal - 1;
-}
 
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
     const aantalPartijen = aantalSpelers / 2;
@@ -84,11 +80,13 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
     }
 }
 
-function indelenAndereRonde(r, wit, zwart) {
+function indelenRonde(r, wit, zwart) {
     console.log(r);
-    console.log("indelenAndereRonde()"); // TODO uitwerken
+    console.log("indelenRonde()"); // TODO uitwerken
     console.log(wit);
     console.log(zwart);
+    let oneven = 0;
+    return oneven;
 }
 
 // TODO mogelijkeTegenstanders aanroepen

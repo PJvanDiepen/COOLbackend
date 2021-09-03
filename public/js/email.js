@@ -15,7 +15,7 @@
 
 async function gebruikerTekst(emailAan, naamAan, link) {
     const leden = await serverFetch(`/${uuidToken}/email/${speler}`);
-    const email = params.get("email");
+    const email = params.get("email"); // TODO verwijderen???
     const lid = leden[0];  // TODO vergelijken met email
     emailAan.appendChild(htmlTekst(lid.email));
     naamAan.appendChild(htmlTekst(`${lid.naam},`));

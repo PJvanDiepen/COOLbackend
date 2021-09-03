@@ -8,7 +8,6 @@ drop table if exists persoon;
 create table persoon (
 	knsbNummer int not null,
     naam varchar(45),
-    dummy varchar(45),
     PRIMARY KEY (knsbNummer)
 );
 
@@ -59,7 +58,6 @@ CREATE TABLE speler (
     knsbNummer int not null,
     knsbRating int not null,
     datumRating date not null,
-    subgroep char(1),
     PRIMARY KEY (seizoen, knsbNummer)
 );
 

@@ -15,6 +15,7 @@ Nuttig
 - [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
+- [client hints](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/client-hints)
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
 - [PDF](https://github.com/bpampuch/pdfmake)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
