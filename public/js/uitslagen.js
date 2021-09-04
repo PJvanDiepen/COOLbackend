@@ -421,10 +421,10 @@ async function seizoenSelecteren(teamCode) {
         });
 }
 
-async function spelerSelecteren() {
+async function spelerSelecteren(seizoen) {
     const spelers = document.getElementById("spelerSelecteren");
     spelers.appendChild(htmlOptie(0, "selecteer naam"));
-    (await localFetch("/spelers/" + seizoen)).forEach(
+    (await localFetch(`/spelers/${seizoen}`)).forEach(
         function (persoon) {
             spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), persoon.naam));
         });
