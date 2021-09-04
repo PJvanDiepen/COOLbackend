@@ -21,7 +21,7 @@ async function spelersLijst(kop, lijst) {
     if (datumTot) {
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "tot ronde " + rondeNummer;
     } else {
-        datumTot = datumSQL();
+        datumTot = datumSQL(null, 10); // + 10 dagen voor testen
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     }
     const winnaars = {};

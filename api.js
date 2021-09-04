@@ -586,10 +586,13 @@ const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
+let uniekeMutaties = 0;
+
 async function mutatie(gebruiker, ctx, aantal, invloed) {
     if (aantal) {
         await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
             knsbNummer: gebruiker.dader.knsbNummer,
+            volgNummer: uniekeMutaties++,
             url: ctx.request.url.substring(38), // zonder uuidToken TODO %C2%BD vervangen door ½
             aantal: aantal,
             invloed: invloed});

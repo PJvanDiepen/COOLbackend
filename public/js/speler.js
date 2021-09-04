@@ -55,7 +55,8 @@
 
 async function uitslagenSpeler(kop, lijst) {
     kop.innerHTML = [vereniging, seizoenVoluit(seizoen), naamSpeler].join(SCHEIDING);
-    const t = (await ranglijst(seizoen, versie, null, [speler]))[0];
+    const datumTot = datumSQL(null, 10); // + 10 dagen voor testen
+    const t = (await ranglijst(seizoen, versie, datumTot, [speler]))[0];
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
         lijst.appendChild(htmlRij("", "", "startpunten", "", "", "", totaal, totaal));

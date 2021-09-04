@@ -247,7 +247,8 @@ $$
 
 delimiter ;
 
-set @seizoen = '1819';
+set @seizoen = '2122';
+set @versie = 0;
 
 set @knsbNummer = 6212404; -- Peter van Diepen
 

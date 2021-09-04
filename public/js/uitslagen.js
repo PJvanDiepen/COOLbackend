@@ -467,6 +467,15 @@ async function rondeSelecteren(teamCode, rondeNummer) {
         });
 }
 
+/**
+ * ranglijst geeft lijst totalen van eventueel geselecteerde spelers op volgorde van totalen
+ *
+ * @param seizoen
+ * @param versie
+ * @param datumTot indien null dan vandaag
+ * @param selectie indien null dan alles
+ * @returns {Promise<*>}
+ */
 async function ranglijst(seizoen, versie, datumTot, selectie) {
     let spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(datumTot)}`);
     if (selectie) {
