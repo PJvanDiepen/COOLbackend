@@ -35,11 +35,24 @@
         naarGebruiker,
         naarBeheer,
         [BEHEERDER, "indeling definitief maken", async function () {
+            let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
-                const mutaties = await serverFetch(
-                    `/${uuidToken}/indelen/${seizoen}/int/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`);
+                if (await serverFetch(
+                    `/${uuidToken}/indelen/${seizoen}/int/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
+                    mutaties += 2;
+                }
             }
-            naarAnderePagina("ronde.html?ronde=" + rondeNummer);
+            if (oneven) {
+                if (await serverFetch(
+                    `/${uuidToken}/oneven/${seizoen}/int/${rondeNummer}/${r[oneven].knsbNummer}`)) {
+                    mutaties += 1;
+                }
+            }
+            mutaties += await serverFetch(`/${uuidToken}/afwezig/${seizoen}/int/${rondeNummer}`);
+            if (mutaties) {
+                console.log("mutaties: " + mutaties);
+                naarAnderePagina("ronde.html?ronde=" + rondeNummer);
+            }
         }]);
 })();
 

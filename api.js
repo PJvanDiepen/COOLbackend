@@ -353,6 +353,7 @@ module.exports = router => {
 
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
         if (gebruiker.juisteRechten(GEREGISTREERD)) {
             await Uitslag.query()
                 .insert({seizoen: ctx.params.seizoen,
@@ -366,11 +367,10 @@ module.exports = router => {
                     resultaat: "",
                     datum: ctx.params.datum,
                     anderTeam: ctx.params.anderTeam});
-            await mutatie(gebruiker, ctx, 1, GEEN_INVLOED);
-            ctx.body = 1;
-        } else {
-            ctx.body = 0;
+            aantal = 1;
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
         }
+        ctx.body = aantal;
     });
 
     router.get('/:uuidToken/partij/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
@@ -421,7 +421,7 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    router.get('/:uuidToken/verwijder/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+    router.get('/:uuidToken/oneven/:seizoen/:teamCode/:rondeNummer/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
@@ -429,12 +429,53 @@ module.exports = router => {
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.partij', INTERNE_PARTIJ)
+                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                .patch({partij: ONEVEN});
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+            aantal = await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', '<=', ctx.params.rondeNummer) // ook voor eerdere ronden
+                .andWhere('uitslag.partij', NIET_MEEDOEN)
+                .patch({partij: AFWEZIG});
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    router.get('/:uuidToken/verwijder/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+            const aanmelden = await Uitslag.query()
+                .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .patch({bordNummer: 0,
                     partij: MEEDOEN,
                     witZwart: "",
                     tegenstanderNummer: 0,
                     resultaat: ""});
+            const afzeggen = await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.partij', AFWEZIG)
+                .patch({bordNummer: 0,
+                    partij: NIET_MEEDOEN,
+                    witZwart: "",
+                    tegenstanderNummer: 0,
+                    resultaat: ""});
+            aantal = aanmelden + afzeggen;
             await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
         }
         ctx.body = aantal;

@@ -161,13 +161,13 @@ CREATE TABLE ranglijst (
 
 drop table if exists mutatie;
 create table mutatie (
-    knsbNummer int not null,
     tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
     volgNummer int not null,
+	knsbNummer int not null,
     url varchar(100),
     aantal int,
     invloed int,
-    primary key (knsbNummer, tijdstip, volgNummer)
+    primary key (tijdstip, volgNummer)
 );
 
 alter table mutatie
