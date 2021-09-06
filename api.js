@@ -10,9 +10,33 @@ const Uitslag = require('./models/uitslag');
 
 const { fn, ref } = require('objection');
 
+// mutatie.invloed
+const GEEN_INVLOED = 0;
+const OPNIEUW_INDELEN = 1;
+const NIEUWE_RANGLIJST = 2;
+
+const laatsteMutaties = [];
+let uniekeMutaties = 0;
+
+async function mutatie(gebruiker, ctx, aantal, invloed) {
+    if (aantal) {
+        laatsteMutaties[invloed] = uniekeMutaties++;
+        await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
+            knsbNummer: gebruiker.dader.knsbNummer,
+            volgNummer: uniekeMutaties,
+            url: ctx.request.url.substring(38), // zonder uuidToken TODO %C2%BD vervangen door ½
+            aantal: aantal,
+            invloed: invloed});
+    }
+}
+
 module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
+
+    router.get('/gewijzigd', async function (ctx) {
+        ctx.body = laatsteMutaties;
+    });
 
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -166,7 +190,7 @@ module.exports = router => {
     where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam)
     order by r.datum;
      */
-    router.get('/agenda/:seizoen/:knsbNummer', async function (ctx) {
+    router.get('/agenda/:seizoen/:knsbNummer', async function (ctx) { // TODO met uuid
         ctx.body = await Ronde.query()
             .with('s', function (qb) {
                 qb.from('speler')
@@ -549,6 +573,7 @@ module.exports = router => {
         }
         ctx.body = aantal;
     });
+
 }
 
 // TODO const.js
@@ -620,22 +645,4 @@ async function gebruikerRechten(uuidToken) {
     }
 
     return Object.freeze({dader, juisteRechten, eigenData, vorigSeizoen});
-}
-
-// mutatie.invloed
-const GEEN_INVLOED = 0;
-const OPNIEUW_INDELEN = 1;
-const NIEUWE_RANGLIJST = 2;
-
-let uniekeMutaties = 0;
-
-async function mutatie(gebruiker, ctx, aantal, invloed) {
-    if (aantal) {
-        await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
-            knsbNummer: gebruiker.dader.knsbNummer,
-            volgNummer: uniekeMutaties++,
-            url: ctx.request.url.substring(38), // zonder uuidToken TODO %C2%BD vervangen door ½
-            aantal: aantal,
-            invloed: invloed});
-    }
 }

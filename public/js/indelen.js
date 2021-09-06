@@ -28,7 +28,8 @@
     }
     const deelnemersLijst = document.getElementById("tabel");
     r.forEach(function(t, i) {
-        deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), t.punten(), t.rating()));
+        const pnt = t.zonderAftrek() > t.punten() ? "*" + t.zonderAftrek() : t.punten(); // * indien eerste keer deelnemer
+        deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), pnt, t.rating()));
     });
     menu(naarAgenda,
         naarRanglijst,

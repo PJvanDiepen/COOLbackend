@@ -56,6 +56,11 @@ const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 8;
 const BEHEERDER = 9;
 
+// mutatie.invloed
+const GEEN_INVLOED = 0;
+const OPNIEUW_INDELEN = 1;
+const NIEUWE_RANGLIJST = 2;
+
 /**
  * Sommige parameters van de url zijn specifiek voor een pagina.
  * Andere parameters kan je doorgeven voor alle pagina's.
@@ -139,7 +144,8 @@ function volgendeSessie(json) {
  * @param menuKeuzes
  * @returns {Promise<void>}
  */
-async function menu(...menuKeuzes) {
+async function menu(...menuKeuzes) {  // TODO is await nodig?
+    await gewijzigd(); // TODO deze test verwijderen
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () { }];
@@ -185,6 +191,13 @@ function naarAnderePagina(naarPagina) { // TODO naarPagina i.p.v. naarAndere/Zel
 
 function naarZelfdePagina(parameters) { // TODO naarPagina i.p.v. naarAndere/ZelfdePagina
     location.replace(pagina.pathname + (parameters ? parameters : ""));
+}
+
+async function gewijzigd() {
+    const laatsteMutaties = await serverFetch("/gewijzigd");
+    console.log("gewijzigd()");
+    console.log(laatsteMutaties);
+    return laatsteMutaties;
 }
 
 /**
@@ -579,6 +592,10 @@ function spelerTotalen(speler) {
         return - totaal[11];
     }
 
+    function zonderAftrek() {
+        return totaal[12] + totaal[13];
+    }
+
     function startPunten() {
         return totaal[13];
     }
@@ -654,6 +671,7 @@ function spelerTotalen(speler) {
         oneven,
         afzeggingen,
         aftrek,
+        zonderAftrek,
         startPunten,
         eigenWaardeCijfer,
         extern,

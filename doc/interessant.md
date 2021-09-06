@@ -22,6 +22,7 @@ Nuttig
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
 - [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
+- [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
 - [Swiss pairings](https://senseis.xmp.net/?SwissPairing)
 
 Objection / Knex

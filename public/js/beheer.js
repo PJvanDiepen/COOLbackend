@@ -1,5 +1,11 @@
 "use strict";
 
+/*
+TODO mutaties per gebruiker afsplitsen
+TODO mutaties met filters
+TODO mutaties met verwijderen
+ */
+
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,

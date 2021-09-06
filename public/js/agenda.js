@@ -13,7 +13,7 @@
 async function wedstrijdSelecteren(wedstrijden) {
     wedstrijden.appendChild(htmlOptie("eigen", "wedstrijden van eigen team(s)"));
     wedstrijden.appendChild(htmlOptie("inval", "wedstrijden van eigen en invalteam(s)"));
-    wedstrijden.appendChild(htmlOptie("alle", "westrijden van alle teams"));
+    wedstrijden.appendChild(htmlOptie("alle", "wedstrijden van alle teams"));
     wedstrijden.value = params.get("wedstrijden") || "eigen";
     wedstrijden.addEventListener("input",
         function () {
@@ -59,7 +59,7 @@ async function agendaMutatie(knsbNummer) {
 }
 
 async function agendaLezen(knsbNummer) {
-    return await serverFetch(`/agenda/${ditSeizoen()}/${knsbNummer}`);
+    return await serverFetch(`/agenda/${ditSeizoen()}/${knsbNummer}`);  // TODO uuid
 }
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {
