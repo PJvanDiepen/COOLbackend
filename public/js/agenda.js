@@ -59,7 +59,7 @@ async function agendaMutatie(knsbNummer) {
 }
 
 async function agendaLezen(knsbNummer) {
-    return await serverFetch(`/agenda/${ditSeizoen()}/${knsbNummer}`);  // TODO uuid
+    return await serverFetch(`/${uuidToken}/kalender/${ditSeizoen()}/${knsbNummer}`);
 }
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {

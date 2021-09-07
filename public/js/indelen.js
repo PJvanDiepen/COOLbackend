@@ -1,8 +1,13 @@
 "use strict";
 
-const zonderRangnummers = params.get("rangnummers") !== "met";
+const rangnummers = params.get("rangnummers");
 
 (async function() {
+    document.querySelector("details").addEventListener("toggle",function () {
+        if (!rangnummers) {
+            naarZelfdePagina("?rangnummers=aan");  // TODO verwijder eventListener
+        }
+    });
     await gebruikerVerwerken();
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
     const datumTot = ronden[rondeNummer - 1].datum;
@@ -23,17 +28,18 @@ const zonderRangnummers = params.get("rangnummers") !== "met";
     }
     const partijenLijst = document.getElementById("partijen");
     for (let i = 0; i < wit.length; i++) {
-        partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, zonderRangnummers ? "" : `${wit[i]+1} - ${zwart[i]+1}`));
+        partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""));
     }
     if (oneven) {
         partijenLijst.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));
     }
-    rangnummersSelecteren(document.getElementById("rangnummers"));
-    const deelnemersLijst = document.getElementById("tabel");
-    r.forEach(function(t, i) {
-        const pnt = t.zonderAftrek() > t.punten() ? "*" + t.zonderAftrek() : t.punten(); // * indien eerste keer deelnemer
-        deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), pnt, t.rating()));
-    });
+    if (rangnummers) {
+        const deelnemersLijst = document.getElementById("tabel");
+        r.forEach(function(t, i) {
+            const pnt = t.zonderAftrek() > t.punten() ? "*" + t.zonderAftrek() : t.punten(); // * indien eerste keer deelnemer
+            deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), pnt, t.rating()));
+        });
+    }
     menu(naarAgenda,
         naarRanglijst,
         naarGebruiker,
@@ -59,16 +65,6 @@ const zonderRangnummers = params.get("rangnummers") !== "met";
             }
         }]);
 })();
-
-async function rangnummersSelecteren(rangnummers) {
-    rangnummers.appendChild(htmlOptie("zonder", "partijen zonder rangnummers"));
-    rangnummers.appendChild(htmlOptie("met", "partijen met rangnummers"));
-    rangnummers.value = zonderRangnummers ? "zonder" : "met";
-    rangnummers.addEventListener("input",
-        function () {
-            naarZelfdePagina("?rangnummers=" + rangnummers.value);
-        });
-}
 
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
     const aantalPartijen = aantalSpelers / 2;
