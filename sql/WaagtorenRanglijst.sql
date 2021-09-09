@@ -3,7 +3,6 @@ use waagtoren;
 drop function rating;
 
 delimiter $$
-
 create function rating(seizoen char(4), knsbNummer int) 
 returns int deterministic
 begin
@@ -15,18 +14,33 @@ begin
     return knsbRating;
 end;
 $$
-
 delimiter ;
 
--- subgroep, waardeCijfer, punten en totalen bevatten de logica voor verschillende reglementen voor de interne competie van de Waagtoren
--- ze bevatten verschillende versies 
--- versie 0 maximumAfzeggingen = 10 in seizoen = 1819, 1920, 2021
--- versie 1 geen maximumAfzeggingen in seizoen = 2122
+-- seizoenVersie, subgroep, waardeCijfer, punten en totalen bevatten de logica voor verschillende reglementen voor de interne competie van de Waagtoren
+-- versie 1 is de oorspronkelijke versie van Alkmaar systeem (geen SQL code)
+-- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
+-- versie 3 geen afzeggingenAftrek in seizoen = 2122
+
+drop function seizoenVersie;
+
+delimiter $$
+create function seizoenVersie(seizoen char(4), versie int)
+returns int deterministic
+begin
+    if versie <> 0 then
+        return versie;
+	elseif seizoen in ('1819', '1920', '2021') then 
+        return 2;
+	else 
+        return 3;
+	end if;
+end;
+$$
+delimiter ;
 
 drop function subgroep;
 
 delimiter $$
-
 create function subgroep(seizoen char(4), versie int, knsbNummer int) 
 returns char(1) deterministic
 begin
@@ -51,13 +65,11 @@ begin
     end if;
 end;
 $$
-
 delimiter ;
 
 drop function waardeCijfer;
 
 delimiter $$
-
 create function waardeCijfer(versie int, knsbRating int) 
 returns int deterministic
 begin
@@ -80,13 +92,11 @@ begin
     end if;
 end;
 $$
-
 delimiter ;
 
 drop function punten;
 
 delimiter $$
-
 create function punten(seizoen char(4), versie int, knsbNummer int, eigenWaardeCijfer int, teamCode char(3), partij char(1), tegenstander int, resultaat char(1))
     returns int deterministic -- reglement artikel 12
 begin
@@ -115,18 +125,15 @@ begin
     end if;
 end;
 $$
-
 delimiter ;
 
 drop function totalen;
 
 delimiter $$
-
 create function totalen(seizoen char(4), versie int, knsbNummer int, totDatum date) returns varchar(600) deterministic
 begin
     declare totaal int default 0;
     declare startPunten int default 300; -- reglement artikel 11
-    declare maximumAfzeggingen int default 10; -- reglement artikel 12
     declare aftrek int default 0;
     declare minimumInternePartijen int default 20; -- reglement artikel 2
     declare reglementairGewonnen int default 0;
@@ -212,12 +219,10 @@ begin
         set prijs = 0;
         set sorteer = witExtern + zwartExtern;
 	else
-		if versie = 0 and afzeggingen > maximumAfzeggingen then
-			set aftrek = (afzeggingen - maximumAfzeggingen) * 8;
-		end if;
         if (witIntern + zwartIntern + oneven + reglementairGewonnen + externTijdensInterneRonde) < minimumInternePartijen then
 			set prijs = 0;
 		end if;
+        set aftrek = afzeggingenAftrek(seizoen, versie, afzeggingen);
         set sorteer = startPunten + totaal - aftrek;
     end if;
     return concat(
@@ -244,7 +249,21 @@ begin
         tegenstanders); -- 20
 end;
 $$
+delimiter ;
 
+drop function afzeggingenAftrek;
+
+delimiter $$
+create function afzeggingenAftrek(seizoen char(4), versie int, afzeggingen int)
+returns int deterministic
+begin
+    if afzeggingen > 10 and seizoenVersie(seizoen, versie) = 2 then -- reglement artikel 12
+        return (afzeggingen - 10) * 8;
+	else
+        return 0;
+    end if;
+end;
+$$
 delimiter ;
 
 set @seizoen = '2122';

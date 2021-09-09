@@ -1,15 +1,9 @@
 "use strict";
 
-const rangnummers = params.get("rangnummers");
-
 (async function() {
-    document.querySelector("details").addEventListener("toggle",function () {
-        if (!rangnummers) {
-            naarZelfdePagina("?rangnummers=aan");  // TODO verwijder eventListener
-        }
-    });
     await gebruikerVerwerken();
     const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
+    console.log(ronden);
     const datumTot = ronden[rondeNummer - 1].datum;
     document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
     let deelnemers = [0];
@@ -26,6 +20,7 @@ const rangnummers = params.get("rangnummers");
     } else {
         oneven = indelenRonde(r, wit, zwart);
     }
+    const rangnummers = rangnummersToggle(document.querySelector("details"));
     const partijenLijst = document.getElementById("partijen");
     for (let i = 0; i < wit.length; i++) {
         partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""));
@@ -65,6 +60,18 @@ const rangnummers = params.get("rangnummers");
             }
         }]);
 })();
+
+function rangnummersToggle(rangnummers) {
+    const rangnummersAan = params.get("rangnummers");
+    if (rangnummersAan) {
+        rangnummers.open = true;
+    } else {
+        rangnummers.addEventListener("toggle",function () {
+            naarZelfdePagina("?rangnummers=aan");
+        });
+    }
+    return rangnummersAan;
+}
 
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
     const aantalPartijen = aantalSpelers / 2;

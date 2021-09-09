@@ -59,7 +59,7 @@ async function laatsteMutaties(lijst) {
     for (const mutatie of mutaties) {
         lijst.appendChild(htmlRij(
             tijdGeleden(mutatie.tijdstip),
-            mutatie.knsbNummer === vorige ? "" : mutatie.naam,
+            mutatie.knsbNummer === vorige ? "" : naarSpeler(mutatie.knsbNummer, mutatie.naam),
             mutatie.knsbNummer === vorige ? "" : mutatie.knsbNummer,
             mutatie.url,
             mutatie.aantal,
