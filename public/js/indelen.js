@@ -2,9 +2,7 @@
 
 (async function() {
     await gebruikerVerwerken();
-    const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
-    console.log(ronden);
-    const datumTot = ronden[rondeNummer - 1].datum;
+    const [rondeNummer, datumRonde, datumTot] = await verwerkRonden(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
     document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
     let deelnemers = [0];
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
@@ -55,7 +53,6 @@
             }
             mutaties += await serverFetch(`/${uuidToken}/afwezig/${seizoen}/int/${rondeNummer}`);
             if (mutaties) {
-                console.log("mutaties: " + mutaties);
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);

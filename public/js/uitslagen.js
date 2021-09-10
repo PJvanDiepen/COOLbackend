@@ -38,16 +38,16 @@ const params = pagina.searchParams;
 
 const vereniging = doorgeven("vereniging", "Waagtoren");
 const seizoen = doorgeven("seizoen", ditSeizoen());
-const versie = Number(params.get("versie")); // TODO lees seizoengegevens
+const versie = Number(params.get("versie"));
 const teamCode = doorgeven("team", INTERNE_COMPETITIE);
-const rondeNummer = Number(doorgeven("ronde", 0));
+let ronden = []; // rondenVerwerken
 const speler = Number(doorgeven("speler", 0)); // knsbNummer
 const naamSpeler = doorgeven("naam", "onbekend");
 
 const uuidActiveren = params.get("uuid");
 const vorigeSessie = localStorage.getItem(vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
-const gebruiker = {}; // gebruikerInvullen
+const gebruiker = {}; // gebruikerVerwerken
 // gebruiker.mutatieRechten
 const GEEN_LID = 0;
 const GEREGISTREERD = 1;
@@ -182,7 +182,7 @@ const naarGebruiker = [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, fu
 }];
 
 const naarIndelen = [GEREGISTREERD, "voorlopige indeling" , function () {
-    naarAnderePagina("indelen.html?seizoen=2122&ronde=1"); // TODO 0 = volgendeRonde
+    naarAnderePagina("indelen.html?seizoen=2122&ronde=0");
 }];
 
 function naarAnderePagina(naarPagina) { // TODO naarPagina i.p.v. naarAndere/ZelfdePagina
@@ -346,6 +346,34 @@ function datumSQL(jsonDatum, dagen) {
 
 function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
+}
+
+function berekenDatum(jsonDatum, dagen) {  // TODO zie datumSQL
+    const datum = jsonDatum ? new Date(jsonDatum) : new Date();
+    if (dagen) {
+        datum.setDate(datum.getDate() + dagen);
+    }
+    return datum;
+}
+
+/**
+ * TODO verwerkRonde leest ronden etc.
+ */
+async function verwerkRonden(teamCode, rondeNummer) {
+    ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
+    const aantalRonden = ronden.length;
+    if (rondeNummer > aantalRonden || rondeNummer < 0) {
+        return [-1];
+    } else if (rondeNummer) {
+        return [rondeNummer, ronden[rondeNummer - 1].datum, berekenDatum(ronden[rondeNummer].datum, -1)];
+    } else {
+        for (let i = 0; i < aantalRonden; i++) {
+            if (datumLater(ronden[i].datum)) {
+                return [i + 1, ronden[i].datum, berekenDatum(ronden[i + 1].datum, -1)];
+            }
+        }
+        return [aantalRonden];
+    }
 }
 
 function teamVoluit(teamCode) {

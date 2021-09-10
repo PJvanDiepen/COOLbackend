@@ -17,6 +17,7 @@ const alleLeden = Number(params.get("leden"));
 })();
 
 async function spelersLijst(kop, lijst) {
+    const rondeNummer = Number(params.get("ronde"));
     let datumTot = params.get("datum");
     if (datumTot) {
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "tot ronde " + rondeNummer;

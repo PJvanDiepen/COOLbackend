@@ -53,6 +53,7 @@ async function agenda(kop, lijst) {
 
 async function agendaMutatie(knsbNummer) {
     const partij = params.get("partij");
+    const rondeNummer = params.get("ronde");
     if (partij) {
         await serverFetch(`/${uuidToken}/partij/${ditSeizoen()}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }

@@ -2,8 +2,18 @@
 
 (async function() {
     await gebruikerVerwerken();
-    const ronden = await localFetch(`/ronden/${seizoen}/${INTERNE_COMPETITIE}`);
-    const datumTot = ronden[rondeNummer - 1].datum;
+    const [rondeNummer, datumRonde, datumTot]  = await verwerkRonden(INTERNE_COMPETITIE, Number(params.get("ronde")));
+
+    /*
+    TODO local functions voor minder parameters
+
+    console.log("ronde.js");
+    console.log(ronden);
+    console.log(rondeNummer);
+    console.log(datumRonde);
+    console.log(datumTot);
+     */
+
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
@@ -19,24 +29,25 @@
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);
             if (mutaties) {
                 sessionStorage.removeItem(`/ronde/${seizoen}/${rondeNummer}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`); // TODO dit kan beter
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);
+    seizoenSelecteren(INTERNE_COMPETITIE);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
-    wedstrijdenBijRonde(ronden, document.getElementById("kop"), document.getElementById("wedstrijden"));
-    document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
-    uitslagenRonde(document.getElementById("tabel"));
+    wedstrijdenBijRonde(rondeNummer, document.getElementById("kop"), document.getElementById("wedstrijden"));
+    document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumRonde);
+    uitslagenRonde(rondeNummer, document.getElementById("tabel"));
 })();
 
-async function wedstrijdenBijRonde(ronden, kop, lijst) {
+async function wedstrijdenBijRonde(rondeNummer, kop, lijst) {
     kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     if (rondeNummer > 1) {
         lijst.appendChild(ranglijstTot(rondeNummer - 1, ronden[rondeNummer - 2].datum));
     }
     const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
     for (const wedstrijd of wedstrijden) {
-        if (wedstrijdBijRonde(wedstrijd.datum, ronden)) {
+        if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
             const datumKolom = datumLeesbaar(wedstrijd.datum);
             const wedstrijdKolom = naarTeam(wedstrijdVoluit(wedstrijd), wedstrijd);
             const rondeUitslagen = await uitslagenTeamAlleRonden(wedstrijd.teamCode);
@@ -52,7 +63,7 @@ function ranglijstTot(ronde, datum) {
     return htmlRij(ronde, datumLeesbaar(datum), "interne competitie", "");
 }
 
-function wedstrijdBijRonde(datum, ronden) {
+function wedstrijdBijRonde(rondeNummer, datum) {
     if (rondeNummer === 1) {
         return datum <= ronden[0].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
     } else if (rondeNummer === ronden.length) {
@@ -77,7 +88,7 @@ function wedstrijdBijRonde(datum, ronden) {
   where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
   order by uitslag.seizoen, uitslag.bordNummer;
  */
-async function uitslagenRonde(lijst) {
+async function uitslagenRonde(rondeNummer, lijst) {
     let geenUitslagen = true;
     (await localFetch(`/ronde/${seizoen}/${rondeNummer}`)).forEach(
         function (uitslag) {
@@ -86,16 +97,16 @@ async function uitslagenRonde(lijst) {
                 uitslag.bordNummer,
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
-                uitslagVerwerken(uitslag)));
+                uitslagVerwerken(rondeNummer, uitslag)));
         });
     if (geenUitslagen) {
         lijst.appendChild(htmlRij("nog", "geen", "uitslagen", ""));
     }
 }
 
-function uitslagVerwerken(uitslag) {
+function uitslagVerwerken(rondeNummer, uitslag) {
     if (uitslagWijzigen(uitslag)) {
-        return uitslagSelecteren(uitslag)
+        return uitslagSelecteren(rondeNummer, uitslag)
     } else if (uitslag.resultaat === WINST) {
         return "1-0";
     } else if (uitslag.resultaat === REMISE) {
@@ -119,7 +130,7 @@ function uitslagWijzigen(uitslag)  {
     }
 }
 
-function uitslagSelecteren(uitslag) {
+function uitslagSelecteren(rondeNummer, uitslag) {
     const select = document.createElement("select");
     select.appendChild(htmlOptie(WINST, "1-0"));
     select.appendChild(htmlOptie(REMISE, "½-½"));
