@@ -2,7 +2,7 @@
 
 (async function() {
     await gebruikerVerwerken();
-    const [rondeNummer, datumRonde, datumTot]  = await verwerkRonden(INTERNE_COMPETITIE, Number(params.get("ronde")));
+    const [rondeNummer, datumRonde, datumTot]  = await verwerkRonden(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
 
     /*
     TODO local functions voor minder parameters

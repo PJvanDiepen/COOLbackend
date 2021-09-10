@@ -3,7 +3,7 @@
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, datumRonde, datumTot] = await verwerkRonden(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
-    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
+    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumRonde);
     let deelnemers = [0];
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
         deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);

@@ -359,7 +359,7 @@ function berekenDatum(jsonDatum, dagen) {  // TODO zie datumSQL
 /**
  * TODO verwerkRonde leest ronden etc.
  */
-async function verwerkRonden(teamCode, rondeNummer) {
+async function verwerkRonden(teamCode, rondeNummer, volgendeRonde) {
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
@@ -369,7 +369,8 @@ async function verwerkRonden(teamCode, rondeNummer) {
     } else {
         for (let i = 0; i < aantalRonden; i++) {
             if (datumLater(ronden[i].datum)) {
-                return [i + 1, ronden[i].datum, berekenDatum(ronden[i + 1].datum, -1)];
+                let nummer = i + 1 + volgendeRonde;
+                return [nummer, ronden[nummer - 1].datum, berekenDatum(ronden[nummer].datum, -1)];
             }
         }
         return [aantalRonden];
