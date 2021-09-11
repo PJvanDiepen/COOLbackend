@@ -14,17 +14,17 @@
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
         deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
     }
-    const r = await ranglijst(seizoen, versie, totDatum, deelnemers);
+    const r = await ranglijstSorteren(totDatum, deelnemers);
     const wit = [];
     const zwart = [];
-    let oneven = 0;
+    let oneven = 0; // eerste speler is nooit oneven
     if (rondeNummer === 1) {
         oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
         indelenEersteRonde(oneven ? oneven : r.length, 3, wit, zwart);
     } else {
         oneven = indelenRonde(r, wit, zwart);
     }
-    const rangnummers = rangnummersToggle(document.querySelector("details"));
+    const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
     const partijenLijst = document.getElementById("partijen");
     for (let i = 0; i < wit.length; i++) {
         partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""));
@@ -64,16 +64,39 @@
         }]);
 })();
 
-function rangnummersToggle(rangnummers) {
+function rangnummersToggle(rangnummers, rondeNummer) {
     const rangnummersAan = params.get("rangnummers");
     if (rangnummersAan) {
         rangnummers.open = true;
     } else {
         rangnummers.addEventListener("toggle",function () {
-            naarZelfdePagina("?rangnummers=aan");
+            naarZelfdePagina(`?ronde=${rondeNummer}&rangnummers=aan`);
         });
     }
     return rangnummersAan;
+}
+
+async function ranglijstSorteren(totDatum, deelnemers) {
+    const r = await ranglijst(seizoen, versie, totDatum, deelnemers);
+    let gesorteerdTot = 1;
+    while (gesorteerdTot < r.length && r[gesorteerdTot - 1].zonderAftrek() >= r[gesorteerdTot].zonderAftrek()) {
+        gesorteerdTot++;
+    }
+    console.log(r.length + " gesorteerd tot " + gesorteerdTot);
+    if (gesorteerdTot >= r.length) {
+        console.log("ranglijst was al gesorteerd");
+        return r; // ranglijst was al gesorteerd
+    } else {
+        let gesorteerd = [];
+        let tussenvoegen = gesorteerdTot;
+        for (let j = 0; j < gesorteerdTot; j++) {
+            while (tussenvoegen < r.length && r[tussenvoegen].zonderAftrek() >= r[j].zonderAftrek()) {
+                gesorteerd.push(r[tussenvoegen++]);
+            }
+            gesorteerd.push(r[j])
+        }
+        return gesorteerd;
+    }
 }
 
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {

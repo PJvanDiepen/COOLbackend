@@ -17,15 +17,13 @@ const alleLeden = Number(params.get("leden"));
 })();
 
 async function spelersLijst(kop, lijst) {
-    const rondeNummer = Number(params.get("ronde"));
-    let totDatum = params.get("datum");
+    const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
     if (totDatum) {
-        kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "tot ronde " + rondeNummer;
+        kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "na ronde " + rondeNummer;
     } else {
-        totDatum = datumSQL(null, 10); // + 10 dagen voor testen
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     }
-    const winnaars = {};
+    const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(seizoen, versie, totDatum)).forEach(function (t, i) {
         if (t.inRanglijst() || alleLeden) {
             lijst.appendChild(htmlRij(

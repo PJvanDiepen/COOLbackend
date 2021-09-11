@@ -362,12 +362,13 @@ function voorloopNul(getal) {
  * @returns {Promise<[*, *, *]|number[]>} rondeNummer, (rondeDatum), totDatum
  */
 async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
+    console.log(`rondenVerwerken("${teamCode}", ${rondeNummer}, ${rondeIndelen})`);
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
         return [-1];
     } else if (rondeNummer) {
-        return rondeInfo(rondeNummer + rondeIndelen, aantalRonden);
+        return rondeInfo(rondeNummer, aantalRonden);
     } else {
         for (let i = 0; i < aantalRonden; i++) {
             if (datumLater(ronden[i].datum)) {
@@ -381,6 +382,7 @@ async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
 function rondeInfo(rondeNummer, aantalRonden) {
     const rondeDatum = ronden[rondeNummer - 1].datum;
     const totDatum = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
+    console.log(`return [${rondeNummer}, "${rondeDatum}", "${totDatum}"]`);
     return [rondeNummer, rondeDatum, totDatum];
 }
 

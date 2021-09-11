@@ -10,17 +10,16 @@
         naarRanglijst,
         naarGebruiker,
         naarBeheer,
-        [WEDSTRIJDLEIDER, `ranglijst tot ronde ${rondeNummer}`, function() {
+        [WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
             naarAnderePagina(`ranglijst.html?datum=${datumSQL(totDatum)}`);
         }],
         [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
-            naarAnderePagina(`indelen.html?datum${datumSQL(totDatum)}`);
+            naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);
         }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/ronde/${seizoen}/${rondeNummer}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`); // TODO dit kan beter
+                sessionStorage.removeItem(`/ronde/${seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);
