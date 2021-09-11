@@ -2,20 +2,19 @@
 
 (async function() {
     await gebruikerVerwerken();
-    const [rondeNummer, datumTot] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
+    const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
 
     console.log("indelen.js");
     console.log(ronden);
     console.log(rondeNummer);
-    // console.log(datumRonde);
-    console.log(datumTot);
+    console.log(totDatum);
 
-    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
+    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(totDatum);
     let deelnemers = [0];
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
         deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
     }
-    const r = await ranglijst(seizoen, versie, datumTot, deelnemers);
+    const r = await ranglijst(seizoen, versie, totDatum, deelnemers);
     const wit = [];
     const zwart = [];
     let oneven = 0;

@@ -1,29 +1,20 @@
 "use strict";
 
+// TODO local functions voor minder parameters
+
 (async function() {
     await gebruikerVerwerken();
-    const [rondeNummer, datumRonde, datumTot]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
-
-    /*
-    TODO local functions voor minder parameters
-
-    console.log("ronde.js");
-    console.log(ronden);
-    console.log(rondeNummer);
-    console.log(datumRonde);
-    console.log(datumTot);
-     */
-
+    const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
         naarGebruiker,
         naarBeheer,
         [WEDSTRIJDLEIDER, `ranglijst tot ronde ${rondeNummer}`, function() {
-            naarAnderePagina(`ranglijst.html?datum=${datumSQL(datumTot)}`);
+            naarAnderePagina(`ranglijst.html?datum=${datumSQL(totDatum)}`);
         }],
         [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
-            naarAnderePagina(`indelen.html?datum${datumSQL(datumTot)}`);
+            naarAnderePagina(`indelen.html?datum${datumSQL(totDatum)}`);
         }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);

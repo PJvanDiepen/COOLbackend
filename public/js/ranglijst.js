@@ -18,15 +18,15 @@ const alleLeden = Number(params.get("leden"));
 
 async function spelersLijst(kop, lijst) {
     const rondeNummer = Number(params.get("ronde"));
-    let datumTot = params.get("datum");
-    if (datumTot) {
+    let totDatum = params.get("datum");
+    if (totDatum) {
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "tot ronde " + rondeNummer;
     } else {
-        datumTot = datumSQL(null, 10); // + 10 dagen voor testen
+        totDatum = datumSQL(null, 10); // + 10 dagen voor testen
         kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     }
     const winnaars = {};
-    (await ranglijst(seizoen, versie, datumTot)).forEach(function (t, i) {
+    (await ranglijst(seizoen, versie, totDatum)).forEach(function (t, i) {
         if (t.inRanglijst() || alleLeden) {
             lijst.appendChild(htmlRij(
                 i + 1,

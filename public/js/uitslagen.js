@@ -349,26 +349,29 @@ function voorloopNul(getal) {
 }
 
 /**
- * TODO rondenVerwerken leest ronden etc.
- * @param teamCode
- * @param rondeNummer
- * @param volgendeRonde
- * @returns {Promise<[*, *, *]|number[]>}
+ * rondenVerwerken leest ronden,
+ * controleert rondeNummer of berekent actuele rondeNummer
+ * geeft rondeNummer, rondeDatum en totDatum voor uitslagen en ranglijsten of rondeNummer en totDatum indien rondeIndelen
+ *
+ * indien rondeIndelen = 1 dan geldt rondeDatum = totDatum en totDatum = vandaag
+ * zie rondeInfo
+ *
+ * @param teamCode interne competitie of team
+ * @param rondeNummer gegeven rondeNummer of 0 indien berekenen
+ * @param rondeIndelen 0 voor uitslagen en ranglijsten en 1 indien rondeIndelen
+ * @returns {Promise<[*, *, *]|number[]>} rondeNummer, (rondeDatum), totDatum
  */
-async function rondenVerwerken(teamCode, rondeNummer, volgendeRonde) {
-    console.log("verwerkRonden()");
+async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
-    console.log(ronden);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
         return [-1];
     } else if (rondeNummer) {
-        return rondeInfo(rondeNummer + volgendeRonde, aantalRonden);
+        return rondeInfo(rondeNummer + rondeIndelen, aantalRonden);
     } else {
         for (let i = 0; i < aantalRonden; i++) {
-            console.log(ronden[i].datum);
             if (datumLater(ronden[i].datum)) {
-                return rondeInfo(i + 1 + volgendeRonde, aantalRonden);
+                return rondeInfo(i + 1 + rondeIndelen, aantalRonden);
             }
         }
         return [aantalRonden];
@@ -376,12 +379,9 @@ async function rondenVerwerken(teamCode, rondeNummer, volgendeRonde) {
 }
 
 function rondeInfo(rondeNummer, aantalRonden) {
-    console.log("rondeInfo()");
-    console.log("aantalRonden: " + aantalRonden);
-    console.log("rondeNummer: " + rondeNummer);
     const rondeDatum = ronden[rondeNummer - 1].datum;
-    const datumTot = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
-    return [rondeNummer, rondeDatum, datumTot];
+    const totDatum = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
+    return [rondeNummer, rondeDatum, totDatum];
 }
 
 function teamVoluit(teamCode) {
@@ -521,12 +521,12 @@ async function rondeSelecteren(teamCode, rondeNummer) {
  *
  * @param seizoen
  * @param versie
- * @param datumTot indien null dan vandaag
+ * @param totDatum indien null dan vandaag
  * @param selectie indien null dan alles
  * @returns {Promise<*>}
  */
-async function ranglijst(seizoen, versie, datumTot, selectie) {
-    let spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(datumTot)}`);
+async function ranglijst(seizoen, versie, totDatum, selectie) {
+    let spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(totDatum)}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }
