@@ -348,33 +348,40 @@ function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
 
-function berekenDatum(jsonDatum, dagen) {  // TODO zie datumSQL
-    const datum = jsonDatum ? new Date(jsonDatum) : new Date();
-    if (dagen) {
-        datum.setDate(datum.getDate() + dagen);
-    }
-    return datum;
-}
-
 /**
- * TODO verwerkRonde leest ronden etc.
+ * TODO rondenVerwerken leest ronden etc.
+ * @param teamCode
+ * @param rondeNummer
+ * @param volgendeRonde
+ * @returns {Promise<[*, *, *]|number[]>}
  */
-async function verwerkRonden(teamCode, rondeNummer, volgendeRonde) {
+async function rondenVerwerken(teamCode, rondeNummer, volgendeRonde) {
+    console.log("verwerkRonden()");
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
+    console.log(ronden);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
         return [-1];
     } else if (rondeNummer) {
-        return [rondeNummer, ronden[rondeNummer - 1].datum, berekenDatum(ronden[rondeNummer].datum, -1)];
+        return rondeInfo(rondeNummer + volgendeRonde, aantalRonden);
     } else {
         for (let i = 0; i < aantalRonden; i++) {
+            console.log(ronden[i].datum);
             if (datumLater(ronden[i].datum)) {
-                let nummer = i + 1 + volgendeRonde;
-                return [nummer, ronden[nummer - 1].datum, berekenDatum(ronden[nummer].datum, -1)];
+                return rondeInfo(i + 1 + volgendeRonde, aantalRonden);
             }
         }
         return [aantalRonden];
     }
+}
+
+function rondeInfo(rondeNummer, aantalRonden) {
+    console.log("rondeInfo()");
+    console.log("aantalRonden: " + aantalRonden);
+    console.log("rondeNummer: " + rondeNummer);
+    const rondeDatum = ronden[rondeNummer - 1].datum;
+    const datumTot = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
+    return [rondeNummer, rondeDatum, datumTot];
 }
 
 function teamVoluit(teamCode) {

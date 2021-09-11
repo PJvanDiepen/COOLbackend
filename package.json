@@ -1,7 +1,7 @@
 {
   "name": "cool_backend",
-  "version": "0.5.2",
-  "description": "Backend for www.0-0-0.nl",
+  "version": "0.5.3",
+  "description": "Backend for 0-0-0.nl",
   "main": "app.js",
   "scripts": {
     "test": "mocha",

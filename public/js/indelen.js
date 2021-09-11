@@ -2,8 +2,15 @@
 
 (async function() {
     await gebruikerVerwerken();
-    const [rondeNummer, datumRonde, datumTot] = await verwerkRonden(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
-    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumRonde);
+    const [rondeNummer, datumTot] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
+
+    console.log("indelen.js");
+    console.log(ronden);
+    console.log(rondeNummer);
+    // console.log(datumRonde);
+    console.log(datumTot);
+
+    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumTot);
     let deelnemers = [0];
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
         deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
