@@ -683,24 +683,12 @@ function spelerTotalen(speler) {
     function tegen(tegenstander, rondeNummer)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
+            console.log(naam + " tegen " + tegenstander.naam + " in ronde " + totaal[i]);
             return (rondeNummer - totaal[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
         }
     }
-
-    /*
-    function kleur(tegenstander) {
-        const i = vorigeKeer(tegenstander);
-        if (i) {
-            return totaal[i + 1] ? "zwart" : "wit"; // indien vorige keer met wit
-        } else if (saldoWitZwart() === tegenstander.saldoWitZwart()) {
-            return punten() > tegenstander.punten() ? "zwart" : "wit";
-        } else {
-            return saldoWitZwart() > tegenstander.saldoWitZwart() ? "zwart" : "wit";
-        }
-    }
-     */
 
     function kleur(tegenstander) {
         const i = vorigeKeer(tegenstander);

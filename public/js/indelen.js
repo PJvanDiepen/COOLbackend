@@ -162,13 +162,32 @@ function indelenRonde(r, wit, zwart) {
         }
         overslaan.push(oneven);
     }
-    for (let i = 0; i < r.length; i++) {
+    let i = 0;
+    while (i < r.length) {
         if (overslaan.includes(i)) {
             console.log(r[i].naam + " overslaan");
+            i++;
+        } else if (!overslaan.includes(i + 1) && r[i].tegen(r[i + 1])) {
+            if (r[i].kleur(r[i +1])) {
+                console.log(r[i].naam + " met zwart tegen " + r[i + 1].naam);
+                wit.push(i + 1);
+                zwart.push(i);
+            } else {
+                console.log(r[i].naam + " met wit tegen " + r[i+ 1].naam);
+                wit.push(i);
+                zwart.push(i + 1);
+            }
+            i = i + 2;
         } else {
-            let j = i + 1;
-            while (!r[i].tegen(r[j])) {
-                console.log(r[i].naam + " niet tegen " + r[j].naam);
+            console.log(r[i].naam + " niet tegen " + r[i + 1].naam);
+            let j = i + 2;
+            while (!(overslaan.includes(j) || r[i].tegen(r[j]))) {
+                console.log(r[i].naam + " misschien tegen " + r[j].naam);
+                if (r[i].tegen(r[j])) {
+                    console.log("ja");
+                } else {
+                    console.log("nee");
+                }
                 j++;
             }
             if (r[i].kleur(r[j])) {
@@ -183,24 +202,8 @@ function indelenRonde(r, wit, zwart) {
             console.log("--- " + r[j].naam);
             overslaan.push(j);
             console.log(overslaan);
+            i++;
         }
     }
     return oneven;
-}
-
-// TODO mogelijkeTegenstanders aanroepen
-
-async function mogelijkeTegenstanders(lijst, knsbNummer, rondeNummer) {
-    const s = (await ranglijst(ditSeizoen(), versie, null, [knsbNummer]))[0];
-    const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${ditSeizoen()}/${INTERNE_COMPETITIE}/${rondeNummer}`);
-    const tegenstanders = await ranglijst(ditSeizoen(), versie, null, deelnemers);
-    for (const t of tegenstanders) {
-        if (s.knsbNummer !== t.knsbNummer) {
-            lijst.appendChild(htmlRij(
-                naarSpeler(t.knsbNummer, t.naam),
-                s.kleur(t),
-                t.punten() - s.punten(), // afstand
-                s.tegen(t, rondeNummer) ? "" : KRUISJE));  // artikel 3
-        }
-    }
 }
