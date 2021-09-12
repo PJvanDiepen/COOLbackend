@@ -67,7 +67,7 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
     for (const w of wedstrijden) {
         if (!w.partij) {
-            const afwezig = datumLater(w.datum) ? NIET_MEEDOEN : AFWEZIG;
+            const afwezig = datumSQL(w.datum) > datumSQL() ? NIET_MEEDOEN : AFWEZIG;
             const mutaties = await serverFetch(
                 `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datumSQL(w.datum)}/int`);
             aanvullingen += mutaties;

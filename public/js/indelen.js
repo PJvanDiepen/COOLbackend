@@ -145,10 +145,6 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
 }
 
 function indelenRonde(r, wit, zwart) {
-    console.log(r);
-    console.log("indelenRonde()"); // TODO uitwerken
-    console.log(wit);
-    console.log(zwart);
     let overslaan = [];
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
     if (oneven) {

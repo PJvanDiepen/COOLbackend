@@ -195,8 +195,8 @@ function naarZelfdePagina(parameters) { // TODO naarPagina i.p.v. naarAndere/Zel
 
 async function gewijzigd() {
     const laatsteMutaties = await serverFetch("/gewijzigd");
-    console.log("gewijzigd()");
-    console.log(laatsteMutaties);
+    // console.log("gewijzigd()");
+    // console.log(laatsteMutaties);
     return laatsteMutaties;
 }
 
@@ -309,23 +309,6 @@ function tijdGeleden(jsonDatum) {
     }
 }
 
-/**
- * Is deze datumLater dan vandaag?
- *
- * Of is deze datumLater dan andereDatum (indien ingevuld)?
- *
- * @param jsonDatum deze datum
- * @param andereDatum of vandaag
- * @returns {Date} indien datumLater
- */
-function datumLater(jsonDatum, andereDatum) {
-    console.log(jsonDatum);
-    console.log(new Date(jsonDatum));
-    console.log(new Date());
-    console.log(new Date(jsonDatum) > new Date());
-    return new Date(jsonDatum) > andereDatum ? new Date(andereDatum) : new Date();
-}
-
 function datumLeesbaar(jsonDatum) {
     const datum = new Date(jsonDatum);
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
@@ -366,9 +349,7 @@ function voorloopNul(getal) {
  * @returns {Promise<[*, *, *]|number[]>} rondeNummer, (rondeDatum), totDatum
  */
 async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
-    console.log(`rondenVerwerken("${teamCode}", ${rondeNummer}, ${rondeIndelen})`);
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
-    console.log(ronden);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
         return [-1];
@@ -376,12 +357,10 @@ async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
         return rondeInfo(rondeNummer, aantalRonden);
     } else {
         for (let i = 0; i < aantalRonden; i++) {
-            console.log("ronde " + i + ": " + ronden[i].datum);
-            if (!datumLater(ronden[i].datum)) {
-                return rondeInfo(i + 1 + rondeIndelen, aantalRonden);
+            if (datumSQL(ronden[i].datum) > datumSQL()) {
+                return rondeInfo(i + rondeIndelen, aantalRonden);
             }
         }
-        console.log("hier????");
         return [aantalRonden];
     }
 }
