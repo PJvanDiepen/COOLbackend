@@ -11,7 +11,7 @@
         naarGebruiker,
         naarBeheer,
         [WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
-            naarAnderePagina(`ranglijst.html?datum=${datumSQL(totDatum)}`);
+            naarAnderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
         [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
             naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);

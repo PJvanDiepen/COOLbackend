@@ -3,18 +3,8 @@
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
-
-    console.log("indelen.js");
-    console.log(ronden);
-    console.log(rondeNummer);
-    console.log(totDatum);
-
     document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(totDatum);
-    let deelnemers = [0];
-    if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
-    }
-    const r = await ranglijstSorteren(totDatum, deelnemers);
+    const r = await ranglijstSorteren(totDatum, await deelnemersRonde(rondeNummer));
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
@@ -25,19 +15,9 @@
         oneven = indelenRonde(r, wit, zwart);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const partijenLijst = document.getElementById("partijen");
-    for (let i = 0; i < wit.length; i++) {
-        partijenLijst.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""));
-    }
-    if (oneven) {
-        partijenLijst.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));
-    }
+    partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"));
     if (rangnummers) {
-        const deelnemersLijst = document.getElementById("tabel");
-        r.forEach(function(t, i) {
-            const pnt = t.zonderAftrek() > t.punten() ? "*" + t.zonderAftrek() : t.punten(); // * indien eerste keer deelnemer
-            deelnemersLijst.appendChild(htmlRij(i + 1, naarSpeler(t.knsbNummer, t.naam), pnt, t.rating()));
-        });
+        deelnemersLijst(r, document.getElementById("lijst"));
     }
     menu(naarAgenda,
         naarRanglijst,
@@ -64,6 +44,35 @@
         }]);
 })();
 
+async function deelnemersRonde(rondeNummer) {
+    if (GEREGISTREERD <= gebruiker.mutatieRechten) {
+        return await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
+    } else {
+        return [0];
+    }
+}
+
+async function ranglijstSorteren(totDatum, deelnemers) {
+    const lijst = await ranglijst(seizoen, versie, totDatum, deelnemers);
+    let gesorteerdTot = 1;
+    while (gesorteerdTot < lijst.length && lijst[gesorteerdTot - 1].zonderAftrek() >= lijst[gesorteerdTot].zonderAftrek()) {
+        gesorteerdTot++;
+    }
+    if (gesorteerdTot >= lijst.length) {
+        return lijst; // ranglijst was al gesorteerd
+    } else {
+        let tussenvoegen = gesorteerdTot; // lijst is gesorteerdTot de rest tussenvoegen
+        let gesorteerd = [];
+        for (let i = 0; i < gesorteerdTot; i++) {
+            while (tussenvoegen < lijst.length && lijst[tussenvoegen].zonderAftrek() >= lijst[i].zonderAftrek()) {
+                gesorteerd.push(lijst[tussenvoegen++]);
+            }
+            gesorteerd.push(lijst[i])
+        }
+        return gesorteerd;
+    }
+}
+
 function rangnummersToggle(rangnummers, rondeNummer) {
     const rangnummersAan = params.get("rangnummers");
     if (rangnummersAan) {
@@ -76,27 +85,25 @@ function rangnummersToggle(rangnummers, rondeNummer) {
     return rangnummersAan;
 }
 
-async function ranglijstSorteren(totDatum, deelnemers) {
-    const r = await ranglijst(seizoen, versie, totDatum, deelnemers);
-    let gesorteerdTot = 1;
-    while (gesorteerdTot < r.length && r[gesorteerdTot - 1].zonderAftrek() >= r[gesorteerdTot].zonderAftrek()) {
-        gesorteerdTot++;
+function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen) {
+    for (let i = 0; i < wit.length; i++) {
+        partijen.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""));
     }
-    console.log(r.length + " gesorteerd tot " + gesorteerdTot);
-    if (gesorteerdTot >= r.length) {
-        console.log("ranglijst was al gesorteerd");
-        return r; // ranglijst was al gesorteerd
-    } else {
-        let gesorteerd = [];
-        let tussenvoegen = gesorteerdTot;
-        for (let j = 0; j < gesorteerdTot; j++) {
-            while (tussenvoegen < r.length && r[tussenvoegen].zonderAftrek() >= r[j].zonderAftrek()) {
-                gesorteerd.push(r[tussenvoegen++]);
-            }
-            gesorteerd.push(r[j])
-        }
-        return gesorteerd;
+    if (oneven) {
+        partijen.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));
     }
+}
+
+function deelnemersLijst(r, lijst) {
+    r.forEach(function(t, i) {
+        lijst.appendChild(htmlRij(
+            i + 1,
+            naarSpeler(t.knsbNummer, t.naam),
+            t.zonderAftrek(),
+            t.eigenWaardeCijfer(),
+            t.intern(),
+            t.saldoWitZwart()));
+    });
 }
 
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
@@ -142,7 +149,33 @@ function indelenRonde(r, wit, zwart) {
     console.log("indelenRonde()"); // TODO uitwerken
     console.log(wit);
     console.log(zwart);
-    let oneven = 0;
+    let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
+    if (oneven) {
+        let partijen = r[oneven].intern();
+        let i = oneven - 1;
+        while (r[oneven].zonderAftrek() === r[i].zonderAftrek()) {
+            if (partijen < r[i].intern()) {
+                oneven = i; // deze speler heeft evenveel punten, heeft meer partijen gespeeld en is daarom oneven
+            }
+            i--;
+        }
+    }
+    let i = 0;
+    // while (i < r.length && r[i].tegen(r[i + 1])) {
+    while (i < r.length) {
+        if (i === oneven) {
+            i++;
+        } else {
+            if (r[i].kleur(r[i + 1])) {
+                wit.push(i + 1);
+                zwart.push(i);
+            } else {
+                wit.push(i);
+                zwart.push(i + 1);
+            }
+            i += 2;
+        }
+    }
     return oneven;
 }
 

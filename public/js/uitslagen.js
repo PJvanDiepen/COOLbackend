@@ -319,6 +319,10 @@ function tijdGeleden(jsonDatum) {
  * @returns {Date} indien datumLater
  */
 function datumLater(jsonDatum, andereDatum) {
+    console.log(jsonDatum);
+    console.log(new Date(jsonDatum));
+    console.log(new Date());
+    console.log(new Date(jsonDatum) > new Date());
     return new Date(jsonDatum) > andereDatum ? new Date(andereDatum) : new Date();
 }
 
@@ -364,6 +368,7 @@ function voorloopNul(getal) {
 async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
     console.log(`rondenVerwerken("${teamCode}", ${rondeNummer}, ${rondeIndelen})`);
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
+    console.log(ronden);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
         return [-1];
@@ -371,10 +376,12 @@ async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
         return rondeInfo(rondeNummer, aantalRonden);
     } else {
         for (let i = 0; i < aantalRonden; i++) {
-            if (datumLater(ronden[i].datum)) {
+            console.log("ronde " + i + ": " + ronden[i].datum);
+            if (!datumLater(ronden[i].datum)) {
                 return rondeInfo(i + 1 + rondeIndelen, aantalRonden);
             }
         }
+        console.log("hier????");
         return [aantalRonden];
     }
 }
@@ -382,7 +389,6 @@ async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
 function rondeInfo(rondeNummer, aantalRonden) {
     const rondeDatum = ronden[rondeNummer - 1].datum;
     const totDatum = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
-    console.log(`return [${rondeNummer}, "${rondeDatum}", "${totDatum}"]`);
     return [rondeNummer, rondeDatum, totDatum];
 }
 
@@ -603,7 +609,7 @@ function spelerTotalen(speler) {
     }
 
     function intern() {
-        return totaal[2] || totaal[5] || totaal[6];
+        return totaal[2] + totaal[5] + totaal[6];
     }
 
     function scoreIntern() {
@@ -639,11 +645,11 @@ function spelerTotalen(speler) {
     }
 
     function eigenWaardeCijfer() {
-        return intern() ? totaal[14] : "";
+        return totaal[14];
     }
 
     function extern() {
-        return totaal[3] || totaal[15] || totaal[16];
+        return totaal[3] + totaal[15] + totaal[16];
     }
 
     function scoreExtern() {
@@ -683,6 +689,7 @@ function spelerTotalen(speler) {
         }
     }
 
+    /*
     function kleur(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
@@ -691,6 +698,18 @@ function spelerTotalen(speler) {
             return punten() > tegenstander.punten() ? "zwart" : "wit";
         } else {
             return saldoWitZwart() > tegenstander.saldoWitZwart() ? "zwart" : "wit";
+        }
+    }
+     */
+
+    function kleur(tegenstander) {
+        const i = vorigeKeer(tegenstander);
+        if (i) {
+            return totaal[i + 1];
+        } else if (saldoWitZwart() === tegenstander.saldoWitZwart()) {
+            return punten() > tegenstander.punten();
+        } else {
+            return saldoWitZwart() > tegenstander.saldoWitZwart();
         }
     }
 
