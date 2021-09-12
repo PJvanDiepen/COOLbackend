@@ -149,6 +149,7 @@ function indelenRonde(r, wit, zwart) {
     console.log("indelenRonde()"); // TODO uitwerken
     console.log(wit);
     console.log(zwart);
+    let overslaan = [];
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
     if (oneven) {
         let partijen = r[oneven].intern();
@@ -159,21 +160,29 @@ function indelenRonde(r, wit, zwart) {
             }
             i--;
         }
+        overslaan.push(oneven);
     }
-    let i = 0;
-    // while (i < r.length && r[i].tegen(r[i + 1])) {
-    while (i < r.length) {
-        if (i === oneven) {
-            i++;
+    for (let i = 0; i < r.length; i++) {
+        if (overslaan.includes(i)) {
+            console.log(r[i].naam + " overslaan");
         } else {
-            if (r[i].kleur(r[i + 1])) {
-                wit.push(i + 1);
+            let j = i + 1;
+            while (!r[i].tegen(r[j])) {
+                console.log(r[i].naam + " niet tegen " + r[j].naam);
+                j++;
+            }
+            if (r[i].kleur(r[j])) {
+                console.log(r[i].naam + " met zwart tegen " + r[j].naam);
+                wit.push(j);
                 zwart.push(i);
             } else {
+                console.log(r[i].naam + " met wit tegen " + r[j].naam);
                 wit.push(i);
-                zwart.push(i + 1);
+                zwart.push(j);
             }
-            i += 2;
+            console.log("--- " + r[j].naam);
+            overslaan.push(j);
+            console.log(overslaan);
         }
     }
     return oneven;
