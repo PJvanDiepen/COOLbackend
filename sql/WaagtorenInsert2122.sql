@@ -15,6 +15,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2122', '', '', 111, 1000, '2021-08-19'),
 ('2122', '', '', 112, 1000, '2021-08-19'),
 ('2122', '', '', 113, 1250, '2021-09-04'),
+('2122', '', '', 114, 1550, '2021-09-13'),
 ('2122', '', '', '7584566', '2333', '2021-08-01'),
 ('2122', '', '', '7657342', '2299', '2021-08-01'),
 ('2122', '', '', '7970094', '2271', '2021-08-01'),
@@ -105,9 +106,8 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden) values
 ('2122', 'int', 'i', 'nt', 'interne competitie', '0'),
 ('2122', '1', 'k', '1a', 'KNSB 1a', '10'),
 ('2122', '2', 'k', '3d', 'KNSB 3d', '8'),
-('2122', '3', 'k', '4e', 'KNSB 4e', '8');
-
-insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
+('2122', '3', 'k', '4e', 'KNSB 4e', '8'),
+('2122', '4', 'k', '6c', 'KNSB 6c', '8'),
 ('2122', 'int', '1', 't', '', 'Alkmaar', '2021-09-07'),
 ('2122', 'int', '2', 't', '', 'Alkmaar', '2021-09-14'),
 ('2122', 'int', '3', 't', '', 'Alkmaar', '2021-09-21'),
@@ -167,7 +167,14 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '3', '6', 'u', 'Caissa-Eenhoorn 3', 'Zwaag', '2022-02-05'),
 ('2122', '3', '7', 't', 'Kennemer Combinatie 3', 'Alkmaar', '2022-03-12'),
 ('2122', '3', '8', 'u', 'vrije ronde', '', '2022-04-02'),
-('2122', '3', '9', 't', 'Het Spaarne 1', 'Alkmaar', '2022-04-23');
+('2122', '3', '9', 't', 'Het Spaarne 1', 'Alkmaar', '2022-04-23'),
+('2122', '4', '1', 't', 'Leiderdorp 2', 'Alkmaar', '2021-10-09'),
+('2122', '4', '2', 'u', 'Woerden 3', 'Woerden', '2021-11-06'),
+('2122', '4', '3', 't', 'Zukertort Amstelveen 3', 'Alkmaar', '2021-11-27'),
+('2122', '4', '4', 'u', 'VAS 6', 'Amsterdam', '2021-12-18'),
+('2122', '4', '5', 't', 'HWP Haarlem 4', 'Alkmaar', '2022-02-05'),
+('2122', '4', '6', 'u', 'VAS 5', 'Amsterdam', '2022-03-12'),
+('2122', '4', '7', 't', 'Purmerend 3', 'Alkmaar', '2022-04-02');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam);
 
@@ -186,6 +193,7 @@ insert into persoon (knsbNummer, naam) values
 ('111', 'Jorn Visser'),
 ('112', 'Thea Veldhuis'),
 ('113', 'Michiel Doodeman'),
+('114', 'Bram Vink'),
 ('6187885', 'Bob de Mon'),
 ('6192098', 'Nico Brugman'),
 ('6212404', 'Peter van Diepen'),
