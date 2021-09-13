@@ -11,12 +11,23 @@ TODO mutaties met verwijderen
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
-        naarGebruiker);
+        naarGebruiker,
+        [BEHEERDER, `backup uitslag seizoen =  ${seizoen}`, async function () {
+            await backup("uitslag");
+        }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     document.getElementById("computer").appendChild(
         htmlTekst(`Operating System: ${navigator.platform} Browser: ${navigator.vendor}`));  // TODO client hints
 })();
+
+async function backup(tabel) {
+    const rij = await serverFetch(`/backup/${tabel}/${seizoen}`);
+    console.log(rij[0]);
+    for (const [key, value] of Object.entries(rij[0])) {
+        console.log(`${key}: ${value} typeof ${typeof value}`);
+    }
+}
 
 async function gebruikers(lijst) {
     const leden = await serverFetch(`/${uuidToken}/gebruikers`);

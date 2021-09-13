@@ -49,6 +49,25 @@ add constraint fk_paring_tegenstander
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;       
+    
+drop table if exists team;
+create table team (
+	seizoen char(4) not null,
+    teamCode char(3) not null,
+    bond char(1),
+    poule char(2),
+    omschrijving varchar(45),
+    borden int not null,
+    teamleider int not null,
+    PRIMARY KEY (seizoen, teamCode)
+);
+
+alter table team
+add constraint fk_team_persoon
+    foreign key (teamleider)
+    references persoon (knsbNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;       
 
 DROP TABLE IF EXISTS speler;
 CREATE TABLE speler (
@@ -68,17 +87,6 @@ add constraint fk_speler_persoon
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-drop table if exists team;
-create table team (
-	seizoen char(4) not null,
-    teamCode char(3) not null,
-    bond char(1),
-    poule char(2),
-    omschrijving varchar(45),
-    borden int not null,
-    PRIMARY KEY (seizoen, teamCode)
-);
-
 alter table speler
 add CONSTRAINT fk_speler_nhsb_team
     FOREIGN KEY (seizoen, nhsbTeam)
@@ -92,7 +100,7 @@ add CONSTRAINT fk_speler_knsb_team
     REFERENCES team (seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;    
-
+    
 DROP TABLE IF EXISTS ronde;
 CREATE TABLE ronde (
     seizoen char(4) not null,

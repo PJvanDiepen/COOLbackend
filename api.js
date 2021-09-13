@@ -299,6 +299,12 @@ module.exports = router => {
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
+    router.get('/backup/uitslag/:seizoen', async function (ctx) {
+        ctx.body = await Uitslag.query()
+            .where('uitslag.seizoen', ctx.params.seizoen)
+            .orderBy(['uitslag.teamCode','uitslag.rondeNummer','uitslag.bordNummer']);
+    });
+
     router.get('/:uuidToken/gebruikers', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(BEHEERDER)) {

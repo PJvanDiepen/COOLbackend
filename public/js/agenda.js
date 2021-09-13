@@ -30,7 +30,6 @@ async function agenda(kop, lijst) {
     if (await agendaAanvullen(andereGebruiker, wedstrijden)) {
         wedstrijden = await agendaLezen(andereGebruiker);
     }
-    let volgendeRonde = 0;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
             const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
@@ -44,9 +43,6 @@ async function agenda(kop, lijst) {
                 htmlLink(
                     `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`,
                     aanwezig)));
-            if (!volgendeRonde && deelnemers.length) {
-                volgendeRonde = w.rondeNummer;
-            }
         }
     }
 }
