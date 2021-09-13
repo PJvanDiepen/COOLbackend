@@ -18,7 +18,7 @@ TODO mutaties met verwijderen
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     document.getElementById("computer").appendChild(
-        htmlTekst(`Operating System: ${navigator.platform} Browser: ${navigator.vendor}`));  // TODO client hints
+        htmlTekst(`0-0-0 versie 1.5.5 operating system: ${navigator.platform} browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function backup(tabel) {
