@@ -357,7 +357,7 @@ async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
         return rondeInfo(rondeNummer, aantalRonden);
     } else {
         for (let i = 0; i < aantalRonden; i++) {
-            if (datumSQL(ronden[i].datum) >= datumSQL()) { // op de dag niet meteen naar volende ronde
+            if (datumSQL(ronden[i].datum) >= datumSQL()) { // op de dag niet meteen naar volgende ronde
                 return rondeInfo(i + rondeIndelen, aantalRonden);
             }
         }
