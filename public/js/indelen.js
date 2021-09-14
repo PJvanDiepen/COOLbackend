@@ -87,7 +87,12 @@ function rangnummersToggle(rangnummers, rondeNummer) {
 
 function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen) {
     for (let i = 0; i < wit.length; i++) {
-        partijen.appendChild(htmlRij(i + 1, r[wit[i]].naam, r[zwart[i]].naam, rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""));
+        partijen.appendChild(htmlRij(
+            i + 1,
+            naarSpeler(r[wit[i]].knsbNummer, r[wit[i]].naam),
+            naarSpeler(r[zwart[i]].knsbNummer, r[zwart[i]].naam),
+            rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""
+        ));
     }
     if (oneven) {
         partijen.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));

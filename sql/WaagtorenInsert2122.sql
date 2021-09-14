@@ -15,7 +15,11 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2122', '', '', 111, 1000, '2021-08-19'),
 ('2122', '', '', 112, 1000, '2021-08-19'),
 ('2122', '', '', 113, 1250, '2021-09-04'),
-('2122', '', '', 114, 1550, '2021-09-13'),
+('2122', '', '', 114, 1550, '2021-09-13');
+
+insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRating) values
+('2122', '', '', 115, 1000, '2021-09-14');
+
 ('2122', '', '', '7584566', '2333', '2021-08-01'),
 ('2122', '', '', '7657342', '2299', '2021-08-01'),
 ('2122', '', '', '7970094', '2271', '2021-08-01'),
@@ -193,7 +197,11 @@ insert into persoon (knsbNummer, naam) values
 ('111', 'Jorn Visser'),
 ('112', 'Thea Veldhuis'),
 ('113', 'Michiel Doodeman'),
-('114', 'Bram Vink'),
+('114', 'Bram Vink');
+
+insert into persoon (knsbNummer, naam) values
+('115', 'Harm Grouwstra');
+
 ('6187885', 'Bob de Mon'),
 ('6192098', 'Nico Brugman'),
 ('6212404', 'Peter van Diepen'),

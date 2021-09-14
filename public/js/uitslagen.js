@@ -260,7 +260,11 @@ function htmlLink(link, tekst, tabblad) {
 }
 
 function naarSpeler(knsbNummer, naam) {
-    return htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
+    const link = htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
+    if (knsbNummer === gebruiker.knsbNummer) {
+        link.className += "vet";
+    }
+    return link;
 }
 
 function naarRonde(tekst, u) {

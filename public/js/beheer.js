@@ -17,8 +17,8 @@ TODO mutaties met verwijderen
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
-    document.getElementById("computer").appendChild(
-        htmlTekst(`0-0-0 versie 1.5.5 operating system: ${navigator.platform} browser: ${navigator.vendor}`));  // TODO client hints
+    document.getElementById("computer").appendChild( // TODO 0-0-0 versie uit package.json
+        htmlTekst(`0-0-0.nl versie 0.5.6 operating system: ${navigator.platform} browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function backup(tabel) {

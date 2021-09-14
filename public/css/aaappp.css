@@ -68,6 +68,10 @@ pre {
   border-radius: 10px;
 }
 
+.vet {
+	font-weight: bold;
+}
+
 .rechts {
 	float: right;
 	margin-left: 20px;
