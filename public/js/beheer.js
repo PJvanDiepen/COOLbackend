@@ -25,7 +25,30 @@ async function backup(tabel) {
     const rij = await serverFetch(`/backup/${tabel}/${seizoen}`);
     console.log(rij[0]);
     for (const [key, value] of Object.entries(rij[0])) {
-        console.log(`${key}: ${value} typeof ${typeof value}`);
+        console.log(`${key}: ${value}  [ ${valueSQL(value)} ]`);
+        if (typeof value === "string") {
+            let x = new Date(value);
+            if (x instanceof Date && !isNaN(x)) {
+                console.log("Date");
+            }
+        }
+    }
+}
+
+/*
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),
+ */
+function valueSQL(value) {
+    if (typeof value === "string") {
+        const datum = new Date(value);
+        if (datum instanceof Date && !isNaN(datum)) {
+            return `[ "${datumSQL(value)}" ]`;
+        } else {
+            return `[ "${value}" ]`;
+        }
+    } else if (typeof value === "number") {
+        return value;
     }
 }
 

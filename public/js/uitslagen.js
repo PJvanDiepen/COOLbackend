@@ -31,6 +31,8 @@ const SCHEIDING = " \u232A ";
 const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
 const STREEP = "___";
 const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
+const FOUTJE = "\u00a0\u00a0?\u00a0\u00a0"; // met no break spaces
+
 
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";

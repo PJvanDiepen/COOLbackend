@@ -33,8 +33,8 @@ async function agenda(kop, lijst) {
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
             const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
-            const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : MEEDOEN;
-            const aanwezig = w.partij === MEEDOEN ? VINKJE : STREEP;
+            const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : w.partij === NIET_MEEDOEN ? MEEDOEN : w.partij;
+            const aanwezig = w.partij === MEEDOEN ? VINKJE : w.partij === NIET_MEEDOEN ? STREEP : FOUTJE;
             lijst.appendChild(htmlRij(
                 w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
                 datumLeesbaar(w.datum),
@@ -63,7 +63,7 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
     for (const w of wedstrijden) {
         if (!w.partij) {
-            const afwezig = datumSQL(w.datum) >= datumSQL() ? NIET_MEEDOEN : AFWEZIG; // op de dag niet meteen naar volgende ronde
+            const afwezig = datumSQL(w.datum) > datumSQL() ? NIET_MEEDOEN : AFWEZIG;
             const mutaties = await serverFetch(
                 `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datumSQL(w.datum)}/int`);
             aanvullingen += mutaties;
