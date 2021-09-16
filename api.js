@@ -41,7 +41,7 @@ module.exports = router => {
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
-        if (gebruiker.juisteRechten(GEREGISTREERD)) {
+        if (gebruiker.juisteRechten(GEREGISTREERD)) { // voor voorlopige indeling
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .where('uitslag.seizoen', ctx.params.seizoen)
@@ -49,7 +49,7 @@ module.exports = router => {
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.partij', MEEDOEN);
         }
-        if (deelnemers.length === 0 && gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+        if (deelnemers.length === 0 && gebruiker.juisteRechten(BESTUUR)) { // voor opnieuw indelen
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
@@ -192,7 +192,8 @@ module.exports = router => {
      */
     router.get('/:uuidToken/kalender/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) {
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || // kalender van andere gebruiker
+            gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen kalender
             ctx.body = await Ronde.query()
                 .with('s', function (qb) {
                     qb.from('speler')
@@ -412,13 +413,16 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) {
-            aantal = await Uitslag.query()
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-                .patch({partij: ctx.params.partij});
-            await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
+            const uitslag = await Uitslag.query()
+                .select('uitslag.partij', 'uitslag.datum')
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
+            if ((uitslag.partij === MEEDOEN && ctx.params.partij === NIET_MEEDOEN) ||
+                (uitslag.partij === NIET_MEEDOEN && ctx.params.partij === MEEDOEN)) { // uitsluitend aanmelden of afzeggen
+                aantal = await Uitslag.query()
+                    .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
+                    .patch({partij: ctx.params.partij});
+                await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
+            }
         }
         ctx.body = aantal;
     });
@@ -426,7 +430,7 @@ module.exports = router => {
     router.get('/:uuidToken/indelen/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) { // indeling definitief maken
             if (await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
@@ -459,7 +463,7 @@ module.exports = router => {
     router.get('/:uuidToken/oneven/:seizoen/:teamCode/:rondeNummer/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) { // oneven definitief maken
             aantal = await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
@@ -474,7 +478,7 @@ module.exports = router => {
     router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) { // afwezig definitief maken
             aantal = await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
@@ -489,7 +493,7 @@ module.exports = router => {
     router.get('/:uuidToken/verwijder/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) {
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) { // definitief maken terugdraaien
             const aanmelden = await Uitslag.query()
                 .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
@@ -519,8 +523,8 @@ module.exports = router => {
     router.get('/:uuidToken/uitslag/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer/:resultaat', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) ||
-            gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer) ||
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || // uitslag van andere gebruiker wijzigen
+            gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer) || // eigen uitslag wijzigen
             gebruiker.eigenData(GEREGISTREERD, ctx.params.tegenstanderNummer)) {
             if (await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)

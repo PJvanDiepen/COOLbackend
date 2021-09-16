@@ -262,7 +262,7 @@ function htmlLink(link, tekst, tabblad) {
 function naarSpeler(knsbNummer, naam) {
     const link = htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
     if (knsbNummer === gebruiker.knsbNummer) {
-        link.className += "vet";
+        link.className += "vet"; // kan ook met classList.add("vet")
     }
     return link;
 }

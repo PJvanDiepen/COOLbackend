@@ -106,8 +106,8 @@ function deelnemersLijst(r, lijst) {
             naarSpeler(t.knsbNummer, t.naam),
             t.zonderAftrek(),
             t.eigenWaardeCijfer(),
-            t.intern(),
-            t.saldoWitZwart()));
+            t.intern() ? t.intern() : "",
+            t.saldoWitZwart() ? t.saldoWitZwart() : ""));
     });
 }
 

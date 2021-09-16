@@ -75,7 +75,7 @@ async function uitslagenSpeler(kop, lijst) {
                 vorigeUitslag = u; // deze uitslag overslaan en combineren met volgende uitslag
             } else if (u.teamCode === INTERNE_COMPETITIE) {
                 lijst.appendChild(geenPartij(u, totaal));
-            } else if (vorigeUitslag && vorigeUitslag.datum === u.datum) {
+            } else if (vorigeUitslag && vorigeUitslag.datum === u.datum) { // TODO dit gaat fout als bordNummer niet is ingevuld
                 lijst.appendChild(externePartijTijdensInterneRonde(vorigeUitslag, u, totaal));
             } else {
                 lijst.appendChild(externePartij(u, totaal));

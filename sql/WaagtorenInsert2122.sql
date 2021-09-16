@@ -15,11 +15,9 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2122', '', '', 111, 1000, '2021-08-19'),
 ('2122', '', '', 112, 1000, '2021-08-19'),
 ('2122', '', '', 113, 1250, '2021-09-04'),
-('2122', '', '', 114, 1550, '2021-09-13');
-
-insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', 115, 1000, '2021-09-14');
-
+('2122', '', '', 114, 1550, '2021-09-13'),
+('2122', '', '', 115, 1000, '2021-09-14'),
+('2122', '', '', 116, 1000, '2021-09-14'),
 ('2122', '', '', '7584566', '2333', '2021-08-01'),
 ('2122', '', '', '7657342', '2299', '2021-08-01'),
 ('2122', '', '', '7970094', '2271', '2021-08-01'),
@@ -180,9 +178,10 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden) values
 ('2122', '4', '6', 'u', 'VAS 5', 'Amsterdam', '2022-03-12'),
 ('2122', '4', '7', 't', 'Purmerend 3', 'Alkmaar', '2022-04-02');
 
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam);
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', '1', 1, 0, 7099950, 'e', 'z', '0', '0', '2021-09-14', 'int'); -- Jos Vlaming speelt vooruit
 
--- 117 deelnemers in alle seizoenen
+-- alle seizoenen
 insert into persoon (knsbNummer, naam) values
 ('101', 'Ramon Witte'),
 ('102', 'Ellen van der Hoeven'),
@@ -197,11 +196,9 @@ insert into persoon (knsbNummer, naam) values
 ('111', 'Jorn Visser'),
 ('112', 'Thea Veldhuis'),
 ('113', 'Michiel Doodeman'),
-('114', 'Bram Vink');
-
-insert into persoon (knsbNummer, naam) values
-('115', 'Harm Grouwstra');
-
+('114', 'Bram Vink'),
+('115', 'Harm Grouwstra'),
+('116', 'Ruard Born'),
 ('6187885', 'Bob de Mon'),
 ('6192098', 'Nico Brugman'),
 ('6212404', 'Peter van Diepen'),

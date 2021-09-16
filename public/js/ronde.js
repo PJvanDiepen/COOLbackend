@@ -13,7 +13,7 @@
         [WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
             naarAnderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
-        [WEDSTRIJDLEIDER, `indeling ronde ${rondeNummer}`, function () {
+        [WEDSTRIJDLEIDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
             naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);
         }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
