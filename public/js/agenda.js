@@ -23,9 +23,7 @@ async function wedstrijdSelecteren(wedstrijden) {
 
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
-    // const [teamCodeGewijzigd, rondeNummerGewijzigd ] = await agendaMutatie(andereGebruiker);
-    const rondeNummerGewijzigd = await agendaMutatie(andereGebruiker);
-    console.log(rondeNummerGewijzigd);
+    const [teamGewijzigd, rondeGewijzigd ] = await agendaMutatie(andereGebruiker);
     const naam = params.get("naamGebruiker") || gebruiker.naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;
     let wedstrijden = await agendaLezen(andereGebruiker);
@@ -38,8 +36,8 @@ async function agenda(kop, lijst) {
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : w.partij === NIET_MEEDOEN ? MEEDOEN : w.partij;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : w.partij === NIET_MEEDOEN ? STREEP : FOUTJE;
             const link = htmlLink(
-                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig);
-            if (w.rondeNummer === rondeNummerGewijzigd) {
+                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig);
+            if (w.teamCode === teamGewijzigd && w.rondeNummer === rondeGewijzigd) {
                 link.className += "verwerkt"; // kan ook met classList.add("gewijzigd")
             }
             lijst.appendChild(htmlRij(
@@ -52,13 +50,14 @@ async function agenda(kop, lijst) {
     }
 }
 
-async function agendaMutatie(knsbNummer) { // TODO ook geschikt maken voor teamCode <>  INTERNE_COMPETITIE
-    const partij = params.get("partij");
+async function agendaMutatie(knsbNummer) {
+    const teamCode = params.get("team");
     const rondeNummer = Number(params.get("ronde"));
-    if (partij) {
+    const partij = params.get("partij");
+    if (teamCode && rondeNummer && partij) {
         await serverFetch(`/${uuidToken}/partij/${ditSeizoen()}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
-    return rondeNummer;
+    return [teamCode, rondeNummer];
 }
 
 async function agendaLezen(knsbNummer) {
