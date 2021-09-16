@@ -17,9 +17,9 @@ TODO mutaties met verwijderen
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
-    document.getElementById("computer").appendChild( // TODO 0-0-0 versie uit package.json
-        htmlTekst(`0-0-0.nl versie 0.5.7 operating system: ${navigator.platform} browser: ${navigator.vendor}`));  // TODO client hints
-})();
+    document.getElementById("computer").appendChild(
+        htmlTekst(`0-0-0.nl versie 0.5.8 met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
+})();      // TODO 0-0-0 versie uit package.json
 
 async function backup(tabel) {
     const rij = await serverFetch(`/backup/${tabel}/${seizoen}`);

@@ -124,6 +124,6 @@ a:hover {
 	background: #FFFF9F;
 }
 
-a:active {
+.verwerkt, a:active {
 	background: #F2BA49;
 }

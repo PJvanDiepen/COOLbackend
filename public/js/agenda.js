@@ -23,7 +23,9 @@ async function wedstrijdSelecteren(wedstrijden) {
 
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
-    await agendaMutatie(andereGebruiker);
+    // const [teamCodeGewijzigd, rondeNummerGewijzigd ] = await agendaMutatie(andereGebruiker);
+    const rondeNummerGewijzigd = await agendaMutatie(andereGebruiker);
+    console.log(rondeNummerGewijzigd);
     const naam = params.get("naamGebruiker") || gebruiker.naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;
     let wedstrijden = await agendaLezen(andereGebruiker);
@@ -35,24 +37,28 @@ async function agenda(kop, lijst) {
             const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : w.partij === NIET_MEEDOEN ? MEEDOEN : w.partij;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : w.partij === NIET_MEEDOEN ? STREEP : FOUTJE;
+            const link = htmlLink(
+                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig);
+            if (w.rondeNummer === rondeNummerGewijzigd) {
+                link.className += "verwerkt"; // kan ook met classList.add("gewijzigd")
+            }
             lijst.appendChild(htmlRij(
                 w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
                 datumLeesbaar(w.datum),
                 w.teamCode === INTERNE_COMPETITIE ? "interne competitie" : wedstrijdVoluit(w),
                 deelnemers.length,
-                htmlLink(
-                    `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&teamCode=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`,
-                    aanwezig)));
+                link));
         }
     }
 }
 
-async function agendaMutatie(knsbNummer) {
+async function agendaMutatie(knsbNummer) { // TODO ook geschikt maken voor teamCode <>  INTERNE_COMPETITIE
     const partij = params.get("partij");
-    const rondeNummer = params.get("ronde");
+    const rondeNummer = Number(params.get("ronde"));
     if (partij) {
         await serverFetch(`/${uuidToken}/partij/${ditSeizoen()}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
+    return rondeNummer;
 }
 
 async function agendaLezen(knsbNummer) {
