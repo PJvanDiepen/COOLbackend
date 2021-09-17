@@ -1,7 +1,5 @@
 "use strict";
 
-// TODO local functions voor minder parameters
-
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);

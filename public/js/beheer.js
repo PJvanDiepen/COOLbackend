@@ -22,15 +22,24 @@ TODO mutaties met verwijderen
 })();      // TODO 0-0-0 versie uit package.json
 
 async function backup(tabel) {
-    const rij = await serverFetch(`/backup/${tabel}/${seizoen}`);
-    console.log(rij[0]);
-    for (const [key, value] of Object.entries(rij[0])) {
-        console.log(`${key}: ${value}  [ ${valueSQL(value)} ]`);
-        if (typeof value === "string") {
-            let x = new Date(value);
-            if (x instanceof Date && !isNaN(x)) {
-                console.log("Date");
+    const rijen = await serverFetch(`/backup/${tabel}/${seizoen}`);
+    let velden = [];
+    for (const [key, value] of Object.entries(rijen[0])) {
+        velden.push(key);
+    }
+    console.log(`insert into ${tabel} (${velden.join(", ")}) values`);
+    for (const rij of rijen) {
+        let kolommen = [];
+        let backupRij = false;
+        for (const [key, value] of Object.entries(rij)) {
+            // TODO backupRij = selecteer(key, value); waarbij selecteer als parameter aan backup doorgeven
+            if (key === "partij" && !["m", "n"].includes(value)) {
+                backupRij = true;
             }
+            kolommen.push(valueSQL(value));
+        }
+        if (backupRij) {
+            console.log(`(${kolommen.join(", ")}),`);
         }
     }
 }
@@ -42,10 +51,10 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 function valueSQL(value) {
     if (typeof value === "string") {
         const datum = new Date(value);
-        if (datum instanceof Date && !isNaN(datum)) {
-            return `[ "${datumSQL(value)}" ]`;
+        if (value.length > 10 && datum instanceof Date && !isNaN(datum)) {
+            return `'${datumSQL(value)}'`;
         } else {
-            return `[ "${value}" ]`;
+            return `'${value}'`;
         }
     } else if (typeof value === "number") {
         return value;

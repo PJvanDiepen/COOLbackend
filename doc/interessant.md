@@ -27,6 +27,7 @@ Nuttig
 
 Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
+- [objection + knexx = painless](https://dev.to/aspittel/objection--knex--painless-postgresql-in-your-node-app--6n6)
 - [My first Node web app](https://dev.to/ekafyi/tribute-to-swissted-introduction-2c6i)
 - [Objection and Knex](https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f)
 - [Objection to orm hatred](https://www.jakso.me/blog/objection-to-orm-hatred)
