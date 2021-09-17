@@ -218,6 +218,12 @@ async function localFetch(url) {
     return object;
 }
 
+/**
+ * serverFetch maakt verbinding met de database voor actuele situatie
+ *
+ * @param url de vraag aan de database op de server
+ * @returns {Promise<any>} het antwoord van de server
+ */
 async function serverFetch(url) {
     try {
         const response = await fetch(server + url);

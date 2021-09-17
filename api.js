@@ -41,7 +41,7 @@ module.exports = router => {
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
-        if (gebruiker.juisteRechten(GEREGISTREERD)) { // voor voorlopige indeling
+        if (gebruiker.juisteRechten(GEREGISTREERD)) { // voorlopige indeling uitsl
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .where('uitslag.seizoen', ctx.params.seizoen)
@@ -49,7 +49,7 @@ module.exports = router => {
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.partij', MEEDOEN);
         }
-        if (deelnemers.length === 0 && gebruiker.juisteRechten(BESTUUR)) { // voor opnieuw indelen
+        if (deelnemers.length === 0) { // voor opnieuw indelen
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])

@@ -46,7 +46,7 @@
 
 async function deelnemersRonde(rondeNummer) {
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        return await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`);
+        return await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`); // actuele situatie
     } else {
         return [0];
     }
