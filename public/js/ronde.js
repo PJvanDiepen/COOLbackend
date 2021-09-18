@@ -14,6 +14,13 @@
         [WEDSTRIJDLEIDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
             naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);
         }],
+        [BEHEERDER, `ranglijst ${ditSeizoen()} opnieuw verwerken`, function () {
+            for (const key of Object.keys(sessionStorage)) {
+                if (key.startsWith(`/ranglijst/${ditSeizoen()}`)) {
+                    sessionStorage.removeItem(key);
+                }
+            }
+        }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);
             if (mutaties) {
@@ -109,10 +116,12 @@ function uitslagVerwerken(rondeNummer, uitslag) {
 }
 
 function uitslagWijzigen(uitslag)  {
-    if (WEDSTRIJDLEIDER <= gebruiker.mutatieRechten) {
+    if (seizoen !== ditSeizoen()) {
+        return false;
+    } else if (gebruiker.mutatieRechten >= WEDSTRIJDLEIDER) {
         return true;
-    } else if (GEREGISTREERD <= gebruiker.mutatieRechten && uitslag.resultaat === "") {
-        return uitslag.knsbNummer === gebruiker.knsbNummer || uitslag.tegenstanderNummer === gebruiker.knsbNummer
+    } else if (gebruiker.mutatieRechten >= GEREGISTREERD && uitslag.resultaat === "") {
+        return uitslag.knsbNummer === gebruiker.knsbNummer || uitslag.tegenstanderNummer === gebruiker.knsbNummer;
     } else {
         return false;
     }
@@ -126,7 +135,7 @@ function uitslagSelecteren(rondeNummer, uitslag) {
     select.appendChild(htmlOptie("", ""));
     select.value = uitslag.resultaat;
     select.addEventListener("input",async function () {
-        const mutaties = await serverFetch( // TODO ranglijst opnieuw inlezen
+        const mutaties = await serverFetch( // TODO ranglijst opnieuw inlezen, kleuren, etc. PvD
             `/${uuidToken}/uitslag/${seizoen}/int/${rondeNummer}/${uitslag.knsbNummer}/${uitslag.tegenstanderNummer}/${select.value}`);
     });
     return select;

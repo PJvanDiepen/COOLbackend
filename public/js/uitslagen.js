@@ -681,14 +681,22 @@ function spelerTotalen(speler) {
         }
     }
 
+    /**
+     * kleur berekent welke kleur tegen tegenstander
+     *
+     * @param tegenstander totalen
+     * @returns {boolean|*} indien 1 = wit anders 0 = zwart
+     */
     function kleur(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            return totaal[i + 1];
-        } else if (saldoWitZwart() === tegenstander.saldoWitZwart()) {
-            return punten() > tegenstander.punten();
+            return totaal[i + 1] === 0 // wit indien vorige keer zwart
+        } else if (saldoWitZwart() > tegenstander.saldoWitZwart()) { // zwart indien vaker met wit
+            return false;
+        } else if (zonderAftrek() > tegenstander.zonderAftrek()) { // zwart indien meer punten
+            return false;
         } else {
-            return saldoWitZwart() > tegenstander.saldoWitZwart();
+            return rating() < tegenstander.rating(); // wit indien lagere rating
         }
     }
 
