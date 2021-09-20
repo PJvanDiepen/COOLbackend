@@ -163,37 +163,35 @@ function indelenRonde(r, wit, zwart) {
         }
         overslaan.push(oneven);
     }
-    console.log("---------------");
-    console.log(overslaan);
     let i = 0;
     while (i < r.length) {
         if (overslaan.includes(i)) {
-            console.log("--- " + r[i].naam);
-            overslaan.shift(); // is eerste van overslaan
+            overslaan.shift(); // eerste van overslaan
         } else {
+            if (overslaan.length) {
+                console.log("tegenstander voor " + r[i].naam);
+                console.log(overslaan);
+            }
             let j = i + 1;
             while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) { // volgende indien overslaan of mag niet tegen
                 j++;
             }
             if (j < r.length) {
-                if (r[i].kleur(r[j])) {
-                    console.log(r[i].naam + " met zwart tegen " + r[j].naam);
-                    wit.push(j);
-                    zwart.push(i);
-                } else {
-                    console.log(r[i].naam + " met wit tegen " + r[j].naam);
+                if (r[i].metWit(r[j])) {
                     wit.push(i);
                     zwart.push(j);
+                } else {
+                    wit.push(j);
+                    zwart.push(i);
                 }
-                console.log("+++ " + r[j].naam);
                 overslaan.push(j);
             }
-            console.log(overslaan);
         }
         i++;
     }
     if (overslaan.length) {
-        console.log(overslaan.length + " deelnemers over!!!");
+        console.log(overslaan.length + " zonder tegenstanders");
+        console.log(overslaan);
     }
     return oneven;
 }

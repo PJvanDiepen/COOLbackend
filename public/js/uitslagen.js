@@ -671,10 +671,14 @@ function spelerTotalen(speler) {
         return j; // vorigeKeer zelfde tegenstander of 0
     }
 
+    function vorigeAfdrukken(i, tegenstander) {
+        console.log(`${naam} met ${totaal[i + 1] ? "wit" : "zwart"} tegen ${tegenstander.naam} in ronde ${totaal[i]}`);
+    }
+
     function tegen(tegenstander, rondeNummer)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            console.log(naam + " tegen " + tegenstander.naam + " in ronde " + totaal[i]);
+            vorigeAfdrukken(i, tegenstander);  // TODO verwijderen
             return (rondeNummer - totaal[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
@@ -682,24 +686,30 @@ function spelerTotalen(speler) {
     }
 
     /**
-     * kleur berekent welke kleur tegen tegenstander
+     * metWit berekent welke kleur tegen tegenstander
      *
      * @param tegenstander totalen
-     * @returns {boolean|*} indien 1 = wit anders 0 = zwart
+     * @returns {boolean|*} indien wit anders zwart
      */
-    function kleur(tegenstander) {
+    function metWit(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
             return totaal[i + 1] === 0 // wit indien vorige keer zwart
-        } else if (saldoWitZwart() > tegenstander.saldoWitZwart()) { // zwart indien vaker met wit
-            return false;
-        } else if (zonderAftrek() > tegenstander.zonderAftrek()) { // zwart indien meer punten
-            return false;
+        } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
+            afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");  // TODO verwijderen
+            return saldoWitZwart() < tegenstander.saldoWitZwart(); // wit indien vaker met zwart
+        } else if (zonderAftrek() !== tegenstander.zonderAftrek()) {
+            afdrukken(i, tegenstander, zonderAftrek() < tegenstander.zonderAftrek(), "punten");  // TODO verwijderen
+            return zonderAftrek() < tegenstander.zonderAftrek(); // wit indien minder punten
         } else {
+            afdrukken(i, tegenstander, rating() < tegenstander.rating(), "rating");  // TODO verwijderen
             return rating() < tegenstander.rating(); // wit indien lagere rating
         }
     }
 
+    function afdrukken(i, tegenstander, kleur, wegens) {
+        console.log(`${naam} met ${kleur ? "wit" : "zwart"} tegen ${tegenstander.naam} wegens ${wegens}`);
+    }
     return Object.freeze({ // Zie blz. 17.1 Douglas Crockford: How JavaScript Works
         knsbNummer,
         naam,
@@ -724,7 +734,7 @@ function spelerTotalen(speler) {
         saldoWitZwartExtern,
         rondenVerschil,
         tegen,
-        kleur
+        metWit
     });
 }
 
