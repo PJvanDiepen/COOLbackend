@@ -40,10 +40,10 @@ async function spelersLijst(kop, lijst) {
     });
 }
 
-async function versieSelecteren(versies) {  // TODO: versies en teksten in database
+function versieSelecteren(versies) {  // TODO: versies en teksten in database
     versies.appendChild(htmlOptie(0, "versie 0 volgens reglement van het seizoen"));
     versies.appendChild(htmlOptie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));
-    versies.appendChild(htmlOptie(2, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
+    versies.appendChild(htmlOptie(3, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
     versies.value = versie;
     versies.addEventListener("input",
         function () {
