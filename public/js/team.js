@@ -15,7 +15,7 @@ async function uitslagenTeam(kop, rondenTabel) {
     const teams = await localFetch("/teams/" + seizoen);
     for (const team of teams) {
         if (team.teamCode === teamCode) {
-            kop.innerHTML = [wedstrijdTeam(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
+            kop.innerHTML = [teamVoluit(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
             break;
         }
     }

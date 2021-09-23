@@ -43,7 +43,7 @@ async function agenda(kop, lijst) {
             lijst.appendChild(htmlRij(
                 w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
                 datumLeesbaar(w.datum),
-                w.teamCode === INTERNE_COMPETITIE ? "interne competitie" : wedstrijdVoluit(w),
+                w.teamCode === INTERNE_COMPETITIE ? "interne competitie" : wedstrijdVoluit(w), // TODO of teamVoluit ?
                 deelnemers.length,
                 link));
         }

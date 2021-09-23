@@ -116,7 +116,7 @@ function uitslagVerwerken(rondeNummer, uitslag) {
 }
 
 function uitslagWijzigen(uitslag)  {
-    if (seizoen !== ditSeizoen()) {
+    if (seizoen !== ditSeizoen()) { // vorig seizoen nooit wijzigen
         return false;
     } else if (gebruiker.mutatieRechten >= WEDSTRIJDLEIDER) {
         return true;

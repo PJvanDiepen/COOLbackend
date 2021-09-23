@@ -104,12 +104,19 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2122', '', '', '8931098', '1000', '2021-08-01');
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden) values
+('2122', 'ira', 'i', 'ra', 'rapid', '0'),
+('2122', 'ike', 'i', 'ke', 'Kersttoernooi', '0'),
+('2122', 'isn', 'i', 'sn', 'snelschaken', '0'),
+('2122', 'ivr', 'i', 'vr', 'vrij schaken', '0');
+
 ('2122', '', '', '', 'geen team', '0'),
-('2122', 'int', 'i', 'nt', 'interne competitie', '0'),
 ('2122', '1', 'k', '1a', 'KNSB 1a', '10'),
 ('2122', '2', 'k', '3d', 'KNSB 3d', '8'),
 ('2122', '3', 'k', '4e', 'KNSB 4e', '8'),
 ('2122', '4', 'k', '6c', 'KNSB 6c', '8'),
+('2122', 'int', 'i', 'nt', 'interne competitie', '0');
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
 ('2122', 'int', '1', 't', '', 'Alkmaar', '2021-09-07'),
 ('2122', 'int', '2', 't', '', 'Alkmaar', '2021-09-14'),
 ('2122', 'int', '3', 't', '', 'Alkmaar', '2021-09-21'),

@@ -18,8 +18,8 @@ TODO mutaties met verwijderen
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     document.getElementById("computer").appendChild(
-        htmlTekst(`0-0-0.nl versie 0.5.9 met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
-})();      // TODO 0-0-0 versie uit package.json
+        htmlTekst(`${versie000} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
+})();
 
 async function backup(tabel) {
     const rijen = await serverFetch(`/backup/${tabel}/${seizoen}`);

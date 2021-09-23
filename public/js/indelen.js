@@ -95,7 +95,7 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen) {
         ));
     }
     if (oneven) {
-        partijen.appendChild(htmlRij("", r[oneven].naam, "", "oneven"));
+        partijen.appendChild(htmlRij("", naarSpeler(r[oneven].knsbNummer, r[oneven].naam), "", "oneven"));
     }
 }
 
@@ -169,8 +169,7 @@ function indelenRonde(r, wit, zwart) {
             overslaan.shift(); // eerste van overslaan
         } else {
             if (overslaan.length) {
-                console.log("tegenstander voor " + r[i].naam);
-                console.log(overslaan);
+                console.log(`overslaan: [${spelersLijst(r, overslaan).join(", ")}]`);
             }
             let j = i + 1;
             while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) { // volgende indien overslaan of mag niet tegen
@@ -190,8 +189,13 @@ function indelenRonde(r, wit, zwart) {
         i++;
     }
     if (overslaan.length) {
-        console.log(overslaan.length + " zonder tegenstanders");
-        console.log(overslaan);
+        console.log(`zonder tegenstanders: [${spelersLijst(r, overslaan).join(", ")}]`);
     }
     return oneven;
+}
+
+function spelersLijst(ranglijst, spelers) {
+    return spelers.map(function (speler) {
+        return ranglijst[speler].naam;
+    });
 }

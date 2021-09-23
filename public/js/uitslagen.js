@@ -2,8 +2,10 @@
 
 // TODO https://developer.chrome.com/blog/migrating-to-js-modules/
 
+const versie000 = "0-0-0.nl versie 0.5.10"; // TODO 0-0-0 versie uit package.json
 // teamCode
 const INTERNE_COMPETITIE = "int";
+const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -32,7 +34,6 @@ const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
 const STREEP = "___";
 const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
 const FOUTJE = "\u00a0\u00a0?\u00a0\u00a0"; // met no break spaces
-
 
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
@@ -391,17 +392,17 @@ function teamVoluit(teamCode) {
     } else if (teamCode === "nbe") {
         return vereniging + " nhsb bekerteam";
     } else {
-        return wedstrijdTeam(teamCode)
+        return vereniging + " " + teamCode;
     }
 }
 
-function wedstrijdTeam(teamCode) {
-    return vereniging + (teamCode.substring(1) === "be" ? " " : " " + teamCode);
-}
-
 function wedstrijdVoluit(ronde) {
-    const eigenTeam = wedstrijdTeam(ronde.teamCode);
-    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
+    if (ronde.teamCode === GEEN_COMPETITIE) {
+        return ronde.tegenstander; // activiteit in plaats van tegenstander
+    } else {
+        const eigenTeam = teamVoluit(ronde.teamCode);
+        return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
+    }
 }
 
 function score(winst, remise, verlies) {

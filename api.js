@@ -216,7 +216,8 @@ module.exports = router => {
                     join.on('u.seizoen', 'ronde.seizoen')
                         .andOn('u.teamCode', 'ronde.teamCode')
                         .andOn('u.rondeNummer', 'ronde.rondeNummer')})
-                .whereIn('ronde.teamCode', [INTERNE_COMPETITIE, ref('s.knsbTeam'), ref('s.nhsbTeam')])
+                .whereIn('ronde.teamCode',
+                    [INTERNE_COMPETITIE, ref('s.knsbTeam'), ref('s.nhsbTeam'), GEEN_COMPETITIE])
                 .andWhere('ronde.seizoen', ctx.params.seizoen)
                 .orderBy('ronde.datum');
         } else {
@@ -296,7 +297,7 @@ module.exports = router => {
     router.get('/wedstrijden/:seizoen', async function (ctx) {
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', ctx.params.seizoen)
-            .andWhere('ronde.teamCode','<>', INTERNE_COMPETITIE)
+            .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, GEEN_COMPETITIE])
             .orderBy('ronde.datum', 'ronde.teamCode');
     });
 
@@ -523,22 +524,25 @@ module.exports = router => {
     router.get('/:uuidToken/uitslag/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer/:resultaat', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || // uitslag van andere gebruiker wijzigen
+        const allesWijzigen = gebruiker.juisteRechten(WEDSTRIJDLEIDER); // uitslag van andere gebruiker wijzigen
+        if (allesWijzigen ||
             gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer) || // eigen uitslag wijzigen
             gebruiker.eigenData(GEREGISTREERD, ctx.params.tegenstanderNummer)) {
-            if (await Uitslag.query()
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-                .patch({resultaat: ctx.params.resultaat})) {
-                aantal++;
+            const eigenUitslag = await Uitslag.query()
+                .select('uitslag.resultaat')
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
+            const tegenstanderUitslag = await Uitslag.query()
+                .select('uitslag.resultaat')
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
+            if (resultaatWijzigen(eigenUitslag.resultaat, tegenstanderUitslag.resultaat, ctx.params.resultaat, allesWijzigen)) {
+                if (await Uitslag.query()
+                    .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
+                    .patch({resultaat: ctx.params.resultaat})) {
+                    aantal++;
+                }
                 if (Number(ctx.params.tegenstanderNummer) > 0) {
                     if (await Uitslag.query()
-                        .where('uitslag.seizoen', ctx.params.seizoen)
-                        .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                        .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                        .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                        .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
                         .patch({resultaat: resultaatTegenstander(ctx.params.resultaat)})) {
                         aantal++;
                     }
@@ -595,6 +599,7 @@ module.exports = router => {
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
+const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -613,6 +618,16 @@ const REMISE = "½";
 const WINST = "1";
 const VERLIES = "0";
 
+function resultaatCorrect(resultaat) {
+    return resultaat === REMISE || resultaat === WINST || resultaat === VERLIES || resultaat === "";
+}
+
+function resultaatDatabase(eigenResultaat, tegenstanderResultaat) {
+    return resultaatCorrect(eigenResultaat) &&
+        resultaatCorrect(tegenstanderResultaat) &&
+        resultaatTegenstander(eigenResultaat) === tegenstanderResultaat; // database consistent
+}
+
 function resultaatTegenstander(resultaat) {
     if (resultaat === WINST) {
         return VERLIES;
@@ -621,6 +636,17 @@ function resultaatTegenstander(resultaat) {
     } else {
         return resultaat; // remise of wissen
     }
+}
+
+function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, allesWijzigen) {
+    if (resultaatCorrect(resultaat) && resultaatDatabase(eigenResultaat, tegenstanderResultaat)) {
+        if (resultaat === "") {
+            return allesWijzigen; // gebruiker mag resultaat wissen indien gebruiker alles mag wijzigen
+        } else {
+            return allesWijzigen || eigenResultaat === ""; // gebruiker mag alles wijzigen of uitsluitend resultaat invullen
+        }
+    }
+    return false;
 }
 
 // gebruiker.mutatieRechten
