@@ -9,6 +9,7 @@ const Team = require('./models/team');
 const Uitslag = require('./models/uitslag');
 
 const { fn, ref } = require('objection');
+const {f} = require("yarn/lib/cli");
 
 // mutatie.invloed
 const GEEN_INVLOED = 0;
@@ -65,6 +66,36 @@ module.exports = router => {
             .select('team.seizoen')
             .where('team.teamCode', ctx.params.teamCode);
         ctx.body = seizoenen.map(function(team) {return team.seizoen});
+    });
+
+    /*
+    -- volgende externe wedstrijd
+    select datum from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') and partij in ('m', 'n') order by datum limit 1;
+     */
+    router.get('/extern/:seizoen', async function (ctx) {
+        const volgende = await Uitslag.query()
+            .select('uitslag.datum')
+            .where('uitslag.seizoen', ctx.params.seizoen)
+            .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, GEEN_COMPETITIE])
+            .whereIn('uitslag.partij', [MEEDOEN, NIET_MEEDOEN])
+            .orderBy('uitslag.datum')
+            .limit(1);
+        ctx.body = volgende.map(function (uitslag) {return uitslag.datum});
+    });
+
+    /*
+   -- volgende interne wedstrijd
+   select rondeNummer, datum from uitslag where seizoen = @seizoen and teamCode = 'int' and partij in ('m', 'n') order by datum limit 1
+    */
+    router.get('/intern/:seizoen', async function (ctx) {
+        const volgende = await Uitslag.query()
+            .select('uitslag.rondeNummer', 'uitslag.datum')
+            .where('uitslag.seizoen', ctx.params.seizoen)
+            .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
+            .whereIn('uitslag.partij', [MEEDOEN, NIET_MEEDOEN])
+            .orderBy('uitslag.datum')
+            .limit(1);
+        ctx.body = volgende.map(function (uitslag) {return [uitslag.rondeNummer, uitslag.datum]});
     });
 
     // geef key - value paren per kolom --------------------------------------------------------------------------------
@@ -187,7 +218,7 @@ module.exports = router => {
       from ronde r
       join s on r.seizoen = s.seizoen
       left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam)
+    where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam, 'ipv')
     order by r.datum;
      */
     router.get('/:uuidToken/kalender/:seizoen/:knsbNummer', async function (ctx) {
@@ -294,11 +325,29 @@ module.exports = router => {
             .orderBy('ronde.rondeNummer');
     });
 
+    /*
+    -- alle externe wedstrijden van het seizoen
+    select r.*, bond, poule, omschrijving, borden, naam from ronde r
+    join team t on r.seizoen = t.seizoen and r.teamCode = t.teamCode
+    join persoon on teamleider = knsbNummer
+    where r.seizoen = @seizoen and r.teamCode not in ('int', 'ipv')
+    order by r.datum, r.teamCode;
+    */
     router.get('/wedstrijden/:seizoen', async function (ctx) {
         ctx.body = await Ronde.query()
+            .select('ronde.*',
+                'team.bond',
+                'team.poule',
+                'team.omschrijving',
+                'team.borden',
+                'persoon.naam')
+            .join('team', function(join) {
+                join.on('team.seizoen', 'ronde.seizoen')
+                    .andOn('team.teamCode', 'ronde.teamCode')})
+            .join('persoon', 'team.teamleider', 'persoon.knsbNummer')
             .where('ronde.seizoen', ctx.params.seizoen)
             .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, GEEN_COMPETITIE])
-            .orderBy('ronde.datum', 'ronde.teamCode');
+            .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
     router.get('/backup/uitslag/:seizoen', async function (ctx) {

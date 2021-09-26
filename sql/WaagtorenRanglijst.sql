@@ -319,5 +319,14 @@ select r.*, u.bordNummer, u.partij, u.witZwart, u.tegenstanderNummer, u.resultaa
   from ronde r
   join s on r.seizoen = s.seizoen
   left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam)
+where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam, 'ipv')
 order by r.datum;
+
+-- alle externe wedstrijden van het seizoen
+select r.*, bond, poule, omschrijving, borden, naam from ronde r
+join team t on r.seizoen = t.seizoen and r.teamCode = t.teamCode
+join persoon on teamleider = knsbNummer
+where r.seizoen = @seizoen and r.teamCode not in ('int', 'ipv')
+order by r.datum, r.teamCode;
+
+

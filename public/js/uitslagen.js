@@ -173,7 +173,7 @@ const naarAgenda = [GEREGISTREERD, "aanmelden / afzeggen", function () {
 }];
 
 const naarBeheer = [GEREGISTREERD, "systeembeheer", function () {
-    naarAnderePagina("beheer.html");
+    naarAnderePagina("beheer.html#mutaties");
 }];
 
 const naarRanglijst = [GEEN_LID, "ranglijst", function () {
