@@ -6,36 +6,44 @@
     <title>Team</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(1), td:nth-child(4) {
-            text-align: center; /* bord, resultaat */
+        td:nth-child(5) {
+            text-align: center; /* borden */
         }
     </style>
 </head>
 <body>
     <select id="menu"></select>
-    <select id="teamSelecteren"></select>
-    <h1 id="kop">Team</h1>
-    <table id="ronden">
+    <select id="datumSelecteren"></select>
+    <h1 id="kop"></h1>
+    <table id="wedstrijden">
         <tr>
-            <th>ronde</th>
+            <th></th>
             <th>datum</th>
             <th>wedstrijd</th>
-            <th>uitslag</th>
+            <th>teamleider</th>
+            <th>borden</th>
         </tr>
     </table>
     <details>
-        <summary>Overzicht van externe spelers uitsluitend voor teamleiders</summary>
-        Uitleg over onderstaande lijst
+        <summary>Overzicht van externe spelers voor teamleiders</summary>
+        <p>
+            Geregistreerde gebruikers kunnen zich aanmelden / afmelden per wedstrijd.
+            De persoonlijke agenda per speler is uitsluitend zichtbaar voor de speler zelf.
+        </p>
+        <p>
+            Hieronder staat een overzicht van de aanmeldingen / afzeggingen per wedstrijddatum.
+            Dit overzicht is uitsluitend zichtbaar voor teamleiders en het bestuur.
+        </p>
     </details>
-    <div id="team1"></div>
-    <div id="team2"></div>
-    <div id="team3"></div>
-    <div id="team4"></div>
-    <div id="team5"></div>
-    <div id="team6"></div>
-    <div id="team7"></div>
-    <div id="team8"></div>
-    <div id="team9"></div>
+    <div id="wedstrijd1"></div>
+    <div id="wedstrijd2"></div>
+    <div id="wedstrijd3"></div>
+    <div id="wedstrijd4"></div>
+    <div id="wedstrijd5"></div>
+    <div id="wedstrijd6"></div>
+    <div id="wedstrijd7"></div>
+    <div id="wedstrijd8"></div>
+    <div id="wedstrijd9"></div>
     <script src="js/uitslagen.js"></script>
     <script src="js/teamleider.js"></script>
 </body>

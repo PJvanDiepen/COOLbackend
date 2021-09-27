@@ -80,7 +80,9 @@ module.exports = router => {
             .whereIn('uitslag.partij', [MEEDOEN, NIET_MEEDOEN])
             .orderBy('uitslag.datum')
             .limit(1);
-        ctx.body = volgende.map(function (uitslag) {return uitslag.datum});
+        console.log(volgende);
+        console.log(volgende[0]);
+        ctx.body = volgende.map(function (uitslag) {return uitslag.datum})[0]; // TODO zonder map en function
     });
 
     /*

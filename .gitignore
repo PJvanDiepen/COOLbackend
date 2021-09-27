@@ -1,6 +1,7 @@
 # COOLbackend
 .idea
 config
+yarn.lock
 
 
 # Logs

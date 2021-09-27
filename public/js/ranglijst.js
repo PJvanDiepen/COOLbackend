@@ -18,7 +18,7 @@ const alleLeden = Number(params.get("leden"));
 
 async function spelersLijst(kop, lijst) {
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
-    kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "na ronde " + rondeNummer;
+    kop.innerHTML = "Ranglijst" + SCHEIDING + "na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(seizoen, versie, totDatum)).forEach(function (t, i) {
         if (t.inRanglijst() || alleLeden) {

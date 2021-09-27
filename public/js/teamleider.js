@@ -1,5 +1,7 @@
 "use strict";
 
+
+
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
@@ -7,21 +9,33 @@
         naarRanglijst,
         naarGebruiker,
         naarBeheer);
-    teamSelecteren(teamCode);
-    uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
+    const wedstrijdDatum = params.get("datum") || await localFetch("/extern/" + seizoen);
+    const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
+    datumSelecteren(wedstrijdDatum, wedstrijden);
+    wedstrijdenOverzicht(document.getElementById("kop"), document.getElementById("wedstrijden"), wedstrijden, wedstrijdDatum);
 })();
 
-async function uitslagenTeam(kop, rondenTabel) {
-    const teams = await localFetch("/teams/" + seizoen);
-    for (const team of teams) {
-        if (team.teamCode === teamCode) {
-            kop.innerHTML = [teamVoluit(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
-            break;
+function datumSelecteren(wedstrijdDatum, wedstrijden) {
+    const datums = document.getElementById("datumSelecteren");
+    wedstrijden.forEach(
+        function (w) {
+            datums.appendChild(htmlOptie(w.datum, datumLeesbaar(w.datum) + SCHEIDING + wedstrijdVoluit(w)));
+        });
+    datums.value = wedstrijdDatum; // werkt uitsluitend na await
+    datums.addEventListener("input",
+        function () {
+            naarZelfdePagina("?datum=" + datums.value);
+        });
+}
+
+function wedstrijdenOverzicht(kop, tabel, wedstrijden, wedstrijdDatum) {
+    let datum = datumLeesbaar(wedstrijdDatum);
+    kop.innerHTML = "Externe competitie" + SCHEIDING + datum;
+    for (const w of wedstrijden) {
+        if (w.datum === wedstrijdDatum) {
+            tabel.appendChild(htmlRij(w.teamCode, datum, wedstrijdVoluit(w), w.naam, w.borden));
+            datum = ""; // datum 1 x in tabel
         }
-    }
-    const rondeUitslagen = await uitslagenTeamAlleRonden(teamCode);
-    for (let i = 0; i < rondeUitslagen.length; ++i) {
-        uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
     }
 }
 
