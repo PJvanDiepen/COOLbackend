@@ -8,6 +8,7 @@
         }],
         naarIndelen,
         naarRanglijst,
+        naarTeamleider,
         naarGebruiker,
         naarBeheer,
         [BEHEERDER, "afzeggingen verwijderen", async function () {

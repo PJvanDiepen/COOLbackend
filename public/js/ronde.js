@@ -6,6 +6,7 @@
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
+        naarTeamleider,
         naarGebruiker,
         naarBeheer,
         [WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {

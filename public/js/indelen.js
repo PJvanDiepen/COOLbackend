@@ -20,7 +20,9 @@
         deelnemersLijst(r, document.getElementById("lijst"));
     }
     menu(naarAgenda,
+        naarTeamleider,
         naarRanglijst,
+        naarTeamleider,
         naarGebruiker,
         naarBeheer,
         [BEHEERDER, "indeling definitief maken", async function () {

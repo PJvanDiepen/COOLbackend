@@ -311,6 +311,12 @@ where u.seizoen = @seizoen
     and u.anderTeam = 'int'
 order by u.datum, u.bordNummer;
 
+-- aantal mutaties per gebruiker 
+select naam, m.knsbNummer, count(*)
+from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
+group by m.knsbNummer
+order by naam;
+
 -- agenda voor alle interne en externe ronden per speler
 with
   s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
@@ -329,4 +335,11 @@ join persoon on teamleider = knsbNummer
 where r.seizoen = @seizoen and r.teamCode not in ('int', 'ipv')
 order by r.datum, r.teamCode;
 
+-- volgende externe wedstrijd
+select datum from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') and partij in ('m', 'n') order by datum limit 1;
+
+-- volgende interne ronde
+select rondeNummer, datum from uitslag where seizoen = @seizoen and teamCode = 'int' and partij in ('m', 'n') order by datum limit 1;
+
+select * from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') order by datum;
 

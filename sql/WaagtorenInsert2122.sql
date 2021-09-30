@@ -178,13 +178,14 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '3', '7', 't', 'Kennemer Combinatie 3', 'Alkmaar', '2022-03-12'),
 ('2122', '3', '8', 'u', 'vrije ronde', '', '2022-04-02'),
 ('2122', '3', '9', 't', 'Het Spaarne 1', 'Alkmaar', '2022-04-23'),
-('2122', '4', '1', 't', 'Leiderdorp 2', 'Alkmaar', '2021-10-09'),
-('2122', '4', '2', 'u', 'Woerden 3', 'Woerden', '2021-11-06'),
-('2122', '4', '3', 't', 'Zukertort Amstelveen 3', 'Alkmaar', '2021-11-27'),
-('2122', '4', '4', 'u', 'VAS 6', 'Amsterdam', '2021-12-18'),
-('2122', '4', '5', 't', 'HWP Haarlem 4', 'Alkmaar', '2022-02-05'),
-('2122', '4', '6', 'u', 'VAS 5', 'Amsterdam', '2022-03-12'),
-('2122', '4', '7', 't', 'Purmerend 3', 'Alkmaar', '2022-04-02');
+
+('2122', '4', '1', 't', 'Purmerend 3', 'Alkmaar', '2021-10-09'),
+('2122', '4', '2', 't', 'HWP Haarlem 4', 'Alkmaar', '2021-11-06'),
+('2122', '4', '3', 'u', 'VAS 5', 'Amsterdam', '2021-11-27'),
+('2122', '4', '4', 't', 'VAS 6', 'Alkmaar', '2021-12-18'),
+('2122', '4', '5', 'u', 'Leiderdorp 2', 'Leiderdorp', '2022-02-05'),
+('2122', '4', '6', 't', 'Woerden 3', 'Alkmaar', '2022-03-12'),
+('2122', '4', '7', 'u', 'Zukertort Amstelveen 3', 'Amstelveen', '2022-04-02');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', '1', 1, 8, 7099950, 'e', 'z', '0', '0', '2021-09-14', 'int'); -- Jos Vlaming speelt vooruit op

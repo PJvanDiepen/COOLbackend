@@ -5,6 +5,7 @@
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
+        naarTeamleider,
         naarBeheer,
         [BEHEERDER, "formulier van geselecteerde speler", function () {
             document.getElementById("naam").value = naamSpeler;

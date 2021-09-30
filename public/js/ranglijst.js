@@ -6,6 +6,7 @@ const alleLeden = Number(params.get("leden"));
     await gebruikerVerwerken();
     menu(naarAgenda,
         naarIndelen,
+        naarTeamleider,
         naarGebruiker,
         naarBeheer);
     seizoenSelecteren(INTERNE_COMPETITIE);

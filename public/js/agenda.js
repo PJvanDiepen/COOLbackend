@@ -4,6 +4,7 @@
     await gebruikerVerwerken();
     menu(naarIndelen,
         naarRanglijst,
+        naarTeamleider,
         naarGebruiker,
         naarBeheer);
     wedstrijdSelecteren(document.getElementById("extern"));

@@ -5,6 +5,7 @@
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
+        naarTeamleider,
         naarGebruiker,
         naarBeheer);
     gebruikerTekst(

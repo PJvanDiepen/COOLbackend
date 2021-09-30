@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,
@@ -12,7 +10,7 @@
     const wedstrijdDatum = params.get("datum") || await localFetch("/extern/" + seizoen);
     const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);
-    wedstrijdenOverzicht(document.getElementById("kop"), document.getElementById("wedstrijden"), wedstrijden, wedstrijdDatum);
+    await wedstrijdenOverzicht(document.getElementById("kop"), wedstrijden, wedstrijdDatum);
 })();
 
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
@@ -28,31 +26,36 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
         });
 }
 
-function wedstrijdenOverzicht(kop, tabel, wedstrijden, wedstrijdDatum) {
-    let datum = datumLeesbaar(wedstrijdDatum);
-    kop.innerHTML = "Externe competitie" + SCHEIDING + datum;
+async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
+    kop.innerHTML = "Externe competitie" + SCHEIDING + datumLeesbaar(wedstrijdDatum);
+    let wedstrijdNummer = 0;
     for (const w of wedstrijden) {
         if (w.datum === wedstrijdDatum) {
-            tabel.appendChild(htmlRij(w.teamCode, datum, wedstrijdVoluit(w), w.naam, w.borden));
-            datum = ""; // datum 1 x in tabel
+            wedstrijdNummer++;
+            const div = document.getElementById("wedstrijd" + wedstrijdNummer); // 9 x div met id="wedstrijd".."wedstrijd9"
+            div.appendChild(document.createElement("h2")).innerHTML = wedstrijdVoluit(w) + SCHEIDING + w.naam;
+            const tabel = div.appendChild(document.createElement("table"));
+            tabel.appendChild(htmlRij("", "speler", "rating", "aanwezig"));
+            let aanwezigen = 0;
+            (await localFetch(`/${uuidToken}/teamleider/${w.seizoen}/${w.teamCode}/${datumSQL(wedstrijdDatum)}`)).forEach(
+                function (u) {
+                    tabel.appendChild(htmlRij(
+                        u.partij === NIET_MEEDOEN ? "" : (++aanwezigen),
+                        naarSpeler(u.knsbNummer, u.naam),
+                        u.knsbRating, aanwezig(u)));
+                });
         }
     }
 }
 
-function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
-    if (u) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
-        const datum = datumLeesbaar(u.ronde.datum);
-        const wedstrijd = wedstrijdVoluit(u.ronde);
-        const uitslag = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
-        rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datum, naarTeam(wedstrijd, u.ronde), uitslag));
-        if (u.uitslagen.length) {
-            const div = document.getElementById("team" + rondeNummer); // 9 x div met id="team1".."team9"
-            div.appendChild(document.createElement("h2")).innerHTML = ["Ronde " + rondeNummer, datum].join(SCHEIDING);
-            const tabel = div.appendChild(document.createElement("table"));
-            tabel.appendChild(htmlRij("", wedstrijd, "", uitslag));
-            for (let uitslag of u.uitslagen) {
-                tabel.appendChild(uitslag);
-            }
-        }
+function aanwezig(u) {
+    if (u.partij === EXTERNE_PARTIJ) {
+        return u.bordNummer + ": " + u.witZwart + u.resultaat;
+    } else if (u.partij === NIET_MEEDOEN) {
+        return STREEP;
+    } else if (u.partij === MEEDOEN) {
+        return VINKJE;
+    } else {
+        return "???";
     }
 }

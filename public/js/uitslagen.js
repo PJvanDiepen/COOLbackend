@@ -2,7 +2,7 @@
 
 // TODO https://developer.chrome.com/blog/migrating-to-js-modules/
 
-const versie000 = "0-0-0.nl versie 0.5.10"; // TODO 0-0-0 versie uit package.json
+const versie000 = "0-0-0.nl versie 0.6.0"; // TODO 0-0-0 versie uit package.json
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
@@ -178,6 +178,10 @@ const naarBeheer = [GEREGISTREERD, "systeembeheer", function () {
 
 const naarRanglijst = [GEEN_LID, "ranglijst", function () {
     naarAnderePagina("ranglijst.html");
+}];
+
+const naarTeamleider = [TEAMLEIDER, "externe competitie", function () {
+    naarAnderePagina("teamleider.html");
 }];
 
 const naarGebruiker = [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, function () {

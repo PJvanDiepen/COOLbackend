@@ -80,8 +80,8 @@ module.exports = router => {
             .whereIn('uitslag.partij', [MEEDOEN, NIET_MEEDOEN])
             .orderBy('uitslag.datum')
             .limit(1);
-        console.log(volgende);
-        console.log(volgende[0]);
+        // console.log(volgende);
+        // console.log(volgende[0]);
         ctx.body = volgende.map(function (uitslag) {return uitslag.datum})[0]; // TODO zonder map en function
     });
 
@@ -253,6 +253,34 @@ module.exports = router => {
                     [INTERNE_COMPETITIE, ref('s.knsbTeam'), ref('s.nhsbTeam'), GEEN_COMPETITIE])
                 .andWhere('ronde.seizoen', ctx.params.seizoen)
                 .orderBy('ronde.datum');
+        } else {
+            ctx.body = [];
+        }
+    });
+
+    router.get('/:uuidToken/teamleider/:seizoen/:teamCode/:datum', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.juisteRechten(TEAMLEIDER)) {
+            ctx.body = await Uitslag.query()
+                .select(
+                    'uitslag.knsbNummer',
+                    'uitslag.bordNummer',
+                    'uitslag.partij',
+                    'uitslag.witZwart',
+                    'uitslag.resultaat',
+                    'speler.nhsbTeam',
+                    'speler.knsbTeam',
+                    'speler.knsbRating',
+                    'persoon.naam')
+                .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
+                .join('speler', function(join) {
+                    join.on('uitslag.seizoen', 'speler.seizoen')
+                        .andOn('uitslag.knsbNummer','speler.knsbNummer')})
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.datum', ctx.params.datum)
+                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, GEEN_COMPETITIE])
+                .orderBy('speler.knsbRating', 'desc');
         } else {
             ctx.body = [];
         }

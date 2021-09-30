@@ -11,6 +11,7 @@ TODO mutaties met verwijderen
     menu(naarAgenda,
         naarIndelen,
         naarRanglijst,
+        naarTeamleider,
         naarGebruiker,
         [BEHEERDER, `backup uitslag seizoen =  ${seizoen}`, async function () {
             await backup("uitslag");
