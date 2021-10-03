@@ -1,5 +1,7 @@
 "use strict";
 
+const versieIndelen = Number(params.get("indelen")) || 0;
+
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
@@ -44,6 +46,7 @@
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);
+    versieSelecteren(document.getElementById("versies"), rondeNummer);
 })();
 
 async function deelnemersRonde(rondeNummer) {
@@ -81,7 +84,7 @@ function rangnummersToggle(rangnummers, rondeNummer) {
         rangnummers.open = true;
     } else {
         rangnummers.addEventListener("toggle",function () {
-            naarZelfdePagina(`?ronde=${rondeNummer}&rangnummers=aan`);
+            naarZelfdePagina(`?ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
         });
     }
     return rangnummersAan;
@@ -151,50 +154,111 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
     }
 }
 
-function indelenRonde(r, wit, zwart) {
-    let overslaan = [];
-    let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
-    if (oneven) {
-        let partijen = r[oneven].intern();
-        let i = oneven - 1;
-        while (r[oneven].zonderAftrek() === r[i].zonderAftrek()) {
-            if (partijen < r[i].intern()) {
-                oneven = i; // deze speler heeft evenveel punten, heeft meer partijen gespeeld en is daarom oneven
-            }
-            i--;
-        }
-        overslaan.push(oneven);
-    }
-    let i = 0;
-    while (i < r.length) {
-        if (overslaan.includes(i)) {
-            overslaan.shift(); // eerste van overslaan
-        } else {
-            if (overslaan.length) {
-                console.log(`overslaan: [${spelersLijst(r, overslaan).join(", ")}]`);
-            }
-            let j = i + 1;
-            while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) { // volgende indien overslaan of mag niet tegen
-                j++;
-            }
-            if (j < r.length) {
-                if (r[i].metWit(r[j])) {
-                    wit.push(i);
-                    zwart.push(j);
-                } else {
-                    wit.push(j);
-                    zwart.push(i);
-                }
-                overslaan.push(j);
-            }
-        }
-        i++;
-    }
-    if (overslaan.length) {
-        console.log(`zonder tegenstanders: [${spelersLijst(r, overslaan).join(", ")}]`);
-    }
-    return oneven;
+function versieSelecteren(versies, rondeNummer) {  // TODO: software en tekst samen in structuur
+    versies.appendChild(htmlOptie(0, "indelen zonder aanpassingen"));
+    versies.appendChild(htmlOptie(1, "indelen met aanpassing"));
+    versies.value = versieIndelen;
+    versies.addEventListener("input",
+        function () {
+            naarZelfdePagina(`?ronde=${rondeNummer}&indelen=${versies.value}&rangnummers=aan`);
+        });
 }
+
+function indelenRonde(r, wit, zwart) {
+    return indelenFun[versieIndelen](r, wit, zwart); // TODO verschillende indelenFun proberen indien mislukt
+}
+
+const indelenFun = [
+    function (r, wit, zwart) {
+        console.log("--- indelen met algoritme van ronde 2 ---");
+        let overslaan = [];
+        let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
+        if (oneven) {
+            let partijen = r[oneven].intern();
+            let i = oneven - 1;
+            while (r[oneven].zonderAftrek() === r[i].zonderAftrek()) {
+                if (partijen < r[i].intern()) {
+                    oneven = i; // deze speler heeft evenveel punten, heeft meer partijen gespeeld en is daarom oneven
+                }
+                i--;
+            }
+            overslaan.push(oneven);
+        }
+        let i = 0;
+        while (i < r.length) {
+            if (overslaan.includes(i)) {
+                overslaan.shift(); // eerste van overslaan
+            } else {
+                if (overslaan.length) {
+                    console.log(`overslaan: [${spelersLijst(r, overslaan).join(", ")}]`);
+                }
+                let j = i + 1;
+                while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) { // volgende indien overslaan of mag niet tegen
+                    j++;
+                }
+                if (j < r.length) {
+                    if (r[i].metWit(r[j])) {
+                        wit.push(i);
+                        zwart.push(j);
+                    } else {
+                        wit.push(j);
+                        zwart.push(i);
+                    }
+                    overslaan.push(j);
+                }
+            }
+            i++;
+        }
+        if (overslaan.length) {
+            console.log(`zonder tegenstanders: [${spelersLijst(r, overslaan).join(", ")}]`);
+        }
+        return oneven;
+    },
+    function (r, wit, zwart) {
+        console.log("--- indelen met (nog niet) verbeterd algoritme ---");
+        let overslaan = [];
+        let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
+        if (oneven) {
+            let partijen = r[oneven].intern();
+            let i = oneven - 1;
+            while (r[oneven].zonderAftrek() === r[i].zonderAftrek()) {
+                if (partijen < r[i].intern()) {
+                    oneven = i; // deze speler heeft evenveel punten, heeft meer partijen gespeeld en is daarom oneven
+                }
+                i--;
+            }
+            overslaan.push(oneven);
+        }
+        let i = 0;
+        while (i < r.length) {
+            if (overslaan.includes(i)) {
+                overslaan.shift(); // eerste van overslaan
+            } else {
+                if (overslaan.length) {
+                    console.log(`overslaan: [${spelersLijst(r, overslaan).join(", ")}]`);
+                }
+                let j = i + 1;
+                while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) { // volgende indien overslaan of mag niet tegen
+                    j++;
+                }
+                if (j < r.length) {
+                    if (r[i].metWit(r[j])) {
+                        wit.push(i);
+                        zwart.push(j);
+                    } else {
+                        wit.push(j);
+                        zwart.push(i);
+                    }
+                    overslaan.push(j);
+                }
+            }
+            i++;
+        }
+        if (overslaan.length) {
+            console.log(`zonder tegenstanders: [${spelersLijst(r, overslaan).join(", ")}]`);
+        }
+        return oneven;
+    }];
 
 function spelersLijst(ranglijst, spelers) {
     return spelers.map(function (speler) {

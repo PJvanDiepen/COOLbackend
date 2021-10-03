@@ -68,6 +68,7 @@ Later:
 - [Guide to Grid](https://css-tricks.com/snippets/css/complete-guide-grid/)
 - [Flexbox cheatsheet](https://www.freecodecamp.org/news/flexbox-the-ultimate-css-flex-cheatsheet/)
 - [Grids vs Flexbox vs Floats vs Position](https://medium.com/@madhur.taneja/css-layouts-cced6c7a8764)
+- [7 GUIs](https://7guis.bradwoods.io/)
 - [JS scrape data](https://beshaimakes.com/js-scrape-data)
 - [CSS reset](https://bitsofco.de/my-css-reset-base/)
 - [CSS font sizing](https://bitsofco.de/css-font-sizing/)
