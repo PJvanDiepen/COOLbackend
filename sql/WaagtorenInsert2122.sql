@@ -104,9 +104,14 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRa
 ('2122', '', '', '8931098', '1000', '2021-08-01');
 
 -- knsb teams
-update speler set knsbTeam = '1' where knsbNummer in (7584566, 7657342, 8180810, 7428960, 8285574, 8096242, 7828183, 6483455, 7099950, 7468417) and seizoen = '2122';
-update speler set knsbTeam = '2' where knsbNummer in (6335670, 7129991, 7099620, 7509920, 7707832, 7665834, 6225934, 8552038) and seizoen = '2122';
-update speler set knsbTeam = '3' where knsbNummer in (6572511, 7535385, 7758014, 7699010, 7504310, 8611922, 8484443, 8587337) and seizoen = '2122';
+update speler set knsbTeam = '1', knsbOpgegeven = '1' where seizoen = '2122' and knsbNummer in 
+(7584566, 7657342, 8180810, 7079743, 7428960, 8285574, 7561653, 8096242, 7828183, 7468417);
+update speler set knsbTeam = '2', knsbOpgegeven = '2' where seizoen = '2122' and knsbNummer in 
+(6335670, 6483455, 7099950, 7129991, 7099620, 7879520, 7509920, 7707832); -- 6225934, 7665834
+update speler set knsbTeam = '3', knsbOpgegeven = '3' where seizoen = '2122' and knsbNummer in 
+(6572511, 7535385, 7758014, 7699010, 7504310, 8611922, 8484443, 8587337);
+update speler set knsbTeam = '4', knsbOpgegeven = '4' where seizoen = '2122' and knsbNummer in 
+(7824674, 7809285, 7904589, 7282033, 8276752, 7649213, 8750093, 6212404);
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ('2122', '', '', '', 'geen team', 0, 0),

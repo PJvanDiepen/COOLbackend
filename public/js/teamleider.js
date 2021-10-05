@@ -35,22 +35,36 @@ async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
             const div = document.getElementById("wedstrijd" + wedstrijdNummer); // 9 x div met id="wedstrijd".."wedstrijd9"
             div.appendChild(document.createElement("h2")).innerHTML = wedstrijdVoluit(w) + SCHEIDING + w.naam;
             const tabel = div.appendChild(document.createElement("table"));
-            tabel.appendChild(htmlRij("", "speler", "rating", "aanwezig"));
+            tabel.appendChild(htmlRij("", "speler", "rating", "", "aanwezig"));
             let aanwezigen = 0;
-            (await localFetch(`/${uuidToken}/teamleider/${w.seizoen}/${w.teamCode}/${datumSQL(wedstrijdDatum)}`)).forEach(
+            (await serverFetch(`/${uuidToken}/teamleider/${w.seizoen}/${w.teamCode}/${datumSQL(wedstrijdDatum)}`)).forEach(
                 function (u) {
                     tabel.appendChild(htmlRij(
                         u.partij === NIET_MEEDOEN ? "" : (++aanwezigen),
                         naarSpeler(u.knsbNummer, u.naam),
-                        u.knsbRating, aanwezig(u)));
+                        u.knsbRating,
+                        vasteSpelerOfInvaller(u, w.teamCode),
+                        aanwezig(u)));
                 });
         }
     }
 }
 
+const INVALLER = "i";
+
+function vasteSpelerOfInvaller(speler, teamCode) {
+    if (speler.nhsbTeam === teamCode) {
+        return speler.nhsbOpgegeven === teamCode ? teamCode : INVALLER;
+    } else if (speler.knsbTeam === teamCode) {
+        return speler.knsbOpgegeven === teamCode ? teamCode : INVALLER;
+    } else {
+        return INVALLER;
+    }
+}
+
 function aanwezig(u) {
     if (u.partij === EXTERNE_PARTIJ) {
-        return u.bordNummer + ": " + u.witZwart + u.resultaat;
+        return `bord ${u.bordNummer} ${u.witZwart} ${u.resultaat}`;
     } else if (u.partij === NIET_MEEDOEN) {
         return STREEP;
     } else if (u.partij === MEEDOEN) {

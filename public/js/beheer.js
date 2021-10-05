@@ -31,17 +31,11 @@ async function backup(tabel) {
     console.log(`insert into ${tabel} (${velden.join(", ")}) values`);
     for (const rij of rijen) {
         let kolommen = [];
-        let backupRij = false;
         for (const [key, value] of Object.entries(rij)) {
             // TODO backupRij = selecteer(key, value); waarbij selecteer als parameter aan backup doorgeven
-            if (key === "partij" && !["m", "n"].includes(value)) {
-                backupRij = true;
-            }
             kolommen.push(valueSQL(value));
         }
-        if (backupRij) {
-            console.log(`(${kolommen.join(", ")}),`);
-        }
+        console.log(`(${kolommen.join(", ")}),`);
     }
 }
 

@@ -269,7 +269,9 @@ module.exports = router => {
                     'uitslag.witZwart',
                     'uitslag.resultaat',
                     'speler.nhsbTeam',
+                    'speler.nhsbOpgegeven',
                     'speler.knsbTeam',
+                    'speler.knsbOpgegeven',
                     'speler.knsbRating',
                     'persoon.naam')
                 .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')

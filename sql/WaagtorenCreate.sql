@@ -73,7 +73,9 @@ DROP TABLE IF EXISTS speler;
 CREATE TABLE speler (
     seizoen char(4) not null,
 	nhsbTeam char(3) not null,
+    nhsbOpgegeven char(3) not null,
 	knsbTeam char(3) not null,
+    knsbOpgegeven char(3) not null,
     knsbNummer int not null,
     knsbRating int not null,
     datumRating date not null,
@@ -95,11 +97,25 @@ add CONSTRAINT fk_speler_nhsb_team
     ON UPDATE CASCADE;
     
 alter table speler
+add CONSTRAINT fk_speler_vast_nhsb_team
+    FOREIGN KEY (seizoen, nhsbOpgegeven)
+    REFERENCES team (seizoen, teamCode)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
+        
+alter table speler
 add CONSTRAINT fk_speler_knsb_team
     FOREIGN KEY (seizoen, knsbTeam)
     REFERENCES team (seizoen, teamCode)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;    
+    ON UPDATE CASCADE; 
+    
+alter table speler
+add CONSTRAINT fk_speler_vast_knsb_team
+    FOREIGN KEY (seizoen, knsbOpgegeven)
+    REFERENCES team (seizoen, teamCode)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;        
     
 DROP TABLE IF EXISTS ronde;
 CREATE TABLE ronde (
