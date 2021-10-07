@@ -155,8 +155,8 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
 }
 
 function versieSelecteren(versies, rondeNummer) {  // TODO: software en tekst samen in structuur
-    versies.appendChild(htmlOptie(0, "indelen zonder aanpassingen"));
-    versies.appendChild(htmlOptie(1, "indelen met aanpassing"));
+    versies.appendChild(htmlOptie(0, "indelen volgens algoritme van ronde 6"));
+    versies.appendChild(htmlOptie(1, "indelen volgens algoritme van ronde 2"));
     versies.value = versieIndelen;
     versies.addEventListener("input",
         function () {
@@ -172,18 +172,14 @@ const indelenFun = [
     function (r, wit, zwart) {
         console.log("--- indelen met algoritme van ronde 6 ---");
         let overslaan = [];
-        let oneven = onevenSpeler(r, overslaan);
-        let i = 0;
-        while (i < r.length) {
-            if (overslaan.includes(i)) {
-                overslaan.shift(); // eerste van overslaan
-            } else {
-                if (overslaan.length) {
-                    console.log(`overslaan: [${spelersLijst(r, overslaan).join(", ")}]`);
-                }
+        const oneven = onevenSpeler(r);
+        for (let i = 0; i < r.length; i++) {
+            if (i === overslaan[0]) { // indien al ingedeeld
+                overslaan.shift();
+            } else if (i !== oneven) { // oneven niet indelen
                 let j = i + 1;
-                while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) { // volgende indien overslaan of mag niet tegen
-                    j++;
+                while (j < r.length && (overslaan.includes(j) || j === oneven || !r[i].tegen(r[j]))) {
+                    j++; // volgende indien al ingedeeld of oneven of mag niet tegen
                 }
                 if (j < r.length) {
                     if (r[i].metWit(r[j])) {
@@ -196,7 +192,6 @@ const indelenFun = [
                     overslaan.push(j);
                 }
             }
-            i++;
         }
         return oneven;
     },
@@ -255,28 +250,26 @@ function spelersLijst(ranglijst, spelers) {
 /**
  * indien er een oneven aantal deelnemers is, is er een onevenSpeler
  * de onevenSpeler is de laagste speler op de ranglijst met meeste aantal partijen, die niet eerder oneven was
- * de onevenSpeler wordt toegevoegd aan de overslaan lijst van spelers die al zijn ingedeeld
  *
  * @param r ranglijst
- * @param overslaan lijst van spelers die al zijn ingedeeld
  * @returns {number|number}
  */
-function onevenSpeler(r, overslaan) {
+function onevenSpeler(r) {
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
     if (oneven) {
         while (r[oneven].oneven()) {
             console.log(`${r[oneven].naam} is al oneven geweest`);
             oneven--;
         }
-        for (let i = oneven - 1; i < -1; i--) {
+        for (let i = oneven - 1; i > -1; i--) {
             if (r[i].oneven()) {
                 console.log(`${r[i].naam} is ook al oneven geweest`);
-            } else if (r[i].intern() > r[i].intern()) {
+            } else if (r[i].intern() > r[oneven].intern()) {
                 console.log(`${r[i].naam} heeft meer interne partijen gespeeld dan ${r[oneven].naam}`);
                 oneven = i;
             }
         }
-        overslaan.push(oneven);
+        console.log(`${r[oneven].naam} is oneven`);
     }
     return oneven;
 }

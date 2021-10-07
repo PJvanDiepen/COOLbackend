@@ -57,10 +57,12 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
     for (const w of wedstrijden) {
         if (!w.partij) {
-            const afwezig = datumSQL(w.datum) > datumSQL() ? NIET_MEEDOEN : AFWEZIG;
-            const mutaties = await serverFetch(
-                `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datumSQL(w.datum)}/int`);
-            aanvullingen += mutaties;
+            if (datumSQL(w.datum) > datumSQL() || w.teamCode === INTERNE_COMPETITIE) { // uitsluitend voor interne competitie afwezig invullen
+                const afwezig = datumSQL(w.datum) > datumSQL() ? NIET_MEEDOEN : AFWEZIG; // wel altijd niet meedoen invullen
+                const mutaties = await serverFetch(
+                    `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datumSQL(w.datum)}/int`);
+                aanvullingen += mutaties;
+            }
         }
     }
     return aanvullingen;
