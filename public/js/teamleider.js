@@ -35,7 +35,7 @@ async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
             const div = document.getElementById("wedstrijd" + wedstrijdNummer); // 9 x div met id="wedstrijd".."wedstrijd9"
             div.appendChild(document.createElement("h2")).innerHTML = wedstrijdVoluit(w) + SCHEIDING + w.naam;
             const tabel = div.appendChild(document.createElement("table"));
-            tabel.appendChild(htmlRij("", "speler", "rating", "", "aanwezig"));
+            tabel.appendChild(htmlRij("", "", "rating", "team", "aanwezig"));
             let aanwezigen = 0;
             (await serverFetch(`/${uuidToken}/teamleider/${w.seizoen}/${w.teamCode}/${datumSQL(wedstrijdDatum)}`)).forEach(
                 function (u) {
@@ -50,7 +50,7 @@ async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
     }
 }
 
-const INVALLER = "i";
+const INVALLER = "invaller";
 
 function vasteSpelerOfInvaller(speler, teamCode) {
     if (speler.nhsbTeam === teamCode) {

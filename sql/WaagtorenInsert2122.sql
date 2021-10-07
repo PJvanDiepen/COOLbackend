@@ -110,8 +110,38 @@ update speler set knsbTeam = '2', knsbOpgegeven = '2' where seizoen = '2122' and
 (6335670, 6483455, 7099950, 7129991, 7099620, 7879520, 7509920, 7707832); -- 6225934, 7665834
 update speler set knsbTeam = '3', knsbOpgegeven = '3' where seizoen = '2122' and knsbNummer in 
 (6572511, 7535385, 7758014, 7699010, 7504310, 8611922, 8484443, 8587337);
+update speler set knsbTeam = '3' where seizoen = '2122' and knsbNummer in (
+6225934,  -- Ruud Adema
+7665834); -- David Baanstra
 update speler set knsbTeam = '4', knsbOpgegeven = '4' where seizoen = '2122' and knsbNummer in 
 (7824674, 7809285, 7904589, 7282033, 8276752, 7649213, 8750093, 6212404);
+update speler set knsbTeam = '4' where seizoen = '2122' and knsbNummer in (
+8112654, -- Ton Fasel             1890
+7529522, -- Willem Meyles         1889
+6930957, -- Leo van Steenoven     1883
+7535396, -- John Leek             1882
+8552038, -- Kevin Brands          1872
+7292043, -- Rob Freer             1860
+6951362, -- Johan Plooijer        1815
+8291877, -- Jawdat Adib           1708
+7210137, -- Arjen Dibbets         1701
+7399469, -- Nico Mak              1671
+7419621, -- Frits Leenart         1670
+8485059, -- Peter Duijs           1611
+8400183, -- Daan de Vetten        1597
+8224502, -- Jan van Gijsen        1579
+7269834, -- Arie Boots            1573
+7518203, -- Theo de Bruijn        1551
+    114, -- Bram Vink             1550
+7321534, -- Ronald Kamps          1540
+8073978, -- Gerrit Peereboom      1509
+8617367, -- Arend Noordam         1487
+6192098, -- Nico Brugman          1481
+8193548, -- Daan de Vries         1460
+7691728, -- Karel Beentjes        1425
+8587348, -- Merijn Hooijmans      1422
+8472530  -- Rosa Leek             1386
+); 
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ('2122', '', '', '', 'geen team', 0, 0),

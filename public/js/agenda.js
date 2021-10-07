@@ -7,20 +7,8 @@
         naarTeamleider,
         naarGebruiker,
         naarBeheer);
-    wedstrijdSelecteren(document.getElementById("extern"));
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
 })();
-
-async function wedstrijdSelecteren(wedstrijden) {
-    wedstrijden.appendChild(htmlOptie("eigen", "wedstrijden van eigen team(s)"));
-    wedstrijden.appendChild(htmlOptie("inval", "wedstrijden van eigen en invalteam(s)"));
-    wedstrijden.appendChild(htmlOptie("alle", "wedstrijden van alle teams"));
-    wedstrijden.value = params.get("wedstrijden") || "eigen";
-    wedstrijden.addEventListener("input",
-        function () {
-            naarZelfdePagina("?wedstrijden=" + wedstrijden.value);
-        });
-}
 
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;

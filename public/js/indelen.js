@@ -170,20 +170,9 @@ function indelenRonde(r, wit, zwart) {
 
 const indelenFun = [
     function (r, wit, zwart) {
-        console.log("--- indelen met algoritme van ronde 2 ---");
+        console.log("--- indelen met algoritme van ronde 6 ---");
         let overslaan = [];
-        let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
-        if (oneven) {
-            let partijen = r[oneven].intern();
-            let i = oneven - 1;
-            while (r[oneven].zonderAftrek() === r[i].zonderAftrek()) {
-                if (partijen < r[i].intern()) {
-                    oneven = i; // deze speler heeft evenveel punten, heeft meer partijen gespeeld en is daarom oneven
-                }
-                i--;
-            }
-            overslaan.push(oneven);
-        }
+        let oneven = onevenSpeler(r, overslaan);
         let i = 0;
         while (i < r.length) {
             if (overslaan.includes(i)) {
@@ -209,13 +198,10 @@ const indelenFun = [
             }
             i++;
         }
-        if (overslaan.length) {
-            console.log(`zonder tegenstanders: [${spelersLijst(r, overslaan).join(", ")}]`);
-        }
         return oneven;
     },
     function (r, wit, zwart) {
-        console.log("--- indelen met (nog niet) verbeterd algoritme ---");
+        console.log("--- indelen met algoritme van ronde 2 ---");
         let overslaan = [];
         let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
         if (oneven) {
@@ -265,3 +251,33 @@ function spelersLijst(ranglijst, spelers) {
         return ranglijst[speler].naam;
     });
 }
+
+/**
+ * indien er een oneven aantal deelnemers is, is er een onevenSpeler
+ * de onevenSpeler is de laagste speler op de ranglijst met meeste aantal partijen, die niet eerder oneven was
+ * de onevenSpeler wordt toegevoegd aan de overslaan lijst van spelers die al zijn ingedeeld
+ *
+ * @param r ranglijst
+ * @param overslaan lijst van spelers die al zijn ingedeeld
+ * @returns {number|number}
+ */
+function onevenSpeler(r, overslaan) {
+    let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
+    if (oneven) {
+        while (r[oneven].oneven()) {
+            console.log(`${r[oneven].naam} is al oneven geweest`);
+            oneven--;
+        }
+        for (let i = oneven - 1; i < -1; i--) {
+            if (r[i].oneven()) {
+                console.log(`${r[i].naam} is ook al oneven geweest`);
+            } else if (r[i].intern() > r[i].intern()) {
+                console.log(`${r[i].naam} heeft meer interne partijen gespeeld dan ${r[oneven].naam}`);
+                oneven = i;
+            }
+        }
+        overslaan.push(oneven);
+    }
+    return oneven;
+}
+
