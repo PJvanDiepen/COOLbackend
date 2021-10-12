@@ -176,7 +176,7 @@ const indelenFun = [
         for (let i = 0; i < r.length; i++) {
             if (i === overslaan[0]) { // indien al ingedeeld
                 overslaan.shift();
-            } else if (i !== oneven) { // oneven niet indelen
+            } else if (i === 0 || i !== oneven) { // eerste speler wel indelen en oneven niet indelen
                 let j = i + 1;
                 while (j < r.length && (overslaan.includes(j) || j === oneven || !r[i].tegen(r[j]))) {
                     j++; // volgende indien al ingedeeld of oneven of mag niet tegen

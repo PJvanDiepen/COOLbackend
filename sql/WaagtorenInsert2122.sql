@@ -1,24 +1,25 @@
 use waagtoren;
 
 -- 0 deelnemers in seizoen 2122
-insert into persoon (knsbNummer, naam, dummy);
+insert into persoon (knsbNummer, naam) values (117, 'Kees van Kuipers');
 
-insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', 101, 1000, '2021-08-06'),
-('2122', '', '', 102, 1000, '2021-08-06'),
-('2122', '', '', 103, 1000, '2021-08-06'),
-('2122', '', '', 105, 1000, '2021-08-06'),
-('2122', '', '', 106, 1000, '2021-08-06'),
-('2122', '', '', 107, 1000, '2021-08-06'),
-('2122', '', '', 109, 1000, '2021-08-06'),
-('2122', '', '', 110, 1000, '2021-08-06'),
-('2122', '', '', 111, 1000, '2021-08-19'),
-('2122', '', '', 112, 1000, '2021-08-19'),
-('2122', '', '', 113, 1250, '2021-09-04'),
-('2122', '', '', 114, 1550, '2021-09-13'),
-('2122', '', '', 115, 1000, '2021-09-14'),
-('2122', '', '', 116, 1000, '2021-09-14'),
-('2122', '', '', '7584566', '2333', '2021-08-01'),
+insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
+('2122', '', '', '', '', 101, 1000, '2021-08-06'),
+('2122', '', '', '', '', 102, 1000, '2021-08-06'),
+('2122', '', '', '', '', 103, 1000, '2021-08-06'),
+('2122', '', '', '', '', 105, 1000, '2021-08-06'),
+('2122', '', '', '', '', 106, 1000, '2021-08-06'),
+('2122', '', '', '', '', 107, 1000, '2021-08-06'),
+('2122', '', '', '', '', 109, 1000, '2021-08-06'),
+('2122', '', '', '', '', 110, 1000, '2021-08-06'),
+('2122', '', '', '', '', 111, 1000, '2021-08-19'),
+('2122', '', '', '', '', 112, 1000, '2021-08-19'),
+('2122', '', '', '', '', 113, 1250, '2021-09-04'),
+('2122', '', '', '', '', 114, 1550, '2021-09-13'),
+('2122', '', '', '', '', 115, 1000, '2021-09-14'),
+('2122', '', '', '', '', 116, 1000, '2021-09-14'),
+('2122', '', '', '', '', 117, 1550, '2021-10-10'),
+('2122', '', '', '7584566', '2333', '2021-08-01'), -- TODO
 ('2122', '', '', '7657342', '2299', '2021-08-01'),
 ('2122', '', '', '7970094', '2271', '2021-08-01'),
 ('2122', '', '', '8180810', '2243', '2021-08-01'),
@@ -133,7 +134,6 @@ update speler set knsbTeam = '4' where seizoen = '2122' and knsbNummer in (
 7269834, -- Arie Boots            1573
 7518203, -- Theo de Bruijn        1551
     114, -- Bram Vink             1550
-7321534, -- Ronald Kamps          1540
 8073978, -- Gerrit Peereboom      1509
 8617367, -- Arend Noordam         1487
 6192098, -- Nico Brugman          1481
@@ -143,12 +143,22 @@ update speler set knsbTeam = '4' where seizoen = '2122' and knsbNummer in (
 8472530  -- Rosa Leek             1386
 ); 
 
+-- nhsb teams
+update speler set nhsbTeam = 'n2', knsbOpgegeven = 'n2' where seizoen = '2122' and knsbNummer in 
+(7529522, 6930957, 7824674, 7758014, 8611922, 8484443, 8587337, 8400183);
+
+update speler set knsbTeam = '' where seizoen = '2122' and knsbNummer = 7321534); -- Ronald Kamps          1540
+
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ('2122', '', '', '', 'geen team', 0, 0),
 ('2122', '1', 'k', '1a', 'KNSB 1a', 10, 6214153),
 ('2122', '2', 'k', '3d', 'KNSB 3d', 8, 7129991),
 ('2122', '3', 'k', '4e', 'KNSB 4e', 8, 7758014),
 ('2122', '4', 'k', '6c', 'KNSB 6c', 8, 6212404),
+('2122', 'n1', 'n', 't', 'NHSB top', 8, 0),
+('2122', 'n2', 'n', '1a', 'NHSB 1a', 8, 0),
+('2122', 'n3', 'n', '2b', 'NHSB 2b', 8, 0),
+('2122', 'n4', 'n', '3c', 'NHSB 3c', 6, 0),
 ('2122', 'int', 'i', 'nt', 'interne competitie', 0, 0),
 ('2122', 'ipv', 'i', 'pv', 'rapid', 0, 0);
 
@@ -219,14 +229,37 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '3', '7', 't', 'Kennemer Combinatie 3', 'Alkmaar', '2022-03-12'),
 ('2122', '3', '8', 'u', 'vrije ronde', '', '2022-04-02'),
 ('2122', '3', '9', 't', 'Het Spaarne 1', 'Alkmaar', '2022-04-23'),
-
 ('2122', '4', '1', 't', 'Purmerend 3', 'Alkmaar', '2021-10-09'),
 ('2122', '4', '2', 't', 'HWP Haarlem 4', 'Alkmaar', '2021-11-06'),
 ('2122', '4', '3', 'u', 'VAS 5', 'Amsterdam', '2021-11-27'),
 ('2122', '4', '4', 't', 'VAS 6', 'Alkmaar', '2021-12-18'),
 ('2122', '4', '5', 'u', 'Leiderdorp 2', 'Leiderdorp', '2022-02-05'),
 ('2122', '4', '6', 't', 'Woerden 3', 'Alkmaar', '2022-03-12'),
-('2122', '4', '7', 'u', 'Zukertort Amstelveen 3', 'Amstelveen', '2022-04-02');
+('2122', '4', '7', 'u', 'Zukertort Amstelveen 3', 'Amstelveen', '2022-04-02'),
+('2122', 'n1', '1', 'u', 'CS Zandvoort N1', 'Zandvoort', '2021-10-15'),
+('2122', 'n1', '2', 't', 'HWP Haarlem N2', 'Alkmaar', '2021-11-09'),
+('2122', 'n1', '3', 'u', 'Kennemer Combinatie N1', 'Haarlem', '2021-12-10'),
+('2122', 'n1', '4', 't', 'Krommenie N1', 'Alkmaar', '2022-02-01'),
+('2122', 'n1', '5', 'u', 'HWP Haarlem N1', 'Haarlem', '2022-03-01'),
+('2122', 'n1', '6', 'u', 'De Uil N1', 'Hillegom', '2022-03-21'),
+('2122', 'n1', '7', 't', 'Kijk Uit N1', 'Alkmaar', '2022-04-12'),
+('2122', 'n2', '1', 't', 'Volendam N1', 'Alkmaar', '2021-10-12'),
+('2122', 'n2', '2', 'u', 'Magnus-AP N1', 'Schagen', '2021-11-12'),
+('2122', 'n2', '3', 't', 'Aartswoud N1', 'Alkmaar', '2021-12-07'),
+('2122', 'n2', '4', 'u', 'KTV N1', 'Enkhuizen', '2022-02-11'),
+('2122', 'n2', '5', 't', 'Caïssa-Eenhoorn N1', 'Alkmaar', '2022-03-01'),
+('2122', 'n2', '6', 't', 'En Passant N', 'Alkmaar', '2022-03-26'),
+('2122', 'n2', '7', 'u', 'Opening 64 N1', 'Sint Pancras', '2022-04-15'),
+('2122', 'n3', '1', 't', 'Koedijk N', 'Alkmaar', '2021-10-26'),
+('2122', 'n3', '2', 'u', 'Opening 64 N2', 'Sint Pancras', '2021-11-12'),
+('2122', 'n3', '3', 't', 'De Pion N', 'Alkmaar', '2022-02-08'),
+('2122', 'n3', '4', 'u', 'Oppositie N', 'Heiloo', '2022-03-08'),
+('2122', 'n3', '5', 'u', 'HWP Zaanstad N', 'Zaandijk', '2022-04-29'),
+('2122', 'n4', '1', 'u', 'Volendam N2', 'Volendam', '2021-10-28'),
+('2122', 'n4', '2', 't', 'Vredeburg N2', 'Alkmaar', '2021-11-23'),
+('2122', 'n4', '3', 'u', 'Castricum- Bakkum Comb. N2', 'Castricum', '2022-02-18'),
+('2122', 'n4', '4', 't', 'Purmerend N4', 'Alkmaar', '2022-03-15'),
+('2122', 'n4', '5', 't', 'Assendelft N', 'Alkmaar', '2022-03-29');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', '1', 1, 8, 7099950, 'e', 'z', '0', '0', '2021-09-14', 'int'); -- Jos Vlaming speelt vooruit op
@@ -715,24 +748,78 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'int', 6, 0, 7321534, 'm', '', 0, '', '2021-10-12', 'int'),
 ('2122', 'int', 6, 0, 7099620, 'm', '', 0, '', '2021-10-12', 'int');
 
+
+delete from uitslag where seizoen = '2122' and teamCode in ('1', '2', '3') and rondeNummer = 3;
+delete from uitslag where seizoen = '2122' and teamCode = '4' and rondeNummer = 4;
+
+-- KNSB competitie 9 oktober 2021 
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', '1', '2', '4', '7079743', 'e', 'w', '0', '1', '2021-10-09', 'int'),
+('2122', '1', '2', '7', '7099950', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '1', '2', '2', '7428960', 'e', 'w', '0', '½', '2021-10-09', 'int'),
+('2122', '1', '2', '9', '7468417', 'e', 'z', '0', '½', '2021-10-09', 'int'),
+('2122', '1', '2', '8', '7561653', 'e', 'w', '0', '0', '2021-10-09', 'int'),
+('2122', '1', '2', '3', '7584566', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '1', '2', '1', '7657342', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '1', '2', '5', '7828183', 'e', 'z', '0', '0', '2021-10-09', 'int'),
+('2122', '1', '2', '10', '8096242', 'e', 'w', '0', '0', '2021-10-09', 'int'),
+('2122', '1', '2', '6', '8285574', 'e', 'w', '0', '0', '2021-10-09', 'int'),
+('2122', '2', '2', '1', '6335670', 'e', 'z', '0', '½', '2021-10-09', 'int'),
+('2122', '2', '2', '2', '7099620', 'e', 'w', '0', '1', '2021-10-09', 'int'),
+('2122', '2', '2', '3', '7129991', 'e', 'z', '0', '0', '2021-10-09', 'int'),
+('2122', '2', '2', '5', '7509920', 'e', 'z', '0', '0', '2021-10-09', 'int'),
+('2122', '2', '2', '7', '7707832', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '2', '2', '4', '7904589', 'e', 'w', '0', '½', '2021-10-09', 'int'),
+('2122', '2', '2', '6', '8112654', 'e', 'w', '0', '0', '2021-10-09', 'int'),
+('2122', '2', '2', '8', '8552038', 'e', 'w', '0', '0', '2021-10-09', 'int'),
+('2122', '3', '2', '4', '6572511', 'e', 'w', '0', '1', '2021-10-09', 'int'),
+('2122', '3', '2', '2', '7282033', 'e', 'w', '0', '½', '2021-10-09', 'int'),
+('2122', '3', '2', '3', '7292043', 'e', 'z', '0', '0', '2021-10-09', 'int'),
+('2122', '3', '2', '5', '7699010', 'e', 'z', '0', '0', '2021-10-09', 'int'),
+('2122', '3', '2', '1', '7758014', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '3', '2', '7', '8587337', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '3', '2', '6', '8611922', 'e', 'w', '0', '1', '2021-10-09', 'int'),
+('2122', '3', '2', '8', '8750093', 'e', 'w', '0', '0', '2021-10-09', 'int'),
+('2122', '4', '1', '5', '6212404', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '4', '1', '2', '7809285', 'e', 'w', '0', '½', '2021-10-09', 'int'),
+('2122', '4', '1', '1', '7824674', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '4', '1', '7', '8073978', 'e', 'z', '0', '0', '2021-10-09', 'int'),
+('2122', '4', '1', '3', '8276752', 'e', 'z', '0', '1', '2021-10-09', 'int'),
+('2122', '4', '1', '6', '8400183', 'e', 'w', '0', '1', '2021-10-09', 'int'),
+('2122', '4', '1', '4', '8485059', 'e', 'w', '0', '1', '2021-10-09', 'int'),
+('2122', '4', '1', '8', '8617367', 'e', 'w', '0', '1', '2021-10-09', 'int');
+
+
+delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 6;
+
+-- ronde 6
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+
+delete from uitslag where seizoen = '2122' and teamCode in ('1', '2', '3') and rondeNummer = 3;
+delete from uitslag where seizoen = '2122' and teamCode = '4' and rondeNummer = 4;
+
+-- KNSB competitie 9 oktober 2021 
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+
 -- alle seizoenen
 insert into persoon (knsbNummer, naam) values
-('101', 'Ramon Witte'),
-('102', 'Ellen van der Hoeven'),
-('103', 'Charles Stoorvogel'),
-('104', 'Sietske de Greeuw'),
-('105', 'Richard Meijer'),
-('106', 'Abdul Rashid Ayobi'),
-('107', 'Joris Beerda'),
-('108', 'Aad Schuit'),
-('109', 'Ron van den Bogert'),
-('110', 'Tansu Madencioglu'),
-('111', 'Jorn Visser'),
-('112', 'Thea Veldhuis'),
-('113', 'Michiel Doodeman'),
-('114', 'Bram Vink'),
-('115', 'Harm Grouwstra'),
-('116', 'Ruard Born'),
+(101, 'Ramon Witte'),
+(102, 'Ellen van der Hoeven'),
+(103, 'Charles Stoorvogel'),
+(104, 'Sietske de Greeuw'),
+(105, 'Richard Meijer'),
+(106, 'Abdul Rashid Ayobi'),
+(107, 'Joris Beerda'),
+(108, 'Aad Schuit'),
+(109, 'Ron van den Bogert'),
+(110, 'Tansu Madencioglu'),
+(111, 'Jorn Visser'),
+(112, 'Thea Veldhuis'),
+(113, 'Michiel Doodeman'),
+(114, 'Bram Vink'),
+(115, 'Harm Grouwstra'),
+(116, 'Ruard Born'),
+(117, 'Kees van Kuipers'),
 ('6187885', 'Bob de Mon'),
 ('6192098', 'Nico Brugman'),
 ('6212404', 'Peter van Diepen'),

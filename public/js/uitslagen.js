@@ -2,7 +2,7 @@
 
 // TODO https://developer.chrome.com/blog/migrating-to-js-modules/
 
-const versie000 = "0-0-0.nl versie 0.6.2"; // TODO 0-0-0 versie uit package.json
+const versie000 = "0-0-0.nl versie 0.6.3"; // TODO 0-0-0 versie uit package.json
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
