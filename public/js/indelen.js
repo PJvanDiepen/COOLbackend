@@ -171,17 +171,11 @@ function indelenRonde(r, wit, zwart) {
 const indelenFun = [
     function (r, wit, zwart) {
         console.log("--- indelen met algoritme van ronde 6 ---");
-        let overslaan = [];
         const oneven = onevenSpeler(r);
-        if (oneven) {
-            overslaan.push(oneven);
-        }
         for (let i = 0; i < r.length; i++) {
-            if (overslaan.includes(i)) { // indien al ingedeeld
-                // TODO verwijderen
-            } else {
+            if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
                 let j = i + 1;
-                while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) {
+                while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j]))) {
                     j++; // volgende indien al ingedeeld of oneven of mag niet tegen
                 }
                 if (j < r.length) {
@@ -192,7 +186,6 @@ const indelenFun = [
                         wit.push(j);
                         zwart.push(i);
                     }
-                    overslaan.push(j);
                 }
             }
         }
@@ -251,12 +244,16 @@ function spelersLijst(ranglijst, spelers) {
     });
 }
 
+function ingedeeld(speler, wit, zwart, oneven) {
+    return wit.includes(speler) || zwart.includes(speler) || (oneven && speler === oneven);
+}
+
 /**
  * indien er een oneven aantal deelnemers is, is er een onevenSpeler
  * de onevenSpeler is de laagste speler op de ranglijst met meeste aantal partijen, die niet eerder oneven was
  *
  * @param r ranglijst
- * @returns {number|number}
+ * @returns {number|number} 0 indien niemand oneven anders onevenSpeler
  */
 function onevenSpeler(r) {
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
