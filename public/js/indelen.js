@@ -22,7 +22,6 @@ const versieIndelen = Number(params.get("indelen")) || 0;
         deelnemersLijst(r, document.getElementById("lijst"));
     }
     menu(naarAgenda,
-        naarTeamleider,
         naarRanglijst,
         naarTeamleider,
         naarGebruiker,

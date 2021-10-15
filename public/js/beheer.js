@@ -13,8 +13,8 @@ TODO mutaties met verwijderen
         naarRanglijst,
         naarTeamleider,
         naarGebruiker,
-        [BEHEERDER, `backup uitslag seizoen =  ${seizoen}`, async function () {
-            await backup("uitslag");
+        [BEHEERDER, "backup interne competitie" , async function () {
+            await backupUitslag(INTERNE_COMPETITIE);
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
@@ -22,13 +22,13 @@ TODO mutaties met verwijderen
         htmlTekst(`${versie000} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
-async function backup(tabel) {
-    const rijen = await serverFetch(`/backup/${tabel}/${seizoen}`);
+async function backupUitslag(teamCode) {
+    const rijen = await serverFetch(`/backup/uitslag/${seizoen}/${teamCode}`);
     let velden = [];
     for (const [key, value] of Object.entries(rijen[0])) {
         velden.push(key);
     }
-    console.log(`insert into ${tabel} (${velden.join(", ")}) values`);
+    console.log(`insert into uitslag (${velden.join(", ")}) values`);
     for (const rij of rijen) {
         let kolommen = [];
         for (const [key, value] of Object.entries(rij)) {

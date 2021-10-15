@@ -144,8 +144,14 @@ update speler set knsbTeam = '4' where seizoen = '2122' and knsbNummer in (
 ); 
 
 -- nhsb teams
-update speler set nhsbTeam = 'n2', knsbOpgegeven = 'n2' where seizoen = '2122' and knsbNummer in 
+update speler set nhsbTeam = 'n1', nhsbOpgegeven = 'n1' where seizoen = '2122' and knsbNummer in 
+(7970094, 7428960, 8096242, 7099950, 7129991, 7099620, 7707832, 6225934);
+update speler set nhsbTeam = 'n2', nhsbOpgegeven = 'n2' where seizoen = '2122' and knsbNummer in 
 (7529522, 6930957, 7824674, 7758014, 8611922, 8484443, 8587337, 8400183);
+update speler set nhsbTeam = 'n3', nhsbOpgegeven = 'n3' where seizoen = '2122' and knsbNummer in 
+();
+update speler set nhsbTeam = 'n4', nhsbOpgegeven = 'n4' where seizoen = '2122' and knsbNummer in 
+();
 
 update speler set knsbTeam = '' where seizoen = '2122' and knsbNummer = 7321534); -- Ronald Kamps          1540
 
@@ -794,6 +800,14 @@ delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer 
 
 -- ronde 6
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', 'n2', '1', '1', '7529522', 'e', 'z', '0', '½', '2021-10-12', 'int'),
+('2122', 'n2', '1', '2', '6930957', 'e', 'w', '0', '½', '2021-10-12', 'int'),
+('2122', 'n2', '1', '3', '7824674', 'e', 'z', '0', '0', '2021-10-12', 'int'),
+('2122', 'n2', '1', '4', '7758014', 'e', 'w', '0', '½', '2021-10-12', 'int'),
+('2122', 'n2', '1', '5', '8112654', 'e', 'z', '0', '1', '2021-10-12', 'int'),
+('2122', 'n2', '1', '6', '8611922', 'e', 'w', '0', '1', '2021-10-12', 'int'),
+('2122', 'n2', '1', '7', '8484443', 'e', 'z', '0', '1', '2021-10-12', 'int'),
+('2122', 'n2', '1', '8', '8400183', 'e', 'w', '0', '1', '2021-10-12', 'int');
 
 delete from uitslag where seizoen = '2122' and teamCode in ('1', '2', '3') and rondeNummer = 3;
 delete from uitslag where seizoen = '2122' and teamCode = '4' and rondeNummer = 4;

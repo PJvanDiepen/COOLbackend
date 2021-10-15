@@ -382,10 +382,11 @@ module.exports = router => {
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
-    router.get('/backup/uitslag/:seizoen', async function (ctx) {
+    router.get('/backup/uitslag/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Uitslag.query()
             .where('uitslag.seizoen', ctx.params.seizoen)
-            .orderBy(['uitslag.teamCode','uitslag.rondeNummer','uitslag.bordNummer']);
+            .andWhere('uitslag.teamCode', ctx.params.teamCode)
+            .orderBy(['uitslag.rondeNummer','uitslag.bordNummer','uitslag.partij','witZwart']);
     });
 
     router.get('/:uuidToken/gebruikers', async function (ctx) {
