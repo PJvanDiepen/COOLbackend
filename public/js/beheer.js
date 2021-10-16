@@ -13,8 +13,8 @@ TODO mutaties met verwijderen
         naarRanglijst,
         naarTeamleider,
         naarGebruiker,
-        [BEHEERDER, "backup interne competitie" , async function () {
-            await backupUitslag(INTERNE_COMPETITIE);
+        [BEHEERDER, "backup interne competitie 1-13" , async function () {
+            await backupUitslag(INTERNE_COMPETITIE, 1, 13);  // TODO selectie invullen
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
@@ -22,8 +22,8 @@ TODO mutaties met verwijderen
         htmlTekst(`${versie000} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
-async function backupUitslag(teamCode) {
-    const rijen = await serverFetch(`/backup/uitslag/${seizoen}/${teamCode}`);
+async function backupUitslag(teamCode, van, tot) {
+    const rijen = await serverFetch(`/backup/uitslag/${seizoen}/${teamCode}/${van}/${tot}`);
     let velden = [];
     for (const [key, value] of Object.entries(rijen[0])) {
         velden.push(key);
