@@ -17,7 +17,8 @@ const versieIndelen = Number(params.get("indelen")) || 0;
         oneven = indelenRonde(r, wit, zwart);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"));
+    const extern = await serverFetch(`/${uuidToken}/externintern/${seizoen}/${rondeNummer}`); // actuele situatie
+    partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), extern);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
     }
@@ -89,7 +90,7 @@ function rangnummersToggle(rangnummers, rondeNummer) {
     return rangnummersAan;
 }
 
-function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen) {
+function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
     for (let i = 0; i < wit.length; i++) {
         partijen.appendChild(htmlRij(
             i + 1,
@@ -100,6 +101,11 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen) {
     }
     if (oneven) {
         partijen.appendChild(htmlRij("", naarSpeler(r[oneven].knsbNummer, r[oneven].naam), "", "oneven"));
+    }
+    let bord = wit.length;
+    for (const speler of extern) {
+        // bord++;
+        partijen.appendChild(htmlRij(++bord, naarSpeler(speler.knsbNummer, speler.naam), "extern", ""));
     }
 }
 

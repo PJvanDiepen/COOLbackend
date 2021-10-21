@@ -19,7 +19,8 @@ delimiter ;
 -- seizoenVersie, subgroep, waardeCijfer, punten en totalen bevatten de logica voor verschillende reglementen voor de interne competie van de Waagtoren
 -- versie 1 is de oorspronkelijke versie van Alkmaar systeem (geen SQL code)
 -- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
--- versie 3 geen afzeggingenAftrek in seizoen = 2122
+-- versie 3 geen afzeggingenAftrek in seizoen = 2122, 2223, enz.
+-- versie 4 rapid in seizoen = 21ra, 22ra, enz.
 
 drop function seizoenVersie;
 
@@ -31,8 +32,12 @@ begin
         return versie;
 	elseif seizoen in ('1819', '1920', '2021') then 
         return 2;
-	else 
+	elseif seizoen in ('2122', '2223') then 
         return 3;
+	elseif seizoen in ('21ra', '22ra') then -- rapid
+        return 4;
+	else 
+        return -1;
 	end if;
 end;
 $$
@@ -41,12 +46,14 @@ delimiter ;
 drop function subgroep;
 
 delimiter $$
-create function subgroep(seizoen char(4), versie int, knsbNummer int) 
+create function subgroep(seizoen char(4), versie int, knsbNummer int)
 returns char(1) deterministic
 begin
     declare knsbRating int;
-    set knsbRating = rating(seizoen, knsbNummer); 
-	if knsbRating < 1400 then
+    set knsbRating = rating(seizoen, knsbNummer);
+    if versie = 4 then -- geen subgroep bij rapid
+        return ' ';
+	elseif knsbRating < 1400 then
         return 'H';
 	elseif knsbRating < 1500 then
         return 'G';
@@ -73,7 +80,9 @@ delimiter $$
 create function waardeCijfer(versie int, knsbRating int) 
 returns int deterministic
 begin
-    if knsbRating < 1400 then
+    if versie = 4 then -- geen waardeCijfer bij rapid
+        return 0;
+    elseif knsbRating < 1400 then
         return 5; -- H
 	elseif knsbRating < 1500 then
         return 6; -- G
@@ -100,7 +109,9 @@ delimiter $$
 create function punten(seizoen char(4), versie int, knsbNummer int, eigenWaardeCijfer int, teamCode char(3), partij char(1), tegenstander int, resultaat char(1))
     returns int deterministic -- reglement artikel 12
 begin
-    if partij = 'i' and resultaat = '1' then
+    if versie = 4 then -- rapidPunten bij rapid
+        return rapidPunten(partij, resultaat);
+    elseif partij = 'i' and resultaat = '1' then
         return waardeCijfer(versie, rating(seizoen, tegenstander)) + 12;
     elseif partij = 'i' and resultaat = '½' then
         return waardeCijfer(versie, rating(seizoen, tegenstander));
@@ -127,35 +138,56 @@ end;
 $$
 delimiter ;
 
+drop function rapidPunten;
+
+delimiter $$
+create function rapidPunten(partij char(1), resultaat char(1))
+    returns int deterministic
+begin
+    if partij = 'i' and resultaat = '1' then
+        return 30;
+    elseif partij = 'i' and resultaat = '½' then
+        return 15;
+    elseif partij = 'i' and resultaat = '0' then
+        return 0;
+    elseif partij = 'o' then -- oneven
+		return 30;
+	else
+		return 10; -- bye  
+    end if;
+end;
+$$
+delimiter ;
+
 drop function totalen;
 
 delimiter $$
 create function totalen(seizoen char(4), versie int, knsbNummer int, totDatum date) returns varchar(600) deterministic
 begin
-    declare totaal int default 0;
-    declare startPunten int default 300; -- reglement artikel 11
-    declare aftrek int default 0;
-    declare minimumInternePartijen int default 20; -- reglement artikel 2
+    declare sorteer int default 0; -- 0
+    declare prijs int default 1; -- 1
+    declare winstIntern int default 0; -- 2
+    declare winstExtern int default 0; -- 3
+    declare knsbRating int; -- 4
+    declare remiseIntern int default 0; -- 5
+    declare verliesIntern int default 0; -- 6
+    declare witIntern int default 0; -- 7
+    declare zwartIntern int default 0; -- 8
+    declare oneven int default 0; -- 9
+	declare afzeggingen int default 0; -- 10
+    declare aftrek int default 0; -- 11
+    declare totaal int default 0; -- 12
+    declare startPunten int default 0; -- 13
+    declare eigenWaardeCijfer int; -- 14
+	declare remiseExtern int default 0; -- 15
+    declare verliesExtern int default 0; -- 16
+    declare witExtern int default 0; -- 17
+    declare zwartExtern int default 0; -- 18
+   	declare rondenVerschil int default 0; -- 19
+    declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
-    declare prijs int default 1;
-    declare sorteer int default 0;
-    declare knsbRating int;
-    declare eigenWaardeCijfer int;
-    declare oneven int default 0;
-	declare afzeggingen int default 0;
-    declare winstIntern int default 0;
-	declare remiseIntern int default 0;
-    declare verliesIntern int default 0;
-    declare witIntern int default 0;
-    declare zwartIntern int default 0;
-    declare winstExtern int default 0;
-    declare remiseExtern int default 0;
-    declare verliesExtern int default 0;
-    declare witExtern int default 0;
-    declare zwartExtern int default 0;
-    declare rondenVerschil int default 7; -- reglement artikel 3
-    declare tegenstanders varchar(500) default '';
+    declare minimumInternePartijen int default 0; 
     declare teamCode char(3);
     declare rondeNummer int;
     declare partij char(1);
@@ -170,8 +202,12 @@ begin
             and u.knsbNummer = knsbNummer
             and u.anderTeam = 'int'
             and u.datum < totDatum;
-    declare continue handler for not found
-    set found = false;
+    declare continue handler for not found set found = false;
+    if versie <> 4 then -- niet bij rapid
+        set startPunten = 300; -- reglement artikel 11
+		set minimumInternePartijen = 20; -- reglement artikel 2
+		set rondenVerschil = 7; -- reglement artikel 3
+	end if;
     set knsbRating = rating(seizoen, knsbNummer); 
     set eigenWaardeCijfer = waardeCijfer(versie, knsbRating);
     open uitslagen;

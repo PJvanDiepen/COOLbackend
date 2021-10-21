@@ -39,28 +39,6 @@ module.exports = router => {
         ctx.body = laatsteMutaties;
     });
 
-    router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        let deelnemers = {};
-        if (gebruiker.juisteRechten(GEREGISTREERD)) { // voorlopige indeling uitsl
-            deelnemers = await Uitslag.query()
-                .select('uitslag.knsbNummer')
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.partij', MEEDOEN);
-        }
-        if (deelnemers.length === 0) { // voor opnieuw indelen
-            deelnemers = await Uitslag.query()
-                .select('uitslag.knsbNummer')
-                .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
-                .andWhere('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
-        }
-        ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
-    });
-
     router.get('/seizoenen/:teamCode', async function (ctx) {
         const seizoenen = await Team.query()
             .select('team.seizoen')
@@ -100,7 +78,46 @@ module.exports = router => {
         ctx.body = volgende.map(function (uitslag) {return [uitslag.rondeNummer, uitslag.datum]});
     });
 
+    router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let deelnemers = {};
+        if (gebruiker.juisteRechten(GEREGISTREERD)) { // voorlopige indeling uitsluitend voor geregistreerde gebruikers
+            deelnemers = await Uitslag.query()
+                .select('uitslag.knsbNummer')
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.partij', MEEDOEN);
+        }
+        if (deelnemers.length === 0) { // voor opnieuw indelen
+            deelnemers = await Uitslag.query()
+                .select('uitslag.knsbNummer')
+                .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
+        }
+        ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
+    });
+
     // geef key - value paren per kolom --------------------------------------------------------------------------------
+
+    router.get('/:uuidToken/externintern/:seizoen/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let deelnemers = {};
+        if (gebruiker.juisteRechten(GEREGISTREERD)) { // extern ingedeeld uitsluitend voor geregistreerde gebruikers
+            deelnemers = await Uitslag.query()
+                .select('naam', 'uitslag.knsbNummer')
+                .join('persoon', 'persoon.knsbNummer', 'uitslag.knsbNummer')
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.partij', EXTERN_INDELEN)
+                .orderBy('naam');
+
+        }
+        ctx.body = deelnemers;
+    });
 
     router.get('/spelers/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
@@ -687,6 +704,7 @@ const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
+const EXTERN_INDELEN       = "x"; // aanmelden voor externe partij op dinsdag
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";

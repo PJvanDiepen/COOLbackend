@@ -2,7 +2,7 @@
 
 // TODO https://developer.chrome.com/blog/migrating-to-js-modules/
 
-const versie000 = "0-0-0.nl versie 0.6.5"; // TODO 0-0-0 versie uit package.json
+const versie000 = "0-0-0.nl versie 0.6.6"; // TODO 0-0-0 versie uit package.json
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
@@ -10,6 +10,7 @@ const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
+const EXTERN_INDELEN       = "x"; // aanmelden voor externe partij op dinsdag
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
@@ -286,9 +287,12 @@ function naarTeam(tekst, u) {
     return htmlLink(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, tekst);
 }
 
-
 function seizoenVoluit(seizoen) {
-    return "20" + seizoen.substring(0,2) + "-20" +  seizoen.substring(2,4);
+    if (seizoen.substring(2,4) === "ra") {
+        return `rapid 20${seizoen.substring(0,2)}-20${voorloopNul(Number(seizoen.substring(0,2)))}`;
+    } else {
+        return `20${seizoen.substring(0,2)}-20${seizoen.substring(2,4)}`;
+    }
 }
 
 function ditSeizoen() {
@@ -367,6 +371,7 @@ function voorloopNul(getal) {
  */
 async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
+    console.log(ronden);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
         return [-1];
@@ -495,7 +500,9 @@ async function teamSelecteren(teamCode) {
     const teams = document.getElementById("teamSelecteren");
     (await localFetch("/teams/" + seizoen)).forEach(
         function (team) {
-            teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            if (team.teamCode !== GEEN_COMPETITIE) {
+                teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            }
         });
     teams.value = teamCode; // werkt uitsluitend na await
     teams.addEventListener("input",
