@@ -55,12 +55,12 @@
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    kop.innerHTML = [vereniging, seizoenVoluit(seizoen), naamSpeler].join(SCHEIDING);
     const totDatum = datumSQL(null, 10); // + 10 dagen voor testen
     const t = (await ranglijst(seizoen, versie, totDatum, [speler]))[0];
+    kop.innerHTML = t.naam + SCHEIDING + t.rating();
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
-        lijst.appendChild(htmlRij("", "", "startpunten", "", "", "", totaal, totaal));
+        lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}`, "", "", "", totaal, totaal));
     }
     let vorigeUitslag;
     (await localFetch(`/uitslagen/${seizoen}/${versie}/${speler}`)).forEach(

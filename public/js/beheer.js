@@ -13,8 +13,8 @@ TODO mutaties met verwijderen
         naarRanglijst,
         naarTeamleider,
         naarGebruiker,
-        [BEHEERDER, "backup interne competitie 1-13" , async function () {
-            await backupUitslag(INTERNE_COMPETITIE, 1, 13);  // TODO selectie invullen
+        [BEHEERDER, "backup interne competitie 7-14" , async function () {
+            await backupUitslag(INTERNE_COMPETITIE, 7, 14);  // TODO selectie invullen
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));

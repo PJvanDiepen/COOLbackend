@@ -27,7 +27,6 @@ async function spelersLijst(kop, lijst) {
                 i + 1,
                 naarSpeler(t.knsbNummer, t.naam),
                 t.punten() ? t.punten() : "",
-                t.intern() ? t.eigenWaardeCijfer() : "",
                 t.winnaarSubgroep(winnaars),
                 t.scoreIntern(),
                 t.percentageIntern(),
@@ -35,8 +34,7 @@ async function spelersLijst(kop, lijst) {
                 t.intern() && t.afzeggingen() ? t.afzeggingen() : "",
                 t.oneven() ? t.oneven() : "",
                 t.scoreExtern(),
-                t.percentageExtern(),
-                t.rating()));
+                t.percentageExtern()));
         }
     });
 }

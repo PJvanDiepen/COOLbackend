@@ -15,6 +15,8 @@ const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
 const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
+const EXTERN_THUIS         = "t";
+const EXTERN_UIT           = "u";
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 // uitslag.witZwart

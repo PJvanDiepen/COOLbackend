@@ -704,11 +704,13 @@ const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
-const EXTERN_INDELEN       = "x"; // aanmelden voor externe partij op dinsdag
+const EXTERN_INDELEN       = "x"; // aanmelden voor externe partij op dinsdag TODO verwijderen!
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
 const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
+const EXTERN_THUIS         = "t";
+const EXTERN_UIT           = "u";
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 // uitslag.witZwart
