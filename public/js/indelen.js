@@ -160,8 +160,8 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
 }
 
 function versieSelecteren(versies, rondeNummer) {  // TODO: software en tekst samen in structuur
-    versies.appendChild(htmlOptie(0, "indelen volgens algoritme van ronde 6"));
-    versies.appendChild(htmlOptie(1, "indelen volgens algoritme van ronde 2"));
+    versies.appendChild(htmlOptie(0, "indelen volgens algoritme van ronde 8"));
+    versies.appendChild(htmlOptie(1, "indelen volgens algoritme van ronde 6"));
     versies.value = versieIndelen;
     versies.addEventListener("input",
         function () {
@@ -174,6 +174,27 @@ function indelenRonde(r, wit, zwart) {
 }
 
 const indelenFun = [
+    function (r, wit, zwart) {
+        console.log("--- indelen met algoritme van ronde 8 ---");
+        const oneven = onevenSpeler(r);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+        if (nietIngedeeld.length > 0) {
+            console.log("--- mislukt ---");
+            while (wit.length > 0) {
+                wit.pop();
+                zwart.pop();
+            }
+            for (const speler of nietIngedeeld) {
+                achteruitIndelen(speler, r, wit, zwart, oneven);
+            }
+            nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+            if (nietIngedeeld.length > 0) {
+                console.log("--- weer mislukt ---");
+            }
+        }
+        return oneven;
+    },
+
     function (r, wit, zwart) {
         console.log("--- indelen met algoritme van ronde 6 ---");
         const oneven = onevenSpeler(r);
@@ -195,58 +216,54 @@ const indelenFun = [
             }
         }
         return oneven;
-    },
-
-    function (r, wit, zwart) {
-        console.log("--- indelen met algoritme van ronde 2 ---");
-        let overslaan = [];
-        let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
-        if (oneven) {
-            let partijen = r[oneven].intern();
-            let i = oneven - 1;
-            while (r[oneven].zonderAftrek() === r[i].zonderAftrek()) {
-                if (partijen < r[i].intern()) {
-                    oneven = i; // deze speler heeft evenveel punten, heeft meer partijen gespeeld en is daarom oneven
-                }
-                i--;
-            }
-            overslaan.push(oneven);
-        }
-        let i = 0;
-        while (i < r.length) {
-            if (overslaan.includes(i)) {
-                overslaan.shift(); // eerste van overslaan
-            } else {
-                if (overslaan.length) {
-                    console.log(`overslaan: [${spelersLijst(r, overslaan).join(", ")}]`);
-                }
-                let j = i + 1;
-                while (j < r.length && (overslaan.includes(j) || !r[i].tegen(r[j]))) { // volgende indien overslaan of mag niet tegen
-                    j++;
-                }
-                if (j < r.length) {
-                    if (r[i].metWit(r[j])) {
-                        wit.push(i);
-                        zwart.push(j);
-                    } else {
-                        wit.push(j);
-                        zwart.push(i);
-                    }
-                    overslaan.push(j);
-                }
-            }
-            i++;
-        }
-        if (overslaan.length) {
-            console.log(`zonder tegenstanders: [${spelersLijst(r, overslaan).join(", ")}]`);
-        }
-        return oneven;
     }];
 
 function spelersLijst(ranglijst, spelers) {
     return spelers.map(function (speler) {
         return ranglijst[speler].naam;
     });
+}
+
+function vooruitIndelen(r, wit, zwart, oneven) {
+    const nietIngedeeld = [];
+    for (let i = 0; i < r.length; i++) {
+        if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
+            let j = i + 1;
+            while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j]))) {
+                j++; // volgende indien al ingedeeld of oneven of mag niet tegen
+            }
+            if (j < r.length) {
+                if (r[i].metWit(r[j])) {
+                    wit.push(i);
+                    zwart.push(j);
+                } else {
+                    wit.push(j);
+                    zwart.push(i);
+                }
+            }
+        }
+        if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
+            console.log(`${r[i].naam} is niet ingedeeld`);
+            nietIngedeeld.push(i);
+        }
+    }
+    return nietIngedeeld;
+}
+
+function achteruitIndelen(i, r, wit, zwart, oneven) {
+    let j = i - 1;
+    while (j >= 0 && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j]))) {
+        j--; // vorige indien al ingedeeld of oneven of mag niet tegen
+    }
+    if (j >= 0) {
+        if (r[i].metWit(r[j])) {
+            wit.push(i);
+            zwart.push(j);
+        } else {
+            wit.push(j);
+            zwart.push(i);
+        }
+    }
 }
 
 function ingedeeld(speler, wit, zwart, oneven) {
@@ -264,12 +281,12 @@ function onevenSpeler(r) {
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
     if (oneven) {
         while (r[oneven].oneven()) {
-            console.log(`${r[oneven].naam} is al oneven geweest`);
+            console.log(`${r[oneven].naam} was al oneven`);
             oneven--;
         }
         for (let i = oneven - 1; i > -1; i--) {
             if (r[i].oneven()) {
-                console.log(`${r[i].naam} is ook al oneven geweest`);
+                console.log(`${r[i].naam} was al oneven`);
             } else if (r[i].intern() > r[oneven].intern()) {
                 console.log(`${r[i].naam} heeft meer interne partijen gespeeld dan ${r[oneven].naam}`);
                 oneven = i;

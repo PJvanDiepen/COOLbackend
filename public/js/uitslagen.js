@@ -2,7 +2,7 @@
 
 // TODO https://developer.chrome.com/blog/migrating-to-js-modules/
 
-const versie000 = "0-0-0.nl versie 0.6.6"; // TODO 0-0-0 versie uit package.json
+const versie000 = "0-0-0.nl versie 0.6.7"; // TODO 0-0-0 versie uit package.json
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
@@ -373,7 +373,6 @@ function voorloopNul(getal) {
  */
 async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
     ronden = await localFetch(`/ronden/${seizoen}/${teamCode}`);
-    console.log(ronden);
     const aantalRonden = ronden.length;
     if (rondeNummer > aantalRonden || rondeNummer < 0) {
         return [-1];
