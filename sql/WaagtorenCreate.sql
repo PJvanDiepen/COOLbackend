@@ -172,6 +172,13 @@ add constraint fk_uitslag_persoon
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
+    
+alter table uitslag
+add constraint fk_uitslag_tegenstander
+    foreign key (tegenstanderNummer)
+    references persoon (knsbNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS ranglijst;
 CREATE TABLE ranglijst (

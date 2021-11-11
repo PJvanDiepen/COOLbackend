@@ -46,7 +46,7 @@ const versieIndelen = Number(params.get("indelen")) || 0;
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);
-    versieSelecteren(document.getElementById("versies"), rondeNummer);
+versieSelecteren(document.getElementById("versies"), rondeNummer);
 })();
 
 async function deelnemersRonde(rondeNummer) {
@@ -160,8 +160,9 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
 }
 
 function versieSelecteren(versies, rondeNummer) {  // TODO: software en tekst samen in structuur
-    versies.appendChild(htmlOptie(0, "indelen volgens algoritme van ronde 8"));
-    versies.appendChild(htmlOptie(1, "indelen volgens algoritme van ronde 6"));
+    for (let i = 0; i < indelenFun.length; i++) {
+        versies.appendChild(htmlOptie(i, indelenFun[i][0]));
+    }
     versies.value = versieIndelen;
     versies.addEventListener("input",
         function () {
@@ -170,12 +171,11 @@ function versieSelecteren(versies, rondeNummer) {  // TODO: software en tekst sa
 }
 
 function indelenRonde(r, wit, zwart) {
-    return indelenFun[versieIndelen](r, wit, zwart); // TODO verschillende indelenFun proberen indien mislukt
+    return indelenFun[versieIndelen][1](r, wit, zwart);
 }
 
 const indelenFun = [
-    function (r, wit, zwart) {
-        console.log("--- indelen met algoritme van ronde 8 ---");
+    ["indelen vooruit en eventueel achteruit", function (r, wit, zwart) {
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
         if (nietIngedeeld.length > 0) {
@@ -193,10 +193,9 @@ const indelenFun = [
             }
         }
         return oneven;
-    },
-
-    function (r, wit, zwart) {
-        console.log("--- indelen met algoritme van ronde 6 ---");
+    }],
+    ["indelen met alleen vooruit gaan", function (r, wit, zwart) {
+        console.log("--- indelen met met alleen vooruit gaan ---");
         const oneven = onevenSpeler(r);
         for (let i = 0; i < r.length; i++) {
             if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
@@ -216,7 +215,7 @@ const indelenFun = [
             }
         }
         return oneven;
-    }];
+    }]];
 
 function spelersLijst(ranglijst, spelers) {
     return spelers.map(function (speler) {

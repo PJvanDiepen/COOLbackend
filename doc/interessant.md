@@ -54,6 +54,7 @@ Interessant
 - [retry an async operation](https://advancedweb.hu/how-to-implement-an-exponential-backoff-retry-strategy-in-javascript/)
 - [Function callback risks](https://jakearchibald.com/2021/function-callback-risks/)
 - [Chaining in JavaScript](https://betterprogramming.pub/how-to-use-chaining-in-javascript-like-a-pro-ff9c1b89d9a9)
+- [Unicode](https://dmitripavlutin.com/what-every-javascript-developer-should-know-about-unicode/)
 - [DevTools](https://blog.asayer.io/15-devtool-secrets-for-javascript-developers)
 
 

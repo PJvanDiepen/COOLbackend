@@ -31,7 +31,6 @@ async function spelersLijst(kop, lijst) {
                 t.scoreIntern(),
                 t.percentageIntern(),
                 t.saldoWitZwart() ? t.saldoWitZwart() : "",
-                t.intern() && t.afzeggingen() ? t.afzeggingen() : "",
                 t.oneven() ? t.oneven() : "",
                 t.scoreExtern(),
                 t.percentageExtern()));
