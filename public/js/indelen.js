@@ -1,7 +1,5 @@
 "use strict";
 
-const versieIndelen = Number(params.get("indelen")) || 0;
-
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
@@ -159,7 +157,9 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
     }
 }
 
-function versieSelecteren(versies, rondeNummer) {  // TODO: software en tekst samen in structuur
+const versieIndelen = Number(params.get("indelen")) || 0;
+
+function versieSelecteren(versies, rondeNummer) {
     for (let i = 0; i < indelenFun.length; i++) {
         versies.appendChild(htmlOptie(i, indelenFun[i][0]));
     }
@@ -174,7 +174,40 @@ function indelenRonde(r, wit, zwart) {
     return indelenFun[versieIndelen][1](r, wit, zwart);
 }
 
+function nietTegen(r, i, j) {
+    const nogNietTegen = [101, 103, 7269834]; // Ramon Witte, Charles Stoorvogel, Arie Boots
+    if (!r[i].tegen(r[j])) {
+        return true;
+    } else if (versieIndelen > 0) { // oudere versies zonder heuristieken
+        return false;
+    } else if (r[i].intern() < 4 && nogNietTegen.includes(r[j].knsbNummer)) {
+        console.log(`${r[i].naam} nog maar niet tegen ${r[j].naam}`);
+        return true;
+    } else if (r[j].intern() < 4 && nogNietTegen.includes(r[i].knsbNummer)) {
+        console.log(`${r[i].naam} nog maar niet tegen ${r[j].naam}`);
+        return true;
+    } else {
+        return false;
+    }
+}
+
 const indelenFun = [
+    ["indelen met heuristieken en herhalen", function (r, wit, zwart) {
+        const oneven = onevenSpeler(r);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+        while (nietIngedeeld.length > 0) {
+            console.log("--- mislukt ---");
+            while (wit.length > 0) {
+                wit.pop();
+                zwart.pop();
+            }
+            for (const speler of nietIngedeeld) {
+                achteruitIndelen(speler, r, wit, zwart, oneven);
+            }
+            nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+        }
+        return oneven;
+    }],
     ["indelen vooruit en eventueel achteruit", function (r, wit, zwart) {
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
@@ -228,7 +261,7 @@ function vooruitIndelen(r, wit, zwart, oneven) {
     for (let i = 0; i < r.length; i++) {
         if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
             let j = i + 1;
-            while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j]))) {
+            while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || nietTegen(r, i, j))) {
                 j++; // volgende indien al ingedeeld of oneven of mag niet tegen
             }
             if (j < r.length) {
@@ -251,7 +284,7 @@ function vooruitIndelen(r, wit, zwart, oneven) {
 
 function achteruitIndelen(i, r, wit, zwart, oneven) {
     let j = i - 1;
-    while (j >= 0 && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j]))) {
+    while (j >= 0 && (ingedeeld(j, wit, zwart, oneven) || nietTegen(r, i, j))) {
         j--; // vorige indien al ingedeeld of oneven of mag niet tegen
     }
     if (j >= 0) {
