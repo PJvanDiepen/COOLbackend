@@ -182,17 +182,26 @@ function nietTegen(r, i, j) {
         return false;
     } else if (r[i].intern() < 4 && nogNietTegen.includes(r[j].knsbNummer)) {
         console.log(`${r[i].naam} nog maar niet tegen ${r[j].naam}`);
-        return true;
+        return true; // de eerste 3 x nogNietTegen
     } else if (r[j].intern() < 4 && nogNietTegen.includes(r[i].knsbNummer)) {
-        console.log(`${r[i].naam} nog maar niet tegen ${r[j].naam}`);
-        return true;
-    } else {
-        return false;
+        console.log(`${r[j].naam} nog maar niet tegen ${r[i].naam}`);
+        return true; // de eerste 3 x nogNietTegen
+    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) {
+        if (r[j].intern() / r[i].intern() > 2) {
+            console.log(`${r[i].naam} te sterk voor ${r[j].naam}`);
+            return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
+        }
+    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) {
+        if (r[i].intern() / r[j].intern() > 2) {
+            console.log(`${r[j].naam} te sterk voor ${r[i].naam}`);
+            return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
+        }
     }
+    return false;
 }
 
 const indelenFun = [
-    ["indelen met heuristieken en herhalen", function (r, wit, zwart) {
+    ["indelen met heuristieken en herhalen indien mislukt", function (r, wit, zwart) {
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
         while (nietIngedeeld.length > 0) {
