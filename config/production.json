@@ -1,8 +1,0 @@
-{
-    "knex": {
-      "connection": {
-        "user": "waag",
-        "password": "9n+skMjge3Cb"
-      }
-    }
-  }

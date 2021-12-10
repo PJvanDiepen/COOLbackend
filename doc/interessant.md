@@ -14,7 +14,6 @@ Nuttig
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await json](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
-- [Introduction common.js](https://eng.wealthfront.com/2015/06/16/an-introduction-to-commonjs/)
 - [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
@@ -22,6 +21,7 @@ Nuttig
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
 - [CORS](https://jakearchibald.com/2021/cors/)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
+- [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
 - [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
@@ -41,6 +41,8 @@ Objection / Knex
 Interessant 
 
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
+- [TypeScript](https://codeascraft.com/2021/11/08/etsys-journey-to-typescript/)
+- [Svelte](https://joshcollinsworth.com/blog/introducing-svelte-comparing-with-react-vue)
 - [resilient js ui](https://www.smashingmagazine.com/2021/08/build-resilient-javascript-ui/)
 - [SPA](http://singlepageappbook.com/index.html)
 - [Accelerate JS development](https://blog.techmagic.co/how-to-accelerate-js-development-with-the-right-approach-techmagic-case-studies/)
@@ -56,6 +58,7 @@ Interessant
 - [Chaining in JavaScript](https://betterprogramming.pub/how-to-use-chaining-in-javascript-like-a-pro-ff9c1b89d9a9)
 - [Unicode](https://dmitripavlutin.com/what-every-javascript-developer-should-know-about-unicode/)
 - [DevTools](https://blog.asayer.io/15-devtool-secrets-for-javascript-developers)
+- [JavaScript engines](https://blogg.bekk.no/how-javascript-engines-achieve-great-performance-fb0b36601557)
 
 
 Later:
