@@ -9,7 +9,6 @@ const Team = require('./models/team');
 const Uitslag = require('./models/uitslag');
 
 const { fn, ref } = require('objection');
-const {f} = require("yarn/lib/cli");
 
 // mutatie.invloed
 const GEEN_INVLOED = 0;
