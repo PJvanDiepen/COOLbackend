@@ -162,7 +162,7 @@ delimiter ;
 drop function totalen;
 
 delimiter $$
-create function totalen(seizoen char(4), versie int, knsbNummer int, totDatum date) returns varchar(600) deterministic
+create function totalen(seizoen char(4), versie int, knsbNummer int, competitie char(3), totDatum date) returns varchar(600) deterministic
 begin
     declare sorteer int default 0; -- 0
     declare prijs int default 1; -- 1
@@ -200,7 +200,7 @@ begin
         from uitslag u
         where u.seizoen = seizoen
             and u.knsbNummer = knsbNummer
-            and u.anderTeam = 'int'
+            and u.anderTeam = competitie
             and u.datum < totDatum;
     declare continue handler for not found set found = false;
     if versie <> 4 then -- niet bij rapid
@@ -306,6 +306,7 @@ set @seizoen = '2122';
 set @versie = 0;
 
 set @knsbNummer = 6212404; -- Peter van Diepen
+set @competitie = 'int';
 
 -- ranglijst
 select
@@ -344,7 +345,7 @@ join persoon p on u.tegenstanderNummer = p.knsbNummer
 join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
 where u.seizoen = @seizoen
     and u.knsbNummer = @knsbNummer
-    and u.anderTeam = 'int'
+    and u.anderTeam = @competitie
 order by u.datum, u.bordNummer;
 
 -- aantal mutaties per gebruiker 

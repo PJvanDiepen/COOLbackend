@@ -14,16 +14,16 @@
         [BEHEERDER, "afzeggingen verwijderen", async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}/${competitie}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${competitie}/${datumSQL()}`);
                 naarZelfdePagina();
             }
         }],
         [BEHEERDER, `${naamSpeler} verwijderen`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}/${competitie}`);
+                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${competitie}/${datumSQL()}`);
                 naarAnderePagina("ranglijst.html");
             }
         }]);
@@ -63,7 +63,7 @@ async function uitslagenSpeler(kop, lijst) {
         lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}`, "", "", "", totaal, totaal));
     }
     let vorigeUitslag;
-    (await localFetch(`/uitslagen/${seizoen}/${versie}/${speler}`)).forEach(
+    (await localFetch(`/uitslagen/${seizoen}/${versie}/${speler}/${competitie}`)).forEach(
         function (u) {
             if (t.intern()) {
                 totaal += u.punten;

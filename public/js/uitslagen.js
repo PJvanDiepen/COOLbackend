@@ -40,9 +40,13 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
+/*
+  verwerk vereniging=Waagtoren&seizoen=2122&versie=0&competitie=int&teamCode=int&speler=0&naam=onbekend&uuid=???
+ */
 const vereniging = doorgeven("vereniging", "Waagtoren");
 const seizoen = doorgeven("seizoen", ditSeizoen());
 const versie = Number(params.get("versie"));
+const competitie = doorgeven("competitie", INTERNE_COMPETITIE)
 const teamCode = doorgeven("team", INTERNE_COMPETITIE);
 let ronden = []; // rondenVerwerken
 const speler = Number(doorgeven("speler", 0)); // knsbNummer
@@ -536,7 +540,7 @@ async function rondeSelecteren(teamCode, rondeNummer) {
  * @returns {Promise<*>}
  */
 async function ranglijst(seizoen, versie, totDatum, selectie) {
-    let spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${datumSQL(totDatum)}`);
+    let spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${competitie}/${datumSQL(totDatum)}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }

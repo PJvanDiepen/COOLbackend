@@ -9,7 +9,6 @@ const Team = require('./models/team');
 const Uitslag = require('./models/uitslag');
 
 const { fn, ref } = require('objection');
-const {f} = require("yarn/lib/cli");
 
 // mutatie.invloed
 const GEEN_INVLOED = 0;
@@ -145,7 +144,7 @@ module.exports = router => {
     where seizoen = @seizoen
     order by totalen desc;
      */
-    router.get('/ranglijst/:seizoen/:versie/:datum', async function (ctx) {
+    router.get('/ranglijst/:seizoen/:versie/:competitie/:datum', async function (ctx) {
         ctx.body = await Speler.query()
             .select(
                 'speler.knsbNummer',
@@ -158,6 +157,7 @@ module.exports = router => {
                         ctx.params.seizoen,
                         ctx.params.versie,
                         ref('speler.knsbNummer'),
+                        ctx.params.competitie,
                         ctx.params.datum)})
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
             .where('seizoen', ctx.params.seizoen)
@@ -191,10 +191,10 @@ module.exports = router => {
     join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
     where u.seizoen = @seizoen
         and u.knsbNummer = @knsbNummer
-        and u.anderTeam = 'int'
+        and u.anderTeam = @competitie
     order by u.datum, u.bordNummer;
      */
-    router.get('/uitslagen/:seizoen/:versie/:knsbNummer', async function (ctx) {
+    router.get('/uitslagen/:seizoen/:versie/:knsbNummer/:competitie', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.datum',
@@ -224,7 +224,7 @@ module.exports = router => {
                     .andOn('uitslag.rondeNummer','ronde.rondeNummer')})
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-            .andWhere('uitslag.anderTeam', INTERNE_COMPETITIE)
+            .andWhere('uitslag.anderTeam', ctx.params.competitie) // TODO anderTeam = competitie
             .orderBy(['uitslag.datum','uitslag.bordNummer']);
     });
 
@@ -488,7 +488,7 @@ module.exports = router => {
             .patch({datumEmail: fn('curdate')});
     });
 
-    router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:anderTeam', async function (ctx) {
+    router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(GEREGISTREERD)) {
@@ -503,7 +503,7 @@ module.exports = router => {
                     tegenstanderNummer: 0,
                     resultaat: "",
                     datum: ctx.params.datum,
-                    anderTeam: ctx.params.anderTeam});
+                    anderTeam: ctx.params.competitie}); // TODO anderTeam = competitie
             aantal = 1;
             await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
         }
