@@ -62,6 +62,7 @@ Interessant
 
 
 Later:
+- [Flutter for web](https://dzone.com/articles/flutter-web-development-all-you-need-to-know)
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
 - [Label Form](https://bitsofco.de/labelling-form-elements/)
 - [Form validation 1](https://bitsofco.de/form-validation-techniques/)

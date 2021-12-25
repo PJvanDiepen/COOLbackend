@@ -468,20 +468,6 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-async function seizoenSelecteren(teamCode) {
-    const seizoenen = document.getElementById("seizoenSelecteren");
-    (await localFetch("/seizoenen/" + teamCode)).forEach(
-        function (seizoen) {
-            seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
-        });
-    seizoenen.value = seizoen; // werkt uitsluitend na await
-    seizoenen.addEventListener("input",
-        function () {
-            sessionStorage.setItem("seizoen", seizoenen.value);
-            naarZelfdePagina();
-        });
-}
-
 async function spelerSelecteren(seizoen) {
     const spelers = document.getElementById("spelerSelecteren");
     spelers.appendChild(htmlOptie(0, "selecteer naam"));

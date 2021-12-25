@@ -232,7 +232,6 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
 ('2122', 'ipv', '1', 't', 'rapid ronde 1, 2 en 3', 'Alkmaar', '2021-10-19'),
-('2122', 'ipv', '2', 't', 'Kersttoernooi', 'Alkmaar', '2021-12-19'),
 ('2122', 'ipv', '3', 't', 'vrij schaken', 'Alkmaar', '2022-01-25'),
 ('2122', 'ipv', '4', 't', 'rapid ronde 4, 5 en 6', 'Alkmaar', '2022-02-22'),
 ('2122', 'ipv', '5', 't', 'rapid ronde 7, 8 en 9', 'Alkmaar', '2022-05-03'),

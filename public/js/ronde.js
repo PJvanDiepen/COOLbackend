@@ -29,7 +29,6 @@
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);
-    seizoenSelecteren(INTERNE_COMPETITIE);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(rondeNummer, document.getElementById("kop"), document.getElementById("wedstrijden"));
     document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumRonde);

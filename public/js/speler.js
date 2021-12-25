@@ -27,7 +27,6 @@
                 naarAnderePagina("ranglijst.html");
             }
         }]);
-    seizoenSelecteren(INTERNE_COMPETITIE);
     uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
 })();
 

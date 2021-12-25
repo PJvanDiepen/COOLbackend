@@ -373,7 +373,5 @@ function htmlPlaatje(plaatje, percentage, breed, hoog) {
         img.width = Math.round(breed * factor);
         img.height = Math.round(hoog * factor);
     }
-    img.width = Math.round(breed * factor);
-    img.height = Math.round(hoog * factor);
     return img;
 }
