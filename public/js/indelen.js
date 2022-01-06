@@ -1,5 +1,9 @@
 "use strict";
 
+/*
+    verwerk // TODO spelers toevoegen, indeling ter plekke wijzigen
+ */
+
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);

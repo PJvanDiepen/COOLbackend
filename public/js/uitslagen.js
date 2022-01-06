@@ -41,7 +41,7 @@ const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https
 const params = pagina.searchParams;
 
 /*
-  verwerk vereniging=Waagtoren&seizoen=2122&versie=0&competitie=int&teamCode=int&speler=0&naam=onbekend&uuid=???
+  verwerk vereniging=Waagtoren&seizoen=2122&versie=0&competitie=int&team=int&speler=0&naam=onbekend&uuid=[uuid]
  */
 const vereniging = doorgeven("vereniging", "Waagtoren");
 const seizoen = doorgeven("seizoen", ditSeizoen());

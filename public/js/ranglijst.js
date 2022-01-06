@@ -1,5 +1,9 @@
 "use strict";
 
+/*
+    verwerk leden=[actieve leden] of versie=0
+ */
+
 const alleLeden = Number(params.get("leden"));
 
 (async function() {

@@ -1,5 +1,9 @@
 "use strict";
 
+/*
+    verwerk email=[email] // zie beheer.js
+ */
+
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,

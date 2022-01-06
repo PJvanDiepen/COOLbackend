@@ -35,6 +35,10 @@
     uitslagenRonde(rondeNummer, document.getElementById("tabel"));
 })();
 
+/*
+    verwerk competitie=[competitie]&ronde=[rondeNummer]&knsbNummer=[wit speler]&uitslag=[uitslag voor wit]
+ */
+
 async function wedstrijdenBijRonde(rondeNummer, kop, lijst) {
     kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
     if (rondeNummer > 1) {
@@ -135,6 +139,7 @@ function uitslagSelecteren(rondeNummer, uitslag) {
     select.appendChild(htmlOptie("", ""));
     select.value = uitslag.resultaat;
     select.addEventListener("input",async function () {
+        // TODO deze verwerking verplaatsen en geel maken !!!
         const mutaties = await serverFetch( // TODO ranglijst opnieuw inlezen, kleuren, etc. PvD
             `/${uuidToken}/uitslag/${seizoen}/int/${rondeNummer}/${uitslag.knsbNummer}/${uitslag.tegenstanderNummer}/${select.value}`);
     });

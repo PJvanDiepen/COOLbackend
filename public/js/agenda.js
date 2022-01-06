@@ -12,7 +12,7 @@
 
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
-    const [teamGewijzigd, rondeGewijzigd ] = await agendaMutatie(andereGebruiker);
+    const [teamGewijzigd, rondeGewijzigd ] = await agendaMutatie(andereGebruiker); // indien gewijzigd
     const naam = params.get("naamGebruiker") || gebruiker.naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;
     let wedstrijden = await agendaLezen(andereGebruiker);
@@ -39,6 +39,9 @@ async function agenda(kop, lijst) {
     }
 }
 
+/*
+    verwerk team=&teamCode&ronde=rondeNummer&partij= MEEDOEN of NIET_MEEDOEN voor knsbNummer
+ */
 async function agendaMutatie(knsbNummer) {
     const teamCode = params.get("team");
     const rondeNummer = Number(params.get("ronde"));

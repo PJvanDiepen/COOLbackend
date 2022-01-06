@@ -1,5 +1,8 @@
 "use strict";
 
+/*
+    verwerk datum=[datum]
+ */
 (async function() {
     await gebruikerVerwerken();
     menu(naarAgenda,

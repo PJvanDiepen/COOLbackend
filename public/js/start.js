@@ -1,5 +1,9 @@
 "use strict";
 
+/*
+    verwerk vereniging=[vereniging]
+ */
+
 (async function() {
     await gebruikerVerwerken();
     menu(naarIndelen,
@@ -8,7 +12,9 @@
         naarGebruiker,
         naarBeheer);
     const plaatje = document.getElementById("plaatje");
-    plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 615, 124));
+    if (vereniging === "Waagtoren") {
+        plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
+    }
     seizoenSelecteren(INTERNE_COMPETITIE);
 })();
 
