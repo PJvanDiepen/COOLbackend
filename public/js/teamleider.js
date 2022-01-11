@@ -25,7 +25,7 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
     datums.value = wedstrijdDatum; // werkt uitsluitend na await
     datums.addEventListener("input",
         function () {
-            naarZelfdePagina("?datum=" + datums.value);
+            naarZelfdePagina(`datum=${datums.value}`);
         });
 }
 
