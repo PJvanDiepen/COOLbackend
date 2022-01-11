@@ -36,7 +36,7 @@
 })();
 
 /*
-    verwerk competitie=[competitie]&ronde=[rondeNummer]&knsbNummer=[wit speler]&uitslag=[uitslag voor wit]
+    verwerk &ronde=[rondeNummer]&wit=[wit]&zwart=[zwart]&uitslag=[uitslag]
  */
 
 async function wedstrijdenBijRonde(rondeNummer, kop, lijst) {
@@ -88,19 +88,40 @@ function wedstrijdBijRonde(rondeNummer, datum) {
   order by uitslag.seizoen, uitslag.bordNummer;
  */
 async function uitslagenRonde(rondeNummer, lijst) {
-    let geenUitslagen = true;
-    (await localFetch(`/ronde/${seizoen}/${rondeNummer}`)).forEach(
-        function (uitslag) {
-            geenUitslagen = false;
+    const gewijzigd = await uitslagMutatie(rondeNummer);
+    const uitslagen = await serverFetch(`/ronde/${seizoen}/${rondeNummer}`); // actuele situatie
+    if (uitslagen) {
+        for (const uitslag of uitslagen) {
+            const uitslagKolom = htmlVerwerkt(uitslagVerwerken(rondeNummer, uitslag),
+            uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
             lijst.appendChild(htmlRij(
                 uitslag.bordNummer,
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
                 naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
-                uitslagVerwerken(rondeNummer, uitslag)));
-        });
-    if (geenUitslagen) {
+                uitslagKolom));
+        }
+    } else {
         lijst.appendChild(htmlRij("nog", "geen", "uitslagen", ""));
     }
+}
+
+async function uitslagMutatie(rondeNummer) {
+    const wit = params.get("wit");
+    const zwart = params.get("zwart");
+    const uitslag = params.get("uitslag");
+    if (wit && zwart && uitslag) {
+        const mutaties = await serverFetch(
+            `/${uuidToken}/uitslag/${seizoen}/${competitie}/${rondeNummer}/${wit}/${zwart}/${uitslag}`);
+        if (mutaties > 0) {
+            for (const key of Object.keys(sessionStorage)) {
+                if (key.startsWith(`/ranglijst/${seizoen}`) ||
+                    key.startsWith(`/uitslagen/${seizoen}`)) { // TODO beperken tot 1 competitie
+                    sessionStorage.removeItem(key);
+                }
+            }
+        }
+    }
+    return {"wit": Number(wit), "zwart": Number(zwart)};  // TODO wijzigingen doorgeven
 }
 
 function uitslagVerwerken(rondeNummer, uitslag) {
@@ -136,12 +157,11 @@ function uitslagSelecteren(rondeNummer, uitslag) {
     select.appendChild(htmlOptie(WINST, "1-0"));
     select.appendChild(htmlOptie(REMISE, "½-½"));
     select.appendChild(htmlOptie(VERLIES, "0-1"));
-    select.appendChild(htmlOptie("", ""));
+    // select.appendChild(htmlOptie("", ""));
     select.value = uitslag.resultaat;
     select.addEventListener("input",async function () {
-        // TODO deze verwerking verplaatsen en geel maken !!!
-        const mutaties = await serverFetch( // TODO ranglijst opnieuw inlezen, kleuren, etc. PvD
-            `/${uuidToken}/uitslag/${seizoen}/int/${rondeNummer}/${uitslag.knsbNummer}/${uitslag.tegenstanderNummer}/${select.value}`);
+        naarZelfdePagina(
+            `ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${select.value}`);
     });
     return select;
 }

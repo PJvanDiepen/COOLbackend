@@ -48,7 +48,7 @@ function versieSelecteren(versies) {  // TODO: versies en teksten in database
     versies.value = versie;
     versies.addEventListener("input",
         function () {
-            naarZelfdePagina("?versie=" + versies.value);
+            naarZelfdePagina(`versie=${versies.value}`);
         });
 }
 
@@ -58,6 +58,6 @@ function ledenSelecteren(leden) {
     leden.value = alleLeden;
     leden.addEventListener("input",
         function () {
-            naarZelfdePagina("?leden=" + leden.value);
+            naarZelfdePagina(`leden=${leden.value}`);
         })
 }

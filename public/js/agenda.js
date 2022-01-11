@@ -10,9 +10,12 @@
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
 })();
 
+/*
+    verwerk gebruiker=[andereGebruiker]&naamGebruiker=[naamGebruiker]&team=teamCode&ronde=rondeNummer&partij=[MEEDOEN of NIET_MEEDOEN]
+ */
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
-    const [teamGewijzigd, rondeGewijzigd ] = await agendaMutatie(andereGebruiker); // indien gewijzigd
+    const gewijzigd = await agendaMutatie(andereGebruiker);
     const naam = params.get("naamGebruiker") || gebruiker.naam;
     kop.innerHTML = "Agenda" + SCHEIDING + naam;
     let wedstrijden = await agendaLezen(andereGebruiker);
@@ -24,11 +27,9 @@ async function agenda(kop, lijst) {
             const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`); // actuele situatie
             const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : w.partij === NIET_MEEDOEN ? MEEDOEN : w.partij;
             const aanwezig = w.partij === MEEDOEN ? VINKJE : w.partij === NIET_MEEDOEN ? STREEP : FOUTJE;
-            const link = htmlLink(
-                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig);
-            if (w.teamCode === teamGewijzigd && w.rondeNummer === rondeGewijzigd) {
-                link.className += "verwerkt"; // kan ook met classList.add("gewijzigd")
-            }
+            const link = htmlVerwerkt(htmlLink(
+                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig),
+                w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.appendChild(htmlRij(
                 w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
                 datumLeesbaar(w.datum),
@@ -39,9 +40,6 @@ async function agenda(kop, lijst) {
     }
 }
 
-/*
-    verwerk team=&teamCode&ronde=rondeNummer&partij= MEEDOEN of NIET_MEEDOEN voor knsbNummer
- */
 async function agendaMutatie(knsbNummer) {
     const teamCode = params.get("team");
     const rondeNummer = Number(params.get("ronde"));
@@ -49,7 +47,7 @@ async function agendaMutatie(knsbNummer) {
     if (teamCode && rondeNummer && partij) {
         await serverFetch(`/${uuidToken}/partij/${ditSeizoen()}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
-    return [teamCode, rondeNummer];
+    return {"teamCode": teamCode, "rondeNummer": rondeNummer};
 }
 
 async function agendaLezen(knsbNummer) {

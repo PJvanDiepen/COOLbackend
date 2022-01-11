@@ -6,11 +6,6 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarIndelen,
-        naarRanglijst,
-        naarTeamleider,
-        naarGebruiker,
-        naarBeheer);
     const plaatje = document.getElementById("plaatje");
     if (vereniging === "Waagtoren") {
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));

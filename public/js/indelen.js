@@ -86,7 +86,7 @@ function rangnummersToggle(rangnummers, rondeNummer) {
         rangnummers.open = true;
     } else {
         rangnummers.addEventListener("toggle",function () {
-            naarZelfdePagina(`?ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
+            naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
         });
     }
     return rangnummersAan;
@@ -170,7 +170,7 @@ function versieSelecteren(versies, rondeNummer) {
     versies.value = versieIndelen;
     versies.addEventListener("input",
         function () {
-            naarZelfdePagina(`?ronde=${rondeNummer}&indelen=${versies.value}&rangnummers=aan`);
+            naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versies.value}&rangnummers=aan`);
         });
 }
 

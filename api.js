@@ -144,7 +144,7 @@ module.exports = router => {
     where seizoen = @seizoen
     order by totalen desc;
      */
-    router.get('/ranglijst/:seizoen/:versie/:competitie/:datum', async function (ctx) {
+    router.get('/ranglijst/:seizoen/:versie/:competitie/:datum', async function (ctx) { // TODO omwisselen /:competitie/:versie
         ctx.body = await Speler.query()
             .select(
                 'speler.knsbNummer',
@@ -694,8 +694,6 @@ module.exports = router => {
     });
 
 }
-
-// TODO const.js
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
