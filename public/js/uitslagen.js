@@ -197,12 +197,12 @@ const naarIndelen = [GEREGISTREERD, "voorlopige indeling" , function () {
     naarAnderePagina("indelen.html?seizoen=2122&ronde=0");
 }];
 
-function naarAnderePagina(naarPagina) { // TODO naarPagina i.p.v. naarAndere/ZelfdePagina
+function naarAnderePagina(naarPagina) {
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
-function naarZelfdePagina(parameters) { // TODO naarPagina i.p.v. naarAndere/ZelfdePagina
-    location.replace(pagina.pathname + (parameters ? parameters : ""));
+function naarZelfdePagina(parameters) {
+    location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 
 async function gewijzigd() {
@@ -262,6 +262,14 @@ function htmlRij(...kolommen) {
         tr.appendChild(td);
     });
     return tr;
+}
+
+function htmlVerwerkt(tekst, verwerkt) {
+    const node =  htmlTekst(tekst);
+    if (verwerkt) {
+        node.className += "verwerkt"; // kan ook met classList.add("verwerkt")
+    }
+    return node;
 }
 
 function htmlLink(link, tekst, tabblad) {
