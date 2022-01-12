@@ -197,7 +197,7 @@ const naarIndelen = [GEREGISTREERD, "voorlopige indeling" , function () {
     naarAnderePagina("indelen.html?seizoen=2122&ronde=0");
 }];
 
-function naarAnderePagina(naarPagina) {
+function naarAnderePagina(naarPagina) { // pagina met parameters
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
@@ -272,14 +272,14 @@ function htmlVerwerkt(tekst, verwerkt) {
     return node;
 }
 
-function htmlLink(link, tekst, tabblad) {
+function htmlLink(link, tekst) {
     const a = document.createElement("a");
     a.appendChild(htmlTekst(tekst));
-    a.href = link;
-    if (tabblad) { // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
-        a.target = "_blank";
-        a.rel = "noopener noreferrer"
-    }
+    a.href = "";
+    a.addEventListener("click", function (event) {
+        event.preventDefault();
+        location.replace(pagina.pathname.replace(/\w+.html/, link)); // TODO naarAnderePagina verwijderen?
+    });
     return a;
 }
 

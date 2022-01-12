@@ -121,7 +121,7 @@ async function uitslagMutatie(rondeNummer) {
             }
         }
     }
-    return {"wit": Number(wit), "zwart": Number(zwart)};  // TODO wijzigingen doorgeven
+    return {"wit": Number(wit), "zwart": Number(zwart)};
 }
 
 function uitslagVerwerken(rondeNummer, uitslag) {
@@ -159,7 +159,7 @@ function uitslagSelecteren(rondeNummer, uitslag) {
     select.appendChild(htmlOptie(VERLIES, "0-1"));
     // select.appendChild(htmlOptie("", ""));
     select.value = uitslag.resultaat;
-    select.addEventListener("input",async function () {
+    select.addEventListener("input",function () {
         naarZelfdePagina(
             `ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${select.value}`);
     });
