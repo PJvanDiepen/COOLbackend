@@ -24,9 +24,7 @@
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
     }
-    menu(naarAgenda,
-        naarRanglijst,
-        naarTeamleider,
+    menu(naarTeamleider,
         naarGebruiker,
         naarBeheer,
         [BEHEERDER, "indeling definitief maken", async function () {

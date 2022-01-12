@@ -2,12 +2,9 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarAgenda,
-        [WEDSTRIJDLEIDER, `agenda van ${naamSpeler}`, function () {
+    menu([WEDSTRIJDLEIDER, `agenda van ${naamSpeler}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
         }],
-        naarIndelen,
-        naarRanglijst,
         naarTeamleider,
         naarGebruiker,
         naarBeheer,

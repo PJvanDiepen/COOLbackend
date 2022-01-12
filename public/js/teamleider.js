@@ -5,10 +5,7 @@
  */
 (async function() {
     await gebruikerVerwerken();
-    menu(naarAgenda,
-        naarIndelen,
-        naarRanglijst,
-        naarGebruiker,
+    menu(naarGebruiker,
         naarBeheer);
     const wedstrijdDatum = params.get("datum") || await localFetch("/extern/" + seizoen);
     const wedstrijden = await localFetch("/wedstrijden/" + seizoen);

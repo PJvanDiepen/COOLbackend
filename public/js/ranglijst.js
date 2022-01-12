@@ -8,9 +8,7 @@ const alleLeden = Number(params.get("leden"));
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarAgenda,
-        naarIndelen,
-        naarTeamleider,
+    menu(naarTeamleider,
         naarGebruiker,
         naarBeheer);
     teamSelecteren(INTERNE_COMPETITIE);

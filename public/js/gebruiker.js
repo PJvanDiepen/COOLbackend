@@ -2,10 +2,7 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarAgenda,
-        naarIndelen,
-        naarRanglijst,
-        naarTeamleider,
+    menu(naarTeamleider,
         naarBeheer,
         [BEHEERDER, "formulier van geselecteerde speler", function () {
             document.getElementById("naam").value = naamSpeler;

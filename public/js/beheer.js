@@ -8,10 +8,7 @@ TODO mutaties met verwijderen
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarAgenda,
-        naarIndelen,
-        naarRanglijst,
-        naarTeamleider,
+    menu(naarTeamleider,
         naarGebruiker,
         [BEHEERDER, "backup interne competitie 7-14" , async function () {
             await backupUitslag(INTERNE_COMPETITIE, 7, 14);  // TODO selectie invullen

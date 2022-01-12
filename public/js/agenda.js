@@ -2,9 +2,7 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarIndelen,
-        naarRanglijst,
-        naarTeamleider,
+    menu(naarTeamleider,
         naarGebruiker,
         naarBeheer);
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));

@@ -3,10 +3,7 @@
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
-    menu(naarAgenda,
-        naarIndelen,
-        naarRanglijst,
-        naarTeamleider,
+    menu(naarTeamleider,
         naarGebruiker,
         naarBeheer,
         [WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
@@ -90,7 +87,7 @@ function wedstrijdBijRonde(rondeNummer, datum) {
 async function uitslagenRonde(rondeNummer, lijst) {
     const gewijzigd = await uitslagMutatie(rondeNummer);
     const uitslagen = await serverFetch(`/ronde/${seizoen}/${rondeNummer}`); // actuele situatie
-    if (uitslagen) {
+    if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
             const uitslagKolom = htmlVerwerkt(uitslagVerwerken(rondeNummer, uitslag),
             uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);

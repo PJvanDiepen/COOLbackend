@@ -147,7 +147,7 @@ function volgendeSessie(json) {
  * Elke htmlOptie krijgt een tekst en een volgnummer.
  * Het volgnummer verwijst naar de bijbehorende functie in functies.
  *
- * De eventListener krijgt het het volgnummer door en start de bijbehorende functie.
+ * De eventListener krijgt het volgnummer door en start de bijbehorende functie.
  *
  * @param menuKeuzes
  * @returns {Promise<void>}
@@ -173,16 +173,8 @@ async function menu(...menuKeuzes) {  // TODO is await nodig?
         });
 }
 
-const naarAgenda = [GEREGISTREERD, "aanmelden / afzeggen", function () {
-    naarAnderePagina("agenda.html");
-}];
-
 const naarBeheer = [GEREGISTREERD, "systeembeheer", function () {
     naarAnderePagina("beheer.html#mutaties");
-}];
-
-const naarRanglijst = [GEEN_LID, "ranglijst", function () {
-    naarAnderePagina("ranglijst.html");
 }];
 
 const naarTeamleider = [TEAMLEIDER, "externe competitie", function () {
@@ -192,18 +184,6 @@ const naarTeamleider = [TEAMLEIDER, "externe competitie", function () {
 const naarGebruiker = [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
     naarAnderePagina("gebruiker.html");
 }];
-
-const naarIndelen = [GEREGISTREERD, "voorlopige indeling" , function () {
-    naarAnderePagina("indelen.html?seizoen=2122&ronde=0");
-}];
-
-function naarAnderePagina(naarPagina) { // pagina met parameters
-    location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
-}
-
-function naarZelfdePagina(parameters) {
-    location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
-}
 
 async function gewijzigd() {
     const laatsteMutaties = await serverFetch("/gewijzigd");
@@ -281,6 +261,14 @@ function htmlLink(link, tekst) {
         location.replace(pagina.pathname.replace(/\w+.html/, link)); // TODO naarAnderePagina verwijderen?
     });
     return a;
+}
+
+function naarAnderePagina(naarPagina) { // pagina en parameters
+    location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
+}
+
+function naarZelfdePagina(parameters) {
+    location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 
 function naarSpeler(knsbNummer, naam) {

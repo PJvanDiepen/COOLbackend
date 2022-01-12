@@ -2,10 +2,7 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarAgenda,
-        naarIndelen,
-        naarRanglijst,
-        naarTeamleider,
+    menu(naarTeamleider,
         naarGebruiker,
         naarBeheer);
     teamSelecteren(teamCode);
