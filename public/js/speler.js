@@ -53,10 +53,10 @@
 async function uitslagenSpeler(kop, lijst) {
     const totDatum = datumSQL(null, 10); // + 10 dagen voor testen
     const t = (await ranglijst(seizoen, versie, totDatum, [speler]))[0];
-    kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + t.rating();
+    kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
-        lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}`, "", "", "", totaal, totaal));
+        lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
     let vorigeUitslag;
     (await localFetch(`/uitslagen/${seizoen}/${versie}/${speler}/${competitie}`)).forEach(

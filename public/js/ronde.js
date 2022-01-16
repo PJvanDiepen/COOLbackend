@@ -89,8 +89,8 @@ async function uitslagenRonde(rondeNummer, lijst) {
     const uitslagen = await serverFetch(`/ronde/${seizoen}/${rondeNummer}`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
-            const uitslagKolom = htmlVerwerkt(uitslagVerwerken(rondeNummer, uitslag),
-            uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
+            const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag);
+            htmlVerwerkt(uitslagKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
             lijst.appendChild(htmlRij(
                 uitslag.bordNummer,
                 naarSpeler(uitslag.knsbNummer, uitslag.wit),
@@ -130,8 +130,6 @@ function uitslagVerwerken(rondeNummer, uitslag) {
         return "½-½";
     } else if (uitslag.resultaat === VERLIES) {
         return "0-1";
-    } else if (uitslag.knsbNummer === gebruiker.knsbNummer || uitslag.tegenstanderNummer === gebruiker.knsbNummer) {
-        return uitslagWijzigen(uitslag);
     } else {
         return "";
     }
@@ -154,7 +152,6 @@ function uitslagSelecteren(rondeNummer, uitslag) {
     select.appendChild(htmlOptie(WINST, "1-0"));
     select.appendChild(htmlOptie(REMISE, "½-½"));
     select.appendChild(htmlOptie(VERLIES, "0-1"));
-    // select.appendChild(htmlOptie("", ""));
     select.value = uitslag.resultaat;
     select.addEventListener("input",function () {
         naarZelfdePagina(

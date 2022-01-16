@@ -203,13 +203,21 @@ const tk = [
     },
     {jaar: 2021,
         zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
+        kabinet: "Rutte 4",
+        coalitie: "VVD, D66, CDA, CU",
+        breed: 800,
+        hoog: 450,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
+    }
+/*
+    {jaar: 2025,
+        zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
         link: "https://www.verkiezingensite.nl"
     }
-    // TODO is dit ooit tijdens de kabinetsformatie gebeurt?
-    // CDA 14, FvD 5, Fractie De Haan i.p.v. 50plus, Groep van Haga 3 en Pieter Omzigt 1
+ */
 ]
 
 function jarenVerwerken(jaren) {
@@ -245,7 +253,7 @@ function parametersVerwerken() {
 function kabinetVerwerken(kader, kop) {
     const i = jaarIndex(jaar);
     kop.innerHTML = "Kabinet in " + Math.round(jaar);
-    kader.appendChild(htmlLink(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog), true));
+    kader.appendChild(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
     kader.appendChild(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
 }
 
@@ -351,14 +359,19 @@ function htmlRij(...kolommen) {
     return tr;
 }
 
-function htmlLink(link, tekst, tabblad) {
+function htmlTabblad(link, tekst) {
     const a = document.createElement("a");
     a.appendChild(htmlTekst(tekst));
     a.href = link;
-    if (tabblad) { // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
-        a.target = "_blank";
-        a.rel = "noopener noreferrer"
-    }
+    a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
+    a.rel = "noopener noreferrer"
+    return a;
+}
+
+function htmlLink(link, tekst) {
+    const a = document.createElement("a");
+    a.appendChild(htmlTekst(tekst));
+    a.href = link;
     return a;
 }
 

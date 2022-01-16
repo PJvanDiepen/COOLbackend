@@ -1,6 +1,6 @@
 "use strict";
 
-const versie000 = "0-0-0.nl versie 0.6.8"; // TODO 0-0-0 versie uit package.json
+const versie000 = "0-0-0.nl versie 0.7.0"; // TODO 0-0-0 versie uit package.json
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
@@ -244,14 +244,6 @@ function htmlRij(...kolommen) {
     return tr;
 }
 
-function htmlVerwerkt(tekst, verwerkt) {
-    const node =  htmlTekst(tekst);
-    if (verwerkt) {
-        node.className += "verwerkt"; // kan ook met classList.add("verwerkt")
-    }
-    return node;
-}
-
 function htmlLink(link, tekst) {
     const a = document.createElement("a");
     a.appendChild(htmlTekst(tekst));
@@ -261,6 +253,14 @@ function htmlLink(link, tekst) {
         location.replace(pagina.pathname.replace(/\w+.html/, link)); // TODO naarAnderePagina verwijderen?
     });
     return a;
+}
+
+function htmlVerwerkt(tekst, verwerkt) {
+    const node =  htmlTekst(tekst);
+    if (verwerkt) {
+        node.classList.add("verwerkt")
+    }
+    return node;
 }
 
 function naarAnderePagina(naarPagina) { // pagina en parameters
@@ -274,7 +274,7 @@ function naarZelfdePagina(parameters) {
 function naarSpeler(knsbNummer, naam) {
     const link = htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
     if (knsbNummer === gebruiker.knsbNummer) {
-        link.className += "vet"; // kan ook met classList.add("vet")
+        link.classList.add("vet");
     }
     return link;
 }
