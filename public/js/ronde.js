@@ -89,7 +89,7 @@ async function uitslagenRonde(rondeNummer, lijst) {
     const uitslagen = await serverFetch(`/ronde/${seizoen}/${rondeNummer}`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
-            const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag);
+            const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag); // TODO waarom werkt htmlVerwerkt hier niet?
             htmlVerwerkt(uitslagKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
             lijst.appendChild(htmlRij(
                 uitslag.bordNummer,

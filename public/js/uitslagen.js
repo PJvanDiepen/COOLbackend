@@ -255,12 +255,11 @@ function htmlLink(link, tekst) {
     return a;
 }
 
-function htmlVerwerkt(tekst, verwerkt) {
-    const node =  htmlTekst(tekst);
+function htmlVerwerkt(htmlNode, verwerkt) {
     if (verwerkt) {
-        node.classList.add("verwerkt")
+        htmlNode.classList.add("verwerkt")
     }
-    return node;
+    return htmlNode;
 }
 
 function naarAnderePagina(naarPagina) { // pagina en parameters
