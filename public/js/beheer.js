@@ -15,8 +15,9 @@ TODO mutaties met verwijderen
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
+    const versie = await serverFetch(`/versie`);
     document.getElementById("computer").appendChild(
-        htmlTekst(`${versie000} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
+        htmlTekst(`${versie} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function backupUitslag(teamCode, van, tot) {

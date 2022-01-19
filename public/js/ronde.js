@@ -19,12 +19,18 @@
                 }
             }
         }],
-        [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);
+        [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${seizoen}/int/${rondeNummer}`);
             if (mutaties) {
                 sessionStorage.removeItem(`/ronde/${seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
+        }],
+        [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);
+        }],
+        [BEHEERDER, `schuif ronde ${rondeNummer} naar ${rondeNummer - 1}`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/schuif/ronde/${seizoen}/int/${rondeNummer - 1}`);
         }]);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(rondeNummer, document.getElementById("kop"), document.getElementById("wedstrijden"));

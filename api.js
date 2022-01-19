@@ -10,6 +10,8 @@ const Uitslag = require('./models/uitslag');
 
 const { fn, ref } = require('objection');
 
+const package_json = require('./package.json');
+
 // mutatie.invloed
 const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
@@ -24,7 +26,7 @@ async function mutatie(gebruiker, ctx, aantal, invloed) {
         await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
             knsbNummer: gebruiker.dader.knsbNummer,
             volgNummer: uniekeMutaties,
-            url: ctx.request.url.substring(38), // zonder uuidToken TODO %C2%BD vervangen door ½
+            url: ctx.request.url.substring(38).replace("%C2%BD", REMISE), // zonder uuidToken
             aantal: aantal,
             invloed: invloed});
     }
@@ -33,6 +35,10 @@ async function mutatie(gebruiker, ctx, aantal, invloed) {
 module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
+
+    router.get('/versie', async function (ctx) {
+        ctx.body = JSON.stringify(package_json.version);
+    });
 
     router.get('/gewijzigd', async function (ctx) {
         ctx.body = laatsteMutaties;
@@ -591,7 +597,7 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    router.get('/:uuidToken/verwijder/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+    router.get('/:uuidToken/verwijder/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) { // definitief maken terugdraaien
@@ -649,6 +655,48 @@ module.exports = router => {
                 }
             }
             await mutatie(gebruiker, ctx, aantal, NIEUWE_RANGLIJST);
+        }
+        ctx.body = aantal;
+    });
+
+    router.get('/:uuidToken/schuif/ronde/:seizoen/:teamCode/:rondeNummer/:naarRonde', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BEHEERDER)) {
+            const ronden = await Ronde.query()
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer])
+                .patch({rondeNummer: ctx.params.naarRonde});
+            const uitslagen = await Uitslag.query()
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer])
+                .patch({rondeNummer: ctx.params.naarRonde});  // TODO is overbodig indien cascade foreign key
+        }
+        ctx.body = aantal;
+    });
+
+    router.get('/:uuidToken/verwijder/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BEHEERDER)) {
+            const resultaten = await Uitslag.query()
+                .whereIn('uitslag.resultaat', [WINST, VERLIES, REMISE])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .limit(1);
+            if (resultaten.length === 0) { // ronde en uitslagen verwijderen indien geen resultaten
+                const uitslagen = await Uitslag.query()
+                    .delete()
+                    .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
+                const ronden = await Ronde.query()
+                    .delete()
+                    .andWhere('ronde.seizoen', ctx.params.seizoen)
+                    .andWhere('ronde.teamCode', ctx.params.teamCode)
+                    .andWhere('ronde.rondeNummer', ctx.params.rondeNummer);
+                aantal = uitslagen + ronden;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
         }
         ctx.body = aantal;
     });

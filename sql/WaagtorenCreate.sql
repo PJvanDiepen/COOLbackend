@@ -129,7 +129,7 @@ CREATE TABLE ronde (
     PRIMARY KEY (seizoen, teamCode, rondeNummer)
 );
 
-alter table ronde
+alter table ronde -- TODO controleer database
 add CONSTRAINT fk_ronde_team
     FOREIGN KEY (seizoen, teamCode)
     REFERENCES team (seizoen, teamCode)
@@ -166,6 +166,13 @@ add CONSTRAINT fk_uitslag_ander_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
+alter table uitslag
+add CONSTRAINT fk_uitslag_ronde
+    FOREIGN KEY (seizoen, teamCode, rondeNummer)
+    REFERENCES ronde (seizoen, teamCode, rondeNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
+        
 alter table uitslag
 add constraint fk_uitslag_persoon
     foreign key (knsbNummer)

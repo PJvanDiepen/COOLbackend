@@ -1,8 +1,8 @@
 "use strict";
 
-const versie000 = "0-0-0.nl versie 0.7.0"; // TODO 0-0-0 versie uit package.json
 // teamCode
 const INTERNE_COMPETITIE = "int";
+const RAPID_COMPETTIE    = "ira";
 const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
 // uitslag.partij
 const AFWEZIG              = "a";
@@ -13,8 +13,8 @@ const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
 const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
-const EXTERN_THUIS         = "t";
-const EXTERN_UIT           = "u";
+const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij thuis op dinsdag
+const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op dinsdag
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 // uitslag.witZwart
@@ -255,9 +255,16 @@ function htmlLink(link, tekst) {
     return a;
 }
 
-function htmlVerwerkt(htmlNode, verwerkt) {
-    if (verwerkt) {
+function htmlVerwerkt(htmlNode, toevoegen) {
+    if (toevoegen) {
         htmlNode.classList.add("verwerkt")
+    }
+    return htmlNode;
+}
+
+function htmlVet(htmlNode, toevoegen) {
+    if (toevoegen) {
+        htmlNode.classList.add("vet")
     }
     return htmlNode;
 }
@@ -272,9 +279,7 @@ function naarZelfdePagina(parameters) {
 
 function naarSpeler(knsbNummer, naam) {
     const link = htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
-    if (knsbNummer === gebruiker.knsbNummer) {
-        link.classList.add("vet");
-    }
+    htmlVet(link, knsbNummer === gebruiker.knsbNummer);
     return link;
 }
 
