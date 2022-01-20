@@ -1,5 +1,4 @@
 use waagtoren;
-drop database waagtoren;
 
 CREATE DATABASE  IF NOT EXISTS `waagtoren`;
 USE `waagtoren`;
@@ -129,13 +128,13 @@ CREATE TABLE ronde (
     PRIMARY KEY (seizoen, teamCode, rondeNummer)
 );
 
-alter table ronde -- TODO controleer database
+alter table ronde
 add CONSTRAINT fk_ronde_team
     FOREIGN KEY (seizoen, teamCode)
     REFERENCES team (seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-
+    
 DROP TABLE IF EXISTS uitslag;
 CREATE TABLE uitslag (
     seizoen char(4) not null,
@@ -165,14 +164,7 @@ add CONSTRAINT fk_uitslag_ander_team
     REFERENCES team (seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-    
-alter table uitslag
-add CONSTRAINT fk_uitslag_ronde
-    FOREIGN KEY (seizoen, teamCode, rondeNummer)
-    REFERENCES ronde (seizoen, teamCode, rondeNummer)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;
-        
+            
 alter table uitslag
 add constraint fk_uitslag_persoon
     foreign key (knsbNummer)
@@ -186,6 +178,13 @@ add constraint fk_uitslag_tegenstander
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
+    
+alter table uitslag
+add CONSTRAINT fk_uitslag_ronde
+    FOREIGN KEY (seizoen, teamCode, rondeNummer)
+    REFERENCES ronde (seizoen, teamCode, rondeNummer)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;        
 
 DROP TABLE IF EXISTS ranglijst;
 CREATE TABLE ranglijst (
