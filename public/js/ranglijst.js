@@ -22,7 +22,7 @@ async function spelersLijst(kop, lijst) {
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
     kop.innerHTML = "Ranglijst" + SCHEIDING + seizoenVoluit(competitie.seizoen) + SCHEIDING + "na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
-    (await ranglijst(competitie.seizoen, competitie.versie, totDatum)).forEach(function (t, i) { // TODO 1 parameter minder voor ranglijst
+    (await ranglijst(totDatum)).forEach(function (t, i) {
         if (t.inRanglijst() || alleLeden) {
             lijst.appendChild(htmlRij(
                 i + 1,

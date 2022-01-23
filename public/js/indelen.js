@@ -58,7 +58,7 @@ async function deelnemersRonde(rondeNummer) {
 }
 
 async function ranglijstSorteren(totDatum, deelnemers) {
-    const lijst = await ranglijst(competitie.seizoen, competitie.versie, totDatum, deelnemers); // TODO 1 parameter minder voor ranglijst
+    const lijst = await ranglijst(totDatum, deelnemers);
     let gesorteerdTot = 1;
     while (gesorteerdTot < lijst.length && lijst[gesorteerdTot - 1].zonderAftrek() >= lijst[gesorteerdTot].zonderAftrek()) {
         gesorteerdTot++;

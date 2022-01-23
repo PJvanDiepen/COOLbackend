@@ -240,6 +240,20 @@ function htmlTekst(tekst) {
     return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
 }
 
+function htmlVerwerkt(htmlNode, toevoegen) {
+    if (toevoegen) {
+        htmlNode.classList.add("verwerkt")
+    }
+    return htmlNode;
+}
+
+function htmlVet(htmlNode, toevoegen) {
+    if (toevoegen) {
+        htmlNode.classList.add("vet")
+    }
+    return htmlNode;
+}
+
 function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
@@ -256,23 +270,9 @@ function htmlLink(link, tekst) {
     a.href = "";
     a.addEventListener("click", function (event) {
         event.preventDefault();
-        location.replace(pagina.pathname.replace(/\w+.html/, link)); // TODO naarAnderePagina verwijderen?
+        naarAnderePagina(link);
     });
     return a;
-}
-
-function htmlVerwerkt(htmlNode, toevoegen) {
-    if (toevoegen) {
-        htmlNode.classList.add("verwerkt")
-    }
-    return htmlNode;
-}
-
-function htmlVet(htmlNode, toevoegen) {
-    if (toevoegen) {
-        htmlNode.classList.add("vet")
-    }
-    return htmlNode;
 }
 
 function naarAnderePagina(naarPagina) { // pagina en parameters
@@ -519,14 +519,13 @@ async function rondeSelecteren(teamCode, rondeNummer) {
 /**
  * ranglijst geeft lijst totalen van eventueel geselecteerde spelers op volgorde van totalen
  *
- * @param seizoen
- * @param versie
  * @param totDatum indien null dan vandaag
  * @param selectie indien null dan alles
  * @returns {Promise<*>}
  */
-async function ranglijst(seizoen, versie, totDatum, selectie) {
-    let spelers = await localFetch(`/ranglijst/${seizoen}/${versie}/${competitie.competitie}/${datumSQL(totDatum)}`);
+async function ranglijst(totDatum, selectie) {
+    let spelers = await localFetch(
+        `/ranglijst/${competitie.seizoen}/${competitie.versie}/${competitie.competitie}/${datumSQL(totDatum)}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }

@@ -52,7 +52,7 @@
 
 async function uitslagenSpeler(kop, lijst) {
     const totDatum = datumSQL(null, 10); // + 10 dagen voor testen
-    const t = (await ranglijst(competitie.seizoen, competitie.versie, totDatum, [competitie.speler]))[0]; // TODO 1 parameter minder voor ranglijst
+    const t = (await ranglijst(totDatum, [competitie.speler]))[0];
     kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(competitie.seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
