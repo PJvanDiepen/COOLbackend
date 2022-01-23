@@ -43,13 +43,13 @@ async function agendaMutatie(knsbNummer) {
     const rondeNummer = Number(params.get("ronde"));
     const partij = params.get("partij");
     if (teamCode && rondeNummer && partij) {
-        await serverFetch(`/${uuidToken}/partij/${ditSeizoen()}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
+        await serverFetch(`/${uuidToken}/partij/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
     return {"teamCode": teamCode, "rondeNummer": rondeNummer};
 }
 
 async function agendaLezen(knsbNummer) {
-    return await serverFetch(`/${uuidToken}/kalender/${ditSeizoen()}/${knsbNummer}`);
+    return await serverFetch(`/${uuidToken}/kalender/${ditSeizoen}/${knsbNummer}`);
 }
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {

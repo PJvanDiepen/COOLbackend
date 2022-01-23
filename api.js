@@ -663,12 +663,12 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BEHEERDER)) {
-            const ronden = await Ronde.query()
+            if (await Ronde.query()
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer])
-                .patch({rondeNummer: ctx.params.naarRonde});
-            const uitslagen = await Uitslag.query()
-                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer])
-                .patch({rondeNummer: ctx.params.naarRonde});  // TODO is overbodig indien cascade foreign key
+                .patch({rondeNummer: ctx.params.naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
         }
         ctx.body = aantal;
     });

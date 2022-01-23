@@ -40,11 +40,17 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
+const ditSeizoen = (function () {
+    const datum = new Date();
+    const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001); // na juli dit jaar anders vorig jaar
+    return `${voorloopNul(i)}${voorloopNul(i+1)}`;
+})();
+
 /*
   verwerk vereniging=Waagtoren&seizoen=2122&versie=0&competitie=int&team=int&speler=0&naam=onbekend&uuid=[uuid]
  */
 const vereniging = doorgeven("vereniging", "Waagtoren");
-const seizoen = doorgeven("seizoen", ditSeizoen());
+const seizoen = doorgeven("seizoen", ditSeizoen);
 const versie = Number(params.get("versie"));
 const competitie = doorgeven("competitie", INTERNE_COMPETITIE)
 const teamCode = doorgeven("team", INTERNE_COMPETITIE);
@@ -297,12 +303,6 @@ function seizoenVoluit(seizoen) {
     } else {
         return `20${seizoen.substring(0,2)}-20${seizoen.substring(2,4)}`;
     }
-}
-
-function ditSeizoen() {
-    const datum = new Date();
-    const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001); // na juli dit jaar anders vorig jaar
-    return `${voorloopNul(i)}${voorloopNul(i+1)}`;
 }
 
 function tijdGeleden(jsonDatum) {

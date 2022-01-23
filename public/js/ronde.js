@@ -12,9 +12,9 @@
         [WEDSTRIJDLEIDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
             naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);
         }],
-        [BEHEERDER, `ranglijst ${ditSeizoen()} opnieuw verwerken`, function () {
+        [BEHEERDER, `ranglijst ${ditSeizoen} opnieuw verwerken`, function () {
             for (const key of Object.keys(sessionStorage)) {
-                if (key.startsWith(`/ranglijst/${ditSeizoen()}`)) {
+                if (key.startsWith(`/ranglijst/${ditSeizoen}`)) {
                     sessionStorage.removeItem(key);
                 }
             }
@@ -142,7 +142,7 @@ function uitslagVerwerken(rondeNummer, uitslag) {
 }
 
 function uitslagWijzigen(uitslag)  {
-    if (seizoen !== ditSeizoen()) { // vorig seizoen nooit wijzigen
+    if (seizoen !== ditSeizoen) { // vorig seizoen nooit wijzigen
         return false;
     } else if (gebruiker.mutatieRechten >= WEDSTRIJDLEIDER) {
         return true;

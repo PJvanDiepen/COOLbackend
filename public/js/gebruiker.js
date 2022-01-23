@@ -9,7 +9,7 @@
             document.getElementById("knsbNummer").value = speler;
             document.getElementById("status").value = "iemand anders registreren";
         }]);
-    spelerSelecteren(ditSeizoen());
+    spelerSelecteren(ditSeizoen);
     gebruikerFormulier(
         document.getElementById("formulier"),
         document.getElementById("naam"),
