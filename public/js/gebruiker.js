@@ -5,8 +5,8 @@
     menu(naarTeamleider,
         naarBeheer,
         [BEHEERDER, "formulier van geselecteerde speler", function () {
-            document.getElementById("naam").value = naamSpeler;
-            document.getElementById("knsbNummer").value = speler;
+            document.getElementById("naam").value = competitie.naam;
+            document.getElementById("knsbNummer").value = competitie.speler;
             document.getElementById("status").value = "iemand anders registreren";
         }]);
     spelerSelecteren(ditSeizoen);
@@ -21,18 +21,18 @@
 // TODO voor iemand anders aanvraag doen (uitsluitend door systeembeheerder)
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
-    if (speler) {
-        knsbNummer.value = speler;
-        naam.value = naamSpeler;
+    if (competitie.speler) {
+        knsbNummer.value = competitie.speler;
+        naam.value = competitie.naam;
     }
-    knsbNummer.value = speler ? speler : gebruiker.knsbNummer;
-    naam.value = speler ? naamSpeler : gebruiker.naam;
+    knsbNummer.value = competitie.speler ? competitie.speler : gebruiker.knsbNummer;
+    naam.value = competitie.speler ? competitie.naam : gebruiker.naam;
     if (uuidToken) {
-        status.value = `${gebruiker.naam} is als gebruiker geregistreerd bij ${vereniging}`;
+        status.value = `${gebruiker.naam} is als gebruiker geregistreerd bij ${competitie.vereniging}`;
     } else if (gebruiker.email) {
         email.value = gebruiker.email;
         status.value = `${gebruiker.naam} heeft al een aanvraag verstuurd`;
-    } else if (!speler) {
+    } else if (!competitie.speler) {
         status.value = "selecteer je naam";
     }
     formulier.addEventListener("submit", async function (event) {

@@ -20,17 +20,17 @@
             }
         }],
         [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${seizoen}/int/${rondeNummer}`);
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${competitie.seizoen}/int/${rondeNummer}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/ronde/${seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
+                sessionStorage.removeItem(`/ronde/${competitie.seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${seizoen}/int/${rondeNummer}`);
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${competitie.seizoen}/int/${rondeNummer}`);
         }],
         [BEHEERDER, `schuif ronde ${rondeNummer} naar ${rondeNummer - 1}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/schuif/ronde/${seizoen}/int/${rondeNummer - 1}`);
+            const mutaties = await serverFetch(`/${uuidToken}/schuif/ronde/${competitie.seizoen}/int/${rondeNummer - 1}`);
         }]);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(rondeNummer, document.getElementById("kop"), document.getElementById("wedstrijden"));
@@ -43,11 +43,11 @@
  */
 
 async function wedstrijdenBijRonde(rondeNummer, kop, lijst) {
-    kop.innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
+    kop.innerHTML = competitie.vereniging + SCHEIDING + seizoenVoluit(competitie.seizoen);
     if (rondeNummer > 1) {
         lijst.appendChild(ranglijstTot(rondeNummer - 1, ronden[rondeNummer - 2].datum));
     }
-    const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
+    const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
     for (const wedstrijd of wedstrijden) {
         if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
             const datumKolom = datumLeesbaar(wedstrijd.datum);
@@ -92,7 +92,7 @@ function wedstrijdBijRonde(rondeNummer, datum) {
  */
 async function uitslagenRonde(rondeNummer, lijst) {
     const gewijzigd = await uitslagMutatie(rondeNummer);
-    const uitslagen = await serverFetch(`/ronde/${seizoen}/${rondeNummer}`); // actuele situatie
+    const uitslagen = await serverFetch(`/ronde/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
             const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag); // TODO waarom werkt htmlVerwerkt hier niet?
@@ -114,11 +114,11 @@ async function uitslagMutatie(rondeNummer) {
     const uitslag = params.get("uitslag");
     if (wit && zwart && uitslag) {
         const mutaties = await serverFetch(
-            `/${uuidToken}/uitslag/${seizoen}/${competitie}/${rondeNummer}/${wit}/${zwart}/${uitslag}`);
+            `/${uuidToken}/uitslag/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${wit}/${zwart}/${uitslag}`);
         if (mutaties > 0) {
             for (const key of Object.keys(sessionStorage)) {
-                if (key.startsWith(`/ranglijst/${seizoen}`) ||
-                    key.startsWith(`/uitslagen/${seizoen}`)) { // TODO beperken tot 1 competitie
+                if (key.startsWith(`/ranglijst/${competitie.seizoen}`) ||
+                    key.startsWith(`/uitslagen/${competitie.seizoen}`)) { // TODO beperken tot 1 competitie
                     sessionStorage.removeItem(key);
                 }
             }
@@ -142,7 +142,7 @@ function uitslagVerwerken(rondeNummer, uitslag) {
 }
 
 function uitslagWijzigen(uitslag)  {
-    if (seizoen !== ditSeizoen) { // vorig seizoen nooit wijzigen
+    if (competitie.seizoen !== ditSeizoen) { // vorig seizoen nooit wijzigen
         return false;
     } else if (gebruiker.mutatieRechten >= WEDSTRIJDLEIDER) {
         return true;

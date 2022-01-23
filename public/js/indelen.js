@@ -19,7 +19,7 @@
         oneven = indelenRonde(r, wit, zwart);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const extern = await serverFetch(`/${uuidToken}/externintern/${seizoen}/${rondeNummer}`); // actuele situatie
+    const extern = await serverFetch(`/${uuidToken}/externintern/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
     partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), extern);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
@@ -31,17 +31,17 @@
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await serverFetch(
-                    `/${uuidToken}/indelen/${seizoen}/int/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
+                    `/${uuidToken}/indelen/${competitie.seizoen}/int/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
                     mutaties += 2;
                 }
             }
             if (oneven) {
                 if (await serverFetch(
-                    `/${uuidToken}/oneven/${seizoen}/int/${rondeNummer}/${r[oneven].knsbNummer}`)) {
+                    `/${uuidToken}/oneven/${competitie.seizoen}/int/${rondeNummer}/${r[oneven].knsbNummer}`)) {
                     mutaties += 1;
                 }
             }
-            mutaties += await serverFetch(`/${uuidToken}/afwezig/${seizoen}/int/${rondeNummer}`);
+            mutaties += await serverFetch(`/${uuidToken}/afwezig/${competitie.seizoen}/int/${rondeNummer}`);
             if (mutaties) {
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
@@ -51,14 +51,14 @@ versieSelecteren(document.getElementById("versies"), rondeNummer);
 
 async function deelnemersRonde(rondeNummer) {
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        return await serverFetch(`/${uuidToken}/deelnemers/${seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`); // actuele situatie
+        return await serverFetch(`/${uuidToken}/deelnemers/${competitie.seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`); // actuele situatie
     } else {
         return [0];
     }
 }
 
 async function ranglijstSorteren(totDatum, deelnemers) {
-    const lijst = await ranglijst(seizoen, versie, totDatum, deelnemers);
+    const lijst = await ranglijst(competitie.seizoen, competitie.versie, totDatum, deelnemers); // TODO 1 parameter minder voor ranglijst
     let gesorteerdTot = 1;
     while (gesorteerdTot < lijst.length && lijst[gesorteerdTot - 1].zonderAftrek() >= lijst[gesorteerdTot].zonderAftrek()) {
         gesorteerdTot++;

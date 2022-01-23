@@ -21,7 +21,7 @@ TODO mutaties met verwijderen
 })();
 
 async function backupUitslag(teamCode, van, tot) {
-    const rijen = await serverFetch(`/backup/uitslag/${seizoen}/${teamCode}/${van}/${tot}`);
+    const rijen = await serverFetch(`/backup/uitslag/${competitie.seizoen}/${teamCode}/${van}/${tot}`);
     let velden = [];
     for (const [key, value] of Object.entries(rijen[0])) {
         velden.push(key);

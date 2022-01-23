@@ -5,19 +5,19 @@
     menu(naarTeamleider,
         naarGebruiker,
         naarBeheer);
-    teamSelecteren(teamCode);
+    teamSelecteren(competitie.team);
     uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
 })();
 
 async function uitslagenTeam(kop, rondenTabel) {
-    const teams = await localFetch("/teams/" + seizoen);
+    const teams = await localFetch("/teams/" + competitie.seizoen);
     for (const team of teams) {
-        if (team.teamCode === teamCode) {
-            kop.innerHTML = [teamVoluit(teamCode), seizoenVoluit(seizoen), team.omschrijving].join(SCHEIDING);
+        if (team.teamCode === competitie.team) {
+            kop.innerHTML = [teamVoluit(competitie.team), seizoenVoluit(competitie.seizoen), team.omschrijving].join(SCHEIDING);
             break;
         }
     }
-    const rondeUitslagen = await uitslagenTeamAlleRonden(teamCode);
+    const rondeUitslagen = await uitslagenTeamAlleRonden(competitie.team);
     for (let i = 0; i < rondeUitslagen.length; ++i) {
         uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
     }

@@ -20,9 +20,9 @@ const alleLeden = Number(params.get("leden"));
 
 async function spelersLijst(kop, lijst) {
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
-    kop.innerHTML = "Ranglijst" + SCHEIDING + seizoenVoluit(seizoen) + SCHEIDING + "na ronde " + rondeNummer;
+    kop.innerHTML = "Ranglijst" + SCHEIDING + seizoenVoluit(competitie.seizoen) + SCHEIDING + "na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
-    (await ranglijst(seizoen, versie, totDatum)).forEach(function (t, i) {
+    (await ranglijst(competitie.seizoen, competitie.versie, totDatum)).forEach(function (t, i) { // TODO 1 parameter minder voor ranglijst
         if (t.inRanglijst() || alleLeden) {
             lijst.appendChild(htmlRij(
                 i + 1,
@@ -43,7 +43,7 @@ function versieSelecteren(versies) {  // TODO: versies en teksten in database
     versies.appendChild(htmlOptie(0, "versie 0 volgens reglement van het seizoen"));
     versies.appendChild(htmlOptie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));
     versies.appendChild(htmlOptie(3, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
-    versies.value = versie;
+    versies.value = competitie.versie;
     versies.addEventListener("input",
         function () {
             naarZelfdePagina(`versie=${versies.value}`);

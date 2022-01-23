@@ -7,8 +7,8 @@
     await gebruikerVerwerken();
     menu(naarGebruiker,
         naarBeheer);
-    const wedstrijdDatum = params.get("datum") || await localFetch("/extern/" + seizoen);
-    const wedstrijden = await localFetch("/wedstrijden/" + seizoen);
+    const wedstrijdDatum = params.get("datum") || await localFetch("/extern/" + competitie.seizoen);
+    const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);
     await wedstrijdenOverzicht(document.getElementById("kop"), wedstrijden, wedstrijdDatum);
 })();

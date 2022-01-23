@@ -7,10 +7,10 @@
 (async function() {
     await gebruikerVerwerken();
     const plaatje = document.getElementById("plaatje");
-    if (vereniging === "Waagtoren") {
+    if (competitie.vereniging === "Waagtoren") {
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
     }
-    document.getElementById("kop").innerHTML = vereniging + SCHEIDING + seizoenVoluit(seizoen);
+    document.getElementById("kop").innerHTML = competitie.vereniging + SCHEIDING + seizoenVoluit(competitie.seizoen);
     seizoenSelecteren(INTERNE_COMPETITIE);
 })();
 
@@ -20,7 +20,7 @@ async function seizoenSelecteren(teamCode) {
         function (seizoen) {
             seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
         });
-    seizoenen.value = seizoen; // werkt uitsluitend na await
+    seizoenen.value = competitie.seizoen; // werkt uitsluitend na await
     seizoenen.addEventListener("input",
         function () {
             sessionStorage.setItem("seizoen", seizoenen.value);

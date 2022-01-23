@@ -2,25 +2,25 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu([WEDSTRIJDLEIDER, `agenda van ${naamSpeler}`, function () {
-            naarAnderePagina(`agenda.html?gebruiker=${speler}&naamGebruiker=${naamSpeler}`);
+    menu([WEDSTRIJDLEIDER, `agenda van ${competitie.naam}`, function () {
+            naarAnderePagina(`agenda.html?gebruiker=${competitie.speler}&naamGebruiker=${competitie.naam}`);
         }],
         naarTeamleider,
         naarGebruiker,
         naarBeheer,
         [BEHEERDER, "afzeggingen verwijderen", async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${seizoen}/${speler}`);
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${competitie.seizoen}/${competitie.speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}/${competitie}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${competitie}/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`);
+                sessionStorage.removeItem(`/ranglijst/${competitie.seizoen}/${competitie.versie}/${competitie.competitie}/${datumSQL()}`);
                 naarZelfdePagina();
             }
         }],
-        [BEHEERDER, `${naamSpeler} verwijderen`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${seizoen}/${speler}`);
+        [BEHEERDER, `${competitie.naam} verwijderen`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${competitie.seizoen}/${competitie.speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${seizoen}/${versie}/${speler}/${competitie}`);
-                sessionStorage.removeItem(`/ranglijst/${seizoen}/${versie}/${competitie}/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`);
+                sessionStorage.removeItem(`/ranglijst/${competitie.seizoen}/${competitie.versie}/${competitie.competitie}/${datumSQL()}`);
                 naarAnderePagina("ranglijst.html");
             }
         }]);
@@ -52,14 +52,14 @@
 
 async function uitslagenSpeler(kop, lijst) {
     const totDatum = datumSQL(null, 10); // + 10 dagen voor testen
-    const t = (await ranglijst(seizoen, versie, totDatum, [speler]))[0];
-    kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(seizoen);
+    const t = (await ranglijst(competitie.seizoen, competitie.versie, totDatum, [competitie.speler]))[0]; // TODO 1 parameter minder voor ranglijst
+    kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(competitie.seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
         lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
     let vorigeUitslag;
-    (await localFetch(`/uitslagen/${seizoen}/${versie}/${speler}/${competitie}`)).forEach(
+    (await localFetch(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`)).forEach(
         function (u) {
             if (t.intern()) {
                 totaal += u.punten;
