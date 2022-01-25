@@ -235,50 +235,38 @@ module.exports = router => {
     });
 
     /*
-    -- kalender voor alle interne en externe ronden per speler
-    with
-      s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
-      u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
-    select r.*, u.bordNummer, u.partij, u.witZwart, u.tegenstanderNummer, u.resultaat
-      from ronde r
-      join s on r.seizoen = s.seizoen
-      left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam, 'ipv')
-    order by r.datum;
+    -- ronden per seizoen en competitie met aantal uitslagen
+    with u as
+      (select seizoen, teamCode, rondeNummer, count(resultaat) resultaten
+      from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)
+    select r.*, ifnull(resultaten, 0) aantal from ronde r
+    left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
+    where r.seizoen = @seizoen and r.teamCode = @teamCode
+    order by r.rondeNummer;
      */
-    router.get('/:uuidToken/kalender/:seizoen/:knsbNummer', async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || // kalender van andere gebruiker
-            gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen kalender
-            ctx.body = await Ronde.query()
-                .with('s', function (qb) {
-                    qb.from('speler')
-                        .where('speler.seizoen', ctx.params.seizoen)
-                        .andWhere('speler.knsbNummer', ctx.params.knsbNummer)
-                })
-                .with('u',function (qb) {
-                    qb.from('uitslag')
-                        .where('uitslag.seizoen', ctx.params.seizoen)
-                        .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-                })
-                .select('ronde.*',
-                    'u.bordNummer',
-                    'u.partij',
-                    'u.witZwart',
-                    'u.tegenstanderNummer',
-                    'u.resultaat')
-                .join('s', 's.seizoen', 'ronde.seizoen')
-                .leftJoin('u', function(join) {
-                    join.on('u.seizoen', 'ronde.seizoen')
-                        .andOn('u.teamCode', 'ronde.teamCode')
-                        .andOn('u.rondeNummer', 'ronde.rondeNummer')})
-                .whereIn('ronde.teamCode',
-                    [INTERNE_COMPETITIE, ref('s.knsbTeam'), ref('s.nhsbTeam'), GEEN_COMPETITIE])
-                .andWhere('ronde.seizoen', ctx.params.seizoen)
-                .orderBy('ronde.datum');
-        } else {
-            ctx.body = [];
-        }
+     router.get('/rondjes/:seizoen/:teamCode', async function (ctx) { // TODO rondjes <-- ronden
+         ctx.body = await Ronde.query()
+             .with('u',function (qb) {
+                 qb.from('uitslag')
+                     .select(
+                         'uitslag.seizoen',
+                         'uitslag.teamCode',
+                         'uitslag.rondeNummer',
+                         {resultaten: fn('count', 'uitslag.resultaat')})
+                     .whereIn('uitslag.resultaat', [WINST, VERLIES, REMISE])
+                     .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                     .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                     .groupBy('uitslag.rondeNummer')
+             })
+             .select('ronde.*',
+                 {aantal: fn('ifnull', ref('resultaten'), 0)})
+             .leftJoin('u', function(join) {
+                 join.on('u.seizoen', 'ronde.seizoen')
+                     .andOn('u.teamCode', 'ronde.teamCode')
+                     .andOn('u.rondeNummer', 'ronde.rondeNummer')})
+             .where('ronde.seizoen', ctx.params.seizoen)
+             .andWhere('ronde.teamCode', ctx.params.teamCode)
+             .orderBy('ronde.rondeNummer');
     });
 
     router.get('/:uuidToken/teamleider/:seizoen/:teamCode/:datum', async function (ctx) {
@@ -373,7 +361,7 @@ module.exports = router => {
             .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
     });
 
-    router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
+    router.get('/ronden/:seizoen/:teamCode', async function (ctx) { // TODO verwijderen
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', ctx.params.seizoen)
             .andWhere('ronde.teamCode', ctx.params.teamCode)

@@ -203,11 +203,12 @@ function nietTegen(r, i, j) {
 }
 
 const indelenFun = [
-    ["indelen met heuristieken en herhalen indien mislukt", function (r, wit, zwart) {
+    ["indelen met heuristieken en 10 x herhalen indien mislukt", function (r, wit, zwart) {
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-        while (nietIngedeeld.length > 0) {
-            console.log("--- mislukt ---");
+        let poging = 0;
+        while (nietIngedeeld.length > 0 && ++poging < 10) {
+            console.log("--- mislukt --- poging: " + poging);
             while (wit.length > 0) {
                 wit.pop();
                 zwart.pop();

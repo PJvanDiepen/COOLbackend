@@ -380,3 +380,17 @@ select rondeNummer, datum from uitslag where seizoen = @seizoen and teamCode = '
 
 select * from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') order by datum;
 
+select u.seizoen, u.teamCode, u.rondeNummer from uitslag u
+where not exists (select * from ronde r where r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer); 
+
+set @seizoen = '2122';
+set @teamCode = 'int';
+
+-- ronden per seizoen en competitie met aantal uitslagen
+with u as 
+  (select seizoen, teamCode, rondeNummer, count(resultaat) resultaten 
+   from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)   
+select r.*, ifnull(resultaten, 0) aantal from ronde r
+left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
+where r.seizoen = @seizoen and r.teamCode = @teamCode
+order by r.rondeNummer;
