@@ -647,6 +647,28 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    router.get('/:uuidToken/rondenummers/:seizoen/:teamCode', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BEHEERDER)) {
+            const ronden = await Ronde.query()
+                .where('ronde.seizoen', ctx.params.seizoen)
+                .andWhere('ronde.teamCode', ctx.params.teamCode);
+            let naarRonde = 0;
+            for (const ronde of ronden) {
+                if (ronde.rondeNummer > ++naarRonde) {
+                    if (await Ronde.query()
+                        .findById([ctx.params.seizoen, ctx.params.teamCode, ronde.rondeNummer])
+                        .patch({rondeNummer: naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
+                        aantal++;
+                    }
+                }
+            }
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
     router.get('/:uuidToken/schuif/ronde/:seizoen/:teamCode/:rondeNummer/:naarRonde', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;

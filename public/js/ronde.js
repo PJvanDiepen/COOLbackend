@@ -28,26 +28,6 @@
         }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${competitie.seizoen}/int/${rondeNummer}`);
-        }],
-        [BEHEERDER, `ronden hernummeren`, async function () {
-            const rondjes = await serverFetch(`/rondjes/${competitie.seizoen}/int`);
-            console.log(rondjes);
-            console.log(competitie.ronden);
-            for (const ronde of rondjes) {
-                competitie.ronden[ronde.rondeNummer] = ronde;
-            }
-            console.log(competitie.ronden.length);
-            let vorige = 0;
-            let leeg = 0;
-            for (let i = 1; i < competitie.ronden.length; i++) {
-                if (competitie.ronden[i]) {
-                    vorige = i;
-                } else {
-                    leeg = i;
-                    console.log("vorige: " + vorige + " leeg: " + i);
-                }
-            }
-            console.log(competitie);
         }]);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(rondeNummer, document.getElementById("kop"), document.getElementById("wedstrijden"));

@@ -2,6 +2,11 @@
 
 const apiCalls = [
     `/rondjes/${competitie.seizoen}/${competitie.competitie}`,
+    `/${uuidToken}/rondenummers/2122/int`,
+    `/${uuidToken}/rondenummers/2122/1`,
+    `/${uuidToken}/rondenummers/2122/2`,
+    `/${uuidToken}/rondenummers/2122/3`,
+    `/${uuidToken}/rondenummers/2122/4`,
     `/${uuidToken}/schuif/ronde/2122/1/5/10`,
     `/${uuidToken}/schuif/ronde/2122/2/5/10`,
     `/${uuidToken}/schuif/ronde/2122/3/5/10`,
