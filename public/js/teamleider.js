@@ -5,8 +5,9 @@
  */
 (async function() {
     await gebruikerVerwerken();
-    menu(naarGebruiker,
-        naarBeheer);
+    menu([GEREGISTREERD, "systeembeheer", function () {
+            naarAnderePagina("beheer.html");
+        }]);
     const wedstrijdDatum = params.get("datum") || await localFetch("/extern/" + competitie.seizoen);
     const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);

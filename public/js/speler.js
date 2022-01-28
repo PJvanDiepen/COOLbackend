@@ -5,9 +5,9 @@
     menu([WEDSTRIJDLEIDER, `agenda van ${competitie.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${competitie.speler}&naamGebruiker=${competitie.naam}`);
         }],
-        naarTeamleider,
-        naarGebruiker,
-        naarBeheer,
+        [GEREGISTREERD, "systeembeheer", function () {
+            naarAnderePagina("beheer.html");
+        }],
         [BEHEERDER, "afzeggingen verwijderen", async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${competitie.seizoen}/${competitie.speler}`);
             if (mutaties) {

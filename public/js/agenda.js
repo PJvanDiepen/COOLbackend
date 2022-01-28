@@ -2,9 +2,9 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarTeamleider,
-        naarGebruiker,
-        naarBeheer);
+    menu([GEREGISTREERD, "systeembeheer", function () {
+            naarAnderePagina("beheer.html");
+        }]);
     agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
 })();
 

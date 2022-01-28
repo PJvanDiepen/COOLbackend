@@ -6,9 +6,9 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarTeamleider,
-        naarGebruiker,
-        naarBeheer);
+    menu([GEREGISTREERD, "systeembeheer", function () {
+            naarAnderePagina("beheer.html");
+        }]);
     gebruikerTekst(
         document.getElementById("emailAan"),
         document.getElementById("naamAan"),
@@ -21,5 +21,5 @@ async function gebruikerTekst(emailAan, naamAan, link) {
     const lid = leden[0];  // TODO vergelijken met email
     emailAan.appendChild(htmlTekst(lid.email));
     naamAan.appendChild(htmlTekst(`${lid.naam},`));
-    link.appendChild(htmlTekst(`https://0-0-0.nl/agenda.html?vereniging=${competitie.vereniging}&uuid=${lid.uuidToken}`));
+    link.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${competitie.vereniging}&uuid=${lid.uuidToken}`));
 }

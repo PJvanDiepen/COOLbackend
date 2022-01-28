@@ -388,9 +388,9 @@ set @teamCode = 'int';
 
 -- ronden per seizoen en competitie met aantal uitslagen
 with u as 
-  (select seizoen, teamCode, rondeNummer, count(resultaat) resultaten 
+  (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten 
    from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)   
-select r.*, ifnull(resultaten, 0) aantal from ronde r
+select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
 left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
 where r.seizoen = @seizoen and r.teamCode = @teamCode
 order by r.rondeNummer;

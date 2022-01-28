@@ -8,8 +8,15 @@ TODO mutaties met verwijderen
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarTeamleider,
-        naarGebruiker,
+    menu([TEAMLEIDER, "externe competitie", function () {
+            naarAnderePagina("teamleider.html");
+        }],
+        [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
+            naarAnderePagina("gebruiker.html");
+        }],
+        [BEHEERDER, "test API", function () {
+            naarAnderePagina("api.html");
+        }],
         [BEHEERDER, "backup interne competitie 7-14" , async function () {
             await backupUitslag(INTERNE_COMPETITIE, 7, 14);  // TODO selectie invullen
         }]);

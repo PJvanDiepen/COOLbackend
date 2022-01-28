@@ -67,6 +67,7 @@ const competitie = (function () {
             competitie[key] = value === 0 ? Number(parameter) : parameter;
         }
     }
+    competitie.ronden = [];
     return competitie;
 })();
 
@@ -178,18 +179,6 @@ async function menu(...menuKeuzes) {  // TODO is await nodig?
             acties.value = 0;
         });
 }
-
-const naarBeheer = [GEREGISTREERD, "systeembeheer", function () {
-    naarAnderePagina("beheer.html#mutaties");
-}];
-
-const naarTeamleider = [TEAMLEIDER, "externe competitie", function () {
-    naarAnderePagina("teamleider.html");
-}];
-
-const naarGebruiker = [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
-    naarAnderePagina("gebruiker.html");
-}];
 
 async function gewijzigd() {
     const laatsteMutaties = await serverFetch("/gewijzigd");

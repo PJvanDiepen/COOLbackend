@@ -237,9 +237,9 @@ module.exports = router => {
     /*
     -- ronden per seizoen en competitie met aantal uitslagen
     with u as
-      (select seizoen, teamCode, rondeNummer, count(resultaat) resultaten
+      (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten
       from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)
-    select r.*, ifnull(resultaten, 0) aantal from ronde r
+    select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where r.seizoen = @seizoen and r.teamCode = @teamCode
     order by r.rondeNummer;
@@ -252,14 +252,14 @@ module.exports = router => {
                          'uitslag.seizoen',
                          'uitslag.teamCode',
                          'uitslag.rondeNummer',
-                         {resultaten: fn('count', 'uitslag.resultaat')})
+                         {aantalResultaten: fn('count', 'uitslag.resultaat')})
                      .whereIn('uitslag.resultaat', [WINST, VERLIES, REMISE])
                      .andWhere('uitslag.seizoen', ctx.params.seizoen)
                      .andWhere('uitslag.teamCode', ctx.params.teamCode)
                      .groupBy('uitslag.rondeNummer')
              })
              .select('ronde.*',
-                 {aantal: fn('ifnull', ref('resultaten'), 0)})
+                 {resultaten: fn('ifnull', ref('aantalResultaten'), 0)})
              .leftJoin('u', function(join) {
                  join.on('u.seizoen', 'ronde.seizoen')
                      .andOn('u.teamCode', 'ronde.teamCode')

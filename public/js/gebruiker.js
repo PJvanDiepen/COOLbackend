@@ -2,8 +2,9 @@
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarTeamleider,
-        naarBeheer,
+    menu([GEREGISTREERD, "systeembeheer", function () {
+            naarAnderePagina("beheer.html");
+        }],
         [BEHEERDER, "formulier van geselecteerde speler", function () {
             document.getElementById("naam").value = competitie.naam;
             document.getElementById("knsbNummer").value = competitie.speler;

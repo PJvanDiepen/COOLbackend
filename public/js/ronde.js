@@ -3,9 +3,9 @@
 (async function() {
     await gebruikerVerwerken();
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
-    menu(naarTeamleider,
-        naarGebruiker,
-        naarBeheer,
+    menu([GEREGISTREERD, "systeembeheer", function () {
+            naarAnderePagina("beheer.html");
+        }],
         [WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
             naarAnderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
@@ -29,8 +29,25 @@
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${competitie.seizoen}/int/${rondeNummer}`);
         }],
-        [BEHEERDER, `schuif ronde ${rondeNummer} naar ${rondeNummer - 1}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/schuif/ronde/${competitie.seizoen}/int/${rondeNummer - 1}`);
+        [BEHEERDER, `ronden hernummeren`, async function () {
+            const rondjes = await serverFetch(`/rondjes/${competitie.seizoen}/int`);
+            console.log(rondjes);
+            console.log(competitie.ronden);
+            for (const ronde of rondjes) {
+                competitie.ronden[ronde.rondeNummer] = ronde;
+            }
+            console.log(competitie.ronden.length);
+            let vorige = 0;
+            let leeg = 0;
+            for (let i = 1; i < competitie.ronden.length; i++) {
+                if (competitie.ronden[i]) {
+                    vorige = i;
+                } else {
+                    leeg = i;
+                    console.log("vorige: " + vorige + " leeg: " + i);
+                }
+            }
+            console.log(competitie);
         }]);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(rondeNummer, document.getElementById("kop"), document.getElementById("wedstrijden"));

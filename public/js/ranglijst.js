@@ -8,9 +8,9 @@ const alleLeden = Number(params.get("leden"));
 
 (async function() {
     await gebruikerVerwerken();
-    menu(naarTeamleider,
-        naarGebruiker,
-        naarBeheer);
+    menu([GEREGISTREERD, "systeembeheer", function () {
+            naarAnderePagina("beheer.html");
+        }]);
     teamSelecteren(INTERNE_COMPETITIE);
     rondeSelecteren(INTERNE_COMPETITIE, 0);
     versieSelecteren(document.getElementById("versies"));
