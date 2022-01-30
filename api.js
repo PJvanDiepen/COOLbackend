@@ -882,13 +882,13 @@ async function gebruikerRechten(uuidToken) {
         return juisteRechten(minimum) && ditSeizoen() !== seizoen;
     }
 
-    function ditSeizoen() {  // TODO zie uitslagen.js
+    function ditSeizoen() {  // TODO zie const.js
         const datum = new Date();
         const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001); // na juli dit jaar anders vorig jaar
         return `${voorloopNul(i)}${voorloopNul(i+1)}`;
     }
 
-    function voorloopNul(getal) { // TODO zie uitslagen.js
+    function voorloopNul(getal) { // TODO zie const.js
         return getal < 10 ? "0" + getal : getal;
     }
 
