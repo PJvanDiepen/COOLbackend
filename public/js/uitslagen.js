@@ -71,52 +71,6 @@ const competitie = (function () {
     return competitie;
 })();
 
-async function rondjesVerwerken() {
-    (await localFetch(`/ronden/${competitie.seizoen}/${teamCode}`).forEach(
-        function (ronde) {
-            ronden[ronde.rondeNummer] = ronde;
-        }
-    ));
-}
-
-let ronden = []; // rondenVerwerken
-
-/**
- * rondenVerwerken leest ronden,
- * controleert rondeNummer of berekent actuele rondeNummer
- * geeft rondeNummer, rondeDatum en totDatum voor uitslagen en ranglijsten of rondeNummer en totDatum indien rondeIndelen
- *
- * indien rondeIndelen = 1 dan geldt rondeDatum = totDatum en totDatum = vandaag
- * zie rondeInfo
- *
- * @param teamCode interne competitie of team
- * @param rondeNummer gegeven rondeNummer of 0 indien berekenen
- * @param rondeIndelen 0 voor uitslagen en ranglijsten en 1 indien rondeIndelen
- * @returns {Promise<[*, *, *]|number[]>} rondeNummer, (rondeDatum), totDatum
- */
-async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
-    ronden = await localFetch(`/ronden/${competitie.seizoen}/${teamCode}`);
-    const aantalRonden = ronden.length;
-    if (rondeNummer > aantalRonden || rondeNummer < 0) {
-        return [-1];
-    } else if (rondeNummer) {
-        return rondeInfo(rondeNummer, aantalRonden);
-    } else {
-        for (let i = 0; i < aantalRonden; i++) {
-            if (datumSQL(ronden[i].datum) >= datumSQL()) { // op de dag niet meteen naar volgende ronde
-                return rondeInfo(i + rondeIndelen, aantalRonden);
-            }
-        }
-        return [aantalRonden];
-    }
-}
-
-function rondeInfo(rondeNummer, aantalRonden) {
-    const rondeDatum = ronden[rondeNummer - 1].datum;
-    const totDatum = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
-    return [rondeNummer, rondeDatum, totDatum];
-}
-
 const uuidActiveren = params.get("uuid");
 const vorigeSessie = localStorage.getItem(competitie.vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
@@ -188,6 +142,52 @@ function volgendeSessie(json) {
     } catch (error) {
         console.error(error); // TODO per sessie fouten verzamelen?
     }
+}
+
+async function rondjesVerwerken() {
+    (await localFetch(`/ronden/${competitie.seizoen}/${teamCode}`).forEach(
+        function (ronde) {
+            ronden[ronde.rondeNummer] = ronde;
+        }
+    ));
+}
+
+let ronden = []; // rondenVerwerken
+
+/**
+ * rondenVerwerken leest ronden,
+ * controleert rondeNummer of berekent actuele rondeNummer
+ * geeft rondeNummer, rondeDatum en totDatum voor uitslagen en ranglijsten of rondeNummer en totDatum indien rondeIndelen
+ *
+ * indien rondeIndelen = 1 dan geldt rondeDatum = totDatum en totDatum = vandaag
+ * zie rondeInfo
+ *
+ * @param teamCode interne competitie of team
+ * @param rondeNummer gegeven rondeNummer of 0 indien berekenen
+ * @param rondeIndelen 0 voor uitslagen en ranglijsten en 1 indien rondeIndelen
+ * @returns {Promise<[*, *, *]|number[]>} rondeNummer, (rondeDatum), totDatum
+ */
+async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
+    ronden = await localFetch(`/ronden/${competitie.seizoen}/${teamCode}`);
+    const aantalRonden = ronden.length;
+    if (rondeNummer > aantalRonden || rondeNummer < 0) {
+        return [-1];
+    } else if (rondeNummer) {
+        return rondeInfo(rondeNummer, aantalRonden);
+    } else {
+        for (let i = 0; i < aantalRonden; i++) {
+            if (datumSQL(ronden[i].datum) >= datumSQL()) { // op de dag niet meteen naar volgende ronde
+                return rondeInfo(i + rondeIndelen, aantalRonden);
+            }
+        }
+        return [aantalRonden];
+    }
+}
+
+function rondeInfo(rondeNummer, aantalRonden) {
+    const rondeDatum = ronden[rondeNummer - 1].datum;
+    const totDatum = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
+    return [rondeNummer, rondeDatum, totDatum];
 }
 
 /**
