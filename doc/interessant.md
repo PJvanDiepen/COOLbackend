@@ -28,6 +28,7 @@ Nuttig
 - [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
 - [IntelliJ](https://blog.jetbrains.com/idea/2021/08/most-popular-live-streams/)
 - [Swiss pairings](https://senseis.xmp.net/?SwissPairing)
+- [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
 
 Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)

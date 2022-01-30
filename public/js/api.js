@@ -1,8 +1,9 @@
 "use strict";
 
 const apiCalls = [
-    `/rondjes/${competitie.seizoen}/${competitie.competitie}`,
+    `/ronden/${competitie.seizoen}/${competitie.competitie}`, // TODO met documentatie
     `/${uuidToken}/rondenummers/2122/int`,
+    `/gewijzigd`,
     `/${uuidToken}/rondenummers/2122/1`,
     `/${uuidToken}/rondenummers/2122/2`,
     `/${uuidToken}/rondenummers/2122/3`,

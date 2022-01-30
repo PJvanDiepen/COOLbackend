@@ -373,12 +373,14 @@ module.exports = router => {
             .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
     });
 
+    /*
     router.get('/ronden/:seizoen/:teamCode', async function (ctx) { // TODO verwijderen
         ctx.body = await Ronde.query()
             .where('ronde.seizoen', ctx.params.seizoen)
             .andWhere('ronde.teamCode', ctx.params.teamCode)
             .orderBy('ronde.rondeNummer');
     });
+     */
 
     /*
     -- alle externe wedstrijden van het seizoen
@@ -773,7 +775,7 @@ module.exports = router => {
     where r.seizoen = @seizoen and r.teamCode = @teamCode
     order by r.rondeNummer;
      */
-    router.get('/rondjes/:seizoen/:teamCode', async function (ctx) { // TODO rondjes <-- ronden
+    router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Ronde.query()
             .with('u',function (qb) {
                 qb.from('uitslag')
@@ -797,7 +799,6 @@ module.exports = router => {
             .andWhere('ronde.teamCode', ctx.params.teamCode)
             .orderBy('ronde.rondeNummer');
     });
-
 }
 
 // teamCode

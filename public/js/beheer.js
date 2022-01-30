@@ -63,8 +63,10 @@ function valueSQL(value) {
 
 async function gebruikers(lijst) {
     const leden = await serverFetch(`/${uuidToken}/gebruikers`);
+    let aantal = 0;
     for (const lid of leden) {
         lijst.appendChild(htmlRij(
+            ++aantal,
             naarSpeler(lid.knsbNummer, lid.naam),
             gebruiker.mutatieRechten === BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
             gebruikerFunctie(lid)));

@@ -14,6 +14,9 @@ Dit zijn velden uit tabellen van de MySQL database of velden die zijn gemaakt do
 9. 0-0-0.nl/ API call
 10. 0-0-0.nl
 
+Een nieuwe versie invoeren kan het best op woensdag wegens naijleffecten in browsers.
+
+
    
 
    
