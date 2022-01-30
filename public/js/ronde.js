@@ -1,7 +1,6 @@
 "use strict";
 
 (async function() {
-    await gebruikerVerwerken();
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");

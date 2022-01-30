@@ -7,7 +7,6 @@ TODO mutaties met verwijderen
  */
 
 (async function() {
-    await gebruikerVerwerken();
     menu([TEAMLEIDER, "externe competitie", function () {
             naarAnderePagina("teamleider.html");
         }],

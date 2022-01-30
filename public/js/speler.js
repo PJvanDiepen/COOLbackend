@@ -1,7 +1,6 @@
 "use strict";
 
 (async function() {
-    await gebruikerVerwerken();
     menu([WEDSTRIJDLEIDER, `agenda van ${competitie.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${competitie.speler}&naamGebruiker=${competitie.naam}`);
         }],

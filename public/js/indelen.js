@@ -5,7 +5,6 @@
  */
 
 (async function() {
-    await gebruikerVerwerken();
     const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
     document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(totDatum);
     const r = await ranglijstSorteren(totDatum, await deelnemersRonde(rondeNummer));

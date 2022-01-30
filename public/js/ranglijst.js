@@ -7,7 +7,6 @@
 const alleLeden = Number(params.get("leden"));
 
 (async function() {
-    await gebruikerVerwerken();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);

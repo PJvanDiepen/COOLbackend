@@ -134,6 +134,10 @@ const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
+(async function() {
+    await gebruikerVerwerken();
+})();
+
 /**
  * 0-0-0.nl genereert een uuid om de gebruiker te herkennen.
  * De gebruiker krijgt uuid via email, moet uuidActiveren en legt uuid vast in localStorage.
