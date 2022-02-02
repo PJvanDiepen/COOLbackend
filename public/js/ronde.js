@@ -1,9 +1,7 @@
 "use strict";
 
 (async function() {
-    const gegevenRonde = Number(params.get("ronde"));
-    const rondeNummer = gegevenRonde || competitie.vorigeRonde;
-    const datumRonde = competitie.ronde[rondeNummer].datum;
+    const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde;
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }],
@@ -32,7 +30,8 @@
         }]);
     rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     wedstrijdenBijRonde(rondeNummer, document.getElementById("kop"), document.getElementById("wedstrijden"));
-    document.getElementById("subkop").innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(datumRonde);
+    const subkop = document.getElementById("subkop");
+    subkop.innerHTML = "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(competitie.ronde[rondeNummer].datum);
     uitslagenRonde(rondeNummer, document.getElementById("tabel"));
 })();
 
@@ -56,11 +55,16 @@ async function wedstrijdenBijRonde(rondeNummer, kop, lijst) {
             lijst.appendChild(htmlRij("", datumKolom, wedstrijdKolom, uitslagKolom));
         }
     }
-    lijst.appendChild(ranglijstTot(rondeNummer));
+    if (competitie.laatsteRonde > rondeNummer + 1) {
+        lijst.appendChild(ranglijstTot(rondeNummer + 1));
+    }
 }
 
 function ranglijstTot(rondeNummer) {
-    return htmlRij(rondeNummer, datumLeesbaar(competitie.ronde[rondeNummer].datum), "interne competitie", "");
+    return htmlRij(
+        rondeNummer,
+        htmlLink(`ronde.html?ronde=${rondeNummer}`, datumLeesbaar(competitie.ronde[rondeNummer].datum)),
+        "interne competitie", "");
 }
 
 function wedstrijdBijRonde(rondeNummer, datum) {

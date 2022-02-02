@@ -5,12 +5,11 @@
  */
 
 (async function() {
-    /* TODO vereenvoudigen
-    const gegevenRonde = Number(params.get("ronde"));
-    const rondeNummer = gegevenRonde || competitie.laatsteRonde + 1;
-    const totDatum = competitie.ronde[rondeNummer + 1].datum;
-     */
-    const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
+    console.log("indelen.js");
+    const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde + 1;
+    console.log("rondeNummer: "+ rondeNummer);
+    const totDatum = competitie.ronde[rondeNummer].datum;
+    console.log("totDatum: "+ totDatum);
     document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(totDatum);
     const r = await ranglijstSorteren(totDatum, await deelnemersRonde(rondeNummer));
     const wit = [];

@@ -101,34 +101,34 @@ kolommen in lijst
  */
 
 function internePartij(u, totaal) {
-    const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
     const tegenstanderKolom = naarSpeler(u.tegenstanderNummer, u.naam);
-    return htmlRij(rondeKolom, datumKolom, tegenstanderKolom, "", u.witZwart, u.resultaat, u.punten, totaal);
+    return htmlRij(u.rondeNummer, datumKolom, tegenstanderKolom, "", u.witZwart, u.resultaat, u.punten, totaal);
 }
 
 function geenPartij(u, totaal) {
-    const rondeKolom = naarRonde(u.rondeNummer, u);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
     const omschrijving = u.partij === AFWEZIG              ? "afgezegd"
                        : u.partij === ONEVEN               ? "oneven"
                        : u.partij === REGLEMENTAIRE_REMISE ? "vrijgesteld"
                        : u.partij === REGLEMENTAIR_VERLIES ? "reglementair verlies"
                        : u.partij === REGLEMENTAIRE_WINST  ? "reglementaire winst" : "???";
-    return htmlRij(rondeKolom, datumKolom, omschrijving, "", "", "", u.punten, totaal);
+    return htmlRij(u.rondeNummer, datumKolom, omschrijving, "", "", "", u.punten, totaal);
 }
 
 function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {
-    const rondeKolom = naarRonde(vorigeUitslag.rondeNummer, vorigeUitslag);
     const datumKolom = naarRonde(datumLeesbaar(u.datum), vorigeUitslag);
     const tegenstanderKolom = naarTeam(wedstrijdVoluit(u), u);
     const puntenKolom = vorigeUitslag.punten + u.punten;
-    return htmlRij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
+    return htmlRij(vorigeUitslag.rondeNummer, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
 }
 
 function externePartij(u, totaal) {
-    const rondeKolom = "";
     const datumKolom = datumLeesbaar(u.datum);
     const tegenstanderKolom = naarTeam(wedstrijdVoluit(u), u);
-    return htmlRij(rondeKolom, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+    return htmlRij("", datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+}
+
+function naarRonde(tekst, u) {
+    return htmlLink(`ronde.html?ronde=${u.rondeNummer}`, tekst);
 }

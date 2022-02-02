@@ -90,21 +90,7 @@ const NIEUWE_RANGLIJST = 2;
 
 (async function() {
     await gebruikerVerwerken();
-    // rondenVerwerken
-    console.log("rondenVerwerken");
-    competitie.ronde = [];
-    competitie.vorigeRonde = 0;
-    const ronden = await localFetch(`/ronden/${competitie.seizoen}/${competitie.team}`);
-    for (const ronde of ronden) {
-        competitie.ronde[ronde.rondeNummer] = ronde;
-        competitie.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
-        if (ronde.resultaten > 0) {
-            competitie.vorigeRonde = ronde.rondeNummer;
-        }
-    }
-    console.log(competitie);
-    // TODO huidigeRonde: ronde.resultaten = 0 en definitieve indeling, volgendeRonde
-    // TODO laatsteDatum uitslag.datum > competitie.ronden[laatsteRonde].datum of gewoon vandaag!
+    await rondenVerwerken();
 })();
 
 /**
@@ -159,36 +145,20 @@ function volgendeSessie(json) {
     }
 }
 
-let ronden = []; // rondenVerwerken // TODO verwijderen
-
-/**
- * rondenVerwerken leest ronden,
- * controleert rondeNummer of berekent actuele rondeNummer
- * geeft rondeNummer, rondeDatum en totDatum voor uitslagen en ranglijsten of rondeNummer en totDatum indien rondeIndelen
- *
- * indien rondeIndelen = 1 dan geldt rondeDatum = totDatum en totDatum = vandaag
- * zie rondeInfo
- *
- * @param teamCode interne competitie of team
- * @param rondeNummer gegeven rondeNummer of 0 indien berekenen
- * @param rondeIndelen 0 voor uitslagen en ranglijsten en 1 indien rondeIndelen
- * @returns {Promise<[*, *, *]|number[]>} rondeNummer, (rondeDatum), totDatum
- */
-async function rondenVerwerken(teamCode, rondeNummer, rondeIndelen) {
-    ronden = await localFetch(`/ronden/${competitie.seizoen}/${teamCode}`);
-    const aantalRonden = ronden.length;
-    if (rondeNummer > aantalRonden || rondeNummer < 0) {
-        return [-1];
-    } else if (rondeNummer) {
-        return rondeInfo(rondeNummer, aantalRonden);
-    } else {
-        for (let i = 0; i < aantalRonden; i++) {
-            if (datumSQL(ronden[i].datum) >= datumSQL()) { // op de dag niet meteen naar volgende ronde
-                return rondeInfo(i + rondeIndelen, aantalRonden);
-            }
+async function rondenVerwerken() {
+    console.log("rondenVerwerken");
+    competitie.ronde = [];
+    competitie.vorigeRonde = 0;
+    const ronden = await localFetch(`/ronden/${competitie.seizoen}/${competitie.team}`);
+    for (const ronde of ronden) {
+        competitie.ronde[ronde.rondeNummer] = ronde;
+        competitie.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
+        if (ronde.resultaten > 0) {
+            competitie.vorigeRonde = ronde.rondeNummer;
         }
-        return [aantalRonden];
     }
+    console.log(competitie);
+    // TODO huidigeRonde: ronde.resultaten = 0 en definitieve indeling, volgendeRonde
 }
 
 function rondeInfo(rondeNummer, aantalRonden) {
@@ -328,10 +298,6 @@ function naarSpeler(knsbNummer, naam) {
     return link;
 }
 
-function naarRonde(tekst, u) {
-    return htmlLink(`ronde.html?ronde=${u.rondeNummer}`, tekst);
-}
-
 function naarTeam(tekst, u) {
     return htmlLink(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, tekst);
 }
@@ -371,6 +337,11 @@ function tijdGeleden(jsonDatum) {
     } else {
         return "langer dan 1 jaar";
     }
+}
+
+function objectDatumLeesbaar(object) { // TODO i.p.v. datumLeesbaar
+    const datum = new Date(object.datum);
+    return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
 
 function datumLeesbaar(jsonDatum) {
