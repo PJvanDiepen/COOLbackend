@@ -4,12 +4,11 @@
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
-const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
+const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie TODO verwijderen
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
-const EXTERN_INDELEN       = "x"; // aanmelden voor externe partij op dinsdag TODO verwijderen
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
@@ -41,9 +40,11 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
+const laasteMaandSeizoen = 6;
+
 const ditSeizoen = (function () {
     const datum = new Date();
-    const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001); // na juli dit jaar anders vorig jaar
+    const i = datum.getFullYear() - (datum.getMonth() > laasteMaandSeizoen ? 2000 : 2001);
     return `${voorloopNul(i)}${voorloopNul(i+1)}`;
 })();
 
@@ -67,7 +68,6 @@ const competitie = (function () {
             competitie[key] = value === 0 ? Number(parameter) : parameter; // versie en speler zijn numeriek
         }
     }
-    competitie.ronden = [];
     return competitie;
 })();
 
@@ -90,6 +90,21 @@ const NIEUWE_RANGLIJST = 2;
 
 (async function() {
     await gebruikerVerwerken();
+    // rondenVerwerken
+    console.log("rondenVerwerken");
+    competitie.ronde = [];
+    competitie.vorigeRonde = 0;
+    const ronden = await localFetch(`/ronden/${competitie.seizoen}/${competitie.team}`);
+    for (const ronde of ronden) {
+        competitie.ronde[ronde.rondeNummer] = ronde;
+        competitie.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
+        if (ronde.resultaten > 0) {
+            competitie.vorigeRonde = ronde.rondeNummer;
+        }
+    }
+    console.log(competitie);
+    // TODO huidigeRonde: ronde.resultaten = 0 en definitieve indeling, volgendeRonde
+    // TODO laatsteDatum uitslag.datum > competitie.ronden[laatsteRonde].datum of gewoon vandaag!
 })();
 
 /**
@@ -144,15 +159,7 @@ function volgendeSessie(json) {
     }
 }
 
-async function rondjesVerwerken() {
-    (await localFetch(`/ronden/${competitie.seizoen}/${teamCode}`).forEach(
-        function (ronde) {
-            ronden[ronde.rondeNummer] = ronde;
-        }
-    ));
-}
-
-let ronden = []; // rondenVerwerken
+let ronden = []; // rondenVerwerken // TODO verwijderen
 
 /**
  * rondenVerwerken leest ronden,

@@ -18,6 +18,11 @@ const alleLeden = Number(params.get("leden"));
 })();
 
 async function spelersLijst(kop, lijst) {
+    /* TODO vereenvoudigen
+    const gegevenRonde = Number(params.get("ronde"));
+    const rondeNummer = gegevenRonde || competitie.laatsteRonde;
+    const totDatum = competitie.ronde[rondeNummer + 1].datum;
+     */
     const [rondeNummer, datumRonde, totDatum]  = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 0);
     kop.innerHTML = "Ranglijst" + SCHEIDING + seizoenVoluit(competitie.seizoen) + SCHEIDING + "na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen

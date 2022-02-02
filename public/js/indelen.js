@@ -5,6 +5,11 @@
  */
 
 (async function() {
+    /* TODO vereenvoudigen
+    const gegevenRonde = Number(params.get("ronde"));
+    const rondeNummer = gegevenRonde || competitie.laatsteRonde + 1;
+    const totDatum = competitie.ronde[rondeNummer + 1].datum;
+     */
     const [rondeNummer, totDatum] = await rondenVerwerken(INTERNE_COMPETITIE, Number(params.get("ronde")), 1);
     document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(totDatum);
     const r = await ranglijstSorteren(totDatum, await deelnemersRonde(rondeNummer));
@@ -103,7 +108,7 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
     }
     let bord = wit.length;
     for (const speler of extern) {
-        // bord++;
+        // bord++;  TODO splitsen in uit (geen bordnummer) en thuis (wel bordnummer)
         partijen.appendChild(htmlRij(++bord, naarSpeler(speler.knsbNummer, speler.naam), "extern", ""));
     }
 }

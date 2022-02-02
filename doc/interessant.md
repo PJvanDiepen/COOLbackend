@@ -29,6 +29,7 @@ Nuttig
 - [IntelliJ](https://blog.jetbrains.com/idea/2021/08/most-popular-live-streams/)
 - [Swiss pairings](https://senseis.xmp.net/?SwissPairing)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
+- [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 
 Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)

@@ -65,7 +65,7 @@ async function uitslagenSpeler(kop, lijst) {
             }
             if (u.tegenstanderNummer > 0) {
                 lijst.appendChild(internePartij(u, totaal));
-            } else if ([MEEDOEN, NIET_MEEDOEN, EXTERN_THUIS, EXTERN_UIT, EXTERN_INDELEN].includes(u.partij)) {
+            } else if ([MEEDOEN, NIET_MEEDOEN, EXTERN_THUIS, EXTERN_UIT].includes(u.partij)) {
                 // geplande partij overslaan
             } else if (u.teamCode === INTERNE_COMPETITIE && u.partij === EXTERNE_PARTIJ) {
                 vorigeUitslag = u; // deze uitslag overslaan en combineren met volgende uitslag

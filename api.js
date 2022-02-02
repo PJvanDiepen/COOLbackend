@@ -68,21 +68,6 @@ module.exports = router => {
         ctx.body = volgende.map(function (uitslag) {return uitslag.datum})[0]; // TODO zonder map en function
     });
 
-    /*
-   -- volgende interne wedstrijd
-   select rondeNummer, datum from uitslag where seizoen = @seizoen and teamCode = 'int' and partij in ('m', 'n') order by datum limit 1
-    */
-    router.get('/intern/:seizoen', async function (ctx) {
-        const volgende = await Uitslag.query()
-            .select('uitslag.rondeNummer', 'uitslag.datum')
-            .where('uitslag.seizoen', ctx.params.seizoen)
-            .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
-            .whereIn('uitslag.partij', [MEEDOEN, NIET_MEEDOEN])
-            .orderBy('uitslag.datum')
-            .limit(1);
-        ctx.body = volgende.map(function (uitslag) {return [uitslag.rondeNummer, uitslag.datum]});
-    });
-
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
@@ -114,10 +99,10 @@ module.exports = router => {
             deelnemers = await Uitslag.query()
                 .select('naam', 'uitslag.knsbNummer')
                 .join('persoon', 'persoon.knsbNummer', 'uitslag.knsbNummer')
-                .where('uitslag.seizoen', ctx.params.seizoen)
+                .whereIn('uitslag.partij', [EXTERN_THUIS, EXTERN_UIT])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.partij', EXTERN_INDELEN)
                 .orderBy('naam');
 
         }
@@ -374,15 +359,6 @@ module.exports = router => {
     });
 
     /*
-    router.get('/ronden/:seizoen/:teamCode', async function (ctx) { // TODO verwijderen
-        ctx.body = await Ronde.query()
-            .where('ronde.seizoen', ctx.params.seizoen)
-            .andWhere('ronde.teamCode', ctx.params.teamCode)
-            .orderBy('ronde.rondeNummer');
-    });
-     */
-
-    /*
     -- alle externe wedstrijden van het seizoen
     select r.*, bond, poule, omschrijving, borden, naam from ronde r
     join team t on r.seizoen = t.seizoen and r.teamCode = t.teamCode
@@ -403,7 +379,7 @@ module.exports = router => {
                     .andOn('team.teamCode', 'ronde.teamCode')})
             .join('persoon', 'team.teamleider', 'persoon.knsbNummer')
             .where('ronde.seizoen', ctx.params.seizoen)
-            .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, GEEN_COMPETITIE])
+            .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, GEEN_COMPETITIE]) // TODO zonder GEEN_COMPETITIE
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
@@ -790,7 +766,7 @@ module.exports = router => {
                     .groupBy('uitslag.rondeNummer')
             })
             .select('ronde.*',
-                {resultaten: fn('ifnull', ref('aantalResultaten'), 0)})
+                {resultaten: fn('ifnull', ref('aantalResultaten'), -1)})
             .leftJoin('u', function(join) {
                 join.on('u.seizoen', 'ronde.seizoen')
                     .andOn('u.teamCode', 'ronde.teamCode')
@@ -803,18 +779,17 @@ module.exports = router => {
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
-const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie
+const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie TODO verwijderen
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
-const EXTERN_INDELEN       = "x"; // aanmelden voor externe partij op dinsdag TODO verwijderen!
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
 const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
-const EXTERN_THUIS         = "t";
-const EXTERN_UIT           = "u";
+const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij thuis op dinsdag
+const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op dinsdag
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 // uitslag.witZwart
