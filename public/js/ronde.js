@@ -101,8 +101,8 @@ async function uitslagenRonde(rondeNummer, lijst) {
             htmlVerwerkt(uitslagKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
             lijst.appendChild(htmlRij(
                 uitslag.bordNummer,
-                naarSpeler(uitslag.knsbNummer, uitslag.wit),
-                naarSpeler(uitslag.tegenstanderNummer, uitslag.zwart),
+                naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
+                naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
                 uitslagKolom));
         }
     } else {

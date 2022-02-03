@@ -26,7 +26,7 @@ async function spelersLijst(kop, lijst) {
         if (t.inRanglijst() || alleLeden) {
             lijst.appendChild(htmlRij(
                 i + 1,
-                naarSpeler(t.knsbNummer, t.naam),
+                naarSpeler(t),
                 t.punten() ? t.punten() : "",
                 t.winnaarSubgroep(winnaars),
                 t.scoreIntern(),

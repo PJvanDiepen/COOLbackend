@@ -41,7 +41,7 @@ async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
                 function (u) {
                     tabel.appendChild(htmlRij(
                         u.partij === NIET_MEEDOEN ? "" : (++aanwezigen),
-                        naarSpeler(u.knsbNummer, u.naam),
+                        naarSpeler(u),
                         u.knsbRating,
                         vasteSpelerOfInvaller(u, w.teamCode),
                         aanwezig(u)));

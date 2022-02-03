@@ -105,7 +105,7 @@ kolommen in lijst
 
 function internePartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
-    const tegenstanderKolom = naarSpeler(uitslag.tegenstanderNummer, uitslag.naam);
+    const tegenstanderKolom = naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.naam});
     return htmlRij(uitslag.rondeNummer, datumKolom, tegenstanderKolom, "", uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
 }
 

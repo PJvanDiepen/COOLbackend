@@ -66,7 +66,7 @@ async function gebruikers(lijst) {
     for (const lid of leden) {
         lijst.appendChild(htmlRij(
             ++aantal,
-            naarSpeler(lid.knsbNummer, lid.naam),
+            naarSpeler(lid),
             gebruiker.mutatieRechten === BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
             gebruikerFunctie(lid)));
     }
@@ -103,7 +103,7 @@ async function laatsteMutaties(lijst) {
     for (const mutatie of mutaties) {
         lijst.appendChild(htmlRij(
             tijdGeleden(mutatie.tijdstip),
-            mutatie.knsbNummer === vorige ? "" : naarSpeler(mutatie.knsbNummer, mutatie.naam),
+            mutatie.knsbNummer === vorige ? "" : naarSpeler(mutatie),
             mutatie.knsbNummer === vorige ? "" : mutatie.knsbNummer,
             mutatie.url,
             mutatie.aantal,

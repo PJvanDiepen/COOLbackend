@@ -98,18 +98,18 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
     for (let i = 0; i < wit.length; i++) {
         partijen.appendChild(htmlRij(
             i + 1,
-            naarSpeler(r[wit[i]].knsbNummer, r[wit[i]].naam),
-            naarSpeler(r[zwart[i]].knsbNummer, r[zwart[i]].naam),
+            naarSpeler(r[wit[i]]),
+            naarSpeler(r[zwart[i]]),
             rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""
         ));
     }
     if (oneven) {
-        partijen.appendChild(htmlRij("", naarSpeler(r[oneven].knsbNummer, r[oneven].naam), "", "oneven"));
+        partijen.appendChild(htmlRij("", naarSpeler(r[oneven]), "", "oneven"));
     }
     let bord = wit.length;
     for (const speler of extern) {
         // bord++;  TODO splitsen in uit (geen bordnummer) en thuis (wel bordnummer)
-        partijen.appendChild(htmlRij(++bord, naarSpeler(speler.knsbNummer, speler.naam), "extern", ""));
+        partijen.appendChild(htmlRij(++bord, naarSpeler(speler), "extern", ""));
     }
 }
 
@@ -117,7 +117,7 @@ function deelnemersLijst(r, lijst) {
     r.forEach(function(t, i) {
         lijst.appendChild(htmlRij(
             i + 1,
-            naarSpeler(t.knsbNummer, t.naam),
+            naarSpeler(t),
             t.zonderAftrek(),
             t.eigenWaardeCijfer(),
             t.intern() ? t.intern() : "",

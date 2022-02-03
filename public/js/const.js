@@ -144,7 +144,6 @@ function volgendeSessie(json) {
 }
 
 async function rondenVerwerken() {
-    console.log("rondenVerwerken");
     competitie.ronde = [];
     competitie.vorigeRonde = 0;
     const ronden = await localFetch(`/ronden/${competitie.seizoen}/${competitie.team}`);
@@ -155,7 +154,6 @@ async function rondenVerwerken() {
             competitie.vorigeRonde = ronde.rondeNummer;
         }
     }
-    console.log(competitie);
     // TODO huidigeRonde: ronde.resultaten = 0 en definitieve indeling, volgendeRonde
 }
 
@@ -290,9 +288,15 @@ function naarZelfdePagina(parameters) {
     location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 
-function naarSpeler(knsbNummer, naam) {
-    const link = htmlLink(`speler.html?speler=${knsbNummer}&naam=${naam}`, naam);
+function verwijderNaarSpeler(knsbNummer, naam) {
+    const link = htmlLink(`speler.html?team=${competitie.competitie}&speler=${knsbNummer}&naam=${naam}`, naam);
     htmlVet(link, knsbNummer === gebruiker.knsbNummer);
+    return link;
+}
+
+function naarSpeler(speler) {
+    const link = htmlLink(`speler.html?team=${competitie.competitie}&speler=${speler.knsbNummer}&naam=${speler.naam}`, speler.naam);
+    htmlVet(link, speler.knsbNummer === gebruiker.knsbNummer);
     return link;
 }
 
@@ -739,7 +743,7 @@ async function uitslagenTeamAlleRonden(teamCode) {
             } else if (u.resultaat === VERLIES) {
                 rondeUitslag.verlies += 1;
             }
-            rondeUitslag.uitslagen.push(htmlRij(u.bordNummer, naarSpeler(u.knsbNummer, u.naam), u.witZwart, u.resultaat));
+            rondeUitslag.uitslagen.push(htmlRij(u.bordNummer, naarSpeler(u), u.witZwart, u.resultaat));
         });
     return rondeUitslagen;
 }
