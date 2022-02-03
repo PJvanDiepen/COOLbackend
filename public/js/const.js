@@ -288,12 +288,6 @@ function naarZelfdePagina(parameters) {
     location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 
-function verwijderNaarSpeler(knsbNummer, naam) {
-    const link = htmlLink(`speler.html?team=${competitie.competitie}&speler=${knsbNummer}&naam=${naam}`, naam);
-    htmlVet(link, knsbNummer === gebruiker.knsbNummer);
-    return link;
-}
-
 function naarSpeler(speler) {
     const link = htmlLink(`speler.html?team=${competitie.competitie}&speler=${speler.knsbNummer}&naam=${speler.naam}`, speler.naam);
     htmlVet(link, speler.knsbNummer === gebruiker.knsbNummer);
