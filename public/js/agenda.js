@@ -29,7 +29,7 @@ async function agenda(kop, lijst) {
                 w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.appendChild(htmlRij(
                 w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
-                datumLeesbaar(w.datum),
+                datumLeesbaar(w),
                 w.teamCode === INTERNE_COMPETITIE ? "interne competitie" : wedstrijdVoluit(w), // TODO of teamVoluit ?
                 deelnemers.length,
                 link));

@@ -40,11 +40,9 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
-const laasteMaandSeizoen = 6;
-
 const ditSeizoen = (function () {
     const datum = new Date();
-    const i = datum.getFullYear() - (datum.getMonth() > laasteMaandSeizoen ? 2000 : 2001);
+    const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001);
     return `${voorloopNul(i)}${voorloopNul(i+1)}`;
 })();
 
@@ -65,7 +63,7 @@ const competitie = (function () {
             parameter = sessionStorage.getItem(key); // inlezen van sessie
         }
         if (parameter) {
-            competitie[key] = value === 0 ? Number(parameter) : parameter; // versie en speler zijn numeriek
+            competitie[key] = value === 0 ? Number(parameter) : parameter; // versie en speler zijn getallen
         }
     }
     return competitie;
@@ -298,8 +296,8 @@ function naarSpeler(knsbNummer, naam) {
     return link;
 }
 
-function naarTeam(tekst, u) {
-    return htmlLink(`team.html?team=${u.teamCode}#ronde${u.rondeNummer}`, tekst);
+function naarTeam(uitslag) {
+    return htmlLink(`team.html?team=${uitslag.teamCode}#ronde${uitslag.rondeNummer}`, wedstrijdVoluit(uitslag));
 }
 
 function seizoenVoluit(seizoen) {
@@ -339,12 +337,12 @@ function tijdGeleden(jsonDatum) {
     }
 }
 
-function objectDatumLeesbaar(object) { // TODO i.p.v. datumLeesbaar
+function datumLeesbaar(object) {
     const datum = new Date(object.datum);
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
 
-function datumLeesbaar(jsonDatum) {
+function jsonDatumLeesbaar(jsonDatum) { // TODO overbodig maken
     const datum = new Date(jsonDatum);
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
@@ -478,7 +476,7 @@ async function rondeSelecteren(teamCode, rondeNummer) {
     const ronden = document.getElementById("rondeSelecteren");
     (await localFetch("/ronden/" + competitie.seizoen + "/" + teamCode)).forEach(
         function (ronde) {
-            ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde.datum) + SCHEIDING + "ronde " + ronde.rondeNummer));
+            ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
     ronden.appendChild(htmlOptie(0, ronden.length + " ronden"))
     ronden.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await

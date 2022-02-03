@@ -10,7 +10,8 @@
     console.log("rondeNummer: "+ rondeNummer);
     const totDatum = competitie.ronde[rondeNummer].datum;
     console.log("totDatum: "+ totDatum);
-    document.getElementById("subkop").innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar(totDatum);
+    const subkop = document.getElementById("subkop");
+    subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + jsonDatumLeesbaar(totDatum);
     const r = await ranglijstSorteren(totDatum, await deelnemersRonde(rondeNummer));
     const wit = [];
     const zwart = [];

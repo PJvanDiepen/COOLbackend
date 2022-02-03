@@ -16,8 +16,8 @@
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
     const datums = document.getElementById("datumSelecteren");
     wedstrijden.forEach(
-        function (w) {
-            datums.appendChild(htmlOptie(w.datum, datumLeesbaar(w.datum) + SCHEIDING + wedstrijdVoluit(w)));
+        function (wedstrijd) {
+            datums.appendChild(htmlOptie(wedstrijd.datum, datumLeesbaar(wedstrijd) + SCHEIDING + wedstrijdVoluit(wedstrijd)));
         });
     datums.value = wedstrijdDatum; // werkt uitsluitend na await
     datums.addEventListener("input",
@@ -27,7 +27,7 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
 }
 
 async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
-    kop.innerHTML = "Externe competitie" + SCHEIDING + datumLeesbaar(wedstrijdDatum);
+    kop.innerHTML = "Externe competitie" + SCHEIDING + jsonDatumLeesbaar(wedstrijdDatum);
     let wedstrijdNummer = 0;
     for (const w of wedstrijden) {
         if (w.datum === wedstrijdDatum) {

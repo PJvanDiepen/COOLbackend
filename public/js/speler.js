@@ -59,22 +59,25 @@ async function uitslagenSpeler(kop, lijst) {
     }
     let vorigeUitslag;
     (await localFetch(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`)).forEach(
-        function (u) {
+        function (uitslag) {
             if (t.intern()) {
-                totaal += u.punten;
+                totaal += uitslag.punten;
             }
-            if (u.tegenstanderNummer > 0) {
-                lijst.appendChild(internePartij(u, totaal));
-            } else if ([MEEDOEN, NIET_MEEDOEN, EXTERN_THUIS, EXTERN_UIT].includes(u.partij)) {
+            if (uitslag.tegenstanderNummer > 0) {
+                lijst.appendChild(internePartij(uitslag, totaal));
+            } else if ([MEEDOEN, NIET_MEEDOEN, EXTERN_THUIS, EXTERN_UIT].includes(uitslag.partij)) {
                 // geplande partij overslaan
-            } else if (u.teamCode === INTERNE_COMPETITIE && u.partij === EXTERNE_PARTIJ) {
-                vorigeUitslag = u; // deze uitslag overslaan en combineren met volgende uitslag
-            } else if (vorigeUitslag && vorigeUitslag.datum === u.datum) { // TODO dit gaat fout als bordNummer niet is ingevuld
-                lijst.appendChild(externePartijTijdensInterneRonde(vorigeUitslag, u, totaal));
-            } else if (u.partij === EXTERNE_PARTIJ) {
-                lijst.appendChild(externePartij(u, totaal));
+            } else if (uitslag.teamCode === INTERNE_COMPETITIE && uitslag.partij === EXTERNE_PARTIJ) {
+                vorigeUitslag = uitslag; // deze uitslag overslaan en combineren met volgende uitslag
+            } else if (vorigeUitslag && vorigeUitslag.datum === uitslag.datum) { // TODO dit gaat fout als bordNummer niet is ingevuld
+                console.log("vorigeUitslag --- uitslag");
+                console.log(vorigeUitslag);
+                console.log(uitslag);
+                lijst.appendChild(externePartijTijdensInterneRonde(vorigeUitslag, uitslag, totaal));
+            } else if (uitslag.partij === EXTERNE_PARTIJ) {
+                lijst.appendChild(externePartij(uitslag, totaal));
             } else {
-                lijst.appendChild(geenPartij(u, totaal));
+                lijst.appendChild(geenPartij(uitslag, totaal));
             }
         });
     if (t.aftrek()) {
@@ -100,35 +103,35 @@ kolommen in lijst
 8. voortschrijdend totaal
  */
 
-function internePartij(u, totaal) {
-    const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
-    const tegenstanderKolom = naarSpeler(u.tegenstanderNummer, u.naam);
-    return htmlRij(u.rondeNummer, datumKolom, tegenstanderKolom, "", u.witZwart, u.resultaat, u.punten, totaal);
+function internePartij(uitslag, totaal) {
+    const datumKolom = naarRonde(uitslag);
+    const tegenstanderKolom = naarSpeler(uitslag.tegenstanderNummer, uitslag.naam);
+    return htmlRij(uitslag.rondeNummer, datumKolom, tegenstanderKolom, "", uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
 }
 
-function geenPartij(u, totaal) {
-    const datumKolom = naarRonde(datumLeesbaar(u.datum), u);
-    const omschrijving = u.partij === AFWEZIG              ? "afgezegd"
-                       : u.partij === ONEVEN               ? "oneven"
-                       : u.partij === REGLEMENTAIRE_REMISE ? "vrijgesteld"
-                       : u.partij === REGLEMENTAIR_VERLIES ? "reglementair verlies"
-                       : u.partij === REGLEMENTAIRE_WINST  ? "reglementaire winst" : "???";
-    return htmlRij(u.rondeNummer, datumKolom, omschrijving, "", "", "", u.punten, totaal);
+function geenPartij(uitslag, totaal) {
+    const datumKolom = naarRonde(uitslag);
+    const omschrijving = uitslag.partij === AFWEZIG              ? "afgezegd"
+                       : uitslag.partij === ONEVEN               ? "oneven"
+                       : uitslag.partij === REGLEMENTAIRE_REMISE ? "vrijgesteld"
+                       : uitslag.partij === REGLEMENTAIR_VERLIES ? "reglementair verlies"
+                       : uitslag.partij === REGLEMENTAIRE_WINST  ? "reglementaire winst" : "???";
+    return htmlRij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", "", uitslag.punten, totaal);
 }
 
-function externePartijTijdensInterneRonde(vorigeUitslag, u, totaal) {
-    const datumKolom = naarRonde(datumLeesbaar(u.datum), vorigeUitslag);
-    const tegenstanderKolom = naarTeam(wedstrijdVoluit(u), u);
-    const puntenKolom = vorigeUitslag.punten + u.punten;
-    return htmlRij(vorigeUitslag.rondeNummer, datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, puntenKolom, totaal);
+function externePartijTijdensInterneRonde(vorigeUitslag, uitslag, totaal) {
+    const datumKolom = naarRonde(uitslag);
+    const tegenstanderKolom = naarTeam(uitslag);
+    const puntenKolom = vorigeUitslag.punten + uitslag.punten;
+    return htmlRij(vorigeUitslag.rondeNummer, datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, puntenKolom, totaal);
 }
 
-function externePartij(u, totaal) {
-    const datumKolom = datumLeesbaar(u.datum);
-    const tegenstanderKolom = naarTeam(wedstrijdVoluit(u), u);
-    return htmlRij("", datumKolom, tegenstanderKolom, u.bordNummer, u.witZwart, u.resultaat, u.punten, totaal);
+function externePartij(uitslag, totaal) {
+    const datumKolom = datumLeesbaar(uitslag);
+    const tegenstanderKolom = naarTeam(uitslag);
+    return htmlRij("", datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
 }
 
-function naarRonde(tekst, u) {
-    return htmlLink(`ronde.html?ronde=${u.rondeNummer}`, tekst);
+function naarRonde(uitslag) {
+    return htmlLink(`ronde.html?ronde=${uitslag.rondeNummer}`, datumLeesbaar(uitslag));
 }

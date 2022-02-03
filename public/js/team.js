@@ -24,15 +24,14 @@ async function uitslagenTeam(kop, rondenTabel) {
 
 function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
     if (u) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
-        const datum = datumLeesbaar(u.ronde.datum);
-        const wedstrijd = wedstrijdVoluit(u.ronde);
-        const uitslag = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
-        rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datum, naarTeam(wedstrijd, u.ronde), uitslag));
+        const datumKolom = datumLeesbaar(u.ronde);
+        const uitslagKolom = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
+        rondenTabel.appendChild(htmlRij(u.ronde.rondeNummer, datumKolom, naarTeam(u.ronde), uitslagKolom));
         if (u.uitslagen.length) {
             const div = document.getElementById("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
-            div.appendChild(document.createElement("h2")).innerHTML = ["Ronde " + rondeNummer, datum].join(SCHEIDING);
+            div.appendChild(document.createElement("h2")).innerHTML = ["Ronde " + rondeNummer, datumKolom].join(SCHEIDING);
             const tabel = div.appendChild(document.createElement("table"));
-            tabel.appendChild(htmlRij("", wedstrijd, "", uitslag));
+            tabel.appendChild(htmlRij("", wedstrijdVoluit(u.ronde), "", uitslagKolom));
             for (let uitslag of u.uitslagen) {
                 tabel.appendChild(uitslag);
             }

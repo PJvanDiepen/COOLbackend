@@ -2,6 +2,7 @@
 
 const apiCalls = [
     `/ronden/${competitie.seizoen}/${competitie.competitie}`, // TODO met documentatie
+    `/${uuidToken}/gebruikers`,
     `/${uuidToken}/rondenummers/2122/int`,
     `/gewijzigd`,
     `/${uuidToken}/rondenummers/2122/1`,
