@@ -5,13 +5,10 @@
  */
 
 (async function() {
-    console.log("indelen.js");
     const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde + 1;
-    console.log("rondeNummer: "+ rondeNummer);
     const totDatum = competitie.ronde[rondeNummer].datum;
-    console.log("totDatum: "+ totDatum);
     const subkop = document.getElementById("subkop");
-    subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + jsonDatumLeesbaar(totDatum);
+    subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
     const r = await ranglijstSorteren(totDatum, await deelnemersRonde(rondeNummer));
     const wit = [];
     const zwart = [];
@@ -107,9 +104,8 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
         partijen.appendChild(htmlRij("", naarSpeler(r[oneven]), "", "oneven"));
     }
     let bord = wit.length;
-    for (const speler of extern) {
-        // bord++;  TODO splitsen in uit (geen bordnummer) en thuis (wel bordnummer)
-        partijen.appendChild(htmlRij(++bord, naarSpeler(speler), "extern", ""));
+    for (const speler of extern) { // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
+        partijen.appendChild(htmlRij(speler.partij === EXTERN_THUIS ? ++bord : "", naarSpeler(speler), "extern", ""));
     }
 }
 
@@ -181,7 +177,7 @@ function indelenRonde(r, wit, zwart) {
 }
 
 function nietTegen(r, i, j) {
-    const nogNietTegen = [101, 103, 7269834]; // Ramon Witte, Charles Stoorvogel, Arie Boots
+    const nogNietTegen = [101, 103]; // Ramon Witte, Charles Stoorvogel TODO test ronde 11 dit seizoen
     if (!r[i].tegen(r[j])) {
         return true;
     } else if (versieIndelen > 0) { // oudere versies zonder heuristieken
@@ -197,7 +193,7 @@ function nietTegen(r, i, j) {
             console.log(`${r[i].naam} te sterk voor ${r[j].naam}`);
             return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
         }
-    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) {
+    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 4) {
         if (r[i].intern() / r[j].intern() > 2) {
             console.log(`${r[j].naam} te sterk voor ${r[i].naam}`);
             return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
@@ -207,6 +203,37 @@ function nietTegen(r, i, j) {
 }
 
 const indelenFun = [
+    ["indelen met heuristieken en niet ingedeelde spelers opnieuw verwerken", function (r, wit, zwart) {
+        const oneven = onevenSpeler(r);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+        if (nietIngedeeld.length > 0) {
+            let pogingen = 0
+            let poging = [];
+            let speler = 999;
+            while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 10) {
+                console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen);
+                opnieuwIndelen(wit, zwart);
+                speler = eenNietIngedeeldeSpeler(nietIngedeeld, poging);
+                spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
+                opnieuwIndelen(wit, zwart);
+                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
+                    // toevoegen aan poging
+                }
+                for (const speler of poging) {
+                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                }
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- mislukt ---");
+            }
+        }
+        return oneven;
+    }],
     ["indelen met heuristieken en 10 x herhalen indien mislukt", function (r, wit, zwart) {
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
@@ -299,6 +326,7 @@ function vooruitIndelen(r, wit, zwart, oneven) {
 }
 
 function achteruitIndelen(i, r, wit, zwart, oneven) {
+    console.log(`--- ${r[i].naam} achteruit indelen ---`);
     let j = i - 1;
     while (j >= 0 && (ingedeeld(j, wit, zwart, oneven) || nietTegen(r, i, j))) {
         j--; // vorige indien al ingedeeld of oneven of mag niet tegen
@@ -314,8 +342,48 @@ function achteruitIndelen(i, r, wit, zwart, oneven) {
     }
 }
 
+const VOORUIT = 1;
+const ACHTERUIT = -1;
+
+function spelerIndelen(speler, richting, r, wit, zwart, oneven) {
+    console.log(`--- ${r[speler].naam} ${richting === VOORUIT ? "vooruit" : "achteruit"} indelen ---`);
+    let j = speler + richting;
+    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j]))) { // zonder heuristieken
+        j = j + richting; // vorige indien al ingedeeld of oneven of mag niet tegen
+    }
+    if (j >= 0 && j < r.length) {
+        if (r[speler].metWit(r[j])) {
+            wit.push(speler);
+            zwart.push(j);
+        } else {
+            wit.push(j);
+            zwart.push(speler);
+        }
+        return true;
+    } else {
+        return false;
+    }
+}
+
 function ingedeeld(speler, wit, zwart, oneven) {
     return wit.includes(speler) || zwart.includes(speler) || (oneven && speler === oneven);
+}
+
+function opnieuwIndelen(wit, zwart) {
+    while (wit.length > 0) {
+        wit.pop();
+        zwart.pop();
+    }
+}
+
+function eenNietIngedeeldeSpeler(nietIngedeeld, poging) {
+    for (const speler of nietIngedeeld) {
+        if (!poging.includes(speler)) {
+            poging.push(speler);
+            return speler;
+        }
+    }
+    return 0;
 }
 
 /**

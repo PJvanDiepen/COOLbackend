@@ -340,11 +340,6 @@ function datumLeesbaar(object) {
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
 
-function jsonDatumLeesbaar(jsonDatum) { // TODO overbodig maken
-    const datum = new Date(jsonDatum);
-    return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
-}
-
 /**
  * datumSQL maakt datum, die geschikt is voor SQL om door te geven aan de backend
  * indien er een gegeven datum is, moet het een jsonDatum zijn die komt van de backend
@@ -467,22 +462,6 @@ async function teamSelecteren(teamCode) {
     teams.addEventListener("input",
         function () {
             naarAnderePagina(teams.value === INTERNE_COMPETITIE ? "ranglijst.html" : "team.html?team=" + teams.value);
-        });
-}
-
-async function rondeSelecteren(teamCode, rondeNummer) {
-    const ronden = document.getElementById("rondeSelecteren");
-    (await localFetch("/ronden/" + competitie.seizoen + "/" + teamCode)).forEach(
-        function (ronde) {
-            ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde) + SCHEIDING + "ronde " + ronde.rondeNummer));
-        });
-    ronden.appendChild(htmlOptie(0, ronden.length + " ronden"))
-    ronden.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
-    ronden.addEventListener("input",
-        function () {
-            if (ronden.value) {
-                naarAnderePagina("ronde.html?ronde=" + ronden.value);
-            }
         });
 }
 

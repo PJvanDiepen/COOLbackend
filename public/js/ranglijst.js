@@ -39,6 +39,23 @@ async function spelersLijst(kop, lijst) {
     });
 }
 
+async function rondeSelecteren(teamCode, rondeNummer) {
+    competitie.team = competitie.competitie;
+    const ronden = document.getElementById("rondeSelecteren");
+    (await localFetch("/ronden/" + competitie.seizoen + "/" + teamCode)).forEach(
+        function (ronde) {
+            ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde) + SCHEIDING + "ronde " + ronde.rondeNummer));
+        });
+    ronden.appendChild(htmlOptie(0, ronden.length + " ronden"))
+    ronden.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
+    ronden.addEventListener("input",
+        function () {
+            if (ronden.value) {
+                naarAnderePagina("ronde.html?ronde=" + ronden.value);
+            }
+        });
+}
+
 function versieSelecteren(versies) {  // TODO: versies en teksten in database
     versies.appendChild(htmlOptie(0, "versie 0 volgens reglement van het seizoen"));
     versies.appendChild(htmlOptie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));

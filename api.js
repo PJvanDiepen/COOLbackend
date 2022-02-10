@@ -52,6 +52,7 @@ module.exports = router => {
     });
 
     /*
+    TODO verwijderen
     -- volgende externe wedstrijd
     select datum from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') and partij in ('m', 'n') order by datum limit 1;
      */
@@ -97,7 +98,7 @@ module.exports = router => {
         let deelnemers = {};
         if (gebruiker.juisteRechten(GEREGISTREERD)) { // extern ingedeeld uitsluitend voor geregistreerde gebruikers
             deelnemers = await Uitslag.query()
-                .select('naam', 'uitslag.knsbNummer')
+                .select('naam', 'uitslag.knsbNummer', 'uitslag.partij')
                 .join('persoon', 'persoon.knsbNummer', 'uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [EXTERN_THUIS, EXTERN_UIT])
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
@@ -120,7 +121,7 @@ module.exports = router => {
     router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
             .where('team.seizoen', ctx.params.seizoen)
-            .andWhere('team.teamCode', '<>', ''); // niet geen team
+            .andWhere('team.teamCode', '<>', '') // niet geen team
     });
 
     /*
@@ -494,7 +495,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    router.get('/:uuidToken/partij/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
+    // TODO EXTERN_UIT, EXTERN_THUIS, gewoon MEEDOEN of NIET_MEEDOEN en omgekeerd PvD
+
+    router.get('/:uuidToken/aanwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) {

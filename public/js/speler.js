@@ -70,9 +70,9 @@ async function uitslagenSpeler(kop, lijst) {
             } else if (uitslag.teamCode === INTERNE_COMPETITIE && uitslag.partij === EXTERNE_PARTIJ) {
                 vorigeUitslag = uitslag; // deze uitslag overslaan en combineren met volgende uitslag
             } else if (vorigeUitslag && vorigeUitslag.datum === uitslag.datum) { // TODO dit gaat fout als bordNummer niet is ingevuld
-                console.log("vorigeUitslag --- uitslag");
-                console.log(vorigeUitslag);
-                console.log(uitslag);
+                // console.log("vorigeUitslag --- uitslag");
+                // console.log(vorigeUitslag);
+                // console.log(uitslag);
                 lijst.appendChild(externePartijTijdensInterneRonde(vorigeUitslag, uitslag, totaal));
             } else if (uitslag.partij === EXTERNE_PARTIJ) {
                 lijst.appendChild(externePartij(uitslag, totaal));

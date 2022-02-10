@@ -8,7 +8,7 @@
 })();
 
 /*
-    verwerk gebruiker=[andereGebruiker]&naamGebruiker=[naamGebruiker]&team=teamCode&ronde=rondeNummer&partij=[MEEDOEN of NIET_MEEDOEN]
+    verwerk gebruiker=<andereGebruiker>&naamGebruiker=<naamGebruiker>&team=<teamCode>&ronde=<rondeNummer>&partij=[MEEDOEN of NIET_MEEDOEN]
  */
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
@@ -37,12 +37,15 @@ async function agenda(kop, lijst) {
     }
 }
 
+/*
+    verwerk gebruiker=<andereGebruiker>&naamGebruiker=<naamGebruiker>&team=<teamCode>&ronde=<rondeNummer>&partij=[MEEDOEN of NIET_MEEDOEN]
+ */
 async function agendaMutatie(knsbNummer) {
     const teamCode = params.get("team");
     const rondeNummer = Number(params.get("ronde"));
     const partij = params.get("partij");
     if (teamCode && rondeNummer && partij) {
-        await serverFetch(`/${uuidToken}/partij/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
+        await serverFetch(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
     }
     return {"teamCode": teamCode, "rondeNummer": rondeNummer};
 }

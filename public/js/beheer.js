@@ -83,7 +83,7 @@ function gebruikerFunctie(lid) {
     if (!lid.datumEmail) {
         return KRUISJE; // TODO eventueel verwijderen
     } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
-        return jsonDatumLeesbaar(lid.datumEmail);
+        return datumLeesbaar({datum: lid.datumEmail});
     } else if (Number(lid.mutatieRechten) === BEHEERDER) {
         return "systeembeheerder";
     } else if (Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {

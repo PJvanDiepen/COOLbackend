@@ -1,6 +1,7 @@
 "use strict";
 
 (async function() {
+    competitie.team = competitie.competitie;
     const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde;
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
@@ -28,7 +29,6 @@
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${competitie.seizoen}/int/${rondeNummer}`);
         }]);
-    rondeSelecteren(INTERNE_COMPETITIE, rondeNummer);
     await uitslagenRonde(rondeNummer, document.getElementById("uitslagen"));
     await wedstrijdenBijRonde(rondeNummer, document.getElementById("wedstrijden"));
     document.getElementById("kop").innerHTML =
