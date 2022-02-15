@@ -249,14 +249,12 @@ function htmlVerwerkt(htmlNode, toevoegen) {
     if (toevoegen) {
         htmlNode.classList.add("verwerkt")
     }
-    return htmlNode;
 }
 
 function htmlVet(htmlNode, toevoegen) {
     if (toevoegen) {
         htmlNode.classList.add("vet")
     }
-    return htmlNode;
 }
 
 function htmlRij(...kolommen) {

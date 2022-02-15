@@ -365,6 +365,17 @@ select r.*, u.bordNummer, u.partij, u.witZwart, u.tegenstanderNummer, u.resultaa
 where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam, 'ipv')
 order by r.datum;
 
+set @seizoen = '2122';
+set @knsbNummer = 7758014; -- Alex Albrecht
+set @datum = '2022-02-15';
+
+-- uitslagen / ronden op dezelfde datum
+select u.teamCode, u.rondeNummer, u.anderTeam, u.partij, r.uithuis 
+  from uitslag u 
+  join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer  
+where u.seizoen = @seizoen and u.knsbNummer = @knsbNummer and u.datum = @datum 
+order by u.teamCode, u.rondeNummer;
+
 -- alle externe wedstrijden van het seizoen
 select r.*, bond, poule, omschrijving, borden, naam from ronde r
 join team t on r.seizoen = t.seizoen and r.teamCode = t.teamCode

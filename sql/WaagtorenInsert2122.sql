@@ -221,6 +221,9 @@ update speler set nhsbTeam = 'n4' where seizoen = '2122' and knsbNummer in (
 );
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
+('2122', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
+
+insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ('2122', '', '', '', 'geen team', 0, 0),
 ('2122', '1', 'k', '1a', 'KNSB 1a', 10, 6214153),
 ('2122', '2', 'k', '3d', 'KNSB 3d', 8, 7129991),
@@ -231,12 +234,20 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 ('2122', 'n3', 'n', '2a', 'NHSB 2b', 8, 6214153),
 ('2122', 'n4', 'n', '3b', 'NHSB 3c', 6, 6212404),
 ('2122', 'int', 'i', 'nt', 'interne competitie', 0, 0),
-('2122', 'ipv', 'i', 'pv', 'rapid', 0, 0);
+('2122', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
-('2122', 'ipv', '4', 't', 'rapid ronde 4, 5 en 6', 'Alkmaar', '2022-02-22'),
-('2122', 'ipv', '5', 't', 'rapid ronde 7, 8 en 9', 'Alkmaar', '2022-05-03'),
-('2122', 'ipv', '6', 't', 'snelschaken', 'Alkmaar', '2022-06-07'),
+('2122', 'ira', '1', 't', '', 'Alkmaar', '2021-10-19'),
+('2122', 'ira', '2', 't', '', 'Alkmaar', '2021-10-19'),
+('2122', 'ira', '3', 't', '', 'Alkmaar', '2021-10-19'),
+('2122', 'ira', '4', 't', '', 'Alkmaar', '2022-02-22'),
+('2122', 'ira', '5', 't', '', 'Alkmaar', '2022-02-22'),
+('2122', 'ira', '6', 't', '', 'Alkmaar', '2022-02-22'),
+('2122', 'ira', '7', 't', '', 'Alkmaar', '2022-05-03'),
+('2122', 'ira', '8', 't', '', 'Alkmaar', '2022-05-03'),
+('2122', 'ira', '9', 't', '', 'Alkmaar', '2022-05-03');
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
 ('2122', 'int', '1', 't', '', 'Alkmaar', '2021-09-07'),
 ('2122', 'int', '2', 't', '', 'Alkmaar', '2021-09-14'),
 ('2122', 'int', '3', 't', '', 'Alkmaar', '2021-09-21'),

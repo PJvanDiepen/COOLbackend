@@ -20,13 +20,14 @@ async function agenda(kop, lijst) {
         wedstrijden = await agendaLezen(andereGebruiker);
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
-        if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN) {
+        if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN || w.partij === EXTERN_THUIS || w.partij === EXTERN_UIT) {
             const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`); // actuele situatie
-            const partij = w.partij === MEEDOEN ? NIET_MEEDOEN : w.partij === NIET_MEEDOEN ? MEEDOEN : w.partij;
-            const aanwezig = w.partij === MEEDOEN ? VINKJE : w.partij === NIET_MEEDOEN ? STREEP : FOUTJE;
-            const link = htmlVerwerkt(htmlLink(
-                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&partij=${partij}`, aanwezig),
-                w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
+            const partij = w.partij === NIET_MEEDOEN ? MEEDOEN : NIET_MEEDOEN;
+            // TODO gebruiker en naamGebruiker anders doorgeven
+            const link = htmlLink(
+                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datumSQL(w.datum)}&partij=${partij}`,
+                w.partij === NIET_MEEDOEN ? STREEP : VINKJE);
+            htmlVerwerkt(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.appendChild(htmlRij(
                 w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
                 datumLeesbaar(w),
@@ -43,9 +44,10 @@ async function agenda(kop, lijst) {
 async function agendaMutatie(knsbNummer) {
     const teamCode = params.get("team");
     const rondeNummer = Number(params.get("ronde"));
+    const datum = params.get("datum");
     const partij = params.get("partij");
     if (teamCode && rondeNummer && partij) {
-        await serverFetch(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}`);
+        await serverFetch(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
     }
     return {"teamCode": teamCode, "rondeNummer": rondeNummer};
 }

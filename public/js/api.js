@@ -5,6 +5,8 @@ const apiCalls = [
     `/${uuidToken}/gebruikers`,
     `/${uuidToken}/rondenummers/2122/int`,
     `/gewijzigd`,
+    `/${uuidToken}/kalender/2122/7758014`, // agenda  Alex Albrecht
+
     `/${uuidToken}/rondenummers/2122/1`,
     `/${uuidToken}/rondenummers/2122/2`,
     `/${uuidToken}/rondenummers/2122/3`,

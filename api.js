@@ -495,20 +495,53 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    // TODO EXTERN_UIT, EXTERN_THUIS, gewoon MEEDOEN of NIET_MEEDOEN en omgekeerd PvD
-
-    router.get('/:uuidToken/aanwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij', async function (ctx) {
+    // TODO EXTERN_UIT, EXTERN_THUIS, MEEDOEN of NIET_MEEDOEN correct invullen voor alle wedstijdenen op zelfde datum
+    /*
+    -- uitslagen / ronden op dezelfde datum
+    select u.teamCode, u.rondeNummer, u.anderTeam, u.partij, r.uithuis
+      from uitslag u
+      join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
+    where u.seizoen = @seizoen and u.knsbNummer = @knsbNummer and u.datum = @datum
+    order by u.teamCode, u.rondeNummer;
+     */
+    router.get('/:uuidToken/aanwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:datum/:partij', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) {
             const uitslag = await Uitslag.query()
-                .select('uitslag.partij', 'uitslag.datum')
+                .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
-            if ((uitslag.partij === MEEDOEN && ctx.params.partij === NIET_MEEDOEN) ||
-                (uitslag.partij === NIET_MEEDOEN && ctx.params.partij === MEEDOEN)) { // uitsluitend aanmelden of afzeggen
-                aantal = await Uitslag.query()
+            if (aanmeldenAfzeggen(uitslag.partij, ctx.params.partij)) {
+                let partij = ctx.params.partij;
+                if (partij === MEEDOEN) {
+                    const ronden = await Uitslag.query()
+                        .select('uitslag.teamCode', 'uitslag.rondeNummer', 'uitslag.anderTeam', 'ronde.uithuis')
+                        .join('ronde', function(join) {
+                            join.on('uitslag.seizoen', 'ronde.seizoen')
+                                .andOn('uitslag.teamCode', 'ronde.teamCode')
+                                .andOn('uitslag.rondeNummer','ronde.rondeNummer')})
+                        .where('uitslag.seizoen', ctx.params.seizoen)
+                        .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                        .andWhere('uitslag.datum', ctx.params.datum)
+                        .orderBy(['uitslag.teamCode', 'uitslag.teamCode']);
+                    for (const ronde of ronden) {
+                        if (ronde.teamCode === ctx.params.teamCode && Number(ronde.rondeNummer) === Number(ctx.params.rondeNummer)) {
+                            partij = ronde.teamCode  === ronde.anderTeam ? MEEDOEN // meedoen in dezelfde competitie
+                                : ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
+                        } else {
+                            if (await Uitslag.query()
+                                .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
+                                .patch({partij: NIET_MEEDOEN})) {
+                                aantal++;
+                            }
+                        }
+                    }
+                }
+                if (await Uitslag.query()
                     .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
-                    .patch({partij: ctx.params.partij});
+                    .patch({partij: partij})) {
+                    aantal++;
+                }
                 await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
             }
         }
@@ -608,6 +641,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+      uitslag wijzigen
+     */
     router.get('/:uuidToken/uitslag/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer/:resultaat', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -795,6 +831,16 @@ const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij thuis op d
 const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op dinsdag
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
+
+function aanmeldenAfzeggen(oud, nieuw) {
+    if (oud === NIET_MEEDOEN) { // aanmelden
+        return nieuw === MEEDOEN;
+    } else  if (oud === MEEDOEN || oud === EXTERN_THUIS || oud === EXTERN_UIT) { // afzeggen
+        return nieuw === NIET_MEEDOEN;
+    }
+    return false;
+}
+
 // uitslag.witZwart
 const WIT = "w";
 const ZWART = "z";
@@ -802,15 +848,17 @@ const ZWART = "z";
 const REMISE = "½";
 const WINST = "1";
 const VERLIES = "0";
+// uitslag.uithuis
+const THUIS = "t";
+const UIT = "u";
 
 function resultaatCorrect(resultaat) {
     return resultaat === REMISE || resultaat === WINST || resultaat === VERLIES || resultaat === "";
 }
 
-function resultaatDatabase(eigenResultaat, tegenstanderResultaat) {
-    return resultaatCorrect(eigenResultaat) &&
-        resultaatCorrect(tegenstanderResultaat) &&
-        resultaatTegenstander(eigenResultaat) === tegenstanderResultaat; // database consistent
+function uitslagCorrect(eigenResultaat, tegenstanderResultaat) {
+    return resultaatCorrect(eigenResultaat) && resultaatCorrect(tegenstanderResultaat) &&
+        resultaatTegenstander(eigenResultaat) === tegenstanderResultaat; // indien wit wint, verliest zwart en omgekeerd
 }
 
 function resultaatTegenstander(resultaat) {
@@ -824,7 +872,7 @@ function resultaatTegenstander(resultaat) {
 }
 
 function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, allesWijzigen) {
-    if (resultaatCorrect(resultaat) && resultaatDatabase(eigenResultaat, tegenstanderResultaat)) {
+    if (resultaatCorrect(resultaat) && uitslagCorrect(eigenResultaat, tegenstanderResultaat)) {
         if (resultaat === "") {
             return allesWijzigen; // gebruiker mag resultaat wissen indien gebruiker alles mag wijzigen
         } else {
