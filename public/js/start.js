@@ -5,6 +5,7 @@
  */
 
 (async function() {
+    await init();
     const plaatje = document.getElementById("plaatje");
     if (competitie.vereniging === "Waagtoren") {
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));

@@ -5,6 +5,7 @@
  */
 
 (async function() {
+    await init();
     const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde + 1;
     const totDatum = competitie.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");

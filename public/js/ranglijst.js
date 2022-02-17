@@ -7,6 +7,7 @@
 const alleLeden = Number(params.get("leden"));
 
 (async function() {
+    await init();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
@@ -20,6 +21,7 @@ const alleLeden = Number(params.get("leden"));
 async function spelersLijst(kop, lijst) {
     const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde;
     const totDatum = rondeNummer === competitie.laatsteRonde ? new Date() : competitie.ronde[rondeNummer + 1].datum;
+    // TODO competitie in kop
     kop.innerHTML = "Ranglijst" + SCHEIDING + seizoenVoluit(competitie.seizoen) + SCHEIDING + "na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(totDatum)).forEach(function (t, i) {

@@ -86,10 +86,11 @@ const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
-(async function() {
+async function init() {
     await gebruikerVerwerken();
     await rondenVerwerken();
-})();
+    console.log("const.js: init")
+}
 
 /**
  * 0-0-0.nl genereert een uuid om de gebruiker te herkennen.
@@ -146,21 +147,22 @@ function volgendeSessie(json) {
 async function rondenVerwerken() {
     competitie.ronde = [];
     competitie.vorigeRonde = 0;
+    competitie.huidigeRonde = 0;
     const ronden = await localFetch(`/ronden/${competitie.seizoen}/${competitie.team}`);
     for (const ronde of ronden) {
         competitie.ronde[ronde.rondeNummer] = ronde;
         competitie.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
         if (ronde.resultaten > 0) {
             competitie.vorigeRonde = ronde.rondeNummer;
+        } else if (competitie.huidigeRonde === 0) {
+            competitie.huidigeRonde = ronde.rondeNummer;
+            if (await serverFetch( // actuele situatie
+                `/indeling/${competitie.seizoen}/${competitie.team}/${competitie.laatsteRonde}`)) {
+                competitie.ronde[competitie.huidigeRonde].resultaten = 0; // indeling zonder resultaten
+                console.log("resultaten = 0");
+            }
         }
     }
-    // TODO huidigeRonde: ronde.resultaten = 0 en definitieve indeling, volgendeRonde
-}
-
-function rondeInfo(rondeNummer, aantalRonden) {
-    const rondeDatum = ronden[rondeNummer - 1].datum;
-    const totDatum = rondeNummer < aantalRonden ? ronden[rondeNummer].datum : new Date();
-    return [rondeNummer, rondeDatum, totDatum];
 }
 
 /**
@@ -176,10 +178,11 @@ function rondeInfo(rondeNummer, aantalRonden) {
  * @param menuKeuzes
  * @returns {Promise<void>}
  */
-function menu(...menuKeuzes) {
+async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
-    let functies = [function () { }];
+    let functies = [function () {
+    }];
     for (let [minimumRechten, tekst, functie] of menuKeuzes) {
         if (minimumRechten <= gebruiker.mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
@@ -190,7 +193,7 @@ function menu(...menuKeuzes) {
         }
     }
     acties.addEventListener("input",
-        function() {
+        function () {
             functies[acties.value]();
             acties.value = 0;
         });

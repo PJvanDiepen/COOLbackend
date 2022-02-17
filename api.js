@@ -69,6 +69,17 @@ module.exports = router => {
         ctx.body = volgende.map(function (uitslag) {return uitslag.datum})[0]; // TODO zonder map en function
     });
 
+    router.get('/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const uitslagen = await Uitslag.query()
+            .where('uitslag.seizoen', ctx.params.seizoen)
+            .andWhere('uitslag.teamCode', ctx.params.teamCode)
+            .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+            .andWhere('uitslag.partij', INTERNE_PARTIJ)
+            .whereNotIn('uitslag.resultaat', [WINST, VERLIES, REMISE])
+            .limit(1);
+        ctx.body = uitslagen.length; // 1 = indeling zonder uitslagen, 0 = geen indeling
+    });
+
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
@@ -80,7 +91,7 @@ module.exports = router => {
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.partij', MEEDOEN);
         }
-        if (deelnemers.length === 0) { // voor opnieuw indelen
+        if (deelnemers.length === 0) { // voor opnieuw indelen reeds gespeelde ronde
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
@@ -229,7 +240,7 @@ module.exports = router => {
       from ronde r
       join s on r.seizoen = s.seizoen
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam, 'ipv')
+    where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam, 'ira')
     order by r.datum;
      */
     router.get('/:uuidToken/kalender/:seizoen/:knsbNummer', async function (ctx) {
@@ -258,8 +269,8 @@ module.exports = router => {
                  join.on('u.seizoen', 'ronde.seizoen')
                      .andOn('u.teamCode', 'ronde.teamCode')
                      .andOn('u.rondeNummer', 'ronde.rondeNummer')})
-                .whereIn('ronde.teamCode',
-                    [INTERNE_COMPETITIE, ref('s.knsbTeam'), ref('s.nhsbTeam'), GEEN_COMPETITIE])
+                .whereIn('ronde.teamCode', // externe teams en interne competities TODO alle interne competities
+                    [INTERNE_COMPETITIE, ref('s.knsbTeam'), ref('s.nhsbTeam'), "ira"])
                 .andWhere('ronde.seizoen', ctx.params.seizoen)
                 .orderBy('ronde.datum');
         } else {
@@ -805,7 +816,7 @@ module.exports = router => {
                     .groupBy('uitslag.rondeNummer')
             })
             .select('ronde.*',
-                {resultaten: fn('ifnull', ref('aantalResultaten'), -1)})
+                {resultaten: fn('ifnull', ref('aantalResultaten'), -1)}) // TODO zie /indeling
             .leftJoin('u', function(join) {
                 join.on('u.seizoen', 'ronde.seizoen')
                     .andOn('u.teamCode', 'ronde.teamCode')

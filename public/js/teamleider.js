@@ -4,6 +4,7 @@
     verwerk datum=[datum]
  */
 (async function() {
+    await init();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);

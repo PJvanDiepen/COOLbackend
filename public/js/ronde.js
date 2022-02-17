@@ -1,8 +1,9 @@
 "use strict";
 
 (async function() {
+    await init();
     competitie.team = competitie.competitie;
-    const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde;
+    const rondeNummer = bepaalRondeNummer();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }],
@@ -34,6 +35,28 @@
     document.getElementById("kop").innerHTML =
         "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(competitie.ronde[rondeNummer]);
 })();
+
+function bepaalRondeNummer() {
+    let rondeNummer = Number(params.get("ronde"));
+
+    console.log("--- dit begrijp ik niet ---")
+    console.log(competitie.huidigeRonde);
+    let ronde = competitie.ronde[competitie.huidigeRonde];
+    console.log(ronde);
+    console.log("--- resultaten: 0 ---")
+    console.log(ronde.resultaten);
+    console.log("--- resultaten: -1 ---")
+
+    console.log(competitie.ronde);
+
+    if (rondeNummer) {
+        return rondeNummer;
+    } else if (competitie.huidigeRonde && competitie.ronde[competitie.huidigeRonde].resultaten === 0) {
+        return competitie.huidigeRonde; // indien indeling definitief, maar nog geen uitslagen
+    } else {
+        return competitie.vorigeRonde;
+    }
+}
 
 /*
   -- uitslagen interne competitie per ronde
