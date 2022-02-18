@@ -6,11 +6,12 @@
 
 (async function() {
     await init();
-    const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde + 1;
+    const rondeNummer = Number(params.get("ronde")) || competitie.competitie === RAPID_COMPETTIE ? 4 : competitie.huidigeRonde; // TODO verwijder 4
     const totDatum = competitie.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");
     subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
-    const r = await ranglijstSorteren(totDatum, await deelnemersRonde(rondeNummer));
+    const deelnemers = await deelnemersRonde(rondeNummer);
+    const r = await ranglijstSorteren(totDatum, deelnemers);
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
@@ -21,7 +22,7 @@
         oneven = indelenRonde(r, wit, zwart);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const extern = await serverFetch(`/${uuidToken}/externintern/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
+    const extern = await serverFetch(`/${uuidToken}/extern/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
     partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), extern);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
@@ -48,18 +49,41 @@
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);
-versieSelecteren(document.getElementById("versies"), rondeNummer);
+    spelerSelecteren(rondeNummer, deelnemers);
+    versieSelecteren(document.getElementById("versies"), rondeNummer);
 })();
+
+async function spelerSelecteren(rondeNummer, deelnemers) {
+    const spelers = document.getElementById("spelerSelecteren");
+    spelers.appendChild(htmlOptie(0, "selecteer naam"));
+    (await localFetch(`/spelers/${competitie.seizoen}`)).forEach(
+        function (persoon) {
+            const naam = persoon.naam + (deelnemers.includes(persoon.knsbNummer) ?  KRUISJE : "");
+            spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), naam));
+        });
+    // spelers.value = competitie.speler; // werkt uitsluitend na await
+    spelers.addEventListener("input",async function () {
+        const knsbNummer = spelers.options[spelers.selectedIndex].value; // = spelers.value;
+        const partij = deelnemers.includes(knsbNummer) ? NIET_MEEDOEN : MEEDOEN;
+        const datum = datumSQL(competitie.ronde[rondeNummer].datum);
+        console.log(`/${uuidToken}/aanwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
+        await serverFetch(
+            `/${uuidToken}/aanwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
+        // naarZelfdePagina();
+    });
+}
 
 async function deelnemersRonde(rondeNummer) {
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        return await serverFetch(`/${uuidToken}/deelnemers/${competitie.seizoen}/${INTERNE_COMPETITIE}/${rondeNummer}`); // actuele situatie
+        return await serverFetch(`/${uuidToken}/deelnemers/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`); // actuele situatie
     } else {
         return [0];
     }
 }
 
 async function ranglijstSorteren(totDatum, deelnemers) {
+    console.log("--- ranglijstSorteren ---");
+    console.log(deelnemers);
     const lijst = await ranglijst(totDatum, deelnemers);
     let gesorteerdTot = 1;
     while (gesorteerdTot < lijst.length && lijst[gesorteerdTot - 1].zonderAftrek() >= lijst[gesorteerdTot].zonderAftrek()) {

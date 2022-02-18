@@ -8,7 +8,7 @@
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
-    const wedstrijdDatum = params.get("datum") || await localFetch("/extern/" + competitie.seizoen);  // TODO verwijderen
+    const wedstrijdDatum = params.get("datum");
     const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);
     await wedstrijdenOverzicht(document.getElementById("kop"), wedstrijden, wedstrijdDatum);

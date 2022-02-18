@@ -19,6 +19,23 @@
         document.getElementById("status"));
 })();
 
+async function spelerSelecteren(seizoen) {
+    const spelers = document.getElementById("spelerSelecteren");
+    spelers.appendChild(htmlOptie(0, "selecteer naam"));
+    (await localFetch(`/spelers/${seizoen}`)).forEach(
+        function (persoon) {
+            spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), persoon.naam));
+        });
+    spelers.value = competitie.speler; // werkt uitsluitend na await
+    spelers.addEventListener("input",
+        function () {
+            const i = spelers.selectedIndex;
+            sessionStorage.setItem("speler", spelers.options[i].value); // = spelers.value;
+            sessionStorage.setItem("naam", spelers.options[i].text )
+            naarZelfdePagina();
+        });
+}
+
 // TODO voor iemand anders aanvraag doen (uitsluitend door systeembeheerder)
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {

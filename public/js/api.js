@@ -6,7 +6,9 @@ const apiCalls = [
     `/${uuidToken}/rondenummers/2122/int`,
     `/gewijzigd`,
     `/${uuidToken}/kalender/2122/7758014`, // agenda  Alex Albrecht
-
+    `/${uuidToken}/kalender/2122/6212404`, // agenda  PvD
+    `/${uuidToken}/deelnemers/2122/ira/4`,
+    `/${uuidToken}/externintern/int/10`,
     `/${uuidToken}/rondenummers/2122/1`,
     `/${uuidToken}/rondenummers/2122/2`,
     `/${uuidToken}/rondenummers/2122/3`,

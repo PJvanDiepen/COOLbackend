@@ -22,17 +22,17 @@ async function agenda(kop, lijst) {
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN || w.partij === EXTERN_THUIS || w.partij === EXTERN_UIT) {
-            const deelnemers = await serverFetch(`/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`); // actuele situatie
+            const deelnemers = await serverFetch( // actuele situatie
+                `/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
             const partij = w.partij === NIET_MEEDOEN ? MEEDOEN : NIET_MEEDOEN;
-            // TODO gebruiker en naamGebruiker anders doorgeven
-            const link = htmlLink(
+            const link = htmlLink( // TODO gebruiker en naamGebruiker anders doorgeven
                 `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datumSQL(w.datum)}&partij=${partij}`,
                 w.partij === NIET_MEEDOEN ? STREEP : VINKJE);
             htmlVerwerkt(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.appendChild(htmlRij(
-                w.teamCode === INTERNE_COMPETITIE ? w.rondeNummer : "",
+                interneCompetitie(w.teamCode) ? w.rondeNummer : "",
                 datumLeesbaar(w),
-                w.teamCode === INTERNE_COMPETITIE ? "interne competitie" : wedstrijdVoluit(w), // TODO of teamVoluit ?
+                interneCompetitie(w.teamCode) ? teamVoluit(w.teamCode) : wedstrijdVoluit(w),
                 deelnemers.length,
                 link));
         }
@@ -61,10 +61,13 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
     for (const w of wedstrijden) {
         if (!w.partij) {
-            if (datumSQL(w.datum) > datumSQL() || w.teamCode === INTERNE_COMPETITIE) { // uitsluitend voor interne competitie afwezig invullen
-                const afwezig = datumSQL(w.datum) > datumSQL() ? NIET_MEEDOEN : AFWEZIG; // wel altijd niet meedoen invullen
+            const datum = datumSQL(w.datum);
+            const datumGeweest = datum > datumSQL();
+            if (datumGeweest || interneCompetitie(w.teamCode)) { // uitsluitend voor interne competities afwezig invullen
+                const afwezig = datumGeweest ? NIET_MEEDOEN : AFWEZIG; // wel altijd niet meedoen invullen
+                const competitie = interneCompetitie(w.teamCode) ? w.teamCode : INTERNE_COMPETITIE;
                 const mutaties = await serverFetch(
-                    `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datumSQL(w.datum)}/int`);
+                    `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datum}/${competitie}`);
                 aanvullingen += mutaties;
             }
         }

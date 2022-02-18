@@ -358,12 +358,12 @@ order by naam;
 with
   s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
   u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
-select r.*, u.bordNummer, u.partij, u.witZwart, u.tegenstanderNummer, u.resultaat
+select r.*, u.partij
   from ronde r
   join s on r.seizoen = s.seizoen
   left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-where r.seizoen = @seizoen and r.teamCode in ('int', s.knsbTeam, s.nhsbTeam, 'ipv')
-order by r.datum;
+where r.seizoen = @seizoen and r.teamCode in ('int', 'ira', s.knsbTeam, s.nhsbTeam)
+order by r.datum, r.rondeNummer;
 
 set @seizoen = '2122';
 set @knsbNummer = 7758014; -- Alex Albrecht

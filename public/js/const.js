@@ -4,7 +4,11 @@
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
-const GEEN_COMPETITIE    = "ipv"; // in plaats van interne competitie TODO verwijderen
+
+function interneCompetitie(teamCode) {
+    return teamCode.substring(0,1) === "i";
+}
+
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -43,7 +47,7 @@ const params = pagina.searchParams;
 const ditSeizoen = (function () {
     const datum = new Date();
     const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001);
-    return `${voorloopNul(i)}${voorloopNul(i+1)}`;
+    return `${voorloopNul(i)}${voorloopNul(i + 1)}`;
 })();
 
 const competitie = (function () {
@@ -86,21 +90,25 @@ const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
+/**
+ * Elke verwerking van een pagina van 0-0-0 begint met init en daarna meestal menu.
+ *
+ * @returns {Promise<void>}
+ */
 async function init() {
     await gebruikerVerwerken();
     await rondenVerwerken();
-    console.log("const.js: init")
 }
 
 /**
- * 0-0-0.nl genereert een uuid om de gebruiker te herkennen.
+ * 0-0-0 genereert een uuid om de gebruiker te herkennen.
  * De gebruiker krijgt uuid via email, moet uuidActiveren en legt uuid vast in localStorage.
  * gebruikerVerwerken geeft de uuid van een geregistreerde gebruiker om knsbNummer, naam en mutatieRechten van gebruiker te lezen.
  *
  * De gebruiker moet een uuid aanvragen door zich te registreren.
  * Bij het registreren tijdens een vorigeSessie zijn knsbNummer, naam en email vastgelegd in localStorage.
  * In een volgende sessie leest gebruikerVerwerken deze gegevens met mutatieRechten = 0.
- * 0-0-0.nl herkent de gebruiker nog niet, maar ziet dat een aanvraag in behandeling is.
+ * 0-0-0 herkent de gebruiker nog niet, maar ziet dat een aanvraag in behandeling is.
  *
  * Indien de gebruiker tijdens een vorigeSessie zich niet heeft geregistreert,
  * leest gebruikerVerwerken gegevens van een onbekende gebruiker met knsbNummer = 0 en mutatieRechten = 0.
@@ -116,7 +124,7 @@ async function gebruikerVerwerken() {
         const registratie = await localFetch("/gebruiker/" + uuidToken);
         gebruiker.knsbNummer = Number(registratie.knsbNummer);
         gebruiker.naam = registratie.naam;
-        gebruiker.email = ""; // 0-0-0.nl stuurt geen email
+        gebruiker.email = ""; // 0-0-0 stuurt geen email
         gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
     } else if (vorigeSessie) {
         const json = JSON.parse(vorigeSessie);
@@ -159,7 +167,6 @@ async function rondenVerwerken() {
             if (await serverFetch( // actuele situatie
                 `/indeling/${competitie.seizoen}/${competitie.team}/${competitie.laatsteRonde}`)) {
                 competitie.ronde[competitie.huidigeRonde].resultaten = 0; // indeling zonder resultaten
-                console.log("resultaten = 0");
             }
         }
     }
@@ -362,25 +369,23 @@ function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
 
-function teamVoluit(teamCode) {
+function teamVoluit(teamCode) { // TODO omschrijving uit database
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
+    } else if (teamCode === RAPID_COMPETTIE) {
+        return "rapid competitie";
     } else if (teamCode === "kbe") {
-        return competitie.vereniging + " bekerteam";
+        return competitie.vereniging + " KNSB bekerteam";
     } else if (teamCode === "nbe") {
-        return competitie.vereniging + " nhsb bekerteam";
+        return competitie.vereniging + " NHSB bekerteam";
     } else {
         return competitie.vereniging + " " + teamCode;
     }
 }
 
 function wedstrijdVoluit(ronde) {
-    if (ronde.teamCode === GEEN_COMPETITIE) {
-        return ronde.tegenstander; // activiteit in plaats van tegenstander
-    } else {
-        const eigenTeam = teamVoluit(ronde.teamCode);
-        return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
-    }
+    const eigenTeam = teamVoluit(ronde.teamCode);
+    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
 }
 
 function score(winst, remise, verlies) {
@@ -434,30 +439,11 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-async function spelerSelecteren(seizoen) {
-    const spelers = document.getElementById("spelerSelecteren");
-    spelers.appendChild(htmlOptie(0, "selecteer naam"));
-    (await localFetch(`/spelers/${seizoen}`)).forEach(
-        function (persoon) {
-            spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), persoon.naam));
-        });
-    spelers.value = competitie.speler; // werkt uitsluitend na await
-    spelers.addEventListener("input",
-        function () {
-            const i = spelers.selectedIndex;
-            sessionStorage.setItem("speler", spelers.options[i].value); // = spelers.value;
-            sessionStorage.setItem("naam", spelers.options[i].text )
-            naarZelfdePagina();
-        });
-}
-
 async function teamSelecteren(teamCode) {
     const teams = document.getElementById("teamSelecteren");
     (await localFetch("/teams/" + competitie.seizoen)).forEach(
         function (team) {
-            if (team.teamCode !== GEEN_COMPETITIE) {
-                teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
-            }
+            teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
         });
     teams.value = teamCode; // werkt uitsluitend na await
     teams.addEventListener("input",
