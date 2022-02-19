@@ -1,9 +1,5 @@
 "use strict";
 
-/*
-    verwerk // TODO spelers toevoegen, indeling ter plekke wijzigen
- */
-
 (async function() {
     await init();
     const rondeNummer = Number(params.get("ronde")) || competitie.competitie === RAPID_COMPETTIE ? 4 : competitie.huidigeRonde; // TODO verwijder 4
@@ -57,19 +53,16 @@ async function spelerSelecteren(rondeNummer, deelnemers) {
     const spelers = document.getElementById("spelerSelecteren");
     spelers.appendChild(htmlOptie(0, "selecteer naam"));
     (await localFetch(`/spelers/${competitie.seizoen}`)).forEach(
-        function (persoon) {
-            const naam = persoon.naam + (deelnemers.includes(persoon.knsbNummer) ?  KRUISJE : "");
-            spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), naam));
+        function (speler) {
+            spelers.appendChild(htmlOptie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  KRUISJE : "")));
         });
-    // spelers.value = competitie.speler; // werkt uitsluitend na await
     spelers.addEventListener("input",async function () {
-        const knsbNummer = spelers.options[spelers.selectedIndex].value; // = spelers.value;
+        const knsbNummer = Number(spelers.value);
         const partij = deelnemers.includes(knsbNummer) ? NIET_MEEDOEN : MEEDOEN;
         const datum = datumSQL(competitie.ronde[rondeNummer].datum);
-        console.log(`/${uuidToken}/aanwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
         await serverFetch(
             `/${uuidToken}/aanwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
-        // naarZelfdePagina();
+        naarZelfdePagina();
     });
 }
 
@@ -82,8 +75,6 @@ async function deelnemersRonde(rondeNummer) {
 }
 
 async function ranglijstSorteren(totDatum, deelnemers) {
-    console.log("--- ranglijstSorteren ---");
-    console.log(deelnemers);
     const lijst = await ranglijst(totDatum, deelnemers);
     let gesorteerdTot = 1;
     while (gesorteerdTot < lijst.length && lijst[gesorteerdTot - 1].zonderAftrek() >= lijst[gesorteerdTot].zonderAftrek()) {

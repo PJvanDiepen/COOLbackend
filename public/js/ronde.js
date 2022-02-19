@@ -20,6 +20,9 @@
                 }
             }
         }],
+        [BEHEERDER, `backup ronde ${rondeNummer}` , async function () {
+            await backupUitslag(rondeNummer);
+        }],
         [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${competitie.seizoen}/int/${rondeNummer}`);
             if (mutaties) {
@@ -34,16 +37,21 @@
     await wedstrijdenBijRonde(rondeNummer, document.getElementById("wedstrijden"));
     document.getElementById("kop").innerHTML =
         "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(competitie.ronde[rondeNummer]);
+    if (competitie.competitie === INTERNE_COMPETITIE) {
+        document.getElementById("subkop").innerHTML = "Andere ronden en wedstrijden";
+    }
 })();
 
 function bepaalRondeNummer() {
     let rondeNummer = Number(params.get("ronde"));
-    if (rondeNummer) {
+    if (rondeNummer) { // niet 0
         return rondeNummer;
     } else if (competitie.huidigeRonde && competitie.ronde[competitie.huidigeRonde].resultaten === 0) {
         return competitie.huidigeRonde; // indien indeling definitief, maar nog geen uitslagen
-    } else {
+    } else if (competitie.vorigeRonde) {
         return competitie.vorigeRonde;
+    } else {
+        return 1;
     }
 }
 
@@ -64,10 +72,10 @@ function bepaalRondeNummer() {
  */
 async function uitslagenRonde(rondeNummer, lijst) {
     const gewijzigd = await uitslagMutatie(rondeNummer);
-    const uitslagen = await serverFetch(`/ronde/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
+    const uitslagen = await serverFetch(`/ronde/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
-            const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag); // TODO waarom werkt htmlVerwerkt hier niet?
+            const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag);
             htmlVerwerkt(uitslagKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
             lijst.appendChild(htmlRij(
                 uitslag.bordNummer,
@@ -146,15 +154,17 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
     if (rondeNummer > 2) {
         lijst.appendChild(rondeInterneCompetitie(rondeNummer - 1));
     }
-    const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
-    for (const wedstrijd of wedstrijden) {
-        if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
-            const datumKolom = datumLeesbaar(wedstrijd);
-            const wedstrijdKolom = naarTeam(wedstrijd);
-            const rondeUitslagen = await uitslagenTeamAlleRonden(wedstrijd.teamCode);
-            const u = rondeUitslagen[wedstrijd.rondeNummer - 1];
-            const uitslagKolom = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
-            lijst.appendChild(htmlRij("", datumKolom, wedstrijdKolom, uitslagKolom));
+    if (competitie.competitie === INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
+        const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
+        for (const wedstrijd of wedstrijden) {
+            if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
+                const datumKolom = datumLeesbaar(wedstrijd);
+                const wedstrijdKolom = naarTeam(wedstrijd);
+                const rondeUitslagen = await uitslagenTeamAlleRonden(wedstrijd.teamCode);
+                const u = rondeUitslagen[wedstrijd.rondeNummer - 1];
+                const uitslagKolom = uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
+                lijst.appendChild(htmlRij("", datumKolom, wedstrijdKolom, uitslagKolom));
+            }
         }
     }
     if (competitie.laatsteRonde > rondeNummer + 1) {
@@ -168,7 +178,7 @@ function rondeInterneCompetitie(rondeNummer) {
     return htmlRij(
         rondeNummer,
         htmlLink(`ronde.html?ronde=${rondeNummer}`, datumLeesbaar(competitie.ronde[rondeNummer])),
-        "interne competitie",
+        teamVoluit(competitie.competitie),
         aantal);
 }
 
@@ -179,5 +189,39 @@ function wedstrijdBijRonde(rondeNummer, datum) {
         return datum > competitie.ronde[rondeNummer - 1].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
     } else {
         return datum > competitie.ronde[rondeNummer - 1].datum && datum <= competitie.ronde[rondeNummer].datum;
+    }
+}
+
+async function backupUitslag(rondeNummer) {
+    const rijen = await serverFetch(`/backup/uitslag/${competitie.seizoen}/${competitie.team}/${rondeNummer}/${rondeNummer}`);
+    let velden = [];
+    for (const [key, value] of Object.entries(rijen[0])) {
+        velden.push(key);
+    }
+    console.log(`insert into uitslag (${velden.join(", ")}) values`);
+    for (const rij of rijen) {
+        let kolommen = [];
+        for (const [key, value] of Object.entries(rij)) {
+            // TODO backupRij = selecteer(key, value); waarbij selecteer als parameter aan backup doorgeven
+            kolommen.push(valueSQL(value));
+        }
+        console.log(`(${kolommen.join(", ")}),`);
+    }
+}
+
+/*
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),
+ */
+function valueSQL(value) {
+    if (typeof value === "string") {
+        const datum = new Date(value);
+        if (value.length > 10 && datum instanceof Date && !isNaN(datum)) {
+            return `'${datumSQL(value)}'`;
+        } else {
+            return `'${value}'`;
+        }
+    } else if (typeof value === "number") {
+        return value;
     }
 }

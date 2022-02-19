@@ -301,10 +301,10 @@ module.exports = router => {
     from uitslag
     join persoon as wit on uitslag.knsbNummer = wit.knsbNummer
     join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
-    where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
+    where seizoen = @seizoen and teamCode = @teamCode and rondeNummer = @rondeNummer and witZwart = 'w'
     order by uitslag.seizoen, bordNummer;
      */
-    router.get('/ronde/:seizoen/:rondeNummer', async function (ctx) {
+    router.get('/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
             .select(
                 'uitslag.bordNummer',
@@ -316,10 +316,10 @@ module.exports = router => {
             .join('persoon as wit', 'uitslag.knsbNummer', 'wit.knsbNummer')
             .join('persoon as zwart', 'uitslag.tegenstanderNummer', 'zwart.knsbNummer')
             .where('uitslag.seizoen', ctx.params.seizoen)
-            .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
+            .andWhere('uitslag.teamCode', ctx.params.teamCode)
             .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
             .andWhere('uitslag.witZwart', WIT)
-            .orderBy(['uitslag.seizoen','uitslag.bordNummer']);
+            .orderBy('uitslag.bordNummer');
     });
 
     /*

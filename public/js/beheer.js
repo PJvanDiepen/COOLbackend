@@ -16,9 +16,6 @@ TODO mutaties met verwijderen
         }],
         [BEHEERDER, "test API", function () {
             naarAnderePagina("api.html");
-        }],
-        [BEHEERDER, "backup interne competitie 7-14" , async function () {
-            await backupUitslag(INTERNE_COMPETITIE, 7, 14);  // TODO selectie invullen
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
@@ -26,40 +23,6 @@ TODO mutaties met verwijderen
     document.getElementById("computer").appendChild(
         htmlTekst(`${versie} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
 })();
-
-async function backupUitslag(teamCode, van, tot) {
-    const rijen = await serverFetch(`/backup/uitslag/${competitie.seizoen}/${teamCode}/${van}/${tot}`);
-    let velden = [];
-    for (const [key, value] of Object.entries(rijen[0])) {
-        velden.push(key);
-    }
-    console.log(`insert into uitslag (${velden.join(", ")}) values`);
-    for (const rij of rijen) {
-        let kolommen = [];
-        for (const [key, value] of Object.entries(rij)) {
-            // TODO backupRij = selecteer(key, value); waarbij selecteer als parameter aan backup doorgeven
-            kolommen.push(valueSQL(value));
-        }
-        console.log(`(${kolommen.join(", ")}),`);
-    }
-}
-
-/*
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),
- */
-function valueSQL(value) {
-    if (typeof value === "string") {
-        const datum = new Date(value);
-        if (value.length > 10 && datum instanceof Date && !isNaN(datum)) {
-            return `'${datumSQL(value)}'`;
-        } else {
-            return `'${value}'`;
-        }
-    } else if (typeof value === "number") {
-        return value;
-    }
-}
 
 async function gebruikers(lijst) {
     const leden = await serverFetch(`/${uuidToken}/gebruikers`);
