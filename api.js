@@ -505,10 +505,20 @@ module.exports = router => {
             const uitslag = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
-            // TODO indien afwezig toevoegen!
-            if (aanmeldenAfzeggen(uitslag.partij, ctx.params.partij)) {
+            console.log(uitslag);
+            if (!uitslag) {
+                console.log("--- niet gevonden ---");
+                // TODO indien afwezig toevoegen!
+            } else if (uitslag && aanmeldenAfzeggen(uitslag.partij, ctx.params.partij)) {
+                console.log("--- gevonden ---");
                 let partij = ctx.params.partij;
-                if (partij === MEEDOEN) {
+                if (partij === NIET_MEEDOEN) {
+                    if (await Uitslag.query()
+                        .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
+                        .patch({partij: NIET_MEEDOEN})) {
+                        aantal++;
+                    }
+                } else { // MEEDOEN
                     const ronden = await Uitslag.query()
                         .select('uitslag.teamCode', 'uitslag.rondeNummer', 'uitslag.anderTeam', 'ronde.uithuis')
                         .join('ronde', function(join) {
@@ -518,12 +528,24 @@ module.exports = router => {
                         .where('uitslag.seizoen', ctx.params.seizoen)
                         .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                         .andWhere('uitslag.datum', ctx.params.datum)
-                        .orderBy(['uitslag.teamCode', 'uitslag.teamCode']);
+                        .orderBy(['uitslag.teamCode', 'uitslag.rondeNummer']);
                     for (const ronde of ronden) {
-                        if (ronde.teamCode === ctx.params.teamCode && Number(ronde.rondeNummer) === Number(ctx.params.rondeNummer)) {
-                            partij = ronde.teamCode  === ronde.anderTeam ? MEEDOEN // meedoen in dezelfde competitie
-                                : ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT; // TODO alle ronden op dezelfde dag
+                        if (ronde.teamCode === ctx.params.teamCode && ronde.teamCode  !== ronde.anderTeam) {
+                            partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
+                        }
+                    }
+                    console.log("ronden: " + ronden.length);
+                    for (const ronde of ronden) {
+                        console.log(ronde.teamCode + " " + ronde.rondeNummer);
+                        if (ronde.teamCode === ctx.params.teamCode) {
+                            console.log("MEEDOEN");
+                            if (await Uitslag.query()
+                                .findById([ctx.params.seizoen, ctx.params.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
+                                .patch({partij: partij})) { // MEEDOEN, EXTERN_THUIS of EXTERN_UIT
+                                aantal++;
+                            }
                         } else {
+                            console.log("NIET_MEEDOEN");
                             if (await Uitslag.query()
                                 .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
                                 .patch({partij: NIET_MEEDOEN})) {
@@ -531,11 +553,6 @@ module.exports = router => {
                             }
                         }
                     }
-                }
-                if (await Uitslag.query()
-                    .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
-                    .patch({partij: partij})) {
-                    aantal++;
                 }
                 await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
             }

@@ -5,7 +5,7 @@ select * from speler where seizoen = '2122' and knsbNummer = 114;
 update speler set knsbRating = 1750, datumRating = '2021-10-20' where seizoen = '2122' and knsbNummer = 114;
 
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values -- TODO teams ingevuld
-('2122', '1', '', '', '', 8956805, 2194, '2022-01-2');
+('2122', '', '', '', '', 102, 1000, '2022-08-06');
 
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values -- TODO teams ingevuld
 ('2122', '', '', '', '', 101, 1000, '2021-08-06'),
