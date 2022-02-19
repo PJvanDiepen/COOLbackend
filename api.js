@@ -505,13 +505,22 @@ module.exports = router => {
             const uitslag = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
-            console.log(uitslag);
-            if (!uitslag) {
-                console.log("--- niet gevonden ---");
-                // TODO indien afwezig toevoegen!
+            let partij = ctx.params.partij;
+            if (!uitslag && partij === MEEDOEN) {
+                await Uitslag.query()
+                    .insert({seizoen: ctx.params.seizoen,
+                        teamCode: ctx.params.teamCode,
+                        rondeNummer: ctx.params.rondeNummer,
+                        bordNummer: 0,
+                        knsbNummer: ctx.params.knsbNummer,
+                        partij: MEEDOEN,
+                        witZwart: "",
+                        tegenstanderNummer: 0,
+                        resultaat: "",
+                        datum: ctx.params.datum,
+                        anderTeam: ctx.params.teamCode}); // uitsluitend interne competitie
+                aantal++;
             } else if (uitslag && aanmeldenAfzeggen(uitslag.partij, ctx.params.partij)) {
-                console.log("--- gevonden ---");
-                let partij = ctx.params.partij;
                 if (partij === NIET_MEEDOEN) {
                     if (await Uitslag.query()
                         .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
@@ -534,18 +543,14 @@ module.exports = router => {
                             partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
                         }
                     }
-                    console.log("ronden: " + ronden.length);
                     for (const ronde of ronden) {
-                        console.log(ronde.teamCode + " " + ronde.rondeNummer);
                         if (ronde.teamCode === ctx.params.teamCode) {
-                            console.log("MEEDOEN");
                             if (await Uitslag.query()
                                 .findById([ctx.params.seizoen, ctx.params.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
                                 .patch({partij: partij})) { // MEEDOEN, EXTERN_THUIS of EXTERN_UIT
                                 aantal++;
                             }
                         } else {
-                            console.log("NIET_MEEDOEN");
                             if (await Uitslag.query()
                                 .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
                                 .patch({partij: NIET_MEEDOEN})) {
