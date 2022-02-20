@@ -213,7 +213,7 @@ module.exports = router => {
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
             .andWhere('uitslag.anderTeam', ctx.params.competitie) // TODO anderTeam = competitie
-            .orderBy(['uitslag.datum','uitslag.bordNummer']);
+            .orderBy(['uitslag.datum','uitslag.rondeNummer']);
     });
 
     /*

@@ -15,6 +15,13 @@ Dit zijn velden uit tabellen van de MySQL database of velden die zijn gemaakt do
 10. 0-0-0.nl
 
 Een nieuwe versie invoeren kan het best op woensdag wegens naijleffecten in browsers.
+Uitleg over hard reload in browsers.
+
+# JavaScript fouten
+
+1. Volgorde uitvoeren JavaScript code met [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
+2. Verschil tussen Number(getal) en "getal".
+3. Verschil tussen SQL date, JSON date en [Date()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date).
 
 
    

@@ -70,6 +70,9 @@ const competitie = (function () {
             competitie[key] = value === 0 ? Number(parameter) : parameter; // versie en speler zijn getallen
         }
     }
+    if (competitie.competitie === RAPID_COMPETTIE && competitie.versie === 0) {
+        competitie.versie = 4;
+    }
     return competitie;
 })();
 
@@ -91,7 +94,8 @@ const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
 /**
- * Elke verwerking van een pagina van 0-0-0 begint met init en daarna meestal menu.
+ * Elke verwerking van een pagina van 0-0-0 begint met init() en het verwerken van mutaties.
+ * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  *
  * @returns {Promise<void>}
  */
@@ -173,7 +177,7 @@ async function rondenVerwerken() {
 }
 
 /**
- * menu verwerkt alle menuKeuzes tot een select-menu met htmlOptie's en zet een eventListener klaar.
+ * menu() verwerkt alle menuKeuzes tot een select-menu met htmlOptie's en zet een eventListener klaar.
  *
  * Elke menuKeuze bestaat uit [ <minimumRechten>, <menuKeuze tekst>, <bijhorende functie> ].
  * Indien gebruiker niet voldoende mutatieRechten heeft, komt de menuKeuze niet in het menu.

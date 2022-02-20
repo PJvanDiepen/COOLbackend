@@ -2,7 +2,7 @@
 
 (async function() {
     await init();
-    const rondeNummer = Number(params.get("ronde")) || competitie.competitie === RAPID_COMPETTIE ? 4 : competitie.huidigeRonde; // TODO verwijder 4
+    const rondeNummer = Number(params.get("ronde")) || competitie.huidigeRonde;
     const totDatum = competitie.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");
     subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
@@ -53,7 +53,7 @@ async function spelerSelecteren(rondeNummer, deelnemers) {
     const spelers = document.getElementById("spelerSelecteren");
     spelers.appendChild(htmlOptie(0, "selecteer naam"));
     (await localFetch(`/spelers/${competitie.seizoen}`)).forEach(
-        function (speler) {
+        function (speler) { // TODO indien mutatie speler geel maken
             spelers.appendChild(htmlOptie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  KRUISJE : "")));
         });
     spelers.addEventListener("input",async function () {
@@ -62,7 +62,7 @@ async function spelerSelecteren(rondeNummer, deelnemers) {
         const datum = datumSQL(competitie.ronde[rondeNummer].datum);
         await serverFetch(
             `/${uuidToken}/aanwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
-        naarZelfdePagina();
+        naarZelfdePagina(); // TODO mutatie na init() en speler geel maken indien gelukt
     });
 }
 
