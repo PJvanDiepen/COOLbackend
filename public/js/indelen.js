@@ -193,10 +193,19 @@ function indelenRonde(r, wit, zwart) {
     return indelenFun[versieIndelen][1](r, wit, zwart);
 }
 
+/**
+ * Liever nietTegen volgens heuristieken.
+ *
+ * @param r ranglijst
+ * @param i speler
+ * @param j tegenstander
+ * @returns {boolean}
+ */
 function nietTegen(r, i, j) {
-    const nogNietTegen = [101, 103]; // Ramon Witte, Charles Stoorvogel TODO test ronde 11 dit seizoen
+    const nogNietTegen = [101, 103]; // Ramon Witte, Charles Stoorvogel TODO test ronde 11 van seizoen = 2122
     if (!r[i].tegen(r[j])) {
         return true;
+    // TODO } else if (competitie.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
     } else if (versieIndelen > 0) { // oudere versies zonder heuristieken
         return false;
     } else if (r[i].intern() < 4 && nogNietTegen.includes(r[j].knsbNummer)) {
@@ -220,6 +229,45 @@ function nietTegen(r, i, j) {
 }
 
 const indelenFun = [
+    ["Sander Jagersma en Charles Stoorvogel worden 2 x ingedeeld", function (r, wit, zwart) {
+        const oneven = onevenSpeler(r);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+        if (nietIngedeeld.length > 0) {
+            let pogingen = 0
+            let poging = [];
+            let speler = 999;
+            while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 10) {
+                console.log(wit);
+                console.log(zwart);
+                console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen);
+                opnieuwIndelen(wit, zwart);
+                speler = eenNietIngedeeldeSpeler(nietIngedeeld, poging);
+                spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log(wit);
+                console.log(zwart);
+                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
+                opnieuwIndelen(wit, zwart);
+                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
+                    // toevoegen aan poging
+                }
+                for (const speler of poging) {
+                    if (!ingedeeld(speler, wit, zwart, oneven)) {
+                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                    }
+                }
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+            }
+            console.log(wit);
+            console.log(zwart);
+            if (nietIngedeeld.length > 0) {
+                console.log("--- mislukt ---");
+            }
+        }
+        return oneven;
+    }],
     ["indelen met heuristieken en niet ingedeelde spelers opnieuw verwerken", function (r, wit, zwart) {
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
@@ -387,7 +435,10 @@ function ingedeeld(speler, wit, zwart, oneven) {
 }
 
 function opnieuwIndelen(wit, zwart) {
-    while (wit.length > 0) {
+    if (wit.length !== zwart.length) {
+        console.log("wit: " + wit.length + " zwart: " + zwart.length); // TODO verwijder
+    }
+    while (wit.length) {
         wit.pop();
         zwart.pop();
     }
