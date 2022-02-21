@@ -205,8 +205,7 @@ function nietTegen(r, i, j) {
     const nogNietTegen = [101, 103]; // Ramon Witte, Charles Stoorvogel TODO test ronde 11 van seizoen = 2122
     if (!r[i].tegen(r[j])) {
         return true;
-    // TODO } else if (competitie.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
-    } else if (versieIndelen > 0) { // oudere versies zonder heuristieken
+    } else if (competitie.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
     } else if (r[i].intern() < 4 && nogNietTegen.includes(r[j].knsbNummer)) {
         console.log(`${r[i].naam} nog maar niet tegen ${r[j].naam}`);
@@ -229,16 +228,14 @@ function nietTegen(r, i, j) {
 }
 
 const indelenFun = [
-    ["Sander Jagersma en Charles Stoorvogel worden 2 x ingedeeld", function (r, wit, zwart) {
+    ["indelen met heuristieken en niet ingedeelde spelers opnieuw verwerken", function (r, wit, zwart) {
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
         if (nietIngedeeld.length > 0) {
             let pogingen = 0
             let poging = [];
             let speler = 999;
-            while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 10) {
-                console.log(wit);
-                console.log(zwart);
+            while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 13) {
                 console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen);
                 opnieuwIndelen(wit, zwart);
                 speler = eenNietIngedeeldeSpeler(nietIngedeeld, poging);
@@ -246,8 +243,6 @@ const indelenFun = [
                 nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
             }
             if (nietIngedeeld.length > 0) {
-                console.log(wit);
-                console.log(zwart);
                 console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
                 opnieuwIndelen(wit, zwart);
                 while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
@@ -260,77 +255,8 @@ const indelenFun = [
                 }
                 nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
             }
-            console.log(wit);
-            console.log(zwart);
             if (nietIngedeeld.length > 0) {
                 console.log("--- mislukt ---");
-            }
-        }
-        return oneven;
-    }],
-    ["indelen met heuristieken en niet ingedeelde spelers opnieuw verwerken", function (r, wit, zwart) {
-        const oneven = onevenSpeler(r);
-        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-        if (nietIngedeeld.length > 0) {
-            let pogingen = 0
-            let poging = [];
-            let speler = 999;
-            while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 10) {
-                console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen);
-                opnieuwIndelen(wit, zwart);
-                speler = eenNietIngedeeldeSpeler(nietIngedeeld, poging);
-                spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
-                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
-                opnieuwIndelen(wit, zwart);
-                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
-                    // toevoegen aan poging
-                }
-                for (const speler of poging) {
-                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
-                }
-                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- mislukt ---");
-            }
-        }
-        return oneven;
-    }],
-    ["indelen met heuristieken en 10 x herhalen indien mislukt", function (r, wit, zwart) {
-        const oneven = onevenSpeler(r);
-        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-        let poging = 0;
-        while (nietIngedeeld.length > 0 && ++poging < 10) {
-            console.log("--- mislukt --- poging: " + poging);
-            while (wit.length > 0) {
-                wit.pop();
-                zwart.pop();
-            }
-            for (const speler of nietIngedeeld) {
-                achteruitIndelen(speler, r, wit, zwart, oneven);
-            }
-            nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-        }
-        return oneven;
-    }],
-    ["indelen vooruit en eventueel achteruit", function (r, wit, zwart) {
-        const oneven = onevenSpeler(r);
-        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-        if (nietIngedeeld.length > 0) {
-            console.log("--- mislukt ---");
-            while (wit.length > 0) {
-                wit.pop();
-                zwart.pop();
-            }
-            for (const speler of nietIngedeeld) {
-                achteruitIndelen(speler, r, wit, zwart, oneven);
-            }
-            nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-            if (nietIngedeeld.length > 0) {
-                console.log("--- weer mislukt ---");
             }
         }
         return oneven;
@@ -390,23 +316,6 @@ function vooruitIndelen(r, wit, zwart, oneven) {
     return nietIngedeeld;
 }
 
-function achteruitIndelen(i, r, wit, zwart, oneven) {
-    console.log(`--- ${r[i].naam} achteruit indelen ---`);
-    let j = i - 1;
-    while (j >= 0 && (ingedeeld(j, wit, zwart, oneven) || nietTegen(r, i, j))) {
-        j--; // vorige indien al ingedeeld of oneven of mag niet tegen
-    }
-    if (j >= 0) {
-        if (r[i].metWit(r[j])) {
-            wit.push(i);
-            zwart.push(j);
-        } else {
-            wit.push(j);
-            zwart.push(i);
-        }
-    }
-}
-
 const VOORUIT = 1;
 const ACHTERUIT = -1;
 
@@ -435,9 +344,6 @@ function ingedeeld(speler, wit, zwart, oneven) {
 }
 
 function opnieuwIndelen(wit, zwart) {
-    if (wit.length !== zwart.length) {
-        console.log("wit: " + wit.length + " zwart: " + zwart.length); // TODO verwijder
-    }
     while (wit.length) {
         wit.pop();
         zwart.pop();
@@ -470,7 +376,7 @@ function onevenSpeler(r) {
         }
         for (let i = oneven - 1; i > -1; i--) {
             if (r[i].oneven()) {
-                console.log(`${r[i].naam} was al oneven`);
+                console.log(`${r[i].naam} was al oneven!?`);  // TODO kan dit?
             } else if (r[i].intern() > r[oneven].intern()) {
                 console.log(`${r[i].naam} heeft meer interne partijen gespeeld dan ${r[oneven].naam}`);
                 oneven = i;

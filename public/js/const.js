@@ -454,10 +454,13 @@ async function teamSelecteren(teamCode) {
             teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
         });
     teams.value = teamCode; // werkt uitsluitend na await
-    teams.addEventListener("input",
-        function () {
-            naarAnderePagina(teams.value === INTERNE_COMPETITIE ? "ranglijst.html" : "team.html?team=" + teams.value);
-        });
+    teams.addEventListener("input", function () {
+        if (interneCompetitie(teams.value)) {
+            naarZelfdePagina("competitie=" + teams.value)
+        } else {
+            naarAnderePagina("team.html?team=" + teams.value);
+        }
+    });
 }
 
 /**
