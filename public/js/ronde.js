@@ -2,6 +2,7 @@
 
 (async function() {
     await init();
+    competitieTitel();
     competitie.team = competitie.competitie;
     const rondeNummer = bepaalRondeNummer();
     menu([GEREGISTREERD, "systeembeheer", function () {

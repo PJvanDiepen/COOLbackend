@@ -8,11 +8,12 @@ const alleLeden = Number(params.get("leden"));
 
 (async function() {
     await init();
+    competitieTitel();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
-    teamSelecteren(INTERNE_COMPETITIE);
-    rondeSelecteren(INTERNE_COMPETITIE, 0);
+    teamSelecteren(competitie.competitie);
+    rondeSelecteren(competitie.competitie, 0);
     versieSelecteren(document.getElementById("versies"));
     ledenSelecteren(document.getElementById("leden"));
     spelersLijst(document.getElementById("kop"), document.getElementById("tabel"));
@@ -21,8 +22,7 @@ const alleLeden = Number(params.get("leden"));
 async function spelersLijst(kop, lijst) {
     const rondeNummer = Number(params.get("ronde")) || competitie.vorigeRonde;
     const totDatum = rondeNummer === competitie.laatsteRonde ? new Date() : competitie.ronde[rondeNummer + 1].datum;
-    // TODO competitie in kop
-    kop.innerHTML = "Ranglijst" + SCHEIDING + seizoenVoluit(competitie.seizoen) + SCHEIDING + "na ronde " + rondeNummer;
+    kop.innerHTML = seizoenVoluit(competitie.seizoen) + SCHEIDING + "ranglijst na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(totDatum)).forEach(function (t, i) {
         if (t.inRanglijst() || alleLeden) {

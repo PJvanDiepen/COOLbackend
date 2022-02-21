@@ -2,6 +2,7 @@
 
 (async function() {
     await init();
+    competitieTitel();
     menu([WEDSTRIJDLEIDER, `agenda van ${competitie.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${competitie.speler}&naamGebruiker=${competitie.naam}`);
         }],

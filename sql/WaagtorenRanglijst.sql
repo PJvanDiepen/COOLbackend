@@ -19,8 +19,8 @@ delimiter ;
 -- seizoenVersie, subgroep, waardeCijfer, punten en totalen bevatten de logica voor verschillende reglementen voor de interne competie van de Waagtoren
 -- versie 1 is de oorspronkelijke versie van Alkmaar systeem (geen SQL code)
 -- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
--- versie 3 geen afzeggingenAftrek in seizoen = 2122, 2223, enz.
--- versie 4 rapid in seizoen = 21ra, 22ra, enz.
+-- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
+-- versie 4 rapidPunten voor rapid competitie
 
 drop function seizoenVersie;
 
@@ -32,12 +32,8 @@ begin
         return versie;
 	elseif seizoen in ('1819', '1920', '2021') then 
         return 2;
-	elseif seizoen in ('2122', '2223') then 
-        return 3;
-	elseif seizoen in ('21ra', '22ra') then -- rapid
-        return 4;
 	else 
-        return -1;
+        return 3;
 	end if;
 end;
 $$

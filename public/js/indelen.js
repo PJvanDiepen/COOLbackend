@@ -2,6 +2,7 @@
 
 (async function() {
     await init();
+    competitieTitel();
     const rondeNummer = Number(params.get("ronde")) || competitie.huidigeRonde;
     const totDatum = competitie.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");

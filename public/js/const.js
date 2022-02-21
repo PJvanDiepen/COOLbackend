@@ -76,6 +76,10 @@ const competitie = (function () {
     return competitie;
 })();
 
+function competitieTitel() {
+    document.getElementById("competitie").innerHTML = competitie.vereniging + SCHEIDING + teamVoluit(competitie.competitie);
+}
+
 const uuidActiveren = params.get("uuid");
 const vorigeSessie = localStorage.getItem(competitie.vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
@@ -94,7 +98,7 @@ const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
 /**
- * Elke verwerking van een pagina van 0-0-0 begint met init() en het verwerken van mutaties.
+ * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  *
  * @returns {Promise<void>}
