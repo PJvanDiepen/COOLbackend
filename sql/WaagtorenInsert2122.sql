@@ -6,6 +6,36 @@ insert into persoon (knsbNummer, naam) values
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
 ('2122', '', '', '', '', 119, 1000, '2022-02-20');
 
+-- TODO meedoen aan rapid op de dag van rapid
+select * from ronde where seizoen = '2122' and teamCode = 'ira';  
+
+set @knsbNummer = 7970094; -- Danny de Ruiter
+set @knsbNummer = 7210137; -- Arjen Dibbets
+
+select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and knsbNummer = @knsbNummer;
+
+update uitslag set partij = 'm' where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and knsbNummer = @knsbNummer;
+
+select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and partij = 'a';
+delete from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and partij = 'a';
+
+update uitslag set partij = 'n' where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and partij = 'a';
+
+select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6);
+
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', 'ira', 4, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int'),
+('2122', 'ira', 5, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int'),
+('2122', 'ira', 6, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int');
+
+
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', 'ira', 4, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int'),
+('2122', 'ira', 5, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int'),
+('2122', 'ira', 6, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int');
+
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values -- TODO teams invullen
 ('2122', '', '', '', '', 101, 1000, '2021-08-06'),
 ('2122', '', '', '', '', 102, 1000, '2021-08-06'),

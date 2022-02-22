@@ -507,6 +507,8 @@ module.exports = router => {
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
             let partij = ctx.params.partij;
             if (!uitslag && partij === MEEDOEN) {
+                // TODO keuze 1) AFWEZIG in vorige ronden en NIET_MEEDOEN in volgende ronden van deze competitie toevoegen
+                // TODO keuze 2) helemaal niets doen en verwijzen naar Aanmelden / Afzeggen
                 await Uitslag.query()
                     .insert({seizoen: ctx.params.seizoen,
                         teamCode: ctx.params.teamCode,
@@ -518,7 +520,7 @@ module.exports = router => {
                         tegenstanderNummer: 0,
                         resultaat: "",
                         datum: ctx.params.datum,
-                        anderTeam: ctx.params.teamCode}); // uitsluitend interne competitie
+                        anderTeam: ctx.params.teamCode}); // uitsluitend voor interne competities
                 aantal++;
             } else if (uitslag && aanmeldenAfzeggen(uitslag.partij, ctx.params.partij)) {
                 if (partij === NIET_MEEDOEN) {

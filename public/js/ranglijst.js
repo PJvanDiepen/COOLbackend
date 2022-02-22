@@ -59,9 +59,10 @@ async function rondeSelecteren(teamCode, rondeNummer) {
 }
 
 function versieSelecteren(versies) {  // TODO: versies en teksten in database
-    versies.appendChild(htmlOptie(0, "versie 0 volgens reglement van het seizoen"));
+    versies.appendChild(htmlOptie(0, "versie 0 volgens reglement interne competitie van het seizoen"));
     versies.appendChild(htmlOptie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));
     versies.appendChild(htmlOptie(3, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
+    versies.appendChild(htmlOptie(4, "versie 4 volgens reglement rapid competitie"));
     versies.value = competitie.versie;
     versies.addEventListener("input",
         function () {
