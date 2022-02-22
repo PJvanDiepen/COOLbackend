@@ -25,7 +25,7 @@
             await backupUitslag(rondeNummer);
         }],
         [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${competitie.seizoen}/int/${rondeNummer}`);
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
             if (mutaties) {
                 sessionStorage.removeItem(`/ronde/${competitie.seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);

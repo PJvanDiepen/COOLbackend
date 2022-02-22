@@ -37,11 +37,11 @@
             }
             if (oneven) {
                 if (await serverFetch(
-                    `/${uuidToken}/oneven/${competitie.seizoen}/int/${rondeNummer}/${r[oneven].knsbNummer}`)) {
+                    `/${uuidToken}/oneven/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${r[oneven].knsbNummer}`)) {
                     mutaties += 1;
                 }
             }
-            mutaties += await serverFetch(`/${uuidToken}/afwezig/${competitie.seizoen}/int/${rondeNummer}`);
+            mutaties += await serverFetch(`/${uuidToken}/afwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
             if (mutaties) {
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
