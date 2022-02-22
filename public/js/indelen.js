@@ -31,7 +31,7 @@
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await serverFetch(
-                    `/${uuidToken}/indelen/${competitie.seizoen}/int/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
+                    `/${uuidToken}/indelen/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
                     mutaties += 2;
                 }
             }
