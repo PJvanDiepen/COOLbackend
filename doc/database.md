@@ -1,19 +1,39 @@
+ uitslagen van teams staan in dit systeem, kunnen meetellen in de  
+De ranglijsten voor externe competies worden niet berekend in dit systeem.
 # Database
 Er is een MySQL database per schaakvereniging met de volgende tabellen:
 - `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie
 - `Persoon` leden van de schaakvereniging en eventueel van tegenstanders in de externe competitie
 - `Gebruiker` leden van de schaakvereniging, die gegevens in de database mogen wijzigen
-- `Seizoen` seizoensgegevens van de schaakvereniging 
+- `Seizoen` seizoensgegevens van de schaakvereniging
 - `Speler` spelers per seizoen
-- `Team` teams of interne competitie (`teamCode = 'int'`) per seizoen
-- `Ronde` ronden per team per seizoen
+- `Team` teams of competities per seizoen
+- `Ronde` ronden per team of competitie per seizoen
 - `Uitslag` uitslagen per ronde per team per seizoen
 - `Mutatie` chronologie van mutaties per gebruiker
 
-Voorlopig is er 1 database van schaakvereniging de Waagtoren, die offline is gevuld 
+Voorlopig is er 1 database van schaakvereniging de Waagtoren, die offline is gevuld
 vanuit de Online Leden Administratie (OLA) van de KNSB naar `Persoon` en `Speler` en
 vanuit Rokade, het informatiesysteem voor de interne competitie naar `Ronde` en `Uitslag` en
 vanuit de KNSB en de NHSB websites voor de externe competitie naar `Team`, `Ronde` en `Uitslag`.
+
+##Competitie
+De database per schaakvereniging heeft een tabel `Team` voor teams en competities.
+De eerste letter van `teamCode` in `Team` maakt het onderscheid tussen team en competitie.
+De `teamCode` van een interne competitie begint met de letter i.
+
+Een team speelt mee in een externe competitie. Bij de Waagtoren zijn dat teams,
+die meespelen voor de KNSB en de NHSB.
+Teams van andere schaakverenigingen kunnen spelen voor andere schaakbonden.
+
+Bij de Waagtoren tellen de uitslagen van teamleden in de externe competities mee voor de interne competitie.
+Daarom staan ze in dit systeem. Dit systeem berekent echter geen ranglijsten van externe competities.
+
+Dit systeem berekent uitsluitend ranglijsten van externe competities. Zie `Reglement`.
+
+Het belangrijkste verschil tussen team en competitie is dus de verwerking door dit systeem.
+Behalve de eerste letter van `teamCode` is in de database verder geen verschil tussen team en competie.
+De specificaties voor competitie staan daarom bij `Team`.
 
 ## Reglement
 De ranglijst van de Waagtoren wordt berekend volgens het [Alkmaar Systeem](https://www.waagtoren.nl/historie/alksys.html) 
@@ -21,10 +41,10 @@ door middel van stored procedures / functions in MySQL.
 Omdat het reglement van de interne competie per seizoen kan verschillen en 
 omdat het nuttig is om te kunnen experimenteren met aanpassingen van het reglement 
 willen we verschillende versies van parameters en formules voor de berekening van de ranglijst vastleggen in `Reglement`.
-De verwerking voor de ranglijst berekening is dan als volgt: de juiste versie inlezen uit `Reglement`, 
-de stored procedures / functions in MySQL installeren en vervolgens zo ongeveer alle tabellen verwerken per seizoen.
+De verwerking voor de ranglijst berekening is dan als volgt: selecteer de juiste versie volgens `Reglement` en 
+verwerk de uitslagen per seizoen en competitie met de juiste versie van de stored procedures / functions in MySQL.
 
-Hoe de backend ranglijsten maakt, is dus helemaal in de database vastgelegd en niet in de JavaScript code van de backend.
+Hoe de backend ranglijsten maakt, is dus helemaal in de database vastgelegd en niet in de JavaScript code van de backend of frontend.
 Op deze manier gaan we, behalve het Alkmaar Systeem, ook het Keizer Systeem en Zwitsers Systeem in `Reglement` coderen.
 Elke schaakvereniging kan dus eventueel per seizoen haar eigen reglement voor de interne competitie 
 vastleggen in `Reglement`. Ons doel is dat wedstrijdleiders zelf wedstrijdsystemen kunnen aanpassen en ermee kunnen experimenteren.
@@ -33,9 +53,9 @@ Voor het indelen van wie tegen wie in de interne competitie gelden ook allerlei 
 die per wedstrijdsysteem, per schaakvereniging en per seizoen kunnen verschillen.
 Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de backend.
 
-De database moet een lijst van alle mogelijke partijen produceren
-waaruit de indeling van een ronde wordt gemaakt door software (backend of frontend) 
-eventueel met interactie van een gebruiker.
+Voor het opstellen van invallers in teams voor de externe competitie gelden allerlei regels,
+die per schaakbond en per seizoen junnen verschillen.
+Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de backend.
 
 De specificaties van de `Reglement` tabel ontbreken nog. 
 

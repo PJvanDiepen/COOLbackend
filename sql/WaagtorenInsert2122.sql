@@ -2,19 +2,65 @@ use waagtoren; -- ga naar PvD
 
 -- TODO speler toevoegen 
 insert into persoon (knsbNummer, naam) values
-(119, 'Randy Roest');
+(7613166, 'Peter Kalisvaart');
+update persoon set naam = 'Peter Kalisvaart' where knsbNummer = 7613166;
+
+select * from persoon order by knsbNummer desc;
+
+
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', '', '', 119, 1000, '2022-02-20');
+('2122', '', '', '', '', 7613166, 1943, '2022-02-22');
 
 -- TODO meedoen aan rapid op de dag van rapid
 select * from ronde where seizoen = '2122' and teamCode = 'ira';  
 
 set @knsbNummer = 7970094; -- Danny de Ruiter
 set @knsbNummer = 7210137; -- Arjen Dibbets
+set @knsbNummer = 7613166; -- Peter Kalisvaart
+set @knsbNummer = 6212404; -- Peter van Diepen
+
+select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer = 4 and knsbNummer = 6212404;
+update uitslag set knsbNummer = 7613166 where seizoen = '2122' and teamCode = 'ira' and rondeNummer = 4 and knsbNummer = 6212404;
+select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer = 4 and knsbNummer = 6192098;
+
+
+set @bord = 13;
+set @wit = 103;
+set @zwart = 102;
+
+set @bord = 12;
+set @wit = 7321534;
+set @zwart = 8485059;
+
+set @bord = 11;
+set @wit = 7210137;
+set @zwart = 8372881;
+
+set @bord = 10;
+set @wit = 7824674;
+set @zwart = 7535396;
+
+set @bord = 9;
+set @wit = 7529522;
+set @zwart = 7399469;
+
+update uitslag set bordNummer = @bord, witZwart = 'w', tegenstanderNummer = @zwart where seizoen = '2122' and teamCode = 'ira' and rondeNummer = 4 and knsbNummer = @wit;
+update uitslag set bordNummer = @bord, witZwart = 'z', tegenstanderNummer = @wit where seizoen = '2122' and teamCode = 'ira' and rondeNummer = 4 and knsbNummer = @zwart;
+
+
+delete from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer = 4 and knsbNummer = 7613166;
+
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer 
+where seizoen = '2122'and teamCode = 'ira' and rondeNummer = 4 and partij = 'i' order by bordNummer;
+
+update uitslag set tegenstanderNummer = 7613166 where seizoen = '2122' and teamCode = 'ira' and rondeNummer = 4 and knsbNummer = 6192098;
+
+u
+
 
 select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and knsbNummer = @knsbNummer;
 
-update uitslag set partij = 'm' where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and knsbNummer = @knsbNummer;
+update uitslag set partij = 'a' where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (1,2,3) and knsbNummer = @knsbNummer;
 
 select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and partij = 'a';
 delete from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6) and partij = 'a';
@@ -23,13 +69,10 @@ update uitslag set partij = 'n' where seizoen = '2122' and teamCode = 'ira' and 
 
 select * from uitslag where seizoen = '2122' and teamCode = 'ira' and rondeNummer in (4, 5, 6);
 
-
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'ira', 4, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int'),
 ('2122', 'ira', 5, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int'),
 ('2122', 'ira', 6, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int');
-
-
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'ira', 4, 0, @knsbNummer, 'm', '', '0', '', '2022-02-22', 'int'),
