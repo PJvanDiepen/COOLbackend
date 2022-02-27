@@ -1,5 +1,11 @@
 "use strict";
 
+/*
+    verwerk ronde=<ronde>
+           &rangnummers=aan
+           &indelen=<versienummer indelen algoritme>
+ */
+
 (async function() {
     await init();
     competitieTitel();

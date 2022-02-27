@@ -9,7 +9,11 @@
 })();
 
 /*
-    verwerk gebruiker=<andereGebruiker>&naamGebruiker=<naamGebruiker>&team=<teamCode>&ronde=<rondeNummer>&partij=[MEEDOEN of NIET_MEEDOEN]
+    verwerk gebruiker=<andereGebruiker>
+           &naamGebruiker=<naamGebruiker>
+           &team=<teamCode>
+           &ronde=<rondeNummer>
+           &partij=[MEEDOEN of NIET_MEEDOEN]
  */
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;

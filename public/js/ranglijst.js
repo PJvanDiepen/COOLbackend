@@ -1,7 +1,8 @@
 "use strict";
 
 /*
-    verwerk leden=[actieve leden] of versie=0
+    verwerk leden=0
+           &ronde=<rondeNummer>
  */
 
 const alleLeden = Number(params.get("leden"));

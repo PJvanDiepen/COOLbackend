@@ -1,5 +1,12 @@
 "use strict";
 
+/*
+    verwerk ronde=<rondeNummers>
+           &wit=<knsbNummer>
+           &zwart=<knsbNummer>
+           &uitslag=<uitslag wit>
+ */
+
 (async function() {
     await init();
     competitieTitel();

@@ -11,8 +11,26 @@
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
     }
     document.getElementById("kop").innerHTML = competitie.vereniging + SCHEIDING + seizoenVoluit(competitie.seizoen);
+    // document.getElementById("competitie").innerHTML = "Ranglijst " + teamVoluit(competitie.competitie);
+    // competitieSelecteren();
     seizoenSelecteren(INTERNE_COMPETITIE);
 })();
+
+async function competitieSelecteren() {
+    const competities = document.getElementById("competitieSelecteren");
+    (await localFetch("/teams/" + competitie.seizoen)).forEach(
+        function (team) {
+            if (interneCompetitie(team.teamCode)) {
+                competities.appendChild(htmlOptie(team.teamCode, team.omschrijving));
+            }
+        });
+    competities.value = competitie.competitie; // werkt uitsluitend na await
+    competities.addEventListener("input",
+        function () {
+            sessionStorage.setItem("competitie", competities.value);
+            naarZelfdePagina(`team=${competitie.team}&competitie=${competitie.competitie}&ronde=0`);
+        });
+}
 
 async function seizoenSelecteren(teamCode) {
     const seizoenen = document.getElementById("seizoenSelecteren");
