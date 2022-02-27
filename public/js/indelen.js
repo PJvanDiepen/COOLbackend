@@ -61,6 +61,7 @@ async function spelerSelecteren(rondeNummer, deelnemers) {
         const knsbNummer = Number(spelers.value);
         const partij = deelnemers.includes(knsbNummer) ? NIET_MEEDOEN : MEEDOEN;
         const datum = datumSQL(competitie.ronde[rondeNummer].datum);
+        // TODO naar agenda.html niet /aanwezig aanroepen!
         await serverFetch(
             `/${uuidToken}/aanwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
         naarZelfdePagina(); // TODO mutatie na init() en speler geel maken indien gelukt

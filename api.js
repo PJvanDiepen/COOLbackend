@@ -68,10 +68,10 @@ module.exports = router => {
         if (gebruiker.juisteRechten(GEREGISTREERD)) { // voorlopige indeling uitsluitend voor geregistreerde gebruikers
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
-                .where('uitslag.seizoen', ctx.params.seizoen)
+                .whereIn('uitslag.partij', [MEEDOEN, EXTERN_THUIS, EXTERN_UIT])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.partij', MEEDOEN);
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
         }
         if (deelnemers.length === 0) { // voor opnieuw indelen reeds gespeelde ronde
             deelnemers = await Uitslag.query()
@@ -381,7 +381,7 @@ module.exports = router => {
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.teamCode', ctx.params.teamCode)
             .whereBetween('uitslag.rondeNummer', [ctx.params.van, ctx.params.tot])
-            .orderBy(['uitslag.rondeNummer','uitslag.bordNummer','uitslag.partij','witZwart']);
+            .orderBy(['rondeNummer','bordNummer','partij','witZwart', 'knsbNummer']);
     });
 
     router.get('/:uuidToken/gebruikers', async function (ctx) {
