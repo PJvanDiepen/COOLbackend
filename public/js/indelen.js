@@ -84,23 +84,10 @@ async function deelnemersRonde(rondeNummer) {
 
 async function ranglijstSorteren(totDatum, deelnemers) {
     const lijst = await ranglijst(totDatum, deelnemers);
-    let gesorteerdTot = 1;
-    while (gesorteerdTot < lijst.length && lijst[gesorteerdTot - 1].zonderAftrek() >= lijst[gesorteerdTot].zonderAftrek()) {
-        gesorteerdTot++;
-    }
-    if (gesorteerdTot >= lijst.length) {
-        return lijst; // ranglijst was al gesorteerd
-    } else {
-        let tussenvoegen = gesorteerdTot; // lijst is gesorteerdTot de rest tussenvoegen
-        let gesorteerd = [];
-        for (let i = 0; i < gesorteerdTot; i++) {
-            while (tussenvoegen < lijst.length && lijst[tussenvoegen].zonderAftrek() >= lijst[i].zonderAftrek()) {
-                gesorteerd.push(lijst[tussenvoegen++]);
-            }
-            gesorteerd.push(lijst[i])
-        }
-        return gesorteerd;
-    }
+    lijst.sort(function (een, ander) {
+        return ander.zonderAftrek() - een.zonderAftrek(); // van hoog naar laag
+    });
+    return lijst;
 }
 
 function rangnummersToggle(rangnummers, rondeNummer) {
@@ -215,10 +202,10 @@ function nietTegen(r, i, j) {
     } else if (competitie.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
     } else if (r[i].intern() < 4 && nogNietTegen.includes(r[j].knsbNummer)) {
-        console.log(`${r[i].naam} nog maar niet tegen ${r[j].naam}`);
+        console.log(`${r[i].naam} nog niet tegen ${r[j].naam}`);
         return true; // de eerste 3 x nogNietTegen
     } else if (r[j].intern() < 4 && nogNietTegen.includes(r[i].knsbNummer)) {
-        console.log(`${r[j].naam} nog maar niet tegen ${r[i].naam}`);
+        console.log(`${r[j].naam} nog niet tegen ${r[i].naam}`);
         return true; // de eerste 3 x nogNietTegen
     } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) {
         if (r[j].intern() / r[i].intern() > 2) {
@@ -268,6 +255,7 @@ const indelenFun = [
         }
         return oneven;
     }],
+
     ["indelen met alleen vooruit gaan", function (r, wit, zwart) {
         console.log("--- indelen met met alleen vooruit gaan ---");
         const oneven = onevenSpeler(r);
@@ -377,13 +365,9 @@ function eenNietIngedeeldeSpeler(nietIngedeeld, poging) {
 function onevenSpeler(r) {
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
     if (oneven) {
-        while (r[oneven].oneven()) {
-            console.log(`${r[oneven].naam} was al oneven`);
-            oneven--;
-        }
-        for (let i = oneven - 1; i > -1; i--) {
+        for (let i = oneven; i > -1; i--) {
             if (r[i].oneven()) {
-                console.log(`${r[i].naam} was al oneven!?`);  // TODO kan dit?
+                console.log(`${r[i].naam} was al oneven`);
             } else if (r[i].intern() > r[oneven].intern()) {
                 console.log(`${r[i].naam} heeft meer interne partijen gespeeld dan ${r[oneven].naam}`);
                 oneven = i;
