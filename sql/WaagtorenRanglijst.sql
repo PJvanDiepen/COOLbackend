@@ -376,8 +376,16 @@ order by u.teamCode, u.rondeNummer;
 select r.*, bond, poule, omschrijving, borden, naam from ronde r
 join team t on r.seizoen = t.seizoen and r.teamCode = t.teamCode
 join persoon on teamleider = knsbNummer
-where r.seizoen = @seizoen and r.teamCode not in ('int', 'ipv')
+where r.seizoen = @seizoen and r.teamCode not in ('int', 'ira')
 order by r.datum, r.teamCode;
+
+set @seizoen = '2122';
+set @datum = '2022-03-01'; 
+-- wie gaat extern spelen per datum
+select u.*, naam from uitslag u join persoon p on u.knsbNummer = p.knsbNummer   
+where seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
+
+update uitslag set partij = 'u' where knsbNummer = 7879520 and seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
 
 -- volgende externe wedstrijd
 select datum from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') and partij in ('m', 'n') order by datum limit 1;

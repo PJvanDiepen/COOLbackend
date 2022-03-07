@@ -22,7 +22,8 @@ Uitleg over hard reload in browsers.
 1. Volgorde uitvoeren JavaScript code met [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise).
 2. Verschil tussen Number(getal) en "getal".
 3. Verschil tussen SQL date, JSON date en [Date()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date).
-4. Misleidend commentaar, verkeerde namen voor variabelen of functies.
+4. Misleidend of ontbrekend commentaar.
+5. Verkeerde namen voor variabelen of functies.
 
 
    

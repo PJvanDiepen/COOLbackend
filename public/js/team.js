@@ -5,8 +5,8 @@
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
-    teamSelecteren(competitie.team);
-    uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
+    await teamSelecteren(competitie.team);
+    await uitslagenTeam(document.getElementById("kop"), document.getElementById("ronden"));
 })();
 
 async function uitslagenTeam(kop, rondenTabel) {

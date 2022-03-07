@@ -25,7 +25,11 @@
         oneven = indelenRonde(r, wit, zwart);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
+    // TODO PvD uitzoeken hoe externe partijen in uitslag staan: 2 records, beter toch rondeNummer van interne competitie ronde
+    // gaat dit goed in agenda.js
+    console.log(`/${uuidToken}/extern/${competitie.seizoen}/${datumSQL(totDatum)}`);
     const extern = await serverFetch(`/${uuidToken}/extern/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
+    console.log(extern);
     partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), extern);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
@@ -196,7 +200,7 @@ function indelenRonde(r, wit, zwart) {
  * @returns {boolean}
  */
 function nietTegen(r, i, j) {
-    const nogNietTegen = [101, 103]; // Ramon Witte, Charles Stoorvogel TODO test ronde 11 van seizoen = 2122
+    const nogNietTegen = [101 , 103]; // Ramon Witte, Charles Stoorvogel
     if (!r[i].tegen(r[j])) {
         return true;
     } else if (competitie.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
@@ -212,7 +216,7 @@ function nietTegen(r, i, j) {
             console.log(`${r[i].naam} te sterk voor ${r[j].naam}`);
             return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
         }
-    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 4) {
+    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) {
         if (r[i].intern() / r[j].intern() > 2) {
             console.log(`${r[j].naam} te sterk voor ${r[i].naam}`);
             return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
