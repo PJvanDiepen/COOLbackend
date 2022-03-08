@@ -48,42 +48,33 @@
   where u.seizoen = @seizoen
       and u.knsbNummer = @knsbNummer
       and u.anderTeam = 'int'
-  order by u.datum, u.bordNummer;
+  order by u.datum, u.rondeNummer;
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    const totDatum = datumSQL(null, 10); // + 10 dagen voor testen
+    const totDatum = datumSQL(null, 10); // + 10 dagen voor testen TODO zie competitie.
     const t = (await ranglijst(totDatum, [competitie.speler]))[0];
     kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(competitie.seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
         lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
-    let vorigeUitslag = {partij: "?"}; // vorigeUitslag is geen externe partij;
-    (await localFetch(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`)).forEach(
-        function (uitslag) {
-            console.log(uitslag);
-            /*
-            if (vorigeUitslag.partij === EXTERNE_PARTIJ && uitslag.partij !== EXTERNE_PARTIJ) { // externe partij niet tijdens interne ronde
-                lijst.appendChild(externePartij(vorigeUitslag, totaal)); // was nog niet verwerkt
-            }
-            if (vorigeUitslag.partij === EXTERNE_PARTIJ && uitslag.partij === EXTERNE_PARTIJ) { // externe partij tijdens interne ronde
-                        } else if (uitslag.teamCode === INTERNE_COMPETITIE && uitslag.partij === EXTERNE_PARTIJ) {
-                vorigeUitslag = uitslag; // deze uitslag overslaan en combineren met volgende uitslag
-             */
-            if (t.intern()) {
-                totaal += uitslag.punten;
-            }
-            if (uitslag.partij === INTERNE_PARTIJ) {
-                lijst.appendChild(internePartij(uitslag, totaal));
-            } else if ([MEEDOEN, NIET_MEEDOEN, EXTERN_THUIS, EXTERN_UIT].includes(uitslag.partij)) {
-                // geplande partij overslaan
-            } else if (uitslag.partij === EXTERNE_PARTIJ && uitslag.teamCode !== INTERNE_COMPETITIE) {
-                lijst.appendChild(externePartij(uitslag, totaal));
-            } else {
-                lijst.appendChild(geenPartij(uitslag, totaal));
-            }
-        });
+    const uitslagen = await localFetch(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`);
+    const regels = externTijdensInternSamenvoegen(uitslagen);
+    for (const uitslag of uitslagen) {
+        if (t.intern()) {
+            totaal += uitslag.punten;
+        }
+        if (uitslag.partij === INTERNE_PARTIJ) {
+            lijst.appendChild(internePartij(uitslag, totaal));
+        } else if ([MEEDOEN, NIET_MEEDOEN, EXTERN_THUIS, EXTERN_UIT].includes(uitslag.partij)) {
+            // geplande partij overslaan
+        } else if (uitslag.partij === EXTERNE_PARTIJ && uitslag.teamCode !== INTERNE_COMPETITIE) {
+            lijst.appendChild(externePartij(uitslag, totaal));
+        } else {
+            lijst.appendChild(geenPartij(uitslag, totaal));
+        }
+    }
     if (t.aftrek()) {
         lijst.appendChild(htmlRij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
     }
@@ -92,6 +83,37 @@ async function uitslagenSpeler(kop, lijst) {
     }
     if (!t.intern() && !t.extern()) {
         lijst.appendChild(htmlRij("", "", "geen interne en geen externe partijen", "", "", "", "", ""));
+    }
+}
+
+function externTijdensInternSamenvoegen(uitslagen) {
+    if (uitslagen.length < 2) {
+        return uitslagen;
+    } else {
+        let minderUitslagen = [];
+        let samenvoegen = -1; // niet samengevoegd
+        for (let i = 0; i < uitslagen.length; i++) {
+            if (samenvoegen < i) { // verwerken indien niet samengevoegd
+                samenvoegen = externTijdensIntern(uitslagen, i);
+                if (samenvoegen === i + 1) {
+                    console.log("--- samenvoegen ---");
+                    console.log(uitslagen[i]);
+                    console.log(uitslagen[i + 1]);
+                    console.log("---+---");
+                } else {
+                    minderUitslagen.push(uitslagen[i]);
+                }
+            }
+        }
+        return minderUitslagen;
+    }
+}
+
+function externTijdensIntern(uitslagen, i) {
+    if (i + 1 < uitslagen.length && uitslagen[i].partij === EXTERNE_PARTIJ && uitslagen[i + 1].partij === EXTERNE_PARTIJ) {
+        return uitslagen[i].datum === uitslagen[i + 1].datum ? i + 1 : -1;
+    } else {
+        return -1;
     }
 }
 
@@ -122,14 +144,6 @@ function geenPartij(uitslag, totaal) {
                        : uitslag.partij === REGLEMENTAIRE_WINST  ? "reglementaire winst"
                        : uitslag.partij === EXTERNE_PARTIJ       ? "externe partij" : "???";
     return htmlRij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", "", uitslag.punten, totaal);
-}
-
-function externePartijTijdensInterneRonde(vorigeUitslag, uitslag, totaal) {
-    console.log("externePartijTijdensInterneRonde()");
-    const datumKolom = naarRonde(uitslag);
-    const tegenstanderKolom = naarTeam(uitslag);
-    const puntenKolom = vorigeUitslag.punten + uitslag.punten;
-    return htmlRij(vorigeUitslag.rondeNummer, datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, puntenKolom, totaal);
 }
 
 function externePartij(uitslag, totaal) {
