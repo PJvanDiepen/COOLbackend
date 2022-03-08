@@ -91,7 +91,6 @@ module.exports = router => {
      */
     router.get('/:uuidToken/extern/:seizoen/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        console.log("/:uuidToken/extern/:seizoen/:datum");
         let deelnemers = {};
         if (gebruiker.juisteRechten(GEREGISTREERD)) {
             deelnemers = await Uitslag.query()
@@ -102,7 +101,6 @@ module.exports = router => {
                 .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .orderBy('naam');
-            console.log(deelnemers);
         }
         ctx.body = deelnemers;
     });
