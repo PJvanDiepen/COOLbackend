@@ -62,14 +62,13 @@ async function uitslagenSpeler(kop, lijst) {
     const uitslagen = await localFetch(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
-        console.log(uitslagen[i]);
-        if (t.intern()) {
-            totaal += uitslagen[i].punten;
-        }
         if (samenvoegen < i && geenGeplandePartij(uitslagen, i)) { // verwerken indien niet samengevoegd
             samenvoegen = externTijdensIntern(uitslagen, i);
             if (samenvoegen === i + 1) {
-                if (uitslagen[i].teamCode === competitie.competitie) {
+                if (t.intern()) {
+                    totaal += uitslagen[i].punten + uitslagen[i + 1].punten;
+                }
+                if (uitslagen[i].teamCode === competitie.competitie) { // TODO verplaatsen naar externePartijTijdensInterneRonde
                     lijst.appendChild(externePartijTijdensInterneRonde(uitslagen[i + 1], totaal, uitslagen[i]));
                 } else if (uitslagen[i + 1].teamCode === competitie.competitie) {
                     lijst.appendChild(externePartijTijdensInterneRonde(uitslagen[i], totaal, uitslagen[i + 1]));
@@ -77,6 +76,9 @@ async function uitslagenSpeler(kop, lijst) {
                     console.log("--- fout met externePartijTijdensInterneRonde ---");
                 }
             } else {
+                if (t.intern()) {
+                    totaal += uitslagen[i].punten;
+                }
                 if (uitslagen[i].partij === INTERNE_PARTIJ) {
                     lijst.appendChild(internePartij(uitslagen[i], totaal));
                 } else if (uitslagen[i].partij === EXTERNE_PARTIJ && uitslagen[i].teamCode !== INTERNE_COMPETITIE) {
