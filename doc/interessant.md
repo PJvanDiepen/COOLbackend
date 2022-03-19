@@ -74,6 +74,7 @@ Later:
 - [Klikmenu](https://css-tricks.com/in-praise-of-the-unambiguous-click-menu/)
 - [Hamburger CSS](https://medium.com/@heyoka/responsive-pure-css-off-canvas-hamburger-menu-aebc8d11d793)
 - [Hamburger CSS](https://leewarrick.com/blog/css-only-menus/)
+- [CSS tricks](https://stackdiary.com/useful-css-tricks/)
 - [Dropdown menu best practise](https://webdesign.tutsplus.com/articles/best-practices-for-responsive-dropdown-menus--cms-35212)
 - [Dropdown menu](https://bitsofco.de/accessible-multi-level-dropdown-navigation/)
 - [Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)

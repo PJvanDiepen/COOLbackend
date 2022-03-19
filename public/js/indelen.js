@@ -13,7 +13,7 @@
     const totDatum = competitie.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");
     subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
-    const deelnemers = await deelnemersRonde(rondeNummer);
+    const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
     const r = await ranglijstSorteren(totDatum, deelnemers);
     const wit = [];
     const zwart = [];
@@ -25,11 +25,7 @@
         oneven = indelenRonde(r, wit, zwart);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    // TODO PvD uitzoeken hoe externe partijen in uitslag staan: 2 records, beter toch rondeNummer van interne competitie ronde
-    // gaat dit goed in agenda.js
-    console.log(`/${uuidToken}/extern/${competitie.seizoen}/${datumSQL(totDatum)}`);
     const extern = await serverFetch(`/${uuidToken}/extern/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
-    console.log(extern);
     partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), extern);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
@@ -56,33 +52,14 @@
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }]);
-    spelerSelecteren(rondeNummer, deelnemers);
     versieSelecteren(document.getElementById("versies"), rondeNummer);
 })();
 
-async function spelerSelecteren(rondeNummer, deelnemers) {
-    const spelers = document.getElementById("spelerSelecteren");
-    spelers.appendChild(htmlOptie(0, "selecteer naam"));
-    (await localFetch(`/spelers/${competitie.seizoen}`)).forEach(
-        function (speler) { // TODO indien mutatie speler geel maken
-            spelers.appendChild(htmlOptie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  KRUISJE : "")));
-        });
-    spelers.addEventListener("input",async function () {
-        const knsbNummer = Number(spelers.value);
-        const partij = deelnemers.includes(knsbNummer) ? NIET_MEEDOEN : MEEDOEN;
-        const datum = datumSQL(competitie.ronde[rondeNummer].datum);
-        // TODO naar agenda.html niet /aanwezig aanroepen!
-        await serverFetch(
-            `/${uuidToken}/aanwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
-        naarZelfdePagina(); // TODO mutatie na init() en speler geel maken indien gelukt
-    });
-}
-
-async function deelnemersRonde(rondeNummer) {
+async function deelnemersRonde(rondeNummer, partij) {
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        return await serverFetch(`/${uuidToken}/deelnemers/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`); // actuele situatie
+        return await serverFetch(`/${uuidToken}/deelnemers/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${partij}`); // actuele situatie
     } else {
-        return [0];
+        return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd
     }
 }
 
@@ -112,7 +89,7 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
             i + 1,
             naarSpeler(r[wit[i]]),
             naarSpeler(r[zwart[i]]),
-            rangnummers ? `${wit[i]+1} - ${zwart[i]+1}` : ""
+            rangnummers ? `${wit[i] + 1} - ${zwart[i] + 1}` : ""
         ));
     }
     if (oneven) {
@@ -120,7 +97,7 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
     }
     let bord = wit.length;
     for (const speler of extern) { // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
-        partijen.appendChild(htmlRij(speler.partij === EXTERN_THUIS ? ++bord : "", naarSpeler(speler), "extern", ""));
+        partijen.appendChild(htmlRij(speler.partij === EXTERN_THUIS ? ++bord : "", naarSpeler(speler), "", "extern"));
     }
 }
 

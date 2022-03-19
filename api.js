@@ -62,18 +62,33 @@ module.exports = router => {
         ctx.body = uitslagen.length; // 1 = indeling zonder uitslagen, 0 = geen indeling
     });
 
-    router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+    router.get('/:uuidToken/teamleden/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
-        if (gebruiker.juisteRechten(GEREGISTREERD)) { // voorlopige indeling uitsluitend voor geregistreerde gebruikers
+        if (gebruiker.juisteRechten(GEREGISTREERD)) { // in agenda van geregistreerde gebruikers
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [MEEDOEN, EXTERN_THUIS, EXTERN_UIT])
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.anderTeam', ctx.params.teamCode); // teamCode = competitie
         }
-        if (deelnemers.length === 0) { // voor opnieuw indelen reeds gespeelde ronde
+        ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
+    });
+
+    router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer/:partij', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let deelnemers = {};
+        if (gebruiker.juisteRechten(GEREGISTREERD)) { // voorlopige indeling uitsluitend voor geregistreerde gebruikers
+            deelnemers = await Uitslag.query()
+                .select('uitslag.knsbNummer')
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.partij', ctx.params.partij);
+        }
+        if (deelnemers.length === 0 && ctx.params.partij === MEEDOEN) { // voor opnieuw indelen reeds gespeelde ronde
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])
@@ -100,7 +115,7 @@ module.exports = router => {
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .orderBy('naam');
+                .orderBy(['uitslag.partij', 'naam']);
         }
         ctx.body = deelnemers;
     });
@@ -220,12 +235,12 @@ module.exports = router => {
     with
       s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
       u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)
-    select r.*, u.partij
+    select r.*, u.partij, u.anderTeam
       from ronde r
       join s on r.seizoen = s.seizoen
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where r.seizoen = @seizoen and (r.teamCode like 'i%' or r.teamCode in (s.knsbTeam, s.nhsbTeam))
-    order by r.datum, r.rondeNummer;
+    order by r.datum, r.teamCode, r.rondeNummer;
      */
     router.get('/:uuidToken/kalender/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -242,7 +257,7 @@ module.exports = router => {
                      .where('uitslag.seizoen', ctx.params.seizoen)
                      .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
              })
-             .select('ronde.*', 'u.partij')
+             .select('ronde.*', 'u.partij', 'u.anderTeam')
              .join('s', 's.seizoen', 'ronde.seizoen')
              .leftJoin('u', function(join) {
                  join.on('u.seizoen', 'ronde.seizoen')
@@ -252,7 +267,7 @@ module.exports = router => {
              .where('ronde.seizoen', ctx.params.seizoen)
              .whereIn('ronde.teamCode', // interne competities en externe teams van speler
                  [INTERNE_COMPETITIE, RAPID_COMPETTIE, ref('s.knsbTeam'), ref('s.nhsbTeam')]) // TODO like "i%"
-             .orderBy(['ronde.datum', 'ronde.rondeNummer']);
+             .orderBy(['ronde.datum', 'ronde.teamCode', 'ronde.rondeNummer']);
         } else {
             ctx.body = [];
         }
@@ -465,7 +480,7 @@ module.exports = router => {
     });
 
     /*
-    ronde in agenda toevoegen
+    wedstrijd in agenda toevoegen
      */
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -491,7 +506,7 @@ module.exports = router => {
 
     /*
     -- uitslagen / ronden op dezelfde datum
-    select u.teamCode, u.rondeNummer, u.anderTeam, u.partij, r.uithuis
+    select u.teamCode, u.rondeNummer, u.partij, u.anderTeam, r.uithuis
       from uitslag u
       join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where u.seizoen = @seizoen and u.knsbNummer = @knsbNummer and u.datum = @datum
@@ -501,67 +516,58 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(WEDSTRIJDLEIDER) || gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) {
-            const uitslag = await Uitslag.query()
-                .select('uitslag.partij')
-                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
-            let partij = ctx.params.partij;
-            if (!uitslag && partij === MEEDOEN) {
-                // TODO keuze 1) AFWEZIG in vorige ronden en NIET_MEEDOEN in volgende ronden van deze competitie toevoegen
-                // TODO keuze 2) helemaal niets doen en verwijzen naar Aanmelden / Afzeggen
-                await Uitslag.query()
-                    .insert({seizoen: ctx.params.seizoen,
-                        teamCode: ctx.params.teamCode,
-                        rondeNummer: ctx.params.rondeNummer,
-                        bordNummer: 0,
-                        knsbNummer: ctx.params.knsbNummer,
-                        partij: MEEDOEN,
-                        witZwart: "",
-                        tegenstanderNummer: 0,
-                        resultaat: "",
-                        datum: ctx.params.datum,
-                        anderTeam: ctx.params.teamCode}); // uitsluitend voor interne competities
-                aantal++;
-            } else if (uitslag && aanmeldenAfzeggen(uitslag.partij, ctx.params.partij)) {
-                if (partij === NIET_MEEDOEN) {
-                    if (await Uitslag.query()
-                        .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
-                        .patch({partij: NIET_MEEDOEN})) {
-                        aantal++;
-                    }
-                } else { // MEEDOEN
-                    const ronden = await Uitslag.query()
-                        .select('uitslag.teamCode', 'uitslag.rondeNummer', 'uitslag.anderTeam', 'ronde.uithuis')
-                        .join('ronde', function(join) {
-                            join.on('uitslag.seizoen', 'ronde.seizoen')
-                                .andOn('uitslag.teamCode', 'ronde.teamCode')
-                                .andOn('uitslag.rondeNummer','ronde.rondeNummer')})
-                        .where('uitslag.seizoen', ctx.params.seizoen)
-                        .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-                        .andWhere('uitslag.datum', ctx.params.datum)
-                        .orderBy(['uitslag.teamCode', 'uitslag.rondeNummer']);
-                    for (const ronde of ronden) {
-                        if (ronde.teamCode === ctx.params.teamCode && ronde.teamCode  !== ronde.anderTeam) {
-                            partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
+            const ronden = await Uitslag.query()
+                .select('uitslag.teamCode', 'uitslag.rondeNummer', 'uitslag.partij', 'uitslag.anderTeam', 'ronde.uithuis')
+                .join('ronde', function(join) {
+                    join.on('uitslag.seizoen', 'ronde.seizoen')
+                        .andOn('uitslag.teamCode', 'ronde.teamCode')
+                        .andOn('uitslag.rondeNummer','ronde.rondeNummer')})
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                .andWhere('uitslag.datum', ctx.params.datum)
+                .orderBy(['uitslag.teamCode', 'uitslag.rondeNummer']);
+            console.log(ronden);
+            // TODO PvD tussenstappen zonder muteren eerst alles controleren
+            let partij = aanmeldenAfzeggen(ronden, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.partij);
+            if (partij === NIET_MEEDOEN) {
+                for (const ronde of ronden) {
+                    /*
+                    if (ronde.teamCode === ctx.params.teamCode || bijbehorendeInterneRonde(ronde, partij)) {
+                        if (await Uitslag.query()
+                            .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
+                            .patch({partij: NIET_MEEDOEN})) {
+                            aantal++;
                         }
                     }
-                    for (const ronde of ronden) {
-                        if (ronde.teamCode === ctx.params.teamCode) {
-                            if (await Uitslag.query()
-                                .findById([ctx.params.seizoen, ctx.params.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
-                                .patch({partij: partij})) { // MEEDOEN, EXTERN_THUIS of EXTERN_UIT
-                                aantal++;
-                            }
-                        } else {
-                            if (await Uitslag.query()
-                                .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
-                                .patch({partij: NIET_MEEDOEN})) {
-                                aantal++;
-                            }
-                        }
+                     */
+                }
+            } else { // MEEDOEN
+                for (const ronde of ronden) {
+                    if (ronde.teamCode === ctx.params.teamCode && ronde.teamCode  !== ronde.anderTeam) { // externe wedstrijd tijdens interne ronde
+                        partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
                     }
                 }
-                await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
+                for (const ronde of ronden) {
+                    if (ronde.teamCode === ctx.params.teamCode || bijbehorendeInterneRonde(ronde, partij)) {
+                        /*
+                        if (await Uitslag.query()
+                            .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
+                            .patch({partij: partij})) { // MEEDOEN, EXTERN_THUIS of EXTERN_UIT
+                            aantal++;
+                        }
+                         */
+                    } else {
+                        /*
+                        if (await Uitslag.query()
+                            .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
+                            .patch({partij: NIET_MEEDOEN})) {
+                            aantal++;
+                        }
+                         */
+                    }
+                }
             }
+            await mutatie(gebruiker, ctx, aantal, OPNIEUW_INDELEN);
         }
         ctx.body = aantal;
     });
@@ -851,13 +857,19 @@ const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op din
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 
-function aanmeldenAfzeggen(oud, nieuw) {
-    if (oud === NIET_MEEDOEN) { // aanmelden
-        return nieuw === MEEDOEN;
-    } else  if (oud === MEEDOEN || oud === EXTERN_THUIS || oud === EXTERN_UIT) { // afzeggen
-        return nieuw === NIET_MEEDOEN;
+function aanmeldenAfzeggen(ronden, teamCode, rondeNummer, partijNieuw) {
+    let partijOud = "";
+    for (const ronde of ronden) {
+        if (ronde.teamCode === teamCode && ronde.rondeNummer === rondeNummer) {
+            partijOud = ronde.partij;
+        }
     }
-    return false;
+    if (partijOud === NIET_MEEDOEN && partijNieuw === MEEDOEN) {
+        return MEEDOEN; // aanmelden
+    } else if ((partijOud === MEEDOEN || partijOud === EXTERN_THUIS || partijOud === EXTERN_UIT) && partijNieuw === NIET_MEEDOEN) {
+        return NIET_MEEDOEN; // afzeggen
+    }
+    return ""; // niet aanmelden en ook niet afmelden
 }
 
 // uitslag.witZwart
@@ -897,6 +909,13 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
         } else {
             return allesWijzigen || eigenResultaat === ""; // gebruiker mag alles wijzigen of uitsluitend resultaat invullen
         }
+    }
+    return false;
+}
+
+function bijbehorendeInterneRonde(ronde, partij) {
+    if (ronde.teamCode === INTERNE_COMPETITIE) {
+        return partij === EXTERN_THUIS || partij === EXTERN_UIT;
     }
     return false;
 }

@@ -205,8 +205,8 @@ const tk = [
         zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
         kabinet: "Rutte 4",
         coalitie: "VVD, D66, CDA, CU",
-        breed: 800,
-        hoog: 450,
+        breed: 1566,
+        hoog: 505,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
     }
 /*

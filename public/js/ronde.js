@@ -175,7 +175,8 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
             }
         }
     }
-    if (competitie.laatsteRonde > rondeNummer + 1) {
+    if (competitie.laatsteRonde > rondeNummer) {
+        lijst.appendChild(rondeInterneCompetitie(rondeNummer));
         lijst.appendChild(rondeInterneCompetitie(rondeNummer + 1));
     }
     lijst.appendChild(rondeInterneCompetitie(competitie.laatsteRonde));

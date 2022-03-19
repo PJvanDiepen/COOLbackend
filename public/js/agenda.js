@@ -14,7 +14,26 @@
            &team=<teamCode>
            &ronde=<rondeNummer>
            &partij=[MEEDOEN of NIET_MEEDOEN]
+
+    De agenda gaat uitsluitend over nog niet gespeelde wedstrijden in het huidige seizoen.
+
+    In de agenda van een speler staan wedstrijden vastgelegd in uitslagen met partij = MEEDOEN, NIET_MEEDOEN, EXTERN_UIT of EXTERN_THUIS.
+    De wedstrijden in de agenda staan op volgorde van datum, teamCode en rondeNummer.
+    Per datum kunnen er verschillende competities / externe wedstrijden zijn (met een verschillende teamCode) en meer ronden.
+
+    De rapid en snelschaak competitie kunnen per datum meer ronden hebben.
+    De interne competitie, rapid competitie en snelschaak competitie zijn nooit op dezelfde datum.
+    Tijdens een ronde van de interne competitie kunnen verschillende externe wedstrijden (uit of thuis) zijn.
+
+    Een speler kan per datum meedoen in 1 competitie of meedoen in 1 externe wedstrijd of niet meedoen.
+
+    Indien een externe wedstrijd meetelt voor de interne competitie (anderTeam = INTERNE_COMPETITIE)
+    en de datum van de externe wedstrijd is de datum van een ronde van de interne competitie
+    dan wordt dit vastgelegd in 2 uitslagen met 2 verschillende teamCode (van team en van INTERNE_COMPETITIE)
+    en partij = EXTERN_UIT of EXTERN_THUIS.
+
  */
+
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
     const gewijzigd = await agendaMutatie(andereGebruiker);
@@ -26,18 +45,18 @@ async function agenda(kop, lijst) {
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN || w.partij === EXTERN_THUIS || w.partij === EXTERN_UIT) {
-            const deelnemers = await serverFetch( // actuele situatie
-                `/${uuidToken}/deelnemers/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
-            const partij = w.partij === NIET_MEEDOEN ? MEEDOEN : NIET_MEEDOEN;
-            const link = htmlLink( // TODO gebruiker en naamGebruiker anders doorgeven
-                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datumSQL(w.datum)}&partij=${partij}`,
-                w.partij === NIET_MEEDOEN ? STREEP : VINKJE);
+            console.log(w);
+            const teamleden = await serverFetch( // actuele situatie
+                `/${uuidToken}/teamleden/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
+            const link = htmlLink(
+                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datumSQL(w.datum)}&partij=${wijzig(w)}`,
+                vinkje(w));
             htmlVerwerkt(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.appendChild(htmlRij(
                 interneCompetitie(w.teamCode) ? w.rondeNummer : "",
                 datumLeesbaar(w),
                 interneCompetitie(w.teamCode) ? teamVoluit(w.teamCode) : wedstrijdVoluit(w),
-                deelnemers.length,
+                teamleden.length,
                 link));
         }
     }
@@ -79,3 +98,33 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     }
     return aanvullingen;
 }
+
+function wijzig(w) {
+    if (w.partij === NIET_MEEDOEN) {
+        return MEEDOEN;
+    } else if (w.partij === MEEDOEN) {
+        return NIET_MEEDOEN;
+    } else if (w.teamCode === w.anderTeam) { // indien EXTERN_THUIS of EXTERN_UIT dan geen interne ronde
+        return MEEDOEN;
+    } else { // indien EXTERN_THUIS of EXTERN_UIT
+        return NIET_MEEDOEN;
+    }
+}
+
+function vinkje(w) {
+    if (w.partij === NIET_MEEDOEN) {
+        return STREEP;
+    } else if (w.partij === MEEDOEN) {
+        return VINKJE;
+    } else if (w.teamCode === w.anderTeam) { // indien EXTERN_THUIS of EXTERN_UIT dan geen interne ronde
+        return STREEP;
+    } else { // indien EXTERN_THUIS of EXTERN_UIT
+        return VINKJE;
+    }
+}
+/*
+if (ronde.teamCode === ctx.params.teamCode && ronde.teamCode  !== ronde.anderTeam) { // externe wedstrijd tijdens interne ronde
+    partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
+}
+
+ */
