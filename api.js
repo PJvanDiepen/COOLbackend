@@ -71,8 +71,7 @@ module.exports = router => {
                 .whereIn('uitslag.partij', [MEEDOEN, EXTERN_THUIS, EXTERN_UIT])
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.anderTeam', ctx.params.teamCode); // teamCode = competitie
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
         }
         ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
     });
