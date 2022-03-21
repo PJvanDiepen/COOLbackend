@@ -45,7 +45,6 @@ async function agenda(kop, lijst) {
     }
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (w.partij === MEEDOEN || w.partij === NIET_MEEDOEN || w.partij === EXTERN_THUIS || w.partij === EXTERN_UIT) {
-            console.log(w);
             const teamleden = await serverFetch( // actuele situatie
                 `/${uuidToken}/teamleden/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
             const link = htmlLink(
@@ -71,13 +70,9 @@ async function agendaMutatie(knsbNummer) {
     const datum = params.get("datum");
     const partij = params.get("partij");
     if (teamCode && rondeNummer && datum && partij) {
-        console.log("--- agendaMutatie ---");
-        console.log(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
         if (await serverFetch(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`)) {
-            console.log("--- agendaMutatie gelukt ---");
             return {"teamCode": teamCode, "rondeNummer": rondeNummer};
         }
-        console.log("--- agendaMutatie mislukt! ---");
     }
     return {"teamCode": "", "rondeNummer": 0};
 }
