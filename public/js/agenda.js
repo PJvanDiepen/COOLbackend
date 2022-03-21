@@ -70,10 +70,16 @@ async function agendaMutatie(knsbNummer) {
     const rondeNummer = Number(params.get("ronde"));
     const datum = params.get("datum");
     const partij = params.get("partij");
-    if (teamCode && rondeNummer && partij) {
-        await serverFetch(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
+    if (teamCode && rondeNummer && datum && partij) {
+        console.log("--- agendaMutatie ---");
+        console.log(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`);
+        if (await serverFetch(`/${uuidToken}/aanwezig/${ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`)) {
+            console.log("--- agendaMutatie gelukt ---");
+            return {"teamCode": teamCode, "rondeNummer": rondeNummer};
+        }
+        console.log("--- agendaMutatie mislukt! ---");
     }
-    return {"teamCode": teamCode, "rondeNummer": rondeNummer};
+    return {"teamCode": "", "rondeNummer": 0};
 }
 
 async function agendaLezen(knsbNummer) {
@@ -122,9 +128,3 @@ function vinkje(w) {
         return VINKJE;
     }
 }
-/*
-if (ronde.teamCode === ctx.params.teamCode && ronde.teamCode  !== ronde.anderTeam) { // externe wedstrijd tijdens interne ronde
-    partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
-}
-
- */

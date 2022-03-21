@@ -526,44 +526,35 @@ module.exports = router => {
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .andWhere('uitslag.datum', ctx.params.datum)
                 .orderBy(['uitslag.teamCode', 'uitslag.rondeNummer']);
+            console.log(ronden.length + " ronden op " + ctx.params.datum);
             console.log(ronden);
-            // TODO PvD tussenstappen zonder muteren eerst alles controleren
-            let partij = aanmeldenAfzeggen(ronden, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.partij);
-            if (partij === NIET_MEEDOEN) {
+            let partij = aanmeldenAfzeggen(ronden, ctx.params.teamCode, Number(ctx.params.rondeNummer), ctx.params.partij);
+            if (partij === MEEDOEN || partij === NIET_MEEDOEN) {
+                if (partij === MEEDOEN) {
+                    for (const ronde of ronden) {
+                        if (ronde.teamCode === ctx.params.teamCode && ronde.teamCode  !== ronde.anderTeam) { // externe wedstrijd tijdens interne ronde
+                            partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
+                        }
+                    }
+                }
+                console.log("partij = " + partij);
                 for (const ronde of ronden) {
-                    /*
-                    if (ronde.teamCode === ctx.params.teamCode || bijbehorendeInterneRonde(ronde, partij)) {
+                    if (rondeMuteren(ronde, ctx.params.teamCode, Number(ctx.params.rondeNummer), partij)) {
+                        console.log("--- wijzig in MEEDOEN ---");
+                        console.log(ronde);
+                        if (await Uitslag.query()
+                            .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
+                            .patch({partij: partij})) {
+                            aantal++;
+                        }
+                    } else if (partij === MEEDOEN || partij === EXTERN_THUIS || partij === EXTERN_UIT) {
+                        console.log("--- wijzig in NIET_MEEDOEN ---");
+                        console.log(ronde);
                         if (await Uitslag.query()
                             .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
                             .patch({partij: NIET_MEEDOEN})) {
                             aantal++;
                         }
-                    }
-                     */
-                }
-            } else { // MEEDOEN
-                for (const ronde of ronden) {
-                    if (ronde.teamCode === ctx.params.teamCode && ronde.teamCode  !== ronde.anderTeam) { // externe wedstrijd tijdens interne ronde
-                        partij = ronde.uithuis === THUIS ? EXTERN_THUIS : EXTERN_UIT;
-                    }
-                }
-                for (const ronde of ronden) {
-                    if (ronde.teamCode === ctx.params.teamCode || bijbehorendeInterneRonde(ronde, partij)) {
-                        /*
-                        if (await Uitslag.query()
-                            .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
-                            .patch({partij: partij})) { // MEEDOEN, EXTERN_THUIS of EXTERN_UIT
-                            aantal++;
-                        }
-                         */
-                    } else {
-                        /*
-                        if (await Uitslag.query()
-                            .findById([ctx.params.seizoen, ronde.teamCode, ronde.rondeNummer, ctx.params.knsbNummer])
-                            .patch({partij: NIET_MEEDOEN})) {
-                            aantal++;
-                        }
-                         */
                     }
                 }
             }
@@ -860,16 +851,34 @@ const REGLEMENTAIRE_WINST  = "w";
 function aanmeldenAfzeggen(ronden, teamCode, rondeNummer, partijNieuw) {
     let partijOud = "";
     for (const ronde of ronden) {
+        console.log(ronde.teamCode === teamCode && ronde.rondeNummer === rondeNummer);
         if (ronde.teamCode === teamCode && ronde.rondeNummer === rondeNummer) {
             partijOud = ronde.partij;
         }
     }
+    console.log("aanmeldenAfzeggen: partijOud = " + partijOud + " partijNieuw = " + partijNieuw);
     if (partijOud === NIET_MEEDOEN && partijNieuw === MEEDOEN) {
+        console.log("aanmeldenAfzeggen: aanmelden");
         return MEEDOEN; // aanmelden
     } else if ((partijOud === MEEDOEN || partijOud === EXTERN_THUIS || partijOud === EXTERN_UIT) && partijNieuw === NIET_MEEDOEN) {
+        console.log("aanmeldenAfzeggen: afzeggen");
         return NIET_MEEDOEN; // afzeggen
+    } else if ((partijOud === EXTERN_THUIS || partijOud === EXTERN_UIT) && teamCode === INTERNE_COMPETITIE && partijNieuw === MEEDOEN) {
+        return MEEDOEN; // intern aanmelden  en extern afzeggen
     }
-    return ""; // niet aanmelden en ook niet afmelden
+    console.log("aanmeldenAfzeggen: niet aanmelden en ook niet afzeggen");
+    return ""; // niet aanmelden en ook niet afzeggen
+}
+
+function rondeMuteren(ronde, teamCode, rondeNummer, partij) {
+    if (ronde.teamCode === teamCode && ronde.rondeNummer === rondeNummer) {
+        return true; // juiste ronde
+    } else if  (ronde.teamCode === INTERNE_COMPETITIE) {
+        return partij === EXTERN_THUIS || partij === EXTERN_UIT; // bijbehorende interne ronde
+    } else if (ronde.teamCode === teamCode) {
+        return partij === MEEDOEN; // alle ronden op dezelfde datum
+    }
+    return false;
 }
 
 // uitslag.witZwart
@@ -909,13 +918,6 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
         } else {
             return allesWijzigen || eigenResultaat === ""; // gebruiker mag alles wijzigen of uitsluitend resultaat invullen
         }
-    }
-    return false;
-}
-
-function bijbehorendeInterneRonde(ronde, partij) {
-    if (ronde.teamCode === INTERNE_COMPETITIE) {
-        return partij === EXTERN_THUIS || partij === EXTERN_UIT;
     }
     return false;
 }

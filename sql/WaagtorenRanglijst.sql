@@ -362,8 +362,8 @@ where r.seizoen = @seizoen and r.teamCode in ('int', 'ira', s.knsbTeam, s.nhsbTe
 order by r.datum, r.rondeNummer;
 
 set @seizoen = '2122';
-set @knsbNummer = 7758014; -- Alex Albrecht
-set @datum = '2022-02-15';
+set @knsbNummer = 6212404;
+set @datum = '2022-03-22';
 
 -- uitslagen / ronden op dezelfde datum
 select u.teamCode, u.rondeNummer, u.anderTeam, u.partij, r.uithuis 
@@ -386,20 +386,6 @@ select u.*, naam from uitslag u join persoon p on u.knsbNummer = p.knsbNummer
 where seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
 
 update uitslag set partij = 'u' where knsbNummer = 7879520 and seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
-
--- volgende externe wedstrijd
-select datum from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') and partij in ('m', 'n') order by datum limit 1;
-
--- volgende interne ronde
-select rondeNummer, datum from uitslag where seizoen = @seizoen and teamCode = 'int' and partij in ('m', 'n') order by datum limit 1;
-
-select * from uitslag where seizoen = @seizoen and teamCode not in ('int', 'ipv') order by datum;
-
-select u.seizoen, u.teamCode, u.rondeNummer from uitslag u
-where not exists (select * from ronde r where r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer); 
-
-set @seizoen = '2122';
-set @teamCode = 'int';
 
 -- ronden per seizoen en competitie met aantal uitslagen
 with u as 
