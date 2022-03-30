@@ -1,7 +1,7 @@
 "use strict";
 
 /*
-    verwerk ronde=<rondeNummers>
+    verwerk ronde=<rondeNummer>
            &wit=<knsbNummer>
            &zwart=<knsbNummer>
            &uitslag=<uitslag wit>
@@ -20,6 +20,9 @@
         }],
         [WEDSTRIJDLEIDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
             naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);
+        }],
+        [WEDSTRIJDLEIDER, `ronde ${rondeNummer} wijzigen`, function () {
+            naarAnderePagina(`wijzig.html?ronde=${rondeNummer}`);
         }],
         [BEHEERDER, `ranglijst ${ditSeizoen} opnieuw verwerken`, function () {
             for (const key of Object.keys(sessionStorage)) {
@@ -176,8 +179,12 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
         }
     }
     if (competitie.laatsteRonde > rondeNummer) {
-        lijst.appendChild(rondeInterneCompetitie(rondeNummer));
-        lijst.appendChild(rondeInterneCompetitie(rondeNummer + 1));
+        if (rondeNummer > 1) {
+            lijst.appendChild(rondeInterneCompetitie(rondeNummer));
+        }
+        if (competitie.laatsteRonde > rondeNummer + 1) {
+            lijst.appendChild(rondeInterneCompetitie(rondeNummer + 1));
+        }
     }
     lijst.appendChild(rondeInterneCompetitie(competitie.laatsteRonde));
 }

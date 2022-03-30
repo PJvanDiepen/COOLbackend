@@ -22,7 +22,7 @@
         oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
         indelenEersteRonde(oneven ? oneven : r.length, 3, wit, zwart);
     } else {
-        oneven = indelenRonde(r, wit, zwart);
+        oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
     const extern = await serverFetch(`/${uuidToken}/extern/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
@@ -164,8 +164,10 @@ function versieSelecteren(versies, rondeNummer) {
         });
 }
 
-function indelenRonde(r, wit, zwart) {
-    return indelenFun[versieIndelen][1](r, wit, zwart);
+function indelenRonde(r, wit, zwart, rondeNummer) {
+    console.log("--- indelenRonde ---");
+    console.log("rondeNummer: " + rondeNummer);
+    return indelenFun[versieIndelen][1](r, wit, zwart, rondeNummer);
 }
 
 /**
@@ -176,9 +178,9 @@ function indelenRonde(r, wit, zwart) {
  * @param j tegenstander
  * @returns {boolean}
  */
-function nietTegen(r, i, j) {
+function nietTegen(r, i, j, rondeNummer) {
     const nogNietTegen = [101 , 103]; // Ramon Witte, Charles Stoorvogel
-    if (!r[i].tegen(r[j])) {
+    if (!r[i].tegen(r[j], rondeNummer)) {
         return true;
     } else if (competitie.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
@@ -203,9 +205,9 @@ function nietTegen(r, i, j) {
 }
 
 const indelenFun = [
-    ["indelen met heuristieken en niet ingedeelde spelers opnieuw verwerken", function (r, wit, zwart) {
+    ["indelen met heuristieken en niet ingedeelde spelers opnieuw verwerken", function (r, wit, zwart, rondeNummer) {
         const oneven = onevenSpeler(r);
-        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
         if (nietIngedeeld.length > 0) {
             let pogingen = 0
             let poging = [];
@@ -214,8 +216,9 @@ const indelenFun = [
                 console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen);
                 opnieuwIndelen(wit, zwart);
                 speler = eenNietIngedeeldeSpeler(nietIngedeeld, poging);
-                spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
-                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+                spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
+                spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer);
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
             }
             if (nietIngedeeld.length > 0) {
                 console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
@@ -225,10 +228,11 @@ const indelenFun = [
                 }
                 for (const speler of poging) {
                     if (!ingedeeld(speler, wit, zwart, oneven)) {
-                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
+                        spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer);
                     }
                 }
-                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
             }
             if (nietIngedeeld.length > 0) {
                 console.log("--- mislukt ---");
@@ -237,13 +241,13 @@ const indelenFun = [
         return oneven;
     }],
 
-    ["indelen met alleen vooruit gaan", function (r, wit, zwart) {
+    ["indelen met alleen vooruit gaan", function (r, wit, zwart, rondeNummer) {
         console.log("--- indelen met met alleen vooruit gaan ---");
         const oneven = onevenSpeler(r);
         for (let i = 0; i < r.length; i++) {
             if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
                 let j = i + 1;
-                while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j]))) {
+                while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j], rondeNummer))) {
                     j++; // volgende indien al ingedeeld of oneven of mag niet tegen
                 }
                 if (j < r.length) {
@@ -266,12 +270,12 @@ function spelersLijst(ranglijst, spelers) {
     });
 }
 
-function vooruitIndelen(r, wit, zwart, oneven) {
+function vooruitIndelen(r, wit, zwart, oneven, rondeNummer) {
     const nietIngedeeld = [];
     for (let i = 0; i < r.length; i++) {
         if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
             let j = i + 1;
-            while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || nietTegen(r, i, j))) {
+            while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || nietTegen(r, i, j, rondeNummer))) {
                 j++; // volgende indien al ingedeeld of oneven of mag niet tegen
             }
             if (j < r.length) {
@@ -295,10 +299,10 @@ function vooruitIndelen(r, wit, zwart, oneven) {
 const VOORUIT = 1;
 const ACHTERUIT = -1;
 
-function spelerIndelen(speler, richting, r, wit, zwart, oneven) {
+function spelerIndelen(speler, richting, r, wit, zwart, oneven, rondeNummer) {
     console.log(`--- ${r[speler].naam} ${richting === VOORUIT ? "vooruit" : "achteruit"} indelen ---`);
     let j = speler + richting;
-    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j]))) { // zonder heuristieken
+    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j], rondeNummer))) { // zonder heuristieken
         j = j + richting; // vorige indien al ingedeeld of oneven of mag niet tegen
     }
     if (j >= 0 && j < r.length) {

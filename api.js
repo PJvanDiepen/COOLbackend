@@ -618,6 +618,8 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    // TODO extern definitief maken
+
     router.get('/:uuidToken/verwijder/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;

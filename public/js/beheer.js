@@ -11,7 +11,7 @@ TODO mutaties met verwijderen
     menu([TEAMLEIDER, "externe competitie", function () {
             naarAnderePagina("teamleider.html");
         }],
-        [GEEN_LID, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
+        [BEHEERDER, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
             naarAnderePagina("gebruiker.html");
         }],
         [BEHEERDER, "test API", function () {
