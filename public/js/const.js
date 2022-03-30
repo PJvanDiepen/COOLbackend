@@ -626,9 +626,9 @@ function spelerTotalen(speler) {
         const i = vorigeKeer(tegenstander);
         if (i) {
             vorigeAfdrukken(i, tegenstander);  // TODO verwijderen
-            console.log("rondeNummer: " + rondeNummer);
-            console.log("totaal[i]: " + totaal[i]);
-            console.log("rondenVerschil(): " + rondenVerschil());
+            // console.log("rondeNummer: " + rondeNummer);
+            // console.log("totaal[i]: " + totaal[i]);
+            // console.log("rondenVerschil(): " + rondenVerschil());
             return (rondeNummer - totaal[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
