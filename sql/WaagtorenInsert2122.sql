@@ -26,20 +26,35 @@ where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and k
 
 set @competitie = 'ira';
 set @ronde = 4;
-set @bord = 6;
+set @bord = 5;
 set @wit = 7613166; -- Peter Kalisvaart
 set @zwart = 6192098; -- Nico Brugman
+set @bord = 6;
+set @wit = 8112654; -- Ton Fasel
+set @zwart = 7970094; -- Danny de Ruiter
+set @bord = 7;
+set @wit = 7518203; -- Theo de Bruijn
+set @zwart = 7292043; -- Rob Freer
+set @bord = 8;
+set @wit = 101; -- Ramon Witte
+set @zwart = 7269834; -- Arie Boots
+set @bord = 9;
+set @wit = 7529522; -- Willem Meyles
+set @zwart = 7399469; -- Nico Mak
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij <> 'i' order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
+
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart);
 
-update uitslag set bordNummer = @bord, partij = '', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
-where seizoen = '2122' and @competitie and rondeNummer = @ronde and knsbNummer = @wit;
-update uitslag set bordNummer = @bord, partij = '', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
-where seizoen = '2122' and @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
+update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
+where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
+update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
+where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 -- TODO spelers selecteren
 select naam, s.knsbNummer, knsbRating, knsbOpgegeven, nhsbOpgegeven 
@@ -2333,10 +2348,49 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'int', 17, 0, 8956805, 'n', '', 0, '', '2022-03-29', 'int');
  
 -- KNSB competitie 2 april 2022
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', '1', '8', '3', '7428960', 'e', 'w', '0', '½', '2022-04-02', 'int'),
+('2122', '1', '8', '1', '7584566', 'e', 'w', '0', '1', '2022-04-02', 'int'),
+('2122', '1', '8', '2', '7657342', 'e', 'z', '0', '½', '2022-04-02', 'int'),
+('2122', '1', '8', '4', '8180810', 'e', 'z', '0', '1', '2022-04-02', 'int'),
+('2122', '1', '8', '5', '7468417', 'e', 'w', '0', '½', '2022-04-02', 'int'),
+('2122', '1', '8', '6', '7099950', 'e', 'z', '0', '0', '2022-04-02', 'int'),
+('2122', '1', '8', '7', '8285574', 'e', 'w', '0', '½', '2022-04-02', 'int'),
+('2122', '1', '8', '8', '7535396', 'e', 'z', '0', '0', '2022-04-02', 'int'),
+('2122', '1', '8', '9', '8112654', 'e', 'w', '0', '½', '2022-04-02', 'int'),
+('2122', '1', '8', '10', '8611922', 'e', 'z', '0', '½', '2022-04-02', 'int'),
+('2122', '2', '8', '5', '7129991', 'e', 'w', '0', '0', '2022-04-02', 'int'),
+('2122', '2', '8', '3', '7509920', 'e', 'w', '0', '0', '2022-04-02', 'int'),
+('2122', '2', '8', '1', '6335670', 'e', 'w', '0', '½', '2022-04-02', 'int'),
+('2122', '2', '8', '2', '7099620', 'e', 'z', '0', '0', '2022-04-02', 'int'),
+('2122', '2', '8', '4', '7707832', 'e', 'z', '0', '½', '2022-04-02', 'int'),
+('2122', '2', '8', '6', '6225934', 'e', 'z', '0', '0', '2022-04-02', 'int'),
+('2122', '2', '8', '7', '7879520', 'e', 'w', '0', '0', '2022-04-02', 'int'),
+('2122', '2', '8', '8', '8552038', 'e', 'z', '0', '1', '2022-04-02', 'int'),
+('2122', '4', '7', '7', '6212404', 'e', 'w', '0', '0', '2022-04-02', 'int'),
+('2122', '4', '7', '4', '7292043', 'e', 'z', '0', '0', '2022-04-02', 'int'),
+('2122', '4', '7', '2', '7809285', 'e', 'z', '0', '0', '2022-04-02', 'int'),
+('2122', '4', '7', '1', '7824674', 'e', 'w', '0', '0', '2022-04-02', 'int'),
+('2122', '4', '7', '3', '7904589', 'e', 'w', '0', '0', '2022-04-02', 'int'),
+('2122', '4', '7', '5', '7399469', 'e', 'w', '0', '½', '2022-04-02', 'int'),
+('2122', '4', '7', '6', '7282033', 'e', 'z', '0', '1', '2022-04-02', 'int'),
+('2122', '4', '7', '8', '8400183', 'e', 'z', '0', '1', '2022-04-02', 'int');
+
+-- ronde 18
+
+use waagtoren; -- PvD
+select * from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 18 order by bordnummer, witZwart;
+delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 18;
+
+-- insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+
+-- KNSB competitie 2 april 2022
 
 use waagtoren; -- PvD
 select * from uitslag where seizoen = '2122' and datum = '2022-04-02';
 delete from uitslag where seizoen = '2122' and datum = '2022-04-02';
+
+-- insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 
 -- alle seizoenen
 insert into persoon (knsbNummer, naam) values 

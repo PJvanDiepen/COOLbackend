@@ -165,8 +165,8 @@ function versieSelecteren(versies, rondeNummer) {
 }
 
 function indelenRonde(r, wit, zwart, rondeNummer) {
-    console.log("--- indelenRonde ---");
-    console.log("rondeNummer: " + rondeNummer);
+    // console.log("--- indelenRonde ---");
+    // console.log("rondeNummer: " + rondeNummer);
     return indelenFun[versieIndelen][1](r, wit, zwart, rondeNummer);
 }
 
@@ -190,12 +190,12 @@ function nietTegen(r, i, j, rondeNummer) {
     } else if (r[j].intern() < 4 && nogNietTegen.includes(r[i].knsbNummer)) {
         console.log(`${r[j].naam} nog niet tegen ${r[i].naam}`);
         return true; // de eerste 3 x nogNietTegen
-    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) {
+    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() >= 3) {
         if (r[j].intern() / r[i].intern() > 2) {
             console.log(`${r[i].naam} te sterk voor ${r[j].naam}`);
             return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
         }
-    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) {
+    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() >= 3) {
         if (r[i].intern() / r[j].intern() > 2) {
             console.log(`${r[j].naam} te sterk voor ${r[i].naam}`);
             return true; // verschil waardecijfers meer dan 3 en helft minder aantal partijen gespeeld
