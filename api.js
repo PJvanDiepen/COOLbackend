@@ -103,11 +103,11 @@ module.exports = router => {
     /*
     spelers die externe competitie spelen tijdens interne competitie
      */
-    router.get('/:uuidToken/extern/:seizoen/:rondeNummer', async function (ctx) {
+    router.get('/:uuidToken/uithuis/:seizoen/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        let deelnemers = {};
+        let uithuis = {};
         if (gebruiker.juisteRechten(GEREGISTREERD)) {
-            deelnemers = await Uitslag.query()
+            uithuis = await Uitslag.query()
                 .select('naam', 'uitslag.knsbNummer', 'uitslag.partij')
                 .join('persoon', 'persoon.knsbNummer', 'uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [EXTERN_THUIS, EXTERN_UIT])
@@ -116,7 +116,7 @@ module.exports = router => {
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .orderBy(['uitslag.partij', 'naam']);
         }
-        ctx.body = deelnemers;
+        ctx.body = uithuis;
     });
 
     router.get('/spelers/:seizoen', async function (ctx) {
@@ -618,7 +618,25 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    // TODO extern definitief maken
+    router.get('/:uuidToken/extern/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(WEDSTRIJDLEIDER)) { // extern uit en extern thuis definitief maken
+            aantal = await Uitslag.query()
+                .whereIn('uitslag.partij', [EXTERN_THUIS, EXTERN_UIT])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', '<=', ctx.params.rondeNummer) // ook voor eerdere ronden
+                .patch({partij: EXTERNE_PARTIJ});
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    /*
+    resultaten van indelen, oneven en afwezig terugdraaien
+    resultaten van extern niet terugdraaien
+     */
 
     router.get('/:uuidToken/verwijder/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);

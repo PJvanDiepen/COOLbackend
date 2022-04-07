@@ -25,15 +25,15 @@
         oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const extern = await serverFetch(`/${uuidToken}/extern/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
-    partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), extern);
+    const uithuis = await serverFetch(`/${uuidToken}/uithuis/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
+    partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), uithuis);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
     }
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }],
-        [BEHEERDER, "indeling definitief maken", async function () {
+        [WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await serverFetch(
@@ -48,6 +48,7 @@
                 }
             }
             mutaties += await serverFetch(`/${uuidToken}/afwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
+            mutaties += await serverFetch(`/${uuidToken}/extern/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
             if (mutaties) {
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
@@ -176,6 +177,7 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
  * @param r ranglijst
  * @param i speler
  * @param j tegenstander
+ * @param rondeNummer huidige ronde
  * @returns {boolean}
  */
 function nietTegen(r, i, j, rondeNummer) {
