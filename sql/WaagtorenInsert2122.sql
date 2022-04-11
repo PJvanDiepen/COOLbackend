@@ -1,5 +1,14 @@
 use waagtoren; -- ga naar PvD
 
+-- TODO ranglijst Rapid
+set @competitie = 'ira';
+set @ronde = 4;
+
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
+
+
+
 -- TODO partij wijzigen
 
 set @competitie = 'int';
@@ -47,7 +56,6 @@ where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and p
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij <> 'i' order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
 
-
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart);
 
@@ -62,37 +70,51 @@ from speler s join persoon p on p.knsbNummer = s.knsbNummer
 where seizoen = '2122' order by naam; -- knsbRating desc; 
 
 -- TODO wedstrijd tijdens interne competitie
+set @team = 'n1'; -- Waagtoren n1 - Kijk Uit n1
+set @ronde = 7;
+set @intern = 19;
+set @uithuis = 't';
+
+set @team = 'n4'; -- Waagtoren n4 - Heerhugowaard n1
+set @ronde = 2;
+set @intern = 20;
+set @uithuis = 't';
+
 select * from ronde
-where seizoen = '2122' and teamCode = 'n4' and rondeNummer = 6; -- Waagtoren n4 - Koedijk
+where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde;
+
+select * from uitslag
+where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde;
+
+delete from uitslag
+where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and partij in ('m', 'n'); -- oude agenda items
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = 16) or (teamCode = 'n4' and rondeNummer = 6))
-and u.knsbNummer in (8750093, 6212404, 7518203, 7321534, 8073978, 7691728) order by naam;
+where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
+and u.knsbNummer in (7970094, 7428960, 7099950, 7099620, 7129991, 7707832, 6225934, 7535385) order by naam; -- Waagtoren n1 - Kijk Uit n1
 
-set @bord = 10;
-set @wit = 8073978; -- Gerrit Peereboom
-set @zwart = 6212404; -- Peter van Diepen
+update uitslag set partij = @uithuis
+where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
+and knsbNummer in (7970094, 7428960, 7099950, 7099620, 7129991, 7707832, 6225934, 7535385); -- Waagtoren n1 - Kijk Uit n1
 
-set @bord = 11;
-set @wit = 7321534; -- Ronald Kamps
-set @zwart = 8750093; -- Martin Rep
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', @team, @ronde, 0, 7535385, @uithuis, '', 0, '', '2022-04-12', 'int'); -- Marten Coerts (Waagtoren n1 - Kijk Uit n1)
 
-set @bord = 12;
-set @wit = 7518203; -- Theo de Bruijn
-set @zwart = 7691728; -- Karel Beentjes
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
+and u.knsbNummer in (8750093, 7399469, 6212404, 7321534, 8472530, 7518203) order by naam; -- Waagtoren n4 - Heerhugowaard n1
 
-update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart
-where seizoen = '2122' and teamCode = 'int' and rondeNummer = 16 and knsbNummer = @wit;
-update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit
-where seizoen = '2122' and teamCode = 'int' and rondeNummer = 16 and knsbNummer = @zwart;
+update uitslag set partij = @uithuis
+where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
+and knsbNummer in (8750093, 7399469, 6212404, 7321534, 8472530, 7518203); -- Waagtoren n4 - Heerhugowaard n1
 
-update uitslag set partij = 't' -- thuis
-where seizoen = '2122' and teamCode = 'int' and rondeNummer = 16
-and knsbNummer in (8750093, 6212404, 7518203, 7321534, 8073978, 7691728); 
-  
-delete from uitslag
-where seizoen = '2122' and teamCode = 'n4' and rondeNummer = 6
-and knsbNummer in (8750093, 6212404, 7518203, 7321534, 8073978, 7691728); 
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', @team, @ronde, 0, 8750093, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Martin Rep (Waagtoren n4 - Heerhugowaard n1)
+('2122', @team, @ronde, 0, 7399469, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Nico Mak
+('2122', @team, @ronde, 0, 7321534, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Ronald Kamps
+('2122', @team, @ronde, 0, 8472530, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Rosa Leek
+('2122', @team, @ronde, 0, 7518203, @uithuis, '', 0, '', '2022-04-19', 'int'); -- Theo de Bruijn
+
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'n4', 6, 0, 8750093, 't', '', 0, '', '2022-03-22', 'int'), -- Martin Rep
@@ -104,10 +126,10 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- TODO speler toevoegen 
 insert into persoon (knsbNummer, naam) values
-(122, 'Olia Lutsiv');
+(7771665, 'Yvonne Schol');
 
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', '', '', 122, 1000, '2022-03-29');
+('2122', '', '', '', '', 7771665, 1264, '2022-04-10');
 
 -- TODO wedstrijden en ronden voor vandaag opruimen
 set @datum = '2022-03-19';
@@ -154,6 +176,7 @@ insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, k
 ('2122', '', '', '', '', 120, 1000, '2022-03-01'),
 ('2122', '', '', '', '', 121, 1000, '2022-03-28'),
 ('2122', '', '', '', '', 122, 1000, '2022-03-29'), -- PvD
+('2122', '', '', '', '', 7771665, 1264, '2022-04-10')
 ('2122', '', '', '', '', 7584566, 2333, '2021-08-01'),
 ('2122', '', '', '', '', 7657342, 2299, '2021-08-01'),
 ('2122', '', '', '', '', 7970094, 2271, '2021-08-01'),
@@ -358,7 +381,7 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 ('2122', '4', 'k', '6c', 'KNSB 6c', 8, 6212404),
 ('2122', 'n1', 'n', 't', 'NHSB top', 8, 7428960),
 ('2122', 'n2', 'n', '1a', 'NHSB 1a', 8, 7529522),
-('2122', 'n3', 'n', '2a', 'NHSB 2b', 8, 6214153),
+-- ('2122', 'n3', 'n', '2a', 'NHSB 2b', 8, 6214153),
 ('2122', 'n4', 'n', '3b', 'NHSB 3c', 6, 6212404),
 ('2122', 'int', 'i', 'nt', 'interne competitie', 0, 0),
 ('2122', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
@@ -444,29 +467,31 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', '4', '7', 'u', 'Zukertort Amstelveen 3', 'Amstelveen', '2022-04-02'),
 ('2122', 'n1', '1', 'u', 'Chess Society Zandvoort N1', 'Zandvoort', '2021-10-15'),
 ('2122', 'n1', '2', 't', 'HWP Haarlem N2', 'Alkmaar', '2021-11-09'),
-('2122', 'n1', '3', 'u', 'Kennemer Combinatie N1', 'Haarlem', '2021-12-10'),
+('2122', 'n1', '3', 'u', 'Kennemer Combinatie N1', 'Haarlem', '2022-05-06'),
 ('2122', 'n1', '4', 't', 'Krommenie N1', 'Alkmaar', '2022-02-01'),
 ('2122', 'n1', '5', 'u', 'HWP Haarlem N1', 'Haarlem', '2022-03-01'),
 ('2122', 'n1', '6', 'u', 'De Uil N1', 'Hillegom', '2022-03-21'),
 ('2122', 'n1', '7', 't', 'Kijk Uit N1', 'Alkmaar', '2022-04-12'),
 ('2122', 'n2', '1', 't', 'Volendam N1', 'Alkmaar', '2021-10-12'),
 ('2122', 'n2', '2', 'u', 'Noordkopcombinatie Magnus N1', 'Schagen', '2021-11-12'),
-('2122', 'n2', '3', 't', 'Aartswoud N1', 'Alkmaar', '2021-12-07'),
-('2122', 'n2', '4', 'u', 'KTV N1', 'Enkhuizen', '2022-02-11'),
+('2122', 'n2', '3', 't', 'Aartswoud N1', 'Alkmaar', '2022-04-26'),
+('2122', 'n2', '4', 'u', 'KTV N1', 'Enkhuizen', '2022-05-27'),
 ('2122', 'n2', '5', 't', 'Caïssa-Eenhoorn N1', 'Alkmaar', '2022-03-15'),
-('2122', 'n2', '6', 't', 'En Passant N', 'Alkmaar', '2022-03-26'),
 ('2122', 'n2', '7', 'u', 'Opening 64 N1', 'Sint Pancras', '2022-04-15'),
-('2122', 'n3', '1', 't', 'Caïssa-Eenhoorn N2', 'Alkmaar', '2021-11-16'),
-('2122', 'n3', '2', 'u', 'Bergen N', 'Bergen', '2021-12-09'),
-('2122', 'n3', '3', 't', 'Aartswoud N2', 'Alkmaar', '2022-02-15'),
-('2122', 'n3', '4', 'u', 'Oppositie N', 'Heiloo', '2022-03-15'),
-('2122', 'n3', '5', 'u', 'Noordkopcombinatie MSC N2', 'Den Helder', '2022-04-05'),
-('2122', 'n3', '6', 't', 'Schaakmat N1', 'Alkmaar', '2022-04-26'),
 ('2122', 'n4', '1', 'u', 'Opening 64 N2', 'Sint Pancras', '2021-11-26'),
-('2122', 'n4', '2', 't', 'Heerhugowaard N1', 'Alkmaar', '2021-12-14'),
-('2122', 'n4', '4', 't', 'Schaakmat N1', 'Alkmaar', '2022-02-01'),
-('2122', 'n4', '5', 'u', 'Aris de Heer N', '', '2022-02-28'), 
-('2122', 'n4', '6', 't', 'Koedijk N', 'Alkmaar', '2022-03-22');
+('2122', 'n4', '2', 't', 'Heerhugowaard N1', 'Alkmaar', '2022-04-19'),
+('2122', 'n4', '5', 'u', 'Aris de Heer N', '', '2022-02-28');
+
+use waagtoren;
+select * from ronde where seizoen = '2122' and teamCode = 'n1';
+update ronde set datum = '2022-05-06' where seizoen = '2122' and teamCode = 'n1' and rondeNummer = 3; 
+delete from uitslag where seizoen = '2122' and teamCode = 'n1' and rondeNummer = 3; 
+
+select * from ronde where seizoen = '2122' and teamCode = 'n2';
+update ronde set datum = '2022-05-27' where seizoen = '2122' and teamCode = 'n2' and rondeNummer = 4; 
+update ronde set datum = '2022-04-26' where seizoen = '2122' and teamCode = 'n2' and rondeNummer = 3; 
+delete from ronde where seizoen = '2122' and teamCode = 'n2' and rondeNummer = 6; 
+delete from uitslag where seizoen = '2122' and teamCode = 'n2' and rondeNummer in (4, 3, 6); 
 
 -- ronde 1
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
@@ -1741,6 +1766,8 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'ira', 4, 0, 118, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 119, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 120, 'a', '', 0, '', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 0, 121, 'a', '', 0, '', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 0, 122, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 6212404, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 6225934, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 6483455, 'a', '', 0, '', '2022-02-22', 'ira'),
@@ -1752,7 +1779,9 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'ira', 4, 0, 7535385, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 7544438, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 7561653, 'a', '', 0, '', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 0, 7582102, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 7584566, 'a', '', 0, '', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 0, 7640798, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 7649213, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 7691728, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 0, 7699010, 'a', '', 0, '', '2022-02-22', 'ira'),
@@ -1778,16 +1807,16 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'ira', 4, 3, 7502143, 'i', 'z', 7282033, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 4, 8587337, 'i', 'w', 8750093, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 4, 8750093, 'i', 'z', 8587337, '1', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 5, 7292043, 'i', 'w', 6192098, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 5, 6192098, 'i', 'z', 7292043, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 6, 7518203, 'i', 'w', 7269834, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 6, 7269834, 'i', 'z', 7518203, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 7, 101, 'i', 'w', 7399469, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 7, 7399469, 'i', 'z', 101, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 8, 7613166, 'i', 'w', 7970094, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 8, 7970094, 'i', 'z', 7613166, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 9, 7529522, 'i', 'w', 8112654, '', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 9, 8112654, 'i', 'z', 7529522, '', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 5, 7613166, 'i', 'w', 6192098, '1', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 5, 6192098, 'i', 'z', 7613166, '0', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 6, 8112654, 'i', 'w', 7970094, '0', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 6, 7970094, 'i', 'z', 8112654, '1', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 7, 7518203, 'i', 'w', 7292043, '1', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 7, 7292043, 'i', 'z', 7518203, '0', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 8, 101, 'i', 'w', 7269834, '0', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 8, 7269834, 'i', 'z', 101, '1', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 9, 7529522, 'i', 'w', 7399469, '1', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 9, 7399469, 'i', 'z', 7529522, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 10, 7824674, 'i', 'w', 7535396, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 10, 7535396, 'i', 'z', 7824674, '1', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 11, 7210137, 'i', 'w', 8372881, '1', '2022-02-22', 'ira'),
@@ -2250,11 +2279,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'int', 16, 12, 7691728, 'i', 'z', 7518203, '0', '2022-03-22', 'int');
 
 -- ronde 17
-
-use waagtoren; -- PvD
-select * from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 17 order by bordnummer, witZwart;
-delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 17;
-
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'int', 17, 0, 101, 'm', '', 0, '', '2022-03-29', 'int'),
 ('2122', 'int', 17, 0, 103, 'm', '', 0, '', '2022-03-29', 'int'),
@@ -2481,6 +2505,7 @@ insert into persoon (knsbNummer, naam) values
 ('7731812', 'Alexander Versluis'),
 ('7739314', 'Piet Pover'),
 ('7758014', 'Alex Albrecht'),
+('7771665', 'Yvonne Schol'),
 ('7809285', 'Albert van der Meiden'),
 ('7824674', 'Guido Florijn'),
 ('7828183', 'Rob Konijn'),

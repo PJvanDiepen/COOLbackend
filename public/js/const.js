@@ -54,10 +54,10 @@ const competitie = (function () {
     const competitie = {
         vereniging: "Waagtoren",
         seizoen: ditSeizoen,
-        versie: 0,
+        versie: 0, // versie is een getal
         competitie: INTERNE_COMPETITIE,
         team: INTERNE_COMPETITIE,
-        speler: 0,
+        speler: 0, // knsbNummer is een getal
         naam: "onbekend"};
     for (let [key, value] of Object.entries(competitie)) {
         let parameter = params.get(key); // inlezen van url
@@ -67,11 +67,16 @@ const competitie = (function () {
             parameter = sessionStorage.getItem(key); // inlezen van sessie
         }
         if (parameter) {
-            competitie[key] = value === 0 ? Number(parameter) : parameter; // versie en speler zijn getallen
+            competitie[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
         }
     }
+    // TODO met reglementVersie in SQL
     if (competitie.competitie === RAPID_COMPETTIE && competitie.versie === 0) {
         competitie.versie = 4;
+    } else if (competitie.competitie === INTERNE_COMPETITIE && competitie === 0 && competitie.seizoen === "2122") {
+        competitie.versie = 3;
+    } else if (competitie.competitie === INTERNE_COMPETITIE && competitie === 0) {
+        competitie.versie = 2;
     }
     return competitie;
 })();

@@ -16,25 +16,51 @@ end;
 $$
 delimiter ;
 
--- seizoenVersie, subgroep, waardeCijfer, punten en totalen bevatten de logica voor verschillende reglementen voor de interne competie van de Waagtoren
+-- reglementVersie, reglement, subgroep, waardeCijfer, punten en totalen
+-- bevatten de logica voor verschillende reglementen voor de interne competitie en de rapid competitie van de Waagtoren
 -- versie 1 is de oorspronkelijke versie van Alkmaar systeem (geen SQL code)
 -- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
 -- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
 -- versie 4 rapidPunten voor rapid competitie
 
-drop function seizoenVersie;
+drop function seizoenVersie; -- TODO verwijderen
+
+drop function reglementVersie;
 
 delimiter $$
-create function seizoenVersie(seizoen char(4), versie int)
+create function reglementVersie(seizoen char(4), competitie char(3), gegevenVersie int)
 returns int deterministic
 begin
-    if versie <> 0 then
-        return versie;
-	elseif seizoen in ('1819', '1920', '2021') then 
+    if gegevenVersie <> 0 then
+        return gegevenVersie;
+	elseif competitie = 'int' and seizoen in ('1819', '1920', '2021') then
         return 2;
-	else 
+	elseif competitie = 'int' then
         return 3;
+    else
+        return 4;
 	end if;
+end;
+$$
+delimiter ;
+
+drop function reglement;
+
+delimiter $$
+create function reglement(gegevenVersie int)
+    returns varchar(45) deterministic
+begin
+    if gegevenVersie = 0 then
+        return 'versie 0 volgens reglement interne competitie van het seizoen';
+    elseif gegevenVersie = 2 then
+        return 'versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021';
+    elseif gegevenVersie = 3 then
+        return 'versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122';
+    elseif gegevenVersie = 4 then
+        return 'versie 4 volgens reglement rapid competitie';
+    else
+        return ' ';
+    end if;
 end;
 $$
 delimiter ;
@@ -157,8 +183,11 @@ delimiter ;
 
 drop function totalen;
 
+-- TODO iets doen met ronde voor rapid
+
 delimiter $$
-create function totalen(seizoen char(4), versie int, knsbNummer int, competitie char(3), totDatum date) returns varchar(600) deterministic
+create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
+    returns varchar(600) deterministic
 begin
     declare sorteer int default 0; -- 0
     declare prijs int default 1; -- 1
@@ -197,7 +226,7 @@ begin
         where u.seizoen = seizoen
             and u.knsbNummer = knsbNummer
             and u.anderTeam = competitie
-            and u.datum < totDatum;
+            and u.datum < datum;
     declare continue handler for not found set found = false;
     if versie <> 4 then -- niet bij rapid
         set startPunten = 300; -- reglement artikel 11
@@ -254,7 +283,7 @@ begin
         if (witIntern + zwartIntern + oneven + reglementairGewonnen + externTijdensInterneRonde) < minimumInternePartijen then
 			set prijs = 0;
 		end if;
-        set aftrek = afzeggingenAftrek(seizoen, versie, afzeggingen);
+        set aftrek = afzeggingenAftrek(versie, afzeggingen);
         set sorteer = startPunten + totaal - aftrek;
     end if;
     return concat(
@@ -286,10 +315,10 @@ delimiter ;
 drop function afzeggingenAftrek;
 
 delimiter $$
-create function afzeggingenAftrek(seizoen char(4), versie int, afzeggingen int)
-returns int deterministic
+create function afzeggingenAftrek(versie int, afzeggingen int)
+    returns int deterministic
 begin
-    if afzeggingen > 10 and seizoenVersie(seizoen, versie) = 2 then -- reglement artikel 12
+    if afzeggingen > 10 and versie = 2 then -- reglement artikel 12
         return (afzeggingen - 10) * 8;
 	else
         return 0;
@@ -299,7 +328,8 @@ $$
 delimiter ;
 
 set @seizoen = '2122';
-set @versie = 0;
+set @versie = 3;
+set @datum = '2022-04-11';
 
 set @knsbNummer = 6212404; -- Peter van Diepen
 set @competitie = 'int';
@@ -309,7 +339,7 @@ select
   s.knsbNummer,
   naam,
   subgroep(@seizoen, @versie, s.knsbNummer) as subgroep,
-  totalen(@seizoen, @versie, s.knsbNummer, @datum) as totalen
+  totalen(@seizoen, @competitie, 0, @datum, @versie, s.knsbNummer) as totalen
 from speler s
 join persoon p on s.knsbNummer = p.knsbNummer
 where seizoen = @seizoen

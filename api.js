@@ -156,10 +156,11 @@ module.exports = router => {
                         ref('speler.knsbNummer'))},
                 {totalen: fn('totalen',
                         ctx.params.seizoen,
-                        ctx.params.versie,
-                        ref('speler.knsbNummer'),
                         ctx.params.competitie,
-                        ctx.params.datum)})
+                        0,
+                        ctx.params.datum,
+                        ctx.params.versie,
+                        ref('speler.knsbNummer'))})
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
             .where('seizoen', ctx.params.seizoen)
             .orderBy('totalen', 'desc');
