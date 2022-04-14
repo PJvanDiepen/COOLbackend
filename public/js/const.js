@@ -70,12 +70,12 @@ const competitie = (function () {
             competitie[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
         }
     }
-    // TODO met reglementVersie in SQL
+    // TODO lees tabel reglement: verie, omschrijving en tabel versie: seizoen / competitie -->
     if (competitie.competitie === RAPID_COMPETTIE && competitie.versie === 0) {
         competitie.versie = 4;
-    } else if (competitie.competitie === INTERNE_COMPETITIE && competitie === 0 && competitie.seizoen === "2122") {
+    } else if (competitie.competitie === INTERNE_COMPETITIE && competitie.versie === 0 && competitie.seizoen === "2122") {
         competitie.versie = 3;
-    } else if (competitie.competitie === INTERNE_COMPETITIE && competitie === 0) {
+    } else if (competitie.competitie === INTERNE_COMPETITIE && competitie.versie === 0) {
         competitie.versie = 2;
     }
     return competitie;

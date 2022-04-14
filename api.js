@@ -11,6 +11,7 @@ const Uitslag = require('./models/uitslag');
 const { fn, ref } = require('objection');
 
 const package_json = require('./package.json');
+const knex = require("knex");
 
 // mutatie.invloed
 const GEEN_INVLOED = 0;
@@ -35,6 +36,13 @@ async function mutatie(gebruiker, ctx, aantal, invloed) {
 module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
+
+    router.get('/reglement/:seizoen/:competitie', async function (ctx) {
+        const reglement = await Uitslag.query()
+            .select({versie: fn('reglementVersie', ctx.params.seizoen, ctx.params.competitie)});
+        console.log(reglement);
+        ctx.body = JSON.stringify(reglement);
+    });
 
     router.get('/versie', async function (ctx) {
         ctx.body = JSON.stringify(package_json.version);
@@ -100,6 +108,19 @@ module.exports = router => {
 
     // geef key - value paren per kolom --------------------------------------------------------------------------------
 
+    router.get('/reglementen', async function (ctx) {
+        const reglementen = [];
+        let i = 0;
+        let stop = await fn('reglement', i);
+        while (stop !== "stop") {
+            if (stop !== "overslaan") {
+                reglementen.push({i, stop});
+            }
+            stop = await fn('reglement', ++i);
+        }
+        ctx.body = JSON.stringify(reglementen);
+    });
+
     /*
     spelers die externe competitie spelen tijdens interne competitie
      */
@@ -157,7 +178,7 @@ module.exports = router => {
                 {totalen: fn('totalen',
                         ctx.params.seizoen,
                         ctx.params.competitie,
-                        0,
+                        0, // TODO ronde nummer
                         ctx.params.datum,
                         ctx.params.versie,
                         ref('speler.knsbNummer'))})
@@ -212,10 +233,10 @@ module.exports = router => {
                 'ronde.tegenstander',
                 {punten: fn('punten',
                         ctx.params.seizoen,
+                        ref('uitslag.teamCode'),
                         ctx.params.versie,
                         ctx.params.knsbNummer,
                         fn('waardeCijfer', ctx.params.versie, fn('rating', ctx.params.seizoen, ctx.params.knsbNummer)),
-                        ref('uitslag.teamCode'),
                         ref('uitslag.partij'),
                         ref('uitslag.tegenstanderNummer'),
                         ref('uitslag.resultaat'))})

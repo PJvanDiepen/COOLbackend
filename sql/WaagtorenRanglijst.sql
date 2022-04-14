@@ -28,17 +28,15 @@ drop function seizoenVersie; -- TODO verwijderen
 drop function reglementVersie;
 
 delimiter $$
-create function reglementVersie(seizoen char(4), competitie char(3), gegevenVersie int)
+create function reglementVersie(seizoen char(4), competitie char(3))
 returns int deterministic
 begin
-    if gegevenVersie <> 0 then
-        return gegevenVersie;
-	elseif competitie = 'int' and seizoen in ('1819', '1920', '2021') then
+    if competitie = 'int' and seizoen in ('1819', '1920', '2021') then
         return 2;
 	elseif competitie = 'int' then
         return 3;
     else
-        return 4;
+        return 4; -- competitie = 'ira'
 	end if;
 end;
 $$
@@ -47,16 +45,16 @@ delimiter ;
 drop function reglement;
 
 delimiter $$
-create function reglement(gegevenVersie int)
+create function reglement(versie int)
     returns varchar(45) deterministic
 begin
-    if gegevenVersie = 0 then
+    if versie = 0 then
         return 'versie 0 volgens reglement interne competitie van het seizoen';
-    elseif gegevenVersie = 2 then
+    elseif versie = 2 then
         return 'versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021';
-    elseif gegevenVersie = 3 then
+    elseif versie = 3 then
         return 'versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122';
-    elseif gegevenVersie = 4 then
+    elseif versie = 4 then
         return 'versie 4 volgens reglement rapid competitie';
     else
         return ' ';
@@ -128,7 +126,7 @@ delimiter ;
 drop function punten;
 
 delimiter $$
-create function punten(seizoen char(4), versie int, knsbNummer int, eigenWaardeCijfer int, teamCode char(3), partij char(1), tegenstander int, resultaat char(1))
+create function punten(seizoen char(4), teamCode char(3), versie int, knsbNummer int, eigenWaardeCijfer int, partij char(1), tegenstander int, resultaat char(1))
     returns int deterministic -- reglement artikel 12
 begin
     if versie = 4 then -- rapidPunten bij rapid
@@ -271,7 +269,7 @@ begin
             elseif partij = 'e' and witZwart = 'z' then
                 set zwartExtern = zwartExtern + 1;
             end if;
-            set totaal = totaal + punten(seizoen, versie, knsbNummer, eigenWaardeCijfer, teamCode, partij, tegenstander, resultaat);
+            set totaal = totaal + punten(seizoen, teamCode, versie, knsbNummer, eigenWaardeCijfer, partij, tegenstander, resultaat);
             fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
@@ -359,10 +357,10 @@ select u.datum,
        r.tegenstander,
        punten(
           @seizoen,
+          u.teamCode,
           @versie,
           @knsbNummer,
           waardeCijfer(@versie, rating(@seizoen, @knsbNummer)),
-          u.teamCode,
           u.partij,
           u.tegenstanderNummer,
           u.resultaat) as punten
