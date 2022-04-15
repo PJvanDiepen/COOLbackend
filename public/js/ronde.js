@@ -31,8 +31,9 @@
                 }
             }
         }],
-        [BEHEERDER, `backup ronde ${rondeNummer}` , async function () {
-            await backupUitslag(rondeNummer);
+        [BEHEERDER, `backup uitslagen ronde ${rondeNummer}` , async function () {
+            const rijen = await serverFetch(`/backup/ronde/uitslag/${competitie.seizoen}/${competitie.team}/${rondeNummer}/${rondeNummer}`);
+            backupUitslag(rijen);
         }],
         [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
@@ -205,39 +206,5 @@ function wedstrijdBijRonde(rondeNummer, datum) {
         return datum > competitie.ronde[rondeNummer - 1].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
     } else {
         return datum > competitie.ronde[rondeNummer - 1].datum && datum <= competitie.ronde[rondeNummer].datum;
-    }
-}
-
-async function backupUitslag(rondeNummer) {
-    const rijen = await serverFetch(`/backup/uitslag/${competitie.seizoen}/${competitie.team}/${rondeNummer}/${rondeNummer}`);
-    let velden = [];
-    for (const [key, value] of Object.entries(rijen[0])) {
-        velden.push(key);
-    }
-    console.log(`insert into uitslag (${velden.join(", ")}) values`);
-    for (const rij of rijen) {
-        let kolommen = [];
-        for (const [key, value] of Object.entries(rij)) {
-            // TODO backupRij = selecteer(key, value); waarbij selecteer als parameter aan backup doorgeven
-            kolommen.push(valueSQL(value));
-        }
-        console.log(`(${kolommen.join(", ")}),`);
-    }
-}
-
-/*
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),
- */
-function valueSQL(value) {
-    if (typeof value === "string") {
-        const datum = new Date(value);
-        if (value.length > 10 && datum instanceof Date && !isNaN(datum)) {
-            return `'${datumSQL(value)}'`;
-        } else {
-            return `'${value}'`;
-        }
-    } else if (typeof value === "number") {
-        return value;
     }
 }

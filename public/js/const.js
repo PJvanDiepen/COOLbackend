@@ -731,3 +731,36 @@ async function uitslagenTeamAlleRonden(teamCode) {
         });
     return rondeUitslagen;
 }
+
+function backupUitslag(rijen) {
+    let velden = [];
+    for (const [key, value] of Object.entries(rijen[0])) {
+        velden.push(key);
+    }
+    console.log(`insert into uitslag (${velden.join(", ")}) values`);
+    for (const rij of rijen) {
+        let kolommen = [];
+        for (const [key, value] of Object.entries(rij)) {
+            // TODO backupRij = selecteer(key, value); waarbij selecteer als parameter aan backup doorgeven
+            kolommen.push(valueSQL(value));
+        }
+        console.log(`(${kolommen.join(", ")}),`);
+    }
+}
+
+/*
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),
+ */
+function valueSQL(value) {
+    if (typeof value === "string") {
+        const datum = new Date(value);
+        if (value.length > 10 && datum instanceof Date && !isNaN(datum)) {
+            return `'${datumSQL(value)}'`;
+        } else {
+            return `'${value}'`;
+        }
+    } else if (typeof value === "number") {
+        return value;
+    }
+}

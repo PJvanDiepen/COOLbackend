@@ -9,6 +9,10 @@
         [GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }],
+        [BEHEERDER, `backup uitslagen ${competitie.naam}` , async function () {
+            const rijen = await serverFetch(`/backup/speler/uitslag/${competitie.seizoen}/${competitie.speler}`);
+            backupUitslag(rijen);
+        }],
         [BEHEERDER, "afzeggingen verwijderen", async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${competitie.seizoen}/${competitie.speler}`);
             if (mutaties) {

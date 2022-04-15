@@ -391,12 +391,19 @@ module.exports = router => {
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
-    router.get('/backup/uitslag/:seizoen/:teamCode/:van/:tot', async function (ctx) {
+    router.get('/backup/ronde/uitslag/:seizoen/:teamCode/:van/:tot', async function (ctx) {
         ctx.body = await Uitslag.query()
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.teamCode', ctx.params.teamCode)
             .whereBetween('uitslag.rondeNummer', [ctx.params.van, ctx.params.tot])
             .orderBy(['rondeNummer','bordNummer','partij','witZwart', 'knsbNummer']);
+    });
+
+    router.get('/backup/speler/uitslag/:seizoen/:knsbNummer', async function (ctx) {
+        ctx.body = await Uitslag.query()
+            .where('uitslag.seizoen', ctx.params.seizoen)
+            .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+            .orderBy(['datum','teamCode']);
     });
 
     router.get('/:uuidToken/gebruikers', async function (ctx) {
