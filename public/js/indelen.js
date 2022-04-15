@@ -352,7 +352,13 @@ function eenNietIngedeeldeSpeler(nietIngedeeld, poging) {
 function onevenSpeler(r) {
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
     if (oneven) {
-        for (let i = oneven; i > -1; i--) {
+        while (r[oneven].oneven()) {
+            console.log(`laatste speler ${r[oneven].naam} was al oneven`);
+            oneven--;
+        }
+        console.log("r.length: " + r.length);
+        for (let i = oneven; i >= 0; i--) {
+            console.log(i);
             if (r[i].oneven()) {
                 console.log(`${r[i].naam} was al oneven`);
             } else if (r[i].intern() > r[oneven].intern()) {
