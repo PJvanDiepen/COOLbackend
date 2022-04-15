@@ -14,7 +14,7 @@
     const subkop = document.getElementById("subkop");
     subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
     const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
-    const r = await ranglijstSorteren(totDatum, deelnemers);
+    const r = await ranglijstSorteren(rondeNummer, deelnemers);
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven

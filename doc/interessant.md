@@ -30,6 +30,7 @@ Nuttig
 - [Swiss pairings](https://senseis.xmp.net/?SwissPairing)
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
+- [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 
 Objection / Knex
