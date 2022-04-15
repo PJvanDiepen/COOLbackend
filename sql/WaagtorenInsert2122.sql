@@ -7,8 +7,6 @@ set @ronde = 4;
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
 
-
-
 -- TODO partij wijzigen
 
 set @competitie = 'int';
@@ -70,6 +68,10 @@ from speler s join persoon p on p.knsbNummer = s.knsbNummer
 where seizoen = '2122' order by naam; -- knsbRating desc; 
 
 -- TODO wedstrijd tijdens interne competitie
+select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer 
+where seizoen = '2122' and teamCode = 'int' and rondeNummer = 15 and u.knsbNummer in 
+(select knsbNummer from uitslag where seizoen = '2122' and teamCode = 'n1' and rondeNummer = 6);
+
 set @team = 'n1'; -- Waagtoren n1 - Kijk Uit n1
 set @ronde = 7;
 set @intern = 19;
@@ -79,6 +81,33 @@ set @team = 'n4'; -- Waagtoren n4 - Heerhugowaard n1
 set @ronde = 2;
 set @intern = 20;
 set @uithuis = 't';
+
+set @team = 'n1'; -- Waagtoren n4 - Heerhugowaard n1
+set @ronde = 2;
+set @intern = 1520;
+set @uithuis = 't';
+
+set @team = 'n2'; -- Waagtoren n2 - Caïssa Eenhoorn n1
+set @ronde = 5;
+set @intern = 15;
+set @uithuis = 't';
+
+select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer 
+where seizoen = '2122' and teamCode = 'int' and rondeNummer = @intern and u.knsbNummer in 
+(select knsbNummer from uitslag where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde);
+
+update uitslag set partij = 'e'
+where seizoen = '2122' and teamCode = 'int' and rondeNummer = @intern and knsbNummer in 
+(7529522, 7758014, 8112654, 8400183, 8484443, 8587337, 8611922);
+
+select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer
+where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde;
+
+select * from uitslag where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and bordNummer = 0;
+delete from uitslag where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and bordNummer = 0;
+update uitslag set knsbNummer = 1 where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and knsbNummer = 0;
+
+
 
 select * from ronde
 where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde;
@@ -2079,6 +2108,10 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'n2', '5', '1', '8611922', 'e', 'z', '0', '½', '2022-03-15', 'int');
 
 -- ronde 15
+use waagtoren; -- PvD
+select * from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 15 order by bordnummer, witZwart;
+delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 15;
+
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'int', 15, 0, 102, 'a', '', 0, '', '2022-03-15', 'int'),
 ('2122', 'int', 15, 0, 105, 'a', '', 0, '', '2022-03-15', 'int'),
@@ -2180,6 +2213,11 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'n1', '6', '6', '7707832', 'e', 'z', '0', '½', '2022-03-21', 'int'),
 ('2122', 'n1', '6', '7', '6225934', 'e', 'w', '0', '1', '2022-03-21', 'int'),
 ('2122', 'n1', '6', '8', '7535385', 'e', 'z', '0', '0', '2022-03-21', 'int');
+
+select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer 
+where seizoen = '2122' and teamCode = 'int' and rondeNummer = 15 and u.knsbNummer in 
+(select knsbNummer from uitslag where seizoen = '2122' and teamCode = 'n1' and rondeNummer = 6);
+  
 
 -- ronde 16
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values

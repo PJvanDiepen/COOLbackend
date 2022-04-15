@@ -23,45 +23,7 @@ delimiter ;
 -- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
 -- versie 4 rapidPunten voor rapid competitie
 
-drop function seizoenVersie; -- TODO verwijderen
-
-drop function reglementVersie;
-
-delimiter $$
-create function reglementVersie(seizoen char(4), competitie char(3))
-returns int deterministic
-begin
-    if competitie = 'int' and seizoen in ('1819', '1920', '2021') then
-        return 2;
-	elseif competitie = 'int' then
-        return 3;
-    else
-        return 4; -- competitie = 'ira'
-	end if;
-end;
-$$
-delimiter ;
-
-drop function reglement;
-
-delimiter $$
-create function reglement(versie int)
-    returns varchar(45) deterministic
-begin
-    if versie = 0 then
-        return 'versie 0 volgens reglement interne competitie van het seizoen';
-    elseif versie = 2 then
-        return 'versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021';
-    elseif versie = 3 then
-        return 'versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122';
-    elseif versie = 4 then
-        return 'versie 4 volgens reglement rapid competitie';
-    else
-        return ' ';
-    end if;
-end;
-$$
-delimiter ;
+drop function seizoenVersie; -- TODO verwijderen, zie const.js
 
 drop function subgroep;
 
@@ -223,8 +185,9 @@ begin
         from uitslag u
         where u.seizoen = seizoen
             and u.knsbNummer = knsbNummer
-            and u.anderTeam = competitie
-            and u.datum < datum;
+            -- uitslagen van interne competitie tot en met deze ronde of uitslagen van externe competitie tot deze datum
+            and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
+            and u.anderTeam = competitie;
     declare continue handler for not found set found = false;
     if versie <> 4 then -- niet bij rapid
         set startPunten = 300; -- reglement artikel 11

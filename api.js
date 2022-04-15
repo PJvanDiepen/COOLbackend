@@ -37,13 +37,6 @@ module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
-    router.get('/reglement/:seizoen/:competitie', async function (ctx) {
-        const reglement = await Uitslag.query()
-            .select({versie: fn('reglementVersie', ctx.params.seizoen, ctx.params.competitie)});
-        console.log(reglement);
-        ctx.body = JSON.stringify(reglement);
-    });
-
     router.get('/versie', async function (ctx) {
         ctx.body = JSON.stringify(package_json.version);
     });
@@ -108,19 +101,6 @@ module.exports = router => {
 
     // geef key - value paren per kolom --------------------------------------------------------------------------------
 
-    router.get('/reglementen', async function (ctx) {
-        const reglementen = [];
-        let i = 0;
-        let stop = await fn('reglement', i);
-        while (stop !== "stop") {
-            if (stop !== "overslaan") {
-                reglementen.push({i, stop});
-            }
-            stop = await fn('reglement', ++i);
-        }
-        ctx.body = JSON.stringify(reglementen);
-    });
-
     /*
     spelers die externe competitie spelen tijdens interne competitie
      */
@@ -166,7 +146,7 @@ module.exports = router => {
     where seizoen = @seizoen
     order by totalen desc;
      */
-    router.get('/ranglijst/:seizoen/:versie/:competitie/:datum', async function (ctx) { // TODO omwisselen /:competitie/:versie
+    router.get('/ranglijst/:seizoen/:competitie/:ronde/:datum/:versie', async function (ctx) {
         ctx.body = await Speler.query()
             .select(
                 'speler.knsbNummer',
@@ -178,7 +158,7 @@ module.exports = router => {
                 {totalen: fn('totalen',
                         ctx.params.seizoen,
                         ctx.params.competitie,
-                        0, // TODO ronde nummer
+                        ctx.params.ronde,
                         ctx.params.datum,
                         ctx.params.versie,
                         ref('speler.knsbNummer'))})

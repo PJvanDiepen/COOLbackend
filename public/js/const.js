@@ -50,6 +50,10 @@ const ditSeizoen = (function () {
     return `${voorloopNul(i)}${voorloopNul(i + 1)}`;
 })();
 
+function eindeSeizoen(seizoen) {
+    return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
+}
+
 const competitie = (function () {
     const competitie = {
         vereniging: "Waagtoren",
@@ -471,13 +475,14 @@ async function teamSelecteren(teamCode) {
 /**
  * ranglijst geeft lijst totalen van eventueel geselecteerde spelers op volgorde van totalen
  *
- * @param totDatum indien null dan vandaag
- * @param selectie indien null dan alles
+ * @param rondeNummer in huidige competitie
+ * @param selectie indien null dan alle spelers
  * @returns {Promise<*>}
  */
-async function ranglijst(totDatum, selectie) {
+async function ranglijst(rondeNummer, selectie) {
+    const totDatum = rondeNummer === competitie.laatsteRonde ? eindeSeizoen(competitie.seizoen) : competitie.ronde[rondeNummer + 1].datum;
     let spelers = await localFetch(
-        `/ranglijst/${competitie.seizoen}/${competitie.versie}/${competitie.competitie}/${datumSQL(totDatum)}`);
+        `/ranglijst/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${datumSQL(totDatum)}/${competitie.versie}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }
