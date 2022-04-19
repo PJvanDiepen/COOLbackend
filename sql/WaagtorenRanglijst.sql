@@ -1,6 +1,6 @@
 use waagtoren;
 
-drop function rating;
+drop function rating; -- 0-0-0.nl versie 0.7.0
 
 delimiter $$
 create function rating(seizoen char(4), knsbNummer int) 
@@ -16,16 +16,14 @@ end;
 $$
 delimiter ;
 
--- reglementVersie, reglement, subgroep, waardeCijfer, punten en totalen
+-- subgroep, waardeCijfer, punten en totalen
 -- bevatten de logica voor verschillende reglementen voor de interne competitie en de rapid competitie van de Waagtoren
 -- versie 1 is de oorspronkelijke versie van Alkmaar systeem (geen SQL code)
 -- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
 -- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
 -- versie 4 rapidPunten voor rapid competitie
 
-drop function seizoenVersie; -- TODO verwijderen, zie const.js
-
-drop function subgroep;
+drop function subgroep; -- 0-0-0.nl versie 0.6.6
 
 delimiter $$
 create function subgroep(seizoen char(4), versie int, knsbNummer int)
@@ -56,7 +54,7 @@ end;
 $$
 delimiter ;
 
-drop function waardeCijfer;
+drop function waardeCijfer; -- 0-0-0.nl versie 0.6.6
 
 delimiter $$
 create function waardeCijfer(versie int, knsbRating int) 
@@ -85,7 +83,7 @@ end;
 $$
 delimiter ;
 
-drop function punten;
+drop function punten; -- 0-0-0.nl versie 0.7.14
 
 delimiter $$
 create function punten(seizoen char(4), teamCode char(3), versie int, knsbNummer int, eigenWaardeCijfer int, partij char(1), tegenstander int, resultaat char(1))
@@ -120,7 +118,7 @@ end;
 $$
 delimiter ;
 
-drop function rapidPunten;
+drop function rapidPunten; -- 0-0-0.nl versie 0.6.6
 
 delimiter $$
 create function rapidPunten(partij char(1), resultaat char(1))
@@ -141,9 +139,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen;
-
--- TODO iets doen met ronde voor rapid
+drop function totalen; -- TODO 0-0-0.nl versie 0.7.??
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -189,7 +185,9 @@ begin
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
             and u.anderTeam = competitie;
     declare continue handler for not found set found = false;
-    if versie <> 4 then -- niet bij rapid
+    if versie = 4 then -- rapid competitie
+        set rondenVerschil = 99; -- niet opnieuw tegen elkaar
+    else -- interne competitie
         set startPunten = 300; -- reglement artikel 11
 		set minimumInternePartijen = 20; -- reglement artikel 2
 		set rondenVerschil = 7; -- reglement artikel 3
@@ -273,7 +271,7 @@ end;
 $$
 delimiter ;
 
-drop function afzeggingenAftrek;
+drop function afzeggingenAftrek; -- 0-0-0.nl versie 0.7.14
 
 delimiter $$
 create function afzeggingenAftrek(versie int, afzeggingen int)

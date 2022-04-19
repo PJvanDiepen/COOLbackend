@@ -267,7 +267,7 @@ module.exports = router => {
              })
              .where('ronde.seizoen', ctx.params.seizoen)
              .whereIn('ronde.teamCode', // interne competities en externe teams van speler
-                 [INTERNE_COMPETITIE, RAPID_COMPETTIE, ref('s.knsbTeam'), ref('s.nhsbTeam')]) // TODO like "i%"
+                 [INTERNE_COMPETITIE, PAAS_COMPETTIE, RAPID_COMPETTIE, ref('s.knsbTeam'), ref('s.nhsbTeam')]) // TODO like "i%"
              .orderBy(['ronde.datum', 'ronde.teamCode', 'ronde.rondeNummer']);
         } else {
             ctx.body = [];
@@ -297,7 +297,7 @@ module.exports = router => {
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.datum', ctx.params.datum)
-                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, RAPID_COMPETTIE])
+                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, PAAS_COMPETTIE, RAPID_COMPETTIE])
                 .orderBy('speler.knsbRating', 'desc');
         } else {
             ctx.body = [];
@@ -387,7 +387,7 @@ module.exports = router => {
                     .andOn('team.teamCode', 'ronde.teamCode')})
             .join('persoon', 'team.teamleider', 'persoon.knsbNummer')
             .where('ronde.seizoen', ctx.params.seizoen)
-            .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, RAPID_COMPETTIE])
+            .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, PAAS_COMPETTIE, RAPID_COMPETTIE])
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
@@ -854,6 +854,7 @@ module.exports = router => {
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
+const PAAS_COMPETTIE     = "ipa";
 const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
 // uitslag.partij

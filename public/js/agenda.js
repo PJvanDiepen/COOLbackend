@@ -85,6 +85,12 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
     for (const w of wedstrijden) {
         if (!w.partij) {
+            /*
+            TODO voor interne competities bij gespeelde ronden afwezig invullen en daarna niet meedoen invullen
+            uitsluitend nodig op de datum dat er meer ronden op 1 dag zijn
+            op andere dagen is vergelijken met de datum van vandaag voldoende
+            uitzoeken wat de meest actuele competititie (ook voor start.html)
+             */
             const datum = datumSQL(w.datum);
             const vanafVandaag = datum >= datumSQL();
             // voor interne competities voor vandaag afwezig invullen en vanafVandaag altijd niet meedoen invullen

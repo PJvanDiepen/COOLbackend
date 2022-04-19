@@ -42,6 +42,9 @@
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }],
+        [BEHEERDER, `wijzig ronde ${rondeNummer}`, async function () {
+            naarAnderePagina("wijzig.html?ronde=" + rondeNummer);
+        }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${competitie.seizoen}/int/${rondeNummer}`);
         }]);
