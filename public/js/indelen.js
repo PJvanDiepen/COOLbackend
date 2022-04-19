@@ -343,8 +343,10 @@ function eenNietIngedeeldeSpeler(nietIngedeeld, poging) {
 }
 
 /**
- * indien er een oneven aantal deelnemers is, is er een onevenSpeler
- * de onevenSpeler is de laagste speler op de ranglijst met meeste aantal partijen, die niet eerder oneven was
+ * Indien er een oneven aantal deelnemers is, is er een onevenSpeler.
+ * De onevenSpeler is de laagste speler op de ranglijst met meeste aantal partijen
+ * die niet eerder oneven was en
+ * die niet bij eerste 8 aanwezige spelers van de ranglijst staat.
  *
  * @param r ranglijst
  * @returns {number|number} 0 indien niemand oneven anders onevenSpeler
@@ -356,7 +358,7 @@ function onevenSpeler(r) {
             console.log(`laatste speler ${r[oneven].naam} was al oneven`);
             oneven--;
         }
-        for (let i = oneven; i >= 0; i--) {
+        for (let i = oneven; i > 7; i--) { // eerste 8 aanwezige spelers mogen niet oneven zijn
             if (r[i].oneven()) {
                 console.log(`${r[i].naam} was al oneven`);
             } else if (r[i].intern() > r[oneven].intern()) {
