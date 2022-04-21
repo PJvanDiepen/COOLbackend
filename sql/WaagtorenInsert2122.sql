@@ -58,13 +58,10 @@ where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde order
 -- TODO partij wijzigen
 
 set @competitie = 'int';
-set @ronde = 17;
-set @bord = 12;
+set @ronde = 20;
+set @bord = 15;
 set @wit = 7691728; -- Karel Beentjes
-set @zwart = 103; -- Charles Stoorvogel
-set @bord = 13;
-set @wit = 8472530; -- Rosa Leek
-set @zwart = 122; -- Olia Lutsiv
+set @zwart = 101; -- Ramon Witte
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
@@ -2698,6 +2695,20 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'n2', '7', '6', '8484443', 'e', 'z', '0', '0', '2022-04-15', 'int'),
 ('2122', 'n2', '7', '7', '8587337', 'e', 'w', '0', '1', '2022-04-15', 'int'),
 ('2122', 'n2', '7', '8', '8400183', 'e', 'z', '0', '0', '2022-04-15', 'int');
+
+-- Waagtoren n4 op 19 april 2022
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', 'n4', '2', '1', '8750093', 'e', 'z', '0', '0', '2022-04-19', 'int'),
+('2122', 'n4', '2', '2', '7399469', 'e', 'w', '0', '½', '2022-04-19', 'int'),
+('2122', 'n4', '2', '3', '6212404', 'e', 'z', '0', '½', '2022-04-19', 'int'),
+('2122', 'n4', '2', '4', '7518203', 'e', 'w', '0', '½', '2022-04-19', 'int'),
+('2122', 'n4', '2', '5', '7321534', 'e', 'z', '0', '1', '2022-04-19', 'int'),
+('2122', 'n4', '2', '6', '8472530', 'e', 'w', '0', '0', '2022-04-19', 'int');
+
+update ronde set rondeNummer = 2 where seizoen = '2122' and teamCode = 'n4' and rondeNummer = 7; 
+
+select * from uitslag where seizoen = '2122' and teamCode = 'n4' and rondeNummer = 2 order by bordnummer, witZwart;
+delete from uitslag where seizoen = '2122' and teamCode = 'n4' and rondeNummer = 2;
 
 -- ronde 20
 

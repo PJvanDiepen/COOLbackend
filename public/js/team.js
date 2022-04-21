@@ -4,6 +4,10 @@
     await init();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
+        }],
+        [BEHEERDER, "backup uitslagen van alle ronden" , async function () {
+            const rijen = await serverFetch(`/backup/ronde/uitslag/${competitie.seizoen}/${competitie.team}/1/9`);
+            backupUitslag(rijen);
         }]);
     await teamSelecteren(competitie.team);
     await uitslagenTeam(document.getElementById("kop"), document.getElementById("ronden"));

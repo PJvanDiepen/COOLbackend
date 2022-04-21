@@ -468,7 +468,7 @@ async function teamSelecteren(teamCode) {
     teams.value = teamCode; // werkt uitsluitend na await
     teams.addEventListener("input", function () {
         if (interneCompetitie(teams.value)) {
-            naarZelfdePagina("competitie=" + teams.value)
+            naarAnderePagina("ranglijst.html?team=" + teams.value);
         } else {
             naarAnderePagina("team.html?team=" + teams.value);
         }
