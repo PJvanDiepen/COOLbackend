@@ -50,54 +50,48 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- TODO ranglijst Rapid
 set @competitie = 'ira';
-set @ronde = 4;
+set @ronde = 5;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
 
 -- TODO partij wijzigen
 
-set @competitie = 'int';
-set @ronde = 20;
-set @bord = 15;
-set @wit = 7691728; -- Karel Beentjes
-set @zwart = 101; -- Ramon Witte
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart);
-
-update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
-update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
-
--- TODO partij wijzigen
-
 set @competitie = 'ira';
-set @ronde = 4;
-set @bord = 5;
-set @wit = 7613166; -- Peter Kalisvaart
-set @zwart = 6192098; -- Nico Brugman
-set @bord = 6;
-set @wit = 8112654; -- Ton Fasel
-set @zwart = 7970094; -- Danny de Ruiter
-set @bord = 7;
+set @ronde = 6;
+set @bord = 1;
+set @wit = 6572511; -- Bert Buitink
+set @zwart = 7282033; -- Gerrit Lemmen
+set @bord = 2;
+set @wit = 7502143; -- Rob Heijink
+set @zwart = 8611922; -- Tycho Bakker
+set @bord = 3;
 set @wit = 7518203; -- Theo de Bruijn
-set @zwart = 7292043; -- Rob Freer
-set @bord = 8;
-set @wit = 101; -- Ramon Witte
-set @zwart = 7269834; -- Arie Boots
-set @bord = 9;
+set @zwart = 8372881; -- Egbert van Oene
+set @bord = 4;
+set @wit = 7613166; -- Peter Kalisvaart
+set @zwart = 7970094; -- Danny de Ruiter
+set @bord = 5;
+set @wit = 7399469; -- Nico Mak
+set @zwart = 8750093; -- Martin Rep
+set @bord = 6;
 set @wit = 7529522; -- Willem Meyles
-set @zwart = 7399469; -- Nico Mak
+set @zwart = 7758014; -- Alex Albrecht
+set @bord = 7;
+set @wit = 6212404; -- Peter van Diepen
+set @zwart = 103; -- Charles Stoorvogel
+set @bord = 8;
+set @wit = 7210137; -- Arjen Dibbets
+set @zwart = 6214153; -- Jan Poland
+set @bord = 9;
+set @wit = 8587337; -- Max Hooijmans
+set @zwart = 7535396; -- John Leek
+set @bord = 10;
+set @wit = 7292043; -- Rob Freer
+set @zwart = 8485059; -- Peter Duijs
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij <> 'i' order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
+where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart);
@@ -113,37 +107,21 @@ from speler s join persoon p on p.knsbNummer = s.knsbNummer
 where seizoen = '2122' order by naam; -- knsbRating desc; 
 
 -- TODO wedstrijd tijdens interne competitie
-select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer 
-where seizoen = '2122' and teamCode = 'int' and rondeNummer = 15 and u.knsbNummer in 
-(select knsbNummer from uitslag where seizoen = '2122' and teamCode = 'n1' and rondeNummer = 6);
-
-set @team = 'n1'; -- Waagtoren n1 - Kijk Uit n1
-set @ronde = 7;
-set @intern = 19;
-set @uithuis = 't';
-
-set @team = 'n4'; -- Waagtoren n4 - Heerhugowaard n1
-set @ronde = 2;
-set @intern = 20;
-set @uithuis = 't';
-
-set @team = 'n1'; -- Waagtoren n4 - Heerhugowaard n1
-set @ronde = 2;
-set @intern = 1520;
-set @uithuis = 't';
-
-set @team = 'n2'; -- Waagtoren n2 - Caïssa Eenhoorn n1
-set @ronde = 5;
-set @intern = 15;
+set @team = 'n2'; -- Waagtoren n2 - Aartswoud n1
+set @ronde = 3;
+set @intern = 21;
 set @uithuis = 't';
 
 select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer 
-where seizoen = '2122' and teamCode = 'int' and rondeNummer = @intern and u.knsbNummer in 
+where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde)) and u.knsbNummer in 
 (select knsbNummer from uitslag where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde);
 
-update uitslag set partij = 'e'
+update uitslag set partij = 't'
 where seizoen = '2122' and teamCode = 'int' and rondeNummer = @intern and knsbNummer in 
-(7529522, 7758014, 8112654, 8400183, 8484443, 8587337, 8611922);
+(8611922, 7529522, 6930957, 7758014, 8400183, 8587337, 8484443);
+update uitslag set partij = 't'
+where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and knsbNummer in 
+(8611922, 7529522, 6930957, 7758014, 8400183, 8587337, 8484443);
 
 select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer
 where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde;
@@ -152,51 +130,12 @@ select * from uitslag where seizoen = '2122' and teamCode = @team and rondeNumme
 delete from uitslag where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and bordNummer = 0;
 update uitslag set knsbNummer = 1 where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and knsbNummer = 0;
 
-
-
-select * from ronde
-where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde;
-
-select * from uitslag
-where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde;
-
-delete from uitslag
-where seizoen = '2122' and teamCode = @team and rondeNummer = @ronde and partij in ('m', 'n'); -- oude agenda items
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
-and u.knsbNummer in (7970094, 7428960, 7099950, 7099620, 7129991, 7707832, 6225934, 7535385) order by naam; -- Waagtoren n1 - Kijk Uit n1
-
-update uitslag set partij = @uithuis
-where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
-and knsbNummer in (7970094, 7428960, 7099950, 7099620, 7129991, 7707832, 6225934, 7535385); -- Waagtoren n1 - Kijk Uit n1
-
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', @team, @ronde, 0, 7535385, @uithuis, '', 0, '', '2022-04-12', 'int'); -- Marten Coerts (Waagtoren n1 - Kijk Uit n1)
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
-and u.knsbNummer in (8750093, 7399469, 6212404, 7321534, 8472530, 7518203) order by naam; -- Waagtoren n4 - Heerhugowaard n1
-
-update uitslag set partij = @uithuis
-where seizoen = '2122' and ((teamCode = 'int' and rondeNummer = @intern) or (teamCode = @team and rondeNummer = @ronde))
-and knsbNummer in (8750093, 7399469, 6212404, 7321534, 8472530, 7518203); -- Waagtoren n4 - Heerhugowaard n1
-
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', @team, @ronde, 0, 8750093, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Martin Rep (Waagtoren n4 - Heerhugowaard n1)
 ('2122', @team, @ronde, 0, 7399469, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Nico Mak
 ('2122', @team, @ronde, 0, 7321534, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Ronald Kamps
 ('2122', @team, @ronde, 0, 8472530, @uithuis, '', 0, '', '2022-04-19', 'int'), -- Rosa Leek
 ('2122', @team, @ronde, 0, 7518203, @uithuis, '', 0, '', '2022-04-19', 'int'); -- Theo de Bruijn
-
-
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'n4', 6, 0, 8750093, 't', '', 0, '', '2022-03-22', 'int'), -- Martin Rep
-('2122', 'n4', 6, 0, 6212404, 't', '', 0, '', '2022-03-22', 'int'), -- PvD
-('2122', 'n4', 6, 0, 7518203, 't', '', 0, '', '2022-03-22', 'int'), -- Theo de Bruijn
-('2122', 'n4', 6, 0, 7321534, 't', '', 0, '', '2022-03-22', 'int'), -- Ronald Kamps
-('2122', 'n4', 6, 0, 8073978, 't', '', 0, '', '2022-03-22', 'int'), -- Gerrit Peereboom
-('2122', 'n4', 6, 0, 7691728, 't', '', 0, '', '2022-03-22', 'int'); -- Karel Beentjes
 
 -- TODO speler toevoegen 
 insert into persoon (knsbNummer, naam) values
