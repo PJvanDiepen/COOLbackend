@@ -33,6 +33,7 @@ Nuttig
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
+- [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 
 Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
