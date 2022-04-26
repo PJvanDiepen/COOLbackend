@@ -3,29 +3,29 @@
 (async function() {
     await init();
     competitieTitel();
-    menu([WEDSTRIJDLEIDER, `agenda van ${competitie.naam}`, function () {
-            naarAnderePagina(`agenda.html?gebruiker=${competitie.speler}&naamGebruiker=${competitie.naam}`);
+    menu([WEDSTRIJDLEIDER, `agenda van ${o_o_o.naam}`, function () {
+            naarAnderePagina(`agenda.html?gebruiker=${o_o_o.speler}&naamGebruiker=${o_o_o.naam}`);
         }],
         [GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }],
-        [BEHEERDER, `backup uitslagen ${competitie.naam}` , async function () {
-            const rijen = await serverFetch(`/backup/speler/uitslag/${competitie.seizoen}/${competitie.speler}`);
+        [BEHEERDER, `backup uitslagen ${o_o_o.naam}` , async function () {
+            const rijen = await serverFetch(`/backup/speler/uitslag/${o_o_o.seizoen}/${o_o_o.speler}`);
             backupUitslag(rijen);
         }],
         [BEHEERDER, "afzeggingen verwijderen", async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${competitie.seizoen}/${competitie.speler}`);
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${o_o_o.seizoen}/${o_o_o.speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`);
-                sessionStorage.removeItem(`/ranglijst/${competitie.seizoen}/${competitie.versie}/${competitie.competitie}/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.speler}/${o_o_o.competitie}`);
+                sessionStorage.removeItem(`/ranglijst/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.competitie}/${datumSQL()}`);
                 naarZelfdePagina();
             }
         }],
-        [BEHEERDER, `${competitie.naam} verwijderen`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${competitie.seizoen}/${competitie.speler}`);
+        [BEHEERDER, `${o_o_o.naam} verwijderen`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${o_o_o.seizoen}/${o_o_o.speler}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`);
-                sessionStorage.removeItem(`/ranglijst/${competitie.seizoen}/${competitie.versie}/${competitie.competitie}/${datumSQL()}`);
+                sessionStorage.removeItem(`/uitslagen/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.speler}/${o_o_o.competitie}`);
+                sessionStorage.removeItem(`/ranglijst/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.competitie}/${datumSQL()}`);
                 naarAnderePagina("ranglijst.html");
             }
         }]);
@@ -56,13 +56,13 @@
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    const t = (await ranglijst(competitie.vorigeRonde, [competitie.speler]))[0];
-    kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(competitie.seizoen);
+    const t = (await ranglijst(o_o_o.vorigeRonde, [o_o_o.speler]))[0];
+    kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern()) {
         lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
-    const uitslagen = await localFetch(`/uitslagen/${competitie.seizoen}/${competitie.versie}/${competitie.speler}/${competitie.competitie}`);
+    const uitslagen = await localFetch(`/uitslagen/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.speler}/${o_o_o.competitie}`);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
         if (samenvoegen < i && geenGeplandePartij(uitslagen, i)) { // verwerken indien niet samengevoegd
@@ -71,9 +71,9 @@ async function uitslagenSpeler(kop, lijst) {
                 if (t.intern()) {
                     totaal += uitslagen[i].punten + uitslagen[i + 1].punten;
                 }
-                if (uitslagen[i].teamCode === competitie.competitie) { // TODO verplaatsen naar externePartijTijdensInterneRonde
+                if (uitslagen[i].teamCode === o_o_o.competitie) { // TODO verplaatsen naar externePartijTijdensInterneRonde
                     lijst.appendChild(externePartijTijdensInterneRonde(uitslagen[i + 1], totaal, uitslagen[i]));
-                } else if (uitslagen[i + 1].teamCode === competitie.competitie) {
+                } else if (uitslagen[i + 1].teamCode === o_o_o.competitie) {
                     lijst.appendChild(externePartijTijdensInterneRonde(uitslagen[i], totaal, uitslagen[i + 1]));
                 } else {
                     console.log("--- fout met externePartijTijdensInterneRonde ---");

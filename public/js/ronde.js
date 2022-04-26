@@ -10,7 +10,7 @@
 (async function() {
     await init();
     competitieTitel();
-    competitie.team = competitie.competitie;
+    o_o_o.team = o_o_o.competitie;
     const rondeNummer = bepaalRondeNummer();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
@@ -32,13 +32,13 @@
             }
         }],
         [BEHEERDER, `backup uitslagen ronde ${rondeNummer}` , async function () {
-            const rijen = await serverFetch(`/backup/ronde/uitslag/${competitie.seizoen}/${competitie.team}/${rondeNummer}/${rondeNummer}`);
+            const rijen = await serverFetch(`/backup/ronde/uitslag/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/${rondeNummer}`);
             backupUitslag(rijen);
         }],
         [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/ronde/${competitie.seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
+                sessionStorage.removeItem(`/ronde/${o_o_o.seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
         }],
@@ -46,14 +46,14 @@
             naarAnderePagina("wijzig.html?ronde=" + rondeNummer);
         }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${competitie.seizoen}/int/${rondeNummer}`);
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${o_o_o.seizoen}/int/${rondeNummer}`);
         }]);
-    rondeSelecteren(competitie.competitie, 0);
+    rondeSelecteren(o_o_o.competitie, 0);
     await uitslagenRonde(rondeNummer, document.getElementById("uitslagen"));
     await wedstrijdenBijRonde(rondeNummer, document.getElementById("wedstrijden"));
     document.getElementById("kop").innerHTML =
-        "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(competitie.ronde[rondeNummer]);
-    if (competitie.competitie === INTERNE_COMPETITIE) {
+        "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(o_o_o.ronde[rondeNummer]);
+    if (o_o_o.competitie === INTERNE_COMPETITIE) {
         document.getElementById("subkop").innerHTML = "Andere ronden en wedstrijden";
     }
 })();
@@ -62,10 +62,10 @@ function bepaalRondeNummer() {
     let rondeNummer = Number(params.get("ronde"));
     if (rondeNummer) { // niet 0
         return rondeNummer;
-    } else if (competitie.huidigeRonde && competitie.ronde[competitie.huidigeRonde].resultaten === 0) {
-        return competitie.huidigeRonde; // indien indeling definitief, maar nog geen uitslagen
-    } else if (competitie.vorigeRonde) {
-        return competitie.vorigeRonde;
+    } else if (o_o_o.huidigeRonde && o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) {
+        return o_o_o.huidigeRonde; // indien indeling definitief, maar nog geen uitslagen
+    } else if (o_o_o.vorigeRonde) {
+        return o_o_o.vorigeRonde;
     } else {
         return 1;
     }
@@ -88,7 +88,7 @@ function bepaalRondeNummer() {
  */
 async function uitslagenRonde(rondeNummer, lijst) {
     const gewijzigd = await uitslagMutatie(rondeNummer);
-    const uitslagen = await serverFetch(`/ronde/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`); // actuele situatie
+    const uitslagen = await serverFetch(`/ronde/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
             const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag);
@@ -113,11 +113,11 @@ async function uitslagMutatie(rondeNummer) {
     const uitslag = params.get("uitslag");
     if (wit && zwart && uitslag) {
         const mutaties = await serverFetch(
-            `/${uuidToken}/uitslag/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${wit}/${zwart}/${uitslag}`);
+            `/${uuidToken}/uitslag/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${wit}/${zwart}/${uitslag}`);
         if (mutaties > 0) {
             for (const key of Object.keys(sessionStorage)) {
-                if (key.startsWith(`/ranglijst/${competitie.seizoen}`) ||
-                    key.startsWith(`/uitslagen/${competitie.seizoen}`)) {
+                if (key.startsWith(`/ranglijst/${o_o_o.seizoen}`) ||
+                    key.startsWith(`/uitslagen/${o_o_o.seizoen}`)) {
                     sessionStorage.removeItem(key);
                 }
             }
@@ -141,7 +141,7 @@ function uitslagVerwerken(rondeNummer, uitslag) {
 }
 
 function uitslagWijzigen(uitslag)  {
-    if (competitie.seizoen !== ditSeizoen) { // vorig seizoen nooit wijzigen
+    if (o_o_o.seizoen !== ditSeizoen) { // vorig seizoen nooit wijzigen
         return false;
     } else if (gebruiker.mutatieRechten >= WEDSTRIJDLEIDER) {
         return true;
@@ -169,8 +169,8 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
     if (rondeNummer > 1) {
         lijst.appendChild(rondeInterneCompetitie(rondeNummer - 1)); // vorige ronde
     }
-    if (competitie.competitie === INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
-        const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
+    if (o_o_o.competitie === INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
+        const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
         for (const wedstrijd of wedstrijden) {
             if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
                 const datumKolom = datumLeesbaar(wedstrijd);
@@ -182,26 +182,24 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
             }
         }
     }
-    if (competitie.laatsteRonde > rondeNummer) {
+    if (o_o_o.laatsteRonde > rondeNummer) {
         lijst.appendChild(rondeInterneCompetitie(rondeNummer + 1)); // volgende ronde
     }
 }
 
 function rondeInterneCompetitie(rondeNummer) {
-    const aantal = competitie.ronde[rondeNummer].resultaten > 0 ? competitie.ronde[rondeNummer].resultaten / 2 : "";
-    return htmlRij(
-        rondeNummer,
-        htmlLink(`ronde.html?ronde=${rondeNummer}`, datumLeesbaar(competitie.ronde[rondeNummer])),
-        teamVoluit(competitie.competitie),
-        aantal);
+    return htmlRij(rondeNummer,
+        htmlLink(`ronde.html?ronde=${rondeNummer}`, datumLeesbaar(o_o_o.ronde[rondeNummer])),
+        teamVoluit(o_o_o.competitie),
+        "");
 }
 
 function wedstrijdBijRonde(rondeNummer, datum) {
     if (rondeNummer === 1) {
-        return datum <= competitie.ronde[1].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
-    } else if (rondeNummer === competitie.laatsteRonde) {
-        return datum > competitie.ronde[rondeNummer - 1].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
+        return datum <= o_o_o.ronde[1].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
+    } else if (rondeNummer === o_o_o.laatsteRonde) {
+        return datum > o_o_o.ronde[rondeNummer - 1].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
     } else {
-        return datum > competitie.ronde[rondeNummer - 1].datum && datum <= competitie.ronde[rondeNummer].datum;
+        return datum > o_o_o.ronde[rondeNummer - 1].datum && datum <= o_o_o.ronde[rondeNummer].datum;
     }
 }

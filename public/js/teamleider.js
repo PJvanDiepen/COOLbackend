@@ -9,7 +9,7 @@
             naarAnderePagina("beheer.html");
         }]);
     const wedstrijdDatum = params.get("datum");
-    const wedstrijden = await localFetch("/wedstrijden/" + competitie.seizoen);
+    const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);
     await wedstrijdenOverzicht(document.getElementById("kop"), wedstrijden, wedstrijdDatum);
 })();

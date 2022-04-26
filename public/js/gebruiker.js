@@ -6,8 +6,8 @@
             naarAnderePagina("beheer.html");
         }],
         [BEHEERDER, "formulier van geselecteerde speler", function () {
-            document.getElementById("naam").value = competitie.naam;
-            document.getElementById("knsbNummer").value = competitie.speler;
+            document.getElementById("naam").value = o_o_o.naam;
+            document.getElementById("knsbNummer").value = o_o_o.speler;
             document.getElementById("status").value = "iemand anders registreren";
         }]);
     spelerSelecteren(ditSeizoen);
@@ -26,7 +26,7 @@ async function spelerSelecteren(seizoen) {
         function (persoon) {
             spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), persoon.naam));
         });
-    spelers.value = competitie.speler; // werkt uitsluitend na await
+    spelers.value = o_o_o.speler; // werkt uitsluitend na await
     spelers.addEventListener("input",
         function () {
             const i = spelers.selectedIndex;
@@ -39,18 +39,18 @@ async function spelerSelecteren(seizoen) {
 // TODO voor iemand anders aanvraag doen (uitsluitend door systeembeheerder)
 
 async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
-    if (competitie.speler) {
-        knsbNummer.value = competitie.speler;
-        naam.value = competitie.naam;
+    if (o_o_o.speler) {
+        knsbNummer.value = o_o_o.speler;
+        naam.value = o_o_o.naam;
     }
-    knsbNummer.value = competitie.speler ? competitie.speler : gebruiker.knsbNummer;
-    naam.value = competitie.speler ? competitie.naam : gebruiker.naam;
+    knsbNummer.value = o_o_o.speler ? o_o_o.speler : gebruiker.knsbNummer;
+    naam.value = o_o_o.speler ? o_o_o.naam : gebruiker.naam;
     if (uuidToken) {
-        status.value = `${gebruiker.naam} is als gebruiker geregistreerd bij ${competitie.vereniging}`;
+        status.value = `${gebruiker.naam} is als gebruiker geregistreerd bij ${o_o_o.vereniging}`;
     } else if (gebruiker.email) {
         email.value = gebruiker.email;
         status.value = `${gebruiker.naam} heeft al een aanvraag verstuurd`;
-    } else if (!competitie.speler) {
+    } else if (!o_o_o.speler) {
         status.value = "selecteer je naam";
     }
     formulier.addEventListener("submit", async function (event) {

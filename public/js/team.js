@@ -6,22 +6,22 @@
             naarAnderePagina("beheer.html");
         }],
         [BEHEERDER, "backup uitslagen van alle ronden" , async function () {
-            const rijen = await serverFetch(`/backup/ronde/uitslag/${competitie.seizoen}/${competitie.team}/1/9`);
+            const rijen = await serverFetch(`/backup/ronde/uitslag/${o_o_o.seizoen}/${o_o_o.team}/1/9`);
             backupUitslag(rijen);
         }]);
-    await teamSelecteren(competitie.team);
+    await teamSelecteren(o_o_o.team);
     await uitslagenTeam(document.getElementById("kop"), document.getElementById("ronden"));
 })();
 
 async function uitslagenTeam(kop, rondenTabel) {
-    const teams = await localFetch("/teams/" + competitie.seizoen);
+    const teams = await localFetch("/teams/" + o_o_o.seizoen);
     for (const team of teams) {
-        if (team.teamCode === competitie.team) {
-            kop.innerHTML = [teamVoluit(competitie.team), seizoenVoluit(competitie.seizoen), team.omschrijving].join(SCHEIDING);
+        if (team.teamCode === o_o_o.team) {
+            kop.innerHTML = [teamVoluit(o_o_o.team), seizoenVoluit(o_o_o.seizoen), team.omschrijving].join(SCHEIDING);
             break;
         }
     }
-    const rondeUitslagen = await uitslagenTeamAlleRonden(competitie.team);
+    const rondeUitslagen = await uitslagenTeamAlleRonden(o_o_o.team);
     for (let i = 0; i < rondeUitslagen.length; ++i) {
         uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
     }

@@ -57,7 +57,7 @@ function eindeSeizoen(seizoen) {
     return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
 }
 
-const competitie = (function () {
+const o_o_o = (function () {
     const competitie = {
         vereniging: "Waagtoren",
         seizoen: ditSeizoen,
@@ -89,11 +89,11 @@ const competitie = (function () {
 })();
 
 function competitieTitel() {
-    document.getElementById("competitie").innerHTML = competitie.vereniging + SCHEIDING + teamVoluit(competitie.competitie);
+    document.getElementById("competitie").innerHTML = o_o_o.vereniging + SCHEIDING + teamVoluit(o_o_o.competitie);
 }
 
 const uuidActiveren = params.get("uuid");
-const vorigeSessie = localStorage.getItem(competitie.vereniging);
+const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 const gebruiker = {}; // gebruikerVerwerken
 // gebruiker.mutatieRechten
@@ -166,27 +166,27 @@ function uuidCorrect(uuid) {
 
 function volgendeSessie(json) {
     try {
-        localStorage.setItem(competitie.vereniging, json);
+        localStorage.setItem(o_o_o.vereniging, json);
     } catch (error) {
         console.error(error); // TODO per sessie fouten verzamelen?
     }
 }
 
 async function rondenVerwerken() {
-    competitie.ronde = [];
-    competitie.vorigeRonde = 0;
-    competitie.huidigeRonde = 0;
-    const ronden = await localFetch(`/ronden/${competitie.seizoen}/${competitie.team}`);
+    o_o_o.ronde = [];
+    o_o_o.vorigeRonde = 0;
+    o_o_o.huidigeRonde = 0;
+    const ronden = await localFetch(`/ronden/${o_o_o.seizoen}/${o_o_o.team}`);
     for (const ronde of ronden) {
-        competitie.ronde[ronde.rondeNummer] = ronde;
-        competitie.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
+        o_o_o.ronde[ronde.rondeNummer] = ronde;
+        o_o_o.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
         if (ronde.resultaten > 0) {
-            competitie.vorigeRonde = ronde.rondeNummer;
-        } else if (competitie.huidigeRonde === 0) {
-            competitie.huidigeRonde = ronde.rondeNummer;
+            o_o_o.vorigeRonde = ronde.rondeNummer;
+        } else if (o_o_o.huidigeRonde === 0) {
+            o_o_o.huidigeRonde = ronde.rondeNummer;
             if (await serverFetch( // actuele situatie
-                `/indeling/${competitie.seizoen}/${competitie.team}/${competitie.laatsteRonde}`)) {
-                competitie.ronde[competitie.huidigeRonde].resultaten = 0; // indeling zonder resultaten
+                `/indeling/${o_o_o.seizoen}/${o_o_o.team}/${o_o_o.laatsteRonde}`)) {
+                o_o_o.ronde[o_o_o.huidigeRonde].resultaten = 0; // indeling zonder resultaten
             }
         }
     }
@@ -317,7 +317,7 @@ function naarZelfdePagina(parameters) {
 }
 
 function naarSpeler(speler) {
-    const link = htmlLink(`speler.html?team=${competitie.competitie}&speler=${speler.knsbNummer}&naam=${speler.naam}`, speler.naam);
+    const link = htmlLink(`speler.html?team=${o_o_o.competitie}&speler=${speler.knsbNummer}&naam=${speler.naam}`, speler.naam);
     htmlVet(link, speler.knsbNummer === gebruiker.knsbNummer);
     return link;
 }
@@ -395,11 +395,11 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database
     } else if (teamCode === RAPID_COMPETTIE) {
         return "rapid competitie";
     } else if (teamCode === "kbe") {
-        return competitie.vereniging + " KNSB bekerteam";
+        return o_o_o.vereniging + " KNSB bekerteam";
     } else if (teamCode === "nbe") {
-        return competitie.vereniging + " NHSB bekerteam";
+        return o_o_o.vereniging + " NHSB bekerteam";
     } else {
-        return competitie.vereniging + " " + teamCode;
+        return o_o_o.vereniging + " " + teamCode;
     }
 }
 
@@ -461,7 +461,7 @@ function percentage(winst, remise, verlies) {
 
 async function teamSelecteren(teamCode) {
     const teams = document.getElementById("teamSelecteren");
-    (await localFetch("/teams/" + competitie.seizoen)).forEach(
+    (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
         function (team) {
             teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
         });
@@ -476,9 +476,9 @@ async function teamSelecteren(teamCode) {
 }
 
 async function rondeSelecteren(teamCode, rondeNummer) {
-    competitie.team = competitie.competitie;
+    o_o_o.team = o_o_o.competitie;
     const ronden = document.getElementById("rondeSelecteren");
-    (await localFetch("/ronden/" + competitie.seizoen + "/" + teamCode)).forEach(
+    (await localFetch("/ronden/" + o_o_o.seizoen + "/" + teamCode)).forEach(
         function (ronde) {
             ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde) + SCHEIDING + "ronde " + ronde.rondeNummer));
         });
@@ -500,9 +500,9 @@ async function rondeSelecteren(teamCode, rondeNummer) {
  * @returns {Promise<*>}
  */
 async function ranglijst(rondeNummer, selectie) {
-    const totDatum = rondeNummer === competitie.laatsteRonde ? eindeSeizoen(competitie.seizoen) : competitie.ronde[rondeNummer + 1].datum;
+    const totDatum = rondeNummer === o_o_o.laatsteRonde ? eindeSeizoen(o_o_o.seizoen) : o_o_o.ronde[rondeNummer + 1].datum;
     let spelers = await localFetch(
-        `/ranglijst/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${datumSQL(totDatum)}/${competitie.versie}`);
+        `/ranglijst/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${datumSQL(totDatum)}/${o_o_o.versie}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }
@@ -733,11 +733,11 @@ order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
 async function uitslagenTeamAlleRonden(teamCode) {
     const rondeUitslagen = [];
-    (await localFetch("/ronden/" + competitie.seizoen + "/" + teamCode)).forEach(
+    (await localFetch("/ronden/" + o_o_o.seizoen + "/" + teamCode)).forEach(
         function (ronde) {
             rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
         });
-    (await localFetch("/team/" + competitie.seizoen + "/" + teamCode)).forEach(
+    (await localFetch("/team/" + o_o_o.seizoen + "/" + teamCode)).forEach(
         function (u) {
             const rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
             if (u.resultaat === WINST) {

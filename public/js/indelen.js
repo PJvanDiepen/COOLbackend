@@ -9,8 +9,8 @@
 (async function() {
     await init();
     competitieTitel();
-    const rondeNummer = Number(params.get("ronde")) || competitie.huidigeRonde;
-    const totDatum = competitie.ronde[rondeNummer].datum;
+    const rondeNummer = Number(params.get("ronde")) || o_o_o.huidigeRonde;
+    const totDatum = o_o_o.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");
     subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
     const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
@@ -25,7 +25,7 @@
         oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const uithuis = await serverFetch(`/${uuidToken}/uithuis/${competitie.seizoen}/${rondeNummer}`); // actuele situatie
+    const uithuis = await serverFetch(`/${uuidToken}/uithuis/${o_o_o.seizoen}/${rondeNummer}`); // actuele situatie
     partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), uithuis);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
@@ -37,18 +37,18 @@
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await serverFetch(
-                    `/${uuidToken}/indelen/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
+                    `/${uuidToken}/indelen/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
                     mutaties += 2;
                 }
             }
             if (oneven) {
                 if (await serverFetch(
-                    `/${uuidToken}/oneven/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${r[oneven].knsbNummer}`)) {
+                    `/${uuidToken}/oneven/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${r[oneven].knsbNummer}`)) {
                     mutaties += 1;
                 }
             }
-            mutaties += await serverFetch(`/${uuidToken}/afwezig/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
-            mutaties += await serverFetch(`/${uuidToken}/extern/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}`);
+            mutaties += await serverFetch(`/${uuidToken}/afwezig/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
+            mutaties += await serverFetch(`/${uuidToken}/extern/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
                 naarAnderePagina("ronde.html?ronde=" + rondeNummer);
             }
@@ -58,7 +58,7 @@
 
 async function deelnemersRonde(rondeNummer, partij) {
     if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        return await serverFetch(`/${uuidToken}/deelnemers/${competitie.seizoen}/${competitie.competitie}/${rondeNummer}/${partij}`); // actuele situatie
+        return await serverFetch(`/${uuidToken}/deelnemers/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${partij}`); // actuele situatie
     } else {
         return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd
     }
@@ -184,7 +184,7 @@ function nietTegen(r, i, j, rondeNummer) {
     const nogNietTegen = [101 , 103]; // Ramon Witte, Charles Stoorvogel
     if (!r[i].tegen(r[j], rondeNummer)) {
         return true;
-    } else if (competitie.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
+    } else if (o_o_o.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
     } else if (r[i].intern() < 4 && nogNietTegen.includes(r[j].knsbNummer)) {
         console.log(`${r[i].naam} nog niet tegen ${r[j].naam}`);

@@ -7,10 +7,10 @@
 (async function() {
     await init();
     const plaatje = document.getElementById("plaatje");
-    if (competitie.vereniging === "Waagtoren") {
+    if (o_o_o.vereniging === "Waagtoren") {
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
     }
-    document.getElementById("kop").innerHTML = competitie.vereniging + SCHEIDING + seizoenVoluit(competitie.seizoen);
+    document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
     // document.getElementById("competitie").innerHTML = "Ranglijst " + teamVoluit(competitie.competitie);
     // competitieSelecteren();
     seizoenSelecteren(INTERNE_COMPETITIE);
@@ -18,17 +18,17 @@
 
 async function competitieSelecteren() {
     const competities = document.getElementById("competitieSelecteren");
-    (await localFetch("/teams/" + competitie.seizoen)).forEach(
+    (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
         function (team) {
             if (interneCompetitie(team.teamCode)) {
                 competities.appendChild(htmlOptie(team.teamCode, team.omschrijving));
             }
         });
-    competities.value = competitie.competitie; // werkt uitsluitend na await
+    competities.value = o_o_o.competitie; // werkt uitsluitend na await
     competities.addEventListener("input",
         function () {
             sessionStorage.setItem("competitie", competities.value);
-            naarZelfdePagina(`team=${competitie.team}&competitie=${competitie.competitie}&ronde=0`);
+            naarZelfdePagina(`team=${o_o_o.team}&competitie=${o_o_o.competitie}&ronde=0`);
         });
 }
 
@@ -38,7 +38,7 @@ async function seizoenSelecteren(teamCode) {
         function (seizoen) {
             seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
         });
-    seizoenen.value = competitie.seizoen; // werkt uitsluitend na await
+    seizoenen.value = o_o_o.seizoen; // werkt uitsluitend na await
     seizoenen.addEventListener("input",
         function () {
             sessionStorage.setItem("seizoen", seizoenen.value);

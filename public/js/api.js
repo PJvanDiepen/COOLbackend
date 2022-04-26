@@ -2,14 +2,14 @@
 
 let ronde = 19;
 const apiCalls = [
-    `/ronden/${competitie.seizoen}/${competitie.competitie}`, // TODO met documentatie
+    `/ronden/${o_o_o.seizoen}/${o_o_o.competitie}`, // TODO met documentatie
     `/${uuidToken}/gebruikers`,
-    `/${uuidToken}/rondenummers/${competitie.seizoen}/${competitie.competitie}`,
+    `/${uuidToken}/rondenummers/${o_o_o.seizoen}/${o_o_o.competitie}`,
     `/gewijzigd`,
     `/reglementen`,
-    `/reglement/${competitie.seizoen}/${competitie.competitie}`,
+    `/reglement/${o_o_o.seizoen}/${o_o_o.competitie}`,
 //    `/${uuidToken}/kalender/${competitie.seizoen}/${speler}`,
-    `/${uuidToken}/agenda/${competitie.seizoen}/${competitie.competitie}/${ronde}/${competitie.speler}`,
+    `/${uuidToken}/agenda/${o_o_o.seizoen}/${o_o_o.competitie}/${ronde}/${o_o_o.speler}`,
     `/${uuidToken}/deelnemers/2122/int/15`,
     `/${uuidToken}/alle/deelnemers/2122/int/15`,
     `/${uuidToken}/rondenummers/2122/1`,
@@ -45,14 +45,14 @@ function htmlTabblad(link) {
 async function spelerSelecteren(rondeNummer, deelnemers) {
     const spelers = document.getElementById("spelerSelecteren");
     spelers.appendChild(htmlOptie(0, "selecteer naam"));
-    (await localFetch(`/spelers/${competitie.seizoen}`)).forEach(
+    (await localFetch(`/spelers/${o_o_o.seizoen}`)).forEach(
         function (speler) {
             spelers.appendChild(htmlOptie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  KRUISJE : "")));
         });
     spelers.addEventListener("input",async function () {
         const knsbNummer = Number(spelers.value);
         const partij = deelnemers.includes(knsbNummer) ? NIET_MEEDOEN : MEEDOEN;
-        const datum = datumSQL(competitie.ronde[rondeNummer].datum);
+        const datum = datumSQL(o_o_o.ronde[rondeNummer].datum);
         naarZelfdePagina(); // TODO mutatie na init() en speler geel maken indien gelukt
     });
 }

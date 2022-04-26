@@ -20,10 +20,10 @@
  */
 
 async function gebruikerTekst(emailAan, naamAan, link) {
-    const leden = await serverFetch(`/${uuidToken}/email/${competitie.speler}`);
+    const leden = await serverFetch(`/${uuidToken}/email/${o_o_o.speler}`);
     const email = params.get("email");
     const lid = leden[0];  // TODO vergelijken met email
     emailAan.appendChild(htmlTekst(lid.email));
     naamAan.appendChild(htmlTekst(`${lid.naam},`));
-    link.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${competitie.vereniging}&uuid=${lid.uuidToken}`));
+    link.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}&uuid=${lid.uuidToken}`));
 }
