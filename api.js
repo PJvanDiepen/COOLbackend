@@ -52,6 +52,9 @@ module.exports = router => {
         ctx.body = seizoenen.map(function(team) {return team.seizoen});
     });
 
+    /*
+     Heeft deze ronde al een indeling en nog geen uitslagen?
+     */
     router.get('/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const uitslagen = await Uitslag.query()
             .where('uitslag.seizoen', ctx.params.seizoen)
