@@ -57,36 +57,15 @@ function eindeSeizoen(seizoen) {
     return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
 }
 
-const o_o_o = (function () {
-    const competitie = {
-        vereniging: "Waagtoren",
-        seizoen: ditSeizoen,
-        versie: 0, // versie is een getal
-        competitie: INTERNE_COMPETITIE,
-        team: INTERNE_COMPETITIE,
-        speler: 0, // knsbNummer is een getal
-        naam: "onbekend"};
-    for (let [key, value] of Object.entries(competitie)) {
-        let parameter = params.get(key); // inlezen van url
-        if (parameter) {
-            sessionStorage.setItem(key, parameter); // opslaan voor sessie
-        } else {
-            parameter = sessionStorage.getItem(key); // inlezen van sessie
-        }
-        if (parameter) {
-            competitie[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
-        }
-    }
-    // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
-    if (competitie.competitie === INTERNE_COMPETITIE && competitie.versie === 0 && competitie.seizoen === "2122") {
-        competitie.versie = 3;
-    } else if (competitie.competitie === INTERNE_COMPETITIE && competitie.versie === 0) {
-        competitie.versie = 2;
-    } else {
-        competitie.versie = 4; // rapid competitie
-    }
-    return competitie;
-})();
+const o_o_o = {
+    vereniging: "Waagtoren",
+    seizoen: ditSeizoen,
+    versie: 0, // versie is een getal
+    competitie: INTERNE_COMPETITIE, // TODO welke competitie is komende dinsdag?
+    team: INTERNE_COMPETITIE,
+    speler: 0, // knsbNummer is een getal
+    naam: "onbekend"
+};
 
 function competitieTitel() {
     document.getElementById("competitie").innerHTML = o_o_o.vereniging + SCHEIDING + teamVoluit(o_o_o.competitie);
@@ -117,6 +96,8 @@ const NIEUWE_RANGLIJST = 2;
  */
 async function init() {
     await gebruikerVerwerken();
+    urlVerwerken();
+    versieVerwerken();
     await rondenVerwerken();
 }
 
@@ -124,6 +105,8 @@ async function init() {
  * 0-0-0 genereert een uuid om de gebruiker te herkennen.
  * De gebruiker krijgt uuid via email, moet uuidActiveren en legt uuid vast in localStorage.
  * gebruikerVerwerken geeft de uuid van een geregistreerde gebruiker om knsbNummer, naam en mutatieRechten van gebruiker te lezen.
+ *
+ * TODO bestuur registreert en maakt uuid aan
  *
  * De gebruiker moet een uuid aanvragen door zich te registreren.
  * Bij het registreren tijdens een vorigeSessie zijn knsbNummer, naam en email vastgelegd in localStorage.
@@ -169,6 +152,31 @@ function volgendeSessie(json) {
         localStorage.setItem(o_o_o.vereniging, json);
     } catch (error) {
         console.error(error); // TODO per sessie fouten verzamelen?
+    }
+}
+
+function urlVerwerken() {
+    for (let [key, value] of Object.entries(o_o_o)) {
+        let parameter = params.get(key); // inlezen van url
+        if (parameter) {
+            sessionStorage.setItem(key, parameter); // opslaan voor sessie
+        } else {
+            parameter = sessionStorage.getItem(key); // inlezen van sessie
+        }
+        if (parameter) {
+            o_o_o[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
+        }
+    }
+}
+
+function versieVerwerken() {
+    // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
+    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0 && o_o_o.seizoen === "2122") {
+        o_o_o.versie = 3;
+    } else if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
+        o_o_o.versie = 2;
+    } else {
+        o_o_o.versie = 4; // rapid competitie
     }
 }
 
