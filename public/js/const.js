@@ -305,6 +305,13 @@ function htmlRij(...kolommen) {
     return tr;
 }
 
+function htmlLinkEnTerug(link, tekst) {
+    const a = document.createElement("a");
+    a.appendChild(htmlTekst(tekst));
+    a.href = link;
+    return a;
+}
+
 function htmlLink(link, tekst) {
     const a = document.createElement("a");
     a.appendChild(htmlTekst(tekst));

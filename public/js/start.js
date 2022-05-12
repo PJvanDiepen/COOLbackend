@@ -1,5 +1,4 @@
 "use strict";
-
 /*
     verwerk vereniging=[vereniging]
  */
@@ -11,7 +10,14 @@
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
     }
     document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
-    document.getElementById("competitie").innerHTML = "Ranglijst " + teamVoluit(competitie.competitie);
+    document.getElementById("competitie").appendChild(
+        htmlLinkEnTerug("ranglijst.html", `Ranglijst ${teamVoluit(o_o_o.competitie)} na ronde ${o_o_o.vorigeRonde}`));
+    document.getElementById("ronde").appendChild(
+        htmlLinkEnTerug("ronde.html", `Uitslagen ronde ${o_o_o.vorigeRonde}`));
+    if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
+        document.getElementById("indelen").appendChild(
+            htmlLinkEnTerug("indelen.html", `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`));
+    }
     seizoenSelecteren(INTERNE_COMPETITIE);
     competitieSelecteren();
 })();

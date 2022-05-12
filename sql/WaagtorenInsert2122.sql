@@ -3046,6 +3046,19 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'int', 21, 13, 103, 'i', 'w', 120, '0', '2022-04-26', 'int'),
 ('2122', 'int', 21, 13, 120, 'i', 'z', 103, '1', '2022-04-26', 'int');
 
+-- Waagtoren n1 op 6 mei 2022
+delete from uitslag where seizoen = '2122' and teamCode = 'n1' and rondeNummer = 3;
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', 'n1', '3', '8', '6225934', 'e', 'z', '0', '0', '2022-05-06', 'int'),
+('2122', 'n1', '3', '4', '7099620', 'e', 'z', '0', '0', '2022-05-06', 'int'),
+('2122', 'n1', '3', '2', '7099950', 'e', 'z', '0', '1', '2022-05-06', 'int'),
+('2122', 'n1', '3', '6', '7129991', 'e', 'z', '0', '0', '2022-05-06', 'int'),
+('2122', 'n1', '3', '3', '7428960', 'e', 'w', '0', '½', '2022-05-06', 'int'),
+('2122', 'n1', '3', '7', '7707832', 'e', 'w', '0', '1', '2022-05-06', 'int'),
+('2122', 'n1', '3', '1', '7970094', 'e', 'w', '0', '1', '2022-05-06', 'int'),
+('2122', 'n1', '3', '5', '7613166', 'e', 'w', '0', '½', '2022-05-06', 'int');
+
 -- ronde 22
 
 use waagtoren; -- PvD
