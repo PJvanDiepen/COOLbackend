@@ -47,6 +47,8 @@ async function seizoenSelecteren(teamCode) {
     seizoenen.addEventListener("input",
         function () {
             sessionStorage.setItem("seizoen", seizoenen.value);
+            sessionStorage.setItem("competitie", INTERNE_COMPETITIE);
+            sessionStorage.setItem("team", INTERNE_COMPETITIE);
             naarZelfdePagina();
         });
 }
