@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Indelen</title>
+    <link rel="stylesheet" type="text/css" href="css/aaappp.css">
+    <style>
+        td:nth-child(1), #lijst td:nth-child(3), #lijst td:nth-child(4), #lijst td:nth-child(5),#lijst td:nth-child(6) {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <select id="menu"></select>
+    <h1 id="competitie"></h1>
+    <h2 id="subkop">Indeling ronde</h2>
+    <table id="partijen">
+        <tr>
+            <th></th>
+            <th>wit</th>
+            <th>zwart</th>
+            <th>uitslag</th>
+        </tr>
+    </table>
+    <p></p>
+    <details>
+        <summary>Rangnummers deelnemers</summary>
+        <p></p>
+        <select id="versies"></select>
+        <p></p>
+        <table id="lijst">
+            <tr>
+                <th></th>
+                <th>naam</th>
+                <th>totaal</th>
+                <th>w</th>
+                <th></th>
+                <th>w-z</th>
+            </tr>
+        </table>
+        <p>
+            Volgens artikel 3 van het
+            <a href="https://www.waagtoren.nl/intern/paginas-intern/reglement/" target="_blank" rel="noopener noreferrer">reglement</a>
+            van de interne competitie kunnen spelers elkaar per seizoen meer dan 1 keer ontmoeten.
+            Tussen 2 partijen met dezelfde spelers moeten minstens 7 ronden liggen.
+            Bij elke volgende partij met dezelfde spelers wisselen de spelers van kleur.
+            Verder is kleur afhankelijk van aantal keren wit of zwart van beide spelers.
+        </p>
+    </details>
+    <script src="js/const.js"></script>
+    <script src="js/indelen.js"></script>
+</body>
+</html>

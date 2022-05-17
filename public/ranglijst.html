@@ -2,22 +2,24 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ranglijst</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
         td {
             text-align: right;
         }
-        td:nth-child(2), td:nth-child(2), td:nth-child(4) {
+        td:nth-child(2), td:nth-child(4) {
             text-align: left; /* naam en (subgroep en prijs) */
         }
     </style>
 </head>
 <body>
-    <h1 id="kop">Ranglijst</h1>
-    <select id="rondeSelecteren" class = "rechts"></select>
-    <select id="teamSelecteren" class = "rechts"></select>
-    <select id="seizoenSelecteren" class = "rechts"></select>
+    <select id="menu"></select>
+    <select id="teamSelecteren"></select>
+    <select id="rondeSelecteren"></select>
+    <h1 id="competitie"></h1>
+    <h2 id="kop"></h2>
     <table id="tabel">
         <tr>
             <th></th>
@@ -27,20 +29,34 @@
             <th>intern</th>
             <th></th>
             <th>w-z</th>
-            <th>afz</th>
             <th>on</th>
             <th>extern</th>
             <th></th>
-            <th>rating</th>
         </tr>
     </table>
-    <p></p>
-    <script src="js/uitslagen.js"></script>
-    <script>
-        seizoenen(document.getElementById("seizoenSelecteren"), INTERNE_COMPETITIE);
-        teams(document.getElementById("teamSelecteren"), INTERNE_COMPETITIE);
-        ronden(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, 0);
-        ranglijst(document.getElementById("kop"), document.getElementById("tabel"));
-    </script>
+    <details>
+        <summary>0-0-0.nl verwerkt alle uitslagen van een seizoen om de ranglijst te berekenen</summary>
+        <p>
+            Het totaal per speler wordt berekent volgens artikel 11 en 12 van het
+            <a href="https://www.waagtoren.nl/intern/paginas-intern/reglement/" target="_blank" rel="noopener noreferrer">reglement</a>
+            van de interne competitie.
+        </p>
+        <p>
+            In de kolom daarnaast staat de subgroep en eventueel een - of een *.
+            Een - betekent dat de speler volgens artikel 2 niet voldoende interne partijen heeft gespeeld
+            voor een prijs als winnaar van de subgroep.
+            Een * betekent dat de speler de winnaar is van de subgroep.
+        </p>
+        <p>
+            In de kolom met w-z staat het verschil tussen het aantal keer met wit en het aantal keer met zwart.
+        </p>
+        <p>
+            In de kolom on staat het aantal keren oneven. Volgens artikel 6 mag een speler een keer per seizoen oneven zijn.
+        </p>
+        <select id="versies"></select>
+        <select id="leden"></select>
+    </details>
+    <script src="js/const.js"></script>
+    <script src="js/ranglijst.js"></script>
 </body>
 </html>

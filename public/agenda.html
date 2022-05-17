@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Agenda</title>
+    <link rel="stylesheet" type="text/css" href="css/aaappp.css">
+    <style>
+        td {
+            text-align: center; /* aanwezig */
+        }
+        td:nth-child(3) {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <select id="menu"></select>
+    <h1 id="kop">Agenda</h1>
+    <table id="wedstrijden">
+        <tr>
+            <th>ronde</th>
+            <th>datum</th>
+            <th></th>
+            <th></th>
+            <th>aanwezig</th>
+        </tr>
+    </table>
+    <details>
+        <summary>Spelen in de externe competitie</summary>
+        <p>
+            Voor het opstellen van vaste spelers voor een team en het laten meespelen van invallers zijn allerlei regels gemaakt
+            die zijn vastgelegd in het
+            <a href="https://www.schaakbond.nl/sites/default/files/userfiles/schaakbond/handboek/competitiereglement/KNSB-Competitiereglement.pdf"
+               target="_blank" rel="noopener noreferrer">KNSB competitiereglement</a> en het
+            <a href="https://www.nhsb.nl/downloads/119" target="_blank" rel="noopener noreferrer">NHSB competitiereglement</a>.
+            Het gaat vooral om de regels 11.2.b, 12.1, 12.2, 12.4 en 13.2 van het KNSB competitiereglement.
+            In het NHSB competitiereglement staan soortgelijke regels. Het belangrijkste verschil tussen de KNSB en NHSB is het Elo-puntenverschil
+            namelijk 40 voor de KNSB en 80 voor de NHSB.
+        </p>
+        <p>
+            In je agenda staan de wedstrijden van je eigen KNSB en/of NHSB team of de wedstrijden van het laagste team waarvoor je mag invallen.
+            Je mag altijd in een hoger team invallen.
+        </p>
+    </details>
+    <script src="js/const.js"></script>
+    <script src="js/agenda.js"></script>
+</body>
+</html>

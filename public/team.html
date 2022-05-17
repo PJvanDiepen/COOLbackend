@@ -2,6 +2,7 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Team</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
@@ -11,8 +12,9 @@
     </style>
 </head>
 <body>
-    <h1><a href="ranglijst.html" id="kop">Team</a></h1>
-    <select id="teamSelecteren" class = "rechts"></select>
+    <select id="menu"></select>
+    <select id="teamSelecteren"></select>
+    <h1 id="kop">Team</h1>
     <table id="ronden">
         <tr>
             <th>ronde</th>
@@ -30,10 +32,7 @@
     <div id="ronde7"></div>
     <div id="ronde8"></div>
     <div id="ronde9"></div>
-    <script src="js/uitslagen.js"></script>
-    <script>
-        teams(document.getElementById("teamSelecteren"), teamCode);
-        uitslagenTeam(document.getElementById("kop"),document.getElementById("ronden"));
-    </script>
+    <script src="js/const.js"></script>
+    <script src="js/team.js"></script>
 </body>
 </html>

@@ -23,8 +23,8 @@ registerApi(router);
 
 app.use(bodyParser());
 app.use(router.routes());
-app.use(router.allowedMethods())
+app.use(router.allowedMethods());
 
-const server = app.listen(3000, () => {
-  console.log('COOL app listening at port %s', server.address().port)
+const server = app.listen(3000, function() {
+  console.log(`0-0-0 luistert op localhost:${server.address().port}`)
 });

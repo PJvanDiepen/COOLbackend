@@ -2,36 +2,41 @@
 <html lang="nl">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Ronde</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(3) {
-            text-align: center; /* uitslag */
+        #tabel td:nth-child(1) {
+            text-align: right; /* bordnummer */
+        }
+        #wedstrijden td:nth-child(1), td:nth-child(4) {
+            text-align: center; /* ronde, uitslag */
         }
     </style>
 </head>
 <body>
-    <h1><a href="ranglijst.html" id="kop">Ronde</a></h1>
-    <select id="rondeSelecteren" class = "rechts"></select>
-    <table id="wedstrijden">
+    <select id="menu"></select>
+    <select id="rondeSelecteren"></select>
+    <h1 id="competitie"></h1>
+    <h2 id="kop">Ronde</h2>
+    <table id="uitslagen">
         <tr>
-            <th>datum</th>
-            <th>wedstrijd</th>
-        </tr>
-    </table>
-    <h2 id="subkop">Ronde</h2>
-    <table id="tabel">
-        <tr>
+            <th></th>
             <th>wit</th>
             <th>zwart</th>
             <th></th>
         </tr>
     </table>
-    <script src="js/uitslagen.js"></script>
-    <script>
-        ronden(document.getElementById("rondeSelecteren"), INTERNE_COMPETITIE, rondeNummer);
-        wedstrijdenBijRonde(document.getElementById("kop"), document.getElementById("wedstrijden"));
-        uitslagenRonde(document.getElementById("subkop"), document.getElementById("tabel"));
-    </script>
+    <h2 id="subkop">Andere ronden</h2>
+    <table id="wedstrijden">
+        <tr>
+            <th>ronde</th>
+            <th>datum</th>
+            <th>wedstrijd</th>
+            <th>uitslag</th>
+        </tr>
+    </table>
+    <script src="js/const.js"></script>
+    <script src="js/ronde.js"></script>
 </body>
 </html>

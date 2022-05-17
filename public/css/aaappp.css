@@ -1,44 +1,81 @@
 /*
+TODO geen randjes, maar kleurtjes en smallere lettertypes voor beter effect op smartphone
+
 https://www.w3schools.com/cssref/css_default_values.asp
-https://github.com/necolas/normalize.css/blob/master/normalize.css
+https://github.com/necolas/normalize.css/blob/master/normalize.css ?
+
+
+TODO styling plaatjes automatiseren
+
+https://www.digitalocean.com/community/tutorials/how-to-style-figure-and-image-html-elements-with-css
 */
 
 body {
-  font-family: sans-serif;
-  font-size: 120%;
+    font-family: sans-serif;
 }
 
 h1, h2, h3, h4 {
-  color: maroon;           
-}
-
-button, select {
-  margin: 5px;
-  padding: 5px;
-  font-size: 100%; /* van 120% */
+    color: maroon;
 }
 
 table {
-  border-collapse: collapse; /* dubbele rand wordt enkele rand */
+    border-collapse: collapse; /* dubbele rand wordt enkele rand */
+	overflow: auto;
 }
 
-hr, select, table, th, td {
-   border: 1px solid maroon;
+hr {
+    border: 1px solid maroon;
 }
 
-th, tr, td {
-  padding: 5px;
+.randje, button, fieldset, legend, select, table, th, td {
+    border: 1px solid maroon;
+    padding: 5px;
+}
+
+table select {
+	border: none;
+	padding: 0px;
+}
+
+button, details {
+	cursor: pointer;
+}
+
+button, input, select, textarea {
+	font-family: inherit; /* https://developer.mozilla.org/en-US/docs/Learn/Forms/Styling_web_forms */
+	font-size: 100%; /* anders wordt font-size kleiner */
+	margin: 2px;
+}
+
+.marge-boven, label, details {
+	margin-top: 10px;
+	display: block;
+}
+
+fieldset {
+	width: fit-content;
+}
+
+button, legend, select {
+	border-radius: 5px;
+}
+
+#menu {
+	position: sticky;
+	top: 10px;
 }
 
 pre {
-  width: fit-content; /* werkt niet in Explorer en Edge */
+  width: fit-content;
   padding: 10px;
   background: seashell;
   border: 1px solid maroon;
   border-radius: 10px;
 }
 
-/* TODO tekst in kader rechts naast de tekst */
+.vet {
+	font-weight: bold;
+}
 
 .rechts {
 	float: right;
@@ -48,6 +85,10 @@ pre {
 .links {
 	float: left;
 	margin-right: 20px;
+}
+
+.onder {
+    clear: both;
 }
 
 .onzichtbaar { 
@@ -70,6 +111,10 @@ a:link {
 	color: inherit;
 }
 
+p a:link {
+	border-bottom: 1px solid; /* lijntje onder link in paragraaf */
+}
+
 a:visited {
 	color: inherit;
 }
@@ -84,6 +129,6 @@ a:hover {
 	background: #FFFF9F;
 }
 
-a:active {
+.verwerkt, a:active {
 	background: #F2BA49;
 }
