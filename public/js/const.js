@@ -58,12 +58,12 @@ function eindeSeizoen(seizoen) {
 }
 
 const o_o_o = {
-    vereniging: "Waagtoren",
-    seizoen: ditSeizoen,
-    versie: 0, // versie is een getal
+        vereniging: "Waagtoren",
+        seizoen: ditSeizoen,
+        versie: 0, // versie is een getal
     competitie: INTERNE_COMPETITIE, // TODO welke competitie is komende dinsdag?
-    team: INTERNE_COMPETITIE,
-    speler: 0, // knsbNummer is een getal
+        team: INTERNE_COMPETITIE,
+        speler: 0, // knsbNummer is een getal
     naam: "onbekend"
 };
 

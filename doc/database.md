@@ -5,14 +5,14 @@ Er is een MySQL database per schaakvereniging met de volgende tabellen:
 - `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie
 - `Persoon` leden van de schaakvereniging en eventueel van tegenstanders in de externe competitie
 - `Gebruiker` leden van de schaakvereniging, die gegevens in de database mogen wijzigen
-- `Seizoen` seizoensgegevens van de schaakvereniging
+- `Seizoen` seizoensgegevens van de schaakvereniging 
 - `Speler` spelers per seizoen
 - `Team` teams of competities per seizoen
 - `Ronde` ronden per team of competitie per seizoen
 - `Uitslag` uitslagen per ronde per team per seizoen
 - `Mutatie` chronologie van mutaties per gebruiker
-
-Voorlopig is er 1 database van schaakvereniging de Waagtoren, die offline is gevuld
+ 
+Voorlopig is er 1 database van schaakvereniging de Waagtoren, die offline is gevuld 
 vanuit de Online Leden Administratie (OLA) van de KNSB naar `Persoon` en `Speler` en
 vanuit Rokade, het informatiesysteem voor de interne competitie naar `Ronde` en `Uitslag` en
 vanuit de KNSB en de NHSB websites voor de externe competitie naar `Team`, `Ronde` en `Uitslag`.
@@ -63,7 +63,7 @@ Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de 
 - `waardeCijfer()` van een speler op basis van de `knsbRating` van 1 augustus aan het begin van het `seizoen` 
 - `punten()` per `Uitslag`
 - `totalen()` van punten en andere totalen per speler op basis van alle uitslagen van een `seizoen`    
-
+ 
 ## Persoon
 Voorlopig zijn dit de specificaties van `Persoon`:
 ```
@@ -82,7 +82,7 @@ In `Persoon` staan voorlopig uitsluitend leden van de eigen schaakvereniging.
 Dit systeem kan daarom wel complete uitslagen lijsten produceren van de interne competitie, 
 maar de bij uitslagen van externe competitie staat uitsluitend de `naam` van de eigen speler, bordnummer, kleur, resultaat en
 eventueel de naam van het team van de tegenstander, want die gegevens staan in `Ronde`.
-
+   
 Een `knsbNummer` bestaat uit 7 cijfers en die krijgt een lid van de KNSB.
 Leden van de schaakvereniging, die nog niet een officieel `knsbNummer` hebben, 
 krijgen een tijdelijk nummer in de reeks vanaf `knsbNummer = 100` tot `knsbNummer = 1000000`.
@@ -106,7 +106,7 @@ Een lid van de schaakvereniging kan zich als gebruiker registreren met een `emai
 Via die `email` ontvangt zo'n gebruiker een link om het `uuidToken` te activeren.
 Na het activeren wordt dit vastgelegd in `datumEmail`.
 In `fout` wordt eventueel vastgelegd als er iets misgaat tijdens het registreren of activeren.
-
+  
 ## Seizoen
 ```
 seizoen CHAR(4)
@@ -125,7 +125,7 @@ Bij elk seizoen van een schaakvereniging hoort een aantal spelers en een aantal 
 Zie verder bij `Speler` en `Team`.
 
 De specificaties van de `Seizoen` tabel zijn nog niet verder uitgewerkt.
-
+ 
 ## Speler
 ```
 seizoen CHAR(4)
@@ -184,7 +184,7 @@ FOREIGN KEY (seizoen, teamCode) REFERENCES Team (seizoen, teamCode)
 
 Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander in een plaats op een bepaalde datum.
 Indien alle datums voor de ronden bekend zijn, kan de backend voor elke speler een kalender produceren.
-
+  
 ## Uitslag
 ```
 seizoen CHAR(4)
