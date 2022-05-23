@@ -66,16 +66,16 @@ insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, k
 set @competitie = 'ipa';
 set @datum = '2022-04-30';
 
-select * from team where seizoen = '2122'; 
+select * from team where seizoen = '2122';
 delete from team where seizoen = '2122' and teamCode = @competitie;
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ('2122', 'ipa', 'i', 'pa', 'Paas competitie', 0, 0);
 
-select * from ronde where seizoen = '2122' and teamCode = @competitie; 
+select * from ronde where seizoen = '2122' and teamCode = @competitie;
 select * from uitslag where seizoen = '2122' and teamCode = @competitie;
 
-update ronde set datum = @datum where seizoen = '2122' and teamCode = @competitie and rondeNummer > 2; 
+update ronde set datum = @datum where seizoen = '2122' and teamCode = @competitie and rondeNummer > 2;
 update uitslag set datum = @datum where seizoen = '2122' and teamCode = @competitie and rondeNummer > 2;
 
 delete from ronde where seizoen = '2122' and teamCode = @competitie;
@@ -86,26 +86,3 @@ set @datum = '2022-04-30';
 select * from uitslag where datum < @datum and partij in ('m', 'n', 'u', 't') order by datum;
 
 delete from uitslag where seizoen = '2122' and datum < @datum and partij in ('m', 'n', 'u', 't');
-
-delete from uitslag where seizoen = '21ra' and datum < '2022-03-12' and partij in ('m', 'n', 'u', 't');
-
-insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
-('2122', 'ipa', '1', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '2', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '3', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '4', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '5', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '6', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '7', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '8', 't', '', 'Alkmaar', '2022-04-29'),
-('2122', 'ipa', '9', 't', '', 'Alkmaar', '2022-04-29');
-
-select * from uitslag where seizoen = '2122' and teamCode = 'ipa'; 
-delete from uitslag where seizoen = '2122' and teamCode = 'ipa';
-
--- TODO ranglijst Rapid
-set @competitie = 'ira';
-set @ronde = 5;
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);

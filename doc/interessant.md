@@ -1,7 +1,6 @@
 Nuttig
 
 - [MySQL tutorial](https://www.mysqltutorial.org/)
-- [MySQL query cache](https://www.digitalocean.com/community/tutorials/how-to-optimize-mysql-with-query-cache-on-ubuntu-18-04)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
@@ -30,7 +29,9 @@ Nuttig
 - [Swiss pairings](https://senseis.xmp.net/?SwissPairing)
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
+- [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
+- [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
@@ -67,7 +68,7 @@ Interessant
 - [Unicode](https://dmitripavlutin.com/what-every-javascript-developer-should-know-about-unicode/)
 - [DevTools](https://blog.asayer.io/15-devtool-secrets-for-javascript-developers)
 - [JavaScript engines](https://blogg.bekk.no/how-javascript-engines-achieve-great-performance-fb0b36601557)
-
+- [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 Later:
 - [Flutter for web](https://dzone.com/articles/flutter-web-development-all-you-need-to-know)
@@ -114,3 +115,5 @@ Misschien:
 - [scroll-snap-stop CSS](https://css-tricks.com/almanac/properties/s/scroll-snap-stop/)
 - [CSS animation](https://www.joshwcomeau.com/animation/keyframe-animations/?utm_source=DigitalOcean_Newsletter&mkt_tok=MTEzLURUTi0yNjYAAAF_aoSFBy0NUtyxPkeZsVuCv6qE6f3fiyegEOSH6AEv-JiqCq_I1o3ISlI9DHKEXT6Or39kiNlTJKODn4CiPts327YIyvfQvhWKfEDOSELI)
 - [Nationaal Cyber Security Centrum](https://www.ncsc.nl/)
+- [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
+- [Diagrammen in Markdown](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)

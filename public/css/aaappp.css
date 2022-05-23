@@ -11,15 +11,15 @@ https://www.digitalocean.com/community/tutorials/how-to-style-figure-and-image-h
 */
 
 body {
-    font-family: sans-serif;
+  font-family: sans-serif;
 }
 
 h1, h2, h3, h4 {
-    color: maroon;
+  color: maroon;           
 }
 
 table {
-    border-collapse: collapse; /* dubbele rand wordt enkele rand */
+  border-collapse: collapse; /* dubbele rand wordt enkele rand */
 	overflow: auto;
 }
 
@@ -28,8 +28,8 @@ hr {
 }
 
 .randje, button, fieldset, legend, select, table, th, td {
-    border: 1px solid maroon;
-    padding: 5px;
+   border: 1px solid maroon;
+  padding: 5px;
 }
 
 table select {
@@ -91,7 +91,7 @@ pre {
     clear: both;
 }
 
-.onzichtbaar { 
+.onzichtbaar {
     display: none;
 }
 

@@ -184,8 +184,8 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
     }
     if (o_o_o.laatsteRonde > rondeNummer) {
         lijst.appendChild(rondeInterneCompetitie(rondeNummer + 1)); // volgende ronde
+        }
     }
-}
 
 function rondeInterneCompetitie(rondeNummer) {
     return htmlRij(rondeNummer,
