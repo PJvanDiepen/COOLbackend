@@ -344,7 +344,7 @@ function spelerIndelen(speler, richting, r, wit, zwart, oneven, rondeNummer) {
     console.log(`--- ${r[speler].naam} ${richting === VOORUIT ? "vooruit" : "achteruit"} indelen ---`);
     let j = speler + richting;
     while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j], rondeNummer))) { // zonder heuristieken
-        j = j + richting; // vorige indien al ingedeeld of oneven of mag niet tegen
+        j = j + richting; // volgende / vorige indien al ingedeeld of oneven of mag niet tegen
     }
     if (j >= 0 && j < r.length) {
         if (r[speler].metWit(r[j])) {

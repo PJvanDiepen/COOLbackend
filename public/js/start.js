@@ -15,7 +15,9 @@
         htmlLinkEnTerug("ranglijst.html", `Ranglijst ${teamVoluit(o_o_o.competitie)} na ronde ${o_o_o.vorigeRonde}`));
     document.getElementById("ronde").appendChild(
         htmlLinkEnTerug("ronde.html", `Uitslagen ronde ${o_o_o.vorigeRonde}`));
-    if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
+    if (o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
+        console.log("// TODO uitslagen invullen en definitieve indeling");
+    } else if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
         document.getElementById("indelen").appendChild(
             htmlLinkEnTerug("indelen.html", `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`));
     }
