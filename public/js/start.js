@@ -16,7 +16,8 @@
     document.getElementById("ronde").appendChild(
         htmlLinkEnTerug("ronde.html", `Uitslagen ronde ${o_o_o.vorigeRonde}`));
     if (o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
-        console.log("// TODO uitslagen invullen en definitieve indeling");
+        document.getElementById("indelen").appendChild(
+            htmlLinkEnTerug(`ronde.html?ronde=${o_o_o.huidigeRonde}`, `Definitieve indeling ronde ${o_o_o.huidigeRonde}`));
     } else if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
         document.getElementById("indelen").appendChild(
             htmlLinkEnTerug("indelen.html", `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`));

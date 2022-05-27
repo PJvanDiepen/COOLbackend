@@ -483,9 +483,9 @@ async function teamSelecteren(teamCode) {
     teams.value = teamCode; // werkt uitsluitend na await
     teams.addEventListener("input", function () {
         if (interneCompetitie(teams.value)) {
-            naarAnderePagina("ranglijst.html?team=" + teams.value);
+            naarAnderePagina(`ranglijst.html?team=${teams.value}`);
         } else {
-            naarAnderePagina("team.html?team=" + teams.value);
+            naarAnderePagina(`team.html?team=${teams.value}`);
         }
     });
 }
@@ -502,7 +502,7 @@ async function rondeSelecteren(teamCode, rondeNummer) {
     ronden.addEventListener("input",
         function () {
             if (ronden.value) {
-                naarAnderePagina("ronde.html?ronde=" + ronden.value);
+                naarAnderePagina(`ronde.html?ronde=${ronden.value}`);
             }
         });
 }

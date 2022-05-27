@@ -50,7 +50,7 @@
             mutaties += await serverFetch(`/${uuidToken}/afwezig/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
             mutaties += await serverFetch(`/${uuidToken}/extern/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
-                naarAnderePagina("ronde.html?ronde=" + rondeNummer);
+                naarAnderePagina(`ronde.html?ronde=${rondeNummer}`);
             }
         }]);
     versieSelecteren(document.getElementById("versies"), rondeNummer);

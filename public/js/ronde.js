@@ -11,7 +11,7 @@
     await init();
     competitieTitel();
     o_o_o.team = o_o_o.competitie;
-    const rondeNummer = bepaalRondeNummer();
+    const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde || 1;
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }],
@@ -39,11 +39,11 @@
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
                 sessionStorage.removeItem(`/ronde/${o_o_o.seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
-                naarAnderePagina("ronde.html?ronde=" + rondeNummer);
+                naarAnderePagina(`ronde.html?ronde=${rondeNummer}`);
             }
         }],
         [BEHEERDER, `wijzig ronde ${rondeNummer}`, async function () {
-            naarAnderePagina("wijzig.html?ronde=" + rondeNummer);
+            naarAnderePagina(`wijzig.html?ronde=${rondeNummer}`);
         }],
         [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${o_o_o.seizoen}/int/${rondeNummer}`);
@@ -57,19 +57,6 @@
         document.getElementById("subkop").innerHTML = "Andere ronden en wedstrijden";
     }
 })();
-
-function bepaalRondeNummer() {
-    let rondeNummer = Number(params.get("ronde"));
-    if (rondeNummer) { // niet 0
-        return rondeNummer;
-    } else if (o_o_o.huidigeRonde && o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) {
-        return o_o_o.huidigeRonde; // indien indeling definitief, maar nog geen uitslagen
-    } else if (o_o_o.vorigeRonde) {
-        return o_o_o.vorigeRonde;
-    } else {
-        return 1;
-    }
-}
 
 /*
   -- uitslagen interne competitie per ronde
