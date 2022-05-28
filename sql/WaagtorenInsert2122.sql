@@ -3272,6 +3272,11 @@ use waagtoren; -- PvD
 select * from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 24 order by bordnummer, witZwart;
 delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 24;
 
+select * from ronde where seizoen = '2122' and teamCode = 'int' order by rondeNummer;
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
+('2122', 'int', '24', 't', '', 'Alkmaar', '2022-05-24');
+
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'int', 24, 0, 101, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 103, 'm', '', 0, '', '2022-05-24', 'int'),

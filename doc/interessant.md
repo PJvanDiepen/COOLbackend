@@ -50,6 +50,7 @@ Interessant
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
 - [TODO in verschillende frameworks](https://todomvc.com/)
+- [JSON in JavaScript](https://www.zhenghao.io/posts/json-oddities)
 - [TypeScript](https://codeascraft.com/2021/11/08/etsys-journey-to-typescript/)
 - [Svelte](https://joshcollinsworth.com/blog/introducing-svelte-comparing-with-react-vue)
 - [resilient js ui](https://www.smashingmagazine.com/2021/08/build-resilient-javascript-ui/)

@@ -171,12 +171,16 @@ function urlVerwerken() {
 
 function versieVerwerken() {
     // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
-    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0 && o_o_o.seizoen === "2122") {
-        o_o_o.versie = 3;
-    } else if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 2;
-    } else {
-        o_o_o.versie = 4; // rapid competitie
+    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
+        if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
+            o_o_o.versie = 2;
+        } else {
+            o_o_o.versie = 3; // vanaf seizoen 2021-2022
+        }
+    } else if (o_o_o.competitie === RAPID_COMPETTIE && o_o_o.versie === 0) {
+        o_o_o.versie = 4;
+    } else if (o_o_o.versie === 0) {
+        o_o_o.versie = 5; // snelschaken
     }
 }
 

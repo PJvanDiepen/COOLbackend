@@ -59,7 +59,7 @@ async function uitslagenSpeler(kop, lijst) {
     const t = (await ranglijst(o_o_o.vorigeRonde, [o_o_o.speler]))[0];
     kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
-    if (t.intern()) {
+    if (t.intern() && t.eigenWaardeCijfer()) {
         lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
     const uitslagen = await localFetch(`/uitslagen/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.speler}/${o_o_o.competitie}`);
