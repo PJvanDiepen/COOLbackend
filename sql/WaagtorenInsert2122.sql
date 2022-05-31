@@ -134,7 +134,7 @@ where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and k
 -- TODO spelers selecteren
 select naam, s.knsbNummer, knsbRating, knsbOpgegeven, nhsbOpgegeven 
 from speler s join persoon p on p.knsbNummer = s.knsbNummer 
-where seizoen = '2122' order by naam; -- knsbRating desc; 
+where seizoen = '2122' order by knsbRating desc; -- naam;
 
 -- TODO wedstrijd tijdens interne competitie
 set @team = 'n2'; -- Waagtoren n2 - Aartswoud n1
@@ -430,7 +430,8 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 -- ('2122', 'n3', 'n', '2a', 'NHSB 2b', 8, 6214153),
 ('2122', 'n4', 'n', '3b', 'NHSB 3c', 6, 6212404),
 ('2122', 'int', 'i', 'nt', 'interne competitie', 0, 0),
-('2122', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
+('2122', 'ira', 'i', 'ra', 'rapid competitie', 0, 0),
+('2122', 'izs', 'i', 'sa', 'einde seizoen snelschaken', 0, 0);
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
 ('2122', 'ira', '1', 't', '', 'Alkmaar', '2021-10-19'),
@@ -442,6 +443,23 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', 'ira', '7', 't', '', 'Alkmaar', '2022-05-03'),
 ('2122', 'ira', '8', 't', '', 'Alkmaar', '2022-05-03'),
 ('2122', 'ira', '9', 't', '', 'Alkmaar', '2022-05-03');
+
+
+insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
+('2122', 'izs', 'i', 'zs', 'einde seizoen snelschaken', 0, 0);
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
+('2122', 'izs', '1', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '2', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '3', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '4', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '5', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '6', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '7', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '8', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '9', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '10', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '11', 't', '', 'Alkmaar', '2022-06-07');
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
 ('2122', 'int', '1', 't', '', 'Alkmaar', '2021-09-07'),

@@ -394,7 +394,7 @@ function volgendeNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer) {
 
 /**
  * Indien er een oneven aantal deelnemers is, is er een onevenSpeler.
- * De onevenSpeler is de laagste speler op de ranglijst met meeste aantal partijen
+ * De onevenSpeler is de laagste speler van de ranglijst met het grootste aantal gespeelde partijen
  * die niet eerder oneven was en
  * die niet bij eerste 8 aanwezige spelers van de ranglijst staat.
  *

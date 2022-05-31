@@ -23,6 +23,8 @@
             htmlLinkEnTerug("indelen.html", `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`));
     }
     seizoenSelecteren(INTERNE_COMPETITIE);
+    // o_o_o.competitie = SNELSCHAKEN; // TODO welke competitie is komende dinsdag?
+    // o_o_o.team = SNELSCHAKEN;
     competitieSelecteren();
 })();
 

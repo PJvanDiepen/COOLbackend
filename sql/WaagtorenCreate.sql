@@ -3,14 +3,14 @@ use waagtoren;
 CREATE DATABASE  IF NOT EXISTS `waagtoren`;
 USE `waagtoren`;
 
-drop table if exists persoon;
+drop table if exists persoon; -- 0-0-0.nl versie 0.1
 create table persoon (
 	knsbNummer int not null,
     naam varchar(45),
     PRIMARY KEY (knsbNummer)
 );
 
-drop table if exists gebruiker;
+drop table if exists gebruiker; -- 0-0-0.nl versie 0.1
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,
@@ -27,7 +27,7 @@ add constraint fk_gebruiker_persoon
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-drop table if exists paring;  -- TODO lezen in WaagtorenRanglijst totalen
+drop table if exists paring;  -- TODO lezen in WaagtorenRanglijst totalen of verwijderen?
 create table paring (
 	knsbNummer int not null,
     tegenstanderNummer int not null,
@@ -49,7 +49,7 @@ add constraint fk_paring_tegenstander
     ON DELETE NO ACTION
     ON UPDATE CASCADE;       
     
-drop table if exists team;
+drop table if exists team; -- 0-0-0.nl versie 0.5.2
 create table team (
 	seizoen char(4) not null,
     teamCode char(3) not null,
@@ -68,13 +68,13 @@ add constraint fk_team_persoon
     ON DELETE NO ACTION
     ON UPDATE CASCADE;       
 
-DROP TABLE IF EXISTS speler;
-CREATE TABLE speler (
+DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.5.5
+CREATE TABLE speler ( -- TODO competities toevoegen
     seizoen char(4) not null,
 	nhsbTeam char(3) not null,
-    nhsbOpgegeven char(3) not null,
+    nhsbOpgegeven char(3) not null, -- TODO verwijderen
 	knsbTeam char(3) not null,
-    knsbOpgegeven char(3) not null,
+    knsbOpgegeven char(3) not null, -- TODO verwijderen
     knsbNummer int not null,
     knsbRating int not null,
     datumRating date not null,
@@ -116,7 +116,7 @@ add CONSTRAINT fk_speler_vast_knsb_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;        
     
-DROP TABLE IF EXISTS ronde;
+DROP TABLE IF EXISTS ronde; -- 0-0-0.nl versie 0.1
 CREATE TABLE ronde (
     seizoen char(4) not null,
     teamCode char(3) not null,
@@ -135,7 +135,7 @@ add CONSTRAINT fk_ronde_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-DROP TABLE IF EXISTS uitslag;
+DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.6.8
 CREATE TABLE uitslag (
     seizoen char(4) not null,
     teamCode char(3) not null,
@@ -186,7 +186,7 @@ add CONSTRAINT fk_uitslag_ronde
     ON DELETE NO ACTION
     ON UPDATE CASCADE;        
 
-DROP TABLE IF EXISTS ranglijst;
+DROP TABLE IF EXISTS ranglijst; -- 0-0-0.nl versie 0.1
 CREATE TABLE ranglijst (
     seizoen char(4) not null,
     teamCode char(3) not null,
@@ -196,7 +196,7 @@ CREATE TABLE ranglijst (
     PRIMARY KEY (seizoen, teamCode, versie)
 );
 
-drop table if exists mutatie;
+drop table if exists mutatie; -- 0-0-0.nl versie 0.2
 create table mutatie (
     tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
     volgNummer int not null,

@@ -22,9 +22,9 @@ delimiter ;
 -- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
 -- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
 -- versie 4 rapidPunten voor rapid competitie
--- versie 5 snelPunten voor snelschaken
+-- versie 5 zwitsersPunten voor Zwitsers systeem
 
-drop function subgroep; -- 0-0-0.nl versie 0.6.6 0.7.??
+drop function subgroep; -- 0-0-0.nl versie 0.7.24
 
 delimiter $$
 create function subgroep(seizoen char(4), versie int, knsbNummer int)
@@ -32,7 +32,7 @@ returns char(1) deterministic
 begin
     declare knsbRating int;
     set knsbRating = rating(seizoen, knsbNummer);
-    if versie = 4 or versie = 5 then -- geen subgroep bij rapid competitie of snelschaken
+    if versie = 4 or versie = 5 then -- geen subgroep bij rapid competitie of Zwitsers systeem
         return ' ';
 	elseif knsbRating < 1400 then
         return 'H';
@@ -55,13 +55,13 @@ end;
 $$
 delimiter ;
 
-drop function waardeCijfer; -- 0-0-0.nl versie 0.6.6 0.7.??
+drop function waardeCijfer; -- 0-0-0.nl versie 0.7.24
 
 delimiter $$
 create function waardeCijfer(versie int, knsbRating int) 
 returns int deterministic
 begin
-    if versie = 4 or versie = 5 then -- geen waardeCijfer bij rapid competitie of snelschaken
+    if versie = 4 or versie = 5 then -- geen waardeCijfer bij rapid competitie of Zwitsers systeem
         return 0;
     elseif knsbRating < 1400 then
         return 5; -- H
@@ -84,7 +84,7 @@ end;
 $$
 delimiter ;
 
-drop function punten; -- 0-0-0.nl versie 0.7.14 ??
+drop function punten; -- 0-0-0.nl versie 0.7.24
 
 delimiter $$
 create function punten(seizoen char(4), teamCode char(3), versie int, knsbNummer int, eigenWaardeCijfer int, partij char(1), tegenstander int, resultaat char(1))
@@ -93,7 +93,7 @@ begin
     if versie = 4 then
         return rapidPunten(partij, resultaat);
 	elseif versie = 5 then
-        return snelPunten(partij, resultaat);
+        return zwitsersPunten(partij, resultaat);
     elseif partij = 'i' and resultaat = '1' then
         return waardeCijfer(versie, rating(seizoen, tegenstander)) + 12;
     elseif partij = 'i' and resultaat = '½' then
@@ -142,10 +142,10 @@ end;
 $$
 delimiter ;
 
-drop function snelPunten; -- 0-0-0.nl versie 0.7.??
+drop function zwitsersPunten; -- 0-0-0.nl versie 0.7.24
 
 delimiter $$
-create function snelPunten(partij char(1), resultaat char(1))
+create function zwitsersPunten(partij char(1), resultaat char(1))
     returns int deterministic
 begin
     if partij = 'i' and resultaat = '1' then
@@ -209,7 +209,7 @@ begin
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
             and u.anderTeam = competitie;
     declare continue handler for not found set found = false;
-    if versie = 4 or versie = 5 then -- rapid competitie en snelschaken
+    if versie = 4 or versie = 5 then -- rapid competitie en Zwitsers systeem
         set rondenVerschil = 99; -- niet opnieuw tegen elkaar
     else -- interne competitie
         set startPunten = 300; -- reglement artikel 11

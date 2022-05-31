@@ -63,14 +63,14 @@ insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, k
     ('2122', '', '', '', '', 7771665, 1264, '2022-04-10');
 
 -- TODO ronde toevoegen
-set @competitie = 'ipa';
-set @datum = '2022-04-30';
+set @competitie = 'izt';
+set @datum = '2022-06-01';
 
 select * from team where seizoen = '2122';
 delete from team where seizoen = '2122' and teamCode = @competitie;
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-('2122', 'ipa', 'i', 'pa', 'Paas competitie', 0, 0);
+('2122', 'izt', 'i', 'zt', 'Zwitsers test', 0, 0);
 
 select * from ronde where seizoen = '2122' and teamCode = @competitie;
 select * from uitslag where seizoen = '2122' and teamCode = @competitie;

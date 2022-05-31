@@ -4,9 +4,15 @@
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
+const SNELSCHAKEN        = "izs";
+const ZWITSERS_TEST      = "izt";
 
 function interneCompetitie(teamCode) {
     return teamCode.substring(0,1) === "i";
+}
+
+function zwitsers(teamCode) {
+    return teamCode.substring(1,2) === "z";
 }
 
 // uitslag.partij
@@ -61,7 +67,7 @@ const o_o_o = {
         vereniging: "Waagtoren",
         seizoen: ditSeizoen,
         versie: 0, // versie is een getal
-    competitie: INTERNE_COMPETITIE, // TODO welke competitie is komende dinsdag?
+    competitie: INTERNE_COMPETITIE,
         team: INTERNE_COMPETITIE,
         speler: 0, // knsbNummer is een getal
     naam: "onbekend"
@@ -179,8 +185,8 @@ function versieVerwerken() {
         }
     } else if (o_o_o.competitie === RAPID_COMPETTIE && o_o_o.versie === 0) {
         o_o_o.versie = 4;
-    } else if (o_o_o.versie === 0) {
-        o_o_o.versie = 5; // snelschaken
+    } else if (zwitsers(o_o_o.competitie) && o_o_o.versie === 0) {
+        o_o_o.versie = 5; // Zwitsers systeem
     }
 }
 
@@ -413,6 +419,8 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database
         return "interne competitie";
     } else if (teamCode === RAPID_COMPETTIE) {
         return "rapid competitie";
+    } else if (teamCode === SNELSCHAKEN) {
+        return "einde seizoen snelschaken";
     } else if (teamCode === "kbe") {
         return o_o_o.vereniging + " KNSB bekerteam";
     } else if (teamCode === "nbe") {
