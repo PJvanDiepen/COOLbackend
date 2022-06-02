@@ -13,26 +13,14 @@
     const totDatum = o_o_o.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");
     subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
-    const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
-    const r = await ranglijstSorteren(rondeNummer, deelnemers);
-    console.log("even tot hier");
-    console.log(o_o_o);
-    console.log(r);
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
+    const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
+    const r = await ranglijstSorteren(rondeNummer, deelnemers);
     if (zwitsers(o_o_o.competitie)) {
         console.log("Zwitsers systeem");
-        const partijen = [];
-        partijen.push([14, 14]);
-        partijen.push([5, 12]);
-        partijen.push([9, 2]);
-        partijen.push([3, 10]);
-        partijen.push([7, 0]);
-        partijen.push([11, 4]);
-        partijen.push([1, 8]);
-        partijen.push([13, 6]);
-        console.log(partijen);
+        const partijen = zwitsersIndelen(r);
         const gesorteerdePartijen = partijen.sort(function (een, ander) {
             return Math.min(een[0], een[1]) - Math.min(ander[0], ander[1]);
         });
@@ -94,7 +82,7 @@ async function deelnemersRonde(rondeNummer, partij) {
 async function ranglijstSorteren(totDatum, deelnemers) {
     const lijst = await ranglijst(totDatum, deelnemers);
     lijst.sort(function (een, ander) {
-        return ander.zonderAftrek() - een.zonderAftrek(); // van hoog naar laag
+        return ander.totaal() - een.totaal(); // van hoog naar laag
     });
     return lijst;
 }
@@ -134,7 +122,7 @@ function deelnemersLijst(r, lijst) {
         lijst.appendChild(htmlRij(
             i + 1,
             naarSpeler(t),
-            t.zonderAftrek(),
+            t.totaal(),
             t.eigenWaardeCijfer(),
             t.intern() ? t.intern() : "",
             t.saldoWitZwart() ? t.saldoWitZwart() : ""));
@@ -448,4 +436,22 @@ function onevenSpeler(r) {
     return oneven;
 }
 
-
+/**
+ * @param r ranglijst
+ * @returns {*[]} ingedeelde partijen
+ */
+function zwitsersIndelen(r) {
+    const partijen = [];
+    let i = 0;
+    let j = 1;
+    partijen.push([14, 14]);
+    partijen.push([5, 12]);
+    partijen.push([9, 2]);
+    partijen.push([3, 10]);
+    partijen.push([7, 0]);
+    partijen.push([11, 4]);
+    partijen.push([1, 8]);
+    partijen.push([13, 6]);
+    console.log(partijen);
+    return partijen;
+}

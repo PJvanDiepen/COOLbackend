@@ -572,17 +572,17 @@ function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
     const naam = speler.naam;
     const subgroep = speler.subgroep;
-    const totaal = speler.totalen.split(" ").map(Number);  // TODO totalen
+    const totalen = speler.totalen.split(" ").map(Number);
 
     function inRanglijst() {
-        return totaal[0];
+        return totalen[0];
     }
 
     function punten() {
         if (!intern()) {
             return "";
         } else {
-            return totaal[0];
+            return totalen[0];
         }
     }
 
@@ -591,7 +591,7 @@ function spelerTotalen(speler) {
             return "";
         } else if (winnaars[subgroep]) { // indien winnaar van subgroep al bekend
             return subgroep;
-        } else if (totaal[1]) { // indien recht op prijs dan is dit winnaar van de subgroep
+        } else if (totalen[1]) { // indien recht op prijs dan is dit winnaar van de subgroep
             winnaars[subgroep] = true;
             return subgroep + "*"; // winnaar
         } else {
@@ -600,74 +600,74 @@ function spelerTotalen(speler) {
     }
 
     function rating() {
-        return totaal[4];
+        return totalen[4];
     }
 
     function intern() {
-        return totaal[2] + totaal[5] + totaal[6];
+        return totalen[2] + totalen[5] + totalen[6];
     }
 
     function scoreIntern() {
-        return score(totaal[2],totaal[5],totaal[6]);
+        return score(totalen[2],totalen[5],totalen[6]);
     }
 
     function percentageIntern() {
-        return percentage(totaal[2],totaal[5],totaal[6]);
+        return percentage(totalen[2],totalen[5],totalen[6]);
     }
 
     function saldoWitZwart() {
-        return totaal[7] - totaal[8];
+        return totalen[7] - totalen[8];
     }
 
     function oneven() {
-        return totaal[9];
+        return totalen[9];
     }
 
     function afzeggingen() {
-        return totaal[10];
+        return totalen[10];
     }
 
     function aftrek() {
-        return - totaal[11];
+        return - totalen[11];
     }
 
-    function zonderAftrek() { // TODO totaal
-        return totaal[12] + totaal[13]; // TODO totalen[12]
+    function totaal() {
+        return totalen[12];
     }
 
     function startPunten() {
-        return totaal[13];
+        return totalen[13];
     }
 
     function eigenWaardeCijfer() {
-        return totaal[14];
+        return totalen[14];
     }
 
     function extern() {
-        return totaal[3] + totaal[15] + totaal[16];
+        return totalen[3] + totalen[15] + totalen[16];
     }
 
     function scoreExtern() {
-        return score(totaal[3],totaal[15],totaal[16]);
+        return score(totalen[3],totalen[15],totalen[16]);
     }
 
     function percentageExtern() {
-        return percentage(totaal[3],totaal[15],totaal[16]);
+        return percentage(totalen[3],totalen[15],totalen[16]);
     }
 
     function saldoWitZwartExtern() {
-        return totaal[17] - totaal[18];
+        return totalen[17] - totalen[18];
     }
 
     function rondenVerschil() {
-        return totaal[19];
+        return totalen[19];
     }
 
     function vorigeKeer(tegenstander) {
         let i = 20;
         let j = 0;
-        while (totaal[i]) { // indien rondeNummer
-            if (totaal[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
+        while (totalen[i]) { // indien rondeNummer
+            if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
                 j = i;
             }
             i = i + 3; // volgende rondeNummer, kleur en knsbNummer
@@ -676,7 +676,7 @@ function spelerTotalen(speler) {
     }
 
     function vorigeAfdrukken(i, tegenstander) {
-        console.log(`${naam} met ${totaal[i + 1] ? "wit" : "zwart"} tegen ${tegenstander.naam} in ronde ${totaal[i]}`);
+        console.log(`${naam} met ${totalen[i + 1] ? "wit" : "zwart"} tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
     }
 
     function tegen(tegenstander, rondeNummer)  {
@@ -686,7 +686,7 @@ function spelerTotalen(speler) {
             // console.log("rondeNummer: " + rondeNummer);
             // console.log("totaal[i]: " + totaal[i]);
             // console.log("rondenVerschil(): " + rondenVerschil());
-            return (rondeNummer - totaal[i]) > rondenVerschil();
+            return (rondeNummer - totalen[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
         }
@@ -701,15 +701,15 @@ function spelerTotalen(speler) {
     function metWit(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            return totaal[i + 1] === 0 // wit indien vorige keer zwart
+            return totalen[i + 1] === 0 // wit indien vorige keer zwart
         } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
-            afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");  // TODO verwijderen
+            afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
             return saldoWitZwart() < tegenstander.saldoWitZwart(); // wit indien vaker met zwart
-        } else if (zonderAftrek() !== tegenstander.zonderAftrek()) {
-            afdrukken(i, tegenstander, zonderAftrek() < tegenstander.zonderAftrek(), "punten");  // TODO verwijderen
-            return zonderAftrek() < tegenstander.zonderAftrek(); // wit indien minder punten
+        } else if (totaal() !== tegenstander.totaal()) {
+            afdrukken(i, tegenstander, totaal() < tegenstander.totaal(), "punten");
+            return totaal() < tegenstander.totaal(); // wit indien minder punten
         } else {
-            afdrukken(i, tegenstander, rating() < tegenstander.rating(), "rating");  // TODO verwijderen
+            afdrukken(i, tegenstander, rating() < tegenstander.rating(), "rating");
             return rating() < tegenstander.rating(); // wit indien lagere rating
         }
     }
@@ -732,7 +732,7 @@ function spelerTotalen(speler) {
         oneven,
         afzeggingen,
         aftrek,
-        zonderAftrek,
+        totaal,
         startPunten,
         eigenWaardeCijfer,
         extern,
