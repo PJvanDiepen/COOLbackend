@@ -169,13 +169,10 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- TODO speler toevoegen 
 insert into persoon (knsbNummer, naam) values
-(7771665, 'Yvonne Schol');
+(7838963, 'Kevin Tan');
 
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', '', '', 100, 1000, '2022-04-23');
-
-insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', '', '', 7771665, 1264, '2022-04-10');
+('2122', '', '', '', '', 7838963, 2194, '2022-06-01');
 
 -- TODO wedstrijden en ronden voor vandaag opruimen
 set @datum = '2022-03-19';

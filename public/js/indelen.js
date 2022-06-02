@@ -15,13 +15,40 @@
     subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
     const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
     const r = await ranglijstSorteren(rondeNummer, deelnemers);
+    console.log("even tot hier");
+    console.log(o_o_o);
+    console.log(r);
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
-    if (rondeNummer === 1) {
+    if (zwitsers(o_o_o.competitie)) {
+        console.log("Zwitsers systeem");
+        const partijen = [];
+        partijen.push([14, 14]);
+        partijen.push([5, 12]);
+        partijen.push([9, 2]);
+        partijen.push([3, 10]);
+        partijen.push([7, 0]);
+        partijen.push([11, 4]);
+        partijen.push([1, 8]);
+        partijen.push([13, 6]);
+        console.log(partijen);
+        const gesorteerdePartijen = partijen.sort(function (een, ander) {
+            return Math.min(een[0], een[1]) - Math.min(ander[0], ander[1]);
+        });
+        console.log(gesorteerdePartijen);
+        for (const p of gesorteerdePartijen) {
+            if (p[0] === p[1]) {
+                oneven = p[0];
+            } else {
+                wit.push(p[0]);
+                zwart.push(p[1]);
+            }
+        }
+    } else if (rondeNummer === 1) { // Alkmaar systeem eerste ronde
         oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
         indelenEersteRonde(oneven ? oneven : r.length, 3, wit, zwart);
-    } else {
+    } else { // Alkmaar systeem andere ronden
         oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
@@ -420,4 +447,5 @@ function onevenSpeler(r) {
     }
     return oneven;
 }
+
 

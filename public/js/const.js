@@ -537,7 +537,7 @@ async function ranglijst(rondeNummer, selectie) {
 }
 
 /*
-totaal
+totalen
 [0] sorteer (3 posities eventueel voorloopnullen)
 [1] prijs (0 = geen prijs, 1 = wel prijs)
 [2] winstIntern (2 posities eventueel voorloopnul)
@@ -572,7 +572,7 @@ function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
     const naam = speler.naam;
     const subgroep = speler.subgroep;
-    const totaal = speler.totalen.split(" ").map(Number);
+    const totaal = speler.totalen.split(" ").map(Number);  // TODO totalen
 
     function inRanglijst() {
         return totaal[0];
@@ -631,8 +631,8 @@ function spelerTotalen(speler) {
         return - totaal[11];
     }
 
-    function zonderAftrek() {
-        return totaal[12] + totaal[13];
+    function zonderAftrek() { // TODO totaal
+        return totaal[12] + totaal[13]; // TODO totalen[12]
     }
 
     function startPunten() {
