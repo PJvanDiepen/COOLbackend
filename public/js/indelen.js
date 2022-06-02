@@ -437,21 +437,48 @@ function onevenSpeler(r) {
 }
 
 /**
+ * zwitsersIndelen deelt in volgens de reglementen van het FIDE Dutch system
+ *
+ * https://spp.fide.com/c-04-3-fide-dutch-system/
+ *
  * @param r ranglijst
  * @returns {*[]} ingedeelde partijen
  */
 function zwitsersIndelen(r) {
+    console.log(r);
     const partijen = [];
-    let i = 0;
-    let j = 1;
-    partijen.push([14, 14]);
-    partijen.push([5, 12]);
-    partijen.push([9, 2]);
-    partijen.push([3, 10]);
-    partijen.push([7, 0]);
-    partijen.push([11, 4]);
-    partijen.push([1, 8]);
-    partijen.push([13, 6]);
-    console.log(partijen);
+    const van = 0;
+    const tot = puntenGroep(r, van);
+    let kleur = 1; // begin met zwart
+    const helftGroep = Math.floor((tot - van) / 2);
+    for (let i = van; i < helftGroep; i++) {
+        if (kleur) {
+            partijen.push([i + helftGroep, i]);
+            kleur = 0;
+        } else {
+            partijen.push([i, i + helftGroep]);
+            kleur = 1;
+        }
+    }
+    if (van + 2 * helftGroep < tot + 1) {
+        partijen.push([tot, tot]);
+    }
     return partijen;
+}
+
+/**
+ * maak puntenGroep (= scoregroup) in ranglijst van tot
+ *
+ * @param r ranglijst
+ * @param van in ranglijst
+ * @returns {number} tot in ranglijst
+ */
+function puntenGroep(r, van) {
+    let tot = van;
+    for (let i = 0; i < r.length; i++) { // maak scoregroup r[van] ... r[tot]
+        if (r[van].totaal() === r[i].totaal()) {
+            tot = i;
+        }
+    }
+    return tot;
 }

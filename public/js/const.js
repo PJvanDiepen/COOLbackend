@@ -682,7 +682,7 @@ function spelerTotalen(speler) {
     function tegen(tegenstander, rondeNummer)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            vorigeAfdrukken(i, tegenstander);  // TODO verwijderen
+            vorigeAfdrukken(i, tegenstander);
             // console.log("rondeNummer: " + rondeNummer);
             // console.log("totaal[i]: " + totaal[i]);
             // console.log("rondenVerschil(): " + rondenVerschil());
