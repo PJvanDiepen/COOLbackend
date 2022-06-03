@@ -25,11 +25,11 @@ async function spelersLijst(kop, lijst) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "ranglijst na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(rondeNummer)).forEach(function (t, i) {
-        if (t.inRanglijst() || alleLeden) {
+        if (t.intern() || t.oneven() || t.extern() || alleLeden) {
             lijst.appendChild(htmlRij(
                 i + 1,
                 naarSpeler(t),
-                t.punten() ? t.punten() : "",
+                t.intern() || t.oneven() ? t.punten() : "",
                 t.winnaarSubgroep(winnaars),
                 t.scoreIntern(),
                 t.percentageIntern(),

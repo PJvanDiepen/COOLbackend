@@ -574,16 +574,8 @@ function spelerTotalen(speler) {
     const subgroep = speler.subgroep;
     const totalen = speler.totalen.split(" ").map(Number);
 
-    function inRanglijst() {
-        return totalen[0];
-    }
-
     function punten() {
-        if (!intern()) {
-            return "";
-        } else {
-            return totalen[0];
-        }
+        return totalen[0];
     }
 
     function winnaarSubgroep(winnaars) {
@@ -723,7 +715,6 @@ function spelerTotalen(speler) {
         subgroep,
         rating,
         intern,
-        inRanglijst,
         punten,
         winnaarSubgroep,
         scoreIntern,

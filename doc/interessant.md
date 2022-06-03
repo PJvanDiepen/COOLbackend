@@ -26,7 +26,6 @@ Nuttig
 - [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
 - [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
 - [IntelliJ](https://blog.jetbrains.com/idea/2021/08/most-popular-live-streams/)
-- [Swiss pairings](https://senseis.xmp.net/?SwissPairing)
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
 - [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)

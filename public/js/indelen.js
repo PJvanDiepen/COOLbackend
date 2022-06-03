@@ -460,7 +460,7 @@ function zwitsersIndelen(r) {
             kleur = 1;
         }
     }
-    if (van + 2 * helftGroep < tot + 1) {
+    if (!reedsIngedeeld(tot, partijen)) { // laatste niet ingedeelde speler is oneven
         partijen.push([tot, tot]);
     }
     return partijen;
@@ -475,10 +475,26 @@ function zwitsersIndelen(r) {
  */
 function puntenGroep(r, van) {
     let tot = van;
-    for (let i = 0; i < r.length; i++) { // maak scoregroup r[van] ... r[tot]
+    for (let i = 0; i < r.length; i++) {
         if (r[van].totaal() === r[i].totaal()) {
             tot = i;
         }
     }
     return tot;
+}
+
+/**
+ * indien speler in partijen staat is speler reedsIngedeeld
+ *
+ * @param speler in ranglijst
+ * @param partijen na indelen
+ * @returns {boolean} indien reedsIngedeeld
+ */
+function reedsIngedeeld(speler, partijen) {
+    for (const p of partijen) {
+        if (p.includes(speler)) {
+            return true;
+        }
+    }
+    return false;
 }

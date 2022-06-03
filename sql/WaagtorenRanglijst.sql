@@ -163,7 +163,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.7.20
+drop function totalen; -- 0-0-0.nl versie 0.7.20 TODO 0.7.25 ??
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -259,7 +259,7 @@ begin
         end while; 
     close uitslagen;
     set tegenstanders = concat(tegenstanders, ' 0 ', knsbNummer); -- TODO lees paring voor voorkeuren 
-    if witIntern = 0 and zwartIntern = 0 then
+    if witIntern = 0 and zwartIntern = 0 and oneven = 0 then
         set prijs = 0;
         set sorteer = witExtern + zwartExtern;
 	else
