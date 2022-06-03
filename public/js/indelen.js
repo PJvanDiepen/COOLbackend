@@ -447,21 +447,32 @@ function onevenSpeler(r) {
 function zwitsersIndelen(r) {
     console.log(r);
     const partijen = [];
-    const van = 0;
-    const tot = puntenGroep(r, van);
-    let kleur = 1; // begin met zwart
-    const helftGroep = Math.floor((tot - van) / 2);
-    for (let i = van; i < helftGroep; i++) {
-        if (kleur) {
-            partijen.push([i + helftGroep, i]);
-            kleur = 0;
-        } else {
-            partijen.push([i, i + helftGroep]);
-            kleur = 1;
+    let oneven = r.length % 2 === 0 ? 0 : r.length - 1;
+    if (oneven) {
+        while (r[oneven].oneven()) { // laatste speler die niet al oneven was
+            oneven--;
         }
+        partijen.push([oneven, oneven]);
     }
-    if (!reedsIngedeeld(tot, partijen)) { // laatste niet ingedeelde speler is oneven
-        partijen.push([tot, tot]);
+    let volgende = 0;
+    while (volgende < r.length) {
+        const van = volgende;
+        const tot = puntenGroep(r, van);
+        volgende = tot + 1; // volgende puntenGroep
+        const helftGroep = Math.floor((volgende - van) / 2);
+        let kleur = 1; // begin met zwart
+        for (let i = van; i <= tot; i++) {
+            console.log(`indelen: ${r[i].naam}`);
+            if (i + helftGroep > tot || reedsIngedeeld(i, partijen)) {
+
+            } else if (kleur) {
+                partijen.push([i + helftGroep, i]);
+                kleur = 0;
+            } else {
+                partijen.push([i, i + helftGroep]);
+                kleur = 1;
+            }
+        }
     }
     return partijen;
 }
