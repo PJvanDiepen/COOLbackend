@@ -441,7 +441,7 @@ function onevenSpeler(r) {
  *
  * https://spp.fide.com/c-04-3-fide-dutch-system/
  *
- * @param r ranglijst
+ * @param r ranglijst (= A.1 initial ranking list)
  * @returns {*[]} ingedeelde partijen
  */
 function zwitsersIndelen(r) {
@@ -449,28 +449,25 @@ function zwitsersIndelen(r) {
     const partijen = [];
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;
     if (oneven) {
-        while (r[oneven].oneven()) { // laatste speler die niet al oneven was
+        while (r[oneven].oneven()) { // Absolute Criteria C.2
             oneven--;
         }
         partijen.push([oneven, oneven]);
     }
-    let volgende = 0;
-    while (volgende < r.length) {
-        const van = volgende;
+    let volgendeGroep = 0;
+    while (volgendeGroep < r.length) {
+        const van = volgendeGroep;
         const tot = puntenGroep(r, van);
-        volgende = tot + 1; // volgende puntenGroep
-        const helftGroep = Math.floor((volgende - van) / 2);
-        let kleur = 1; // begin met zwart
+        volgendeGroep = tot + 1;
+        const helftGroep = van + Math.floor((volgendeGroep - van) / 2);
+        let wisselKleur = 1; // indien geen kleurVoorkeur begin met 1 = zwart, 0 = wit
         for (let i = van; i <= tot; i++) {
-            console.log(`indelen: ${r[i].naam}`);
-            if (i + helftGroep > tot || reedsIngedeeld(i, partijen)) {
-
-            } else if (kleur) {
-                partijen.push([i + helftGroep, i]);
-                kleur = 0;
-            } else {
-                partijen.push([i, i + helftGroep]);
-                kleur = 1;
+            if (!reedsIngedeeld(i, partijen)) {
+                console.log(`indelen: ${r[i].naam}`);
+                if (!zwitsersVooruitIndelen(r, i, wisselKleur, helftGroep, partijen)) {
+                    console.log(`vooruit indelen: ${r[i].naam} is mislukt!`);
+                }
+                wisselKleur = wisselKleur ? 0 : 1;
             }
         }
     }
@@ -478,7 +475,7 @@ function zwitsersIndelen(r) {
 }
 
 /**
- * maak puntenGroep (= scoregroup) in ranglijst van tot
+ * maak puntenGroep (= A.3 Scoregroup) in ranglijst van tot
  *
  * @param r ranglijst
  * @param van in ranglijst
@@ -509,3 +506,64 @@ function reedsIngedeeld(speler, partijen) {
     }
     return false;
 }
+
+/**
+ * zwitsersVoooruitIndelen probeert speler in te delen met tegenstander lager op de ranglijst
+ *
+ * @param r ranglijst
+ * @param speler in ranglijst
+ * @param wisselKleur indien geen voorkeur 1 = zwart, 0 = wit
+ * @param tegenstander in ranglijst
+ * @param partijen na indelen
+ * @returns {boolean} indien speler is ingedeeld
+ */
+function zwitsersVooruitIndelen(r, speler, wisselKleur, tegenstander, partijen) {
+    for (let i = tegenstander; i < r.length; i++) {
+        if (!reedsIngedeeld(i, partijen) && r[speler].tegen(i) && juisteKleurVoorkeur(r[speler], r[i])) {
+            if (metWit(r[speler], r[i], wisselKleur)) {
+                partijen.push([i, speler]);
+            } else {
+                partijen.push([speler, i]);
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * juistKleurVoorkeur zorgt voor Absolute Criteria C.3
+ * speler en tegenstander mogen niet dezelfde voorkeur hebben voor een kleur
+ *
+ * @param speler
+ * @param tegenstander
+ * @returns {boolean} indien juisteKleurVoorkeur
+ */
+function juisteKleurVoorkeur(speler, tegenstander) {
+    if (speler.saldoWitZwart() > 0) { // speler heeft voorkeur voor wit
+        return tegenstander.saldoWitZwart() <= 0;
+    } else if (speler.saldoWitZwart() < 0) { // speler heeft voorkeur voor zwart
+        return tegenstander.saldoWitZwart() >= 0;
+    } else {
+        return true // speler heeft geen voorkeur
+    }
+}
+
+/**
+ * metWit berekent welke kleur speler heeft tegen tegenstander
+ *
+ * @param speler
+ * @param tegenstander
+ * @param wisselKleur indien spelers geen voorkeur hebben
+ * @returns {number|*} indien wit anders zwart
+ */
+function metWit(speler, tegenstander, wisselKleur) {
+    if (speler.saldoWitZwart() < 0 || tegenstander.saldoWitZwart() > 0) { // speler heeft voorkeur voor wit of tegenstander heeft voorkeur voor zwart
+        return 0;
+    } else if (speler.saldoWitZwart() > 0 || tegenstander.saldoWitZwart() < 0) { // speler heeft voorkeur voor zwart of tegenstander heeft voorkeur voor zwart
+        return 1;
+    } else {
+        return wisselKleur; // spelers hebben geen voorkeur
+    }
+}
+

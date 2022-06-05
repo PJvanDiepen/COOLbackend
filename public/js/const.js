@@ -671,7 +671,7 @@ function spelerTotalen(speler) {
         console.log(`${naam} met ${totalen[i + 1] ? "wit" : "zwart"} tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
     }
 
-    function tegen(tegenstander, rondeNummer)  {
+    function tegen(tegenstander, rondeNummer = 0)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
             vorigeAfdrukken(i, tegenstander);
