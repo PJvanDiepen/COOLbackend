@@ -163,7 +163,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.7.20 TODO 0.7.25 ??
+drop function totalen; -- 0-0-0.nl versie 0.7.20 TODO 0.7.25 ?? PvD!
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -251,24 +251,24 @@ begin
             if partij = 'i' and witZwart = 'w' then
                 set internKleur = 0;
                 set witIntern = witIntern + 1;
-                -- set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 1 ', tegenstander);
             elseif partij = 'i' and witZwart = 'z' then
                 set internKleur = 1;
                 set zwartIntern = zwartIntern + 1;
-                -- set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 ', tegenstander);
             elseif partij = 'e' and witZwart = 'w' then
                 set witExtern = witExtern + 1;
             elseif partij = 'e' and witZwart = 'z' then
                 set zwartExtern = zwartExtern + 1;
             end if;
-            if partij = 'i' then
+            if partij = 'i' then -- PvD!
                 set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' ', internKleur, ' ', tegenstander, ' ', internResultaat);
+            elseif partij = 'o' then
+                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 0 0'); -- verliest met wit indien geen tegenstander
             end if;
             set totaal = totaal + punten(seizoen, teamCode, versie, knsbNummer, eigenWaardeCijfer, partij, tegenstander, resultaat);
             fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
-    set tegenstanders = concat(tegenstanders, ' 0');
+    set tegenstanders = concat(tegenstanders, ' 0'); -- rondeNummer = 0
     if witIntern = 0 and zwartIntern = 0 and oneven = 0 then
         set prijs = 0;
         set sorteer = witExtern + zwartExtern;

@@ -22,6 +22,7 @@
         : await ranglijstOpPuntenRating(rondeNummer, deelnemers);
     if (zwitsers(o_o_o.competitie)) {
         console.log("Zwitsers systeem");
+        console.log(r);
         const partijen = zwitsersIndelen(r);
         const gesorteerdePartijen = partijen.sort(function (een, ander) {
             return Math.min(een[0], een[1]) - Math.min(ander[0], ander[1]);
@@ -92,25 +93,34 @@ async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
 async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
     const lijst = await ranglijst(rondeNummer, deelnemers);
     for (const speler of lijst) {
-        // console.log(speler.naam);
-        // console.log(speler.totalen);
+        console.log(speler.naam);
+        console.log(speler.totalen);
         let i = 20;
         let wp = speler.oneven() * 5; // TODO bijtelling oneven * 5
         while (speler.totalen[i]) { // indien rondeNummer
             const knsbNummer = speler.totalen[i + 2];
-            let tegenstander = 0;
-            while (lijst[tegenstander].knsbNummer !== knsbNummer) {
-                tegenstander++;
+            if (knsbNummer) {
+                let tegenstander = 0;
+                while (lijst[tegenstander].knsbNummer !== knsbNummer) {
+                    tegenstander++;
+                }
+                console.log(`tegenstander ${lijst[tegenstander].naam} heeft ${lijst[tegenstander].totaal()}`)
+                wp += lijst[tegenstander].totaal() - lijst[tegenstander].oneven()  * 5;  // TODO aftrek oneven * 5
+            } else {
+                // console.log(speler.totalen[i]);
+                // console.log(rondeNummer);
+                // console.log(speler.totalen[i] === rondeNummer);
+                if (speler.totalen[i] === rondeNummer - 1) {
+                    wp -= 5; // in ranglijst na vorige ronde TODO geen aftrek of bijtelling oneven = 5
+                }
             }
-            // console.log(`tegenstander ${lijst[tegenstander].naam} heeft ${lijst[tegenstander].totaal()}`)
-            wp += lijst[tegenstander].totaal() - lijst[tegenstander].oneven()  * 5;  // TODO aftrek oneven * 5
             i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
         }
         console.log(`${speler.naam} heeft ${wp} weerstandspunten`);
         speler.weerstandsPuntenInvullen(wp);
     }
     lijst.sort(function (een, ander) {
-        return ander.totaal() - een.totaal(); // van hoog naar laag
+        return ander.totaal() - een.totaal() || ander.weerstandsPunten() - een.weerstandsPunten(); // van hoog naar laag
     });
     return lijst;
 }
