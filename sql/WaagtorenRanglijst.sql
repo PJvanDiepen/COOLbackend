@@ -192,7 +192,9 @@ begin
     declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
-    declare minimumInternePartijen int default 0; 
+    declare minimumInternePartijen int default 0;
+    declare internKleur int; -- 0 = wit, 1 = zwart
+    declare internResultaat int; -- 0 = verlies, 1 = remise, 2 = winst
     declare teamCode char(3);
     declare rondeNummer int;
     declare partij char(1);
@@ -223,10 +225,13 @@ begin
     while found
         do
             if partij = 'i' and resultaat = '1' then
+                set internResultaat = 2;
                 set winstIntern = winstIntern + 1;
             elseif partij = 'i' and resultaat = '½' then
+                set internResultaat = 1;
                 set remiseIntern = remiseIntern + 1;
             elseif partij = 'i' and resultaat = '0' then
+                set internResultaat = 0;
                 set verliesIntern = verliesIntern + 1;
             elseif partij = 'a' then
                 set afzeggingen = afzeggingen + 1;
@@ -244,21 +249,26 @@ begin
                 set verliesExtern = verliesExtern + 1;
             end if;
             if partij = 'i' and witZwart = 'w' then
+                set internKleur = 0;
                 set witIntern = witIntern + 1;
-                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 1 ', tegenstander);
+                -- set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 1 ', tegenstander);
             elseif partij = 'i' and witZwart = 'z' then
+                set internKleur = 1;
                 set zwartIntern = zwartIntern + 1;
-                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 ', tegenstander);
+                -- set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 ', tegenstander);
             elseif partij = 'e' and witZwart = 'w' then
                 set witExtern = witExtern + 1;
             elseif partij = 'e' and witZwart = 'z' then
                 set zwartExtern = zwartExtern + 1;
             end if;
+            if partij = 'i' then
+                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' ', internKleur, ' ', tegenstander, ' ', internResultaat);
+            end if;
             set totaal = totaal + punten(seizoen, teamCode, versie, knsbNummer, eigenWaardeCijfer, partij, tegenstander, resultaat);
             fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
-    set tegenstanders = concat(tegenstanders, ' 0 ', knsbNummer); -- TODO lees paring voor voorkeuren 
+    set tegenstanders = concat(tegenstanders, ' 0');
     if witIntern = 0 and zwartIntern = 0 and oneven = 0 then
         set prijs = 0;
         set sorteer = witExtern + zwartExtern;

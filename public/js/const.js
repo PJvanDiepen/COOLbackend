@@ -560,19 +560,25 @@ totalen
 [19] rondenVerschil
 tegenstanders met n = 0, 1, 2, enz.
 [20 + n] rondeNummer
-[21 + n] kleur (1 = wit, 0 = zwart)
+[21 + n] kleur (0 = wit, 1 = zwart)  TODO was (1 = wit, 0 = zwart)
 [22 + n] tegenstander
+[23 + n] resultaat (0 = verlies, 1 = remise, 2 = winst)
 einde indien rondeNummer = 0
-[20 + n] rondeNummer = 0
-[21 + n] knsbNummer
-verboden tegenstanders met  m = 1, 2, 3, enz.
-[22 + n + m] tegenstander
  */
 function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
     const naam = speler.naam;
     const subgroep = speler.subgroep;
     const totalen = speler.totalen.split(" ").map(Number);
+    let wp = 0;
+
+    function weerstandsPuntenInvullen(weerstand) {
+        wp = weerstand;
+    }
+
+    function weerstandsPunten() {
+        return wp;
+    }
 
     function punten() {
         return totalen[0];
@@ -662,7 +668,7 @@ function spelerTotalen(speler) {
             if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
                 j = i;
             }
-            i = i + 3; // volgende rondeNummer, kleur en knsbNummer
+            i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
         }
         return j; // vorigeKeer zelfde tegenstander of 0
     }
@@ -693,7 +699,7 @@ function spelerTotalen(speler) {
     function metWit(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            return totalen[i + 1] === 0 // wit indien vorige keer zwart
+            return totalen[i + 1] === 0 // wit indien vorige keer zwart TODO werkt dit?
         } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
             afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
             return saldoWitZwart() < tegenstander.saldoWitZwart(); // wit indien vaker met zwart
@@ -713,8 +719,11 @@ function spelerTotalen(speler) {
         knsbNummer,
         naam,
         subgroep,
+        totalen,
         rating,
         intern,
+        weerstandsPuntenInvullen,
+        weerstandsPunten,
         punten,
         winnaarSubgroep,
         scoreIntern,

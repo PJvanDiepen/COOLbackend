@@ -17,7 +17,9 @@
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
     const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
-    const r = await ranglijstSorteren(rondeNummer, deelnemers);
+    const r = zwitsers(o_o_o.competitie) // TODO weer 1 ranglijstSorteren
+        ? await ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers)
+        : await ranglijstOpPuntenRating(rondeNummer, deelnemers);
     if (zwitsers(o_o_o.competitie)) {
         console.log("Zwitsers systeem");
         const partijen = zwitsersIndelen(r);
@@ -79,8 +81,34 @@ async function deelnemersRonde(rondeNummer, partij) {
     }
 }
 
-async function ranglijstSorteren(totDatum, deelnemers) {
-    const lijst = await ranglijst(totDatum, deelnemers);
+async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
+    const lijst = await ranglijst(rondeNummer, deelnemers);
+    lijst.sort(function (een, ander) {
+        return ander.totaal() - een.totaal(); // van hoog naar laag
+    });
+    return lijst;
+}
+
+async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
+    const lijst = await ranglijst(rondeNummer, deelnemers);
+    for (const speler of lijst) {
+        // console.log(speler.naam);
+        // console.log(speler.totalen);
+        let i = 20;
+        let wp = speler.oneven() * 5; // TODO bijtelling oneven * 5
+        while (speler.totalen[i]) { // indien rondeNummer
+            const knsbNummer = speler.totalen[i + 2];
+            let tegenstander = 0;
+            while (lijst[tegenstander].knsbNummer !== knsbNummer) {
+                tegenstander++;
+            }
+            // console.log(`tegenstander ${lijst[tegenstander].naam} heeft ${lijst[tegenstander].totaal()}`)
+            wp += lijst[tegenstander].totaal() - lijst[tegenstander].oneven()  * 5;  // TODO aftrek oneven * 5
+            i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
+        }
+        console.log(`${speler.naam} heeft ${wp} weerstandspunten`);
+        speler.weerstandsPuntenInvullen(wp);
+    }
     lijst.sort(function (een, ander) {
         return ander.totaal() - een.totaal(); // van hoog naar laag
     });
@@ -464,6 +492,7 @@ function zwitsersIndelen(r) {
         for (let i = van; i <= tot; i++) {
             if (!reedsIngedeeld(i, partijen)) {
                 console.log(`indelen: ${r[i].naam}`);
+                console.log(`weerstandsPunten: ${r[i].weerstandsPunten()}`);
                 if (!zwitsersVooruitIndelen(r, i, wisselKleur, helftGroep, partijen)) {
                     console.log(`vooruit indelen: ${r[i].naam} is mislukt!`);
                 }
