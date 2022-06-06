@@ -25,7 +25,8 @@
         for (const speler of r) {
             console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.solkoff()}`);
         }
-        const partijen = zwitsersIndelen(r);
+        const pogingen = [];
+        const partijen = zwitsersIndelen(r, pogingen);
         const gesorteerdePartijen = partijen.sort(function (een, ander) {
             return Math.min(een[0], een[1]) - Math.min(ander[0], ander[1]);
         });
@@ -361,12 +362,6 @@ const indelenFun = [
         return oneven;
     }]];
 
-function spelersLijst(ranglijst, spelers) {
-    return spelers.map(function (speler) {
-        return ranglijst[speler].naam;
-    });
-}
-
 function vooruitIndelen(r, wit, zwart, oneven, rondeNummer) {
     const nietIngedeeld = [];
     for (let i = 0; i < r.length; i++) {
@@ -482,18 +477,33 @@ function onevenSpeler(r) {
  *
  * https://spp.fide.com/c-04-3-fide-dutch-system/
  *
- * @param r ranglijst (= A.1 initial ranking list)
- * @returns {*[]} ingedeelde partijen
+ * ?param r ranglijst (= A.1 initial ranking list)
+ * ?returns ingedeelde partijen of false
  */
-function zwitsersIndelen(r) {
-    const partijen = [];
+function zwitsersIndelen(r, pogingen, eerst) {
+    console.log(`=== zwitsersIndelen === poging #${pogingen.length}`);
+    let partijen = [];
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;
     if (oneven) {
         while (r[oneven].oneven()) { // Absolute Criteria C.2
+            console.log(`${r[oneven].naam} was al oneven`);
             oneven--;
         }
+        console.log(`${r[oneven].naam} is oneven`);
         partijen.push([oneven, oneven]);
     }
+    if (eerst) {
+        console.log(`eerst indelen: ${r[eerst].naam}`);
+        if (!zwitsersVooruitIndelen(r, eerst, 0, eerst + 1, partijen)) {
+            console.log(`eerst vooruit indelen: ${r[eerst].naam} is ook mislukt!`);
+            if (!zwitsersAchteruitIndelen(r, eerst, 0, eerst - 1, partijen)) {
+                console.log(`eerst achteruit indelen: ${r[eerst].naam} is ook mislukt!`);
+                pogingen.push(eerst);
+                return false;
+            }
+        }
+    }
+    const mislukt = [];
     let volgendeGroep = 0;
     while (volgendeGroep < r.length) {
         const van = volgendeGroep;
@@ -506,9 +516,16 @@ function zwitsersIndelen(r) {
                 console.log(`indelen: ${r[i].naam}`);
                 if (!zwitsersVooruitIndelen(r, i, wisselKleur, helftGroep, partijen)) {
                     console.log(`vooruit indelen: ${r[i].naam} is mislukt!`);
+                    mislukt.push(i);
                 }
                 wisselKleur = wisselKleur ? 0 : 1;
             }
+        }
+    }
+    for (const speler of mislukt) {
+        partijen = zwitsersIndelen(r, pogingen, speler);
+        if (partijen) {
+            break;
         }
     }
     return partijen;
@@ -571,6 +588,20 @@ function zwitsersVooruitIndelen(r, speler, wisselKleur, tegenstander, partijen) 
     return false;
 }
 
+function zwitsersAchteruitIndelen(r, speler, wisselKleur, tegenstander, partijen) {
+    for (let i = tegenstander; i >= 0; i--) {
+        if (!reedsIngedeeld(i, partijen) && r[speler].tegen(i) && juisteKleurVoorkeur(r[speler], r[i])) {
+            if (metWit(r[speler], r[i], wisselKleur)) {
+                partijen.push([i, speler]);
+            } else {
+                partijen.push([speler, i]);
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
 /**
  * juistKleurVoorkeur zorgt voor Absolute Criteria C.3
  * speler en tegenstander mogen niet dezelfde voorkeur hebben voor een kleur
@@ -606,4 +637,3 @@ function metWit(speler, tegenstander, wisselKleur) {
         return wisselKleur; // spelers hebben geen voorkeur
     }
 }
-
