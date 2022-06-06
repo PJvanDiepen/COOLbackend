@@ -21,8 +21,10 @@
         ? await ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers)
         : await ranglijstOpPuntenRating(rondeNummer, deelnemers);
     if (zwitsers(o_o_o.competitie)) {
-        console.log("Zwitsers systeem");
-        console.log(r);
+        console.log("--- Zwitsers systeem ---");
+        for (const speler of r) {
+            console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.solkoff()}`);
+        }
         const partijen = zwitsersIndelen(r);
         const gesorteerdePartijen = partijen.sort(function (een, ander) {
             return Math.min(een[0], een[1]) - Math.min(ander[0], ander[1]);
@@ -93,10 +95,9 @@ async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
 async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
     const lijst = await ranglijst(rondeNummer, deelnemers);
     for (const speler of lijst) {
-        console.log(speler.naam);
-        console.log(speler.totalen);
         let i = 20;
-        let wp = speler.oneven() * 5; // TODO bijtelling oneven * 5
+        let wp = speler.oneven() * 5; // bijtelling oneven
+        let sb = speler.oneven() * 50;
         while (speler.totalen[i]) { // indien rondeNummer
             const knsbNummer = speler.totalen[i + 2];
             if (knsbNummer) {
@@ -104,23 +105,25 @@ async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
                 while (lijst[tegenstander].knsbNummer !== knsbNummer) {
                     tegenstander++;
                 }
-                console.log(`tegenstander ${lijst[tegenstander].naam} heeft ${lijst[tegenstander].totaal()}`)
-                wp += lijst[tegenstander].totaal() - lijst[tegenstander].oneven()  * 5;  // TODO aftrek oneven * 5
+                wp += lijst[tegenstander].totaal() - lijst[tegenstander].oneven() * 5;  // aftrek oneven
+                if (speler.totalen[i + 3] === 2) { // wint van tegenstander
+                    sb += lijst[tegenstander].totaal() * 10 - lijst[tegenstander].oneven() * 50;
+                } else if (speler.totalen[i + 3] === 1) { // remise met tegenstander
+                    sb += lijst[tegenstander].totaal() * 5 - lijst[tegenstander].oneven() * 25;
+                }
             } else {
-                // console.log(speler.totalen[i]);
-                // console.log(rondeNummer);
-                // console.log(speler.totalen[i] === rondeNummer);
                 if (speler.totalen[i] === rondeNummer - 1) {
-                    wp -= 5; // in ranglijst na vorige ronde TODO geen aftrek of bijtelling oneven = 5
+                    wp -= 5; // in ranglijst na vorige ronde geen aftrek of bijtelling oneven
+                    sb -= 50;
                 }
             }
             i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
         }
-        console.log(`${speler.naam} heeft ${wp} weerstandspunten`);
-        speler.weerstandsPuntenInvullen(wp);
+        speler.solkoffInvullen(wp);
+        speler.sonnebornBergerInvullen(sb);
     }
     lijst.sort(function (een, ander) {
-        return ander.totaal() - een.totaal() || ander.weerstandsPunten() - een.weerstandsPunten(); // van hoog naar laag
+        return ander.totaal() - een.totaal() || ander.sonnebornBerger() - een.sonnebornBerger() || ander.solkoff() - een.solkoff();
     });
     return lijst;
 }
@@ -483,7 +486,6 @@ function onevenSpeler(r) {
  * @returns {*[]} ingedeelde partijen
  */
 function zwitsersIndelen(r) {
-    console.log(r);
     const partijen = [];
     let oneven = r.length % 2 === 0 ? 0 : r.length - 1;
     if (oneven) {
@@ -502,7 +504,6 @@ function zwitsersIndelen(r) {
         for (let i = van; i <= tot; i++) {
             if (!reedsIngedeeld(i, partijen)) {
                 console.log(`indelen: ${r[i].naam}`);
-                console.log(`weerstandsPunten: ${r[i].weerstandsPunten()}`);
                 if (!zwitsersVooruitIndelen(r, i, wisselKleur, helftGroep, partijen)) {
                     console.log(`vooruit indelen: ${r[i].naam} is mislukt!`);
                 }

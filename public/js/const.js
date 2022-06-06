@@ -570,14 +570,25 @@ function spelerTotalen(speler) {
     const naam = speler.naam;
     const subgroep = speler.subgroep;
     const totalen = speler.totalen.split(" ").map(Number);
+
     let wp = 0;
 
-    function weerstandsPuntenInvullen(weerstand) {
+    function solkoffInvullen(weerstand) {
         wp = weerstand;
     }
 
-    function weerstandsPunten() {
+    function solkoff() {
         return wp;
+    }
+
+    let sb = 0;
+
+    function sonnebornBergerInvullen(weerstand) {
+        sb = weerstand;
+    }
+
+    function sonnebornBerger() {
+        return sb;
     }
 
     function punten() {
@@ -722,8 +733,10 @@ function spelerTotalen(speler) {
         totalen,
         rating,
         intern,
-        weerstandsPuntenInvullen,
-        weerstandsPunten,
+        solkoffInvullen,
+        solkoff,
+        sonnebornBergerInvullen,
+        sonnebornBerger,
         punten,
         winnaarSubgroep,
         scoreIntern,
