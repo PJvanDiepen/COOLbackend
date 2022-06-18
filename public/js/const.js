@@ -573,11 +573,11 @@ function spelerTotalen(speler) {
 
     let wp = 0;
 
-    function solkoffInvullen(weerstand) {
+    function weerstandsPuntenInvullen(weerstand) {
         wp = weerstand;
     }
 
-    function solkoff() {
+    function weerstandsPunten() {
         return wp;
     }
 
@@ -673,6 +673,7 @@ function spelerTotalen(speler) {
     }
 
     function vorigeKeer(tegenstander) {
+        console.log(totalen);
         let i = 20;
         let j = 0;
         while (totalen[i]) { // indien rondeNummer
@@ -692,9 +693,9 @@ function spelerTotalen(speler) {
         const i = vorigeKeer(tegenstander);
         if (i) {
             vorigeAfdrukken(i, tegenstander);
-            // console.log("rondeNummer: " + rondeNummer);
-            // console.log("totaal[i]: " + totaal[i]);
-            // console.log("rondenVerschil(): " + rondenVerschil());
+            console.log("rondeNummer: " + rondeNummer);
+            console.log("totaal[i]: " + totaal[i]);
+            console.log("rondenVerschil(): " + rondenVerschil());
             return (rondeNummer - totalen[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
@@ -733,8 +734,8 @@ function spelerTotalen(speler) {
         totalen,
         rating,
         intern,
-        solkoffInvullen,
-        solkoff,
+        weerstandsPuntenInvullen,
+        weerstandsPunten,
         sonnebornBergerInvullen,
         sonnebornBerger,
         punten,

@@ -23,7 +23,7 @@
     if (zwitsers(o_o_o.competitie)) {
         console.log("--- Zwitsers systeem ---");
         for (const speler of r) {
-            console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.solkoff()}`);
+            console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.weerstandsPunten()}`);
         }
         const pogingen = [];
         const partijen = zwitsersIndelen(r, pogingen);
@@ -120,11 +120,11 @@ async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
             }
             i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
         }
-        speler.solkoffInvullen(wp);
+        speler.weerstandsPuntenInvullen(wp);
         speler.sonnebornBergerInvullen(sb);
     }
     lijst.sort(function (een, ander) {
-        return ander.totaal() - een.totaal() || ander.sonnebornBerger() - een.sonnebornBerger() || ander.solkoff() - een.solkoff();
+        return ander.totaal() - een.totaal() || ander.sonnebornBerger() - een.sonnebornBerger() || ander.weerstandsPunten() - een.weerstandsPunten();
     });
     return lijst;
 }
@@ -494,11 +494,10 @@ function zwitsersIndelen(r, pogingen, eerst) {
     }
     if (eerst) {
         console.log(`eerst indelen: ${r[eerst].naam}`);
-        if (!zwitsersVooruitIndelen(r, eerst, 0, eerst + 1, partijen)) {
+        if (!zwitsersVooruit(r, eerst, eerst + 1, partijen)) {
             console.log(`eerst vooruit indelen: ${r[eerst].naam} is ook mislukt!`);
-            if (!zwitsersAchteruitIndelen(r, eerst, 0, eerst - 1, partijen)) {
+            if (!zwitsersAchteruit(r, eerst, eerst - 1, partijen)) {
                 console.log(`eerst achteruit indelen: ${r[eerst].naam} is ook mislukt!`);
-                pogingen.push(eerst);
                 return false;
             }
         }
@@ -512,7 +511,7 @@ function zwitsersIndelen(r, pogingen, eerst) {
         const helftGroep = van + Math.floor((volgendeGroep - van) / 2);
         let wisselKleur = 1; // indien geen kleurVoorkeur begin met 1 = zwart, 0 = wit
         for (let i = van; i <= tot; i++) {
-            if (!reedsIngedeeld(i, partijen)) {
+            if (!reedsIngedeeld(r, i, partijen)) {
                 console.log(`indelen: ${r[i].naam}`);
                 if (!zwitsersVooruitIndelen(r, i, wisselKleur, helftGroep, partijen)) {
                     console.log(`vooruit indelen: ${r[i].naam} is mislukt!`);
@@ -523,9 +522,12 @@ function zwitsersIndelen(r, pogingen, eerst) {
         }
     }
     for (const speler of mislukt) {
-        partijen = zwitsersIndelen(r, pogingen, speler);
-        if (partijen) {
-            break;
+        if (!pogingen.includes(speler)) {
+            pogingen.push(speler);
+            partijen = zwitsersIndelen(r, pogingen, speler);
+            if (partijen) {
+                break;
+            }
         }
     }
     return partijen;
@@ -539,25 +541,38 @@ function zwitsersIndelen(r, pogingen, eerst) {
  * @returns {number} tot in ranglijst
  */
 function puntenGroep(r, van) {
+    const einde = r.length - 1;
+    if (van >= einde) {
+        console.log(`geen nieuwe puntenGroep tot: ${einde}`);
+        return einde;
+    }
     let tot = van;
     for (let i = 0; i < r.length; i++) {
         if (r[van].totaal() === r[i].totaal()) {
             tot = i;
         }
     }
-    return tot;
+    const helft = Math.floor((tot + 1 - van) / 2);
+    console.log(`helft: ${helft} *****`);
+    if (helft > 0) {
+        return tot;
+    }
+    console.log(`puntenGroep verlengen`);
+    return puntenGroep(r, tot + 1);
 }
 
 /**
  * indien speler in partijen staat is speler reedsIngedeeld
  *
+ * @param r ranglijst TODO uitsluitend voor print
  * @param speler in ranglijst
  * @param partijen na indelen
  * @returns {boolean} indien reedsIngedeeld
  */
-function reedsIngedeeld(speler, partijen) {
+function reedsIngedeeld(r, speler, partijen) {
     for (const p of partijen) {
         if (p.includes(speler)) {
+            console.log(`${r[speler].naam} reeds ingedeeld`);
             return true;
         }
     }
@@ -576,7 +591,10 @@ function reedsIngedeeld(speler, partijen) {
  */
 function zwitsersVooruitIndelen(r, speler, wisselKleur, tegenstander, partijen) {
     for (let i = tegenstander; i < r.length; i++) {
-        if (!reedsIngedeeld(i, partijen) && r[speler].tegen(i) && juisteKleurVoorkeur(r[speler], r[i])) {
+        if (!reedsIngedeeld(r, i, partijen)) {
+            console.log(`${r[speler].naam} tegen ${r[i].naam} ? ${r[speler].tegen(i)} en ${juisteKleurVoorkeur(r[speler], r[i])} kleur: ${metWit(r[speler], r[i], wisselKleur)}`);
+        }
+        if (!reedsIngedeeld(r, i, partijen) && r[speler].tegen(i) && juisteKleurVoorkeur(r[speler], r[i])) {
             if (metWit(r[speler], r[i], wisselKleur)) {
                 partijen.push([i, speler]);
             } else {
@@ -588,10 +606,24 @@ function zwitsersVooruitIndelen(r, speler, wisselKleur, tegenstander, partijen) 
     return false;
 }
 
-function zwitsersAchteruitIndelen(r, speler, wisselKleur, tegenstander, partijen) {
+function zwitsersVooruit(r, speler, tegenstander, partijen) {
+    for (let i = tegenstander; i < r.length; i++) {
+        if (!i === speler && !reedsIngedeeld(r, i, partijen) && !r[speler].tegen(i)) {
+            if (metWit(r[speler], r[i], metZwart(r[speler], r[i]))) {
+                partijen.push([i, speler]);
+            } else {
+                partijen.push([speler, i]);
+            }
+            return true;
+        }
+    }
+    return false;
+}
+
+function zwitsersAchteruit(r, speler, tegenstander, partijen) {
     for (let i = tegenstander; i >= 0; i--) {
-        if (!reedsIngedeeld(i, partijen) && r[speler].tegen(i) && juisteKleurVoorkeur(r[speler], r[i])) {
-            if (metWit(r[speler], r[i], wisselKleur)) {
+        if (!i === speler && !reedsIngedeeld(r, i, partijen) && !r[speler].tegen(i)) {
+            if (metWit(r[speler], r[i], metZwart(r[speler], r[i]))) {
                 partijen.push([i, speler]);
             } else {
                 partijen.push([speler, i]);
@@ -637,3 +669,12 @@ function metWit(speler, tegenstander, wisselKleur) {
         return wisselKleur; // spelers hebben geen voorkeur
     }
 }
+
+function metZwart(speler, tegenstander) {
+    if (speler > tegenstander) { // sterkste speler heeft voorkeur voor zwart
+        return 1;
+    } else {
+        return 0; // zwakste speler heeft voorkeur voor wit
+    }
+}
+

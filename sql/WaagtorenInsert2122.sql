@@ -3390,6 +3390,36 @@ use waagtoren; -- PvD
 select * from uitslag where seizoen = '2122' and datum = '2022-04-23';
 delete from uitslag where seizoen = '2122' and datum = '2022-04-23';
 
+select * from uitslag where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+select * from ronde where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+update uitslag set datum = '2022-06-11' where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+update ronde set datum = '2022-06-11' where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', '1', '4', '1', '7584566', 'e', 'w', '0', '0', '2021-11-27', 'int'),
+('2122', '1', '4', '2', '7657342', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '1', '4', '3', '8180810', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '4', '7428960', 'e', 'z', '0', '1', '2021-11-27', 'int'),
+('2122', '1', '4', '5', '7079743', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '6', '8285574', 'e', 'z', '0', '1', '2021-11-27', 'int'),
+('2122', '1', '4', '7', '7468417', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '8', '7099950', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '1', '4', '9', '7828183', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '10', '7561653', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '1', '6335670', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '2', '4', '2', '6225934', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '3', '7707832', 'e', 'w', '0', '1', '2021-11-27', 'int'),
+('2122', '2', '4', '4', '7129991', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '5', '8552038', 'e', 'w', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '6', '6572511', 'e', 'z', '0', '½', '2021-11-27', 'int'),
+('2122', '2', '4', '7', '7535385', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '2', '4', '8', '7758014', 'e', 'z', '0', '0', '2021-11-27', 'int');
+
 -- alle seizoenen
 insert into persoon (knsbNummer, naam) values 
 (1, 'niemand'),

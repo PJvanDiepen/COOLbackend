@@ -1,6 +1,18 @@
 Nuttig
 
+Verwijder localStorage op Android browser Chrome
+- 3 puntjes
+- Instellingen
+- Site-instellingen
+- Alle sites
+- https://0-0-0.nl
+- Wissen en opnieuw instellen
+ 
+Verwijder localStorage op iPhone
+- 
+
 - [MySQL tutorial](https://www.mysqltutorial.org/)
+- [read local fil in browser](https://usefulangle.com/post/193/javascript-read-local-file)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
@@ -50,6 +62,7 @@ Interessant
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
 - [TODO in verschillende frameworks](https://todomvc.com/)
 - [JSON in JavaScript](https://www.zhenghao.io/posts/json-oddities)
+- [type in JavaScript](https://github.com/tc39/proposal-type-annotations)
 - [TypeScript](https://codeascraft.com/2021/11/08/etsys-journey-to-typescript/)
 - [Svelte](https://joshcollinsworth.com/blog/introducing-svelte-comparing-with-react-vue)
 - [resilient js ui](https://www.smashingmagazine.com/2021/08/build-resilient-javascript-ui/)
