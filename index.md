@@ -1,6 +1,4 @@
-## Welcome to GitHub Pages
+## Documentatie 0-0-0
 
-Hier komt de documentatie over 0-0-0
-
-Bij voorbeeld over de [database](doc/database.md) van 0-0-0
+Hier komt de documentatie over de [database](doc/database.md) en over de [api](doc/api.md) van 0-0-0
 
