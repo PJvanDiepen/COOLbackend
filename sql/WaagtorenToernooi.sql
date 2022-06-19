@@ -1,5 +1,29 @@
 use waagtoren;
 
+-- test Zwitsers toernooi gebaseerd op NK jeugd tot 18 jaar 2022
+set @ronde = 1; -- 7 ronden
+
+select * from uitslag where seizoen = '2122' and teamCode = 'izt' and rondeNummer = @ronde;
+
+delete from uitslag where seizoen = '2122' and teamCode = 'izt' and rondeNummer = @ronde;
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', 'izt', @ronde, 0, 6214153, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 6572511, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7099950, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7210137, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7282033, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7428960, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7584566, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7649213, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7657342, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7665834, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 7970094, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 8112654, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 8285574, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 8587337, 'm', '', 0, '', '2022-06-01', 'izt'),
+('2122', 'izt', @ronde, 0, 8611922, 'm', '', 0, '', '2022-06-01', 'izt');
+
 -- TODO spelers selecteren
 select naam, s.knsbNummer, knsbRating, knsbOpgegeven, nhsbOpgegeven
 from speler s join persoon p on p.knsbNummer = s.knsbNummer
@@ -63,14 +87,14 @@ insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, k
     ('2122', '', '', '', '', 7771665, 1264, '2022-04-10');
 
 -- TODO ronde toevoegen
-set @competitie = 'ipa';
-set @datum = '2022-04-30';
+set @competitie = 'izt';
+set @datum = '2022-06-01';
 
 select * from team where seizoen = '2122';
 delete from team where seizoen = '2122' and teamCode = @competitie;
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-('2122', 'ipa', 'i', 'pa', 'Paas competitie', 0, 0);
+('2122', 'izt', 'i', 'zt', 'Zwitsers test', 0, 0);
 
 select * from ronde where seizoen = '2122' and teamCode = @competitie;
 select * from uitslag where seizoen = '2122' and teamCode = @competitie;

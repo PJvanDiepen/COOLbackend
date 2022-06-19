@@ -148,6 +148,8 @@ module.exports = router => {
     join persoon p on s.knsbNummer = p.knsbNummer
     where seizoen = @seizoen
     order by totalen desc;
+
+    TODO geen overbodige spelers? Uitsluitend spelers per seizoen!
      */
     router.get('/ranglijst/:seizoen/:competitie/:ronde/:datum/:versie', async function (ctx) {
         ctx.body = await Speler.query()
@@ -269,8 +271,8 @@ module.exports = router => {
                      .andOn('u.rondeNummer', 'ronde.rondeNummer')
              })
              .where('ronde.seizoen', ctx.params.seizoen)
-             .whereIn('ronde.teamCode', // interne competities en externe teams van speler
-                 [INTERNE_COMPETITIE, PAAS_COMPETTIE, RAPID_COMPETTIE, ref('s.knsbTeam'), ref('s.nhsbTeam')]) // TODO like "i%"
+             .whereIn('ronde.teamCode', // interne competities en externe teams van speler TODO like "i%"
+                 [INTERNE_COMPETITIE, RAPID_COMPETTIE, SNELSCHAKEN, ZWITSERS_TEST, ref('s.knsbTeam'), ref('s.nhsbTeam')])
              .orderBy(['ronde.datum', 'ronde.teamCode', 'ronde.rondeNummer']);
         } else {
             ctx.body = [];
@@ -300,7 +302,7 @@ module.exports = router => {
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.datum', ctx.params.datum)
-                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, PAAS_COMPETTIE, RAPID_COMPETTIE])
+                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, RAPID_COMPETTIE, SNELSCHAKEN, ZWITSERS_TEST])
                 .orderBy('speler.knsbRating', 'desc');
         } else {
             ctx.body = [];
@@ -390,7 +392,7 @@ module.exports = router => {
                     .andOn('team.teamCode', 'ronde.teamCode')})
             .join('persoon', 'team.teamleider', 'persoon.knsbNummer')
             .where('ronde.seizoen', ctx.params.seizoen)
-            .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, PAAS_COMPETTIE, RAPID_COMPETTIE])
+            .whereNotIn('ronde.teamCode',[INTERNE_COMPETITIE, RAPID_COMPETTIE, SNELSCHAKEN, ZWITSERS_TEST])
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
@@ -857,9 +859,10 @@ module.exports = router => {
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
-const PAAS_COMPETTIE     = "ipa";
 const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
+const SNELSCHAKEN        = "izs";
+const ZWITSERS_TEST      = "izt";
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";

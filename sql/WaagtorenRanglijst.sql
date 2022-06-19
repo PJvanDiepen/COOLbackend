@@ -22,8 +22,9 @@ delimiter ;
 -- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
 -- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
 -- versie 4 rapidPunten voor rapid competitie
+-- versie 5 zwitsersPunten voor Zwitsers systeem
 
-drop function subgroep; -- 0-0-0.nl versie 0.6.6
+drop function subgroep; -- 0-0-0.nl versie 0.7.24
 
 delimiter $$
 create function subgroep(seizoen char(4), versie int, knsbNummer int)
@@ -31,7 +32,7 @@ returns char(1) deterministic
 begin
     declare knsbRating int;
     set knsbRating = rating(seizoen, knsbNummer);
-    if versie = 4 then -- geen subgroep bij rapid
+    if versie = 4 or versie = 5 then -- geen subgroep bij rapid competitie of Zwitsers systeem
         return ' ';
 	elseif knsbRating < 1400 then
         return 'H';
@@ -54,13 +55,13 @@ end;
 $$
 delimiter ;
 
-drop function waardeCijfer; -- 0-0-0.nl versie 0.6.6
+drop function waardeCijfer; -- 0-0-0.nl versie 0.7.24
 
 delimiter $$
 create function waardeCijfer(versie int, knsbRating int) 
 returns int deterministic
 begin
-    if versie = 4 then -- geen waardeCijfer bij rapid
+    if versie = 4 or versie = 5 then -- geen waardeCijfer bij rapid competitie of Zwitsers systeem
         return 0;
     elseif knsbRating < 1400 then
         return 5; -- H
@@ -83,14 +84,16 @@ end;
 $$
 delimiter ;
 
-drop function punten; -- 0-0-0.nl versie 0.7.14
+drop function punten; -- 0-0-0.nl versie 0.7.24
 
 delimiter $$
 create function punten(seizoen char(4), teamCode char(3), versie int, knsbNummer int, eigenWaardeCijfer int, partij char(1), tegenstander int, resultaat char(1))
     returns int deterministic -- reglement artikel 12
 begin
-    if versie = 4 then -- rapidPunten bij rapid
+    if versie = 4 then
         return rapidPunten(partij, resultaat);
+	elseif versie = 5 then
+        return zwitsersPunten(partij, resultaat);
     elseif partij = 'i' and resultaat = '1' then
         return waardeCijfer(versie, rating(seizoen, tegenstander)) + 12;
     elseif partij = 'i' and resultaat = '½' then
@@ -139,7 +142,28 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.7.20
+drop function zwitsersPunten; -- 0-0-0.nl versie 0.7.24
+
+delimiter $$
+create function zwitsersPunten(partij char(1), resultaat char(1))
+    returns int deterministic
+begin
+    if partij = 'i' and resultaat = '1' then
+        return 10;
+    elseif partij = 'i' and resultaat = '½' then
+        return 5;
+    elseif partij = 'i' and resultaat = '0' then
+        return 0;
+    elseif partij = 'o' then -- oneven
+		return 10;
+	else
+		return 0;  
+    end if;
+end;
+$$
+delimiter ;
+
+drop function totalen; -- 0-0-0.nl versie 0.7.20 TODO 0.7.25 ?? PvD!
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -168,7 +192,9 @@ begin
     declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
-    declare minimumInternePartijen int default 0; 
+    declare minimumInternePartijen int default 0;
+    declare internKleur int; -- 0 = wit, 1 = zwart
+    declare internResultaat int; -- 0 = verlies, 1 = remise, 2 = winst
     declare teamCode char(3);
     declare rondeNummer int;
     declare partij char(1);
@@ -185,7 +211,7 @@ begin
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
             and u.anderTeam = competitie;
     declare continue handler for not found set found = false;
-    if versie = 4 then -- rapid competitie
+    if versie = 4 or versie = 5 then -- rapid competitie en Zwitsers systeem
         set rondenVerschil = 99; -- niet opnieuw tegen elkaar
     else -- interne competitie
         set startPunten = 300; -- reglement artikel 11
@@ -199,10 +225,13 @@ begin
     while found
         do
             if partij = 'i' and resultaat = '1' then
+                set internResultaat = 2;
                 set winstIntern = winstIntern + 1;
             elseif partij = 'i' and resultaat = '½' then
+                set internResultaat = 1;
                 set remiseIntern = remiseIntern + 1;
             elseif partij = 'i' and resultaat = '0' then
+                set internResultaat = 0;
                 set verliesIntern = verliesIntern + 1;
             elseif partij = 'a' then
                 set afzeggingen = afzeggingen + 1;
@@ -220,22 +249,27 @@ begin
                 set verliesExtern = verliesExtern + 1;
             end if;
             if partij = 'i' and witZwart = 'w' then
+                set internKleur = 0;
                 set witIntern = witIntern + 1;
-                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 1 ', tegenstander);
             elseif partij = 'i' and witZwart = 'z' then
+                set internKleur = 1;
                 set zwartIntern = zwartIntern + 1;
-                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 ', tegenstander);
             elseif partij = 'e' and witZwart = 'w' then
                 set witExtern = witExtern + 1;
             elseif partij = 'e' and witZwart = 'z' then
                 set zwartExtern = zwartExtern + 1;
             end if;
+            if partij = 'i' then -- PvD!
+                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' ', internKleur, ' ', tegenstander, ' ', internResultaat);
+            elseif partij = 'o' then
+                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 0 0'); -- verliest met wit indien geen tegenstander
+            end if;
             set totaal = totaal + punten(seizoen, teamCode, versie, knsbNummer, eigenWaardeCijfer, partij, tegenstander, resultaat);
             fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
         end while; 
     close uitslagen;
-    set tegenstanders = concat(tegenstanders, ' 0 ', knsbNummer); -- TODO lees paring voor voorkeuren 
-    if witIntern = 0 and zwartIntern = 0 then
+    set tegenstanders = concat(tegenstanders, ' 0'); -- rondeNummer = 0
+    if witIntern = 0 and zwartIntern = 0 and oneven = 0 then
         set prijs = 0;
         set sorteer = witExtern + zwartExtern;
 	else

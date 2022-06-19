@@ -25,11 +25,11 @@ async function spelersLijst(kop, lijst) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "ranglijst na ronde " + rondeNummer;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(rondeNummer)).forEach(function (t, i) {
-        if (t.inRanglijst() || alleLeden) {
+        if (t.intern() || t.oneven() || t.extern() || alleLeden) {
             lijst.appendChild(htmlRij(
                 i + 1,
                 naarSpeler(t),
-                t.punten() ? t.punten() : "",
+                t.intern() || t.oneven() ? t.punten() : "",
                 t.winnaarSubgroep(winnaars),
                 t.scoreIntern(),
                 t.percentageIntern(),
@@ -46,6 +46,7 @@ function versieSelecteren(versies) {  // TODO: versies en teksten in database
     versies.appendChild(htmlOptie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));
     versies.appendChild(htmlOptie(3, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
     versies.appendChild(htmlOptie(4, "versie 4 volgens reglement rapid competitie"));
+    versies.appendChild(htmlOptie(5, "versie 5 voor snelschaken"));
     versies.value = o_o_o.versie;
     versies.addEventListener("input",
         function () {

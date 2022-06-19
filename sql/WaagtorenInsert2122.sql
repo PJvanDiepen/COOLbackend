@@ -134,7 +134,7 @@ where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and k
 -- TODO spelers selecteren
 select naam, s.knsbNummer, knsbRating, knsbOpgegeven, nhsbOpgegeven 
 from speler s join persoon p on p.knsbNummer = s.knsbNummer 
-where seizoen = '2122' order by naam; -- knsbRating desc; 
+where seizoen = '2122' order by knsbRating desc; -- naam;
 
 -- TODO wedstrijd tijdens interne competitie
 set @team = 'n2'; -- Waagtoren n2 - Aartswoud n1
@@ -169,13 +169,10 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- TODO speler toevoegen 
 insert into persoon (knsbNummer, naam) values
-(7771665, 'Yvonne Schol');
+(7838963, 'Kevin Tan');
 
 insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', '', '', 100, 1000, '2022-04-23');
-
-insert into speler (seizoen, nhsbTeam, nhsbOpgegeven, knsbTeam, knsbOpgegeven, knsbNummer, knsbRating, datumRating) values
-('2122', '', '', '', '', 7771665, 1264, '2022-04-10');
+('2122', '', '', '', '', 7838963, 2194, '2022-06-01');
 
 -- TODO wedstrijden en ronden voor vandaag opruimen
 set @datum = '2022-03-19';
@@ -430,7 +427,8 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 -- ('2122', 'n3', 'n', '2a', 'NHSB 2b', 8, 6214153),
 ('2122', 'n4', 'n', '3b', 'NHSB 3c', 6, 6212404),
 ('2122', 'int', 'i', 'nt', 'interne competitie', 0, 0),
-('2122', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
+('2122', 'ira', 'i', 'ra', 'rapid competitie', 0, 0),
+('2122', 'izs', 'i', 'sa', 'einde seizoen snelschaken', 0, 0);
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
 ('2122', 'ira', '1', 't', '', 'Alkmaar', '2021-10-19'),
@@ -442,6 +440,23 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats
 ('2122', 'ira', '7', 't', '', 'Alkmaar', '2022-05-03'),
 ('2122', 'ira', '8', 't', '', 'Alkmaar', '2022-05-03'),
 ('2122', 'ira', '9', 't', '', 'Alkmaar', '2022-05-03');
+
+
+insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
+('2122', 'izs', 'i', 'zs', 'einde seizoen snelschaken', 0, 0);
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
+('2122', 'izs', '1', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '2', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '3', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '4', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '5', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '6', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '7', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '8', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '9', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '10', 't', '', 'Alkmaar', '2022-06-07'),
+('2122', 'izs', '11', 't', '', 'Alkmaar', '2022-06-07');
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
 ('2122', 'int', '1', 't', '', 'Alkmaar', '2021-09-07'),
@@ -3272,6 +3287,11 @@ use waagtoren; -- PvD
 select * from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 24 order by bordnummer, witZwart;
 delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 24;
 
+select * from ronde where seizoen = '2122' and teamCode = 'int' order by rondeNummer;
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, plaats, datum) values
+('2122', 'int', '24', 't', '', 'Alkmaar', '2022-05-24');
+
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'int', 24, 0, 101, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 103, 'm', '', 0, '', '2022-05-24', 'int'),
@@ -3295,14 +3315,13 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'int', 24, 0, 7707832, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 7731812, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 7758014, 'm', '', 0, '', '2022-05-24', 'int'),
-('2122', 'int', 24, 0, 7970094, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8073978, 'm', '', 0, '', '2022-05-24', 'int'),
-('2122', 'int', 24, 0, 8112654, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8224502, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8372881, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8400183, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8472530, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8611922, 'm', '', 0, '', '2022-05-24', 'int'),
+('2122', 'int', 24, 0, 8750093, 'm', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 102, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 105, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 111, 'n', '', 0, '', '2022-05-24', 'int'),
@@ -3349,7 +3368,9 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'int', 24, 0, 7828183, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 7879520, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 7904589, 'n', '', 0, '', '2022-05-24', 'int'),
+('2122', 'int', 24, 0, 7970094, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8096242, 'n', '', 0, '', '2022-05-24', 'int'),
+('2122', 'int', 24, 0, 8112654, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8180810, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8193548, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8276752, 'n', '', 0, '', '2022-05-24', 'int'),
@@ -3361,7 +3382,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'int', 24, 0, 8552038, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8587337, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8617367, 'n', '', 0, '', '2022-05-24', 'int'),
-('2122', 'int', 24, 0, 8750093, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8865549, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8931098, 'n', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 8956805, 'n', '', 0, '', '2022-05-24', 'int');
@@ -3369,6 +3389,36 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 use waagtoren; -- PvD
 select * from uitslag where seizoen = '2122' and datum = '2022-04-23';
 delete from uitslag where seizoen = '2122' and datum = '2022-04-23';
+
+select * from uitslag where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+select * from ronde where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+update uitslag set datum = '2022-06-11' where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+update ronde set datum = '2022-06-11' where seizoen = '2122' and teamCode in ('1', '2') and rondeNummer = 4;
+
+
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+('2122', '1', '4', '1', '7584566', 'e', 'w', '0', '0', '2021-11-27', 'int'),
+('2122', '1', '4', '2', '7657342', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '1', '4', '3', '8180810', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '4', '7428960', 'e', 'z', '0', '1', '2021-11-27', 'int'),
+('2122', '1', '4', '5', '7079743', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '6', '8285574', 'e', 'z', '0', '1', '2021-11-27', 'int'),
+('2122', '1', '4', '7', '7468417', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '8', '7099950', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '1', '4', '9', '7828183', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '1', '4', '10', '7561653', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '1', '6335670', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '2', '4', '2', '6225934', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '3', '7707832', 'e', 'w', '0', '1', '2021-11-27', 'int'),
+('2122', '2', '4', '4', '7129991', 'e', 'z', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '5', '8552038', 'e', 'w', '0', '0', '2021-11-27', 'int'),
+('2122', '2', '4', '6', '6572511', 'e', 'z', '0', '½', '2021-11-27', 'int'),
+('2122', '2', '4', '7', '7535385', 'e', 'w', '0', '½', '2021-11-27', 'int'),
+('2122', '2', '4', '8', '7758014', 'e', 'z', '0', '0', '2021-11-27', 'int');
 
 -- alle seizoenen
 insert into persoon (knsbNummer, naam) values 

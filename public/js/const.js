@@ -4,9 +4,15 @@
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
+const SNELSCHAKEN        = "izs";
+const ZWITSERS_TEST      = "izt";
 
 function interneCompetitie(teamCode) {
     return teamCode.substring(0,1) === "i";
+}
+
+function zwitsers(teamCode) {
+    return teamCode.substring(1,2) === "z";
 }
 
 // uitslag.partij
@@ -61,7 +67,7 @@ const o_o_o = {
         vereniging: "Waagtoren",
         seizoen: ditSeizoen,
         versie: 0, // versie is een getal
-    competitie: INTERNE_COMPETITIE, // TODO welke competitie is komende dinsdag?
+    competitie: INTERNE_COMPETITIE,
         team: INTERNE_COMPETITIE,
         speler: 0, // knsbNummer is een getal
     naam: "onbekend"
@@ -171,12 +177,16 @@ function urlVerwerken() {
 
 function versieVerwerken() {
     // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
-    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0 && o_o_o.seizoen === "2122") {
-        o_o_o.versie = 3;
-    } else if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 2;
-    } else {
-        o_o_o.versie = 4; // rapid competitie
+    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
+        if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
+            o_o_o.versie = 2;
+        } else {
+            o_o_o.versie = 3; // vanaf seizoen 2021-2022
+        }
+    } else if (o_o_o.competitie === RAPID_COMPETTIE && o_o_o.versie === 0) {
+        o_o_o.versie = 4;
+    } else if (zwitsers(o_o_o.competitie) && o_o_o.versie === 0) {
+        o_o_o.versie = 5; // Zwitsers systeem
     }
 }
 
@@ -409,6 +419,8 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database
         return "interne competitie";
     } else if (teamCode === RAPID_COMPETTIE) {
         return "rapid competitie";
+    } else if (teamCode === SNELSCHAKEN) {
+        return "einde seizoen snelschaken";
     } else if (teamCode === "kbe") {
         return o_o_o.vereniging + " KNSB bekerteam";
     } else if (teamCode === "nbe") {
@@ -483,9 +495,9 @@ async function teamSelecteren(teamCode) {
     teams.value = teamCode; // werkt uitsluitend na await
     teams.addEventListener("input", function () {
         if (interneCompetitie(teams.value)) {
-            naarAnderePagina("ranglijst.html?team=" + teams.value);
+            naarAnderePagina(`ranglijst.html?team=${teams.value}`);
         } else {
-            naarAnderePagina("team.html?team=" + teams.value);
+            naarAnderePagina(`team.html?team=${teams.value}`);
         }
     });
 }
@@ -502,7 +514,7 @@ async function rondeSelecteren(teamCode, rondeNummer) {
     ronden.addEventListener("input",
         function () {
             if (ronden.value) {
-                naarAnderePagina("ronde.html?ronde=" + ronden.value);
+                naarAnderePagina(`ronde.html?ronde=${ronden.value}`);
             }
         });
 }
@@ -525,7 +537,7 @@ async function ranglijst(rondeNummer, selectie) {
 }
 
 /*
-totaal
+totalen
 [0] sorteer (3 posities eventueel voorloopnullen)
 [1] prijs (0 = geen prijs, 1 = wel prijs)
 [2] winstIntern (2 posities eventueel voorloopnul)
@@ -548,30 +560,39 @@ totaal
 [19] rondenVerschil
 tegenstanders met n = 0, 1, 2, enz.
 [20 + n] rondeNummer
-[21 + n] kleur (1 = wit, 0 = zwart)
+[21 + n] kleur (0 = wit, 1 = zwart)  TODO was (1 = wit, 0 = zwart)
 [22 + n] tegenstander
+[23 + n] resultaat (0 = verlies, 1 = remise, 2 = winst)
 einde indien rondeNummer = 0
-[20 + n] rondeNummer = 0
-[21 + n] knsbNummer
-verboden tegenstanders met  m = 1, 2, 3, enz.
-[22 + n + m] tegenstander
  */
 function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
     const naam = speler.naam;
     const subgroep = speler.subgroep;
-    const totaal = speler.totalen.split(" ").map(Number);
+    const totalen = speler.totalen.split(" ").map(Number);
 
-    function inRanglijst() {
-        return totaal[0];
+    let wp = 0;
+
+    function weerstandsPuntenInvullen(weerstand) {
+        wp = weerstand;
+    }
+
+    function weerstandsPunten() {
+        return wp;
+    }
+
+    let sb = 0;
+
+    function sonnebornBergerInvullen(weerstand) {
+        sb = weerstand;
+    }
+
+    function sonnebornBerger() {
+        return sb;
     }
 
     function punten() {
-        if (!intern()) {
-            return "";
-        } else {
-            return totaal[0];
-        }
+        return totalen[0];
     }
 
     function winnaarSubgroep(winnaars) {
@@ -579,7 +600,7 @@ function spelerTotalen(speler) {
             return "";
         } else if (winnaars[subgroep]) { // indien winnaar van subgroep al bekend
             return subgroep;
-        } else if (totaal[1]) { // indien recht op prijs dan is dit winnaar van de subgroep
+        } else if (totalen[1]) { // indien recht op prijs dan is dit winnaar van de subgroep
             winnaars[subgroep] = true;
             return subgroep + "*"; // winnaar
         } else {
@@ -588,93 +609,94 @@ function spelerTotalen(speler) {
     }
 
     function rating() {
-        return totaal[4];
+        return totalen[4];
     }
 
     function intern() {
-        return totaal[2] + totaal[5] + totaal[6];
+        return totalen[2] + totalen[5] + totalen[6];
     }
 
     function scoreIntern() {
-        return score(totaal[2],totaal[5],totaal[6]);
+        return score(totalen[2],totalen[5],totalen[6]);
     }
 
     function percentageIntern() {
-        return percentage(totaal[2],totaal[5],totaal[6]);
+        return percentage(totalen[2],totalen[5],totalen[6]);
     }
 
     function saldoWitZwart() {
-        return totaal[7] - totaal[8];
+        return totalen[7] - totalen[8];
     }
 
     function oneven() {
-        return totaal[9];
+        return totalen[9];
     }
 
     function afzeggingen() {
-        return totaal[10];
+        return totalen[10];
     }
 
     function aftrek() {
-        return - totaal[11];
+        return - totalen[11];
     }
 
-    function zonderAftrek() {
-        return totaal[12] + totaal[13];
+    function totaal() {
+        return totalen[12];
     }
 
     function startPunten() {
-        return totaal[13];
+        return totalen[13];
     }
 
     function eigenWaardeCijfer() {
-        return totaal[14];
+        return totalen[14];
     }
 
     function extern() {
-        return totaal[3] + totaal[15] + totaal[16];
+        return totalen[3] + totalen[15] + totalen[16];
     }
 
     function scoreExtern() {
-        return score(totaal[3],totaal[15],totaal[16]);
+        return score(totalen[3],totalen[15],totalen[16]);
     }
 
     function percentageExtern() {
-        return percentage(totaal[3],totaal[15],totaal[16]);
+        return percentage(totalen[3],totalen[15],totalen[16]);
     }
 
     function saldoWitZwartExtern() {
-        return totaal[17] - totaal[18];
+        return totalen[17] - totalen[18];
     }
 
     function rondenVerschil() {
-        return totaal[19];
+        return totalen[19];
     }
 
     function vorigeKeer(tegenstander) {
+        console.log(totalen);
         let i = 20;
         let j = 0;
-        while (totaal[i]) { // indien rondeNummer
-            if (totaal[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
+        while (totalen[i]) { // indien rondeNummer
+            if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
                 j = i;
             }
-            i = i + 3; // volgende rondeNummer, kleur en knsbNummer
+            i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
         }
         return j; // vorigeKeer zelfde tegenstander of 0
     }
 
     function vorigeAfdrukken(i, tegenstander) {
-        console.log(`${naam} met ${totaal[i + 1] ? "wit" : "zwart"} tegen ${tegenstander.naam} in ronde ${totaal[i]}`);
+        console.log(`${naam} met ${totalen[i + 1] ? "wit" : "zwart"} tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
     }
 
-    function tegen(tegenstander, rondeNummer)  {
+    function tegen(tegenstander, rondeNummer = 0)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            vorigeAfdrukken(i, tegenstander);  // TODO verwijderen
-            // console.log("rondeNummer: " + rondeNummer);
-            // console.log("totaal[i]: " + totaal[i]);
-            // console.log("rondenVerschil(): " + rondenVerschil());
-            return (rondeNummer - totaal[i]) > rondenVerschil();
+            vorigeAfdrukken(i, tegenstander);
+            console.log("rondeNummer: " + rondeNummer);
+            console.log("totaal[i]: " + totaal[i]);
+            console.log("rondenVerschil(): " + rondenVerschil());
+            return (rondeNummer - totalen[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
         }
@@ -689,15 +711,15 @@ function spelerTotalen(speler) {
     function metWit(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            return totaal[i + 1] === 0 // wit indien vorige keer zwart
+            return totalen[i + 1] === 0 // wit indien vorige keer zwart TODO werkt dit?
         } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
-            afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");  // TODO verwijderen
+            afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
             return saldoWitZwart() < tegenstander.saldoWitZwart(); // wit indien vaker met zwart
-        } else if (zonderAftrek() !== tegenstander.zonderAftrek()) {
-            afdrukken(i, tegenstander, zonderAftrek() < tegenstander.zonderAftrek(), "punten");  // TODO verwijderen
-            return zonderAftrek() < tegenstander.zonderAftrek(); // wit indien minder punten
+        } else if (totaal() !== tegenstander.totaal()) {
+            afdrukken(i, tegenstander, totaal() < tegenstander.totaal(), "punten");
+            return totaal() < tegenstander.totaal(); // wit indien minder punten
         } else {
-            afdrukken(i, tegenstander, rating() < tegenstander.rating(), "rating");  // TODO verwijderen
+            afdrukken(i, tegenstander, rating() < tegenstander.rating(), "rating");
             return rating() < tegenstander.rating(); // wit indien lagere rating
         }
     }
@@ -709,9 +731,13 @@ function spelerTotalen(speler) {
         knsbNummer,
         naam,
         subgroep,
+        totalen,
         rating,
         intern,
-        inRanglijst,
+        weerstandsPuntenInvullen,
+        weerstandsPunten,
+        sonnebornBergerInvullen,
+        sonnebornBerger,
         punten,
         winnaarSubgroep,
         scoreIntern,
@@ -720,7 +746,7 @@ function spelerTotalen(speler) {
         oneven,
         afzeggingen,
         aftrek,
-        zonderAftrek,
+        totaal,
         startPunten,
         eigenWaardeCijfer,
         extern,
