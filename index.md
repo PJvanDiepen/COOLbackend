@@ -1,14 +1,12 @@
 # Rokade wordt 0-0-0
 
-Tot voor kort gebruike schaakvereniging de Waagtoren [Rokade van Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 
-voor het maken van indelingen en ranglijsten voor de interne competitie 
-volgens het [Alkmaarse systeem van Bert Buitink en Wim Andriessen](https://www.waagtoren.nl/historie/alksys.html). 
-Sinds het schaakseizoen 2021-2022 gebruiken we 0-0-0.
+Tot voor kort gebruikte schaakvereniging de Waagtoren [Rokade van Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 
+voor het maken van indelingen en ranglijsten voor de interne competitie volgens het [Alkmaarse systeem](https://www.waagtoren.nl/historie/alksys.html). 
+Sinds het schaakseizoen 2021-2022 wordt Rokade vervangen door 0-0-0.
 
 ## Uitslagen en ranglijsten
 Rokade gebruikte een Microsoft Access database, die lokaal op de computer van de intern wedstrijdleider van de Waagtoren draaide. 
 Vanuit Rokade konden we HTML maken en uploads doen naar de Waagtoren-website.
-
 0-0-0 is een online database met een web-app die uitslagen en ranglijsten laat zien. 
 De backend bestaat uit MySQL en Node.js. De frontend verwerkt JSON en gebruikt zo standaard mogelijke HTML, CSS en JavaScript.
 
@@ -55,7 +53,7 @@ In de database van 0-0-0 gebruiken we uitsluitend gegevens die noodzakelijk zijn
 zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit OLA, de Online Leden Administratie van de KNSB. 
 
 Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die informatie inleest uit andere systemen:
-- Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
+- Excel-bestand uit OLA met de gegevens van de Waagtoren leden, 
 - de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
 - een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
 
