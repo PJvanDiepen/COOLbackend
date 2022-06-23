@@ -11,6 +11,10 @@
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
     }
     document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
+    if (gebruiker.mutatieRechten >= TEAMLEIDER) {
+        document.getElementById("teamleider").appendChild(
+            htmlLinkEnTerug("teamleider.html", `Overzicht voor teamleiders`));
+    }
     document.getElementById("competitie").appendChild(
         htmlLinkEnTerug("ranglijst.html", `Ranglijst ${teamVoluit(o_o_o.competitie)} na ronde ${o_o_o.vorigeRonde}`));
     document.getElementById("ronde").appendChild(

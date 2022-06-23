@@ -352,7 +352,7 @@ function naarTeam(uitslag) {
 }
 
 function seizoenVoluit(seizoen) {
-    if (seizoen.substring(2,4) === "ra") {
+    if (seizoen.substring(2,4) === "ra") { // TODO verwijderen?
         return `rapid 20${seizoen.substring(0,2)}-20${voorloopNul(Number(seizoen.substring(0,2)))}`;
     } else {
         return `20${seizoen.substring(0,2)}-20${seizoen.substring(2,4)}`;
@@ -673,7 +673,7 @@ function spelerTotalen(speler) {
     }
 
     function vorigeKeer(tegenstander) {
-        console.log(totalen);
+        // console.log(totalen);
         let i = 20;
         let j = 0;
         while (totalen[i]) { // indien rondeNummer
@@ -693,9 +693,9 @@ function spelerTotalen(speler) {
         const i = vorigeKeer(tegenstander);
         if (i) {
             vorigeAfdrukken(i, tegenstander);
-            console.log("rondeNummer: " + rondeNummer);
-            console.log("totaal[i]: " + totaal[i]);
-            console.log("rondenVerschil(): " + rondenVerschil());
+            // console.log("rondeNummer: " + rondeNummer);
+            // console.log("totaal[i]: " + totaal[i]);
+            // console.log("rondenVerschil(): " + rondenVerschil());
             return (rondeNummer - totalen[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld

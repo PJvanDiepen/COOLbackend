@@ -163,7 +163,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.7.20 TODO 0.7.25 ?? PvD!
+drop function totalen; -- 0-0-0.nl versie 0.7.25
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -259,7 +259,7 @@ begin
             elseif partij = 'e' and witZwart = 'z' then
                 set zwartExtern = zwartExtern + 1;
             end if;
-            if partij = 'i' then -- PvD!
+            if partij = 'i' then 
                 set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' ', internKleur, ' ', tegenstander, ' ', internResultaat);
             elseif partij = 'o' then
                 set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 0 0'); -- verliest met wit indien geen tegenstander

@@ -7,11 +7,13 @@
     await init();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
-        }]);
+        }],
+        [BESTUUR, "speler toevoegen"],
+        [BESTUUR, "OLA inlezen"]);
     const wedstrijdDatum = params.get("datum");
     const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);
-    await wedstrijdenOverzicht(document.getElementById("kop"), wedstrijden, wedstrijdDatum);
+    await spelersOverzicht(document.getElementById("kop"), document.getElementById("tabel"), wedstrijden, wedstrijdDatum);
 })();
 
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
@@ -25,6 +27,14 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
         function () {
             naarZelfdePagina(`datum=${datums.value}`);
         });
+}
+
+async function spelersOverzicht(kop, tabel, wedstrijden, wedstrijdDatum) {
+    kop.innerHTML = "Externe competitie" + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
+    const spelers = await localFetch(`/rating/${o_o_o.seizoen}`);
+    for (const s of spelers) {
+        tabel.appendChild(htmlRij(s.naam, s.knsbRating, datumLeesbaar({datum: s.datumRating}), s.knsbOpgegeven, "", s.nhsbOpgegeven, ""));
+    }
 }
 
 async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {

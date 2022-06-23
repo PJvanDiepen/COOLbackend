@@ -5,6 +5,21 @@ voor het maken van indelingen en ranglijsten voor de interne competitie volgens 
 Sinds het schaakseizoen 2021-2022 wordt Rokade vervangen door 0-0-0.
 
 ## Uitslagen en ranglijsten
+
+TODO offline toepassing in Java voor OLA en KNSB en NHSB uitslagen, eerste opzet in seizoen 2019-2020
+
+TODO eerste concrete toepassing in seizoen 2020-2021 naast Rokade
+
+Omdat externe wedstrijden in het Alkmaar systeem meetellen voor de interne competitie maakt 0-0-0 overzichten van scores in de interne en externe competitie. 
+Met Rokade moest de intern wedstrijdleider de externe wedstijden, die niet op de avonden van de interne competitie werden gespeeld, 
+met de hand bijhouden in de kolom #XBP. 
+Rokade geeft echter geen overzicht van de bijbehorende externe wedstrijden. 
+Met 0-0-0 kunnen de leden van de Waagtoren de ranglijst helemaal zelf controleren.
+
+TODO muteren, eerste opzet indelen, uitwerking competitie versus team in seizoen 2021-2022 zonder Rokade
+
+TODO teamleider, competitie aanmaken, inlezen uit OLA, enz. in seizoen 2022-2023
+
 Rokade gebruikte een Microsoft Access database, die lokaal op de computer van de intern wedstrijdleider van de Waagtoren draaide. 
 Vanuit Rokade konden we HTML maken en uploads doen naar de Waagtoren-website.
 0-0-0 is een online database met een web-app die uitslagen en ranglijsten laat zien. 

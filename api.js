@@ -131,6 +131,14 @@ module.exports = router => {
             .orderBy('naam');
     });
 
+    router.get('/rating/:seizoen', async  function (ctx) { // PvD
+        ctx.body = await Speler.query()
+            .select('naam', 'speler.*')
+            .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
+            .where('speler.seizoen', ctx.params.seizoen)
+            .orderBy('knsbRating', 'desc');
+    });
+
     router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
             .where('team.seizoen', ctx.params.seizoen)

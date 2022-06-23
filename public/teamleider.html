@@ -6,8 +6,11 @@
     <title>Teamleider</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(4), td:nth-child(5) {
-            text-align: center; /* team, aanwezig */
+        td:nth-child(2) {
+            text-align: right; /* rating */
+        }
+        td:nth-child(4), td:nth-child(6) {
+            text-align: center; /* knsb en nhsb */
         }
     </style>
 </head>
@@ -15,6 +18,17 @@
     <select id="menu"></select>
     <select id="datumSelecteren"></select>
     <h1 id="kop"></h1>
+    <table id="tabel">
+        <tr>
+            <th></th>
+            <th>rating</th>
+            <th>datum</th>
+            <th>knsb</th>
+            <th></th>
+            <th>nhsb</th>
+            <th></th>
+        </tr>
+    </table>
     <details>
         <summary>Overzicht van externe spelers voor teamleiders</summary>
         <p>
@@ -38,15 +52,6 @@
             Het overzicht voor de externe competitie is uitsluitend zichtbaar voor teamleiders en het bestuur.
         </p>
     </details>
-    <div id="wedstrijd1"></div>
-    <div id="wedstrijd2"></div>
-    <div id="wedstrijd3"></div>
-    <div id="wedstrijd4"></div>
-    <div id="wedstrijd5"></div>
-    <div id="wedstrijd6"></div>
-    <div id="wedstrijd7"></div>
-    <div id="wedstrijd8"></div>
-    <div id="wedstrijd9"></div>
     <script src="js/const.js"></script>
     <script src="js/teamleider.js"></script>
 </body>
