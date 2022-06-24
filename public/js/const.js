@@ -598,13 +598,13 @@ function spelerTotalen(speler) {
     function winnaarSubgroep(winnaars) {
         if (!intern()) {
             return "";
-        } else if (winnaars[subgroep]) { // indien winnaar van subgroep al bekend
+        } else if (!totalen[1]) { // indien geen recht op prijs
             return subgroep;
-        } else if (totalen[1]) { // indien recht op prijs dan is dit winnaar van de subgroep
-            winnaars[subgroep] = true;
-            return subgroep + "*"; // winnaar
+        } else if (winnaars[subgroep]) { // indien wel recht op prijs maar winnaar van subgroep al bekend
+            return subgroep + "+";
         } else {
-            return subgroep + "-"; // geen recht op prijs
+            winnaars[subgroep] = true; // winnaar subgroep
+            return subgroep + "*";
         }
     }
 
