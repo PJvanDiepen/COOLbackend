@@ -595,10 +595,14 @@ function spelerTotalen(speler) {
         return totalen[0];
     }
 
+    function prijs() {
+        return totalen[1];
+    }
+
     function winnaarSubgroep(winnaars) {
         if (!intern()) {
             return "";
-        } else if (!totalen[1]) { // indien geen recht op prijs
+        } else if (!prijs()) { // indien geen recht op prijs
             return subgroep;
         } else if (winnaars[subgroep]) { // indien wel recht op prijs maar winnaar van subgroep al bekend
             return subgroep + "+";
@@ -739,6 +743,7 @@ function spelerTotalen(speler) {
         sonnebornBergerInvullen,
         sonnebornBerger,
         punten,
+        prijs,
         winnaarSubgroep,
         scoreIntern,
         percentageIntern,

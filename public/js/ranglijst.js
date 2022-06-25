@@ -23,22 +23,50 @@ const alleLeden = Number(params.get("leden"));
 async function spelersLijst(kop, lijst) {
     const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde;
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "ranglijst na ronde " + rondeNummer;
+    let i = 0;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
-    (await ranglijst(rondeNummer)).forEach(function (t, i) {
-        if (t.intern() || t.oneven() || t.extern() || alleLeden) {
+    const spelers = await ranglijst(rondeNummer);
+    for (const speler of spelers) {
+        if (speler.intern() || speler.oneven() || speler.extern() || alleLeden) {
             lijst.appendChild(htmlRij(
-                i + 1,
-                naarSpeler(t),
-                t.intern() || t.oneven() ? t.punten() : "",
-                t.winnaarSubgroep(winnaars),
-                t.scoreIntern(),
-                t.percentageIntern(),
-                t.saldoWitZwart() ? t.saldoWitZwart() : "",
-                t.oneven() ? t.oneven() : "",
-                t.scoreExtern(),
-                t.percentageExtern()));
+                ++i,
+                naarSpeler(speler),
+                speler.intern() || speler.oneven() ? speler.punten() : "",
+                speler.winnaarSubgroep(winnaars),
+                speler.scoreIntern(),
+                speler.percentageIntern(),
+                speler.saldoWitZwart() ? speler.saldoWitZwart() : "",
+                speler.oneven() ? speler.oneven() : "",
+                speler.scoreExtern(),
+                speler.percentageExtern()));
         }
-    });
+    }
+    const laagsteSubgroep = [];
+    for (let j = 0; j < spelers.length; j++) {
+        if (spelers[j].prijs()) {
+            laagsteSubgroep[spelers[j].eigenWaardeCijfer()] = j;
+        }
+    }
+    console.log(laagsteSubgroep);
+    for (let j = 0; j < spelers.length; j++) {
+        if (spelers[j].prijs()) {
+            console.log(`${spelers[j].naam} in ${spelers[j].subgroep} promoveert ${promotieSubgroep(j, spelers, laagsteSubgroep)}`);
+        }
+    }
+    const promoties = {}; // voor promotieSubgroep() in totalen
+}
+
+function promotieSubgroep(j, spelers, laagsteSubgroep) {
+    // console.log(`spelers[j]: ${spelers[j].naam}`);
+    for (let i = laagsteSubgroep.length - 1; i > 0; i--) {
+        // console.log(`i: ${i} a[i]: ${laagsteSubgroep[i]}`);
+        if (spelers[laagsteSubgroep[i]].eigenWaardeCijfer() <= spelers[j].eigenWaardeCijfer()) {
+            return "niet";
+        } else if (laagsteSubgroep[i] > j) {
+            return `naar ${spelers[laagsteSubgroep[i]].subgroep}`;
+        }
+    }
+    return "niet ?";
 }
 
 function versieSelecteren(versies) {  // TODO: versies en teksten in database
