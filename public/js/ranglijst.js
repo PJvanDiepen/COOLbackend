@@ -17,10 +17,10 @@ const alleLeden = Number(params.get("leden"));
     rondeSelecteren(o_o_o.competitie, 0);
     versieSelecteren(document.getElementById("versies"));
     ledenSelecteren(document.getElementById("leden"));
-    spelersLijst(document.getElementById("kop"), document.getElementById("tabel"));
+    spelersLijst(document.getElementById("kop"), document.getElementById("tabel"), document.getElementById("promoties"));
 })();
 
-async function spelersLijst(kop, lijst) {
+async function spelersLijst(kop, lijst, promoties) {
     const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde;
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "ranglijst na ronde " + rondeNummer;
     let i = 0;
@@ -47,23 +47,26 @@ async function spelersLijst(kop, lijst) {
             laagsteSubgroep[spelers[j].eigenWaardeCijfer()] = j;
         }
     }
-    console.log(laagsteSubgroep);
-    for (let j = 0; j < spelers.length; j++) {
-        if (spelers[j].prijs()) {
-            console.log(`${spelers[j].naam} in ${spelers[j].subgroep} promoveert ${promotieSubgroep(j, spelers, laagsteSubgroep)}`);
+    for (let j = laagsteSubgroep.length - 1; j > 0; j--) {
+        if (laagsteSubgroep[j]) {
+            console.log(`${spelers[laagsteSubgroep[j]].naam} laagste in ${spelers[laagsteSubgroep[j]].subgroep}`);
         }
     }
-    const promoties = {}; // voor promotieSubgroep() in totalen
+    for (let j = 0; j < spelers.length; j++) {
+        if (spelers[j].prijs()) {
+            console.log(`${spelers[j].naam} in ${spelers[j].subgroep} promoveert ${promotieSubgroep(j, spelers, laagsteSubgroep, promoties)}`);
+        }
+    }
 }
 
-function promotieSubgroep(j, spelers, laagsteSubgroep) {
-    // console.log(`spelers[j]: ${spelers[j].naam}`);
+function promotieSubgroep(j, spelers, laagsteSubgroep, promoties) {
     for (let i = laagsteSubgroep.length - 1; i > 0; i--) {
-        // console.log(`i: ${i} a[i]: ${laagsteSubgroep[i]}`);
-        if (spelers[laagsteSubgroep[i]].eigenWaardeCijfer() <= spelers[j].eigenWaardeCijfer()) {
+        const k = laagsteSubgroep[i];
+        if (spelers[k].eigenWaardeCijfer() <= spelers[j].eigenWaardeCijfer()) {
             return "niet";
         } else if (laagsteSubgroep[i] > j) {
-            return `naar ${spelers[laagsteSubgroep[i]].subgroep}`;
+            promoties.appendChild(htmlRij(j + 1, spelers[j].naam, `van ${spelers[j].subgroep} naar ${spelers[k].subgroep}`))
+            return `naar ${spelers[k].subgroep}`;
         }
     }
     return "niet ?";

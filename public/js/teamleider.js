@@ -33,7 +33,7 @@ async function spelersOverzicht(kop, tabel, wedstrijden, wedstrijdDatum) {
     kop.innerHTML = "Externe competitie" + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
     const spelers = await localFetch(`/rating/${o_o_o.seizoen}`);
     for (const s of spelers) {
-        tabel.appendChild(htmlRij(s.naam, s.knsbRating, datumLeesbaar({datum: s.datumRating}), s.knsbOpgegeven, "", s.nhsbOpgegeven, ""));
+        tabel.appendChild(htmlRij(s.naam, s.knsbRating, s.knsbRating, datumLeesbaar({datum: s.datumRating}), s.knsbOpgegeven, "", s.nhsbOpgegeven, ""));
     }
 }
 
