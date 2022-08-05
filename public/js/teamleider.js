@@ -9,7 +9,9 @@
             naarAnderePagina("beheer.html");
         }],
         [BESTUUR, "speler toevoegen"],
-        [BESTUUR, "OLA inlezen"]);
+        [BESTUUR, "OLA-bestand inlezen", function () {
+            naarAnderePagina("ola.html");
+    }]);
     const wedstrijdDatum = params.get("datum");
     const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);
@@ -33,7 +35,7 @@ async function spelersOverzicht(kop, tabel, wedstrijden, wedstrijdDatum) {
     kop.innerHTML = "Externe competitie" + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
     const spelers = await localFetch(`/rating/${o_o_o.seizoen}`);
     for (const s of spelers) {
-        tabel.appendChild(htmlRij(s.naam, s.knsbRating, s.knsbRating, datumLeesbaar({datum: s.datumRating}), s.knsbOpgegeven, "", s.nhsbOpgegeven, ""));
+        tabel.appendChild(htmlRij(s.naam, s.knsbRating, datumLeesbaar(s), s.knsbTeam, "", s.nhsbTeam, ""));
     }
 }
 
@@ -54,23 +56,15 @@ async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
                         u.partij === NIET_MEEDOEN ? "" : (++aanwezigen),
                         naarSpeler(u),
                         u.knsbRating,
-                        vasteSpelerOfInvaller(u, w.teamCode),
+                        vasteSpelerOfInvaller(w.teamCode, u),
                         aanwezig(u)));
                 });
         }
     }
 }
 
-const INVALLER = "invaller";
-
-function vasteSpelerOfInvaller(speler, teamCode) {
-    if (speler.nhsbTeam === teamCode) {
-        return speler.nhsbOpgegeven === teamCode ? teamCode : INVALLER;
-    } else if (speler.knsbTeam === teamCode) {
-        return speler.knsbOpgegeven === teamCode ? teamCode : INVALLER;
-    } else {
-        return INVALLER;
-    }
+function vasteSpelerOfInvaller(teamCode, speler) {
+    return teamCode === speler.nhsbTeam || teamCode === speler.teamCode ? teamCode : "invaller";
 }
 
 function aanwezig(u) {

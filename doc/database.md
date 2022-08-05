@@ -133,19 +133,28 @@ nhsbTeam CHAR(3)
 knsbTeam CHAR(3)
 knsbNummer INT
 knsbRating INT
-datumRating DATE
-subgroep CHAR(1)
+datum DATE
+intern1 CHAR(3)
+intern2 CHAR(3)
+intern3 CHAR(3)
+intern4 CHAR(3)
+intern5 CHAR(3)
 PRIMARY KEY (seizoen, knsbNummer)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 FOREIGN KEY (seizoen, nhsbTeam) REFERENCES Team (seizoen, teamCode)
 FOREIGN KEY (seizoen, knsbTeam) REFERENCES Team (seizoen, teamCode)
+FOREIGN KEY (seizoen, intern1) REFERENCES Team (seizoen, teamCode)
+FOREIGN KEY (seizoen, intern2) REFERENCES Team (seizoen, teamCode)
+FOREIGN KEY (seizoen, intern3) REFERENCES Team (seizoen, teamCode)
+FOREIGN KEY (seizoen, intern4) REFERENCES Team (seizoen, teamCode)
+FOREIGN KEY (seizoen, intern5) REFERENCES Team (seizoen, teamCode)
 ```
 
 De leden van een schaakvereniging krijgen per `seizoen` uit OLA een nieuwe `knsbRating`,
 die wordt gebruikt voor de indeling in een team van de KNSB competitie `knsbTeam`, 
 een team in een onderbond competitie `nhsbTeam` en in een `subgroep` van de interne competitie.
 Volgens de reglementen geldt de `knsbRating` van 1 augustus aan het begin van het `seizoen`.
-Daarom is ook de `datumRating` vastgelegd.
+Daarom is ook de `datum` vastgelegd.
 
 Omdat de Waagtoren in de NHSB onderbond speelt heet het team in de onderbond voorlopig `nhsbTeam`.  
 

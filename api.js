@@ -131,7 +131,27 @@ module.exports = router => {
             .orderBy('naam');
     });
 
-    router.get('/rating/:seizoen', async  function (ctx) { // PvD
+    /*
+    -- alle personen met spelers per seizoen
+    with s as
+    (select * from speler where seizoen = @seizoen)
+
+    select p.*, s.* from persoon p
+    left join s on s.knsbNummer = p.knsbNummer
+    order by naam;
+     */
+    router.get('/personen/:seizoen', async function (ctx) {
+        ctx.body = await Persoon.query()
+            .with('s', function (qb) {
+                qb.from('speler')
+                    .where('speler.seizoen', ctx.params.seizoen)
+            })
+            .select('naam', 'persoon.knsbNummer', 'knsbRating')
+            .leftJoin('s', 'persoon.knsbNummer', 's.knsbNummer')
+            .orderBy('naam');
+    });
+
+    router.get('/rating/:seizoen', async  function (ctx) {
         ctx.body = await Speler.query()
             .select('naam', 'speler.*')
             .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
@@ -156,8 +176,6 @@ module.exports = router => {
     join persoon p on s.knsbNummer = p.knsbNummer
     where seizoen = @seizoen
     order by totalen desc;
-
-    TODO geen overbodige spelers? Uitsluitend spelers per seizoen!
      */
     router.get('/ranglijst/:seizoen/:competitie/:ronde/:datum/:versie', async function (ctx) {
         ctx.body = await Speler.query()
@@ -298,9 +316,7 @@ module.exports = router => {
                     'uitslag.witZwart',
                     'uitslag.resultaat',
                     'speler.nhsbTeam',
-                    'speler.nhsbOpgegeven',
                     'speler.knsbTeam',
-                    'speler.knsbOpgegeven',
                     'speler.knsbRating',
                     'persoon.naam')
                 .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
@@ -310,7 +326,7 @@ module.exports = router => {
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.datum', ctx.params.datum)
-                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, RAPID_COMPETTIE, SNELSCHAKEN, ZWITSERS_TEST])
+                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, RAPID_COMPETTIE, SNELSCHAKEN, ZWITSERS_TEST]) // TODO is dit goed?
                 .orderBy('speler.knsbRating', 'desc');
         } else {
             ctx.body = [];

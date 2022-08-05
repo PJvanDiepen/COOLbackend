@@ -12,8 +12,9 @@ Verwijder localStorage op iPhone
 - 
 
 - [MySQL tutorial](https://www.mysqltutorial.org/)
-- [read local fil in browser](https://usefulangle.com/post/193/javascript-read-local-file)
+- [read local file in browser](https://usefulangle.com/post/193/javascript-read-local-file)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
+- [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [DOM events](https://domevents.dev/)
@@ -59,8 +60,10 @@ Objection / Knex
 Interessant 
 
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
+- [chess engines](https://www.chessengines.org/)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
 - [TODO in verschillende frameworks](https://todomvc.com/)
+- [unit test met vitest](https://vitest.dev/)
 - [JSON in JavaScript](https://www.zhenghao.io/posts/json-oddities)
 - [type in JavaScript](https://github.com/tc39/proposal-type-annotations)
 - [TypeScript](https://codeascraft.com/2021/11/08/etsys-journey-to-typescript/)
@@ -84,6 +87,7 @@ Interessant
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 Later:
+- [IntelliJ on Chromebook](https://medium.com/@jeffrey.cardillo/using-intellij-and-other-linux-apps-on-your-chromebook-51fd7fadb9db)
 - [Flutter for web](https://dzone.com/articles/flutter-web-development-all-you-need-to-know)
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
 - [Label Form](https://bitsofco.de/labelling-form-elements/)
@@ -108,6 +112,7 @@ Later:
 - [Uitleg over Grid Layout](https://bitsofco.de/github-contribution-graph-css-grid/)
 - [vertical alignment with css subgrid](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [EM vs REM vs PX](https://engageinteractive.co.uk/blog/em-vs-rem-vs-px)
+- [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
 
 
 Misschien:

@@ -6,6 +6,7 @@ const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
 const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
+const HALVE_COMPETITIE   = "ict";
 
 function interneCompetitie(teamCode) {
     return teamCode.substring(0,1) === "i";
