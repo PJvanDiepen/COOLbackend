@@ -146,7 +146,7 @@ module.exports = router => {
                 qb.from('speler')
                     .where('speler.seizoen', ctx.params.seizoen)
             })
-            .select('naam', 'persoon.knsbNummer', 'knsbRating')
+            .select('naam', 'persoon.knsbNummer', 'knsbRating', 'interneRating')
             .leftJoin('s', 'persoon.knsbNummer', 's.knsbNummer')
             .orderBy('naam');
     });

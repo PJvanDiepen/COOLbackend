@@ -6,17 +6,13 @@
 
 (async function() {
     await init();
+    document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen) + SCHEIDING + teamVoluit(o_o_o.competitie);
     const plaatje = document.getElementById("plaatje");
     if (o_o_o.vereniging === "Waagtoren") {
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
     }
-    document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
-    if (gebruiker.mutatieRechten >= TEAMLEIDER) {
-        document.getElementById("teamleider").appendChild(
-            htmlLinkEnTerug("teamleider.html", `Overzicht voor teamleiders`));
-    }
-    document.getElementById("competitie").appendChild(
-        htmlLinkEnTerug("ranglijst.html", `Ranglijst ${teamVoluit(o_o_o.competitie)} na ronde ${o_o_o.vorigeRonde}`));
+    document.getElementById("ranglijst").appendChild(
+        htmlLinkEnTerug("ranglijst.html", `Ranglijst na ronde ${o_o_o.vorigeRonde}`));
     document.getElementById("ronde").appendChild(
         htmlLinkEnTerug("ronde.html", `Uitslagen ronde ${o_o_o.vorigeRonde}`));
     if (o_o_o.huidigeRonde && o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
@@ -25,6 +21,14 @@
     } else if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
         document.getElementById("indelen").appendChild(
             htmlLinkEnTerug("indelen.html", `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`));
+    }
+    if (gebruiker.mutatieRechten >= BESTUUR) {
+        document.getElementById("bestuur").appendChild(
+            htmlLinkEnTerug("bestuur.html", `Overzicht voor bestuur`));
+    }
+    if (gebruiker.mutatieRechten >= TEAMLEIDER) {
+        document.getElementById("teamleider").appendChild(
+            htmlLinkEnTerug("teamleider.html", `Overzicht voor teamleiders`));
     }
     seizoenSelecteren(INTERNE_COMPETITIE);
     // o_o_o.competitie = SNELSCHAKEN; // TODO welke competitie is komende dinsdag?
@@ -49,10 +53,17 @@ function htmlPlaatje(plaatje, percentage, breed, hoog) {
 
 async function seizoenSelecteren(teamCode) {
     const seizoenen = document.getElementById("seizoenSelecteren");
+    let ditSeizoentoevoegen = true;
     (await localFetch("/seizoenen/" + teamCode)).forEach(
         function (seizoen) {
+            if (seizoen === ditSeizoen) {
+                ditSeizoentoevoegen = false;
+            }
             seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
         });
+    if (ditSeizoentoevoegen) {
+        seizoenen.appendChild(htmlOptie(ditSeizoen, seizoenVoluit(ditSeizoen)));
+    }
     seizoenen.value = o_o_o.seizoen; // werkt uitsluitend na await
     seizoenen.addEventListener("input",
         function () {

@@ -1,17 +1,17 @@
 use waagtoren;
 
-drop function rating; -- 0-0-0.nl versie 0.7.0
+drop function rating; -- 0-0-0.nl versie 0.7.27
 
 delimiter $$
 create function rating(seizoen char(4), knsbNummer int) 
 returns int deterministic
 begin
-    declare knsbRating int;
-    select s.knsbRating
-    into knsbRating
+    declare interneRating int;
+    select s.interneRating
+    into interneRating
     from speler s
     where s.seizoen = seizoen and s.knsbNummer = knsbNummer;
-    return knsbRating;
+    return interneRating;
 end;
 $$
 delimiter ;
@@ -24,29 +24,29 @@ delimiter ;
 -- versie 4 rapidPunten voor rapid competitie
 -- versie 5 zwitsersPunten voor Zwitsers systeem
 
-drop function subgroep; -- 0-0-0.nl versie 0.7.24
+drop function subgroep; -- 0-0-0.nl versie 0.7.27
 
 delimiter $$
 create function subgroep(seizoen char(4), versie int, knsbNummer int)
 returns char(1) deterministic
 begin
-    declare knsbRating int;
-    set knsbRating = rating(seizoen, knsbNummer);
+    declare interneRating int;
+    set interneRating = rating(seizoen, knsbNummer);
     if versie = 4 or versie = 5 then -- geen subgroep bij rapid competitie of Zwitsers systeem
         return ' ';
-	elseif knsbRating < 1400 then
+	elseif interneRating < 1400 then
         return 'H';
-	elseif knsbRating < 1500 then
+	elseif interneRating < 1500 then
         return 'G';
-	elseif knsbRating < 1600 then
+	elseif interneRating < 1600 then
         return 'F';
-    elseif knsbRating < 1700 then
+    elseif interneRating < 1700 then
         return 'E';
-    elseif knsbRating < 1800 then
+    elseif interneRating < 1800 then
         return 'D';
-    elseif knsbRating < 1900 then
+    elseif interneRating < 1900 then
         return 'C';
-    elseif knsbRating < 2000 then
+    elseif interneRating < 2000 then
         return 'B';
     else
         return 'A';
@@ -55,27 +55,27 @@ end;
 $$
 delimiter ;
 
-drop function waardeCijfer; -- 0-0-0.nl versie 0.7.24
+drop function waardeCijfer; -- 0-0-0.nl versie 0.7.27
 
 delimiter $$
-create function waardeCijfer(versie int, knsbRating int) 
+create function waardeCijfer(versie int, interneRating int)
 returns int deterministic
 begin
     if versie = 4 or versie = 5 then -- geen waardeCijfer bij rapid competitie of Zwitsers systeem
         return 0;
-    elseif knsbRating < 1400 then
+    elseif interneRating < 1400 then
         return 5; -- H
-	elseif knsbRating < 1500 then
+	elseif interneRating < 1500 then
         return 6; -- G
-	elseif knsbRating < 1600 then
+	elseif interneRating < 1600 then
         return 7; -- F
-    elseif knsbRating < 1700 then
+    elseif interneRating < 1700 then
         return 8; -- E
-    elseif knsbRating < 1800 then
+    elseif interneRating < 1800 then
         return 9; -- D
-    elseif knsbRating < 1900 then
+    elseif interneRating < 1900 then
         return 10; -- C
-    elseif knsbRating < 2000 then
+    elseif interneRating < 2000 then
         return 11; -- B
     else
         return 12; -- A
@@ -173,7 +173,7 @@ begin
     declare prijs int default 1; -- 1
     declare winstIntern int default 0; -- 2
     declare winstExtern int default 0; -- 3
-    declare knsbRating int; -- 4
+    declare interneRating int; -- 4
     declare remiseIntern int default 0; -- 5
     declare verliesIntern int default 0; -- 6
     declare witIntern int default 0; -- 7
@@ -218,8 +218,8 @@ begin
 		set minimumInternePartijen = 20; -- reglement artikel 2
 		set rondenVerschil = 7; -- reglement artikel 3
 	end if;
-    set knsbRating = rating(seizoen, knsbNummer); 
-    set eigenWaardeCijfer = waardeCijfer(versie, knsbRating);
+    set interneRating = rating(seizoen, knsbNummer);
+    set eigenWaardeCijfer = waardeCijfer(versie, interneRating);
     open uitslagen;
     fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
     while found
@@ -284,7 +284,7 @@ begin
         prijs, ' ', -- 1
         lpad(winstIntern,2,'0'), ' ', -- 2
         lpad(winstExtern,2,'0'), ' ', -- 3
-        lpad(knsbRating,4, '0'), ' ', -- 4
+        lpad(interneRating,4, '0'), ' ', -- 4
         remiseIntern, ' ', -- 5
         verliesIntern, ' ', -- 6
         witIntern, ' ', -- 7

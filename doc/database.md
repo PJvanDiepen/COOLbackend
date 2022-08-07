@@ -60,9 +60,11 @@ Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code
 De specificaties van de `Reglement` tabel ontbreken nog. 
 
 Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de database van de Waagtoren, maar nog niet in `Reglement`:
-- `waardeCijfer()` van een speler op basis van de `knsbRating` van 1 augustus aan het begin van het `seizoen` 
-- `punten()` per `Uitslag`
-- `totalen()` van punten en andere totalen per speler op basis van alle uitslagen van een `seizoen`    
+- `waardeCijfer()` van een speler op basis van de `interneRating`,
+- `punten()` per `Uitslag`,
+- `totalen()` van punten en andere totalen per speler op basis van alle uitslagen van een seizoen.
+
+De `interneRating` is in principe gelijk aan de `knsbRating`van 1 augustus aan het begin van het seizoen.
  
 ## Persoon
 Voorlopig zijn dit de specificaties van `Persoon`:

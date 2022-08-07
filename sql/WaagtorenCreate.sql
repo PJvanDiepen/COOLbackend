@@ -26,29 +26,7 @@ add constraint fk_gebruiker_persoon
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-    
-drop table if exists paring;  -- TODO lezen in WaagtorenRanglijst totalen of verwijderen?
-create table paring (
-	knsbNummer int not null,
-    tegenstanderNummer int not null,
-    voorkeur int,
-    primary key (knsbNummer, tegenstanderNummer)
-); 
-
-alter table paring
-add constraint fk_paring_persoon
-    foreign key (knsbNummer)
-    references persoon (knsbNummer)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;   
-    
-alter table paring
-add constraint fk_paring_tegenstander
-    foreign key (tegenstanderNummer)
-    references persoon (knsbNummer)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;       
-    
+        
 drop table if exists team; -- 0-0-0.nl versie 0.5.2
 create table team (
 	seizoen char(4) not null,
@@ -76,6 +54,7 @@ ALTER TABLE speler DROP COLUMN nhsbOpgegeven;
 ALTER TABLE speler DROP COLUMN knsbOpgegeven;
 ALTER TABLE speler CHANGE COLUMN datumRating datum date not null;
 ALTER TABLE speler
+	ADD interneRating int not null,
 	ADD intern1 char(3) not null,
     ADD intern2 char(3) not null,
 	ADD intern3 char(3) not null,

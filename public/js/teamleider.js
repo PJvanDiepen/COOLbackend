@@ -7,11 +7,7 @@
     await init();
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
-        }],
-        [BESTUUR, "speler toevoegen"],
-        [BESTUUR, "OLA-bestand inlezen", function () {
-            naarAnderePagina("ola.html");
-    }]);
+        }]);
     const wedstrijdDatum = params.get("datum");
     const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
     datumSelecteren(wedstrijdDatum, wedstrijden);
