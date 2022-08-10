@@ -7,7 +7,7 @@
         }],
         [BEHEERDER, "backup uitslagen van alle ronden" , async function () {
             const rijen = await serverFetch(`/backup/ronde/uitslag/${o_o_o.seizoen}/${o_o_o.team}/1/9`);
-            backupUitslag(rijen);
+            backupSQL("uitslag", rijen);
         }]);
     await teamSelecteren(o_o_o.team);
     await uitslagenTeam(document.getElementById("kop"), document.getElementById("ronden"));

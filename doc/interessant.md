@@ -13,6 +13,8 @@ Verwijder localStorage op iPhone
 
 - [MySQL tutorial](https://www.mysqltutorial.org/)
 - [read local file in browser](https://usefulangle.com/post/193/javascript-read-local-file)
+- [verbeterde versie](http://jsfiddle.net/k56eezxp/)
+- [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
@@ -40,6 +42,7 @@ Verwijder localStorage op iPhone
 - [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
 - [IntelliJ](https://blog.jetbrains.com/idea/2021/08/most-popular-live-streams/)
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
+- [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
 - [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)

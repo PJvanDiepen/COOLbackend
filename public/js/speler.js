@@ -11,7 +11,7 @@
         }],
         [BEHEERDER, `backup uitslagen ${o_o_o.naam}` , async function () {
             const rijen = await serverFetch(`/backup/speler/uitslag/${o_o_o.seizoen}/${o_o_o.speler}`);
-            backupUitslag(rijen);
+            backupSQL("uitslag", rijen);
         }],
         [BEHEERDER, "afzeggingen verwijderen", async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${o_o_o.seizoen}/${o_o_o.speler}`);

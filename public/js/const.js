@@ -799,19 +799,18 @@ async function uitslagenTeamAlleRonden(teamCode) {
     return rondeUitslagen;
 }
 
-function backupUitslag(rijen) {
+function backupSQL(tabel, rijen) {
     let velden = [];
     for (const [key, value] of Object.entries(rijen[0])) {
         velden.push(key);
     }
-    console.log(`insert into uitslag (${velden.join(", ")}) values`);
-    for (const rij of rijen) {
+    console.log(`insert into ${tabel} (${velden.join(", ")}) values`);
+    for (let i = 0; i < rijen.length; i++) {
         let kolommen = [];
-        for (const [key, value] of Object.entries(rij)) {
-            // TODO backupRij = selecteer(key, value); waarbij selecteer als parameter aan backup doorgeven
+        for (const [key, value] of Object.entries(rijen[i])) {
             kolommen.push(valueSQL(value));
         }
-        console.log(`(${kolommen.join(", ")}),`);
+        console.log(`(${kolommen.join(", ")})${i === rijen.length - 1 ? ";" : ","}`); // afsluiten met ;
     }
 }
 

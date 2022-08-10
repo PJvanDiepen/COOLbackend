@@ -33,7 +33,7 @@
         }],
         [BEHEERDER, `backup uitslagen ronde ${rondeNummer}` , async function () {
             const rijen = await serverFetch(`/backup/ronde/uitslag/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/${rondeNummer}`);
-            backupUitslag(rijen);
+            backupSQL("uitslag", rijen);
         }],
         [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);

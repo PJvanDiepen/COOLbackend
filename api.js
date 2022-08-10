@@ -420,11 +420,34 @@ module.exports = router => {
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
+    router.get('/backup/persoon', async function (ctx) {
+        ctx.body = await Persoon.query()
+            .orderBy('naam');
+    });
+
+    router.get('/backup/speler/:seizoen', async function (ctx) {
+        ctx.body = await Speler.query()
+            .where('seizoen', ctx.params.seizoen)
+            .orderBy('knsbNummer');
+    });
+
+    router.get('/backup/team/:seizoen', async function (ctx) {
+        ctx.body = await Team.query()
+            .where('seizoen', ctx.params.seizoen)
+            .orderBy('teamCode');
+    });
+
+    router.get('/backup/ronde/:seizoen', async function (ctx) {
+        ctx.body = await Ronde.query()
+            .where('seizoen', ctx.params.seizoen)
+            .orderBy(['teamCode', 'rondeNummer']);
+    });
+
     router.get('/backup/ronde/uitslag/:seizoen/:teamCode/:van/:tot', async function (ctx) {
         ctx.body = await Uitslag.query()
-            .where('uitslag.seizoen', ctx.params.seizoen)
-            .andWhere('uitslag.teamCode', ctx.params.teamCode)
-            .whereBetween('uitslag.rondeNummer', [ctx.params.van, ctx.params.tot])
+            .where('seizoen', ctx.params.seizoen)
+            .andWhere('teamCode', ctx.params.teamCode)
+            .whereBetween('rondeNummer', [ctx.params.van, ctx.params.tot])
             .orderBy(['rondeNummer','bordNummer','partij','witZwart', 'knsbNummer']);
     });
 
@@ -433,6 +456,15 @@ module.exports = router => {
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
             .orderBy(['datum','teamCode']);
+    });
+
+    router.get('/:uuidToken/backup/gebruiker', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        if (gebruiker.juisteRechten(BEHEERDER)) {
+            ctx.body = await Gebruiker.query().orderBy('knsbNummer');
+        } else {
+            ctx.body = {};
+        }
     });
 
     router.get('/:uuidToken/gebruikers', async function (ctx) {

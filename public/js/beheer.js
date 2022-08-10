@@ -14,6 +14,26 @@ TODO mutaties met verwijderen
         [BEHEERDER, `${uuidToken ? "opnieuw " : ""}registreren`, function () {
             naarAnderePagina("gebruiker.html");
         }],
+        [BEHEERDER, `backup gebruikers` , async function () {
+            const rijen = await serverFetch(`/${uuidToken}/backup/gebruiker`);
+            backupSQL("gebruiker", rijen);
+        }],
+        [BEHEERDER, `backup personen` , async function () {
+            const rijen = await serverFetch(`/backup/persoon`);
+            backupSQL("persoon", rijen);
+        }],
+        [BEHEERDER, `backup spelers ${seizoenVoluit(o_o_o.seizoen)}` , async function () {
+            const rijen = await serverFetch(`/backup/speler/${o_o_o.seizoen}`);
+            backupSQL("speler", rijen);
+        }],
+        [BEHEERDER, `backup teams ${seizoenVoluit(o_o_o.seizoen)}` , async function () {
+            const rijen = await serverFetch(`/backup/team/${o_o_o.seizoen}`);
+            backupSQL("team", rijen);
+        }],
+        [BEHEERDER, `backup ronden ${seizoenVoluit(o_o_o.seizoen)}` , async function () {
+            const rijen = await serverFetch(`/backup/ronde/${o_o_o.seizoen}`);
+            backupSQL("ronde", rijen);
+        }],
         [BEHEERDER, "test API", function () {
             naarAnderePagina("api.html");
         }]);

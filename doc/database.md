@@ -44,18 +44,18 @@ willen we verschillende versies van parameters en formules voor de berekening va
 De verwerking voor de ranglijst berekening is dan als volgt: selecteer de juiste versie volgens `Reglement` en 
 verwerk de uitslagen per seizoen en competitie met de juiste versie van de stored procedures / functions in MySQL.
 
-Hoe de backend ranglijsten maakt, is dus helemaal in de database vastgelegd en niet in de JavaScript code van de backend of frontend.
+Hoe de 0-0-0 ranglijsten maakt, is dus helemaal in de database vastgelegd en niet in de JavaScript code van 0-0-0.
 Op deze manier gaan we, behalve het Alkmaar Systeem, ook het Keizer Systeem en Zwitsers Systeem in `Reglement` coderen.
 Elke schaakvereniging kan dus eventueel per seizoen haar eigen reglement voor de interne competitie 
 vastleggen in `Reglement`. Ons doel is dat wedstrijdleiders zelf wedstrijdsystemen kunnen aanpassen en ermee kunnen experimenteren.
 
 Voor het indelen van wie tegen wie in de interne competitie gelden ook allerlei regels,
 die per wedstrijdsysteem, per schaakvereniging en per seizoen kunnen verschillen.
-Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de backend.
+Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van 0-0-0.
 
 Voor het opstellen van invallers in teams voor de externe competitie gelden allerlei regels,
 die per schaakbond en per seizoen junnen verschillen.
-Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de backend.
+Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de 0-0-0.
 
 De specificaties van de `Reglement` tabel ontbreken nog. 
 
@@ -187,14 +187,13 @@ teamCode CHAR(3)
 rondeNummer INT
 uithuis CHAR(1)
 tegenstander VARCHAR(45)
-plaats VARCHAR(45)
 datum DATE
 PRIMARY KEY (seizoen, teamCode, rondeNummer)
 FOREIGN KEY (seizoen, teamCode) REFERENCES Team (seizoen, teamCode)
 ```
 
-Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander in een plaats op een bepaalde datum.
-Indien alle datums voor de ronden bekend zijn, kan de backend voor elke speler een kalender produceren.
+Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander op een bepaalde datum.
+Indien alle datums voor de ronden bekend zijn, kan 0-0-0 voor elke speler een kalender produceren.
   
 ## Uitslag
 ```
@@ -263,7 +262,7 @@ In de `mutatie` tabel wordt vastgelegd welke gebruiker en wanneer iets muteert i
 Welke gebruiker staat in `knsbNummer` en wanneer staat in `tijdstip`.
 In `url` staat de omschrijving van de mutatie in url-vorm zoals die door de frontend aan de backend is doorgegeven. 
 In `aantal` staat hoeveel rijen zijn gemuteerd.
-In `invloed` legt de backend vast hoeveel invloed de mutatie heeft, 
+In `invloed` legt 0-0-0 vast hoeveel invloed de mutatie heeft, 
 zodat de frontend kan vragen of er tijdens een sessie belangijke mutaties zijn geweest.  
 
 De verschillende mogelijkheden voor `invloed` zijn:
