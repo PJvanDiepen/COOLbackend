@@ -824,7 +824,7 @@ function valueSQL(key, value) {
     } else if (typeof value !== "string") {
         return "???";
     } else if (key === "datum" && jsonDate(value)) {
-        return `'${datumSQL(value)}`; // datum met enkele quotes
+        return `'${datumSQL(value)}'`; // datum met enkele quotes
     } else {
         return JSON.stringify(value); // string met dubbele quotes
     }
