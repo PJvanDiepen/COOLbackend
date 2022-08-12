@@ -163,7 +163,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.7.25
+drop function totalen; -- 0-0-0.nl versie 0.7.28
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)

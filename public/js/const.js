@@ -808,7 +808,7 @@ function backupSQL(tabel, rijen) {
     for (let i = 0; i < rijen.length; i++) {
         let kolommen = [];
         for (const [key, value] of Object.entries(rijen[i])) {
-            kolommen.push(valueSQL(value));
+            kolommen.push(valueSQL(key, value));
         }
         console.log(`(${kolommen.join(", ")})${i === rijen.length - 1 ? ";" : ","}`); // afsluiten met ;
     }
@@ -818,15 +818,24 @@ function backupSQL(tabel, rijen) {
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),
  */
-function valueSQL(value) {
-    if (typeof value === "string") {
-        const datum = new Date(value);
-        if (value.length > 10 && datum instanceof Date && !isNaN(datum)) {
-            return `'${datumSQL(value)}'`;
-        } else {
-            return `'${value}'`;
-        }
-    } else if (typeof value === "number") {
+function valueSQL(key, value) {
+    if (typeof value === "number") {
         return value;
+    } else if (typeof value !== "string") {
+        return "???";
+    } else if (key === "datum" && jsonDate(value)) {
+        return `'${datumSQL(value)}`; // datum met enkele quotes
+    } else {
+        return JSON.stringify(value); // string met dubbele quotes
     }
+}
+
+function jsonDate(jsonDatum) {
+    if (jsonDatum.length > 10) {
+        const datum = new Date(jsonDatum);
+        if (datum instanceof Date) {
+            return !isNaN(datum)
+        }
+    }
+    return false;
 }
