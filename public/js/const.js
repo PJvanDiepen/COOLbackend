@@ -814,12 +814,8 @@ function backupSQL(tabel, rijen) {
     }
 }
 
-/*
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2021', 'int', '1', '0', '101', 'a', '', '0', '', '2020-08-25', 'int'),
- */
 function valueSQL(key, value) {
-    if (typeof value === "number") {
+    if (typeof value === "number") { // number zonder quotes
         return value;
     } else if (typeof value !== "string") {
         return "???";
