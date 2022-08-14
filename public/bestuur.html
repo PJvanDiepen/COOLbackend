@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Teamleider</title>
+    <title>Bestuur</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(2), td:nth-child(3) {
+        td:nth-child(2) {
             text-align: right; /* rating */
         }
-        td:nth-child(5), td:nth-child(7) {
+        td:nth-child(4), td:nth-child(6) {
             text-align: center; /* knsb en nhsb */
         }
     </style>
@@ -18,6 +18,19 @@
     <select id="menu"></select>
     <select id="datumSelecteren"></select>
     <h1 id="kop"></h1>
+    <table id="tabel">
+        <tr>
+            <th></th>
+            <th>rating</th>
+            <th>datum</th>
+            <th>knsb</th>
+            <th></th>
+            <th>nhsb</th>
+            <th></th>
+            <th>competitie</th>
+        </tr>
+    </table>
+    <hr>
     <div id="demo-container">
         <!-- label for="file-input" id="file-input-label">Choose Text File</label -->
         <input type="file" id="file-input" accept="text/plain" />
@@ -26,21 +39,8 @@
     </div>
     <input type="file" id="fileUpload" />
     <input type="button" id="upload" value="Upload" onclick="Upload()" />
-    <hr />
     <div id="dvCSV">
     </div>
-    <table id="tabel">
-        <tr>
-            <th></th>
-            <th>intern</th>
-            <th>rating</th>
-            <th>datum</th>
-            <th>knsb</th>
-            <th></th>
-            <th>nhsb</th>
-            <th></th>
-        </tr>
-    </table>
     <script src="js/const.js"></script>
     <script src="js/bestuur.js"></script>
 </body>

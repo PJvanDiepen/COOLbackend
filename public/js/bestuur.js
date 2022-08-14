@@ -5,6 +5,7 @@
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
+    ledenLijst(document.getElementById("kop"), document.getElementById("tabel"));
     document.querySelector("#file-input").addEventListener('change', function() {
         // files that user has chosen
         var all_files = this.files;
@@ -98,6 +99,26 @@ function Upload() {
         }
     } else {
         alert("Please upload a valid CSV file.");
+    }
+}
+
+async function ledenLijst(kop, lijst) {
+    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "leden";
+    const leden = await localFetch(`/personen/${o_o_o.seizoen}`);
+    for (const lid of leden) {
+        console.log(lid);
+        const knsbNummer = Number(lid.knsbNummer);
+        if (knsbNummer > 100) {
+            tabel.appendChild(htmlRij(
+                lid.naam,
+                "", // lid ? lid.knsbRating : "",
+                "", // lid ? datumLeesbaar(lid) : "",
+                "", // lid ? lid.knsbTeam : "",
+                "",
+                "", // lid ? lid.nhsbTeam : "",
+                "",
+                ""));
+        }
     }
 }
 
