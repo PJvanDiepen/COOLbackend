@@ -4,7 +4,6 @@ TODO geen randjes, maar kleurtjes en smallere lettertypes voor beter effect op s
 https://www.w3schools.com/cssref/css_default_values.asp
 https://github.com/necolas/normalize.css/blob/master/normalize.css ?
 
-
 TODO styling plaatjes automatiseren
 
 https://www.digitalocean.com/community/tutorials/how-to-style-figure-and-image-html-elements-with-css
@@ -15,11 +14,11 @@ body {
 }
 
 h1, h2, h3, h4 {
-  color: maroon;           
+	color: maroon;
 }
 
 table {
-  border-collapse: collapse; /* dubbele rand wordt enkele rand */
+	border-collapse: collapse; /* dubbele rand wordt enkele rand */
 	overflow: auto;
 }
 
@@ -27,9 +26,9 @@ hr {
     border: 1px solid maroon;
 }
 
-.randje, button, fieldset, legend, select, table, th, td {
-   border: 1px solid maroon;
-  padding: 5px;
+.randje, input::file-selector-button, button, fieldset, legend, select, table, th, td {
+	border: 1px solid maroon;
+    padding: 5px;
 }
 
 table select {
@@ -56,7 +55,7 @@ fieldset {
 	width: fit-content;
 }
 
-button, legend, select {
+input::file-selector-button, button, legend, select {
 	border-radius: 5px;
 }
 

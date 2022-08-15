@@ -44,6 +44,7 @@
         // file reading finished successfully
         reader.addEventListener('load', function(e) {
             var text = e.target.result;
+            console.log(text);
 
             // contents of the file
             document.querySelector("#contents").innerHTML = text;
@@ -80,6 +81,8 @@ function Upload() {
                 var table = document.createElement("table");
                 var rows = e.target.result.split("\n");
                 for (var i = 0; i < rows.length; i++) {
+                    console.log("---");
+                    console.log(rows[i]);
                     var cells = rows[i].split(",");
                     if (cells.length > 1) {
                         var row = table.insertRow(-1);
@@ -111,6 +114,7 @@ async function ledenLijst(kop, lijst) {
         if (knsbNummer > 100) {
             tabel.appendChild(htmlRij(
                 lid.naam,
+                "", // eventueel interne rating
                 "", // lid ? lid.knsbRating : "",
                 "", // lid ? datumLeesbaar(lid) : "",
                 "", // lid ? lid.knsbTeam : "",

@@ -44,26 +44,7 @@ add constraint fk_team_persoon
     foreign key (teamleider)
     references persoon (knsbNummer)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;     
-    
--- speler 0-0-0.nl versie 0.5.5 --> 0.7.27
-ALTER TABLE speler DROP FOREIGN KEY fk_speler_vast_knsb_team;
-ALTER TABLE speler DROP FOREIGN KEY fk_speler_vast_nhsb_team;
--- fk_speler_intern1, 2, 3, 4 en 5 toevoegen
-ALTER TABLE speler DROP COLUMN nhsbOpgegeven;
-ALTER TABLE speler DROP COLUMN knsbOpgegeven;
-ALTER TABLE speler CHANGE COLUMN datumRating datum date not null;
-ALTER TABLE speler
-	ADD interneRating int not null,
-	ADD intern1 char(3) not null,
-    ADD intern2 char(3) not null,
-	ADD intern3 char(3) not null,
-	ADD intern4 char(3) not null,
-	ADD intern5 char(3) not null;
-update speler set interneRating = knsbRating where seizoen = '1819';    
-update speler set interneRating = knsbRating where seizoen = '1920';    
-update speler set interneRating = knsbRating where seizoen = '2021';    
-update speler set interneRating = knsbRating where seizoen = '2122';
+    ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.7.27
 CREATE TABLE speler (
@@ -135,10 +116,7 @@ add CONSTRAINT fk_speler_intern5
     FOREIGN KEY (seizoen, intern5)
     REFERENCES team (seizoen, teamCode)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;  
-    
--- speler 0-0-0.nl versie 0.1 --> 0.7.27
-ALTER TABLE ronde DROP COLUMN plaats;    
+    ON UPDATE CASCADE;
     
 DROP TABLE IF EXISTS ronde; -- 0-0-0.nl versie 0.7.27
 CREATE TABLE ronde (

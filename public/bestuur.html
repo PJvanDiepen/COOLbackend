@@ -6,10 +6,10 @@
     <title>Bestuur</title>
     <link rel="stylesheet" type="text/css" href="css/aaappp.css">
     <style>
-        td:nth-child(2) {
-            text-align: right; /* rating */
+        td:nth-child(2), td:nth-child(3) {
+            text-align: right; /* interne en KNSB rating */
         }
-        td:nth-child(4), td:nth-child(6) {
+        td:nth-child(5), td:nth-child(7) {
             text-align: center; /* knsb en nhsb */
         }
     </style>
@@ -18,9 +18,14 @@
     <select id="menu"></select>
     <select id="datumSelecteren"></select>
     <h1 id="kop"></h1>
+    <p>
+        OLA bestand inlezen:
+        <input type="file" id="olaFile" accept=".csv" />
+    </p>
     <table id="tabel">
         <tr>
             <th></th>
+            <th>interne</th>
             <th>rating</th>
             <th>datum</th>
             <th>knsb</th>
