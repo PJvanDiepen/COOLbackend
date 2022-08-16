@@ -6,104 +6,9 @@
             naarAnderePagina("beheer.html");
         }]);
     ledenLijst(document.getElementById("kop"), document.getElementById("tabel"));
-    document.querySelector("#file-input").addEventListener('change', function() {
-        // files that user has chosen
-        var all_files = this.files;
-        if(all_files.length == 0) {
-            alert('Error : No file selected');
-            return;
-        }
-
-        // first file selected by user
-        var file = all_files[0];
-
-        // files types allowed
-        var allowed_types = [ 'text/plain' ];
-        if(allowed_types.indexOf(file.type) == -1) {
-            alert('Error : Incorrect file type');
-            return;
-        }
-
-        // Max 2 MB allowed
-        var max_size_allowed = 2*1024*1024
-        if(file.size > max_size_allowed) {
-            alert('Error : Exceeded size 2MB');
-            return;
-        }
-
-        // file validation is successfull
-        // we will now read the file
-
-        var reader = new FileReader();
-
-        // file reading started
-        reader.addEventListener('loadstart', function() {
-            document.querySelector("#file-input-label").style.display = 'none';
-        });
-
-        // file reading finished successfully
-        reader.addEventListener('load', function(e) {
-            var text = e.target.result;
-            console.log(text);
-
-            // contents of the file
-            document.querySelector("#contents").innerHTML = text;
-            document.querySelector("#contents").style.display = 'block';
-
-            document.querySelector("#file-input-label").style.display = 'block';
-        });
-
-        // file reading failed
-        reader.addEventListener('error', function() {
-            alert('Error : Failed to read file');
-        });
-
-        // file read progress
-        reader.addEventListener('progress', function(e) {
-            if(e.lengthComputable == true) {
-                document.querySelector("#file-progress-percent").innerHTML = Math.floor((e.loaded/e.total)*100);
-                document.querySelector("#file-progress-percent").style.display = 'block';
-            }
-        });
-
-        // read as text file
-        reader.readAsText(file);
-    });
+    testRegEx1();
+    theFileReader();
 })();
-
-function Upload() {
-    var fileUpload = document.getElementById("fileUpload");
-    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.txt)$/;
-    if (regex.test(fileUpload.value.toLowerCase())) {
-        if (typeof (FileReader) != "undefined") {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var table = document.createElement("table");
-                var rows = e.target.result.split("\n");
-                for (var i = 0; i < rows.length; i++) {
-                    console.log("---");
-                    console.log(rows[i]);
-                    var cells = rows[i].split(",");
-                    if (cells.length > 1) {
-                        var row = table.insertRow(-1);
-                        for (var j = 0; j < cells.length; j++) {
-                            var cell = row.insertCell(-1);
-                            cell.innerHTML = cells[j];
-                        }
-                    }
-                }
-                var dvCSV = document.getElementById("dvCSV");
-                dvCSV.innerHTML = "";
-                dvCSV.appendChild(table);
-            }
-            reader.readAsText(fileUpload.files[0]);
-        } else {
-            alert("This browser does not support HTML5.");
-        }
-    } else {
-        alert("Please upload a valid CSV file.");
-    }
-}
 
 async function ledenLijst(kop, lijst) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "leden";
@@ -126,3 +31,79 @@ async function ledenLijst(kop, lijst) {
     }
 }
 
+/*
+Zie https://regex101.com/codegen?language=javascript
+ */
+function testRegEx1() {
+    const regex = /(.*),.*\.\s(.*)\((.*)\)/gm;
+
+// Alternative syntax using RegExp constructor
+// const regex = new RegExp('(.*),.*\\.\\s(.*)\\((.*)\\)', 'gm')
+
+    const str = `Diepen, P.J. van (Peter)
+Bakker, J. (Jos)
+Meiden, D. van der (Dirk)
+Horst, C.A. v.d. (Corné)
+`;
+    let m;
+
+    while ((m = regex.exec(str)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+
+        // The result can be accessed through the `m`-variable.
+        m.forEach((match, groupIndex) => {
+            console.log(`Found match, group ${groupIndex}: ${match}`);
+        });
+    }
+}
+
+/*
+Zie Matt Frisbie: Professional JavaScript for Web Developers blz. 760
+ */
+function theFileReader() {
+    let filesList = document.getElementById("olaFile");
+    filesList.addEventListener("change", function (event) {
+        let info = "",
+            output = document.getElementById("output"),
+            progress = document.getElementById("progress"),
+            files = event.target.files,
+            type = "default",
+            reader = new FileReader();
+
+        if (/image/.test(files[0].type)) {
+            reader.readAsDataURL(files[0]);
+            type = "image";
+        } else {
+            reader.readAsText(files[0]);
+            type = "text";
+        }
+
+        reader.onerror = function() {
+            output.innerHTML = "Could not read file, error code is " +
+                reader.error.code;
+        };
+
+        reader.onprogress = function(event) {
+            if (event.lengthComputable) {
+                progress.innerHTML = `${event.loaded}/${event.total}`;
+            }
+        };
+
+        reader.onload = function() {
+            let html = "";
+
+            switch(type) {
+                case "image":
+                    html = `<img src="${reader.result}">`;
+                    break;
+                case "text":
+                    html = reader.result;
+                    break;
+            }
+            output.innerHTML = html;
+        };
+    });
+}

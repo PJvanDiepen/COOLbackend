@@ -1,5 +1,3 @@
-Nuttig
-
 Verwijder localStorage op Android browser Chrome
 - 3 puntjes
 - Instellingen
@@ -9,44 +7,37 @@ Verwijder localStorage op Android browser Chrome
 - Wissen en opnieuw instellen
  
 Verwijder localStorage op iPhone
-- 
+
+# MySQL
 
 - [MySQL tutorial](https://www.mysqltutorial.org/)
+- [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
+- [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
+- [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
+- [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
+
+# JavaScript
+
 - [read local file in browser](https://usefulangle.com/post/193/javascript-read-local-file)
 - [verbeterde versie](http://jsfiddle.net/k56eezxp/)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
-- [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
-- [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
-- [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
-- [DOM events](https://domevents.dev/)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
 - [js algorithms](https://github.com/trekhleb/javascript-algorithms)
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
+- [DOM events](https://domevents.dev/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await json](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
 - [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
-- [client hints](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/client-hints)
-- [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
-- [CORS](https://jakearchibald.com/2021/cors/)
-- [CSS display](https://bitsofco.de/how-display-contents-works/)
-- [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
-- [Learn & practice Git](https://gitexercises.fracz.com/)
-- [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
-- [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
-- [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
-- [IntelliJ](https://blog.jetbrains.com/idea/2021/08/most-popular-live-streams/)
-- [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
-- [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
-- [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
-- [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
-- [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
+
+# node.js
+- [CORS](https://jakearchibald.com/2021/cors/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
@@ -60,7 +51,24 @@ Objection / Knex
 - [Multiple databases](https://blog.eperedo.com/2019/12/28/multiple-database-connection-objection-js-knex/)
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
 
-Interessant 
+# HTML / CSS
+- [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
+- [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
+- [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
+- [CSS display](https://bitsofco.de/how-display-contents-works/)
+
+# software enigineering
+- [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
+- [Learn & practice Git](https://gitexercises.fracz.com/)
+- [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
+- [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
+- [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
+
+# schaken
+- [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
+- [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
+
+# Interessant 
 
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [chess engines](https://www.chessengines.org/)
@@ -89,7 +97,7 @@ Interessant
 - [JavaScript engines](https://blogg.bekk.no/how-javascript-engines-achieve-great-performance-fb0b36601557)
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
-Later:
+# Later
 - [IntelliJ on Chromebook](https://medium.com/@jeffrey.cardillo/using-intellij-and-other-linux-apps-on-your-chromebook-51fd7fadb9db)
 - [Flutter for web](https://dzone.com/articles/flutter-web-development-all-you-need-to-know)
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
@@ -117,8 +125,7 @@ Later:
 - [EM vs REM vs PX](https://engageinteractive.co.uk/blog/em-vs-rem-vs-px)
 - [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
 
-
-Misschien:
+# Misschien
 
 - [Vlaggen van de wereld](https://codepen.io/raddevus/pen/WNQbOpK)
 - [comic book speech bubbles with SVG and javascript](https://humaan.com/blog/creating-comic-book-speech-bubbles-with-svg-and-javascript/?ref=sidebar)
