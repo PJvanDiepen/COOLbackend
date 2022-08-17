@@ -8,6 +8,7 @@
     ledenLijst(document.getElementById("kop"), document.getElementById("tabel"));
     testRegEx1();
     theFileReader();
+    drieGroepen();
 })();
 
 async function ledenLijst(kop, lijst) {
@@ -64,46 +65,73 @@ Horst, C.A. v.d. (Corné)
 Zie Matt Frisbie: Professional JavaScript for Web Developers blz. 760
  */
 function theFileReader() {
-    let filesList = document.getElementById("olaFile");
+    const filesList = document.getElementById("olaFile");
     filesList.addEventListener("change", function (event) {
-        let info = "",
-            output = document.getElementById("output"),
-            progress = document.getElementById("progress"),
-            files = event.target.files,
-            type = "default",
-            reader = new FileReader();
-
-        if (/image/.test(files[0].type)) {
-            reader.readAsDataURL(files[0]);
-            type = "image";
-        } else {
-            reader.readAsText(files[0]);
-            type = "text";
-        }
-
+        const output = document.getElementById("output");
+        const files = event.target.files;
+        const reader = new FileReader();
+        reader.readAsText(files[0]);
         reader.onerror = function() {
-            output.innerHTML = "Could not read file, error code is " +
-                reader.error.code;
+            output.innerHTML = "Could not read file, error code is " + reader.error.code;
         };
-
-        reader.onprogress = function(event) {
-            if (event.lengthComputable) {
-                progress.innerHTML = `${event.loaded}/${event.total}`;
-            }
-        };
-
         reader.onload = function() {
-            let html = "";
-
-            switch(type) {
-                case "image":
-                    html = `<img src="${reader.result}">`;
-                    break;
-                case "text":
-                    html = reader.result;
-                    break;
+            const regels = reader.result.split('\n');
+            for (const regel of regels) {
+                console.log(regel);
             }
-            output.innerHTML = html;
+            output.innerHTML = regels[0];
+            console.log(regel);
         };
     });
+}
+
+/*
+eerste 2 groepen afsplitsen met regular expressions
+groep 3 bestaat uit 03 tot en met 22 en kan je splitsen met .split(",")
+
+01 Relatienummer > knsbNummer
+02 Volledige naam > voornaam, tussenvoegsel, achternaam
+03 Geslacht > M of V
+04 Geboortejaar
+05 Categorie > S of J
+06 Email
+07 Telefoonnummer 1
+08 Telefoonnummer 2
+09 Adres > straat, huisNummer
+10 Postcode
+11 Plaatsnaam
+12 Landnaam
+13 Lidmaatschap
+14 Lid sinds
+15 Afgemeld per
+16 KNSB-rating > knsbRating
+17 FIDE-rating
+18 Jeugdrating
+19 Stappenniveau
+20 Verlengingsdatum
+21 Gebruik NAW
+22 Beeldmateriaal
+ */
+
+function drieGroepen() {
+    const regex = /"(\d*),""([^"]*)"",([^"]*)/gm;
+
+// Alternative syntax using RegExp constructor
+// const regex = new RegExp('"(\\d*),""([^"]*)"",([^"]*)', 'gm')
+
+    const str = `"7970094,""Ruiter, D.E. de (Danny)"",M,1991,S,dannyderuiter@hotmail.com,072-5159175,06-53269132,De Kempenstraat 7,1827 AG,Alkmaar,Nederland,Dubbellid,1/7/2021,,2271,2251,,,,Toegestaan,Toegestaan";;;;;;;;;;;;;;;;;;;;;;;;;"7970094,""Ruiter, D.E. de (Danny)"",M,1991,S,dannyderuiter@hotmail.com,072-5159175,06-53269132,De Kempenstraat 7,1827 AG,Alkmaar,Nederland,Dubbellid,1/7/2021,,2271,2251,,,,Toegestaan,Toegestaan%%%%%%%%%%%%%%%%%%%%%%"
+`;
+    let m;
+
+    while ((m = regex.exec(str)) !== null) {
+        // This is necessary to avoid infinite loops with zero-width matches
+        if (m.index === regex.lastIndex) {
+            regex.lastIndex++;
+        }
+
+        // The result can be accessed through the `m`-variable.
+        m.forEach((match, groupIndex) => {
+            console.log(`Found match, group ${groupIndex}: ${match}`);
+        });
+    }
 }
