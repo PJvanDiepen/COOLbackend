@@ -60,6 +60,7 @@ Objection / Knex
 # software enigineering
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
+- [RexEgg](https://www.rexegg.com/)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
 - [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
