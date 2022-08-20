@@ -44,11 +44,14 @@ function olaBestandLezen() {
             output.innerHTML = "Could not read file, error code is " + reader.error.code;
         };
         reader.onload = function() {
+            const olaTabel = [];
             const regels = reader.result.split('\n');
             for (const regel of regels) {
-                olaVerwerken(csv(regel));
+                olaVerwerken(olaTabel, csv(regel));
             }
             output.innerHTML = `${files[0].size} bytes van ${files[0].name} zijn ingelezen`;
+            console.log(olaTabel);
+            sessionStorage.setItem("OLA", JSON.stringify(olaTabel));
         };
     });
 }
@@ -72,6 +75,7 @@ const olaRegex = /(),|(\d*),|"([^"]*)",|([^,]*),/g;
  * @param regel in csv
  * @returns {*[]} kolommen
  */
+
 function csv(regel) {
     let kolommen = [];
     let m;
@@ -154,8 +158,17 @@ function normaleNaam(olaNaam) {
 21 Beeldmateriaal (laatste kolom ontbreekt!)
  */
 
-function olaVerwerken(kolom) {
+function olaVerwerken(olaTabel, kolom) {
     if (kolom[0] !== undefined) {
-        console.log(`${normaleNaam(kolom[1])} ${kolom[0]} ${kolom[5]} speelt ${kolom[4] === "S" ? "dinsdag" : "niet"} ${kolom[15]}`);
+        olaTabel.push({
+            knsbNummer: kolom[0],
+            olaNaam: kolom[1],
+            naam: normaleNaam(kolom[1]),
+            intern1: (kolom[4] === "S" ? INTERNE_COMPETITIE : ""),
+            email: kolom[5],
+            interneRating: kolom[15],
+            knsbRating: kolom[15]
+        });
+        // console.log(`${kolom[0]} ${olaTabel[knsbNummer].naam} ${olaTabel[knsbNummer].interneRating}`);
     }
 }

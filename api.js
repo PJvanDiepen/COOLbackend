@@ -135,9 +135,10 @@ module.exports = router => {
     -- alle personen met spelers per seizoen
     with s as
     (select * from speler where seizoen = @seizoen)
-
-    select p.*, s.* from persoon p
+    select p.*, s.*, gebruiker.mutatieRechten
+    from persoon p
     left join s on s.knsbNummer = p.knsbNummer
+    left join gebruiker g on g.knsbNummer = p.knsbNummer
     order by naam;
      */
     router.get('/personen/:seizoen', async function (ctx) {
@@ -149,16 +150,19 @@ module.exports = router => {
             .select(
                 'persoon.naam',
                 'persoon.knsbNummer',
+                's.nhsbTeam',
+                's.knsbTeam',
                 's.knsbRating',
                 's.datum',
-                's.knsbTeam',
-                's.nhsbTeam',
+                's.interneRating',
                 's.intern1',
                 's.intern2',
                 's.intern3',
                 's.intern4',
-                's.intern5')
+                's.intern5',
+                'gebruiker.mutatieRechten')
             .leftJoin('s', 'persoon.knsbNummer', 's.knsbNummer')
+            .leftJoin('gebruiker', 'persoon.knsbNummer', 'gebruiker.knsbNummer')
             .orderBy('naam');
     });
 

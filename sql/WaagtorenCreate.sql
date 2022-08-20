@@ -54,6 +54,7 @@ CREATE TABLE speler (
     knsbNummer int not null,
     knsbRating int not null,
     datum date not null,
+    interneRating int not null,
     intern1 char(3) not null,
 	intern2 char(3) not null,
     intern3 char(3) not null,
