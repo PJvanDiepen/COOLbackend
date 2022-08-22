@@ -5,12 +5,26 @@
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
+
+
     ledenLijst(document.getElementById("kop"), document.getElementById("tabel"));
     olaBestandLezen();
 })();
 
 async function ledenLijst(kop, lijst) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "leden";
+    const nieuwLid = await localFetch(`/nummer`);
+    tabel.appendChild(htmlRij(
+       "nieuw lid",
+        "", // eventueel interne rating
+        "", // lid ? lid.knsbRating : "",
+        "", // lid ? datumLeesbaar(lid) : "",
+        "", // lid ? lid.knsbTeam : "",
+        "",
+        "", // lid ? lid.nhsbTeam : "",
+        "",
+        "",
+        nieuwLid));
     const leden = await localFetch(`/personen/${o_o_o.seizoen}`);
     for (const lid of leden) {
         console.log(lid);
@@ -25,7 +39,8 @@ async function ledenLijst(kop, lijst) {
                 "",
                 "", // lid ? lid.nhsbTeam : "",
                 "",
-                ""));
+                "",
+                knsbNummer));
         }
     }
 }

@@ -45,6 +45,15 @@ module.exports = router => {
         ctx.body = laatsteMutaties;
     });
 
+    router.get('/nummer', async function (ctx) {
+        const nummers = await Persoon.query()
+            .select('knsbNummer')
+            .where('knsbNummer', '<', 1000000) // hoogste tijdelijke knsbNummer
+            .orderBy('knsbNummer', 'desc')
+            .limit(1);
+        ctx.body = nummers[0] ? Number(nummers[0].knsbNummer + 1) : 0;
+    });
+
     router.get('/seizoenen/:teamCode', async function (ctx) {
         const seizoenen = await Team.query()
             .select('team.seizoen')
@@ -564,8 +573,24 @@ module.exports = router => {
     });
 
     /*
-    wedstrijd in agenda toevoegen
+    persoon toevoegen of wijzigen
      */
+    router.get('/:uuidToken/wijzig/persoon/:naam', async function (ctx) {
+
+        //TODO PvD
+    });
+    /*
+    speler toevoegen of wijzigen
+     */
+    router.get('/:uuidToken/wijzig/speler/:seizoen/:knsbNummer/:teamCode/:knsbRating/:interneRating', async function (ctx) {
+
+        //TODO PvD
+    });
+
+
+        /*
+        wedstrijd in agenda toevoegen
+         */
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
