@@ -5,17 +5,44 @@
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
-
-
     ledenLijst(document.getElementById("kop"), document.getElementById("tabel"));
     olaBestandLezen();
 })();
 
-async function ledenLijst(kop, lijst) {
+async function ledenLijst(kop, tabel) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "leden";
+    const leden = await localFetch(`/personen/${o_o_o.seizoen}`);
+    const olaLid = [];
+    for (const lid of leden) {
+        const knsbNummer = Number(lid.knsbNummer);
+        olaLid[knsbNummer] = knsbNummer; // bekend in persoon tabel
+    }
+    const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
+    if (olaBestand) {
+        for (const olaRegel of olaBestand) {
+            const knsbNummer = Number(olaRegel.knsbNummer);
+            if (isNaN(knsbNummer)) {
+                console.log(olaRegel.knsbNummer);
+            } else if (olaLid[knsbNummer] === knsbNummer) {
+                olaLid[Number(knsbNummer)] = olaRegel; // bekend in persoon tabel
+            } else {
+                tabel.appendChild(htmlRij(
+                    olaRegel.olaNaam,
+                    "", // eventueel interne rating
+                    olaRegel.knsbRating,
+                    "", // lid ? datumLeesbaar(lid) : "",
+                    "", // lid ? lid.knsbTeam : "",
+                    "",
+                    "", // lid ? lid.nhsbTeam : "",
+                    "",
+                    "",
+                    knsbNummer));
+            }
+        }
+    }
     const nieuwLid = await localFetch(`/nummer`);
     tabel.appendChild(htmlRij(
-       "nieuw lid",
+        "--- nieuw lid toevoegen ---",
         "", // eventueel interne rating
         "", // lid ? lid.knsbRating : "",
         "", // lid ? datumLeesbaar(lid) : "",
@@ -25,15 +52,13 @@ async function ledenLijst(kop, lijst) {
         "",
         "",
         nieuwLid));
-    const leden = await localFetch(`/personen/${o_o_o.seizoen}`);
     for (const lid of leden) {
-        console.log(lid);
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
             tabel.appendChild(htmlRij(
                 lid.naam,
                 "", // eventueel interne rating
-                "", // lid ? lid.knsbRating : "",
+                (!olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number") ? "" : olaLid[knsbNummer].knsbRating,
                 "", // lid ? datumLeesbaar(lid) : "",
                 "", // lid ? lid.knsbTeam : "",
                 "",
@@ -64,9 +89,9 @@ function olaBestandLezen() {
             for (const regel of regels) {
                 olaVerwerken(olaTabel, csv(regel));
             }
-            output.innerHTML = `${files[0].size} bytes van ${files[0].name} zijn ingelezen`;
-            console.log(olaTabel);
+            // output.innerHTML = `${files[0].size} bytes van ${files[0].name} zijn ingelezen`;
             sessionStorage.setItem("OLA", JSON.stringify(olaTabel));
+            naarZelfdePagina();
         };
     });
 }
