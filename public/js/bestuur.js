@@ -5,24 +5,36 @@
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
-    ledenLijst(document.getElementById("kop"), document.getElementById("tabel"));
+    ledenLijst(document.getElementById("kop"), document.getElementById("competities"), document.getElementById("tabel"));
     olaBestandLezen();
 })();
 
-async function ledenLijst(kop, tabel) {
-    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "leden";
-    const leden = await localFetch(`/personen/${o_o_o.seizoen}`);
+async function ledenLijst(kop, competities, tabel) {
+    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "competities en leden";
+
+    const namen = await localFetch(`/personen/${o_o_o.seizoen}`);
+    console.log("--- leden ---");
+    console.log(namen);
+    competities.appendChild(htmlRij("namen in 0-0-0", namen.length - 11)); // zonder onbekend en 10 x niemand
+
     const olaLid = [];
-    for (const lid of leden) {
+    for (const lid of namen) {
         const knsbNummer = Number(lid.knsbNummer);
         olaLid[knsbNummer] = knsbNummer; // bekend in persoon tabel
     }
+
+    const teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
+    console.log("--- teams ---");
+    console.log(teams);
+
     const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
     if (olaBestand) {
+        console.log("--- olaBestand ---");
+        console.log(olaBestand);
         for (const olaRegel of olaBestand) {
             const knsbNummer = Number(olaRegel.knsbNummer);
             if (isNaN(knsbNummer)) {
-                console.log(olaRegel.knsbNummer);
+                // console.log(olaRegel.knsbNummer);
             } else if (olaLid[knsbNummer] === knsbNummer) {
                 olaLid[Number(knsbNummer)] = olaRegel; // bekend in persoon tabel
             } else {
@@ -52,9 +64,15 @@ async function ledenLijst(kop, tabel) {
         "",
         "",
         nieuwLid));
-    for (const lid of leden) {
+
+    let aantalGebruikers = 0;
+    competities.appendChild(htmlRij("--- nieuwe competitie toevoegen ---", ""));
+    competities.appendChild(htmlRij("--- nieuw team toevoegen ---", ""));
+
+    for (const lid of namen) {
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
+
             tabel.appendChild(htmlRij(
                 lid.naam,
                 "", // eventueel interne rating
@@ -209,6 +227,5 @@ function olaVerwerken(olaTabel, kolom) {
             interneRating: kolom[15],
             knsbRating: kolom[15]
         });
-        // console.log(`${kolom[0]} ${olaTabel[knsbNummer].naam} ${olaTabel[knsbNummer].interneRating}`);
     }
 }
