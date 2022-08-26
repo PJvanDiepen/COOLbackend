@@ -554,7 +554,7 @@ module.exports = router => {
     /*
     registratie aanvragen voor gebruiker
      */
-    router.get('/registreer/:knsbNummer/:email', async function (ctx) {
+    router.get('/registreer/:knsbNummer/:email', async function (ctx) {  //TODO vervangen door gebruiker toevoegen
         await Gebruiker.query()
             .insert({knsbNummer: ctx.params.knsbNummer,
                 mutatieRechten: GEREGISTREERD,
@@ -570,6 +570,58 @@ module.exports = router => {
         ctx.body = await Gebruiker.query()
             .findById(ctx.params.uuidToken)
             .patch({datumEmail: fn('curdate')});
+    });
+
+    router.get('/:uuidToken/gebruiker/toevoegen/:knsbNummer/:email', async function (ctx) { // TODO /registreer verwijderen
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BESTUUR)) {
+            await Gebruiker.query()
+                .insert({knsbNummer: ctx.params.knsbNummer,
+                    mutatieRechten: GEREGISTREERD,
+                    uuidToken: fn('uuid'),
+                    email: ctx.params.email});
+            aantal = 1;
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    router.get('/:uuidToken/team/toevoegen/:seizoen/:team/:bond', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BESTUUR)) {
+            await Team.query().insert({
+                seizoen: ctx.params.seizoen,
+                teamCode: ctx.params.team,
+                bond: ctx.params.bond,
+                poule: "",
+                omschrijving: ctx.params.bond === "k" ? "KNSB poule" : ctx.params.bond === "k" ? "KNSB poule" : `${ctx.params.team} competitie`,
+                borden: 0,
+                teamleider: 0});
+            aantal = 1;
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    router.get('/:uuidToken/team/wijzigen/:seizoen/:team/:bond/:poule/:omschrijving/:borden/:teamleider', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BESTUUR)) {
+            if (await Team.query()
+                .findById([ctx.params.seizoen, ctx.params.team])
+                .patch({
+                    bond: ctx.params.bond,
+                    poule: ctx.params.poule,
+                    omschrijving: ctx.params.omschrijving,
+                    borden: ctx.params.borden,
+                    teamleider: ctx.params.teamleider})) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
+        }
+        ctx.body = aantal;
     });
 
     /*

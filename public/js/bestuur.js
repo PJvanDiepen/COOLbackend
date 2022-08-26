@@ -10,12 +10,12 @@
 })();
 
 async function ledenLijst(kop, competities, tabel) {
-    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "competities en leden";
+    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor bestuur";
 
     const namen = await localFetch(`/personen/${o_o_o.seizoen}`);
-    console.log("--- leden ---");
+    console.log("--- namen ---");
     console.log(namen);
-    competities.appendChild(htmlRij("namen in 0-0-0", namen.length - 11)); // zonder onbekend en 10 x niemand
+    competities.appendChild(htmlRij("namen in 0-0-0", namen.length - 11)); // aantal namen zonder onbekend en 10 x niemand
 
     const olaLid = [];
     for (const lid of namen) {
@@ -66,16 +66,15 @@ async function ledenLijst(kop, competities, tabel) {
         nieuwLid));
 
     let aantalGebruikers = 0;
-    competities.appendChild(htmlRij("--- nieuwe competitie toevoegen ---", ""));
-    competities.appendChild(htmlRij("--- nieuw team toevoegen ---", ""));
-
     for (const lid of namen) {
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
-
+            if (lid.mutatieRechten !== null) {
+                aantalGebruikers++;
+            }
             tabel.appendChild(htmlRij(
                 lid.naam,
-                "", // eventueel interne rating
+                lid.mutatieRechten === null ? "" : lid.mutatieRechten, // eventueel interne rating
                 (!olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number") ? "" : olaLid[knsbNummer].knsbRating,
                 "", // lid ? datumLeesbaar(lid) : "",
                 "", // lid ? lid.knsbTeam : "",
@@ -86,6 +85,10 @@ async function ledenLijst(kop, competities, tabel) {
                 knsbNummer));
         }
     }
+
+    competities.appendChild(htmlRij("gebruikers van 0-0-0", aantalGebruikers));
+    competities.appendChild(htmlRij("--- nieuwe competitie toevoegen ---", ""));
+    competities.appendChild(htmlRij("--- nieuw team toevoegen ---", ""));
 }
 
 /*
