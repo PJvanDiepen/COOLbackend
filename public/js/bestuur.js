@@ -23,9 +23,14 @@ async function ledenLijst(kop, competities, tabel) {
         olaLid[knsbNummer] = knsbNummer; // bekend in persoon tabel
     }
 
-    const teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
+    let teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
     console.log("--- teams ---");
     console.log(teams);
+
+    if (!teams) {
+        // TODO team
+
+    }
 
     const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
     if (olaBestand) {
@@ -54,7 +59,7 @@ async function ledenLijst(kop, competities, tabel) {
     }
     const nieuwLid = await localFetch(`/nummer`);
     tabel.appendChild(htmlRij(
-        "--- nieuw lid toevoegen ---",
+        "----- iemand toevoegen -----",
         "", // eventueel interne rating
         "", // lid ? lid.knsbRating : "",
         "", // lid ? datumLeesbaar(lid) : "",
@@ -66,12 +71,38 @@ async function ledenLijst(kop, competities, tabel) {
         nieuwLid));
 
     let aantalGebruikers = 0;
+    let aantalPerTeam = {};
+    for (const team of teams) {
+        aantalPerTeam[team.teamCode] = 0;
+    }
     for (const lid of namen) {
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
             if (lid.mutatieRechten !== null) {
                 aantalGebruikers++;
             }
+            if (lid.nhsbTeam) {
+                aantalPerTeam[lid.nhsbTeam]++;
+            }
+            if (lid.knsbTeam) {
+                aantalPerTeam[lid.nhsbTeam]++;
+            }
+            if (lid.intern1) {
+                aantalPerTeam[lid.intern1]++;
+            }
+            if (lid.intern1) {
+                aantalPerTeam[lid.intern1]++;
+            }
+            if (lid.intern1) {
+                aantalPerTeam[lid.intern1]++;
+            }
+            if (lid.intern1) {
+                aantalPerTeam[lid.intern1]++;
+            }
+            if (lid.intern1) {
+                aantalPerTeam[lid.intern1]++;
+            }
+            console.log(lid);
             tabel.appendChild(htmlRij(
                 lid.naam,
                 lid.mutatieRechten === null ? "" : lid.mutatieRechten, // eventueel interne rating
@@ -81,14 +112,15 @@ async function ledenLijst(kop, competities, tabel) {
                 "",
                 "", // lid ? lid.nhsbTeam : "",
                 "",
-                "",
+                "", // lid ? lid.intern1 : "",
                 knsbNummer));
         }
     }
-
     competities.appendChild(htmlRij("gebruikers van 0-0-0", aantalGebruikers));
-    competities.appendChild(htmlRij("--- nieuwe competitie toevoegen ---", ""));
-    competities.appendChild(htmlRij("--- nieuw team toevoegen ---", ""));
+    competities.appendChild(htmlRij(teamToevoegen(), ""));
+    for (const team of teams) {
+        competities.appendChild(htmlRij(teamVoluit(team.teamCode), aantalPerTeam[team.teamCode]));
+    }
 }
 
 /*
@@ -231,4 +263,8 @@ function olaVerwerken(olaTabel, kolom) {
             knsbRating: kolom[15]
         });
     }
+}
+
+function teamToevoegen() { // TODO naar competitie.html
+    return htmlLinkEnTerug(`team.html?team=${INTERNE_COMPETITIE}`, "----- competitie of team toevoegen -----");
 }

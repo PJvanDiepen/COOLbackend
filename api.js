@@ -551,6 +551,9 @@ module.exports = router => {
 
     // geef aantal mutaties --------------------------------------------------------------------------------------------
 
+    // TODO if (query().insert...) zoals bij if (query().patch...)
+
+
     /*
     registratie aanvragen voor gebruiker
      */

@@ -163,7 +163,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.7.28
+drop function totalen; -- 0-0-0.nl versie 0.7.27
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -403,6 +403,7 @@ where r.seizoen = @seizoen and r.teamCode not in ('int', 'ira')
 order by r.datum, r.teamCode;
 
 set @seizoen = '2122';
+set @teamCode = 'int';
 set @datum = '2022-03-01'; 
 -- wie gaat extern spelen per datum
 select u.*, naam from uitslag u join persoon p on u.knsbNummer = p.knsbNummer   

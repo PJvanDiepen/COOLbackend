@@ -228,7 +228,7 @@ async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () {
-    }];
+    }]; //  TODO naarAnderePagina("beheer.html") en documentatie
     for (let [minimumRechten, tekst, functie] of menuKeuzes) {
         if (minimumRechten <= gebruiker.mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
