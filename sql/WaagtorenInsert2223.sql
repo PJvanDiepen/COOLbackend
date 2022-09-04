@@ -1,7 +1,6 @@
 use waagtoren;
 
-select * from gebruiker;
-
+select naam, g.* from gebruiker g join persoon p on g.knsbNummer = p.knsbNummer order by naam;
 
 select * from speler where seizoen = '2223';
 

@@ -1,5 +1,8 @@
 "use strict";
 
+const LAAGSTE_RATING = 1000; // volgens Alkmaar Systeem
+const HOOGSTE_RATING = 2000;
+
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETTIE    = "ira";
@@ -162,7 +165,7 @@ function gebruikerFunctieVoluit(lid) {
     } else if (Number(lid.mutatieRechten) === BESTUUR) {
         return "bestuurslid";
     } else {
-        return "???"
+        return "geen gebruiker";
     }
 }
 

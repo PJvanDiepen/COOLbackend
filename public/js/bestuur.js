@@ -22,25 +22,25 @@ async function ledenLijst(kop, competities, tabel) {
     const personen = lidNummer
         ? await serverFetch(`/personen/${o_o_o.seizoen}`)
         : await localFetch(`/personen/${o_o_o.seizoen}`);
-
-    console.log("--- personen ---");
-    console.log(personen);
-    competities.appendChild(htmlRij("namen in 0-0-0", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
+    competities.appendChild(htmlRij("personen in 0-0-0", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
+    const tijdelijkNummer = await localFetch(`/nummer`); // vanaf 100
+    tabel.appendChild(htmlRij(
+        htmlLink(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
+        "", // knsbRating
+        "", // eventueel interne rating
+        "", // knsbTeam
+        "", // nhsbTeam
+        "", // competities
+        "")); // functie
 
     const olaLid = [];
     for (const lid of personen) {
         const knsbNummer = Number(lid.knsbNummer);
         olaLid[knsbNummer] = knsbNummer; // bekend in persoon tabel
     }
-
-    let teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
-    console.log("--- teams ---");
-    console.log(teams);
-
+    const teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
     const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
     if (olaBestand) {
-        console.log("--- olaBestand ---");
-        console.log(olaBestand);
         for (const olaRegel of olaBestand) {
             const knsbNummer = Number(olaRegel.knsbNummer);
             if (isNaN(knsbNummer)) {
@@ -52,24 +52,15 @@ async function ledenLijst(kop, competities, tabel) {
                 htmlVerwerkt(link,knsbNummer === lidNummer);
                 tabel.appendChild(htmlRij(
                     link,
-                    "", // eventueel interne rating
                     olaRegel.knsbRating,
+                    "", // eventueel interne rating
                     "", // lid ? lid.knsbTeam : "",
                     "", // lid ? lid.nhsbTeam : "",
-                    "",
-                    knsbNummer));
+                    "", // competities
+                    "")); // functie
             }
         }
     }
-    const tijdelijkKnsbNummer = await localFetch(`/nummer`);
-    tabel.appendChild(htmlRij(
-        htmlLink(`lid.html?lid=${tijdelijkKnsbNummer}`, "----- iemand toevoegen -----"),
-        "", // eventueel interne rating
-        "", // knsbRating
-        "", // knsbTeam
-        "", // nhsbTeam
-        "", // competities
-        tijdelijkKnsbNummer));
 
     let aantalGebruikers = 0;
     let aantalPerTeam = {};
@@ -103,16 +94,16 @@ async function ledenLijst(kop, competities, tabel) {
             if (lid.intern5 !== null &&  lid.intern5) {
                 aantalPerTeam[lid.intern5]++;
             }
-            console.log(lid);
             const link = htmlLink(`lid.html?lid=${knsbNummer}`, lid.naam);
+            const olaRating = !olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number" ? 0 : Number(olaLid[knsbNummer].knsbRating);
             htmlVerwerkt(link,knsbNummer === lidNummer);
             tabel.appendChild(htmlRij(
                 link,
-                lid.interneRating === null ? "" : lid.interneRating,
-                (!olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number") ? "" : olaLid[knsbNummer].knsbRating,
+                olaRating ? olaRating : lid.knsbRating === null ? "" : lid.knsbRating,
+                lid.interneRating === null || lid.interneRating === lid.knsbRating ? "" : lid.interneRating,
                 lid.knsbTeam === null ? "" : lid.knsbTeam,
                 lid.nhsbTeam === null ? "" : lid.nhsbTeam,
-                lid.intern1 === null ? "" : "intern en rapid",
+                lid.intern1 === null ? "" : "intern en rapid", // TODO uitsplitsen
                 lid.mutatieRechten === null ? "" : gebruikerFunctieVoluit(lid)
             ));
         }

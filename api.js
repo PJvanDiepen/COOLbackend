@@ -551,9 +551,6 @@ module.exports = router => {
 
     // geef aantal mutaties --------------------------------------------------------------------------------------------
 
-    // TODO if (query().insert...) zoals bij if (query().patch...)
-
-
     /*
     registratie aanvragen voor gebruiker
      */
@@ -627,12 +624,15 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    /*
-    persoon toevoegen of wijzigen
-     */
-    router.get('/:uuidToken/wijzig/persoon/:naam', async function (ctx) {
-
-        //TODO PvD
+    router.get('/:uuidToken/persoon/toevoegen/:knsbNummer/:naam', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BESTUUR)) {
+            const pers = await Persoon.query().insert({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam});
+            aantal = 1;
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
     });
     /*
     speler toevoegen of wijzigen
