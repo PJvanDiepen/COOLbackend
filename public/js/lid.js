@@ -1,48 +1,77 @@
 "use strict";
 
+/*
+    verwerk lid=<knsbNummer>
+ */
+
 (async function() {
     await init();
+    const lidNummer = Number(params.get("lid"));
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
-        }],
-        [BEHEERDER, "formulier van geselecteerde speler", function () {
-            document.getElementById("naam").value = o_o_o.naam;
-            document.getElementById("knsbNummer").value = o_o_o.speler;
-            document.getElementById("status").value = "iemand anders registreren";
         }]);
-    spelerSelecteren(ditSeizoen);
-    gebruikerFormulier(
+    lidFormulier(
+        lidNummer,
         document.getElementById("formulier"),
         document.getElementById("naam"),
-        document.getElementById("knsbNummer"),
         document.getElementById("email"),
+        document.getElementById("knsbNummer"),
+        document.getElementById("knsbRating"),
+        document.getElementById("interneRating"),
+        document.getElementById("knsbTeam"),
+        document.getElementById("nhsbTeam"),
+        document.getElementById("intern1"),
+        document.getElementById("intern2"),
         document.getElementById("status"));
 })();
 
-async function spelerSelecteren(seizoen) {
-    const spelers = document.getElementById("spelerSelecteren");
-    spelers.appendChild(htmlOptie(0, "selecteer naam"));
-    (await localFetch(`/spelers/${seizoen}`)).forEach(
-        function (persoon) {
-            spelers.appendChild(htmlOptie(Number(persoon.knsbNummer), persoon.naam));
-        });
-    spelers.value = o_o_o.speler; // werkt uitsluitend na await
-    spelers.addEventListener("input",
-        function () {
-            const i = spelers.selectedIndex;
-            sessionStorage.setItem("speler", spelers.options[i].value); // = spelers.value;
-            sessionStorage.setItem("naam", spelers.options[i].text )
-            naarZelfdePagina();
-        });
-}
+async function lidFormulier(lidNummer,
+                            formulier,
+                            naam,
+                            email,
+                            knsbNummer,
+                            knsbRating,
+                            interneRating,
+                            knsbTeam,
+                            nhsbTeam,
+                            intern1,
+                            intern2,
+                            status) {
+    const personen = await localFetch(`/personen/${o_o_o.seizoen}`);
+    console.log("--- personen ---");
+    console.log(personen);
 
-// TODO voor iemand anders aanvraag doen (uitsluitend door systeembeheerder)
-
-async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
-    if (o_o_o.speler) {
-        knsbNummer.value = o_o_o.speler;
-        naam.value = o_o_o.naam;
+    const olaLid = [];
+    for (const lid of personen) {
+        const knsbNummer = Number(lid.knsbNummer);
+        olaLid[knsbNummer] = knsbNummer; // bekend in persoon tabel
     }
+
+    let teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
+    console.log("--- teams ---");
+    console.log(teams);
+
+    if (!teams) {
+        // TODO team
+
+    }
+
+    const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
+    if (olaBestand) {
+        console.log("--- olaBestand ---");
+        console.log(olaBestand);
+        for (const olaRegel of olaBestand) {
+            const knsbNummer = Number(olaRegel.knsbNummer);
+            if (isNaN(knsbNummer)) {
+                // console.log(olaRegel.knsbNummer);
+            } else if (olaLid[knsbNummer] === knsbNummer) {
+                olaLid[Number(knsbNummer)] = olaRegel; // bekend in persoon tabel
+            } else {
+
+            }
+        }
+    }
+
     knsbNummer.value = o_o_o.speler ? o_o_o.speler : gebruiker.knsbNummer;
     naam.value = o_o_o.speler ? o_o_o.naam : gebruiker.naam;
     if (uuidToken) {
@@ -55,6 +84,8 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
     }
     formulier.addEventListener("submit", async function (event) {
         event.preventDefault();
+        naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
+        /*
         if (Number(knsbNummer.value)) {
             gebruiker.knsbNummer = Number(knsbNummer.value);
             gebruiker.naam = naam.value;
@@ -68,5 +99,6 @@ async function gebruikerFormulier(formulier, naam, knsbNummer, email, status) {
         } else {
             status.value = "selecteer je naam";
         }
+         */
     });
 }

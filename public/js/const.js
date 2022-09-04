@@ -150,6 +150,22 @@ async function gebruikerVerwerken() {
     }
 }
 
+function gebruikerFunctieVoluit(lid) {
+    if (Number(lid.mutatieRechten) === GEREGISTREERD) {
+        return "geregistreerd lid";
+    } else if (Number(lid.mutatieRechten) === BEHEERDER) {
+        return "systeembeheerder";
+    } else if (Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
+        return "wedstrijdleider";
+    } else if (Number(lid.mutatieRechten) === TEAMLEIDER) {
+        return "teamleider";
+    } else if (Number(lid.mutatieRechten) === BESTUUR) {
+        return "bestuurslid";
+    } else {
+        return "???"
+    }
+}
+
 function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
@@ -228,7 +244,7 @@ async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
     let functies = [function () {
-    }]; //  TODO naarAnderePagina("beheer.html") en documentatie
+    }]; //  TODO naarAnderePagina("beheer.html") en documentatie op nieuwe webpagina
     for (let [minimumRechten, tekst, functie] of menuKeuzes) {
         if (minimumRechten <= gebruiker.mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));
@@ -294,14 +310,14 @@ function htmlTekst(tekst) {
     return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
 }
 
-function htmlVerwerkt(htmlNode, toevoegen) {
-    if (toevoegen) {
+function htmlVerwerkt(htmlNode, indien) {
+    if (indien) {
         htmlNode.classList.add("verwerkt")
     }
 }
 
-function htmlVet(htmlNode, toevoegen) {
-    if (toevoegen) {
+function htmlVet(htmlNode, indien) {
+    if (indien) {
         htmlNode.classList.add("vet")
     }
 }

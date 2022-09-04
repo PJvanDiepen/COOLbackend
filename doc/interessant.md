@@ -18,8 +18,7 @@ Verwijder localStorage op iPhone
 
 # JavaScript
 
-- [read local file in browser](https://usefulangle.com/post/193/javascript-read-local-file)
-- [verbeterde versie](http://jsfiddle.net/k56eezxp/)
+- [JavaScript tutorial](https://www.javascripttutorial.net/)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)

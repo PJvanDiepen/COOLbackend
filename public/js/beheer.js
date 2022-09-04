@@ -60,7 +60,6 @@ function gebruikerEmailSturen(lid) {
     return htmlLink(`email.html?speler=${lid.knsbNummer}&email=${lid.email}`, lid.email);
 }
 
-// TODO email corrigeren
 // TODO gebruiker hoger of lagere functie geven
 
 function gebruikerFunctie(lid) {
@@ -68,16 +67,8 @@ function gebruikerFunctie(lid) {
         return KRUISJE; // TODO eventueel verwijderen
     } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
         return datumLeesbaar({datum: lid.datumEmail});
-    } else if (Number(lid.mutatieRechten) === BEHEERDER) {
-        return "systeembeheerder";
-    } else if (Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
-        return "wedstrijdleider";
-    } else if (Number(lid.mutatieRechten) === TEAMLEIDER) {
-        return "teamleider";
-    } else if (Number(lid.mutatieRechten) === BESTUUR) {
-        return "bestuur";
     } else {
-        return "???"
+        return gebruikerFunctieVoluit(lid);
     }
 }
 
