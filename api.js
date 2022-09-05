@@ -628,24 +628,40 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
-            const pers = await Persoon.query().insert({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam});
+            await Persoon.query().insert({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam});
             aantal = 1;
             await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
         }
         ctx.body = aantal;
     });
-    /*
-    speler toevoegen of wijzigen
-     */
-    router.get('/:uuidToken/wijzig/speler/:seizoen/:knsbNummer/:teamCode/:knsbRating/:interneRating', async function (ctx) {
 
-        //TODO PvD
+    router.get('/:uuidToken/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BESTUUR)) {
+            await Speler.query().insert({
+                seizoen: ctx.params.seizoen,
+                knsbNummer: ctx.params.knsbNummer,
+                nhsbTeam: "",
+                knsbTeam: "",
+                knsbRating: ctx.params.knsbRating,
+                datum: ctx.params.datum,
+                interneRating: ctx.params.interneRating,
+                intern1: INTERNE_COMPETITIE,
+                intern2: RAPID_COMPETTIE,
+                intern3: "",
+                intern4: "",
+                intern5: ""});
+            aantal = 1;
+            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+        }
+        ctx.body = aantal;
     });
 
-
-        /*
+    /*
         wedstrijd in agenda toevoegen
-         */
+
+     */
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;

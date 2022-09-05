@@ -6,24 +6,23 @@
 
 (async function() {
     await init();
+    const lidNummer = Number(params.get("lid"));
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
     ledenLijst(
+        lidNummer,
         document.getElementById("kop"),
         document.getElementById("competities"),
         document.getElementById("tabel"));
     olaBestandLezen();
 })();
 
-async function ledenLijst(kop, competities, tabel) {
+async function ledenLijst(lidNummer, kop, competities, tabel) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor bestuur";
-    const lidNummer = Number(params.get("lid"));
-    const personen = lidNummer
-        ? await serverFetch(`/personen/${o_o_o.seizoen}`)
-        : await localFetch(`/personen/${o_o_o.seizoen}`);
+    const personen = await serverFetch(`/personen/${o_o_o.seizoen}`);
     competities.appendChild(htmlRij("personen in 0-0-0", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
-    const tijdelijkNummer = await localFetch(`/nummer`); // vanaf 100
+    const tijdelijkNummer = await serverFetch(`/nummer`); // vanaf 100
     tabel.appendChild(htmlRij(
         htmlLink(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
         "", // knsbRating
@@ -48,10 +47,8 @@ async function ledenLijst(kop, competities, tabel) {
             } else if (olaLid[knsbNummer] === knsbNummer) {
                 olaLid[Number(knsbNummer)] = olaRegel; // bekend in persoon tabel
             } else {
-                const link = htmlLink(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam);
-                htmlVerwerkt(link,knsbNummer === lidNummer);
                 tabel.appendChild(htmlRij(
-                    link,
+                    htmlLink(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam),
                     olaRegel.knsbRating,
                     "", // eventueel interne rating
                     "", // lid ? lid.knsbTeam : "",
