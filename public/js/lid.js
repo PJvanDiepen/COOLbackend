@@ -10,9 +10,9 @@
     const persoon = await persoonLezen(lidNummer);
     console.log("--- persoon ---");
     console.log(persoon);
-    const olaLid = olaLidLezen(lidNummer);
-    console.log("--- olaLid ---");
-    console.log(olaLid);
+    const ola = olaLezen(lidNummer);
+    console.log("--- ola ---");
+    console.log(ola);
     menu([WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }],
@@ -22,7 +22,7 @@
     lidFormulier(
         lidNummer,
         persoon,
-        olaLid,
+        ola,
         document.getElementById("formulier"), // TODO is er een truuk om alle velden klaar te zetten?
         document.getElementById("naam"),
         document.getElementById("email"),
@@ -38,20 +38,20 @@
 
 async function persoonLezen(lidNummer) {
     const personen = await localFetch(`/personen/${o_o_o.seizoen}`); // reeds gelezen in bestuur.html
+    console.log("--- personen ---");
+    console.log(personen);
     for (const persoon of personen) {
         if (lidNummer === Number(persoon.knsbNummer)) {
             return persoon;
         };
     }
-    return {
-        knsbNummer: lidNummer,
-        naam: null, // indien null peroon toevoegen
-        interneRating: null, // indien null speler toevoegen
-        mutatieRechten: null }; // indien null gebruiker toevoegen
+    return false;
 }
 
-function olaLidLezen(lidNummer) {
+function olaLezen(lidNummer) {
     const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
+    console.log("--- olaBestand ---");
+    console.log(olaBestand);
     if (olaBestand) {
         for (const olaRegel of olaBestand) {
             if (lidNummer === Number(olaRegel.knsbNummer)) {
@@ -59,12 +59,12 @@ function olaLidLezen(lidNummer) {
             }
         }
     }
-    return { knsbNummer: lidNummer, naam: "", email: "", knsbRating: 0 }; // knsbRating wijzigen
+    return false;
 }
 
 async function lidFormulier(lidNummer,
                             persoon,
-                            olaLid,
+                            ola,
                             formulier,
                             naam,
                             email,
@@ -76,47 +76,75 @@ async function lidFormulier(lidNummer,
                             // intern1,
                             // intern2,
                             gebruiker) {
-    // const teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
-    // console.log("--- teams ---");
-    // console.log(teams);
-    const rating = Number(olaLid.knsbRating) || Number(persoon.knsbRating);
-    if (rating) {
-        interneRating.appendChild(htmlOptie(rating, "zie KNSB rating"));
+    // formulier invullen
+    knsbNummer.value = lidNummer;
+    if (!persoon && ola) {
+        naam.value = ola.naam;
+    } else if (persoon) {
+        naam.value = persoon.naam;
+        if (ola && ola.naam !== persoon.naam) {
+            console.log(`verschillende namen in persoon: ${persoon.naam} en OLA: ${ola.naam}`);
+        }
+    }
+    if (ola) {
+        email.value = ola.email;
+    }
+    knsbRating.value = 0;
+    const spelerToevoegen = !persoon || persoon.knsbRating === null;
+    if (!spelerToevoegen) {
+        knsbRating.value = persoon.knsbRating;
+    }
+    if (ola) {
+        knsbRating.value = ola.knsbRating; // in OLA bestand van augustus staat juiste KNSB rating
+    }
+    if (knsbRating.value > 0) {
+        interneRating.appendChild(htmlOptie(knsbRating.value, "zie KNSB rating"));
     }
     for (let ratingOptie = LAAGSTE_RATING; ratingOptie <= HOOGSTE_RATING; ratingOptie += 100) {
-        if (ratingOptie > rating) {
+        if (ratingOptie > knsbRating.value) {
             interneRating.appendChild(htmlOptie(ratingOptie, ratingOptie));
         }
     }
-    knsbNummer.value = lidNummer;
-    naam.value = persoon.naam || olaLid.naam;
-    email.value = olaLid.email;
-    knsbRating.value = rating || LAAGSTE_RATING;
-    interneRating.value = Number(persoon.interneRating) > rating ? persoon.interneRating : knsbRating.value;
-    gebruiker.value = gebruikerFunctieVoluit(persoon);
+    if (!spelerToevoegen && persoon.interneRating !== null && persoon.interneRating > knsbRating.value) {
+        interneRating.value = persoon.interneRating;
+    } else if (knsbRating.value > 0) {
+        interneRating.value = knsbRating.value;
+    } else {
+        interneRating.value = LAAGSTE_RATING;
+    }
+    const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
+    if (!gebruikerToevoegen) {
+        gebruiker.value = gebruikerFunctieVoluit(persoon);
+    }
+    // formulier verwerken
     formulier.addEventListener("submit", async function (event) {
         event.preventDefault();
         let mutaties = 0;
-        if (persoon.naam === null) {
+        if (!persoon) {
             if (await serverFetch(`/${uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
+                console.log(`serverFetch(persoon/toevoegen/${lidNummer}/${naam.value})`);
                 mutaties++;
             }
         }
-        if (persoon.interneRating === null) {
+        if (spelerToevoegen) {
             if (await serverFetch(
                 `/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${knsbRating.value}/${interneRating.value}/${datumSQL()}`)) {
                 mutaties++;
+                console.log(`serverFetch(speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${knsbRating.value}/${interneRating.value}/${datumSQL()})`);
             }
         }
-        if (persoon.mutatieRechten === null && email.value !== "") {
+        if (gebruikerToevoegen === null && email.value !== "") { // TODO e-mailadres controleren
             if (await serverFetch(`/${uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
                 mutaties++;
+                console.log(`serverFetch(gebruiker/toevoegen/${lidNummer}/${email.value})`);
             }
         }
+        /*
         if (mutaties) {
             naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
         } else {
             naarAnderePagina(`bestuur.html`);
         }
+         */
     });
 }

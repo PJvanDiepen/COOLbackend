@@ -97,11 +97,11 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             tabel.appendChild(htmlRij(
                 link,
                 olaRating ? olaRating : lid.knsbRating === null ? "" : lid.knsbRating,
-                lid.interneRating === null || lid.interneRating === lid.knsbRating ? "" : lid.interneRating,
+                lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? VINKJE : lid.interneRating,
                 lid.knsbTeam === null ? "" : lid.knsbTeam,
                 lid.nhsbTeam === null ? "" : lid.nhsbTeam,
                 lid.intern1 === null ? "" : "intern en rapid", // TODO uitsplitsen
-                lid.mutatieRechten === null ? "" : gebruikerFunctieVoluit(lid)
+                lid.mutatieRechten === null ? "" : gebruikerFunctieVoluit(lid) // TODO zoals bij beheer.html
             ));
         }
     }
@@ -238,17 +238,14 @@ function normaleNaam(olaNaam) {
 20 Gebruik NAW
 21 Beeldmateriaal (laatste kolom ontbreekt!)
  */
-
 function olaVerwerken(olaTabel, kolom) {
-    if (kolom[0] !== undefined) {
+    if ((typeof kolom[0]) === "number") {
         olaTabel.push({
             knsbNummer: kolom[0],
             olaNaam: kolom[1],
             naam: normaleNaam(kolom[1]),
-            intern1: (kolom[4] === "S" ? INTERNE_COMPETITIE : ""),
             email: kolom[5],
-            interneRating: kolom[15],
-            knsbRating: kolom[15]
+            knsbRating: Number(kolom[15]) // indien "" dan 0
         });
     }
 }

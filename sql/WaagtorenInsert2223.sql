@@ -6,8 +6,19 @@ select * from speler where seizoen = '2223';
 
 delete from speler where seizoen = '2223' and knsbNummer = 6212404;
 
+select * from speler where seizoen = '2223'and knsbNummer < 1000000;
+
+select * from persoon where knsbNummer < 1000000;
+
+
 insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5) values
-('2223', '', '', 6212404, 1605, '2022-08-01', 1605, 'int', '', '', '', '');
+("2223", "", "", 7101193, 1547, '2022-09-05', 1547, "int", "ira", "", "", ""); -- Jacob Bleijendaal
+
+insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5) values
+("2223", "", "", 126, 1997, '2022-09-05', 1997, "int", "ira", "", "", ""); -- Alberto Alvarez Alonso
+
+insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5) values
+("2223", "", "", 127, 1000, '2022-09-05', 1000, "int", "ira", "", "", ""); -- Daniel Younk
 
 select * from team where seizoen = '2223';
 delete from team where seizoen = '2223';
