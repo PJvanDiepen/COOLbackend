@@ -28,17 +28,15 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 ('2223', 'int', 'i', 'nt', 'interne competitie', 0, 0),
 ('2223', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
 
-('2223', '1', 'k', '1a', 'KNSB 1a', 10, 6214153),
-('2223', '2', 'k', '3d', 'KNSB 3d', 8, 7129991),
-('2223', '3', 'k', '4e', 'KNSB 4e', 8, 7758014),
-('2223', '4', 'k', '6c', 'KNSB 6c', 8, 6212404),
-('2223', 'int', 'i', 'nt', 'interne competitie', 0, 0),
-('2223', 'ira', 'i', 'ra', 'rapid competitie', 0, 0),
-('2223', 'izs', 'i', 'zs', 'einde seizoen snelschaken', 0, 0),
-('2223', 'n1', 'n', 't', 'NHSB top', 8, 7428960),
-('2223', 'n2', 'n', '1a', 'NHSB 1a', 8, 7529522),
-('2223', 'n3', 'n', '2a', 'NHSB 2a', 8, 6214153),
-('2223', 'n4', 'n', '3b', 'NHSB 3b', 6, 6212404);
+insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
+('2223', '1', 'k', '1a', 'KNSB 1a', '10', '0'),
+('2223', '2', 'k', '3d', 'KNSB 3d', '8', '0'),
+('2223', '3', 'k', '4d', 'KNSB 4d', '8', '0'),
+('2223', '4', 'k', '6c', 'KNSB 6c', '8', '0');
+
+insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
+('2223', 'n1', 'n', 't', 'NHSB top', '8', '0'),
+('2223', 'n2', 'n', '1a', 'NHSB 1a', '8', '0');
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2223", "int", 1, "t", "", '2022-09-06'),
@@ -84,111 +82,58 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ("2223", "ira", 8, "t", "", '2023-05-02'),
 ("2223", "ira", 9, "t", "", '2023-05-02');
 
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+('2223', '1', '1', 't', 'En Passant 1', '2022-09-17'),
+('2223', '1', '2', 'u', 'HWP Haarlem 1', '2022-10-08'),
+('2223', '1', '3', 'u', 'Caissa-Eenhoorn 1', '2022-11-05'),
+('2223', '1', '4', 't', 'LSG 2', '2022-11-26'),
+('2223', '1', '5', 'u', 'MSV 1', '2022-12-17'),
+('2223', '1', '6', 't', 'Philidor 1847 1', '2023-02-11'),
+('2223', '1', '7', 'u', 'Caissa 1', '2023-03-11'),
+('2223', '1', '8', 't', 'Purmerend 1', '2023-04-01'),
+('2223', '1', '9', 'u', 'Wageningen 1', '2023-04-22'),
+('2223', '2', '1', 't', 'Santpoort 1', '2022-09-17'),
+('2223', '2', '2', 'u', 'HWP Haarlem 2', '2022-10-08'),
+('2223', '2', '3', 'u', 'Amsterdam Berserkers 1', '2022-11-05'),
+('2223', '2', '4', 't', 'Het Spaarne 1', '2022-11-26'),
+('2223', '2', '5', 'u', 'Aartswoud 1', '2022-12-17'),
+('2223', '2', '6', 't', 'Paul Keres 3', '2023-02-11'),
+('2223', '2', '7', 'u', 'Caissa 2', '2023-03-11'),
+('2223', '2', '8', 't', 'De Wijker Toren 2', '2023-04-01'),
+('2223', '2', '9', 'u', 'ZSC-HWP Combinatie 1', '2023-04-22'),
+('2223', '3', '1', 't', 'Volendam 1', '2022-09-17'),
+('2223', '3', '2', 'u', 'HWP Haarlem 3', '2022-10-08'),
+('2223', '3', '3', 'u', 'Caissa-Eenhoorn 2', '2022-11-05'),
+('2223', '3', '4', 't', 'Bergen 1', '2022-11-26'),
+('2223', '3', '5', 'u', 'ZSC-HWP Combinatie 3', '2022-12-17'),
+('2223', '3', '6', 't', 'Heerhugowaard 1', '2023-02-11'),
+('2223', '3', '7', 'u', 'Kennemer Combinatie 3', '2023-03-11'),
+('2223', '3', '8', 't', 'Purmerend 2', '2023-04-01'),
+('2223', '3', '9', 'u', 'HWP-ZSC Combinatie 2', '2023-04-22'),
+('2223', '4', '1', 'u', 'HWP Haarlem 5', '2022-10-08'),
+('2223', '4', '2', 'u', 'VAS 6', '2022-11-05'),
+('2223', '4', '3', 't', 'Combiteam KL 2', '2022-11-26'),
+('2223', '4', '5', 't', 'Magnus Anna Paulowna Combinatie 3', '2023-02-11'),
+('2223', '4', '6', 'u', 'Almere 4', '2023-03-11'),
+('2223', '4', '7', 't', 'Zukertort Amstelveen 5', '2023-04-01'),
+('2223', '4', '4', 'u', 'ZSC-Saende Combinatie 4', '2022-12-17');
 
-("2223", "1", 1, "u", "Voorschoten 1", '2021-09-18'),
-("2223", "1", 2, "t", "Philidor 1847 1", '2021-10-09'),
-("2223", "1", 3, "t", "HWP Haarlem 1", '2021-11-06'),
-("2223", "1", 4, "u", "Wageningen 1", '2022-06-11'),
-("2223", "1", 5, "t", "Paul Keres 1", '2022-05-21'),
-("2223", "1", 6, "u", "Caissa-Eenhoorn 1", '2022-02-05'),
-("2223", "1", 7, "t", "Groninger Combinatie 2", '2022-03-12'),
-("2223", "1", 8, "u", "SG Max Euwe 1", '2022-04-02'),
-("2223", "1", 9, "t", "Zukertort Amstelveen 1", '2022-04-23'),
-("2223", "2", 1, "u", "ZSC-Saende 1", '2021-09-18'),
-("2223", "2", 2, "t", "Laurierboom-Gambiet 1", '2021-10-09'),
-("2223", "2", 3, "t", "HWP Haarlem 2", '2021-11-06'),
-("2223", "2", 4, "u", "ZSC-Saende 2", '2022-06-11'),
-("2223", "2", 5, "t", "De Wijker Toren 2", '2022-05-21'),
-("2223", "2", 6, "u", "Caissa-Eenhoorn 2", '2022-02-05'),
-("2223", "2", 7, "t", "Caissa 3", '2022-03-12'),
-("2223", "2", 8, "u", "Santpoort 1", '2022-04-02'),
-("2223", "2", 9, "t", "Fischer Z 1", '2022-04-23'),
-("2223", "3", 1, "u", "Bergen 1", '2021-09-18'),
-("2223", "3", 2, "t", "De Uil 1", '2021-10-09'),
-("2223", "3", 3, "t", "HWP Haarlem 3", '2021-11-06'),
-("2223", "3", 4, "u", "Aartswoud 1", '2021-11-27'),
-("2223", "3", 5, "t", "Volendam 1", '2022-05-21'),
-("2223", "3", 6, "u", "Caissa-Eenhoorn 3", '2022-02-05'),
-("2223", "3", 7, "t", "Kennemer Combinatie 3", '2022-03-12'),
-("2223", "3", 9, "t", "Het Spaarne 1", '2022-04-23'),
-("2223", "4", 1, "t", "Purmerend 3", '2021-10-09'),
-("2223", "4", 2, "t", "HWP Haarlem 4", '2021-11-06'),
-("2223", "4", 3, "u", "VAS 5", '2021-11-27'),
-("2223", "4", 4, "t", "VAS 6", '2022-05-21'),
-("2223", "4", 5, "u", "Leiderdorp 2", '2022-02-05'),
-("2223", "4", 6, "t", "Woerden 3", '2022-03-12'),
-("2223", "4", 7, "u", "Zukertort Amstelveen 3", '2022-04-02'),
-("2223", "int", 1, "t", "", '2022-09-06'),
-("2223", "int", 2, "t", "", '2022-09-13'),
-("2223", "int", 3, "t", "", '2022-09-20'),
-("2223", "int", 4, "t", "", '2022-09-27'),
-("2223", "int", 5, "t", "", '2022-10-04'),
-("2223", "int", 6, "t", "", '2022-10-11'),
-("2223", "int", 7, "t", "", '2022-10-25'),
-("2223", "int", 8, "t", "", '2022-11-01'),
-("2223", "int", 9, "t", "", '2022-11-08'),
-("2223", "int", 10, "t", "", '2022-11-15'),
-("2223", "int", 11, "t", "", '2022-11-22'),
-("2223", "int", 12, "t", "", '2022-11-29'),
-("2223", "int", 13, "t", "", '2022-12-06'),
-("2223", "int", 14, "t", "", '2022-12-13'),
-("2223", "int", 15, "t", "", '2023-01-03'),
-("2223", "int", 16, "t", "", '2023-01-10'),
-("2223", "int", 17, "t", "", '2023-01-17'),
-("2223", "int", 18, "t", "", '2023-01-31'),
-("2223", "int", 19, "t", "", '2023-02-07'),
-("2223", "int", 20, "t", "", '2023-02-14'),
-("2223", "int", 21, "t", "", '2023-02-21'),
-("2223", "int", 22, "t", "", '2023-03-07'),
-("2223", "int", 23, "t", "", '2023-03-14'),
-("2223", "int", 24, "t", "", '2023-03-21'),
-("2223", "int", 25, "t", "", '2023-03-28'),
-("2223", "int", 26, "t", "", '2023-04-04'),
-("2223", "int", 27, "t", "", '2023-04-11'),
-("2223", "int", 28, "t", "", '2023-04-18'),
-("2223", "int", 29, "t", "", '2023-04-25'),
-("2223", "int", 30, "t", "", '2023-05-09'),
-("2223", "int", 31, "t", "", '2023-05-16'),
-("2223", "int", 32, "t", "", '2023-05-23'),
-("2223", "int", 33, "t", "", '2023-05-30'),
-
-("2223", "ira", 1, "t", "", '2022-10-18'),
-("2223", "ira", 2, "t", "", '2022-10-18'),
-("2223", "ira", 3, "t", "", '2022-10-18'),
-("2223", "ira", 4, "t", "", '2023-02-28'),
-("2223", "ira", 5, "t", "", '2023-02-28'),
-("2223", "ira", 6, "t", "", '2023-02-28'),
-("2223", "ira", 7, "t", "", '2023-05-02'),
-("2223", "ira", 8, "t", "", '2023-05-02'),
-("2223", "ira", 9, "t", "", '2023-05-02'),
-
-("2223", "izs", 1, "t", "", '2022-06-07'),
-("2223", "izs", 2, "t", "", '2022-06-07'),
-("2223", "izs", 3, "t", "", '2022-06-07'),
-("2223", "izs", 4, "t", "", '2022-06-07'),
-("2223", "izs", 5, "t", "", '2022-06-07'),
-("2223", "izs", 6, "t", "", '2022-06-07'),
-("2223", "izs", 7, "t", "", '2022-06-07'),
-("2223", "izs", 8, "t", "", '2022-06-07'),
-("2223", "izs", 9, "t", "", '2022-06-07'),
-("2223", "izs", 10, "t", "", '2022-06-07'),
-("2223", "izs", 11, "t", "", '2022-06-07'),
-("2223", "n1", 1, "u", "Chess Society Zandvoort N1", '2021-10-15'),
-("2223", "n1", 2, "t", "HWP Haarlem N2", '2021-11-09'),
-("2223", "n1", 3, "u", "Kennemer Combinatie N1", '2022-05-06'),
-("2223", "n1", 4, "t", "Krommenie N1", '2022-02-08'),
-("2223", "n1", 5, "u", "HWP Haarlem N1", '2022-03-01'),
-("2223", "n1", 6, "u", "De Uil N1", '2022-03-21'),
-("2223", "n1", 7, "t", "Kijk Uit N1", '2022-04-12'),
-("2223", "n2", 1, "t", "Volendam N1", '2021-10-12'),
-("2223", "n2", 2, "u", "Noordkopcombinatie Magnus N1", '2021-11-12'),
-("2223", "n2", 3, "t", "Aartswoud N1", '2022-04-26'),
-("2223", "n2", 4, "u", "KTV N1", '2022-05-27'),
-("2223", "n2", 5, "t", "Caïssa-Eenhoorn N1", '2022-03-15'),
-("2223", "n2", 7, "u", "Opening 64 N1", '2022-04-15'),
-("2223", "n4", 1, "u", "Opening 64 N2", '2021-11-26'),
-("2223", "n4", 2, "t", "Heerhugowaard N1", '2022-04-19'),
-("2223", "n4", 5, "u", "Aris de Heer N", '2022-02-28');
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+('2223', 'n1', '1', 'u', 'Kennemer Combinatie N1', '2022-09-30'),
+('2223', 'n1', '2', 't', 'De Wijker Toren N1', '2022-10-25'),
+('2223', 'n1', '3', 'u', 'De Uil N1', '2022-11-14'),
+('2223', 'n1', '4', 't', 'Aartswoud N1', '2023-01-10'),
+('2223', 'n1', '5', 'u', 'Bloemendaal N1', '2023-02-01'),
+('2223', 'n1', '6', 't', 'Krommenie N1', '2023-02-21'),
+('2223', 'n1', '7', 'u', 'Chess Society Zandvoort N1', '2023-03-24'),
+('2223', 'n1', '8', 't', 'HWP Haarlem N1', '2023-04-11'),
+('2223', 'n2', '1', 'u', 'En Passant N1', '2022-09-24'),
+('2223', 'n2', '2', 't', 'Purmerend N1', '2022-10-25'),
+('2223', 'n2', '3', 'u', 'Vredeburg N1', '2022-11-18'),
+('2223', 'n2', '4', 't', 'Noordkopcombinatie Magnus N1', '2022-12-06'),
+('2223', 'n2', '5', 'u', 'Caïssa-Eenhoorn N1', '2023-01-31'),
+('2223', 'n2', '6', 't', 'Opening ''64 N1', '2023-02-21'),
+('2223', 'n2', '7', 'u', 'KTV N1', '2023-03-24');
 
 -- TODO ranglijst Rapid
 set @competitie = 'ira';
@@ -197,57 +142,59 @@ set @ronde = 5;
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
 
+-- TODO alle mutaties van Peter van Diepen verwijderen
+
+delete from mutatie where knsbNummer = 6212404;
+
 -- TODO partij wijzigen
 
+set @seizoen = '2223';
 set @competitie = 'int';
-set @ronde = 21;
-set @bord = 5;
-set @wit = 7502143; -- Rob Heijink
-set @zwart = 6212404; -- Peter van Diepen
+set @ronde = 1;
+set @bord = 22;
+set @wit = 7691728; -- Karel Beentjes
+set @zwart = 7269900; -- Jan Ens
+set @oneven = 6212404; -- Peter van Diepen
+set @afwezig = 6212404; -- Peter van Diepen
 
-set @bord = 2;
-set @wit = 7502143; -- Rob Heijink
-set @zwart = 8611922; -- Tycho Bakker
-set @bord = 3;
-set @wit = 7518203; -- Theo de Bruijn
-set @zwart = 8372881; -- Egbert van Oene
-set @bord = 4;
-set @wit = 7613166; -- Peter Kalisvaart
-set @zwart = 7970094; -- Danny de Ruiter
-set @bord = 5;
-set @wit = 7399469; -- Nico Mak
-set @zwart = 8750093; -- Martin Rep
-set @bord = 6;
-set @wit = 7529522; -- Willem Meyles
-set @zwart = 7758014; -- Alex Albrecht
-set @bord = 7;
-set @wit = 6212404; -- Peter van Diepen
-set @zwart = 103; -- Charles Stoorvogel
-set @bord = 8;
-set @wit = 7210137; -- Arjen Dibbets
-set @zwart = 6214153; -- Jan Poland
-set @bord = 9;
-set @wit = 7535396; -- John Leek
-set @zwart = 8587337; -- Max Hooijmans
-set @bord = 10;
-set @wit = 7292043; -- Rob Freer
-set @zwart = 8485059; -- Peter Duijs
+set @wit = 7699010; -- Ruud Niewenhuis
+set @zwart = 6572511; -- Bert Buitink
+
+set @wit = 6187885; -- Bob de Mon
+set @zwart = 123; -- Kees van Montfoort
 
 update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = 7731812;
-
-select * from uitslag where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = 7731812;
+where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart);
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @oneven, @afwezig);
+
+-- TODO afwezig maken
+
+update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
+where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
+
+-- TODO oneven maken
+
+update uitslag set partij = 'o'
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @oneven;
+
+-- TODO partij wijzigen
 
 update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
 update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
+
+-- TODO wit / zwart wijzigen
+
+update uitslag set witZwart = 'w'
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
+update uitslag set witZwart = 'z'
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 -- TODO spelers selecteren
 select naam, s.knsbNummer, knsbRating, knsbOpgegeven, nhsbOpgegeven 

@@ -238,7 +238,7 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
  * @returns {boolean}
  */
 function nietTegen(r, i, j, rondeNummer) {
-    const nogNietTegen = [101 , 103]; // Ramon Witte, Charles Stoorvogel
+    const nogNietTegen = [];  // TODO helemaal verwijderen? [101, 103]; // Ramon Witte, Charles Stoorvogel
     if (!r[i].tegen(r[j], rondeNummer)) {
         return true;
     } else if (o_o_o.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
