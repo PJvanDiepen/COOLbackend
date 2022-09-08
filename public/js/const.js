@@ -11,12 +11,39 @@ const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
 const HALVE_COMPETITIE   = "ict";
 
-function interneCompetitie(teamCode) {
+function teamOfCompetitie(teamCode) {
+    return teamCode === "" ? false : teamCode.substring(0,1) !== " ";
+}
+
+function isCompetitie(teamCode) {
     return teamCode.substring(0,1) === "i";
 }
 
 function zwitsers(teamCode) {
     return teamCode.substring(1,2) === "z";
+}
+
+function teamVoluit(teamCode) { // TODO omschrijving uit database
+    if (teamCode === INTERNE_COMPETITIE) {
+        return "interne competitie";
+    } else if (teamCode === RAPID_COMPETTIE) {
+        return "rapid competitie";
+    } else if (teamCode === SNELSCHAKEN) {
+        return "einde seizoen snelschaken";
+    } else if (teamCode === "kbe") {
+        return o_o_o.vereniging + " KNSB bekerteam";
+    } else if (teamCode === "nbe") {
+        return o_o_o.vereniging + " NHSB bekerteam";
+    } else if (!teamOfCompetitie(teamCode)) {
+        return "geen";
+    } else {
+        return o_o_o.vereniging + " " + teamCode;
+    }
+}
+
+function wedstrijdVoluit(ronde) {
+    const eigenTeam = teamVoluit(ronde.teamCode);
+    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
 }
 
 // uitslag.partij
@@ -434,27 +461,6 @@ function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
 
-function teamVoluit(teamCode) { // TODO omschrijving uit database
-    if (teamCode === INTERNE_COMPETITIE) {
-        return "interne competitie";
-    } else if (teamCode === RAPID_COMPETTIE) {
-        return "rapid competitie";
-    } else if (teamCode === SNELSCHAKEN) {
-        return "einde seizoen snelschaken";
-    } else if (teamCode === "kbe") {
-        return o_o_o.vereniging + " KNSB bekerteam";
-    } else if (teamCode === "nbe") {
-        return o_o_o.vereniging + " NHSB bekerteam";
-    } else {
-        return o_o_o.vereniging + " " + teamCode;
-    }
-}
-
-function wedstrijdVoluit(ronde) {
-    const eigenTeam = teamVoluit(ronde.teamCode);
-    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
-}
-
 function score(winst, remise, verlies) {
     const partijen = winst + remise + verlies;
     if (partijen) {
@@ -510,11 +516,13 @@ async function teamSelecteren(teamCode) {
     const teams = document.getElementById("teamSelecteren");
     (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
         function (team) {
-            teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            if (teamOfCompetitie(team.teamCode)) {
+                teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            }
         });
     teams.value = teamCode; // werkt uitsluitend na await
     teams.addEventListener("input", function () {
-        if (interneCompetitie(teams.value)) {
+        if (isCompetitie(teams.value)) {
             naarAnderePagina(`ranglijst.html?team=${teams.value}`);
         } else {
             naarAnderePagina(`team.html?team=${teams.value}`);

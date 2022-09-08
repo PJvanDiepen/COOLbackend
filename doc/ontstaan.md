@@ -1,5 +1,8 @@
 TODO alle design beslissingen inclusief planning
 
+Alles draait om de eenvoud
+(Het Goede Doel)
+
 # Rokade wordt 0-0-0
 
 Tot voor kort gebruikte schaakvereniging de Waagtoren [Rokade van Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 

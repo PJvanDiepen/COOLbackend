@@ -52,9 +52,9 @@ async function agenda(kop, lijst) {
                 vinkje(w));
             htmlVerwerkt(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.appendChild(htmlRij(
-                interneCompetitie(w.teamCode) ? w.rondeNummer : "",
+                isCompetitie(w.teamCode) ? w.rondeNummer : "",
                 datumLeesbaar(w),
-                interneCompetitie(w.teamCode) ? teamVoluit(w.teamCode) : wedstrijdVoluit(w),
+                isCompetitie(w.teamCode) ? teamVoluit(w.teamCode) : wedstrijdVoluit(w),
                 teamleden.length,
                 link));
         }
@@ -94,12 +94,11 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
             // console.log('--- deze wedstrijd invullen ----');
             // console.log(w);
             const datum = datumSQL(w.datum);
-            const vandaag = datumSQL();
             const vanafVandaag = datum >= datumSQL();
             // voor interne competities voor vandaag afwezig invullen en vanafVandaag altijd niet meedoen invullen
-            if (vanafVandaag || interneCompetitie(w.teamCode)) {
+            if (vanafVandaag || isCompetitie(w.teamCode)) {
                 const afwezig = vanafVandaag ? NIET_MEEDOEN : AFWEZIG;
-                const competitie = interneCompetitie(w.teamCode) ? w.teamCode : INTERNE_COMPETITIE;
+                const competitie = isCompetitie(w.teamCode) ? w.teamCode : INTERNE_COMPETITIE;
                 const mutaties = await serverFetch(
                     `/${uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datum}/${competitie}`);
                 aanvullingen += mutaties;

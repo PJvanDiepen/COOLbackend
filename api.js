@@ -185,8 +185,7 @@ module.exports = router => {
 
     router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
-            .where('team.seizoen', ctx.params.seizoen)
-            .andWhere('team.teamCode', '<>', '') // niet geen team
+            .where('team.seizoen', ctx.params.seizoen);
     });
 
     /*

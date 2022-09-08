@@ -78,7 +78,7 @@ async function competitieSelecteren() {
     const competities = document.getElementById("competitieSelecteren");
     (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
         function (team) {
-            if (interneCompetitie(team.teamCode)) {
+            if (isCompetitie(team.teamCode)) {
                 competities.appendChild(htmlOptie(team.teamCode, team.omschrijving));
             }
         });
@@ -90,3 +90,6 @@ async function competitieSelecteren() {
             naarZelfdePagina();
         });
 }
+
+
+

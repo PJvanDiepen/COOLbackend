@@ -8,11 +8,11 @@
     await init();
     const lidNummer = Number(params.get("lid"));
     const persoon = await persoonLezen(lidNummer);
-    console.log("--- persoon ---");
-    console.log(persoon);
+    // console.log("--- persoon ---");
+    // console.log(persoon);
     const ola = olaLezen(lidNummer);
-    console.log("--- ola ---");
-    console.log(ola);
+    // console.log("--- ola ---");
+    // console.log(ola);
     menu([WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }],
@@ -31,8 +31,8 @@
         document.getElementById("interneRating"),
         document.getElementById("knsbTeam"),
         document.getElementById("nhsbTeam"),
-        // document.getElementById("intern1"),
-        // document.getElementById("intern2"),
+        document.getElementById("intern1"),
+        document.getElementById("intern2"),
         document.getElementById("gebruiker"));
 })();
 
@@ -43,7 +43,7 @@ async function persoonLezen(lidNummer) {
     for (const persoon of personen) {
         if (lidNummer === Number(persoon.knsbNummer)) {
             return persoon;
-        };
+        }
     }
     return false;
 }
@@ -73,8 +73,8 @@ async function lidFormulier(lidNummer,
                             interneRating,
                             knsbTeam,
                             nhsbTeam,
-                            // intern1,
-                            // intern2,
+                            intern1,
+                            intern2,
                             gebruiker) {
     // formulier invullen
     knsbNummer.value = lidNummer;
@@ -122,7 +122,6 @@ async function lidFormulier(lidNummer,
         let mutaties = 0;
         if (!persoon) {
             if (await serverFetch(`/${uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
-                console.log(`serverFetch(persoon/toevoegen/${lidNummer}/${naam.value})`);
                 mutaties++;
             }
         }
@@ -130,21 +129,17 @@ async function lidFormulier(lidNummer,
             if (await serverFetch(
                 `/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${knsbRating.value}/${interneRating.value}/${datumSQL()}`)) {
                 mutaties++;
-                console.log(`serverFetch(speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${knsbRating.value}/${interneRating.value}/${datumSQL()})`);
             }
         }
         if (gebruikerToevoegen === null && email.value !== "") { // TODO e-mailadres controleren
             if (await serverFetch(`/${uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
                 mutaties++;
-                console.log(`serverFetch(gebruiker/toevoegen/${lidNummer}/${email.value})`);
             }
         }
-        /*
         if (mutaties) {
             naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
         } else {
             naarAnderePagina(`bestuur.html`);
         }
-         */
     });
 }

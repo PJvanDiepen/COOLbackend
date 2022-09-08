@@ -37,7 +37,6 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
         const knsbNummer = Number(lid.knsbNummer);
         olaLid[knsbNummer] = knsbNummer; // bekend in persoon tabel
     }
-    const teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
     const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
     if (olaBestand) {
         for (const olaRegel of olaBestand) {
@@ -50,9 +49,9 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
                 tabel.appendChild(htmlRij(
                     htmlLink(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam),
                     olaRegel.knsbRating,
-                    "", // eventueel interne rating
-                    "", // lid ? lid.knsbTeam : "",
-                    "", // lid ? lid.nhsbTeam : "",
+                    "", // interne rating
+                    "", // knsbTeam
+                    "", // nhsbTeam
                     "", // competities
                     "")); // functie
             }
@@ -61,9 +60,14 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
 
     let aantalGebruikers = 0;
     let aantalPerTeam = {};
+    const teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
     for (const team of teams) {
-        aantalPerTeam[team.teamCode] = 0;
+        if (teamOfCompetitie(team.teamCode)) {
+            aantalPerTeam[team.teamCode] = 0;
+        }
     }
+    console.log("--- aantalPerTeam ---");
+    console.log(aantalPerTeam);
     for (const lid of personen) {
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
@@ -108,7 +112,9 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
     competities.appendChild(htmlRij("gebruikers van 0-0-0", aantalGebruikers));
     competities.appendChild(htmlRij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
     for (const team of teams) {
-        competities.appendChild(htmlRij(teamVoluit(team.teamCode), aantalPerTeam[team.teamCode]));
+        if (teamOfCompetitie(team.teamCode)) {
+            competities.appendChild(htmlRij(teamVoluit(team.teamCode), aantalPerTeam[team.teamCode]));
+        }
     }
 }
 
