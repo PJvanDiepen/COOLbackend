@@ -23,8 +23,12 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, 
 select * from team where seizoen = '2223';
 delete from team where seizoen = '2223';
 
+select * from team where omschrijving = 'geen';
+
+update team set omschrijving = 'geen' where seizoen = '2223' and omschrijving = 'geen team';
+
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-('2223', '', '', '', 'geen team', 0, 0),
+('2223', '', '', '', 'geen', 0, 0),
 ('2223', 'int', 'i', 'nt', 'interne competitie', 0, 0),
 ('2223', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
 

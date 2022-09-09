@@ -3,58 +3,45 @@
 /*
     verwerk lid=<knsbNummer>
  */
+const lidNummer = Number(params.get("lid"));
 
 (async function() {
     await init();
-    const lidNummer = Number(params.get("lid"));
-    const persoon = await persoonLezen(lidNummer);
-    // console.log("--- persoon ---");
-    // console.log(persoon);
-    const ola = olaLezen(lidNummer);
-    // console.log("--- ola ---");
-    // console.log(ola);
+    const persoon = await persoonLezen();
+    console.log("--- persoon ---");
+    console.log(persoon);
+    const competities = persoon ? competitiesVanPersoon(persoon) : "";
+    const ola = olaLezen();
+    console.log("--- ola ---");
+    console.log(ola);
     menu([WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }],
         [GEREGISTREERD, "systeembeheer", function () {  // TODO standaard in menu()
             naarAnderePagina("beheer.html");
         }]);
-    lidFormulier(
-        lidNummer,
-        persoon,
-        ola,
-        document.getElementById("formulier"), // TODO is er een truuk om alle velden klaar te zetten?
-        document.getElementById("naam"),
-        document.getElementById("email"),
-        document.getElementById("knsbNummer"),
-        document.getElementById("knsbRating"),
-        document.getElementById("interneRating"),
-        document.getElementById("knsbTeam"),
-        document.getElementById("nhsbTeam"),
-        document.getElementById("intern1"),
-        document.getElementById("intern2"),
-        document.getElementById("gebruiker"));
+    lidFormulier(persoon, competities, ola);
 })();
 
-async function persoonLezen(lidNummer) {
-    const personen = await localFetch(`/personen/${o_o_o.seizoen}`); // reeds gelezen in bestuur.html
-    console.log("--- personen ---");
-    console.log(personen);
+async function persoonLezen() {
+    const personen = await localFetch(`/personen/${o_o_o.seizoen}`);
     for (const persoon of personen) {
-        if (lidNummer === Number(persoon.knsbNummer)) {
+        if (Number(persoon.knsbNummer) === lidNummer) {
             return persoon;
         }
     }
     return false;
 }
 
-function olaLezen(lidNummer) {
+function competitiesVanPersoon(persoon) {
+    return persoon.intern1 + persoon.intern2 + persoon.intern3 + persoon.intern4 + persoon.intern5;
+}
+
+function olaLezen() {
     const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
-    console.log("--- olaBestand ---");
-    console.log(olaBestand);
     if (olaBestand) {
         for (const olaRegel of olaBestand) {
-            if (lidNummer === Number(olaRegel.knsbNummer)) {
+            if (Number(olaRegel.knsbNummer) === lidNummer) {
                 return olaRegel;
             }
         }
@@ -62,22 +49,11 @@ function olaLezen(lidNummer) {
     return false;
 }
 
-async function lidFormulier(lidNummer,
-                            persoon,
-                            ola,
-                            formulier,
-                            naam,
-                            email,
-                            knsbNummer,
-                            knsbRating,
-                            interneRating,
-                            knsbTeam,
-                            nhsbTeam,
-                            intern1,
-                            intern2,
-                            gebruiker) {
+async function lidFormulier(persoon, competities, ola) {
     // formulier invullen
+    const knsbNummer = document.getElementById("knsbNummer");
     knsbNummer.value = lidNummer;
+    const naam = document.getElementById("naam");
     if (!persoon && ola) {
         naam.value = ola.naam;
     } else if (persoon) {
@@ -86,9 +62,16 @@ async function lidFormulier(lidNummer,
             console.log(`verschillende namen in persoon: ${persoon.naam} en OLA: ${ola.naam}`);
         }
     }
+    const email = document.getElementById("email");
     if (ola) {
         email.value = ola.email;
     }
+    const gebruiker = document.getElementById("gebruiker");
+    const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
+    if (!gebruikerToevoegen) {
+        gebruiker.value = gebruikerFunctieVoluit(persoon);
+    }
+    const knsbRating = document.getElementById("knsbRating");
     knsbRating.value = 0;
     const spelerToevoegen = !persoon || persoon.knsbRating === null;
     if (!spelerToevoegen) {
@@ -97,6 +80,7 @@ async function lidFormulier(lidNummer,
     if (ola) {
         knsbRating.value = ola.knsbRating; // in OLA bestand van augustus staat juiste KNSB rating
     }
+    const interneRating = document.getElementById("interneRating");
     if (knsbRating.value > 0) {
         interneRating.appendChild(htmlOptie(knsbRating.value, "zie KNSB rating"));
     }
@@ -112,12 +96,37 @@ async function lidFormulier(lidNummer,
     } else {
         interneRating.value = LAAGSTE_RATING;
     }
-    const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
-    if (!gebruikerToevoegen) {
-        gebruiker.value = gebruikerFunctieVoluit(persoon);
+    const nhsbTeam = document.getElementById("nhsbTeam");
+    const knsbTeam = document.getElementById("knsbTeam");
+    const competitie = [
+        document.getElementById("intern1"),
+        document.getElementById("intern2")]; // TODO voorlopig 2 competities
+    let competitieNummer = 0;
+    const teams = await localFetch("/teams/" + o_o_o.seizoen);
+    for (const team of teams) {
+        if (!teamOfCompetitie(team.teamCode)) {
+            nhsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            knsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            competitie[0].appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            competitie[1].appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+        } else if (team.bond === "n") {
+            nhsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+        } else if (team.bond === "k") {
+            knsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+        } else if (isCompetitie(team.teamCode)) {
+            console.log("--- competities ---");
+            console.log(competities);
+            console.log(team.teamCode);
+            if (competities.includes(team.teamCode)) { // staat deze competitie bij de competities van persoon?
+                console.log("ja");
+                competitie[competitieNummer].value = team.teamCode;
+            }
+            competitie[competitieNummer].appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            competitieNummer++;
+        }
     }
     // formulier verwerken
-    formulier.addEventListener("submit", async function (event) {
+    document.getElementById("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();
         let mutaties = 0;
         if (!persoon) {

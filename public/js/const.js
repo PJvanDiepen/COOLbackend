@@ -23,7 +23,7 @@ function zwitsers(teamCode) {
     return teamCode.substring(1,2) === "z";
 }
 
-function teamVoluit(teamCode) { // TODO omschrijving uit database
+function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
     } else if (teamCode === RAPID_COMPETTIE) {

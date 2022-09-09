@@ -66,8 +66,6 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             aantalPerTeam[team.teamCode] = 0;
         }
     }
-    console.log("--- aantalPerTeam ---");
-    console.log(aantalPerTeam);
     for (const lid of personen) {
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
