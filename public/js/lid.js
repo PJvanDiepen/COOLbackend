@@ -10,7 +10,6 @@ const lidNummer = Number(params.get("lid"));
     const persoon = await persoonLezen();
     console.log("--- persoon ---");
     console.log(persoon);
-    const competities = persoon ? competitiesVanPersoon(persoon) : "";
     const ola = olaLezen();
     console.log("--- ola ---");
     console.log(ola);
@@ -20,7 +19,7 @@ const lidNummer = Number(params.get("lid"));
         [GEREGISTREERD, "systeembeheer", function () {  // TODO standaard in menu()
             naarAnderePagina("beheer.html");
         }]);
-    lidFormulier(persoon, competities, ola);
+    lidFormulier(persoon, ola);
 })();
 
 async function persoonLezen() {
@@ -31,10 +30,6 @@ async function persoonLezen() {
         }
     }
     return false;
-}
-
-function competitiesVanPersoon(persoon) {
-    return persoon.intern1 + persoon.intern2 + persoon.intern3 + persoon.intern4 + persoon.intern5;
 }
 
 function olaLezen() {
@@ -49,7 +44,19 @@ function olaLezen() {
     return false;
 }
 
-async function lidFormulier(persoon, competities, ola) {
+function speeltIntern(persoon, teamCode) {
+    if (persoon) {
+        return persoon.intern1 === teamCode
+            || persoon.intern2 === teamCode
+            || persoon.intern3 === teamCode
+            || persoon.intern4 === teamCode
+            || persoon.intern5 === teamCode;
+    } else {
+        return false;
+    }
+}
+
+async function lidFormulier(persoon, ola) {
     // formulier invullen
     const knsbNummer = document.getElementById("knsbNummer");
     knsbNummer.value = lidNummer;
@@ -98,30 +105,31 @@ async function lidFormulier(persoon, competities, ola) {
     }
     const nhsbTeam = document.getElementById("nhsbTeam");
     const knsbTeam = document.getElementById("knsbTeam");
-    const competitie = [
-        document.getElementById("intern1"),
-        document.getElementById("intern2")]; // TODO voorlopig 2 competities
+    const competities = document.getElementById("competities");
+    const competitie = [];
     let competitieNummer = 0;
     const teams = await localFetch("/teams/" + o_o_o.seizoen);
     for (const team of teams) {
         if (!teamOfCompetitie(team.teamCode)) {
             nhsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
             knsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
-            competitie[0].appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
-            competitie[1].appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
         } else if (team.bond === "n") {
             nhsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            if (persoon && persoon.nhsbTeam === team.teamCode) { // speelt persoon in dit nhsbTeam?
+                nhsbTeam.value = team.teamCode;
+            }
         } else if (team.bond === "k") {
             knsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
-        } else if (isCompetitie(team.teamCode)) {
-            console.log("--- competities ---");
-            console.log(competities);
-            console.log(team.teamCode);
-            if (competities.includes(team.teamCode)) { // staat deze competitie bij de competities van persoon?
-                console.log("ja");
-                competitie[competitieNummer].value = team.teamCode;
+            if (persoon && persoon.knsbTeam === team.teamCode) { // speelt persoon in dit knsbTeam?
+                knsbTeam.value = team.teamCode;
             }
-            competitie[competitieNummer].appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+        } else if (interneCompetitie(team.teamCode)) {
+            const id = `intern${competitieNummer + 1}`;
+            competities.appendChild(htmlCheckbox(id, team.teamCode, teamVoluit(team.teamCode)));
+            competitie[competitieNummer] = document.getElementById(id);
+            if (speeltIntern(persoon, team.teamCode)) {
+                competitie[competitieNummer].checked = true;
+            }
             competitieNummer++;
         }
     }

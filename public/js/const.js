@@ -15,7 +15,7 @@ function teamOfCompetitie(teamCode) {
     return teamCode === "" ? false : teamCode.substring(0,1) !== " ";
 }
 
-function isCompetitie(teamCode) {
+function interneCompetitie(teamCode) {
     return teamCode.substring(0,1) === "i";
 }
 
@@ -329,6 +329,17 @@ async function serverFetch(url) {
     }
 }
 
+function htmlCheckbox(id, value, tekst) {
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.id = id;
+    input.value = value;
+    const label = document.createElement("label");
+    label.appendChild(input);
+    label.appendChild(htmlTekst(tekst));
+    return label;
+}
+
 function htmlOptie(value, text) {
     const option = document.createElement("option");
     option.value = value;
@@ -522,7 +533,7 @@ async function teamSelecteren(teamCode) {
         });
     teams.value = teamCode; // werkt uitsluitend na await
     teams.addEventListener("input", function () {
-        if (isCompetitie(teams.value)) {
+        if (interneCompetitie(teams.value)) {
             naarAnderePagina(`ranglijst.html?team=${teams.value}`);
         } else {
             naarAnderePagina(`team.html?team=${teams.value}`);
