@@ -3,6 +3,49 @@ TODO alle design beslissingen inclusief planning
 Alles draait om de eenvoud
 (Het Goede Doel)
 
+We hebben je e-mailadres nodig om je een link met een unieke code op te sturen waarmee 0-0-0.nl je herkent.
+Indien 0-0-0.nl je niet meer herkent, kan je opnieuw een registratie aanvragen.
+
+Je aanvraag wordt gecontroleerd
+
+Je aanvraag wordt niet onmiddellijk verwerkt, want we controleren eerst je e-mailadres.
+Een wedstrijdleider stuurt je per e-mail een link met een unieke code.
+0-0-0.nl stuurt dus nooit automatisch een unieke code.
+
+Klik op de link, die je per e-mail hebt gekregen
+
+0-0-0.nl genereert voor elk lid van de schaakvereniging een unieke code.
+Die unieke code krijg je per e-mail met een link.
+Pas als je op die link hebt geklikt, wordt de unieke code geactiveerd en
+kan 0-0-0.nl je herkennen als geregistreerd gebruiker.
+Indien je 0-0-0.nl gebruikt op verschillende apparaten (computer, tablet of smartphone),
+moet je op elk apparaat dezelfde unieke code activeren.
+
+0-0-0.nl herkent je als geregistreerd gebruiker
+
+Als je een geregistreerd gebruiker bent, staat een unieke code op elk apparaat waarop je de registratie hebt geactiveerd.
+Indien je met dat apparaat 0-0-0.nl gebruikt, stuur je automatisch die unieke code naar 0-0-0.nl.
+Met de unieke code zoekt 0-0-0.nl je naam en KNSB nummer en
+heb je een persoonlijke agenda, kan je je per ronde aanmelden of afzeggen
+en kan je de voorlopige indeling van de komende ronde zien.
+
+Technische uitleg
+
+0-0-0.nl gebruikt [localStorage en sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
+(DOM storage), een moderne en veilige techniek om gegevens van de server op je lokale computer, smartphone of tablet op te slaan.
+0-0-0.nl gebruikt [geen ouderwetse, onveilige cookie's](https://blog.google/products/chrome/updated-timeline-privacy-sandbox-milestones/)!
+
+0-0-0.nl gebruikt sessionStorage om ranglijsten en uitslagen tijdelijk op te slaan,
+zodat het oproepen van verschillende ranglijsten en uitslagen van meer spelers sneller gaat,
+omdat je browser niet steeds opnieuw een verbinding hoeft te maken met de server.
+Na het sluiten van je sessie met je browser staan die ranglijsten en uitslagen niet meer in het geheugen van je apparaat.
+0-0-0.nl gebruikt localStorage alleen voor de unieke code om jou te herkennen als geregistreerd gebruiker.
+Deze unieke code blijft daarom wel in het geheugen van je apparaat staan,
+maar is uitsluitend zichtbaar voor 0-0-0.nl en niet voor andere websites dankzij je browser.
+            </p>
+        </details>
+    </details>
+
 # Rokade wordt 0-0-0
 
 Tot voor kort gebruikte schaakvereniging de Waagtoren [Rokade van Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 

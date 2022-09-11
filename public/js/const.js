@@ -336,7 +336,7 @@ function htmlCheckbox(id, value, tekst) {
     input.value = value;
     const label = document.createElement("label");
     label.appendChild(input);
-    label.appendChild(htmlTekst(tekst));
+    label.appendChild(htmlTekst(` ${tekst}`)); // spatie tussen checkbox en label
     return label;
 }
 

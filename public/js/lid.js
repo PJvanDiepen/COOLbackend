@@ -7,6 +7,7 @@ const lidNummer = Number(params.get("lid"));
 
 (async function() {
     await init();
+    document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
     const persoon = await persoonLezen();
     console.log("--- persoon ---");
     console.log(persoon);
@@ -141,17 +142,23 @@ async function lidFormulier(persoon, ola) {
             if (await serverFetch(`/${uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
                 mutaties++;
             }
+        } else if (false) { // TODO naam of knsbNummer gewijzigd
+            // TODO persoon wijzigen
         }
         if (spelerToevoegen) {
             if (await serverFetch(
                 `/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${knsbRating.value}/${interneRating.value}/${datumSQL()}`)) {
                 mutaties++;
             }
+        } else if (false) { // TODO rating, team of competitie gewijzigd
+            // TODO speler wijzigen
         }
-        if (gebruikerToevoegen === null && email.value !== "") { // TODO e-mailadres controleren
+        if (gebruikerToevoegen && email.value !== "") { // TODO e-mailadres controleren
             if (await serverFetch(`/${uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
                 mutaties++;
             }
+        } else if (false) { // TODO email gewijzigd
+            // TODO gebruiker wijzigen
         }
         if (mutaties) {
             naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
