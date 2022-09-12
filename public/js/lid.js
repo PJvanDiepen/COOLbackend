@@ -58,6 +58,7 @@ function speeltIntern(persoon, teamCode) {
 }
 
 async function lidFormulier(persoon, ola) {
+
     // formulier invullen
     const knsbNummer = document.getElementById("knsbNummer");
     knsbNummer.value = lidNummer;
@@ -134,10 +135,13 @@ async function lidFormulier(persoon, ola) {
             competitieNummer++;
         }
     }
+
     // formulier verwerken
     document.getElementById("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();
         let mutaties = 0;
+
+        // persoon verwerken
         if (!persoon) {
             if (await serverFetch(`/${uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
                 mutaties++;
@@ -145,20 +149,34 @@ async function lidFormulier(persoon, ola) {
         } else if (false) { // TODO naam of knsbNummer gewijzigd
             // TODO persoon wijzigen
         }
-        if (spelerToevoegen) {
-            if (await serverFetch(
-                `/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${knsbRating.value}/${interneRating.value}/${datumSQL()}`)) {
-                mutaties++;
-            }
-        } else if (false) { // TODO rating, team of competitie gewijzigd
-            // TODO speler wijzigen
-        }
+
+        // gebruiker verwerken
         if (gebruikerToevoegen && email.value !== "") { // TODO e-mailadres controleren
             if (await serverFetch(`/${uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
                 mutaties++;
             }
         } else if (false) { // TODO email gewijzigd
             // TODO gebruiker wijzigen
+        }
+
+        // speler verwerken
+        const rating = knsbRating.value;
+        const ratingIntern = interneRating.value;
+        const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
+        const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;
+        let vinkjes = "";
+        for (let i = 0; i < competitie.length; i++) {
+            if (competitie[i].checked) {
+                vinkjes += competitie[i].value; // teamCode
+            }
+        }
+        vinkjes += " "; // minstens 1 vinkje voor blanko teamCode
+        if (spelerToevoegen) {
+            if (await serverFetch(`/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${datumSQL()}/${nhsb}/${knsb}/${vinkjes}`)) {
+                mutaties++;
+            }
+        } else if (false) { // TODO rating, team of competitie gewijzigd
+            // TODO speler wijzigen
         }
         if (mutaties) {
             naarAnderePagina(`bestuur.html?lid=${lidNummer}`);

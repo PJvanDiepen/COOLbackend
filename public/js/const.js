@@ -323,9 +323,16 @@ async function localFetch(url) {
 async function serverFetch(url) {
     try {
         const response = await fetch(server + url);
-        return await response.json();
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.log(`--- serverFetch ---`);
+            console.log(response);
+            return false;
+        }
     } catch (error) {
-        console.error(error); // TODO per sessie fouten verzamelen?
+        console.log(`--- serverFetch error ---`);
+        console.error(error);
     }
 }
 

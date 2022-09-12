@@ -2,6 +2,8 @@ use waagtoren;
 
 select naam, g.* from gebruiker g join persoon p on g.knsbNummer = p.knsbNummer order by naam;
 
+delete from gebruiker where uuidToken = 'b9a31580-32b0-11ed-a8a7-525400be7013';
+
 select * from speler where seizoen = '2223';
 
 delete from speler where seizoen = '2223' and knsbNummer = 6212404;

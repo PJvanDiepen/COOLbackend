@@ -33,6 +33,18 @@ async function mutatie(gebruiker, ctx, aantal, invloed) {
     }
 }
 
+function teamCodes(competities) {
+    const teamCode = [" ", " ", " ", " ", " "]; // voor intern1..5
+    let i = 0;
+    let j = 0;
+    while (i < competities.length && j < teamCode.length) {
+        teamCode[j] = competities.substring(i, i + 3);
+        i += 3;
+        j++;
+    }
+    return teamCode;
+}
+
 module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
@@ -551,18 +563,6 @@ module.exports = router => {
     // geef aantal mutaties --------------------------------------------------------------------------------------------
 
     /*
-    registratie aanvragen voor gebruiker
-     */
-    router.get('/registreer/:knsbNummer/:email', async function (ctx) {  //TODO vervangen door gebruiker toevoegen
-        await Gebruiker.query()
-            .insert({knsbNummer: ctx.params.knsbNummer,
-                mutatieRechten: GEREGISTREERD,
-                uuidToken: fn('uuid'),
-                email: ctx.params.email});
-        ctx.body = 1;
-    });
-
-    /*
     registratie voor gebruiker activeren
      */
     router.get('/activeer/:uuidToken', async function (ctx) {
@@ -571,7 +571,7 @@ module.exports = router => {
             .patch({datumEmail: fn('curdate')});
     });
 
-    router.get('/:uuidToken/gebruiker/toevoegen/:knsbNummer/:email', async function (ctx) { // TODO /registreer verwijderen
+    router.get('/:uuidToken/gebruiker/toevoegen/:knsbNummer/:email', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
@@ -586,7 +586,7 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    router.get('/:uuidToken/team/toevoegen/:seizoen/:team/:bond', async function (ctx) {
+    router.get('/:uuidToken/team/toevoegen/:seizoen/:team/:bond', async function (ctx) { // TODO alle velden invullen
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
@@ -634,32 +634,57 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    router.get('/:uuidToken/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum', async function (ctx) {
+    router.get('/:uuidToken/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum/:nhsb/:knsb/:competities', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
+            const intern = teamCodes(ctx.params.competities);
             await Speler.query().insert({
                 seizoen: ctx.params.seizoen,
                 knsbNummer: ctx.params.knsbNummer,
-                nhsbTeam: "",
-                knsbTeam: "",
                 knsbRating: ctx.params.knsbRating,
                 datum: ctx.params.datum,
                 interneRating: ctx.params.interneRating,
-                intern1: INTERNE_COMPETITIE,
-                intern2: RAPID_COMPETTIE,
-                intern3: "",
-                intern4: "",
-                intern5: ""});
+                nhsbTeam: ctx.params.nhsb,
+                knsbTeam: ctx.params.knsb,
+                intern1: intern[0],
+                intern2: intern[1],
+                intern3: intern[2],
+                intern4: intern[3],
+                intern5: intern[4]});
             aantal = 1;
             await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
         }
         ctx.body = aantal;
     });
 
+    router.get('/:uuidToken/speler/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum/:nhsb/:knsb/:competities', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BESTUUR)) {
+            const intern = teamCodes(ctx.params.competities);
+            if (await Speler.query()
+                .findById([ctx.params.seizoen, ctx.params.knsbNummer])
+                .patch({
+                    knsbRating: ctx.params.knsbRating,
+                    datum: ctx.params.datum,
+                    interneRating: ctx.params.interneRating,
+                    nhsbTeam: ctx.params.nhsb,
+                    knsbTeam: ctx.params.knsb,
+                    intern1: intern[0],
+                    intern2: intern[1],
+                    intern3: intern[2],
+                    intern4: intern[3],
+                    intern5: intern[4]})) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
+        }
+        ctx.body = aantal;
+    });
+
     /*
         wedstrijd in agenda toevoegen
-
      */
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
