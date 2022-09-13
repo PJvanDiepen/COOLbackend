@@ -71,6 +71,9 @@ Objection / Knex
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
 - [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
 
+# marketing
+- [SEO](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
+
 # Interessant 
 
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)

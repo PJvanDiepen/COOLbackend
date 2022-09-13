@@ -78,7 +78,7 @@ async function lidFormulier(persoon, ola) {
     const gebruiker = document.getElementById("gebruiker");
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
     if (!gebruikerToevoegen) {
-        gebruiker.value = gebruikerFunctieVoluit(persoon);
+        gebruiker.value = gebruikerFunctie(persoon);
     }
     const knsbRating = document.getElementById("knsbRating");
     knsbRating.value = 0;

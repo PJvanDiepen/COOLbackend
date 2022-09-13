@@ -21,7 +21,7 @@
 async function ledenLijst(lidNummer, kop, competities, tabel) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor bestuur";
     const personen = await serverFetch(`/personen/${o_o_o.seizoen}`);
-    competities.appendChild(htmlRij("personen in 0-0-0", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
+    competities.appendChild(htmlRij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
     const tijdelijkNummer = await serverFetch(`/nummer`); // vanaf 100
     tabel.appendChild(htmlRij(
         htmlLink(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
@@ -102,16 +102,16 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
                 lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? VINKJE : lid.interneRating,
                 lid.knsbTeam === null ? "" : lid.knsbTeam,
                 lid.nhsbTeam === null ? "" : lid.nhsbTeam,
-                lid.intern1 === null ? "" : "intern en rapid", // TODO uitsplitsen
-                lid.mutatieRechten === null ? "" : gebruikerFunctieVoluit(lid) // TODO zoals bij beheer.html
+                lid.intern1 === null ? "" : [lid.intern1, lid.intern2, lid.intern3, lid.intern4, lid.intern5].join(", "),
+                lid.mutatieRechten === null ? "" : gebruikerFunctie(lid)
             ));
         }
     }
-    competities.appendChild(htmlRij("gebruikers van 0-0-0", aantalGebruikers));
+    competities.appendChild(htmlRij("gebruikers van 0-0-0", "", aantalGebruikers));
     competities.appendChild(htmlRij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
     for (const team of teams) {
         if (teamOfCompetitie(team.teamCode)) {
-            competities.appendChild(htmlRij(teamVoluit(team.teamCode), aantalPerTeam[team.teamCode]));
+            competities.appendChild(htmlRij(teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
         }
     }
 }

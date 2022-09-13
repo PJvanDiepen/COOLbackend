@@ -156,7 +156,7 @@ module.exports = router => {
     -- alle personen met spelers per seizoen
     with s as
     (select * from speler where seizoen = @seizoen)
-    select p.*, s.*, gebruiker.mutatieRechten
+    select p.*, s.*, gebruiker.mutatieRechten, gebruiker.datumEmail
     from persoon p
     left join s on s.knsbNummer = p.knsbNummer
     left join gebruiker g on g.knsbNummer = p.knsbNummer
@@ -181,7 +181,8 @@ module.exports = router => {
                 's.intern3',
                 's.intern4',
                 's.intern5',
-                'gebruiker.mutatieRechten')
+                'gebruiker.mutatieRechten',
+                'gebruiker.datumEmail')
             .leftJoin('s', 'persoon.knsbNummer', 's.knsbNummer')
             .leftJoin('gebruiker', 'persoon.knsbNummer', 'gebruiker.knsbNummer')
             .orderBy('naam');

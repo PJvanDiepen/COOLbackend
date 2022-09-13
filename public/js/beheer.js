@@ -59,16 +59,6 @@ function gebruikerEmailSturen(lid) {
 
 // TODO gebruiker hoger of lagere functie geven
 
-function gebruikerFunctie(lid) {
-    if (!lid.datumEmail) {
-        return KRUISJE; // TODO eventueel verwijderen
-    } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
-        return datumLeesbaar({datum: lid.datumEmail});
-    } else {
-        return gebruikerFunctieVoluit(lid);
-    }
-}
-
 async function laatsteMutaties(lijst) {
     const mutaties = await serverFetch(`/${uuidToken}/mutaties/0/9/100`); // laatste 100 mutaties
     let vorige = 0;

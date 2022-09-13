@@ -180,9 +180,11 @@ async function gebruikerVerwerken() {
     }
 }
 
-function gebruikerFunctieVoluit(lid) {
-    if (Number(lid.mutatieRechten) === GEREGISTREERD) {
-        return "geregistreerd lid";
+function gebruikerFunctie(lid) {
+    if (!lid.datumEmail) {
+        return KRUISJE; // TODO eventueel verwijderen
+    } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
+        return datumLeesbaar({datum: lid.datumEmail});
     } else if (Number(lid.mutatieRechten) === BEHEERDER) {
         return "systeembeheerder";
     } else if (Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
@@ -190,9 +192,9 @@ function gebruikerFunctieVoluit(lid) {
     } else if (Number(lid.mutatieRechten) === TEAMLEIDER) {
         return "teamleider";
     } else if (Number(lid.mutatieRechten) === BESTUUR) {
-        return "bestuurslid";
+        return "bestuur";
     } else {
-        return "geen gebruiker";
+        return "geen gebruiker"
     }
 }
 
