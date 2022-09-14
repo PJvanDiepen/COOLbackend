@@ -307,7 +307,7 @@ module.exports = router => {
       from ronde r
       join s on r.seizoen = s.seizoen
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen and (r.teamCode like 'i%' or r.teamCode in (s.knsbTeam, s.nhsbTeam))
+    where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5))
     order by r.datum, r.teamCode, r.rondeNummer;
      */
     router.get('/:uuidToken/kalender/:seizoen/:knsbNummer', async function (ctx) {
@@ -333,8 +333,14 @@ module.exports = router => {
                      .andOn('u.rondeNummer', 'ronde.rondeNummer')
              })
              .where('ronde.seizoen', ctx.params.seizoen)
-             .whereIn('ronde.teamCode', // interne competities en externe teams van speler TODO like "i%"
-                 [INTERNE_COMPETITIE, RAPID_COMPETTIE, SNELSCHAKEN, ZWITSERS_TEST, ref('s.knsbTeam'), ref('s.nhsbTeam')])
+             .whereIn('ronde.teamCode', [ // externe teams en interne competities van speler
+                 ref('s.knsbTeam'),
+                 ref('s.nhsbTeam'),
+                 ref('s.intern1'),
+                 ref('s.intern2'),
+                 ref('s.intern3'),
+                 ref('s.intern4'),
+                 ref('s.intern5')])
              .orderBy(['ronde.datum', 'ronde.teamCode', 'ronde.rondeNummer']);
         } else {
             ctx.body = [];
