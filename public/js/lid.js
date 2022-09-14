@@ -188,18 +188,15 @@ async function lidFormulier(persoon, ola) {
                 persoon.nhsbTeam.trim() === nhsb.trim() &&
                 persoon.knsbTeam.trim() === knsb.trim() &&
                 speeltInAantalCompetities === internNummer;
-            console.log(intern);
             for (let i = 0; i < internNummer; i++) {
                 nietGewijzigd = nietGewijzigd && speeltIntern(persoon, intern[i].trim());
             }
             if (!nietGewijzigd) { // wel gewijzigd
-                console.log("TODO speler wijzigen");
                 if (await serverFetch(`/${uuidToken}/speler/wijzigen/${o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${datumSQL()}`)) {
                     mutaties++;
                 }
             }
         }
-        console.log(`${mutaties} mutaties voor ${persoon.naam}`);
-        // TODO naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
+        naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
     });
 }
