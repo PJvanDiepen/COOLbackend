@@ -635,7 +635,7 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    router.get('/:uuidToken/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum/:nhsb/:knsb/:competities', async function (ctx) {
+    router.get('/:uuidToken/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
@@ -659,7 +659,7 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    router.get('/:uuidToken/speler/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum/:nhsb/:knsb/:competities', async function (ctx) {
+    router.get('/:uuidToken/speler/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {

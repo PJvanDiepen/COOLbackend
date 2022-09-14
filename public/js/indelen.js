@@ -164,7 +164,7 @@ function deelnemersLijst(r, lijst) {
         lijst.appendChild(htmlRij(
             i + 1,
             naarSpeler(t),
-            t.totaal(),
+            t.totaal(), // TODO t.punten() ?
             t.eigenWaardeCijfer(),
             t.intern() ? t.intern() : "",
             t.saldoWitZwart() ? t.saldoWitZwart() : ""));

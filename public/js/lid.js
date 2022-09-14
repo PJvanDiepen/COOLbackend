@@ -45,7 +45,7 @@ function olaLezen() {
     return false;
 }
 
-function speeltIntern(persoon, teamCode) {
+function speeltIntern(persoon, teamCode) { // volgens database
     if (persoon) {
         return persoon.intern1 === teamCode
             || persoon.intern2 === teamCode
@@ -110,6 +110,7 @@ async function lidFormulier(persoon, ola) {
     const competities = document.getElementById("competities");
     const competitie = [];
     let competitieNummer = 0;
+    let speeltInAantalCompetities = 0;
     const teams = await localFetch("/teams/" + o_o_o.seizoen);
     for (const team of teams) {
         if (!teamOfCompetitie(team.teamCode)) {
@@ -131,6 +132,7 @@ async function lidFormulier(persoon, ola) {
             competitie[competitieNummer] = document.getElementById(id);
             if (speeltIntern(persoon, team.teamCode)) {
                 competitie[competitieNummer].checked = true;
+                speeltInAantalCompetities++;
             }
             competitieNummer++;
         }
@@ -164,24 +166,40 @@ async function lidFormulier(persoon, ola) {
         const ratingIntern = interneRating.value;
         const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
         const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;
+        const intern = []; // speeltIntern volgens lidformulier
+        let internNummer = 0;
         let vinkjes = "";
         for (let i = 0; i < competitie.length; i++) {
             if (competitie[i].checked) {
-                vinkjes += competitie[i].value; // teamCode
+                intern[internNummer] = competitie[i].value;
+                internNummer++;
+                vinkjes += competitie[i].value;
             }
         }
         vinkjes += " "; // minstens 1 vinkje voor blanko teamCode
         if (spelerToevoegen) {
-            if (await serverFetch(`/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${datumSQL()}/${nhsb}/${knsb}/${vinkjes}`)) {
+            if (await serverFetch(`/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${datumSQL()}`)) {
                 mutaties++;
             }
-        } else if (false) { // TODO rating, team of competitie gewijzigd
-            // TODO speler wijzigen
+        } else if (persoon) {
+            let nietGewijzigd =
+                Number(persoon.knsbRating) === Number(rating) &&
+                Number(persoon.interneRating) === Number(ratingIntern) &&
+                persoon.nhsbTeam.trim() === nhsb.trim() &&
+                persoon.knsbTeam.trim() === knsb.trim() &&
+                speeltInAantalCompetities === internNummer;
+            console.log(intern);
+            for (let i = 0; i < internNummer; i++) {
+                nietGewijzigd = nietGewijzigd && speeltIntern(persoon, intern[i].trim());
+            }
+            if (!nietGewijzigd) { // wel gewijzigd
+                console.log("TODO speler wijzigen");
+                if (await serverFetch(`/${uuidToken}/speler/wijzigen/${o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${datumSQL()}`)) {
+                    mutaties++;
+                }
+            }
         }
-        if (mutaties) {
-            naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
-        } else {
-            naarAnderePagina(`bestuur.html`);
-        }
+        console.log(`${mutaties} mutaties voor ${persoon.naam}`);
+        // TODO naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
     });
 }
