@@ -8,10 +8,7 @@ TODO mutaties met verwijderen
 
 (async function() {
     await init();
-    menu([TEAMLEIDER, "externe competitie", function () {
-            naarAnderePagina("teamleider.html");
-        }],
-        [BEHEERDER, `backup gebruikers` , async function () {
+    menu([BEHEERDER, `backup gebruikers` , async function () {
             const rijen = await serverFetch(`/${uuidToken}/backup/gebruiker`);
             backupSQL("gebruiker", rijen);
         }],

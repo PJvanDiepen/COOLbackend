@@ -49,14 +49,23 @@ module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
+    /*
+    Zie beheer.js
+     */
     router.get('/versie', async function (ctx) {
         ctx.body = JSON.stringify(package_json.version);
     });
 
+    /*
+    Zie const.js
+     */
     router.get('/gewijzigd', async function (ctx) {
         ctx.body = laatsteMutaties;
     });
 
+    /*
+    Zie bestuur.js
+     */
     router.get('/nummer', async function (ctx) {
         const nummers = await Persoon.query()
             .select('knsbNummer')
@@ -66,6 +75,9 @@ module.exports = router => {
         ctx.body = nummers[0] ? Number(nummers[0].knsbNummer + 1) : 0;
     });
 
+    /*
+    Zie start.js
+     */
     router.get('/seizoenen/:teamCode', async function (ctx) {
         const seizoenen = await Team.query()
             .select('team.seizoen')
@@ -75,6 +87,8 @@ module.exports = router => {
 
     /*
      Heeft deze ronde al een indeling en nog geen uitslagen?
+
+     Zie const.js
      */
     router.get('/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const uitslagen = await Uitslag.query()
@@ -87,6 +101,9 @@ module.exports = router => {
         ctx.body = uitslagen.length; // 1 = indeling zonder uitslagen, 0 = geen indeling
     });
 
+    /*
+    Zie agenda.js
+     */
     router.get('/:uuidToken/teamleden/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
@@ -101,6 +118,9 @@ module.exports = router => {
         ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
     });
 
+    /*
+    Zie indelen.js
+     */
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer/:partij', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
@@ -127,6 +147,8 @@ module.exports = router => {
 
     /*
     spelers die externe competitie spelen tijdens interne competitie
+
+    Zie indelen.js
      */
     router.get('/:uuidToken/uithuis/:seizoen/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -144,6 +166,9 @@ module.exports = router => {
         ctx.body = uithuis;
     });
 
+    /*
+    Zie wijzig.js
+     */
     router.get('/spelers/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
             .select('naam', 'persoon.knsbNummer')
@@ -161,6 +186,8 @@ module.exports = router => {
     left join s on s.knsbNummer = p.knsbNummer
     left join gebruiker g on g.knsbNummer = p.knsbNummer
     order by naam;
+
+    Zie bestuur.js, lid.js
      */
     router.get('/personen/:seizoen', async function (ctx) {
         ctx.body = await Persoon.query()
@@ -188,6 +215,9 @@ module.exports = router => {
             .orderBy('naam');
     });
 
+    /*
+    Zie teamleider.js
+     */
     router.get('/rating/:seizoen', async  function (ctx) {
         ctx.body = await Speler.query()
             .select('naam', 'speler.*')
@@ -196,6 +226,9 @@ module.exports = router => {
             .orderBy('knsbRating', 'desc');
     });
 
+    /*
+    Zie const.js, start.js, team.js, bestuur.js, lid.js
+     */
     router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
             .where('team.seizoen', ctx.params.seizoen);
@@ -212,6 +245,8 @@ module.exports = router => {
     join persoon p on s.knsbNummer = p.knsbNummer
     where seizoen = @seizoen
     order by totalen desc;
+
+    Zie const.js, ronde.js*, speler.js*
      */
     router.get('/ranglijst/:seizoen/:competitie/:ronde/:datum/:versie', async function (ctx) {
         ctx.body = await Speler.query()
@@ -263,6 +298,8 @@ module.exports = router => {
         and u.knsbNummer = @knsbNummer
         and u.anderTeam = @competitie
     order by u.datum, u.bordNummer;
+
+    Zie speler.js, ronde.js*
      */
     router.get('/uitslagen/:seizoen/:versie/:knsbNummer/:competitie', async function (ctx) {
         ctx.body = await Uitslag.query()
@@ -309,6 +346,8 @@ module.exports = router => {
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5))
     order by r.datum, r.teamCode, r.rondeNummer;
+
+    Zie agenda.js
      */
     router.get('/:uuidToken/kalender/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -347,6 +386,9 @@ module.exports = router => {
         }
     });
 
+    /*
+    Zie teamleider.js
+     */
     router.get('/:uuidToken/teamleider/:seizoen/:teamCode/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(TEAMLEIDER)) {
@@ -389,6 +431,8 @@ module.exports = router => {
     join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
     where seizoen = @seizoen and teamCode = @teamCode and rondeNummer = @rondeNummer and witZwart = 'w'
     order by uitslag.seizoen, bordNummer;
+
+    Zie ronde.js
      */
     router.get('/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
@@ -420,6 +464,8 @@ module.exports = router => {
     join persoon on uitslag.knsbNummer = persoon.knsbNummer
     where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode and uitslag.team = 'e'
     order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
+
+    Zie const.js
      */
     router.get('/team/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Uitslag.query()
@@ -444,6 +490,8 @@ module.exports = router => {
     join persoon on teamleider = knsbNummer
     where r.seizoen = @seizoen and r.teamCode not in ('int', 'ipv')
     order by r.datum, r.teamCode;
+
+    Zie ronde.js, teamleider.js
     */
     router.get('/wedstrijden/:seizoen', async function (ctx) {
         ctx.body = await Ronde.query()
@@ -462,29 +510,44 @@ module.exports = router => {
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
+    /*
+    Zie beheer.js
+     */
     router.get('/backup/persoon', async function (ctx) {
         ctx.body = await Persoon.query()
             .orderBy('naam');
     });
 
+    /*
+    Zie beheer.js
+     */
     router.get('/backup/speler/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
             .where('seizoen', ctx.params.seizoen)
             .orderBy('knsbNummer');
     });
 
+    /*
+    Zie beheer.js
+     */
     router.get('/backup/team/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
             .where('seizoen', ctx.params.seizoen)
             .orderBy('teamCode');
     });
 
+    /*
+    Zie beheer.js
+     */
     router.get('/backup/ronde/:seizoen', async function (ctx) {
         ctx.body = await Ronde.query()
             .where('seizoen', ctx.params.seizoen)
             .orderBy(['teamCode', 'rondeNummer']);
     });
 
+    /*
+    Zie ronde.js
+     */
     router.get('/backup/ronde/uitslag/:seizoen/:teamCode/:van/:tot', async function (ctx) {
         ctx.body = await Uitslag.query()
             .where('seizoen', ctx.params.seizoen)
@@ -493,6 +556,9 @@ module.exports = router => {
             .orderBy(['rondeNummer','bordNummer','partij','witZwart', 'knsbNummer']);
     });
 
+    /*
+    Zie speler.js
+     */
     router.get('/backup/speler/uitslag/:seizoen/:knsbNummer', async function (ctx) {
         ctx.body = await Uitslag.query()
             .where('uitslag.seizoen', ctx.params.seizoen)
@@ -500,6 +566,9 @@ module.exports = router => {
             .orderBy(['datum','teamCode']);
     });
 
+    /*
+    Zie beheer.js
+     */
     router.get('/:uuidToken/backup/gebruiker', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(BEHEERDER)) {
@@ -509,6 +578,9 @@ module.exports = router => {
         }
     });
 
+    /*
+    Zie beheer.js
+     */
     router.get('/:uuidToken/gebruikers', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(BEHEERDER)) {
@@ -524,6 +596,9 @@ module.exports = router => {
         }
     });
 
+    /*
+    Zie beheer.js
+     */
     router.get('/:uuidToken/mutaties/:van/:tot/:aantal', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(BEHEERDER)) {
@@ -546,6 +621,8 @@ module.exports = router => {
 
     /*
     email aan gebruiker om registratie te activeren
+
+    Zie email.js
      */
     router.get('/:uuidToken/email/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -561,6 +638,8 @@ module.exports = router => {
 
     /*
     knsbNummer, naam en mutatieRechten van gebruiker opzoeken
+
+    Zie const.js
     */
     router.get('/gebruiker/:uuidToken', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -571,6 +650,8 @@ module.exports = router => {
 
     /*
     registratie voor gebruiker activeren
+
+    Zie const.js
      */
     router.get('/activeer/:uuidToken', async function (ctx) {
         ctx.body = await Gebruiker.query()
@@ -578,6 +659,9 @@ module.exports = router => {
             .patch({datumEmail: fn('curdate')});
     });
 
+    /*
+    Zie lid.js
+     */
     router.get('/:uuidToken/gebruiker/toevoegen/:knsbNummer/:email', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -593,6 +677,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie ???
+     */
     router.get('/:uuidToken/team/toevoegen/:seizoen/:team/:bond', async function (ctx) { // TODO alle velden invullen
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -611,6 +698,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie ???
+     */
     router.get('/:uuidToken/team/wijzigen/:seizoen/:team/:bond/:poule/:omschrijving/:borden/:teamleider', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -630,6 +720,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie lid.js
+     */
     router.get('/:uuidToken/persoon/toevoegen/:knsbNummer/:naam', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -641,6 +734,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie lid.js
+     */
     router.get('/:uuidToken/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -665,6 +761,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie lid.js
+     */
     router.get('/:uuidToken/speler/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -691,7 +790,9 @@ module.exports = router => {
     });
 
     /*
-        wedstrijd in agenda toevoegen
+    wedstrijd in agenda toevoegen
+
+    Zie agenda.js
      */
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -722,6 +823,8 @@ module.exports = router => {
       join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where u.seizoen = @seizoen and u.knsbNummer = @knsbNummer and u.datum = @datum
     order by u.teamCode, u.rondeNummer;
+
+    Zie agenda.js
      */
     router.get('/:uuidToken/aanwezig/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:datum/:partij', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -767,6 +870,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie indelen.js
+     */
     router.get('/:uuidToken/indelen/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -800,6 +906,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie indelen.js
+     */
     router.get('/:uuidToken/oneven/:seizoen/:teamCode/:rondeNummer/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -815,6 +924,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie indelen.js
+     */
     router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -830,6 +942,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie indelen.js
+     */
     router.get('/:uuidToken/extern/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -848,8 +963,9 @@ module.exports = router => {
     /*
     resultaten van indelen, oneven en afwezig terugdraaien
     resultaten van extern niet terugdraaien
-     */
 
+    Zie ronde.js
+     */
     router.get('/:uuidToken/verwijder/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -881,7 +997,9 @@ module.exports = router => {
     });
 
     /*
-      uitslag wijzigen
+    uitslag wijzigen
+
+    Zie ronde.js
      */
     router.get('/:uuidToken/uitslag/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer/:resultaat', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -915,6 +1033,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie ???.js
+     */
     router.get('/:uuidToken/rondenummers/:seizoen/:teamCode', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -937,6 +1058,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie ???
+     */
     router.get('/:uuidToken/schuif/ronde/:seizoen/:teamCode/:rondeNummer/:naarRonde', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -951,6 +1075,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie ronde.js
+     */
     router.get('/:uuidToken/verwijder/ronde/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -979,6 +1106,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie speler.js
+     */
     router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -998,6 +1128,9 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
+    /*
+    Zie speler.js
+     */
     router.get('/:uuidToken/verwijder/afzeggingen/:seizoen/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
@@ -1028,6 +1161,8 @@ module.exports = router => {
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where r.seizoen = @seizoen and r.teamCode = @teamCode
     order by r.rondeNummer;
+
+    Zie const.js
      */
     router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Ronde.query()

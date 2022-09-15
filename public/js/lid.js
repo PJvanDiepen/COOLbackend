@@ -24,7 +24,7 @@ const lidNummer = Number(params.get("lid"));
 })();
 
 async function persoonLezen() {
-    const personen = await localFetch(`/personen/${o_o_o.seizoen}`);
+    const personen = await serverFetch(`/personen/${o_o_o.seizoen}`); // TODO 1 persoon lezen
     for (const persoon of personen) {
         if (Number(persoon.knsbNummer) === lidNummer) {
             return persoon;

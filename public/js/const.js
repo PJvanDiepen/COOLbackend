@@ -139,18 +139,11 @@ async function init() {
 }
 
 /**
- * 0-0-0 genereert een uuid om de gebruiker te herkennen.
+ * Bestuur vult e-mail in voor gebruiker. 0-0-0 genereert 0-0-0 een uuid om de gebruiker te herkennen.
  * De gebruiker krijgt uuid via email, moet uuidActiveren en legt uuid vast in localStorage.
  * gebruikerVerwerken geeft de uuid van een geregistreerde gebruiker om knsbNummer, naam en mutatieRechten van gebruiker te lezen.
  *
- * TODO bestuur registreert en maakt uuid aan
- *
- * De gebruiker moet een uuid aanvragen door zich te registreren.
- * Bij het registreren tijdens een vorigeSessie zijn knsbNummer, naam en email vastgelegd in localStorage.
- * In een volgende sessie leest gebruikerVerwerken deze gegevens met mutatieRechten = 0.
- * 0-0-0 herkent de gebruiker nog niet, maar ziet dat een aanvraag in behandeling is.
- *
- * Indien de gebruiker tijdens een vorigeSessie zich niet heeft geregistreert,
+ * Indien de gebruiker tijdens een vorigeSessie zich niet heeft geregistreerd,
  * leest gebruikerVerwerken gegevens van een onbekende gebruiker met knsbNummer = 0 en mutatieRechten = 0.
  *
  * @returns {Promise<void>}
@@ -164,18 +157,10 @@ async function gebruikerVerwerken() {
         const registratie = await localFetch("/gebruiker/" + uuidToken);
         gebruiker.knsbNummer = Number(registratie.knsbNummer);
         gebruiker.naam = registratie.naam;
-        gebruiker.email = ""; // 0-0-0 stuurt geen email
         gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
-    } else if (vorigeSessie) {
-        const json = JSON.parse(vorigeSessie);
-        gebruiker.knsbNummer = Number(json.knsbNummer);
-        gebruiker.naam = json.naam;
-        gebruiker.email = json.email;
-        gebruiker.mutatieRechten = 0;
     } else {
         gebruiker.knsbNummer = 0;
         gebruiker.naam = "onbekend";
-        gebruiker.email = "";
         gebruiker.mutatieRechten = 0;
     }
 }
