@@ -187,7 +187,7 @@ module.exports = router => {
     left join gebruiker g on g.knsbNummer = p.knsbNummer
     order by naam;
 
-    Zie bestuur.js, lid.js
+    Zie bestuur.js, lid.js TODO /persoon/:seizoen/:knsbNummer uitsluitend voor lid.js
      */
     router.get('/personen/:seizoen', async function (ctx) {
         ctx.body = await Persoon.query()
@@ -387,7 +387,7 @@ module.exports = router => {
     });
 
     /*
-    Zie teamleider.js
+    Zie teamleider.js TODO verwijderen?
      */
     router.get('/:uuidToken/teamleider/:seizoen/:teamCode/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);

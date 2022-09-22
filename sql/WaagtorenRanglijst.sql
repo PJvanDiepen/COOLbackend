@@ -381,7 +381,7 @@ select r.*, u.partij
   from ronde r
   join s on r.seizoen = s.seizoen
   left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-where r.seizoen = @seizoen and r.teamCode in ('int', 'ira', s.knsbTeam, s.nhsbTeam)
+where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5)
 order by r.datum, r.rondeNummer;
 
 set @seizoen = '2122';
@@ -419,3 +419,15 @@ select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
 left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
 where r.seizoen = @seizoen and r.teamCode = @teamCode
 order by r.rondeNummer;
+
+-- aantal mutaties per gebruiker
+select naam, count(*) sort
+from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
+group by m.knsbNummer
+order by sort desc;
+
+-- voor teamleiders
+select naam, s.* 
+from speler s join persoon p on s.knsbNummer = p.knsbNummer
+where seizoen = '2223' 
+order by knsbRating desc;

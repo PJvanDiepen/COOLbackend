@@ -8,11 +8,26 @@
     menu([GEREGISTREERD, "systeembeheer", function () {
             naarAnderePagina("beheer.html");
         }]);
-    const wedstrijdDatum = params.get("datum");
     const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
+    const wedstrijdDatum = params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
     await spelersOverzicht(document.getElementById("kop"), document.getElementById("tabel"), wedstrijden, wedstrijdDatum);
 })();
+
+function volgendeWedstrijdDatum(wedstrijden) {
+    console.log(wedstrijden);
+    const vandaag = datumSQL();
+    let datum;
+    for (const wedstrijd of wedstrijden) {
+        datum = wedstrijd.datum;
+        console.log(datum);
+        if (datumSQL(datum) >= vandaag) {
+            console.log("gevonden!")
+            return datum;
+        }
+    }
+    return datum;
+}
 
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
     const datums = document.getElementById("datumSelecteren");
@@ -28,12 +43,14 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
 }
 
 async function spelersOverzicht(kop, tabel, wedstrijden, wedstrijdDatum) {
-    kop.innerHTML = "Externe competitie" + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
+    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor teamleiders";
     const spelers = await localFetch(`/rating/${o_o_o.seizoen}`);
     for (const s of spelers) {
         tabel.appendChild(htmlRij(s.naam, s.knsbRating, datumLeesbaar(s), s.knsbTeam, "", s.nhsbTeam, ""));
     }
 }
+
+// TODO verwijderen?
 
 async function wedstrijdenOverzicht(kop, wedstrijden, wedstrijdDatum) {
     kop.innerHTML = "Externe competitie" + SCHEIDING + jsonDatumLeesbaar(wedstrijdDatum);

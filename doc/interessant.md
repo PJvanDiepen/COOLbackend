@@ -19,6 +19,7 @@ Verwijder localStorage op iPhone
 # JavaScript
 
 - [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [call function without ()](https://portswigger.net/research/the-seventh-way-to-call-a-javascript-function-without-parentheses)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
@@ -42,7 +43,7 @@ Verwijder localStorage op iPhone
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 
-Objection / Knex
+# Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
 - [objection + knexx = painless](https://dev.to/aspittel/objection--knex--painless-postgresql-in-your-node-app--6n6)
 - [My first Node web app](https://dev.to/ekafyi/tribute-to-swissted-introduction-2c6i)
@@ -52,6 +53,7 @@ Objection / Knex
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
 
 # HTML / CSS
+- [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
@@ -72,10 +74,12 @@ Objection / Knex
 - [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
 
 # marketing
-- [SEO](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
+- [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
+- [SEO for beginners](https://moz.com/beginners-guide-to-seo)
 
 # Interessant 
 
+- [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [chess engines](https://www.chessengines.org/)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
@@ -104,6 +108,7 @@ Objection / Knex
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 # Later
+- [JavaScript frameworks](https://qr.ae/pvWvGt)
 - [IntelliJ on Chromebook](https://medium.com/@jeffrey.cardillo/using-intellij-and-other-linux-apps-on-your-chromebook-51fd7fadb9db)
 - [Flutter for web](https://dzone.com/articles/flutter-web-development-all-you-need-to-know)
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
