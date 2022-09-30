@@ -24,10 +24,10 @@ let uniekeMutaties = 0;
 async function mutatie(gebruiker, ctx, aantal, invloed) {
     if (aantal) {
         laatsteMutaties[invloed] = uniekeMutaties++;
-        await Mutatie.query().insert({ // await is noodzakelijk, want anders gaat insert niet door
+        await Mutatie.query().insert({
             knsbNummer: gebruiker.dader.knsbNummer,
             volgNummer: uniekeMutaties,
-            url: ctx.request.url.substring(38).replace("%C2%BD", REMISE), // zonder uuidToken
+            url: ctx.request.url.substring(38).replace("%C2%BD", REMISE), // zonder uuidToken en TODO "%20" vervangen door spatie?
             aantal: aantal,
             invloed: invloed});
     }
@@ -387,30 +387,32 @@ module.exports = router => {
     });
 
     /*
-    Zie teamleider.js TODO verwijderen?
+    Zie teamleider.js
+
+    with u as
+      (select * from uitslag where seizoen = @seizoen and datum = @datum)
+    select naam, s.*, u.*
+    from speler s
+      join persoon p on s.knsbNummer = p.knsbNummer
+      left join u on s.seizoen = @seizoen and s.knsbNummer = u.knsbNummer
+    where s.seizoen = @seizoen
+    order by knsbRating desc;
      */
-    router.get('/:uuidToken/teamleider/:seizoen/:teamCode/:datum', async function (ctx) {
+    router.get('/:uuidToken/teamleider/:seizoen/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         if (gebruiker.juisteRechten(TEAMLEIDER)) {
-            ctx.body = await Uitslag.query()
-                .select(
-                    'uitslag.knsbNummer',
-                    'uitslag.bordNummer',
-                    'uitslag.partij',
-                    'uitslag.witZwart',
-                    'uitslag.resultaat',
-                    'speler.nhsbTeam',
-                    'speler.knsbTeam',
-                    'speler.knsbRating',
-                    'persoon.naam')
-                .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
-                .join('speler', function(join) {
-                    join.on('uitslag.seizoen', 'speler.seizoen')
-                        .andOn('uitslag.knsbNummer','speler.knsbNummer')})
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.datum', ctx.params.datum)
-                .whereNotIn('uitslag.teamCode', [INTERNE_COMPETITIE, RAPID_COMPETTIE, SNELSCHAKEN, ZWITSERS_TEST]) // TODO is dit goed?
+            ctx.body = await Speler.query()
+                .with('u',function (qb) {
+                    qb.from('uitslag')
+                        .where('uitslag.seizoen', ctx.params.seizoen)
+                        .andWhere('uitslag.datum', ctx.params.datum)
+                })
+                .select('speler.*', 'persoon.naam', 'u.*')
+                .join('persoon', 'speler.knsbNummer', 'persoon.knsbNummer')
+                .leftJoin('u', function(join) {
+                    join.on('u.seizoen', 'speler.seizoen')
+                        .andOn('u.knsbNummer','speler.knsbNummer')})
+                .where('speler.seizoen', ctx.params.seizoen)
                 .orderBy('speler.knsbRating', 'desc');
         } else {
             ctx.body = [];

@@ -33,6 +33,7 @@ async function spelersLijst(kop, lijst, promoties) {
                 naarSpeler(speler),
                 speler.intern() || speler.oneven() ? speler.punten() : "",
                 speler.winnaarSubgroep(winnaars),
+                speler.rating(),
                 speler.scoreIntern(),
                 speler.percentageIntern(),
                 speler.saldoWitZwart() ? speler.saldoWitZwart() : "",

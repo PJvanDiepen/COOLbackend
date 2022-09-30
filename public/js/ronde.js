@@ -45,7 +45,7 @@
         [BEHEERDER, `wijzig ronde ${rondeNummer}`, async function () {
             naarAnderePagina(`wijzig.html?ronde=${rondeNummer}`);
         }],
-        [BEHEERDER, `verwijder ronde ${rondeNummer}`, async function () {
+        [BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${o_o_o.seizoen}/int/${rondeNummer}`);
         }]);
     rondeSelecteren(o_o_o.competitie, 0);

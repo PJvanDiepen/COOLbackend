@@ -19,6 +19,7 @@ Verwijder localStorage op iPhone
 # JavaScript
 
 - [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [Spread and rest ...](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
 - [call function without ()](https://portswigger.net/research/the-seventh-way-to-call-a-javascript-function-without-parentheses)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
@@ -63,6 +64,7 @@ Verwijder localStorage op iPhone
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Trunk based development](https://trunkbaseddevelopment.com/)
+- [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
 - [RexEgg](https://www.rexegg.com/)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [Git uitleg](https://github.com/readme/guides/configure-git-environment)
@@ -134,7 +136,7 @@ Verwijder localStorage op iPhone
 - [Uitleg over Grid Layout](https://bitsofco.de/github-contribution-graph-css-grid/)
 - [vertical alignment with css subgrid](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [EM vs REM vs PX](https://engageinteractive.co.uk/blog/em-vs-rem-vs-px)
-- [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
+- [bash in JavaScript](https://github.com/google/zx)
 
 # Misschien
 

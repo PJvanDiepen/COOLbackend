@@ -11,7 +11,13 @@
     const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
     const wedstrijdDatum = params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
-    await spelersOverzicht(document.getElementById("kop"), document.getElementById("tabel"), wedstrijden, wedstrijdDatum);
+    await spelersOverzicht(
+        document.getElementById("kop"),
+        document.getElementById("tabel"),
+        document.getElementById("tussenkop"),
+        document.getElementById("lijst"),
+        wedstrijden,
+        wedstrijdDatum);
 })();
 
 function volgendeWedstrijdDatum(wedstrijden) {
@@ -42,8 +48,19 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
         });
 }
 
-async function spelersOverzicht(kop, tabel, wedstrijden, wedstrijdDatum) {
+async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedstrijdDatum) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor teamleiders";
+    let aantalWedstrijden = 0;
+    let nhsb = false;
+    for (const wedstrijd of wedstrijden) {
+        if (wedstrijd.datum === wedstrijdDatum) {
+            aantalWedstrijden++;
+            nhsb = nhsb || wedstrijd.teamCode.substring(0,1) === "n";
+            console.log(wedstrijd);
+            // lijst.appendChild(htmlRij())
+        }
+    }
+    tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
     const spelers = await localFetch(`/rating/${o_o_o.seizoen}`);
     for (const s of spelers) {
         tabel.appendChild(htmlRij(s.naam, s.knsbRating, datumLeesbaar(s), s.knsbTeam, "", s.nhsbTeam, ""));

@@ -323,6 +323,12 @@ async function serverFetch(url) {
     }
 }
 
+/*
+TODO const html = {id1: , id2: } alle DOM elementen met id
+
+https://stackoverflow.com/questions/59068548/how-to-get-all-of-the-element-ids-on-the-same-time-in-javascript
+ */
+
 function htmlCheckbox(id, value, tekst) {
     const input = document.createElement("input");
     input.type = "checkbox";

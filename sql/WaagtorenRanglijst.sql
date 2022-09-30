@@ -384,9 +384,9 @@ select r.*, u.partij
 where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5)
 order by r.datum, r.rondeNummer;
 
-set @seizoen = '2122';
+set @seizoen = '2223';
 set @knsbNummer = 6212404;
-set @datum = '2022-03-22';
+set @datum = '2022-10-08';
 
 -- uitslagen / ronden op dezelfde datum
 select u.teamCode, u.rondeNummer, u.anderTeam, u.partij, r.uithuis 
@@ -404,7 +404,8 @@ order by r.datum, r.teamCode;
 
 set @seizoen = '2122';
 set @teamCode = 'int';
-set @datum = '2022-03-01'; 
+set @datum = '2022-03-01';
+
 -- wie gaat extern spelen per datum
 select u.*, naam from uitslag u join persoon p on u.knsbNummer = p.knsbNummer   
 where seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
@@ -426,8 +427,31 @@ from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
 group by m.knsbNummer
 order by sort desc;
 
+-- laatste mutaties
+select * from mutatie order by tijdstip desc;
+
+set @seizoen = '2223';
+set @knsbNummer = 7504310;
+set @datum = '2022-10-08';
+
 -- voor teamleiders
-select naam, s.* 
-from speler s join persoon p on s.knsbNummer = p.knsbNummer
-where seizoen = '2223' 
-order by knsbRating desc;
+with u as 
+  (select * from uitslag where seizoen = @seizoen and datum = @datum)   
+select naam, s.*, u.* 
+from speler s
+  join persoon p on s.knsbNummer = p.knsbNummer
+  left join u on s.seizoen = @seizoen and s.knsbNummer = u.knsbNummer
+where s.seizoen = @seizoen 
+order by s.knsbRating desc, u.teamCode;
+
+-- uitslagen op dezelfde datum
+select * from uitslag 
+where seizoen = @seizoen and datum = @datum 
+order by knsbNummer, teamCode;
+
+-- uitslagen / ronden op dezelfde datum
+select u.*, r.* 
+  from uitslag u 
+  join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer  
+where u.seizoen = @seizoen and u.datum = @datum 
+order by u.knsbNummer, u.teamCode;
