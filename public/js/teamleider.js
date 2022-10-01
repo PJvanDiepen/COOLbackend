@@ -52,18 +52,19 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor teamleiders";
     let aantalWedstrijden = 0;
     let nhsb = false;
-    for (const wedstrijd of wedstrijden) {
-        if (wedstrijd.datum === wedstrijdDatum) {
+    for (const w of wedstrijden) {
+        if (w.datum === wedstrijdDatum) {
             aantalWedstrijden++;
-            nhsb = nhsb || wedstrijd.teamCode.substring(0,1) === "n";
-            console.log(wedstrijd);
-            // lijst.appendChild(htmlRij())
+            nhsb = nhsb || w.teamCode.substring(0,1) === "n";
+            console.log(w);
+            lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, 0, 0, w.borden));
         }
     }
     tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
-    const spelers = await localFetch(`/rating/${o_o_o.seizoen}`);
+    const spelers = await localFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
-        tabel.appendChild(htmlRij(s.naam, s.knsbRating, datumLeesbaar(s), s.knsbTeam, "", s.nhsbTeam, ""));
+        console.log(s);
+        tabel.appendChild(htmlRij(s.naam, s.knsbRating, s.knsbTeam, VINKJE, s.nhsbTeam, STREEP, "", KRUISJE));
     }
 }
 

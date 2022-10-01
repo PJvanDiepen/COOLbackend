@@ -36,6 +36,7 @@ Verwijder localStorage op iPhone
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
+- [JavaScipt date & time](https://blog.openreplay.com/is-it-time-for-the-javascript-temporal-api/)
 
 # node.js
 - [Overview node.js](https://2ality.com/2022/09/nodejs-overview.html)
@@ -74,6 +75,7 @@ Verwijder localStorage op iPhone
 # schaken
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
 - [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
+- [Schaken in HTML en JavaScript](https://www.chessengines.org/)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
@@ -83,7 +85,6 @@ Verwijder localStorage op iPhone
 
 - [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
-- [chess engines](https://www.chessengines.org/)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
 - [TODO in verschillende frameworks](https://todomvc.com/)
 - [unit test met vitest](https://vitest.dev/)

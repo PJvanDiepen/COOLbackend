@@ -280,18 +280,14 @@ update team set omschrijving = 'geen' where seizoen = '2223' and omschrijving = 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ('2223', '', '', '', 'geen', 0, 0),
 ('2223', 'int', 'i', 'nt', 'interne competitie', 0, 0),
-('2223', 'ira', 'i', 'ra', 'rapid competitie', 0, 0);
-
-insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-('2223', '1', 'k', '1a', 'KNSB 1a', '10', '0'),
-('2223', '2', 'k', '3d', 'KNSB 3d', '8', '0'),
-('2223', '3', 'k', '4d', 'KNSB 4d', '8', '0'),
-('2223', '4', 'k', '6c', 'KNSB 6c', '8', '0');
-
-insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-('2223', 'n1', 'n', 't', 'NHSB top', '8', '0'),
-('2223', 'n2', 'n', '1a', 'NHSB 1a', '8', '0'),
-('2223', 'n3', 'n', '2b', 'NHSB 2b', '8', '0');
+('2223', 'ira', 'i', 'ra', 'rapid competitie', 0, 0),
+('2223', '1', 'k', '1a', 'KNSB 1a', '10', 6214153), -- Jan Poland
+('2223', '2', 'k', '3d', 'KNSB 3d', '8', 7129991), -- Gerard de Geus 
+('2223', '3', 'k', '4d', 'KNSB 4d', '8', 7129991), -- Alex Albrecht
+('2223', '4', 'k', '6c', 'KNSB 6c', '8', 6212404), -- Peter van Diepen
+('2223', 'n1', 'n', 't', 'NHSB top', '8', 7428960), -- Frank Agter
+('2223', 'n2', 'n', '1a', 'NHSB 1a', '8', 7529522), -- Willem Meyles
+('2223', 'n3', 'n', '2b', 'NHSB 2b', '8', 6214153); -- Jan Poland
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2223", "int", 5, "t", "", '2022-10-04');

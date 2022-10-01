@@ -216,17 +216,6 @@ module.exports = router => {
     });
 
     /*
-    Zie teamleider.js
-     */
-    router.get('/rating/:seizoen', async  function (ctx) {
-        ctx.body = await Speler.query()
-            .select('naam', 'speler.*')
-            .join('persoon', 'persoon.knsbNummer', 'speler.knsbNummer')
-            .where('speler.seizoen', ctx.params.seizoen)
-            .orderBy('knsbRating', 'desc');
-    });
-
-    /*
     Zie const.js, start.js, team.js, bestuur.js, lid.js
      */
     router.get('/teams/:seizoen', async function (ctx) {

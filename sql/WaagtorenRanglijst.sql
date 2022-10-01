@@ -434,6 +434,9 @@ set @seizoen = '2223';
 set @knsbNummer = 7504310;
 set @datum = '2022-10-08';
 
+-- de teamleiders
+select t.*, naam from team t join persoon p on p.knsbNummer = t.teamleider where seizoen = @seizoen;
+
 -- voor teamleiders
 with u as 
   (select * from uitslag where seizoen = @seizoen and datum = @datum)   
