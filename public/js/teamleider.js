@@ -63,27 +63,44 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     const spelers = await localFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
         console.log(s);
-        let knsbVast = STREEP;
-        let nhsbVast = STREEP;
-        let invaller = STREEP;
+        let knsbVast = "";
+        let nhsbVast = "";
+        let invallerTeam = "?";
+        let invaller = "";
         for (const w of wedstrijd) {
-            if (s.teamCode === w.teamCode) { // speler is gevraagd
+            const isGevraagd = s.teamCode === w.teamCode;
+            if (isGevraagd) {
                 w.gevraagd++;
-                if (s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT) { // speler heeft toegezegd
-                    w.toegezegd++;
-                    if (s.teamCode === s.knsbTeam) { // speler heeft toegezegd voor vaste knsbTeam
-                        knsbVast = VINKJE;
-                    } else if (s.teamCode === s.nhsbTeam) { // speler heeft toegezegd voor vaste knsbTeam
-                        nhsbVast = VINKJE;
-                    } else { // speler heeft toegezegd als invaller
-                        invaller = VINKJE;
-                    }
-                }
+            }
+            const heeftToegezegd = s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT;
+            if (isGevraagd && heeftToegezegd) {
+                w.toegezegd++;
+            }
+            if (w.teamCode === s.knsbTeam) {
+                knsbVast = heeftToegezegd ? VINKJE : STREEP;
+            } else if (w.teamCode === s.nhsbTeam) {
+                nhsbVast = heeftToegezegd ? VINKJE : STREEP;
+            } else if (w.teamCode === invallerTeam) {
+                invaller = heeftToegezegd ? VINKJE : STREEP;
             }
         }
-        tabel.appendChild(htmlRij(s.naam, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, "", invaller));
+        tabel.appendChild(htmlRij(s.naam, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
     }
     for (const w of wedstrijd) {
         lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : KRUISJE));
+    }
+}
+
+function invallerVragen(speler, wedstrijd) {
+    if (uitslagWijzigen(uitslag)) {
+        return uitslagSelecteren(rondeNummer, uitslag)
+    } else if (uitslag.resultaat === WINST) {
+        return "1-0";
+    } else if (uitslag.resultaat === REMISE) {
+        return "½-½";
+    } else if (uitslag.resultaat === VERLIES) {
+        return "0-1";
+    } else {
+        return "";
     }
 }
