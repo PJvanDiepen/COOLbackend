@@ -380,7 +380,7 @@ module.exports = router => {
 
     with u as
       (select * from uitslag where seizoen = @seizoen and datum = @datum)
-    select naam, s.*, u.*
+    select s.nhsbTeam, s.knsbTeam, s.knsbNummer, s.knsbRating, naam, u.teamCode, u.partij
     from speler s
       join persoon p on s.knsbNummer = p.knsbNummer
       left join u on s.seizoen = @seizoen and s.knsbNummer = u.knsbNummer
