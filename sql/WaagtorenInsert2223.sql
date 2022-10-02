@@ -637,10 +637,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 3, 22, 8931098, "i", "z", 7731812, "0", '2022-09-20', "int");
 
 -- NHSB 24-9-2022
-select * from uitslag where seizoen = '2223' and teamCode = 'n2' and rondeNummer = 1;
-
-delete from uitslag where seizoen = '2223' and teamCode = 'n2' and rondeNummer = 1;
-
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2223', 'n2', '1', '1', '8611922', 'e', 'w', '0', '0', '2022-09-24', 'int'),
 ('2223', 'n2', '1', '2', '7529522', 'e', 'z', '0', '1', '2022-09-24', 'int'),
@@ -720,6 +716,21 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 4, 21, 101, "i", "z", 124, "1", '2022-09-27', "int"),
 ("2223", "int", 4, 22, 8931098, "i", "w", 8865549, "½", '2022-09-27', "int"),
 ("2223", "int", 4, 22, 8865549, "i", "z", 8931098, "½", '2022-09-27', "int");
+
+-- NHSB 30-9-2023
+select * from uitslag where seizoen = '2223' and teamCode = 'n1' and rondeNummer = 1;
+
+delete from uitslag where seizoen = '2223' and teamCode = 'n1' and rondeNummer = 1;
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "n1", 1, 1, 7970094, "e", "w", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 2, 7099950, "e", "z", 0, "½", '2022-09-30', "int"),
+("2223", "n1", 1, 3, 7428960, "e", "w", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 4, 7099620, "e", "z", 0, "0", '2022-09-30', "int"),
+("2223", "n1", 1, 5, 7613166, "e", "w", 0, "0", '2022-09-30', "int"),
+("2223", "n1", 1, 6, 7879520, "e", "z", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 7, 6225934, "e", "w", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 8, 8611922, "e", "z", 0, "0", '2022-09-30', "int");
 
 -- ronde 5 interne competitie
 

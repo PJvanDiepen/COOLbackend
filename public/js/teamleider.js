@@ -60,7 +60,7 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     }
     console.log(wedstrijd);
     tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
-    const spelers = await severFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
+    const spelers = await serverFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
         console.log(s);
         let knsbVast = "";
@@ -84,7 +84,9 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
                 invaller = heeftToegezegd ? VINKJE : STREEP;
             }
         }
-        tabel.appendChild(htmlRij(s.naam, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
+        const link = htmlLink(`speler.html?team=${o_o_o.competitie}&speler=${s.knsbNummer}&naam=${s.naam}`, s.naam);
+        // htmlVerwerkt(link, knsbNummer === lidNummer);
+        tabel.appendChild(htmlRij(naarSpeler(s), s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
     }
     for (const w of wedstrijd) {
         lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : KRUISJE));

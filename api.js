@@ -396,7 +396,14 @@ module.exports = router => {
                         .where('uitslag.seizoen', ctx.params.seizoen)
                         .andWhere('uitslag.datum', ctx.params.datum)
                 })
-                .select('speler.*', 'persoon.naam', 'u.*')
+                .select(
+                    'speler.nhsbTeam',
+                    'speler.knsbTeam',
+                    'speler.knsbNummer',
+                    'speler.knsbRating',
+                    'persoon.naam',
+                    'u.teamCode',
+                    'u.partij')
                 .join('persoon', 'speler.knsbNummer', 'persoon.knsbNummer')
                 .leftJoin('u', function(join) {
                     join.on('u.seizoen', 'speler.seizoen')
