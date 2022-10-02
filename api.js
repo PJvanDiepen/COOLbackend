@@ -657,13 +657,14 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
-            await Gebruiker.query()
+            if (await Gebruiker.query()
                 .insert({knsbNummer: ctx.params.knsbNummer,
                     mutatieRechten: GEREGISTREERD,
                     uuidToken: fn('uuid'),
-                    email: ctx.params.email});
-            aantal = 1;
-            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+                    email: ctx.params.email})) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
         }
         ctx.body = aantal;
     });
@@ -675,16 +676,17 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
-            await Team.query().insert({
+            if (await Team.query().insert({
                 seizoen: ctx.params.seizoen,
                 teamCode: ctx.params.team,
                 bond: ctx.params.bond,
                 poule: "",
                 omschrijving: ctx.params.bond === "k" ? "KNSB poule" : ctx.params.bond === "k" ? "KNSB poule" : `${ctx.params.team} competitie`,
                 borden: 0,
-                teamleider: 0});
-            aantal = 1;
-            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+                teamleider: 0})) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
         }
         ctx.body = aantal;
     });
@@ -718,9 +720,10 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
-            await Persoon.query().insert({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam});
-            aantal = 1;
-            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            if (await Persoon.query().insert({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam})) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
         }
         ctx.body = aantal;
     });
@@ -733,7 +736,7 @@ module.exports = router => {
         let aantal = 0;
         if (gebruiker.juisteRechten(BESTUUR)) {
             const intern = teamCodes(ctx.params.competities);
-            await Speler.query().insert({
+            if (await Speler.query().insert({
                 seizoen: ctx.params.seizoen,
                 knsbNummer: ctx.params.knsbNummer,
                 knsbRating: ctx.params.knsbRating,
@@ -745,9 +748,10 @@ module.exports = router => {
                 intern2: intern[1],
                 intern3: intern[2],
                 intern4: intern[3],
-                intern5: intern[4]});
-            aantal = 1;
-            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+                intern5: intern[4]})) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
         }
         ctx.body = aantal;
     });
@@ -788,9 +792,11 @@ module.exports = router => {
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(GEREGISTREERD)) {
-            await Uitslag.query()
-                .insert({seizoen: ctx.params.seizoen,
+        if (gebruiker.juisteRechten(TEAMLEIDER) || // agenda van andere gebruiker
+            gebruiker.eigenData(GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen agenda
+            if (await Uitslag.query()
+                .insert({
+                    seizoen: ctx.params.seizoen,
                     teamCode: ctx.params.teamCode,
                     rondeNummer: ctx.params.rondeNummer,
                     bordNummer: 0,
@@ -800,9 +806,10 @@ module.exports = router => {
                     tegenstanderNummer: 0,
                     resultaat: "",
                     datum: ctx.params.datum,
-                    anderTeam: ctx.params.competitie}); // TODO anderTeam = competitie
-            aantal = 1;
-            await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+                    anderTeam: ctx.params.competitie})) { // TODO anderTeam = competitie
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
         }
         ctx.body = aantal;
     });

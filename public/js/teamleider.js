@@ -60,7 +60,7 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     }
     console.log(wedstrijd);
     tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
-    const spelers = await localFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
+    const spelers = await severFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
         console.log(s);
         let knsbVast = "";
