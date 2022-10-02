@@ -94,8 +94,8 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
                 aantalPerTeam[lid.intern5]++;
             }
             const link = htmlLink(`lid.html?lid=${knsbNummer}`, lid.naam);
-            const olaRating = !olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number" ? 0 : Number(olaLid[knsbNummer].knsbRating);
             htmlVerwerkt(link,knsbNummer === lidNummer);
+            const olaRating = !olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number" ? 0 : Number(olaLid[knsbNummer].knsbRating);
             tabel.appendChild(htmlRij(
                 link,
                 olaRating ? olaRating : lid.knsbRating === null ? "" : lid.knsbRating,
