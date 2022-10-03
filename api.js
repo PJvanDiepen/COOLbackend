@@ -333,7 +333,7 @@ module.exports = router => {
       from ronde r
       join s on r.seizoen = s.seizoen
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5))
+    where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5, u.teamCode))
     order by r.datum, r.teamCode, r.rondeNummer;
 
     Zie agenda.js
@@ -368,7 +368,8 @@ module.exports = router => {
                  ref('s.intern2'),
                  ref('s.intern3'),
                  ref('s.intern4'),
-                 ref('s.intern5')])
+                 ref('s.intern5'),
+                 ref('u.teamCode')]) // indien speler invaller is
              .orderBy(['ronde.datum', 'ronde.teamCode', 'ronde.rondeNummer']);
         } else {
             ctx.body = [];

@@ -1,6 +1,7 @@
 "use strict";
 
-let ronde = 19;
+
+
 const apiCalls = [
     `/ronden/${o_o_o.seizoen}/${o_o_o.competitie}`, // TODO met documentatie
     `/${uuidToken}/gebruikers`,
@@ -8,18 +9,11 @@ const apiCalls = [
     `/gewijzigd`,
     `/reglementen`,
     `/reglement/${o_o_o.seizoen}/${o_o_o.competitie}`,
-//    `/${uuidToken}/kalender/${competitie.seizoen}/${speler}`,
-    `/${uuidToken}/agenda/${o_o_o.seizoen}/${o_o_o.competitie}/${ronde}/${o_o_o.speler}`,
-    `/${uuidToken}/deelnemers/2122/int/15`,
-    `/${uuidToken}/alle/deelnemers/2122/int/15`,
-    `/${uuidToken}/rondenummers/2122/1`,
-    `/${uuidToken}/rondenummers/2122/2`,
-    `/${uuidToken}/rondenummers/2122/3`,
-    `/${uuidToken}/rondenummers/2122/4`,
-    `/${uuidToken}/schuif/ronde/2122/1/5/10`,
-    `/${uuidToken}/schuif/ronde/2122/2/5/10`,
-    `/${uuidToken}/schuif/ronde/2122/3/5/10`,
-    `/${uuidToken}/schuif/ronde/2122/4/4/8`
+    `/${uuidToken}/agenda/${o_o_o.seizoen}/teamCode/rondeNummer/knsbNummer/n/${datumSQL()}/int`,
+
+    `/${uuidToken}/agenda/${o_o_o.seizoen}/teamCode/rondeNummer/knsbNummer/n/${datumSQL()}/int`,
+    `/${uuidToken}/deelnemers/2122/int/rondeNummer`,
+    `/${uuidToken}/alle/deelnemers/2122/int/15`
 ];
 
 (async function() {

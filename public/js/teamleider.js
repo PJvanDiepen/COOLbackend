@@ -63,9 +63,10 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     const spelers = await serverFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
         console.log(s);
+        const geenInvaller = s.teamCode === null || s.teamCode === "" || s.teamCode === s.knsbTeam || s.teamCode === s.nhsbTeam;
         let knsbVast = "";
         let nhsbVast = "";
-        let invallerTeam = "?";
+        let invallerTeam = s.teamCode === null ? "?" : s.teamCode;
         let invaller = "";
         for (const w of wedstrijd) {
             const isGevraagd = s.teamCode === w.teamCode;
@@ -84,8 +85,6 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
                 invaller = heeftToegezegd ? VINKJE : STREEP;
             }
         }
-        const link = htmlLink(`speler.html?team=${o_o_o.competitie}&speler=${s.knsbNummer}&naam=${s.naam}`, s.naam);
-        // htmlVerwerkt(link, knsbNummer === lidNummer);
         tabel.appendChild(htmlRij(naarSpeler(s), s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
     }
     for (const w of wedstrijd) {
