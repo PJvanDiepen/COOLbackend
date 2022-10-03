@@ -63,13 +63,14 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     const spelers = await serverFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
         console.log(s);
-        const geenInvaller = s.teamCode === null || s.teamCode === "" || s.teamCode === s.knsbTeam || s.teamCode === s.nhsbTeam;
+        // const vastTeam = nhsb ? s.nhsbTeam !== "" : s.knsbTeam !== "";
+        // const geenInvaller = s.teamCode === null || s.teamCode === "" || s.teamCode === s.knsbTeam || s.teamCode === s.nhsbTeam;
         let knsbVast = "";
         let nhsbVast = "";
-        let invallerTeam = s.teamCode === null ? "?" : s.teamCode;
+        let invallerTeam = s.teamCode === null || s.teamCode === "" ? "" : s.teamCode === s.knsbTeam || s.teamCode === s.nhsbTeam ? "" : s.teamCode;
         let invaller = "";
         for (const w of wedstrijd) {
-            const isGevraagd = s.teamCode === w.teamCode;
+            const isGevraagd = s.knsbTeam === w.teamCode || s.nhsbTeam === w.teamCode || s.teamCode === w.teamCode;
             if (isGevraagd) {
                 w.gevraagd++;
             }
@@ -81,14 +82,14 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
                 knsbVast = heeftToegezegd ? VINKJE : STREEP;
             } else if (w.teamCode === s.nhsbTeam) {
                 nhsbVast = heeftToegezegd ? VINKJE : STREEP;
-            } else if (w.teamCode === invallerTeam) {
+            } else if (w.teamCode === s.teamCode) {
                 invaller = heeftToegezegd ? VINKJE : STREEP;
             }
         }
         tabel.appendChild(htmlRij(naarSpeler(s), s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
     }
     for (const w of wedstrijd) {
-        lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : KRUISJE));
+        lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : "?"));
     }
 }
 
