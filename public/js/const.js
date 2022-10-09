@@ -113,7 +113,7 @@ const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 const gebruiker = {}; // gebruikerVerwerken
 // gebruiker.mutatieRechten
-const GEEN_LID = 0;
+const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;
 const BESTUUR = 3;
@@ -259,9 +259,14 @@ async function rondenVerwerken() {
  */
 async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
-    acties.appendChild(htmlOptie(0, "\u2630 menu")); // hamburger
-    let functies = [function () {
-    }]; //  TODO naarAnderePagina("beheer.html") en documentatie op nieuwe webpagina
+    menuKeuzes.unshift([IEDEREEN, "\u2630"],  // hamburger en menuKeuzes bovenaan in het menu
+        [IEDEREEN, "menu", function () {
+            naarAnderePagina("start.html");
+        }]);
+    menuKeuzes.push([GEREGISTREERD, "systeembeheer", function () { // menuKeuzes onderaan in het menu
+        naarAnderePagina("beheer.html");
+    }]); // TODO naar documentatie voor deze pagina
+    let functies = [];
     for (let [minimumRechten, tekst, functie] of menuKeuzes) {
         if (minimumRechten <= gebruiker.mutatieRechten) {
             acties.appendChild(htmlOptie(functies.length, tekst));

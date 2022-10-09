@@ -16,9 +16,6 @@ const lidNummer = Number(params.get("lid"));
     console.log(ola);
     menu([WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
-        }],
-        [GEREGISTREERD, "systeembeheer", function () {  // TODO standaard in menu()
-            naarAnderePagina("beheer.html");
         }]);
     lidFormulier(persoon, ola);
 })();

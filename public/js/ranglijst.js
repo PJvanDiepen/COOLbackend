@@ -10,9 +10,7 @@ const alleLeden = Number(params.get("leden"));
 (async function() {
     await init();
     competitieTitel();
-    menu([GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }]);
+    menu([]);
     teamSelecteren(o_o_o.competitie);
     rondeSelecteren(o_o_o.competitie, 0);
     versieSelecteren(document.getElementById("versies"));

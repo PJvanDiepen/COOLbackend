@@ -12,9 +12,7 @@
     competitieTitel();
     o_o_o.team = o_o_o.competitie;
     const rondeNummer = Number(params.get("ronde"));
-    menu([GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }]);
+    menu([]);
     document.getElementById("kop").innerHTML =
         "Ronde " + rondeNummer + SCHEIDING + datumLeesbaar(o_o_o.ronde[rondeNummer]);
     if (o_o_o.competitie === INTERNE_COMPETITIE) {

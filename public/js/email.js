@@ -6,9 +6,7 @@
 
 (async function() {
     await init();
-    menu([GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }]);
+    menu([]);
     gebruikerTekst(
         document.getElementById("emailAan"),
         document.getElementById("naamAan"),

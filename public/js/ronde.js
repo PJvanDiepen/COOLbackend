@@ -12,10 +12,7 @@
     competitieTitel();
     o_o_o.team = o_o_o.competitie;
     const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde || 1;
-    menu([GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }],
-        [WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
+    menu([WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
             naarAnderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
         [WEDSTRIJDLEIDER, `ronde ${rondeNummer} opnieuw indelen`, function () {

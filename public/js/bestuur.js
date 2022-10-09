@@ -7,9 +7,7 @@
 (async function() {
     await init();
     const lidNummer = Number(params.get("lid"));
-    menu([GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }]);
+    menu([]);
     ledenLijst(
         lidNummer,
         document.getElementById("kop"),

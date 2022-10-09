@@ -51,10 +51,7 @@
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
     }
-    menu([GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }],
-        [WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
+    menu([WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await serverFetch(

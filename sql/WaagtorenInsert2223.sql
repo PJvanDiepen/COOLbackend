@@ -1,28 +1,5 @@
 use waagtoren;
 
-select naam, s.* from speler s join persoon p on s.knsbNummer = p.knsbNummer  where seizoen = '2223' order by naam;
-
-select naam, u.* from uitslag u join persoon p on u.knsbNummer = p.knsbNummer where seizoen = '2223' and teamCode = 'n2' and rondeNummer = 1 order by naam;
-
-select * from uitslag u join persoon p on u.knsbNummer = p.knsbNummer where seizoen = '2223' and u.knsbNummer in (7584566, 8285574, 7359913, 7468417, 7828183) order by naam;
-
-delete from uitslag where seizoen = '2223' and knsbNummer = 7970094 and teamCode = 'n2';
-
-delete from gebruiker where uuidToken = '06cbc61f-3476-11ed-a8a7-525400be7013';
-
-select * from speler where seizoen = '2223';
-
-delete from speler where seizoen = '2223' and knsbNummer = 6212404;
-
-select * from speler where seizoen = '2223'and knsbNummer < 1000000;
-
-select * from persoon where knsbNummer < 1000000;
-
-
-
-select * from team where seizoen = '2223';
-delete from team where seizoen = '2223';
-
 -- laatste toevoeging 130 = Bas Mazereeuw
 insert into persoon (knsbNummer, naam) values
 (108, "Aad Schuit"),
@@ -120,6 +97,7 @@ insert into persoon (knsbNummer, naam) values
 (8180810, "Midas Ratsma"),
 (8547110, "Milan de Boer"),
 (6192098, "Nico Brugman"),
+(5968611, "Nico Hauwert"),
 (7399469, "Nico Mak"),
 (1, "niemand"),
 (0, "niemand"),
@@ -197,6 +175,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, 
 ("2223", "", "", 128, 0, '2022-09-08', 1000, "int", "ira", "", "", ""),
 ("2223", "", "", 129, 0, '2022-09-18', 1700, "int", "ira", "", "", ""),
 ("2223", "", "", 130, 0, '2022-09-28', 1000, "int", "ira", "", "", ""),
+("2223", "", "", 5968611, 2118, '2022-10-04', 2118, "", "", "", "", ""),
 ("2223", "", "", 6187885, 1358, '2022-09-05', 1358, "int", "ira", "", "", ""),
 ("2223", "", "", 6192098, 1471, '2022-09-05', 1471, "int", "ira", "", "", ""),
 ("2223", "", "4", 6212404, 1605, '2022-09-21', 1605, "int", "ira", "", "", ""),
@@ -273,10 +252,6 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, 
 ("2223", "", "", 8931098, 1000, '2022-09-05', 1000, "int", "ira", "", "", ""),
 ("2223", "", "", 8956805, 2228, '2022-09-15', 2228, "", "", "", "", "");
 
-select * from team where omschrijving = 'geen';
-
-update team set omschrijving = 'geen' where seizoen = '2223' and omschrijving = 'geen team';
-
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ('2223', '', '', '', 'geen', 0, 0),
 ('2223', 'int', 'i', 'nt', 'interne competitie', 0, 0),
@@ -289,15 +264,12 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 ('2223', 'n2', 'n', '1a', 'NHSB 1a', '8', 7529522), -- Willem Meyles
 ('2223', 'n3', 'n', '2b', 'NHSB 2b', '8', 6214153); -- Jan Poland
 
-insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-("2223", "int", 5, "t", "", '2022-10-04');
-
 -- interne en rapid competitie
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2223", "int", 1, "t", "", '2022-09-06'),
 ("2223", "int", 2, "t", "", '2022-09-13'),
 ("2223", "int", 3, "t", "", '2022-09-20'),
-("2223", "int", 5, "t", "", '2022-09-27'),
+("2223", "int", 4, "t", "", '2022-09-27'),
 ("2223", "int", 5, "t", "", '2022-10-04'),
 ("2223", "int", 6, "t", "", '2022-10-11'),
 ("2223", "int", 7, "t", "", '2022-10-25'),
@@ -369,10 +341,9 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ('2223', '4', '1', 'u', 'HWP Haarlem 5', '2022-10-08'),
 ('2223', '4', '2', 'u', 'VAS 6', '2022-11-05'),
 ('2223', '4', '3', 't', 'Combiteam KL 2', '2022-11-26'),
+('2223', '4', '4', 'u', 'ZSC-Saende Combinatie 4', '2022-12-17'),
 ('2223', '4', '5', 't', 'Magnus Anna Paulowna Combinatie 3', '2023-02-11'),
-('2223', '4', '6', 'u', 'Almere 4', '2023-03-11'),
-('2223', '4', '7', 't', 'Zukertort Amstelveen 5', '2023-04-01'),
-('2223', '4', '4', 'u', 'ZSC-Saende Combinatie 4', '2022-12-17');
+('2223', '4', '6', 'u', 'Almere 4', '2023-03-11');
 
 -- NHSB competitie
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
@@ -717,11 +688,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 4, 22, 8931098, "i", "w", 8865549, "½", '2022-09-27', "int"),
 ("2223", "int", 4, 22, 8865549, "i", "z", 8931098, "½", '2022-09-27', "int");
 
--- NHSB 30-9-2023
-select * from uitslag where seizoen = '2223' and teamCode = 'n1' and rondeNummer = 1;
-
-delete from uitslag where seizoen = '2223' and teamCode = 'n1' and rondeNummer = 1;
-
+-- NHSB 30-9-2022
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "n1", 1, 1, 7970094, "e", "w", 0, "1", '2022-09-30', "int"),
 ("2223", "n1", 1, 2, 7099950, "e", "z", 0, "½", '2022-09-30', "int"),
@@ -733,17 +700,136 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "n1", 1, 8, 8611922, "e", "z", 0, "0", '2022-09-30', "int");
 
 -- ronde 5 interne competitie
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "int", 5, 0, 105, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 123, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 124, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 125, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 127, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 6187885, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 6214153, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 6225934, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 6572511, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 6951362, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7269834, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7269900, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7282033, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7321534, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7428960, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7535385, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7582102, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7640798, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7649213, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7657342, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7691728, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7699010, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7707832, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7758014, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7809285, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7824674, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7904589, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 7970094, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8096242, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8243312, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8276752, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8335415, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8372881, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8472530, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8484443, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8485059, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8587337, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8611922, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 0, 8865549, "a", "", 0, "", '2022-10-04', "int"),
+("2223", "int", 5, 1, 7502143, "i", "w", 7129991, "1", '2022-10-04', "int"),
+("2223", "int", 5, 1, 7129991, "i", "z", 7502143, "0", '2022-10-04', "int"),
+("2223", "int", 5, 2, 7099950, "i", "w", 7210137, "1", '2022-10-04', "int"),
+("2223", "int", 5, 2, 7210137, "i", "z", 7099950, "0", '2022-10-04', "int"),
+("2223", "int", 5, 3, 7613166, "i", "w", 7292043, "0", '2022-10-04', "int"),
+("2223", "int", 5, 3, 7292043, "i", "z", 7613166, "1", '2022-10-04', "int"),
+("2223", "int", 5, 4, 7099620, "i", "w", 7535396, "1", '2022-10-04', "int"),
+("2223", "int", 5, 4, 7535396, "i", "z", 7099620, "0", '2022-10-04', "int"),
+("2223", "int", 5, 5, 8750093, "i", "w", 7419621, "½", '2022-10-04', "int"),
+("2223", "int", 5, 5, 7419621, "i", "z", 8750093, "½", '2022-10-04', "int"),
+("2223", "int", 5, 6, 7529522, "i", "w", 129, "0", '2022-10-04', "int"),
+("2223", "int", 5, 6, 129, "i", "z", 7529522, "1", '2022-10-04', "int"),
+("2223", "int", 5, 7, 6212404, "i", "w", 126, "1", '2022-10-04', "int"),
+("2223", "int", 5, 7, 126, "i", "z", 6212404, "0", '2022-10-04', "int"),
+("2223", "int", 5, 8, 7399469, "i", "w", 8224502, "1", '2022-10-04', "int"),
+("2223", "int", 5, 8, 8224502, "i", "z", 7399469, "0", '2022-10-04', "int"),
+("2223", "int", 5, 9, 7731812, "i", "w", 8073978, "1", '2022-10-04', "int"),
+("2223", "int", 5, 9, 8073978, "i", "z", 7731812, "0", '2022-10-04', "int"),
+("2223", "int", 5, 10, 7544438, "i", "w", 8112654, "½", '2022-10-04', "int"),
+("2223", "int", 5, 10, 8112654, "i", "z", 7544438, "½", '2022-10-04', "int"),
+("2223", "int", 5, 11, 7101193, "i", "w", 6192098, "1", '2022-10-04', "int"),
+("2223", "int", 5, 11, 6192098, "i", "z", 7101193, "0", '2022-10-04', "int"),
+("2223", "int", 5, 12, 7518203, "i", "w", 8617367, "½", '2022-10-04', "int"),
+("2223", "int", 5, 12, 8617367, "i", "z", 7518203, "½", '2022-10-04', "int"),
+("2223", "int", 5, 13, 8400183, "i", "w", 101, "½", '2022-10-04', "int"),
+("2223", "int", 5, 13, 101, "i", "z", 8400183, "½", '2022-10-04', "int"),
+("2223", "int", 5, 14, 106, "i", "w", 130, "1", '2022-10-04', "int"),
+("2223", "int", 5, 14, 130, "i", "z", 106, "0", '2022-10-04', "int"),
+("2223", "int", 5, 15, 120, "i", "w", 103, "0", '2022-10-04', "int"),
+("2223", "int", 5, 15, 103, "i", "z", 120, "1", '2022-10-04', "int"),
+("2223", "int", 5, 16, 7771665, "i", "w", 8931098, "1", '2022-10-04', "int"),
+("2223", "int", 5, 16, 8931098, "i", "z", 7771665, "0", '2022-10-04', "int");
 
--- TODO ranglijst Rapid
+-- KNSB 8-10-2022
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "1", 2, 1, 7970094, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "1", 2, 2, 7584566, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "1", 2, 3, 7359913, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "1", 2, 4, 7657342, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "1", 2, 5, 7428960, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "1", 2, 6, 8285574, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "1", 2, 7, 7828183, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "1", 2, 8, 7099950, "e", "z", 0, "½", '2022-10-08', "int"),
+("2223", "1", 2, 9, 8096242, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "1", 2, 10, 8611922, "e", "z", 0, "½", '2022-10-08', "int"),
+("2223", "2", 2, 1, 6483455, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 2, 6335670, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "2", 2, 3, 7509920, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 4, 5968611, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 5, 7129991, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "2", 2, 6, 6225934, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 7, 8112654, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 8, 7292043, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "3", 2, 1, 7535385, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "3", 2, 2, 7758014, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "3", 2, 3, 6572511, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "3", 2, 4, 7809285, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "3", 2, 5, 8484443, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "3", 2, 6, 8587337, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "3", 2, 7, 7504310, "e", "w", 0, "0", '2022-10-08', "int"),
+("2223", "3", 2, 8, 8400183, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 1, 6214153, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 2, 7282033, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 3, 7904589, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 4, 6212404, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 5, 8485059, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "4", 1, 6, 7321534, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 7, 8472530, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 8, 7771665, "e", "z", 0, "1", '2022-10-08', "int");
+
+-- TODO NHSB 14-10-2022
+select * from uitslag where seizoen = '2223' and teamCode = 'n3' and rondeNummer = 1;
+delete from uitslag where seizoen = '2223' and teamCode = 'n3' and rondeNummer = 1;
+
+-- TODO KNSB 5-11-2022
+select * from uitslag where seizoen = "2223" and teamCode in ("1", "2", "2") and rondeNummer = 3;
+delete from uitslag where seizoen = "2223" and teamCode in("1", "2", "2") and rondeNummer = 3;
+select * from uitslag where seizoen = "2223" and teamCode = "4" and rondeNummer = 2;
+delete from uitslag where seizoen = "2223" and teamCode = "4" and rondeNummer = 2;
+
+-- TODO ranglijst Rapid ??
 set @competitie = 'ira';
 set @ronde = 5;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde order by bordNummer, witZwart;  -- and u.knsbNummer in (@wit, @zwart);
 
--- TODO alle mutaties van Peter van Diepen verwijderen
+-- TODO alle mutaties van P.J. van Diepen verwijderen
 
-delete from mutatie where knsbNummer = 6212404;
+delete from mutatie where knsbNummer = 97;
 
 -- TODO partij wijzigen
 

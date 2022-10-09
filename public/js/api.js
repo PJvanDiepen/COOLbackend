@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 const apiCalls = [
     `/ronden/${o_o_o.seizoen}/${o_o_o.competitie}`, // TODO met documentatie
     `/${uuidToken}/gebruikers`,
@@ -18,9 +16,7 @@ const apiCalls = [
 
 (async function() {
     await init();
-    menu([GEREGISTREERD, "systeembeheer", function () {
-        naarAnderePagina("beheer.html");
-    }]);
+    menu([]);
     const lijst = document.getElementById("lijst");
     for (const apiCall of apiCalls) {
         lijst.appendChild(htmlRij(htmlTabblad(apiCall)));

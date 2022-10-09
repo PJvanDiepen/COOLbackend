@@ -6,9 +6,6 @@
     menu([WEDSTRIJDLEIDER, `agenda van ${o_o_o.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${o_o_o.speler}&naamGebruiker=${o_o_o.naam}`);
         }],
-        [GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }],
         [BEHEERDER, `backup uitslagen ${o_o_o.naam}` , async function () {
             const rijen = await serverFetch(`/backup/speler/uitslag/${o_o_o.seizoen}/${o_o_o.speler}`);
             backupSQL("uitslag", rijen);

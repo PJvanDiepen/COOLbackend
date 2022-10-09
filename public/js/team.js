@@ -2,10 +2,7 @@
 
 (async function() {
     await init();
-    menu([GEREGISTREERD, "systeembeheer", function () {
-            naarAnderePagina("beheer.html");
-        }],
-        [BEHEERDER, "backup uitslagen van alle ronden" , async function () {
+    menu([BEHEERDER, "backup uitslagen van alle ronden" , async function () {
             const rijen = await serverFetch(`/backup/ronde/uitslag/${o_o_o.seizoen}/${o_o_o.team}/1/9`);
             backupSQL("uitslag", rijen);
         }]);
