@@ -63,20 +63,20 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     const spelers = await serverFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
         console.log(s);
-        // const vastTeam = nhsb ? s.nhsbTeam !== "" : s.knsbTeam !== "";
-        // const geenInvaller = s.teamCode === null || s.teamCode === "" || s.teamCode === s.knsbTeam || s.teamCode === s.nhsbTeam;
+        const heeftToegezegd = s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT; // heeft voor 1 team toegezegd
         let knsbVast = "";
         let nhsbVast = "";
         let invallerTeam = s.teamCode === null || s.teamCode === "" ? "" : s.teamCode === s.knsbTeam || s.teamCode === s.nhsbTeam ? "" : s.teamCode;
         let invaller = "";
         for (const w of wedstrijd) {
-            const isGevraagd = s.knsbTeam === w.teamCode || s.nhsbTeam === w.teamCode || s.teamCode === w.teamCode;
+            const isGevraagd = s.knsbTeam === w.teamCode || s.nhsbTeam === w.teamCode || s.teamCode === w.teamCode; // is voor minstens 1 team gevraagd
             if (isGevraagd) {
                 w.gevraagd++;
             }
-            const heeftToegezegd = s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT;
-            if (isGevraagd && heeftToegezegd) {
-                w.toegezegd++;
+            if (w.teamCode === s.teamCode) { // is deze wedstijd voor dit team gevraagd
+                if (isGevraagd && heeftToegezegd) {
+                    w.toegezegd++;
+                }
             }
             if (w.teamCode === s.knsbTeam) {
                 knsbVast = heeftToegezegd ? VINKJE : STREEP;
@@ -86,7 +86,8 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
                 invaller = heeftToegezegd ? VINKJE : STREEP;
             }
         }
-        tabel.appendChild(htmlRij(naarSpeler(s), s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
+        const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
+        tabel.appendChild(htmlRij(naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
     }
     for (const w of wedstrijd) {
         lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : "?"));

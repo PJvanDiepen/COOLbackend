@@ -12,18 +12,18 @@
     gebruikerTekst(
         document.getElementById("emailAan"),
         document.getElementById("naamAan"),
-        document.getElementById("link"));
+        document.getElementById("activeer"),
+        document.getElementById("favoriet"));
 })();
 
-/*
-    verwerk email=<email> TODO verwijderen???
- */
-
-async function gebruikerTekst(emailAan, naamAan, link) {
+async function gebruikerTekst(emailAan, naamAan, activeer, favoriet) {
     const leden = await serverFetch(`/${uuidToken}/email/${o_o_o.speler}`);
-    const email = params.get("email");
-    const lid = leden[0];  // TODO vergelijken met email
+    if (leden.length > 1) {
+        console.log(leden); // TODO zorgen dat gebruiker uniek is
+    }
+    const lid = leden[0];
     emailAan.appendChild(htmlTekst(lid.email));
     naamAan.appendChild(htmlTekst(`${lid.naam},`));
-    link.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}&uuid=${lid.uuidToken}`));
+    activeer.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}&uuid=${lid.uuidToken}`));
+    favoriet.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}`));
 }

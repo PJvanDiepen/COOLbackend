@@ -461,3 +461,8 @@ select u.*, r.*
   join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer  
 where u.seizoen = @seizoen and u.datum = @datum 
 order by u.knsbNummer, u.teamCode;
+
+-- wijzig naam
+select * from persoon where knsbNummer = 106;
+
+update persoon set naam = 'Abdulrashid Ayobi' where knsbNummer = 106;

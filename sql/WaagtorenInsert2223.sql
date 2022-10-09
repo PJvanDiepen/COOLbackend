@@ -26,7 +26,7 @@ delete from team where seizoen = '2223';
 -- laatste toevoeging 130 = Bas Mazereeuw
 insert into persoon (knsbNummer, naam) values
 (108, "Aad Schuit"),
-(106, "Abdul Rashid Ayobi"),
+(106, "Abdulrashid Ayobi"),
 (8363982, "Afshin Mehnavian"),
 (7809285, "Albert van der Meiden"),
 (126, "Alberto Alvarez Alonso"),
@@ -244,7 +244,7 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, 
 ("2223", "n1", "2", 7707832, 1936, '2022-09-15', 1936, "int", "ira", "", "", ""),
 ("2223", "n3", "", 7731812, 1700, '2022-09-29', 1700, "int", "ira", "", "", ""),
 ("2223", "", "3", 7758014, 1771, '2022-09-15', 1771, "int", "ira", "", "", ""),
-("2223", "", "", 7771665, 1086, '2022-09-05', 1086, "int", "ira", "", "", ""),
+("2223", "", "", 7771665, 1213, '2022-09-05', 1086, "int", "ira", "", "", ""),
 ("2223", "", "4", 7809285, 1793, '2022-09-21', 1793, "int", "ira", "", "", ""),
 ("2223", "", "", 7824674, 1840, '2022-09-06', 1840, "int", "ira", "", "", ""),
 ("2223", "", "1", 7828183, 2101, '2022-09-15', 2101, "", "", "", "", ""),
