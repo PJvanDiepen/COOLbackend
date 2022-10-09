@@ -73,24 +73,32 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             if (isGevraagd) {
                 w.gevraagd++;
             }
-            if (w.teamCode === s.teamCode) { // is deze wedstijd voor dit team gevraagd
-                if (isGevraagd && heeftToegezegd) {
+            if (w.teamCode === s.teamCode) { // is voor deze wedstijd van dit team gevraagd
+                if (heeftToegezegd) {
                     w.toegezegd++;
+                    if (w.teamCode === s.knsbTeam) {
+                        knsbVast = VINKJE;
+                    } else if (w.teamCode === s.nhsbTeam) {
+                        nhsbVast = VINKJE;
+                    } else {
+                        invaller = VINKJE;
+                    }
+                } else {
+                    if (w.teamCode === s.knsbTeam) {
+                        knsbVast = STREEP;
+                    } else if (w.teamCode === s.nhsbTeam) {
+                        nhsbVast = STREEP;
+                    } else {
+                        invaller = STREEP;
+                    }
                 }
-            }
-            if (w.teamCode === s.knsbTeam) {
-                knsbVast = heeftToegezegd ? VINKJE : STREEP;
-            } else if (w.teamCode === s.nhsbTeam) {
-                nhsbVast = heeftToegezegd ? VINKJE : STREEP;
-            } else if (w.teamCode === s.teamCode) {
-                invaller = heeftToegezegd ? VINKJE : STREEP;
             }
         }
         const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
         tabel.appendChild(htmlRij(naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
     }
     for (const w of wedstrijd) {
-        lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : "?"));
+        lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : STREEP));
     }
 }
 

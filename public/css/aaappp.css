@@ -132,6 +132,11 @@ a:hover {
 	background: #F2BA49;
 }
 
+.fout {
+	background: #C32148;
+	font-weight: bold;
+}
+
 input[type=checkbox] {
 	accent-color: maroon;
 	transform: scale(1.3);

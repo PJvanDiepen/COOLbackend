@@ -351,15 +351,21 @@ function htmlTekst(tekst) {
     return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
 }
 
+function htmlFout(htmlNode, indien) {
+    if (indien) {
+        htmlNode.classList.add("fout");
+    }
+}
+
 function htmlVerwerkt(htmlNode, indien) {
     if (indien) {
-        htmlNode.classList.add("verwerkt")
+        htmlNode.classList.add("verwerkt");
     }
 }
 
 function htmlVet(htmlNode, indien) {
     if (indien) {
-        htmlNode.classList.add("vet")
+        htmlNode.classList.add("vet");
     }
 }
 
