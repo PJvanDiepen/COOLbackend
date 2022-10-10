@@ -815,8 +815,8 @@ select * from uitslag where seizoen = '2223' and teamCode = 'n3' and rondeNummer
 delete from uitslag where seizoen = '2223' and teamCode = 'n3' and rondeNummer = 1;
 
 -- TODO KNSB 5-11-2022
-select * from uitslag where seizoen = "2223" and teamCode in ("1", "2", "2") and rondeNummer = 3;
-delete from uitslag where seizoen = "2223" and teamCode in("1", "2", "2") and rondeNummer = 3;
+select * from uitslag where seizoen = "2223" and teamCode in ("1", "2", "3") and rondeNummer = 3;
+delete from uitslag where seizoen = "2223" and teamCode in("1", "2", "3") and rondeNummer = 3;
 select * from uitslag where seizoen = "2223" and teamCode = "4" and rondeNummer = 2;
 delete from uitslag where seizoen = "2223" and teamCode = "4" and rondeNummer = 2;
 

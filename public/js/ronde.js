@@ -6,7 +6,6 @@
            &zwart=<knsbNummer>
            &uitslag=<uitslag wit>
  */
-
 (async function() {
     await init();
     competitieTitel();

@@ -1,7 +1,9 @@
 "use strict";
 
 /*
-    verwerk datum=[datum]
+    verwerk datum=<datum>
+           &invaller=<knsbNummer>
+           &wedstrijd=<teamCode>
  */
 (async function() {
     await init();
@@ -45,6 +47,7 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
 
 async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedstrijdDatum) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor teamleiders";
+    const spelers = await serverFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     let nhsb = false;
     let aantalWedstrijden = 0;
     let wedstrijd = [];
@@ -53,12 +56,12 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             nhsb = nhsb || w.teamCode.substring(0,1) === "n";
             w.gevraagd = 0;
             w.toegezegd = 0;
+            w.hoogsteRating = ratingInvaller(spelers, w.teamCode, nhsb);
             wedstrijd[aantalWedstrijden++] = w;
         }
     }
     console.log(wedstrijd);
     tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
-    const spelers = await serverFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
     for (const s of spelers) {
         console.log(s);
         const heeftToegezegd = s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT; // heeft voor 1 team toegezegd
@@ -98,6 +101,17 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     for (const w of wedstrijd) {
         lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : STREEP));
     }
+}
+
+function ratingInvaller(spelers, teamCode, nhsb) {
+    for (const s of spelers) {
+        if (nhsb && s.nhsbTeam === teamCode) {
+            return s.knsbRating + 80;
+        } else if (s.knsbTeam === teamCode) {
+            return s.knsbRating + 40;
+        }
+    }
+    return 0;
 }
 
 function invallerVragen(speler, wedstrijd) {
