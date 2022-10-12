@@ -44,7 +44,7 @@
         [BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/ronde/${o_o_o.seizoen}/int/${rondeNummer}`);
         }]);
-    rondeSelecteren(o_o_o.competitie, 0);
+    rondeSelecteren(o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, document.getElementById("uitslagen"));
     await wedstrijdenBijRonde(rondeNummer, document.getElementById("wedstrijden"));
     document.getElementById("kop").innerHTML =

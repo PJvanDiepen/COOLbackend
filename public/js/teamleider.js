@@ -53,7 +53,7 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     let wedstrijd = [];
     for (const w of wedstrijden) {
         if (w.datum === wedstrijdDatum) {
-            nhsb = nhsb || w.teamCode.substring(0,1) === "n";
+            nhsb = nhsb || w.teamCode.substring(0,1) === "n"; // KNSB en NHSB wedstrijden nooit op dezelfde dag!
             w.gevraagd = 0;
             w.toegezegd = 0;
             w.hoogsteRating = ratingInvaller(spelers, w.teamCode, nhsb);

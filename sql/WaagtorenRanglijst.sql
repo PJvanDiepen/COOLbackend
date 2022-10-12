@@ -450,18 +450,6 @@ from speler s
 where s.seizoen = @seizoen 
 order by s.knsbRating desc, u.teamCode;
 
--- uitslagen op dezelfde datum
-select * from uitslag 
-where seizoen = @seizoen and datum = @datum 
-order by knsbNummer, teamCode;
-
--- uitslagen / ronden op dezelfde datum
-select u.*, r.* 
-  from uitslag u 
-  join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer  
-where u.seizoen = @seizoen and u.datum = @datum 
-order by u.knsbNummer, u.teamCode;
-
 -- wijzig naam
 select * from persoon where knsbNummer = 106;
 

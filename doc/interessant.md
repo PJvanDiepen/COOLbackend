@@ -159,3 +159,4 @@ Verwijder localStorage op iPhone
 - [Nationaal Cyber Security Centrum](https://www.ncsc.nl/)
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [Diagrammen in Markdown](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)
+- [cursus algoritmes en datastructuren](https://frontendmasters.com/courses/algorithms/)
