@@ -814,6 +814,14 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 select * from uitslag where seizoen = '2223' and teamCode = 'n3' and rondeNummer = 1;
 delete from uitslag where seizoen = '2223' and teamCode = 'n3' and rondeNummer = 1;
 
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "n3", 1, 1, 6214153, "e", "w", 0, "½", '2022-10-14', "int"),
+("2223", "n3", 1, 2, 8372881, "e", "z", 0, "1", '2022-10-14', "int"),
+("2223", "n3", 1, 3, 8276752, "e", "w", 0, "½", '2022-10-14', "int"),
+("2223", "n3", 1, 4, 7282033, "e", "z", 0, "0", '2022-10-14', "int"),
+("2223", "n3", 1, 5, 7210137, "e", "w", 0, "0", '2022-10-14', "int"),
+("2223", "n3", 1, 6, 7731812, "e", "z", 0, "0", '2022-10-14', "int");
+
 -- TODO KNSB 5-11-2022
 select * from uitslag where seizoen = "2223" and teamCode in ("1", "2", "3") and rondeNummer = 3;
 delete from uitslag where seizoen = "2223" and teamCode in("1", "2", "3") and rondeNummer = 3;

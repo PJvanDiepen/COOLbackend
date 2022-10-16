@@ -10,16 +10,19 @@ const alleLeden = Number(params.get("leden"));
 (async function() {
     await init();
     competitieTitel();
+    const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde || 1;
     menu([]);
     teamSelecteren(o_o_o.competitie);
-    rondeSelecteren(o_o_o.competitie, 0);
+    rondeSelecteren(o_o_o.competitie, rondeNummer);
     versieSelecteren(document.getElementById("versies"));
     ledenSelecteren(document.getElementById("leden"));
-    spelersLijst(document.getElementById("kop"), document.getElementById("tabel"), document.getElementById("promoties"));
+    spelersLijst(rondeNummer,
+        document.getElementById("kop"),
+        document.getElementById("tabel"),
+        document.getElementById("promoties"));
 })();
 
-async function spelersLijst(kop, lijst, promoties) {
-    const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde;
+async function spelersLijst(rondeNummer, kop, lijst, promoties) {
     kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "ranglijst na ronde " + rondeNummer;
     let i = 0;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
