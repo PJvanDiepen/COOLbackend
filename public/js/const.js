@@ -98,8 +98,8 @@ const o_o_o = {
     vereniging: "Waagtoren",
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
-    competitie: RAPID_COMPETTIE, // TODO INTERNE_COMPETITIE,
-    team: RAPID_COMPETTIE, // TODO INTERNE_COMPETITIE,
+    competitie: INTERNE_COMPETITIE,
+    team: INTERNE_COMPETITIE,
     speler: 0, // knsbNummer is een getal
     naam: "onbekend"
 };

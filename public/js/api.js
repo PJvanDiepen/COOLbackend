@@ -8,10 +8,9 @@ const apiCalls = [
     `/reglementen`,
     `/reglement/${o_o_o.seizoen}/${o_o_o.competitie}`,
     `/${uuidToken}/agenda/${o_o_o.seizoen}/teamCode/rondeNummer/knsbNummer/n/${datumSQL()}/int`,
-
-    `/${uuidToken}/agenda/${o_o_o.seizoen}/teamCode/rondeNummer/knsbNummer/n/${datumSQL()}/int`,
-    `/${uuidToken}/deelnemers/2122/int/rondeNummer`,
-    `/${uuidToken}/alle/deelnemers/2122/int/15`
+    `/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL()}`,
+    `/${uuidToken}/deelnemers/${o_o_o.seizoen}/int/rondeNummer`,
+    `/${uuidToken}/alle/deelnemers/${o_o_o.seizoen}/int/15`
 ];
 
 (async function() {

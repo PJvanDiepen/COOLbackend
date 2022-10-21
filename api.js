@@ -380,7 +380,7 @@ module.exports = router => {
     Zie teamleider.js
 
     with u as
-      (select * from uitslag where seizoen = @seizoen and datum = @datum)
+      (select * from uitslag where seizoen = @seizoen and not teamCode = anderTeam and datum = @datum)
     select s.nhsbTeam, s.knsbTeam, s.knsbNummer, s.knsbRating, naam, u.teamCode, u.partij
     from speler s
       join persoon p on s.knsbNummer = p.knsbNummer
@@ -395,6 +395,7 @@ module.exports = router => {
                 .with('u',function (qb) {
                     qb.from('uitslag')
                         .where('uitslag.seizoen', ctx.params.seizoen)
+                        .andWhereNot('uitslag.teamCode', ref('uitslag.anderTeam'))
                         .andWhere('uitslag.datum', ctx.params.datum)
                 })
                 .select(

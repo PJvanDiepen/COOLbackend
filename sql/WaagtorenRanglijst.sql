@@ -433,16 +433,17 @@ select * from mutatie order by tijdstip desc;
 -- verwijder mutaties
 delete from mutatie where knsbNummer = 97; -- and invloed = 0;
 
+use waagtoren;
 set @seizoen = '2223';
 set @knsbNummer = 7504310;
-set @datum = '2022-10-08';
+set @datum = '2022-10-25';
 
 -- de teamleiders
 select t.*, naam from team t join persoon p on p.knsbNummer = t.teamleider where seizoen = @seizoen;
 
 -- voor teamleiders
 with u as 
-  (select * from uitslag where seizoen = @seizoen and datum = @datum)   
+  (select * from uitslag where seizoen = @seizoen and not teamCode = anderTeam and datum = @datum)   
 select s.nhsbTeam, s.knsbTeam, s.knsbNummer, s.knsbRating, naam, u.teamCode, u.partij
 from speler s
   join persoon p on s.knsbNummer = p.knsbNummer
