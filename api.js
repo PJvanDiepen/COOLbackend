@@ -150,7 +150,7 @@ module.exports = router => {
 
     Zie indelen.js
      */
-    router.get('/:uuidToken/uithuis/:seizoen/:rondeNummer', async function (ctx) {
+    router.get('/:uuidToken/uithuis/:seizoen/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let uithuis = {};
         if (gebruiker.juisteRechten(GEREGISTREERD)) {
@@ -159,8 +159,8 @@ module.exports = router => {
                 .join('persoon', 'persoon.knsbNummer', 'uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [EXTERN_THUIS, EXTERN_UIT])
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', INTERNE_COMPETITIE)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhereNot('uitslag.teamCode', ref('uitslag.anderTeam'))
+                .andWhere('uitslag.datum',ctx.params.datum)
                 .orderBy(['uitslag.partij', 'naam']);
         }
         ctx.body = uithuis;

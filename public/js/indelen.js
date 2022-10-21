@@ -46,7 +46,7 @@
         oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const uithuis = await serverFetch(`/${uuidToken}/uithuis/${o_o_o.seizoen}/${rondeNummer}`); // actuele situatie
+    const uithuis = await serverFetch(`/${uuidToken}/uithuis/${o_o_o.seizoen}/${datumSQL(totDatum)}`); // actuele situatie
     partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), uithuis);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
