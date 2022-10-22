@@ -96,7 +96,8 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             }
         }
         const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
-        tabel.appendChild(htmlRij(naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerTeam, invaller));
+        const invallerWedstrijd = wedstrijdSelecteren(s, invallerTeam, wedstrijd);
+        tabel.appendChild(htmlRij(naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerWedstrijd, invaller));
     }
     for (const w of wedstrijd) {
         lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : STREEP));
@@ -114,16 +115,24 @@ function ratingInvaller(spelers, teamCode, nhsb) {
     return 0;
 }
 
-function invallerVragen(speler, wedstrijd) {
-    if (uitslagWijzigen(uitslag)) {
-        return uitslagSelecteren(rondeNummer, uitslag)
-    } else if (uitslag.resultaat === WINST) {
-        return "1-0";
-    } else if (uitslag.resultaat === REMISE) {
-        return "½-½";
-    } else if (uitslag.resultaat === VERLIES) {
-        return "0-1";
-    } else {
-        return "";
+function wedstrijdSelecteren(speler, invallerTeam, wedstrijd) {
+    let invallerMogelijkheden = 0;
+    const select = document.createElement("select");
+    if (invallerTeam === "") {
+        select.appendChild(htmlOptie("", ""));
     }
+    for (const w of wedstrijd) {
+        if (speler.knsbTeam !== w.teamCode && speler.nhsbTeam !== w.teamCode && speler.knsbRating < w.hoogsteRating) {
+            invallerMogelijkheden++;
+            select.appendChild(htmlOptie(w.teamCode, teamVoluit(w.teamCode)));
+        }
+    }
+    select.value = invallerTeam;
+    select.addEventListener("input",function () {
+        // naarZelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${select.value}`);
+    });
+    if (invallerMogelijkheden === 0) {
+        return invallerTeam;
+    }
+    return select;
 }
