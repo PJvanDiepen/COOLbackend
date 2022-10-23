@@ -2,8 +2,6 @@
 
 /*
     verwerk datum=<datum>
-           &invaller=<knsbNummer>
-           &wedstrijd=<teamCode>
  */
 (async function() {
     await init();
@@ -62,6 +60,7 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
     }
     console.log(wedstrijd);
     tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
+    let vorigeSpeler = 0;
     for (const s of spelers) {
         console.log(s);
         const heeftToegezegd = s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT; // heeft voor 1 team toegezegd
@@ -96,7 +95,8 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             }
         }
         const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
-        const invallerWedstrijd = wedstrijdSelecteren(s, invallerTeam, wedstrijd);
+        const invallerWedstrijd = s.knsbNummer === vorigeSpeler ? invallerTeam : wedstrijdSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
+        vorigeSpeler = s.knsbNummer;
         tabel.appendChild(htmlRij(naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerWedstrijd, invaller));
     }
     for (const w of wedstrijd) {
@@ -112,27 +112,38 @@ function ratingInvaller(spelers, teamCode, nhsb) {
             return s.knsbRating + 40;
         }
     }
-    return 0;
+    return 3000; // hoogste rating indien team zonder vaste spelers
 }
 
-function wedstrijdSelecteren(speler, invallerTeam, wedstrijd) {
+function wedstrijdSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
     let invallerMogelijkheden = 0;
     const select = document.createElement("select");
+    let wedstrijdNummer = -1; // geen wedstrijd;
     if (invallerTeam === "") {
-        select.appendChild(htmlOptie("", ""));
+        select.appendChild(htmlOptie(wedstrijdNummer, ""));
     }
-    for (const w of wedstrijd) {
-        if (speler.knsbTeam !== w.teamCode && speler.nhsbTeam !== w.teamCode && speler.knsbRating < w.hoogsteRating) {
+    for (let i = 0; i < wedstrijd.length; i++) {
+        if (wedstrijd[i].teamCode === invallerTeam) {
+            wedstrijdNummer = i;
+        }
+        if (speler.knsbTeam !== wedstrijd[i].teamCode &&
+            speler.nhsbTeam !== wedstrijd[i].teamCode &&
+            speler.knsbRating < wedstrijd[i].hoogsteRating) {
             invallerMogelijkheden++;
-            select.appendChild(htmlOptie(w.teamCode, teamVoluit(w.teamCode)));
+            select.appendChild(htmlOptie(i, teamVoluit(wedstrijd[i].teamCode)));
         }
     }
-    select.value = invallerTeam;
-    select.addEventListener("input",function () {
-        // naarZelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${select.value}`);
-    });
     if (invallerMogelijkheden === 0) {
         return invallerTeam;
+    } else {
+        select.value = wedstrijdNummer;
+        select.addEventListener("input",async function () {
+            const team = wedstrijd[select.value].teamCode;
+            const ronde = wedstrijd[select.value].rondeNummer;
+            const mutaties = await serverFetch(
+                `/${uuidToken}/agenda/${o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/n/${datumSQL(wedstrijdDatum)}/int`);
+            naarZelfdePagina(`datum=${wedstrijdDatum}&wedstrijd=${select.value}`);
+        });
+        return select;
     }
-    return select;
 }
