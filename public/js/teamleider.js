@@ -58,11 +58,9 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             wedstrijd[aantalWedstrijden++] = w;
         }
     }
-    console.log(wedstrijd);
     tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
     let vorigeSpeler = 0;
     for (const s of spelers) {
-        console.log(s);
         const heeftToegezegd = s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT; // heeft voor 1 team toegezegd
         let knsbVast = "";
         let nhsbVast = "";
