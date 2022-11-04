@@ -1207,6 +1207,7 @@ const ZWITSERS_TEST      = "izt";
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
+const VRAAG_INVALLER       = "?";
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";

@@ -10,11 +10,10 @@
     gebruikerTekst(
         document.getElementById("emailAan"),
         document.getElementById("naamAan"),
-        document.getElementById("activeer"),
-        document.getElementById("favoriet"));
+        document.getElementById("activeer"));
 })();
 
-async function gebruikerTekst(emailAan, naamAan, activeer, favoriet) {
+async function gebruikerTekst(emailAan, naamAan, activeer) {
     const leden = await serverFetch(`/${uuidToken}/email/${o_o_o.speler}`);
     if (leden.length > 1) {
         console.log(leden); // TODO zorgen dat gebruiker uniek is
@@ -23,5 +22,4 @@ async function gebruikerTekst(emailAan, naamAan, activeer, favoriet) {
     emailAan.appendChild(htmlTekst(lid.email));
     naamAan.appendChild(htmlTekst(`${lid.naam},`));
     activeer.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}&uuid=${lid.uuidToken}`));
-    favoriet.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}`));
 }

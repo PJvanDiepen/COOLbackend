@@ -14,6 +14,7 @@ Verwijder localStorage op iPhone
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
 - [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
+- [Fix corrupted tables](https://www.digitalocean.com/community/tutorials/how-to-fix-corrupted-tables-in-mysql)
 - [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
 
 # JavaScript

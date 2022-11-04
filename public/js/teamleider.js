@@ -93,7 +93,8 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             }
         }
         const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
-        const invallerWedstrijd = s.knsbNummer === vorigeSpeler ? invallerTeam : wedstrijdSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
+        const invallerWedstrijd =
+            s.knsbNummer === vorigeSpeler ? teamVoluit(invallerTeam) + "  " : wedstrijdSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
         vorigeSpeler = s.knsbNummer;
         tabel.appendChild(htmlRij(naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerWedstrijd, invaller));
     }

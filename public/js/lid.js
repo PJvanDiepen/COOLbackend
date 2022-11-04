@@ -2,8 +2,10 @@
 
 /*
     verwerk lid=<knsbNummer>
+           &knsb=wijzigen
  */
 const lidNummer = Number(params.get("lid"));
+const knsbWijzigen = params.get("knsb") === "wijzigen";
 
 (async function() {
     await init();
@@ -14,7 +16,12 @@ const lidNummer = Number(params.get("lid"));
     const ola = olaLezen();
     console.log("--- ola ---");
     console.log(ola);
-    menu([WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
+    menu([BEHEERDER, "wijzig KNSB gegevens (pas op!)", function () {
+            if (gebruiker.mutatieRechten >= BEHEERDER) {
+                naarZelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
+            }
+        }],
+        [WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }]);
     lidFormulier(persoon, ola);
@@ -72,10 +79,10 @@ async function lidFormulier(persoon, ola) {
     if (ola) {
         email.value = ola.email;
     }
-    const gebruiker = document.getElementById("gebruiker");
+    const gebruikerSoort = document.getElementById("gebruiker");
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
     if (!gebruikerToevoegen) {
-        gebruiker.value = gebruikerFunctie(persoon);
+        gebruikerSoort.value = gebruikerFunctie(persoon);
     }
     const knsbRating = document.getElementById("knsbRating");
     knsbRating.value = 0;
@@ -133,6 +140,10 @@ async function lidFormulier(persoon, ola) {
             }
             competitieNummer++;
         }
+    }
+    if (knsbWijzigen) {
+        knsbNummer.disabled = false; // enable input
+        knsbRating.disabled = false; // enable input
     }
 
     // formulier verwerken

@@ -97,7 +97,7 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             tabel.appendChild(htmlRij(
                 link,
                 olaRating ? olaRating : lid.knsbRating === null ? "" : lid.knsbRating,
-                lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? VINKJE : lid.interneRating,
+                lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? ZELFDE : lid.interneRating,
                 lid.knsbTeam === null ? "" : lid.knsbTeam,
                 lid.nhsbTeam === null ? "" : lid.nhsbTeam,
                 lid.intern1 === null ? "" : [lid.intern1, lid.intern2, lid.intern3, lid.intern4, lid.intern5].join(", "),
