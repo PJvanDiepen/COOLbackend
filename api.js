@@ -679,6 +679,24 @@ module.exports = router => {
     });
 
     /*
+   Zie lid.js
+    */
+    router.get('/:uuidToken/knsb/:lidNummer/:knsbNummer', async function (ctx) {
+        ctx.body = await Persoon.query()
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(BEHEERDER)) {
+            if (await Persoon.query()
+                .findById(ctx.params.lidNummer)
+                .patch({knsbNummer: ctx.params.knsbNummer})) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
+            }
+        }
+        ctx.body = aantal;
+    });
+
+    /*
     Zie ???
      */
     router.get('/:uuidToken/team/toevoegen/:seizoen/:team/:bond', async function (ctx) { // TODO alle velden invullen

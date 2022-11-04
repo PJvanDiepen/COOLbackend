@@ -205,6 +205,12 @@ async function lidFormulier(persoon, ola) {
                 }
             }
         }
+        if (knsbWijzigen && Number(knsbNummer.value) !== lidNummer) {
+            if (await serverFetch(`/${uuidToken}/knsb/${lidNummer}/${knsbNummer.value}`)){
+                mutaties++;
+            }
+        }
+        // TODO iets doen met mutaties of mutaties verwijderen?
         naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
     });
 }

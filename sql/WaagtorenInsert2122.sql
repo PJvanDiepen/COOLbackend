@@ -1,7 +1,7 @@
 insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5) values
 ('2122', '', '', 100, 1000, '2022-04-23', 1000, '', '', '', '', ''),
 ('2122', '', '', 101, 1000, '2021-08-06', 1000, '', '', '', '', ''),
-('2122', '', '', 102, 1000, '2021-08-06', 1000, '', '', '', '', ''),
+('2122', '', '', 8978717, 1000, '2021-08-06', 1000, '', '', '', '', ''),
 ('2122', '', '', 103, 1000, '2021-08-06', 1000, '', '', '', '', ''),
 ('2122', '', '', 105, 1000, '2021-08-06', 1000, '', '', '', '', ''),
 ('2122', '', '', 106, 1000, '2021-08-06', 1000, '', '', '', '', ''),
@@ -1392,7 +1392,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 12
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 12, 0, 102, 'a', '', 0, '', '2022-02-15', 'int'),
+('2122', 'int', 12, 0, 8978717, 'a', '', 0, '', '2022-02-15', 'int'),
 ('2122', 'int', 12, 0, 105, 'a', '', 0, '', '2022-02-15', 'int'),
 ('2122', 'int', 12, 0, 111, 'a', '', 0, '', '2022-02-15', 'int'),
 ('2122', 'int', 12, 0, 113, 'a', '', 0, '', '2022-02-15', 'int'),
@@ -1547,8 +1547,8 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'ira', 4, 11, 8372881, 'i', 'z', 7210137, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 12, 7321534, 'i', 'w', 8485059, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 4, 12, 8485059, 'i', 'z', 7321534, '1', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 13, 103, 'i', 'w', 102, '½', '2022-02-22', 'ira'),
-('2122', 'ira', 4, 13, 102, 'i', 'z', 103, '½', '2022-02-22', 'ira');
+('2122', 'ira', 4, 13, 103, 'i', 'w', 8978717, '½', '2022-02-22', 'ira'),
+('2122', 'ira', 4, 13, 8978717, 'i', 'z', 103, '½', '2022-02-22', 'ira');
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'ira', 5, 0, 105, 'a', '', 0, '', '2022-02-22', 'ira'),
@@ -1603,8 +1603,8 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ('2122', 'ira', 5, 6, 7210137, 'i', 'z', 7399469, '½', '2022-02-22', 'ira'),
 ('2122', 'ira', 5, 7, 7292043, 'i', 'w', 7970094, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 5, 7, 7970094, 'i', 'z', 7292043, '1', '2022-02-22', 'ira'),
-('2122', 'ira', 5, 8, 102, 'i', 'w', 6212404, '0', '2022-02-22', 'ira'),
-('2122', 'ira', 5, 8, 6212404, 'i', 'z', 102, '1', '2022-02-22', 'ira'),
+('2122', 'ira', 5, 8, 8978717, 'i', 'w', 6212404, '0', '2022-02-22', 'ira'),
+('2122', 'ira', 5, 8, 6212404, 'i', 'z', 8978717, '1', '2022-02-22', 'ira'),
 ('2122', 'ira', 5, 9, 101, 'i', 'w', 103, '0', '2022-02-22', 'ira'),
 ('2122', 'ira', 5, 9, 103, 'i', 'z', 101, '1', '2022-02-22', 'ira'),
 ('2122', 'ira', 5, 10, 7613166, 'i', 'w', 8112654, '1', '2022-02-22', 'ira'),
@@ -1618,7 +1618,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ('2122', 'ira', 6, 0, 101, 'a', '', 0, '', '2022-02-22', 'ira'),
-('2122', 'ira', 6, 0, 102, 'a', '', 0, '', '2022-02-22', 'ira'),
+('2122', 'ira', 6, 0, 8978717, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 6, 0, 105, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 6, 0, 117, 'a', '', 0, '', '2022-02-22', 'ira'),
 ('2122', 'ira', 6, 0, 118, 'a', '', 0, '', '2022-02-22', 'ira'),
@@ -1704,7 +1704,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 13
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-  ('2122', 'int', 13, 0, 102, 'a', '', 0, '', '2022-03-01', 'int'),
+  ('2122', 'int', 13, 0, 8978717, 'a', '', 0, '', '2022-03-01', 'int'),
   ('2122', 'int', 13, 0, 105, 'a', '', 0, '', '2022-03-01', 'int'),
   ('2122', 'int', 13, 0, 111, 'a', '', 0, '', '2022-03-01', 'int'),
   ('2122', 'int', 13, 0, 113, 'a', '', 0, '', '2022-03-01', 'int'),
@@ -1796,7 +1796,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 14
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
- ('2122', 'int', 14, 0, 102, 'a', '', 0, '', '2022-03-08', 'int'),
+ ('2122', 'int', 14, 0, 8978717, 'a', '', 0, '', '2022-03-08', 'int'),
  ('2122', 'int', 14, 0, 111, 'a', '', 0, '', '2022-03-08', 'int'),
  ('2122', 'int', 14, 0, 113, 'a', '', 0, '', '2022-03-08', 'int'),
  ('2122', 'int', 14, 0, 114, 'a', '', 0, '', '2022-03-08', 'int'),
@@ -1936,7 +1936,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 15
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 15, 0, 102, 'a', '', 0, '', '2022-03-15', 'int'),
+('2122', 'int', 15, 0, 8978717, 'a', '', 0, '', '2022-03-15', 'int'),
 ('2122', 'int', 15, 0, 105, 'a', '', 0, '', '2022-03-15', 'int'),
 ('2122', 'int', 15, 0, 111, 'a', '', 0, '', '2022-03-15', 'int'),
 ('2122', 'int', 15, 0, 113, 'a', '', 0, '', '2022-03-15', 'int'),
@@ -2044,7 +2044,7 @@ where seizoen = '2122' and teamCode = 'int' and rondeNummer = 15 and u.knsbNumme
 
 -- ronde 16
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 16, 0, 102, 'a', '', 0, '', '2022-03-22', 'int'),
+('2122', 'int', 16, 0, 8978717, 'a', '', 0, '', '2022-03-22', 'int'),
 ('2122', 'int', 16, 0, 105, 'a', '', 0, '', '2022-03-22', 'int'),
 ('2122', 'int', 16, 0, 111, 'a', '', 0, '', '2022-03-22', 'int'),
 ('2122', 'int', 16, 0, 113, 'a', '', 0, '', '2022-03-22', 'int'),
@@ -2137,7 +2137,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 17
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 17, 0, 102, 'a', '', 0, '', '2022-03-29', 'int'),
+('2122', 'int', 17, 0, 8978717, 'a', '', 0, '', '2022-03-29', 'int'),
 ('2122', 'int', 17, 0, 111, 'a', '', 0, '', '2022-03-29', 'int'),
 ('2122', 'int', 17, 0, 113, 'a', '', 0, '', '2022-03-29', 'int'),
 ('2122', 'int', 17, 0, 114, 'a', '', 0, '', '2022-03-29', 'int'),
@@ -2261,7 +2261,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 18
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 18, 0, 102, 'a', '', 0, '', '2022-04-05', 'int'),
+('2122', 'int', 18, 0, 8978717, 'a', '', 0, '', '2022-04-05', 'int'),
 ('2122', 'int', 18, 0, 105, 'a', '', 0, '', '2022-04-05', 'int'),
 ('2122', 'int', 18, 0, 111, 'a', '', 0, '', '2022-04-05', 'int'),
 ('2122', 'int', 18, 0, 113, 'a', '', 0, '', '2022-04-05', 'int'),
@@ -2367,7 +2367,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 19
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 19, 0, 102, 'a', '', 0, '', '2022-04-12', 'int'),
+('2122', 'int', 19, 0, 8978717, 'a', '', 0, '', '2022-04-12', 'int'),
 ('2122', 'int', 19, 0, 105, 'a', '', 0, '', '2022-04-12', 'int'),
 ('2122', 'int', 19, 0, 111, 'a', '', 0, '', '2022-04-12', 'int'),
 ('2122', 'int', 19, 0, 113, 'a', '', 0, '', '2022-04-12', 'int'),
@@ -2482,7 +2482,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 20
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 20, 0, 102, 'a', '', 0, '', '2022-04-19', 'int'),
+('2122', 'int', 20, 0, 8978717, 'a', '', 0, '', '2022-04-19', 'int'),
 ('2122', 'int', 20, 0, 105, 'a', '', 0, '', '2022-04-19', 'int'),
 ('2122', 'int', 20, 0, 111, 'a', '', 0, '', '2022-04-19', 'int'),
 ('2122', 'int', 20, 0, 113, 'a', '', 0, '', '2022-04-19', 'int'),
@@ -2633,7 +2633,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 21
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 21, 0, 102, 'a', '', 0, '', '2022-04-26', 'int'),
+('2122', 'int', 21, 0, 8978717, 'a', '', 0, '', '2022-04-26', 'int'),
 ('2122', 'int', 21, 0, 111, 'a', '', 0, '', '2022-04-26', 'int'),
 ('2122', 'int', 21, 0, 113, 'a', '', 0, '', '2022-04-26', 'int'),
 ('2122', 'int', 21, 0, 114, 'a', '', 0, '', '2022-04-26', 'int'),
@@ -2741,7 +2741,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 22
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 22, 0, 102, 'a', '', 0, '', '2022-05-10', 'int'),
+('2122', 'int', 22, 0, 8978717, 'a', '', 0, '', '2022-05-10', 'int'),
 ('2122', 'int', 22, 0, 111, 'a', '', 0, '', '2022-05-10', 'int'),
 ('2122', 'int', 22, 0, 113, 'a', '', 0, '', '2022-05-10', 'int'),
 ('2122', 'int', 22, 0, 114, 'a', '', 0, '', '2022-05-10', 'int'),
@@ -2836,7 +2836,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 23
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 23, 0, 102, 'a', '', 0, '', '2022-05-17', 'int'),
+('2122', 'int', 23, 0, 8978717, 'a', '', 0, '', '2022-05-17', 'int'),
 ('2122', 'int', 23, 0, 111, 'a', '', 0, '', '2022-05-17', 'int'),
 ('2122', 'int', 23, 0, 113, 'a', '', 0, '', '2022-05-17', 'int'),
 ('2122', 'int', 23, 0, 114, 'a', '', 0, '', '2022-05-17', 'int'),
@@ -2968,7 +2968,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- ronde 24
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 24, 0, 102, 'a', '', 0, '', '2022-05-24', 'int'),
+('2122', 'int', 24, 0, 8978717, 'a', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 111, 'a', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 113, 'a', '', 0, '', '2022-05-24', 'int'),
 ('2122', 'int', 24, 0, 114, 'a', '', 0, '', '2022-05-24', 'int'),
@@ -3068,7 +3068,7 @@ select * from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNumme
 delete from uitslag where seizoen = '2122' and teamCode = 'int' and rondeNummer = 25;
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2122', 'int', 25, 0, 102, 'a', '', 0, '', '2022-05-31', 'int'),
+('2122', 'int', 25, 0, 8978717, 'a', '', 0, '', '2022-05-31', 'int'),
 ('2122', 'int', 25, 0, 111, 'a', '', 0, '', '2022-05-31', 'int'),
 ('2122', 'int', 25, 0, 113, 'a', '', 0, '', '2022-05-31', 'int'),
 ('2122', 'int', 25, 0, 114, 'a', '', 0, '', '2022-05-31', 'int'),
@@ -3196,7 +3196,6 @@ insert into persoon (knsbNummer, naam) values
 (10, 'niemand'), 
 (99, 'Peter Glashouwer'),
 (101, 'Ramon Witte'),
-(102, 'Ellen van der Hoeven'),
 (103, 'Charles Stoorvogel'),
 (104, 'Sietske de Greeuw'),
 (105, 'Richard Meijer'),
@@ -3323,4 +3322,5 @@ insert into persoon (knsbNummer, naam) values
 ('8827588', 'Roel Boesenkool'),
 ('8865549', 'Erno Brouwer'),
 ('8931098', 'Sander Jagersma'),
-(8956805, 'Vjekoslav Nemec');
+(8956805, 'Vjekoslav Nemec'),
+(8978717, 'Ellen van der Hoeven');
