@@ -768,6 +768,8 @@ function spelerTotalen(speler) {
     function metWit(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
+            // console.log(`--- totalen[${i + 1}] ---`);
+            // console.log(totalen);
             return totalen[i + 1] === 1 // wit indien vorige keer zwart
         } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
             afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
