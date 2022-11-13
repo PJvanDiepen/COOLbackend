@@ -130,9 +130,9 @@ module.exports = router => {
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.partij', ctx.params.partij);
+                .andWhere('uitslag.partij', MEEDOEN);
         }
-        if (deelnemers.length === 0 && ctx.params.partij === MEEDOEN) { // voor opnieuw indelen reeds gespeelde ronde
+        if (deelnemers.length === 0) { // voor opnieuw indelen reeds gespeelde ronde
             deelnemers = await Uitslag.query()
                 .select('uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [INTERNE_PARTIJ, ONEVEN, REGLEMENTAIRE_WINST])

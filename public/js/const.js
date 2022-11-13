@@ -611,9 +611,9 @@ totalen
 [17] witExtern
 [18] zwartExtern
 [19] rondenVerschil
-tegenstanders met n = 0, 1, 2, enz.
+tegenstanders met n = 0, 4, 8, enz.
 [20 + n] rondeNummer
-[21 + n] kleur (0 = wit, 1 = zwart)  TODO was (1 = wit, 0 = zwart)
+[21 + n] kleur (0 = wit, 1 = zwart)  TODO ??? was (1 = wit, 0 = zwart)
 [22 + n] tegenstander
 [23 + n] resultaat (0 = verlies, 1 = remise, 2 = winst)
 einde indien rondeNummer = 0
@@ -768,7 +768,9 @@ function spelerTotalen(speler) {
     function metWit(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            return totalen[i + 1] === 0 // wit indien vorige keer zwart TODO werkt dit?
+            console.log(`--- totalen[${i + 1}] ---`);
+            console.log(totalen);
+            return totalen[i + 1] === 1 // wit indien vorige keer zwart
         } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
             afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
             return saldoWitZwart() < tegenstander.saldoWitZwart(); // wit indien vaker met zwart

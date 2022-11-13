@@ -20,7 +20,7 @@ Verwijder localStorage op iPhone
 # JavaScript
 
 - [JavaScript tutorial](https://www.javascripttutorial.net/)
-- [Spread and rest ...](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
+- [Spread and rest ... erg leuke website](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
 - [call function without ()](https://portswigger.net/research/the-seventh-way-to-call-a-javascript-function-without-parentheses)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
@@ -113,6 +113,7 @@ Verwijder localStorage op iPhone
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 # Later
+- [IBM Carbon Design System](https://carbondesignsystem.com/)
 - [JavaScript frameworks](https://qr.ae/pvWvGt)
 - [IntelliJ on Chromebook](https://medium.com/@jeffrey.cardillo/using-intellij-and-other-linux-apps-on-your-chromebook-51fd7fadb9db)
 - [Flutter for web](https://dzone.com/articles/flutter-web-development-all-you-need-to-know)

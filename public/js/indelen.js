@@ -16,7 +16,7 @@
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
-    const deelnemers = await deelnemersRonde(rondeNummer, MEEDOEN);
+    const deelnemers = await deelnemersRonde(rondeNummer);
     const r = zwitsers(o_o_o.competitie) // TODO weer 1 ranglijstSorteren
         ? await ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers)
         : await ranglijstOpPuntenRating(rondeNummer, deelnemers);

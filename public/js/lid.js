@@ -210,7 +210,7 @@ async function lidFormulier(persoon, ola) {
                 mutaties++;
             }
         }
-        // TODO iets doen met mutaties of mutaties verwijderen?
-        naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
+        // TODO iets doen met mutaties of variable mutaties verwijderen?
+        naarAnderePagina(`bestuur.html?lid=${knsbNummer.value}`);
     });
 }
