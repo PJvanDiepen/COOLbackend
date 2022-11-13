@@ -613,7 +613,7 @@ totalen
 [19] rondenVerschil
 tegenstanders met n = 0, 4, 8, enz.
 [20 + n] rondeNummer
-[21 + n] kleur (0 = wit, 1 = zwart)  TODO ??? was (1 = wit, 0 = zwart)
+[21 + n] kleur (0 = wit, 1 = zwart)
 [22 + n] tegenstander
 [23 + n] resultaat (0 = verlies, 1 = remise, 2 = winst)
 einde indien rondeNummer = 0
@@ -743,16 +743,13 @@ function spelerTotalen(speler) {
     }
 
     function vorigeAfdrukken(i, tegenstander) {
-        console.log(`${naam} met ${totalen[i + 1] ? "wit" : "zwart"} tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
+        console.log(`${naam} met ${totalen[i + 1] ? "zwart" : "wit" } tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
     }
 
     function tegen(tegenstander, rondeNummer = 0)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
             vorigeAfdrukken(i, tegenstander);
-            // console.log("rondeNummer: " + rondeNummer);
-            // console.log("totaal[i]: " + totaal[i]);
-            // console.log("rondenVerschil(): " + rondenVerschil());
             return (rondeNummer - totalen[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
@@ -768,8 +765,6 @@ function spelerTotalen(speler) {
     function metWit(tegenstander) {
         const i = vorigeKeer(tegenstander);
         if (i) {
-            // console.log(`--- totalen[${i + 1}] ---`);
-            // console.log(totalen);
             return totalen[i + 1] === 1 // wit indien vorige keer zwart
         } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
             afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
@@ -858,14 +853,15 @@ function backupSQL(tabel, rijen) {
     for (const [key, value] of Object.entries(rijen[0])) {
         velden.push(key);
     }
-    console.log(`insert into ${tabel} (${velden.join(", ")}) values`);
+    let tekst = `insert into ${tabel} (${velden.join(", ")}) values\n`;
     for (let i = 0; i < rijen.length; i++) {
         let kolommen = [];
         for (const [key, value] of Object.entries(rijen[i])) {
             kolommen.push(valueSQL(key, value));
         }
-        console.log(`(${kolommen.join(", ")})${i === rijen.length - 1 ? ";" : ","}`); // afsluiten met ;
+        tekst += `(${kolommen.join(", ")})${i === rijen.length - 1 ? ";" : ","}\n`; // afsluiten met ;
     }
+    console.log(tekst);
 }
 
 function valueSQL(key, value) {
