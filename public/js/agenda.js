@@ -31,7 +31,6 @@
     en partij = EXTERN_UIT of EXTERN_THUIS.
 
  */
-
 async function agenda(kop, lijst) {
     const andereGebruiker = Number(params.get("gebruiker")) || gebruiker.knsbNummer;
     const gewijzigd = await agendaMutatie(andereGebruiker);
@@ -59,9 +58,6 @@ async function agenda(kop, lijst) {
     }
 }
 
-/*
-    verwerk gebruiker=<andereGebruiker>&naamGebruiker=<naamGebruiker>&team=<teamCode>&ronde=<rondeNummer>&partij=[MEEDOEN of NIET_MEEDOEN]
- */
 async function agendaMutatie(knsbNummer) {
     const teamCode = params.get("team");
     const rondeNummer = Number(params.get("ronde"));

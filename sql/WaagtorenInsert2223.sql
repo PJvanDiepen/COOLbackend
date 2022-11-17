@@ -1,26 +1,6 @@
 use waagtoren; -- ga naar TODO
 
-select * from persoon where knsbNummer in (128, 118, 112);
-
-delete from persoon where knsbNummer in (128, 118, 112);
-
-select * from gebruiker where knsbNummer in (128, 118, 112);
-
-delete from gebruiker where knsbNummer in (128, 118, 112);
-
-select * from speler where knsbNummer in (128, 118, 112);
-
-delete from speler where knsbNummer in (128, 118, 112);
-
-select * from uitslag where knsbNummer in (128, 118, 112);
-
-delete from uitslag where knsbNummer in (128, 118, 112);
-
-
-
-
-
--- laatste toevoeging 130 = Bas Mazereeuw
+-- laatste toevoeging 127 = Daniel Younk
 insert into persoon (knsbNummer, naam) values
 (108, "Aad Schuit"),
 (106, "Abdulrashid Ayobi"),
@@ -1314,6 +1294,38 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "4", 2, 6, 7321534, "e", "z", 0, "1", '2022-11-05', "int"),
 ("2223", "4", 2, 7, 8472530, "e", "w", 0, "1", '2022-11-05', "int"),
 ("2223", "4", 2, 8, 7691728, "e", "z", 0, "0", '2022-11-05', "int");
+
+-- Waagtoren n1
+select * from uitslag where seizoen = "2223" and teamCode = "n1" order by rondeNummer, bordNummer;
+delete from uitslag where seizoen = "2223" and teamCode = "n1" and rondeNummer = 3; -- TODO wijzigen
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "n1", 1, 1, 7970094, "e", "w", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 2, 7099950, "e", "z", 0, "½", '2022-09-30', "int"),
+("2223", "n1", 1, 3, 7428960, "e", "w", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 4, 7099620, "e", "z", 0, "0", '2022-09-30', "int"),
+("2223", "n1", 1, 5, 7613166, "e", "w", 0, "0", '2022-09-30', "int"),
+("2223", "n1", 1, 6, 7879520, "e", "z", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 7, 6225934, "e", "w", 0, "1", '2022-09-30', "int"),
+("2223", "n1", 1, 8, 8611922, "e", "z", 0, "0", '2022-09-30', "int"),
+("2223", "n1", 2, 0, 7970094, "n", "", 0, "", '2022-10-25', "int"),
+("2223", "n1", 2, 1, 7657342, "e", "z", 0, "1", '2022-10-25', "int"),
+("2223", "n1", 2, 2, 7428960, "e", "w", 0, "1", '2022-10-25', "int"),
+("2223", "n1", 2, 3, 7099950, "e", "z", 0, "1", '2022-10-25', "int"),
+("2223", "n1", 2, 4, 6225934, "e", "w", 0, "0", '2022-10-25', "int"),
+("2223", "n1", 2, 5, 7613166, "e", "z", 0, "½", '2022-10-25', "int"),
+("2223", "n1", 2, 6, 7099620, "e", "w", 0, "0", '2022-10-25', "int"),
+("2223", "n1", 2, 7, 7707832, "e", "z", 0, "½", '2022-10-25', "int"),
+("2223", "n1", 2, 8, 7129991, "e", "w", 0, "1", '2022-10-25', "int");
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "n1", 3, 1, 7613166, "e", "w", 0, "½", '2022-11-14', "int"),
+("2223", "n1", 3, 2, 7970094, "e", "z", 0, "½", '2022-11-14', "int"),
+("2223", "n1", 3, 3, 7099620, "e", "w", 0, "½", '2022-11-14', "int"),
+("2223", "n1", 3, 4, 7428960, "e", "z", 0, "½", '2022-11-14', "int"),
+("2223", "n1", 3, 5, 7129991, "e", "w", 0, "1", '2022-11-14', "int"),
+("2223", "n1", 3, 6, 7099950, "e", "z", 0, "0", '2022-11-14', "int"),
+("2223", "n1", 3, 7, 7707832, "e", "w", 0, "½", '2022-11-14', "int"),
+("2223", "n1", 3, 8, 6225934, "e", "z", 0, "1", '2022-11-14', "int");
 
 -- Waagtoren n3
 select * from uitslag where seizoen = "2223" and teamCode = "n3" order by rondeNummer, bordNummer;

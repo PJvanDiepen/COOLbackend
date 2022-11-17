@@ -1,5 +1,8 @@
 "use strict";
 
+/*
+verwerk team=<teamCode>
+ */
 (async function() {
     await init();
     menu([BEHEERDER, "backup uitslagen van alle ronden" , async function () {

@@ -135,10 +135,12 @@ const NIEUWE_RANGLIJST = 2;
  * @returns {Promise<void>}
  */
 async function init() {
+    console.log(sessionStorage);
     await gebruikerVerwerken();
     urlVerwerken();
     versieVerwerken();
-    await rondenVerwerken();
+    await competitieRondenVerwerken();
+    // await teamWedstrijdenVerwerken();
 }
 
 /**
@@ -199,7 +201,11 @@ function volgendeSessie(json) {
 }
 
 function urlVerwerken() {
+    console.log("--- urlVerwerken() ---");
+    console.log(o_o_o);
     for (let [key, value] of Object.entries(o_o_o)) {
+        console.log(`key: ${key}`);
+        console.log(`value: ${value}`);
         let parameter = params.get(key); // inlezen van url
         if (parameter) {
             sessionStorage.setItem(key, parameter); // opslaan voor sessie
@@ -227,11 +233,13 @@ function versieVerwerken() {
     }
 }
 
-async function rondenVerwerken() {
+async function competitieRondenVerwerken() {
+    console.log("--- competitieRondenVerwerken() ---");
+    console.log(o_o_o);
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
-    const ronden = await localFetch(`/ronden/${o_o_o.seizoen}/${o_o_o.team}`);
+    const ronden = await localFetch(`/ronden/${o_o_o.seizoen}/${o_o_o.competitie}`);
     for (const ronde of ronden) {
         o_o_o.ronde[ronde.rondeNummer] = ronde;
         o_o_o.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
@@ -240,7 +248,7 @@ async function rondenVerwerken() {
         } else if (o_o_o.huidigeRonde === 0) {
             o_o_o.huidigeRonde = ronde.rondeNummer;
             if (await serverFetch( // actuele situatie
-                `/indeling/${o_o_o.seizoen}/${o_o_o.team}/${o_o_o.laatsteRonde}`)) {
+                `/indeling/${o_o_o.seizoen}/${o_o_o.competitie}/${o_o_o.laatsteRonde}`)) {
                 o_o_o.ronde[o_o_o.huidigeRonde].resultaten = 0; // indeling zonder resultaten
             }
         }
