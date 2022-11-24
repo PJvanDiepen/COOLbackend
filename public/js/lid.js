@@ -11,11 +11,7 @@ const knsbWijzigen = params.get("knsb") === "wijzigen";
     await init();
     document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
     const persoon = await persoonLezen();
-    console.log("--- persoon ---");
-    console.log(persoon);
     const ola = olaLezen();
-    console.log("--- ola ---");
-    console.log(ola);
     menu([BEHEERDER, "wijzig KNSB gegevens (pas op!)", function () {
             if (gebruiker.mutatieRechten >= BEHEERDER) {
                 naarZelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);

@@ -135,8 +135,6 @@ const NIEUWE_RANGLIJST = 2;
  * @returns {Promise<void>}
  */
 async function init() {
-    console.log(JSON.stringify(localStorage));
-    console.log(JSON.stringify(sessionStorage));
     await gebruikerVerwerken();
     urlVerwerken();
     versieVerwerken();
@@ -201,11 +199,7 @@ function volgendeSessie(json) {
 }
 
 function urlVerwerken() {
-    console.log("--- urlVerwerken() ---");
-    console.log(o_o_o);
     for (let [key, value] of Object.entries(o_o_o)) {
-        console.log(`key: ${key}`);
-        console.log(`value: ${value}`);
         let parameter = params.get(key); // inlezen van url
         if (parameter) {
             sessionStorage.setItem(key, parameter); // opslaan voor sessie
@@ -234,8 +228,6 @@ function versieVerwerken() {
 }
 
 async function competitieRondenVerwerken() {
-    console.log("--- competitieRondenVerwerken() ---");
-    console.log(o_o_o);
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
@@ -296,8 +288,6 @@ async function menu(...menuKeuzes) {
 
 async function gewijzigd() {
     const laatsteMutaties = await serverFetch("/gewijzigd");
-    // console.log("/gewijzigd");
-    // console.log(laatsteMutaties);
     return laatsteMutaties;
 }
 
@@ -738,7 +728,6 @@ function spelerTotalen(speler) {
     }
 
     function vorigeKeer(tegenstander) {
-        // console.log(totalen);
         let i = 20;
         let j = 0;
         while (totalen[i]) { // indien rondeNummer
