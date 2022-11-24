@@ -50,7 +50,7 @@ function wedstrijdVoluit(ronde) {
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
-const VRAAG_INVALLER       = "?";
+const AGENDA               = "?"; // indien nog niet aanmelden of afzeggen bijvoorbeeld invaller vragen
 const MEEDOEN              = "m"; // na aanmelden
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
@@ -135,12 +135,12 @@ const NIEUWE_RANGLIJST = 2;
  * @returns {Promise<void>}
  */
 async function init() {
-    console.log(sessionStorage);
+    console.log(JSON.stringify(localStorage));
+    console.log(JSON.stringify(sessionStorage));
     await gebruikerVerwerken();
     urlVerwerken();
     versieVerwerken();
     await competitieRondenVerwerken();
-    // await teamWedstrijdenVerwerken();
 }
 
 /**

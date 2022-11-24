@@ -814,7 +814,7 @@ module.exports = router => {
     /*
     wedstrijd in agenda toevoegen
 
-    Zie agenda.js
+    Zie agenda.js en teamleider.js
      */
     router.get('/:uuidToken/agenda/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);

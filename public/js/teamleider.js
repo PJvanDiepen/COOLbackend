@@ -31,10 +31,13 @@ function volgendeWedstrijdDatum(wedstrijden) {
 }
 
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
+    const vandaag = datumSQL();
     const datums = document.getElementById("datumSelecteren");
     wedstrijden.forEach(
         function (wedstrijd) {
-            datums.appendChild(htmlOptie(wedstrijd.datum, datumLeesbaar(wedstrijd) + SCHEIDING + wedstrijdVoluit(wedstrijd)));
+            if ((datumSQL(wedstrijd.datum) >= vandaag)) {
+                datums.appendChild(htmlOptie(wedstrijd.datum, datumLeesbaar(wedstrijd) + SCHEIDING + wedstrijdVoluit(wedstrijd)));
+            }
         });
     datums.value = wedstrijdDatum; // werkt uitsluitend na await
     datums.addEventListener("input",

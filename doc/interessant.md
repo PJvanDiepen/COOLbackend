@@ -62,10 +62,12 @@ Verwijder localStorage op iPhone
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
+- [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
 
 # software enigineering
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
+- [Linus Torvalds on Git](https://www.youtube.com/watch?v=4XpnKHJAok8)
 - [Trunk based development](https://trunkbaseddevelopment.com/)
 - [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
 - [RexEgg](https://www.rexegg.com/)
