@@ -16,7 +16,7 @@ function teamOfCompetitie(teamCode) {
 }
 
 function interneCompetitie(teamCode) {
-    return teamCode.substring(0,1) === "i";
+    return teamCode === "" ? false : teamCode.substring(0,1) === "i";
 }
 
 function zwitsers(teamCode) {
@@ -101,10 +101,10 @@ const o_o_o = {
     vereniging: "Waagtoren",
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
-    competitie: INTERNE_COMPETITIE,
-    team: INTERNE_COMPETITIE,
+    competitie: "",
+    team: "",
     speler: 0, // knsbNummer is een getal
-    naam: "onbekend"
+    naam: ""
 };
 
 function competitieTitel() {
@@ -137,7 +137,8 @@ const NIEUWE_RANGLIJST = 2;
 async function init() {
     await gebruikerVerwerken();
     urlVerwerken();
-    versieVerwerken();
+    await competitieBepalen();
+    versieBepalen();
     await competitieRondenVerwerken();
 }
 
@@ -212,7 +213,20 @@ function urlVerwerken() {
     }
 }
 
-function versieVerwerken() {
+async function competitieBepalen() {
+    if (!interneCompetitie(o_o_o.competitie)) {
+        const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
+        const vandaag = datumSQL();
+        for (const ronde of ronden) {
+            if (datumSQL(ronde.datum) >= vandaag) {
+                o_o_o.competitie = ronde.teamCode;
+                return;
+            }
+        }
+    }
+}
+
+function versieBepalen() {
     // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
     if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {

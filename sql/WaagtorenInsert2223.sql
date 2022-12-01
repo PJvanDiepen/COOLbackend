@@ -321,9 +321,9 @@ select * from ronde where seizoen = "2223" and teamCode = "ira";
 delete from ronde where seizoen = "2223" and teamCode = "ira";
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-("2223", "ira", 1, "t", "", '2022-11-20'),
-("2223", "ira", 2, "t", "", '2022-11-20'),
-("2223", "ira", 3, "t", "", '2022-11-20');
+("2223", "ira", 1, "t", "", '2022-12-02'),
+("2223", "ira", 2, "t", "", '2022-12-03'),
+("2223", "ira", 3, "t", "", '2022-12-03');
 
 select * from uitslag where seizoen = "2223" and teamCode = "int" and knsbNummer in(8865549, 124) and rondeNummer = 10;
 select * from uitslag where seizoen = "2223" and teamCode = "int" and bordNummer = 14 and rondeNummer = 10;
@@ -369,6 +369,18 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ('2223', '4', '5', 't', 'Magnus Anna Paulowna Combinatie 3', '2023-02-11'),
 ('2223', '4', '6', 'u', 'Almere 4', '2023-03-11'),
 ("2223", "kbe", 1, "u", "Bergen", '2022-10-27');
+
+use waagtoren;
+select * from ronde where seizoen = '2223' and teamCode = 'kbe';
+select * from uitslag where seizoen = '2223' and teamCode = 'kbe' and rondeNummer = 2;
+
+
+update ronde set datum = '2022-12-06' where seizoen = '2223' and teamCode = 'kbe' and rondeNummer = 2;
+update uitslag set datum = '2022-12-06' where seizoen = '2223' and teamCode = 'kbe' and rondeNummer = 2;
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+
+("2223", "kbe", 2, "u", "Caissa-Eenhoorn", '2022-12-03');
 
 -- NHSB competitie
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
@@ -545,35 +557,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 2, 20, 7771665, "i", "w", 6187885, "0", '2022-09-13', "int"),
 ("2223", "int", 2, 20, 6187885, "i", "z", 7771665, "1", '2022-09-13', "int");
 
--- KNSB 17-9-2022
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2223', '1', '1', '3', '7468417', 'e', 'z', '0', '0', '2022-09-17', 'int'),
-('2223', '1', '1', '1', '7657342', 'e', 'z', '0', '0', '2022-09-17', 'int'),
-('2223', '1', '1', '2', '7584566', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '1', '1', '4', '7359913', 'e', 'w', '0', '1', '2022-09-17', 'int'),
-('2223', '1', '1', '5', '7428960', 'e', 'z', '0', '0', '2022-09-17', 'int'),
-('2223', '1', '1', '6', '8285574', 'e', 'w', '0', '1', '2022-09-17', 'int'),
-('2223', '1', '1', '7', '7099950', 'e', 'z', '0', '½', '2022-09-17', 'int'),
-('2223', '1', '1', '8', '7828183', 'e', 'w', '0', '1', '2022-09-17', 'int'),
-('2223', '1', '1', '9', '8096242', 'e', 'z', '0', '1', '2022-09-17', 'int'),
-('2223', '1', '1', '10', '8611922', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '2', '1', '1', '6483455', 'e', 'z', '0', '½', '2022-09-17', 'int'),
-('2223', '2', '1', '2', '6335670', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '2', '1', '3', '7509920', 'e', 'z', '0', '1', '2022-09-17', 'int'),
-('2223', '2', '1', '4', '7879520', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '2', '1', '5', '7707832', 'e', 'z', '0', '1', '2022-09-17', 'int'),
-('2223', '2', '1', '6', '7129991', 'e', 'w', '0', '1', '2022-09-17', 'int'),
-('2223', '2', '1', '7', '6225934', 'e', 'z', '0', '0', '2022-09-17', 'int'),
-('2223', '2', '1', '8', '8552038', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '3', '1', '1', '7292043', 'e', 'z', '0', '1', '2022-09-17', 'int'),
-('2223', '3', '1', '2', '7758014', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '3', '1', '3', '6572511', 'e', 'z', '0', '½', '2022-09-17', 'int'),
-('2223', '3', '1', '4', '7699010', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '3', '1', '5', '8484443', 'e', 'z', '0', '½', '2022-09-17', 'int'),
-('2223', '3', '1', '6', '8587337', 'e', 'w', '0', '½', '2022-09-17', 'int'),
-('2223', '3', '1', '7', '7504310', 'e', 'z', '0', '1', '2022-09-17', 'int'),
-('2223', '3', '1', '8', '8400183', 'e', 'w', '0', '1', '2022-09-17', 'int');
-
 -- ronde 3 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "int", 3, 0, 105, "a", "", 0, "", '2022-09-20', "int"),
@@ -643,17 +626,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 3, 21, 7582102, "i", "z", 101, "½", '2022-09-20', "int"),
 ("2223", "int", 3, 22, 7731812, "i", "w", 8931098, "1", '2022-09-20', "int"),
 ("2223", "int", 3, 22, 8931098, "i", "z", 7731812, "0", '2022-09-20', "int");
-
--- NHSB 24-9-2022
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-('2223', 'n2', '1', '1', '8611922', 'e', 'w', '0', '0', '2022-09-24', 'int'),
-('2223', 'n2', '1', '2', '7529522', 'e', 'z', '0', '1', '2022-09-24', 'int'),
-('2223', 'n2', '1', '3', '7758014', 'e', 'w', '0', '1', '2022-09-24', 'int'),
-('2223', 'n2', '1', '4', '7292043', 'e', 'z', '0', '0', '2022-09-24', 'int'),
-('2223', 'n2', '1', '5', '7699010', 'e', 'w', '0', '1', '2022-09-24', 'int'),
-('2223', 'n2', '1', '6', '7504310', 'e', 'z', '0', '1', '2022-09-24', 'int'),
-('2223', 'n2', '1', '7', '8750093', 'e', 'w', '0', '1', '2022-09-24', 'int'),
-('2223', 'n2', '1', '8', '8587337', 'e', 'z', '0', '0', '2022-09-24', 'int');
 
 -- ronde 4 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
@@ -725,24 +697,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 4, 22, 8931098, "i", "w", 8865549, "½", '2022-09-27', "int"),
 ("2223", "int", 4, 22, 8865549, "i", "z", 8931098, "½", '2022-09-27', "int");
 
--- NHSB 30-9-2022
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-("2223", "n1", 1, 1, 7970094, "e", "w", 0, "1", '2022-09-30', "int"),
-("2223", "n1", 1, 2, 7099950, "e", "z", 0, "½", '2022-09-30', "int"),
-("2223", "n1", 1, 3, 7428960, "e", "w", 0, "1", '2022-09-30', "int"),
-("2223", "n1", 1, 4, 7099620, "e", "z", 0, "0", '2022-09-30', "int"),
-("2223", "n1", 1, 5, 7613166, "e", "w", 0, "0", '2022-09-30', "int"),
-("2223", "n1", 1, 6, 7879520, "e", "z", 0, "1", '2022-09-30', "int"),
-("2223", "n1", 1, 7, 6225934, "e", "w", 0, "1", '2022-09-30', "int"),
-("2223", "n1", 1, 8, 8611922, "e", "z", 0, "0", '2022-09-30', "int");
-
 -- ronde 5 interne competitie
-set @seizoen = '2223';
-set @competitie = 'int';
-set @ronde = 5;
-select * from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-delete from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "int", 5, 0, 105, "a", "", 0, "", '2022-10-04', "int"),
 ("2223", "int", 5, 0, 123, "a", "", 0, "", '2022-10-04', "int"),
@@ -815,43 +770,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 5, 15, 103, "i", "z", 120, "1", '2022-10-04', "int"),
 ("2223", "int", 5, 16, 7771665, "i", "w", 8931098, "1", '2022-10-04', "int"),
 ("2223", "int", 5, 16, 8931098, "i", "z", 7771665, "0", '2022-10-04', "int");
-
--- KNSB 8-10-2022
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-("2223", "1", 2, 1, 7970094, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "1", 2, 2, 7584566, "e", "z", 0, "0", '2022-10-08', "int"),
-("2223", "1", 2, 3, 7359913, "e", "w", 0, "½", '2022-10-08', "int"),
-("2223", "1", 2, 4, 7657342, "e", "z", 0, "0", '2022-10-08', "int"),
-("2223", "1", 2, 5, 7428960, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "1", 2, 6, 8285574, "e", "z", 0, "0", '2022-10-08', "int"),
-("2223", "1", 2, 7, 7828183, "e", "w", 0, "½", '2022-10-08', "int"),
-("2223", "1", 2, 8, 7099950, "e", "z", 0, "½", '2022-10-08', "int"),
-("2223", "1", 2, 9, 8096242, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "1", 2, 10, 8611922, "e", "z", 0, "½", '2022-10-08', "int"),
-("2223", "2", 2, 1, 6483455, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "2", 2, 2, 6335670, "e", "z", 0, "0", '2022-10-08', "int"),
-("2223", "2", 2, 3, 7509920, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "2", 2, 4, 5968611, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "2", 2, 5, 7129991, "e", "w", 0, "½", '2022-10-08', "int"),
-("2223", "2", 2, 6, 6225934, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "2", 2, 7, 8112654, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "2", 2, 8, 7292043, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "3", 2, 1, 7535385, "e", "w", 0, "½", '2022-10-08', "int"),
-("2223", "3", 2, 2, 7758014, "e", "z", 0, "0", '2022-10-08', "int"),
-("2223", "3", 2, 3, 6572511, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "3", 2, 4, 7809285, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "3", 2, 5, 8484443, "e", "w", 0, "½", '2022-10-08', "int"),
-("2223", "3", 2, 6, 8587337, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "3", 2, 7, 7504310, "e", "w", 0, "0", '2022-10-08', "int"),
-("2223", "3", 2, 8, 8400183, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "4", 1, 1, 6214153, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "4", 1, 2, 7282033, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "4", 1, 3, 7904589, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "4", 1, 4, 6212404, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "4", 1, 5, 8485059, "e", "w", 0, "½", '2022-10-08', "int"),
-("2223", "4", 1, 6, 7321534, "e", "z", 0, "1", '2022-10-08', "int"),
-("2223", "4", 1, 7, 8472530, "e", "w", 0, "1", '2022-10-08', "int"),
-("2223", "4", 1, 8, 7771665, "e", "z", 0, "1", '2022-10-08', "int");
 
 -- ronde 6 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
@@ -927,25 +845,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 6, 20, 8987176, "i", "w", 8931098, "1", '2022-10-11', "int"),
 ("2223", "int", 6, 20, 8931098, "i", "z", 8987176, "0", '2022-10-11', "int");
 
--- NHSB 25-10-2022
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-("2223", "n1", 2, 1, 7657342, "e", "z", 0, "1", '2022-10-25', "int"),
-("2223", "n1", 2, 2, 7428960, "e", "w", 0, "1", '2022-10-25', "int"),
-("2223", "n1", 2, 3, 7099950, "e", "z", 0, "1", '2022-10-25', "int"),
-("2223", "n1", 2, 4, 6225934, "e", "w", 0, "0", '2022-10-25', "int"),
-("2223", "n1", 2, 5, 7613166, "e", "z", 0, "½", '2022-10-25', "int"),
-("2223", "n1", 2, 6, 7099620, "e", "w", 0, "0", '2022-10-25', "int"),
-("2223", "n1", 2, 7, 7707832, "e", "z", 0, "½", '2022-10-25', "int"),
-("2223", "n1", 2, 8, 7129991, "e", "w", 0, "1", '2022-10-25', "int"),
-("2223", "n2", 2, 1, 8611922, "e", "z", 0, "0", '2022-10-25', "int"),
-("2223", "n2", 2, 2, 7529522, "e", "w", 0, "1", '2022-10-25', "int"),
-("2223", "n2", 2, 3, 7468362, "e", "z", 0, "0", '2022-10-25', "int"),
-("2223", "n2", 2, 4, 7699010, "e", "w", 0, "1", '2022-10-25', "int"),
-("2223", "n2", 2, 5, 8484443, "e", "z", 0, "0", '2022-10-25', "int"),
-("2223", "n2", 2, 6, 8587337, "e", "w", 0, "1", '2022-10-25', "int"),
-("2223", "n2", 2, 7, 8750093, "e", "z", 0, "1", '2022-10-25', "int"),
-("2223", "n2", 2, 8, 8400183, "e", "w", 0, "1", '2022-10-25', "int");
-
 -- ronde 7 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "int", 7, 0, 120, "a", "", 0, "", '2022-10-25', "int"),
@@ -1020,15 +919,6 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 7, 16, 7771665, "i", "z", 8243312, "0", '2022-10-25', "int"),
 ("2223", "int", 7, 17, 7582102, "i", "w", 8865549, "1", '2022-10-25', "int"),
 ("2223", "int", 7, 17, 8865549, "i", "z", 7582102, "0", '2022-10-25', "int");
-
--- KNSB beker 27-10-2022
-select * from uitslag where seizoen = "2223" and teamCode = "kbe";
-
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-("2223", "kbe", 1, 1, 7428960, "e", "w", 0, "1", '2022-10-27', "int"),
-("2223", "kbe", 1, 2, 8096242, "e", "z", 0, "1", '2022-10-27', "int"),
-("2223", "kbe", 1, 3, 7099620, "e", "w", 0, "1", '2022-10-27', "int"),
-("2223", "kbe", 1, 4, 8611922, "e", "z", 0, "1", '2022-10-27', "int");
 
 -- ronde 8 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
@@ -1263,13 +1153,43 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 10, 0, 8931098, "n", "", 0, "", '2022-11-15', "int"),
 ("2223", "int", 10, 0, 8987176, "n", "", 0, "", '2022-11-15', "int");
 
--- TODO KNSB 5-11-2022
-select * from uitslag where seizoen = "2223" and teamCode in ("1", "2", "3") and rondeNummer = 3;
-delete from uitslag where seizoen = "2223" and teamCode in("1", "2", "3") and rondeNummer = 3;
-select * from uitslag where seizoen = "2223" and teamCode = "4" and rondeNummer = 2;
-delete from uitslag where seizoen = "2223" and teamCode = "4" and rondeNummer = 2;
+-- KNSB beker
+select * from uitslag where seizoen = "2223" and teamCode = "kbe";
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "kbe", 1, 1, 7428960, "e", "w", 0, "1", '2022-10-27', "int"),
+("2223", "kbe", 1, 2, 8096242, "e", "z", 0, "1", '2022-10-27', "int"),
+("2223", "kbe", 1, 3, 7099620, "e", "w", 0, "1", '2022-10-27', "int"),
+("2223", "kbe", 1, 4, 8611922, "e", "z", 0, "1", '2022-10-27', "int");
+
+-- Waagtoren 1
+select * from uitslag where seizoen = "2223" and teamCode = "1" order by rondeNummer, bordNummer;
+delete from uitslag where seizoen = "2223" and teamCode = "1" and rondeNummer = 5; -- TODO wijzigen
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "1", 1, 1, 7657342, "e", "z", 0, "0", '2022-09-17', "int"),
+("2223", "1", 1, 2, 7584566, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "1", 1, 3, 7468417, "e", "z", 0, "0", '2022-09-17', "int"),
+("2223", "1", 1, 4, 7359913, "e", "w", 0, "1", '2022-09-17', "int"),
+("2223", "1", 1, 5, 7428960, "e", "z", 0, "0", '2022-09-17', "int"),
+("2223", "1", 1, 6, 8285574, "e", "w", 0, "1", '2022-09-17', "int"),
+("2223", "1", 1, 7, 7099950, "e", "z", 0, "½", '2022-09-17', "int"),
+("2223", "1", 1, 8, 7828183, "e", "w", 0, "1", '2022-09-17', "int"),
+("2223", "1", 1, 9, 8096242, "e", "z", 0, "1", '2022-09-17', "int"),
+("2223", "1", 1, 10, 8611922, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "1", 2, 0, 7468417, "n", "", 0, "", '2022-10-08', "int"),
+("2223", "1", 2, 1, 7970094, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "1", 2, 2, 7584566, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "1", 2, 3, 7359913, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "1", 2, 4, 7657342, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "1", 2, 5, 7428960, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "1", 2, 6, 8285574, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "1", 2, 7, 7828183, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "1", 2, 8, 7099950, "e", "z", 0, "½", '2022-10-08', "int"),
+("2223", "1", 2, 9, 8096242, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "1", 2, 10, 8611922, "e", "z", 0, "½", '2022-10-08', "int"),
+("2223", "1", 3, 0, 7099950, "n", "", 0, "", '2022-11-05', "int"),
+("2223", "1", 3, 0, 8096242, "n", "", 0, "", '2022-11-05', "int"),
 ("2223", "1", 3, 1, 7970094, "e", "w", 0, "½", '2022-11-05', "int"),
 ("2223", "1", 3, 2, 8956805, "e", "z", 0, "0", '2022-11-05', "int"),
 ("2223", "1", 3, 3, 8285574, "e", "w", 0, "½", '2022-11-05', "int"),
@@ -1280,6 +1200,38 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "1", 3, 8, 7828183, "e", "z", 0, "½", '2022-11-05', "int"),
 ("2223", "1", 3, 9, 7468417, "e", "w", 0, "1", '2022-11-05', "int"),
 ("2223", "1", 3, 10, 8611922, "e", "z", 0, "1", '2022-11-05', "int"),
+("2223", "1", 4, 1, 7359913, "e", "z", 0, "1", '2022-11-26', "int"),
+("2223", "1", 4, 2, 8285574, "e", "w", 0, "0", '2022-11-26', "int"),
+("2223", "1", 4, 3, 7970094, "e", "z", 0, "½", '2022-11-26', "int"),
+("2223", "1", 4, 4, 7584566, "e", "w", 0, "1", '2022-11-26', "int"),
+("2223", "1", 4, 5, 7428960, "e", "z", 0, "½", '2022-11-26', "int"),
+("2223", "1", 4, 6, 7657342, "e", "w", 0, "½", '2022-11-26', "int"),
+("2223", "1", 4, 7, 7828183, "e", "z", 0, "0", '2022-11-26', "int"),
+("2223", "1", 4, 8, 7468417, "e", "w", 0, "½", '2022-11-26', "int"),
+("2223", "1", 4, 9, 7099950, "e", "z", 0, "0", '2022-11-26', "int"),
+("2223", "1", 4, 10, 8611922, "e", "w", 0, "½", '2022-11-26', "int");
+
+-- Waagtoren 2
+select * from uitslag where seizoen = "2223" and teamCode = "2" order by rondeNummer, bordNummer;
+delete from uitslag where seizoen = "2223" and teamCode = "2" and rondeNummer = 5; -- TODO wijzigen
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "2", 1, 1, 6483455, "e", "z", 0, "½", '2022-09-17', "int"),
+("2223", "2", 1, 2, 6335670, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "2", 1, 3, 7509920, "e", "z", 0, "1", '2022-09-17', "int"),
+("2223", "2", 1, 4, 7879520, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "2", 1, 5, 7707832, "e", "z", 0, "1", '2022-09-17', "int"),
+("2223", "2", 1, 6, 7129991, "e", "w", 0, "1", '2022-09-17', "int"),
+("2223", "2", 1, 7, 6225934, "e", "z", 0, "0", '2022-09-17', "int"),
+("2223", "2", 1, 8, 8552038, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "2", 2, 1, 6483455, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 2, 6335670, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "2", 2, 3, 7509920, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 4, 5968611, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 5, 7129991, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "2", 2, 6, 6225934, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 7, 8112654, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "2", 2, 8, 7292043, "e", "z", 0, "1", '2022-10-08', "int"),
 ("2223", "2", 3, 1, 6483455, "e", "w", 0, "0", '2022-11-05', "int"),
 ("2223", "2", 3, 2, 8096242, "e", "z", 0, "½", '2022-11-05', "int"),
 ("2223", "2", 3, 3, 6335670, "e", "w", 0, "½", '2022-11-05', "int"),
@@ -1288,6 +1240,36 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "2", 3, 6, 7879520, "e", "z", 0, "0", '2022-11-05', "int"),
 ("2223", "2", 3, 7, 7129991, "e", "w", 0, "1", '2022-11-05', "int"),
 ("2223", "2", 3, 8, 8112654, "e", "z", 0, "0", '2022-11-05', "int"),
+("2223", "2", 4, 1, 6483455, "e", "z", 0, "0", '2022-11-26', "int"),
+("2223", "2", 4, 2, 6335670, "e", "w", 0, "1", '2022-11-26', "int"),
+("2223", "2", 4, 3, 7509920, "e", "z", 0, "1", '2022-11-26', "int"),
+("2223", "2", 4, 4, 7879520, "e", "w", 0, "1", '2022-11-26', "int"),
+("2223", "2", 4, 5, 7707832, "e", "z", 0, "0", '2022-11-26', "int"),
+("2223", "2", 4, 6, 7129991, "e", "w", 0, "½", '2022-11-26', "int"),
+("2223", "2", 4, 7, 6225934, "e", "z", 0, "1", '2022-11-26', "int"),
+("2223", "2", 4, 8, 8112654, "e", "w", 0, "1", '2022-11-26', "int");
+
+-- Waagtoren 3
+select * from uitslag where seizoen = "2223" and teamCode = "3" order by rondeNummer, bordNummer;
+delete from uitslag where seizoen = "2223" and teamCode = "3" and rondeNummer = 5; -- TODO wijzigen
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "3", 1, 1, 7292043, "e", "z", 0, "1", '2022-09-17', "int"),
+("2223", "3", 1, 2, 7758014, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "3", 1, 3, 6572511, "e", "z", 0, "½", '2022-09-17', "int"),
+("2223", "3", 1, 4, 7699010, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "3", 1, 5, 8484443, "e", "z", 0, "½", '2022-09-17', "int"),
+("2223", "3", 1, 6, 8587337, "e", "w", 0, "½", '2022-09-17', "int"),
+("2223", "3", 1, 7, 7504310, "e", "z", 0, "1", '2022-09-17', "int"),
+("2223", "3", 1, 8, 8400183, "e", "w", 0, "1", '2022-09-17', "int"),
+("2223", "3", 2, 1, 7535385, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "3", 2, 2, 7758014, "e", "z", 0, "0", '2022-10-08', "int"),
+("2223", "3", 2, 3, 6572511, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "3", 2, 4, 7809285, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "3", 2, 5, 8484443, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "3", 2, 6, 8587337, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "3", 2, 7, 7504310, "e", "w", 0, "0", '2022-10-08', "int"),
+("2223", "3", 2, 8, 8400183, "e", "z", 0, "1", '2022-10-08', "int"),
 ("2223", "3", 3, 1, 7758014, "e", "w", 0, "0", '2022-11-05', "int"),
 ("2223", "3", 3, 2, 7699010, "e", "z", 0, "0", '2022-11-05', "int"),
 ("2223", "3", 3, 3, 6207520, "e", "w", 0, "0", '2022-11-05', "int"),
@@ -1296,6 +1278,32 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "3", 3, 6, 8587337, "e", "z", 0, "½", '2022-11-05', "int"),
 ("2223", "3", 3, 7, 8400183, "e", "w", 0, "0", '2022-11-05', "int"),
 ("2223", "3", 3, 8, 7504310, "e", "z", 0, "0", '2022-11-05', "int"),
+("2223", "3", 4, 1, 7535385, "e", "z", 0, "½", '2022-11-26', "int"),
+("2223", "3", 4, 2, 6572511, "e", "w", 0, "1", '2022-11-26', "int"),
+("2223", "3", 4, 3, 7758014, "e", "z", 0, "0", '2022-11-26', "int"),
+("2223", "3", 4, 4, 7699010, "e", "w", 0, "0", '2022-11-26', "int"),
+("2223", "3", 4, 5, 8484443, "e", "z", 0, "1", '2022-11-26', "int"),
+("2223", "3", 4, 6, 8587337, "e", "w", 0, "1", '2022-11-26', "int"),
+("2223", "3", 4, 7, 8400183, "e", "z", 0, "0", '2022-11-26', "int"),
+("2223", "3", 4, 8, 7504310, "e", "w", 0, "0", '2022-11-26', "int");
+
+-- Waagtoren 4
+select * from uitslag where seizoen = "2223" and teamCode = "4" order by rondeNummer, bordNummer;
+delete from uitslag where seizoen = "2223" and teamCode = "4" and rondeNummer = 4; -- TODO wijzigen
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2223", "4", 1, 0, 7399469, "n", "", 0, "", '2022-10-08', "int"),
+("2223", "4", 1, 0, 7649213, "n", "", 0, "", '2022-10-08', "int"),
+("2223", "4", 1, 0, 7809285, "n", "", 0, "", '2022-10-08', "int"),
+("2223", "4", 1, 0, 8276752, "n", "", 0, "", '2022-10-08', "int"),
+("2223", "4", 1, 1, 6214153, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 2, 7282033, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 3, 7904589, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 4, 6212404, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 5, 8485059, "e", "w", 0, "½", '2022-10-08', "int"),
+("2223", "4", 1, 6, 7321534, "e", "z", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 7, 8472530, "e", "w", 0, "1", '2022-10-08', "int"),
+("2223", "4", 1, 8, 7771665, "e", "z", 0, "1", '2022-10-08', "int"),
 ("2223", "4", 2, 1, 7809285, "e", "w", 0, "0", '2022-11-05', "int"),
 ("2223", "4", 2, 2, 7292043, "e", "z", 0, "1", '2022-11-05', "int"),
 ("2223", "4", 2, 3, 8276752, "e", "w", 0, "0", '2022-11-05', "int"),
@@ -1303,7 +1311,15 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "4", 2, 5, 8886625, "e", "w", 0, "1", '2022-11-05', "int"),
 ("2223", "4", 2, 6, 7321534, "e", "z", 0, "1", '2022-11-05', "int"),
 ("2223", "4", 2, 7, 8472530, "e", "w", 0, "1", '2022-11-05', "int"),
-("2223", "4", 2, 8, 7691728, "e", "z", 0, "0", '2022-11-05', "int");
+("2223", "4", 2, 8, 7691728, "e", "z", 0, "0", '2022-11-05', "int"),
+("2223", "4", 3, 1, 7809285, "e", "z", 0, "1", '2022-11-26', "int"),
+("2223", "4", 3, 2, 7282033, "e", "w", 0, "½", '2022-11-26', "int"),
+("2223", "4", 3, 3, 8276752, "e", "z", 0, "0", '2022-11-26', "int"),
+("2223", "4", 3, 4, 7649213, "e", "w", 0, "0", '2022-11-26', "int"),
+("2223", "4", 3, 5, 7399469, "e", "z", 0, "1", '2022-11-26', "int"),
+("2223", "4", 3, 6, 6212404, "e", "w", 0, "1", '2022-11-26', "int"),
+("2223", "4", 3, 7, 8472530, "e", "z", 0, "1", '2022-11-26', "int"),
+("2223", "4", 3, 8, 8485059, "e", "w", 0, "1", '2022-11-26', "int");
 
 -- Waagtoren n1
 select * from uitslag where seizoen = "2223" and teamCode = "n1" order by rondeNummer, bordNummer;
@@ -1357,10 +1373,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "n2", 2, 5, 8484443, "e", "z", 0, "0", '2022-10-25', "int"),
 ("2223", "n2", 2, 6, 8587337, "e", "w", 0, "1", '2022-10-25', "int"),
 ("2223", "n2", 2, 7, 8750093, "e", "z", 0, "1", '2022-10-25', "int"),
-("2223", "n2", 2, 8, 8400183, "e", "w", 0, "1", '2022-10-25', "int");
-
-insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-
+("2223", "n2", 2, 8, 8400183, "e", "w", 0, "1", '2022-10-25', "int"),
 ("2223", "n2", 3, 1, 8611922, "e", "w", 0, "1", '2022-11-18', "int"),
 ("2223", "n2", 3, 2, 7529522, "e", "z", 0, "0", '2022-11-18', "int"),
 ("2223", "n2", 3, 3, 7758014, "e", "w", 0, "½", '2022-11-18', "int"),
@@ -1372,7 +1385,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- Waagtoren n3
 select * from uitslag where seizoen = "2223" and teamCode = "n3" order by rondeNummer, bordNummer;
-delete from uitslag where seizoen = "2223" and teamCode = "n3" and rondeNummer = 2; -- TODO wijzigen
+delete from uitslag where seizoen = "2223" and teamCode = "n3" and rondeNummer = 3; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "n3", 1, 1, 6214153, "e", "w", 0, "½", '2022-10-14', "int"),
@@ -1386,10 +1399,18 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "n3", 2, 3, 8276752, "e", "z", 0, "0", '2022-11-08', "int"),
 ("2223", "n3", 2, 4, 7282033, "e", "w", 0, "1", '2022-11-08', "int"),
 ("2223", "n3", 2, 5, 7210137, "e", "z", 0, "½", '2022-11-08', "int"),
-("2223", "n3", 2, 6, 7731812, "e", "w", 0, "½", '2022-11-08', "int");
+("2223", "n3", 2, 6, 7731812, "e", "w", 0, "½", '2022-11-08', "int"),
+("2223", "n3", 3, 1, 6214153, "e", "w", 0, "0", '2022-11-29', "int"),
+("2223", "n3", 3, 2, 8372881, "e", "z", 0, "1", '2022-11-29', "int"),
+("2223", "n3", 3, 3, 8276752, "e", "w", 0, "0", '2022-11-29', "int"),
+("2223", "n3", 3, 4, 7282033, "e", "z", 0, "0", '2022-11-29', "int"),
+("2223", "n3", 3, 5, 7210137, "e", "w", 0, "0", '2022-11-29', "int"),
+("2223", "n3", 3, 6, 7731812, "e", "z", 0, "½", '2022-11-29', "int");
 
+use waagtoren;
 -- Waagtoren nv1
 select * from uitslag where seizoen = "2223" and teamCode = "nv1" order by rondeNummer, bordNummer;
+delete from uitslag where seizoen = "2223" and teamCode = "nv1" and rondeNummer = 1; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "nv1", 1, 1, 6212404, "e", "w", 0, "½", '2022-11-22', "int"),
@@ -1398,8 +1419,8 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "nv1", 1, 4, 8073978, "e", "z", 0, "1", '2022-11-22', "int");
 
 -- Waagtoren nv2
-select * from uitslag where seizoen = "2223" and teamCode = "nv1" order by rondeNummer, bordNummer;
-
+select * from uitslag where seizoen = "2223" and teamCode = "nv2" order by rondeNummer, bordNummer;
+delete from uitslag where seizoen = "2223" and teamCode = "nv2" and rondeNummer = 1; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "nv2", 1, 1, 7691728, "e", "z", 0, "0", '2022-11-22', "int"),
@@ -1428,16 +1449,16 @@ use waagtoren;
 
 set @seizoen = '2223';
 set @competitie = 'int';
-set @ronde = 9;
-set @bord = 17;
+set @ronde = 11;
+set @bord = 9;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
 
 set @wit = 8865549; -- Erno
 set @zwart = 120; -- Emiel
-set @oneven = 8617367; -- Arend
-set @afwezig = 7771665; -- Yvonne
+set @oneven = 8243312; -- Harry
+set @afwezig = 106; -- Abdulrahid
 
 update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;

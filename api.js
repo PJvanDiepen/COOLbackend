@@ -224,6 +224,57 @@ module.exports = router => {
     });
 
     /*
+    -- interne ronden per seizoen van verschillende competities
+    select teamCode, rondeNummer, datum from ronde where seizoen = @seizoen and substring(teamCode, 1, 1) = 'i' order by datum, rondeNummer;
+
+    Zie start.js
+     */
+    router.get('/ronden/intern/:seizoen', async function (ctx) {
+        ctx.body = await Ronde.query()
+            .select('teamCode', 'rondeNUmmer', 'datum')
+            .where('seizoen', ctx.params.seizoen)
+            .andWhere(fn('substring', ref('teamCode'), 1, 1), "i")
+            .orderBy('datum', 'rondeNummer');
+    });
+
+    /*
+    -- ronden per seizoen en competitie met aantal uitslagen
+    with u as
+      (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten
+      from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)
+    select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
+    left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
+    where r.seizoen = @seizoen and r.teamCode = @teamCode
+    order by r.rondeNummer;
+
+    Zie const.js
+     */
+    router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
+        ctx.body = await Ronde.query()
+            .with('u',function (qb) {
+                qb.from('uitslag')
+                    .select(
+                        'uitslag.seizoen',
+                        'uitslag.teamCode',
+                        'uitslag.rondeNummer',
+                        {aantalResultaten: fn('count', 'uitslag.resultaat')})
+                    .whereIn('uitslag.resultaat', [WINST, VERLIES, REMISE])
+                    .andWhere('uitslag.seizoen', ctx.params.seizoen)
+                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                    .groupBy('uitslag.rondeNummer')
+            })
+            .select('ronde.*',
+                {resultaten: fn('ifnull', ref('aantalResultaten'), -1)}) // TODO zie /indeling
+            .leftJoin('u', function(join) {
+                join.on('u.seizoen', 'ronde.seizoen')
+                    .andOn('u.teamCode', 'ronde.teamCode')
+                    .andOn('u.rondeNummer', 'ronde.rondeNummer')})
+            .where('ronde.seizoen', ctx.params.seizoen)
+            .andWhere('ronde.teamCode', ctx.params.teamCode)
+            .orderBy('ronde.rondeNummer');
+    });
+
+    /*
     -- ranglijst
     select
       s.knsbNummer,
@@ -1177,42 +1228,6 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    /*
-    -- ronden per seizoen en competitie met aantal uitslagen
-    with u as
-      (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten
-      from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)
-    select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
-    left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen and r.teamCode = @teamCode
-    order by r.rondeNummer;
-
-    Zie const.js
-     */
-    router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
-        ctx.body = await Ronde.query()
-            .with('u',function (qb) {
-                qb.from('uitslag')
-                    .select(
-                        'uitslag.seizoen',
-                        'uitslag.teamCode',
-                        'uitslag.rondeNummer',
-                        {aantalResultaten: fn('count', 'uitslag.resultaat')})
-                    .whereIn('uitslag.resultaat', [WINST, VERLIES, REMISE])
-                    .andWhere('uitslag.seizoen', ctx.params.seizoen)
-                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                    .groupBy('uitslag.rondeNummer')
-            })
-            .select('ronde.*',
-                {resultaten: fn('ifnull', ref('aantalResultaten'), -1)}) // TODO zie /indeling
-            .leftJoin('u', function(join) {
-                join.on('u.seizoen', 'ronde.seizoen')
-                    .andOn('u.teamCode', 'ronde.teamCode')
-                    .andOn('u.rondeNummer', 'ronde.rondeNummer')})
-            .where('ronde.seizoen', ctx.params.seizoen)
-            .andWhere('ronde.teamCode', ctx.params.teamCode)
-            .orderBy('ronde.rondeNummer');
-    });
 }
 
 // teamCode

@@ -402,7 +402,7 @@ join persoon on teamleider = knsbNummer
 where r.seizoen = @seizoen and r.teamCode not in ('int', 'ira')
 order by r.datum, r.teamCode;
 
-set @seizoen = '2122';
+set @seizoen = '2223';
 set @teamCode = 'int';
 set @datum = '2022-03-01';
 
@@ -411,6 +411,9 @@ select u.*, naam from uitslag u join persoon p on u.knsbNummer = p.knsbNummer
 where seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
 
 update uitslag set partij = 'u' where knsbNummer = 7879520 and seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
+
+-- interne ronden per seizoen van verschillende competities
+select * from ronde where seizoen = @seizoen and substring(teamCode, 1, 1) = 'i' order by datum;
 
 -- ronden per seizoen en competitie met aantal uitslagen
 with u as 
