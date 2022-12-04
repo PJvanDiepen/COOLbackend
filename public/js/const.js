@@ -748,7 +748,7 @@ function spelerTotalen(speler) {
             if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
                 j = i;
             }
-            i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
+            i = i + 4; // volgende rondeNummer, kleur (0 = wit, 1 = zwart), knsbNummer en resultaat (0 = verlies, 1 = remise, 2 = winst)
         }
         return j; // vorigeKeer zelfde tegenstander of 0
     }
@@ -767,6 +767,16 @@ function spelerTotalen(speler) {
         }
     }
 
+    function vorigeKleur() {
+        let i = 20;
+        let kleur = -1;
+        while (totalen[i]) { // indien rondeNummer
+            kleur = totalen[i + 1];
+            i = i + 4; // volgende rondeNummer, kleur (0 = wit, 1 = zwart), knsbNummer en resultaat (0 = verlies, 1 = remise, 2 = winst)
+        }
+        return kleur;
+    }
+
     /**
      * metWit berekent welke kleur tegen tegenstander
      *
@@ -774,24 +784,28 @@ function spelerTotalen(speler) {
      * @returns {boolean|*} indien wit anders zwart
      */
     function metWit(tegenstander) {
-        const i = vorigeKeer(tegenstander);
-        if (i) {
-            return totalen[i + 1] === 1 // wit indien vorige keer zwart
-        } else if (saldoWitZwart() !== tegenstander.saldoWitZwart()) {
-            afdrukken(i, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
-            return saldoWitZwart() < tegenstander.saldoWitZwart(); // wit indien vaker met zwart
-        } else if (totaal() !== tegenstander.totaal()) {
-            afdrukken(i, tegenstander, totaal() < tegenstander.totaal(), "punten");
-            return totaal() < tegenstander.totaal(); // wit indien minder punten
-        } else {
-            afdrukken(i, tegenstander, rating() < tegenstander.rating(), "rating");
-            return rating() < tegenstander.rating(); // wit indien lagere rating
+        const zelfdeTegenstander = vorigeKeer(tegenstander);
+        if (zelfdeTegenstander) {
+            return totalen[zelfdeTegenstander + 1] === 1 // wit indien vorige keer zwart = 1 tegen zelfdeTegenstander
+        }
+        if (saldoWitZwart() !== tegenstander.saldoWitZwart()) { // wit indien vaker met zwart
+            return afdrukken(zelfdeTegenstander, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
+        }
+        const kleur = vorigeKleur();
+        if (kleur !== tegenstander.vorigeKleur()) { // wit indien vorige kleur zwart en vorige kleur tegenstander wit
+            return afdrukken(zelfdeTegenstander, tegenstander, kleur === 1, "vorige kleur");
+        } else if (totaal() !== tegenstander.totaal()) { // wit indien minder punten
+            return afdrukken(zelfdeTegenstander, tegenstander, totaal() < tegenstander.totaal(), "punten");
+        } else { // wit indien lagere rating
+            return afdrukken(zelfdeTegenstander, tegenstander, rating() < tegenstander.rating(), "rating");
         }
     }
 
     function afdrukken(i, tegenstander, kleur, wegens) {
         console.log(`${naam} met ${kleur ? "wit" : "zwart"} tegen ${tegenstander.naam} wegens ${wegens}`);
+        return kleur;
     }
+
     return Object.freeze({ // Zie blz. 17.1 Douglas Crockford: How JavaScript Works
         knsbNummer,
         naam,
@@ -821,6 +835,7 @@ function spelerTotalen(speler) {
         saldoWitZwartExtern,
         rondenVerschil,
         tegen,
+        vorigeKleur,
         metWit
     });
 }
