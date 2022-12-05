@@ -118,7 +118,7 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
 Zie Matt Frisbie: Professional JavaScript for Web Developers blz. 760
  */
 function olaBestandLezen() {
-    console.log("--- olaBestandLezen() ---");
+    // console.log("--- olaBestandLezen() ---");
     const filesList = document.getElementById("olaFile");
     filesList.addEventListener("change", function (event) {
         const output = document.getElementById("output");
@@ -131,12 +131,12 @@ function olaBestandLezen() {
         reader.onload = function() {
             const olaTabel = [];
             const regels = reader.result.split('\n');
-            console.log(regels);
+            // console.log(regels);
             for (const regel of regels) {
                 olaVerwerken(olaTabel, csv(regel));
             }
             sessionStorage.setItem("OLA", JSON.stringify(olaTabel));
-            // naarZelfdePagina();
+            naarZelfdePagina(); // TODO comment om te testen
         };
     });
 }

@@ -254,47 +254,6 @@ function nietTegen(r, i, j, rondeNummer) {
 }
 
 const indelenFun = [
-    ["verbeterde versie vaker met heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.8.16
-        const oneven = onevenSpeler(r);
-        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
-        if (nietIngedeeld.length > 0) {
-            let pogingen = 0
-            let poging = [];
-            for (let volgnummer = 0; volgnummer < 6; volgnummer++) {
-                poging = [];
-                let speler = 999;
-                while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 13) {
-                    console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen + "/" + volgnummer);
-                    opnieuwIndelen(wit, zwart);
-                    speler = volgendeNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer);
-                    spelerIndelenHeuristiek(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
-                    spelerIndelenHeuristiek(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer) ||
-                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
-                    spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer);
-                    nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
-                }
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
-                opnieuwIndelen(wit, zwart);
-                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
-                    // toevoegen aan poging
-                }
-                for (const speler of poging) {
-                    if (!ingedeeld(speler, wit, zwart, oneven)) {
-                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
-                        spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer);
-                    }
-                }
-                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- mislukt ---");
-            }
-        }
-        return oneven;
-    }],
-
     ["vooruit indelen met en achteruit indelen zonder heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.7.8
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
@@ -308,6 +267,9 @@ const indelenFun = [
                     console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen + "/" + volgnummer);
                     opnieuwIndelen(wit, zwart);
                     speler = volgendeNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer);
+                    // TODO 0-0-0.nl versie 0.8.16 werkt niet
+                    // spelerIndelenHeuristiek(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
+                    // spelerIndelenHeuristiek(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer) ||
                     spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
                     spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer);
                     nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
