@@ -425,7 +425,7 @@ where r.seizoen = @seizoen and r.teamCode = @teamCode
 order by r.rondeNummer;
 
 -- aantal mutaties per gebruiker
-select naam, count(*) sort
+select naam, m.knsbNummer, count(*) sort
 from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
 group by m.knsbNummer
 order by sort desc;

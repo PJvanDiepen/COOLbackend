@@ -243,10 +243,10 @@ function nietTegen(r, i, j, rondeNummer) {
         return false;
     } else if (rondeNummer / r[i].intern() < 2 && rondeNummer / r[j].intern() < 2) { // spelers hebben niet te weinig gespeeld
         return false
-    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() >= 3) {
+    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) { // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
         console.log(`${r[i].naam} te sterk voor ${r[j].naam}`);
         return true;
-    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() >= 3) {
+    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) { // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
         console.log(`${r[i].naam} te zwak voor ${r[j].naam}`);
         return true;
     }
@@ -254,9 +254,50 @@ function nietTegen(r, i, j, rondeNummer) {
 }
 
 const indelenFun = [
+    ["vooruit indelen met en laatste achteruit indelen zonder heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.8.17
+        const oneven = onevenSpeler(r);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+        // console.log(nietIngedeeld);
+        if (nietIngedeeld.length > 0) {
+            let pogingen = 0
+            let poging = [];
+            for (let volgnummer = 0; volgnummer < 6; volgnummer++) {
+                poging = [];
+                let speler = 999;
+                while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 13) {
+                    console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen + "/" + volgnummer);
+                    opnieuwIndelen(wit, zwart);
+                    speler = laatsteNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer);
+                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
+                    spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer);
+                    nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+                }
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
+                opnieuwIndelen(wit, zwart);
+                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
+                    // toevoegen aan poging
+                }
+                for (const speler of poging) {
+                    if (!ingedeeld(speler, wit, zwart, oneven)) {
+                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven, rondeNummer) ||
+                        spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven, rondeNummer);
+                    }
+                }
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- mislukt ---");
+            }
+        }
+        return oneven;
+    }],
+
     ["vooruit indelen met en achteruit indelen zonder heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.7.8
         const oneven = onevenSpeler(r);
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+        console.log(nietIngedeeld);
         if (nietIngedeeld.length > 0) {
             let pogingen = 0
             let poging = [];
@@ -451,6 +492,17 @@ function volgendeNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer) {
         if (!poging.includes(speler) && ++nummer >= volgnummer) {
             poging.push(speler);
             return speler;
+        }
+    }
+    return 0;
+}
+
+function laatsteNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer) {
+    let nummer = 0;
+    for (let i = nietIngedeeld.length - 1; i >= 0; i--) {
+        if (!poging.includes(nietIngedeeld[i]) && ++nummer >= volgnummer) {
+            poging.push(nietIngedeeld[i]);
+            return nietIngedeeld[i];
         }
     }
     return 0;

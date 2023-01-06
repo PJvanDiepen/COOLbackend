@@ -36,6 +36,10 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en
         return o_o_o.vereniging + " NHSB bekerteam";
     } else if (!teamOfCompetitie(teamCode)) {
         return "geen";
+    } else if (teamCode.substring(0,2) === "nv") {
+        return o_o_o.vereniging + " V" + teamCode.substring(2);
+    } else if (teamCode.substring(0,1) === "n") {
+        return o_o_o.vereniging + " N" + teamCode.substring(1);
     } else {
         return o_o_o.vereniging + " " + teamCode;
     }

@@ -90,6 +90,7 @@ Verwijder localStorage op iPhone
 
 - [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
+- [Svelte](https://svelte.dev/)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
 - [TODO in verschillende frameworks](https://todomvc.com/)
 - [unit test met vitest](https://vitest.dev/)
