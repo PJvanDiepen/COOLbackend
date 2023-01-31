@@ -1,6 +1,6 @@
 use waagtoren; -- ga naar TODO
 
--- laatste toevoeging 129 = Michel Durivou
+-- laatste toevoeging TODO 132 = Daan van Boxtel 
 insert into persoon (knsbNummer, naam) values
 (108, "Aad Schuit"),
 (106, "Abdulrashid Ayobi"),
@@ -412,11 +412,11 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ("2223", "nv1", 5, "t", "Wijker Toren V1", '2023-03-07'),
 ("2223", "nv1", 6, "u", "Het Spaarne V2", '2023-03-30'),
 ("2223", "nv2", 1, "t", "Castricum V", '2022-11-22'),
-("2223", "nv2", 2, "u", "Heerhugowaard V", '2022-12-15'),
-("2223", "nv2", 3, "t", "Vredeburg V2", '2023-01-10'),
-("2223", "nv2", 4, "u", "Castricum V", '2023-02-10'),
-("2223", "nv2", 5, "u", "Vredeburg V2", '2023-03-10'),
-("2223", "nv2", 6, "t", "Heerhugowaard V", '2023-03-28');
+("2223", "nv2", 2, "t", "Vredeburg V2", '2023-01-10'),
+("2223", "nv2", 3, "u", "Castricum V", '2023-02-10'),
+("2223", "nv2", 4, "u", "Vredeburg V2", '2023-03-10'),
+("2223", "nv2", 5, "t", "Heerhugowaard V", '2023-03-28'),
+("2223", "nv2", 6, "u", "Heerhugowaard V", '2023-03-31');
 
 -- ronde 1 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
@@ -1075,13 +1075,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 9, 17, 8865549, "i", "w", 120, "0", '2022-11-08', "int"),
 ("2223", "int", 9, 17, 120, "i", "z", 8865549, "1", '2022-11-08', "int");
 
--- ronde 10 interne competitie TODO
-set @seizoen = '2223';
-set @competitie = 'int';
-set @ronde = 10;
-select * from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-delete from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-
+-- ronde 10 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "int", 10, 0, 120, "a", "", 0, "", '2022-11-15', "int"),
 ("2223", "int", 10, 0, 123, "a", "", 0, "", '2022-11-15', "int"),
@@ -1160,13 +1154,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 10, 13, 7582102, "i", "w", 7771665, "0", '2022-11-15', "int"),
 ("2223", "int", 10, 13, 7771665, "i", "z", 7582102, "1", '2022-11-15', "int");
 
--- ronde 11 interne competitie TODO
-set @seizoen = '2223';
-set @competitie = 'int';
-set @ronde = 11;
-select * from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-delete from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-
+-- ronde 11 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "int", 11, 0, 106, "a", "", 0, "", '2022-11-22', "int"),
 ("2223", "int", 11, 0, 120, "a", "", 0, "", '2022-11-22', "int"),
@@ -1245,13 +1233,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "int", 11, 14, 8335415, "i", "w", 8865549, "1", '2022-11-22', "int"),
 ("2223", "int", 11, 14, 8865549, "i", "z", 8335415, "0", '2022-11-22', "int");
 
--- ronde 12 interne competitie TODO
-set @seizoen = '2223';
-set @competitie = 'int';
-set @ronde = 12;
-select * from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-delete from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-
+-- ronde 12 interne competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "int", 12, 0, 120, "a", "", 0, "", '2022-11-29', "int"),
 ("2223", "int", 12, 0, 123, "a", "", 0, "", '2022-11-29', "int"),
@@ -1867,7 +1849,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- Waagtoren n1
 select * from uitslag where seizoen = "2223" and teamCode = "n1" order by rondeNummer, bordNummer;
-delete from uitslag where seizoen = "2223" and teamCode = "n1" and rondeNummer = 3; -- TODO wijzigen
+delete from uitslag where seizoen = "2223" and teamCode = "n1" and rondeNummer = 4; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "n1", 1, 1, 7970094, "e", "w", 0, "1", '2022-09-30', "int"),
@@ -1894,7 +1876,15 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "n1", 3, 5, 5, "e", "w", 0, "1", '2022-11-14', "int"),
 ("2223", "n1", 3, 6, 7099950, "e", "z", 0, "0", '2022-11-14', "int"),
 ("2223", "n1", 3, 7, 7707832, "e", "w", 0, "½", '2022-11-14', "int"),
-("2223", "n1", 3, 8, 6225934, "e", "z", 0, "1", '2022-11-14', "int");
+("2223", "n1", 3, 8, 6225934, "e", "z", 0, "1", '2022-11-14', "int"),
+("2223", "n1", 4, 1, 7428960, "e", "z", 0, "½", '2023-01-10', "int"),
+("2223", "n1", 4, 2, 7970094, "e", "w", 0, "1", '2023-01-10', "int"),
+("2223", "n1", 4, 3, 8096242, "e", "z", 0, "1", '2023-01-10', "int"),
+("2223", "n1", 4, 4, 7099950, "e", "w", 0, "0", '2023-01-10', "int"),
+("2223", "n1", 4, 5, 7129991, "e", "z", 0, "½", '2023-01-10', "int"),
+("2223", "n1", 4, 6, 7707832, "e", "w", 0, "0", '2023-01-10', "int"),
+("2223", "n1", 4, 7, 7613166, "e", "z", 0, "½", '2023-01-10', "int"),
+("2223", "n1", 4, 8, 6225934, "e", "w", 0, "½", '2023-01-10', "int");
 
 -- Waagtoren n2
 select * from uitslag where seizoen = "2223" and teamCode = "n2" order by rondeNummer, bordNummer;
@@ -1966,7 +1956,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 use waagtoren;
 -- Waagtoren nv1
 select * from uitslag where seizoen = "2223" and teamCode = "nv1" order by rondeNummer, bordNummer;
-delete from uitslag where seizoen = "2223" and teamCode = "nv1" and rondeNummer = 2; -- TODO wijzigen
+delete from uitslag where seizoen = "2223" and teamCode = "nv1" and rondeNummer = 3; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "nv1", 1, 1, 6212404, "e", "w", 0, "½", '2022-11-22', "int"),
@@ -1976,17 +1966,25 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "nv1", 2, 1, 6212404, "e", "z", 0, "1", '2022-12-13', "int"),
 ("2223", "nv1", 2, 2, 7101193, "e", "w", 0, "1", '2022-12-13', "int"),
 ("2223", "nv1", 2, 3, 7321534, "e", "z", 0, "0", '2022-12-13', "int"),
-("2223", "nv1", 2, 4, 8073978, "e", "w", 0, "½", '2022-12-13', "int");
+("2223", "nv1", 2, 4, 8073978, "e", "w", 0, "½", '2022-12-13', "int"),
+("2223", "nv1", 3, 1, 6212404, "e", "w", 0, "1", '2023-01-12', "int"),
+("2223", "nv1", 3, 2, 7101193, "e", "z", 0, "1", '2023-01-12', "int"),
+("2223", "nv1", 3, 3, 7321534, "e", "w", 0, "½", '2023-01-12', "int"),
+("2223", "nv1", 3, 4, 8073978, "e", "z", 0, "0", '2023-01-12', "int");
 
 -- Waagtoren nv2
 select * from uitslag where seizoen = "2223" and teamCode = "nv2" order by rondeNummer, bordNummer;
-delete from uitslag where seizoen = "2223" and teamCode = "nv2" and rondeNummer = 1; -- TODO wijzigen
+delete from uitslag where seizoen = "2223" and teamCode = "nv2" and rondeNummer = 2; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "nv2", 1, 1, 7691728, "e", "z", 0, "0", '2022-11-22', "int"),
 ("2223", "nv2", 1, 2, 8144191, "e", "w", 0, "1", '2022-11-22', "int"),
 ("2223", "nv2", 1, 3, 8931098, "e", "z", 0, "0", '2022-11-22', "int"),
-("2223", "nv2", 1, 4, 8978717, "e", "w", 0, "0", '2022-11-22', "int");
+("2223", "nv2", 1, 4, 8978717, "e", "w", 0, "0", '2022-11-22', "int"),
+("2223", "nv2", 2, 1, 8617367, "e", "z", 0, "1", '2023-01-10', "int"),
+("2223", "nv2", 2, 2, 8472530, "e", "w", 0, "1", '2023-01-10', "int"),
+("2223", "nv2", 2, 3, 8987176, "e", "z", 0, "1", '2023-01-10', "int"),
+("2223", "nv2", 2, 4, 8931098, "e", "w", 0, "1", '2023-01-10', "int");
 
 -- ronde 1 rapid competitie
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
@@ -2250,16 +2248,16 @@ use waagtoren;
 
 set @seizoen = '2223';
 set @competitie = 'int';
-set @ronde = 13;
-set @bord = 9;
+set @ronde = 17;
+set @bord = 23;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
 
-set @wit = 8865549; -- Erno
-set @zwart = 120; -- Emiel
-set @oneven = 8243312; -- Harry
-set @afwezig = 103; -- Charles
+set @wit = 138; -- Thijs
+set @zwart = 137; -- Joris
+set @oneven = 106; -- Abdulrashid
+set @afwezig = 135; -- Miquel
 
 update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;

@@ -280,11 +280,14 @@ async function competitieRondenVerwerken() {
  */
 async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
-    menuKeuzes.unshift([IEDEREEN, "\u2630"],  // hamburger en menuKeuzes bovenaan in het menu
+    const eersteKeuzes = [[IEDEREEN, "\u2630"], // hamburger bovenaan in het menu
         [IEDEREEN, "menu", function () {
-            naarAnderePagina("start.html");
-        }]);
-    menuKeuzes.push([GEREGISTREERD, "systeembeheer", function () { // menuKeuzes onderaan in het menu
+        naarAnderePagina("start.html");
+    }]];
+    for (const keuze of eersteKeuzes) {
+        menuKeuzes.unshift(keuze);
+    }
+    menuKeuzes.push([GEREGISTREERD, "systeembeheer", function () { // onderaan in het menu
         naarAnderePagina("beheer.html");
     }]); // TODO naar documentatie voor deze pagina
     let functies = [];

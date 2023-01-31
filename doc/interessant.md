@@ -27,6 +27,7 @@ Verwijder localStorage op iPhone
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
 - [js algorithms](https://github.com/trekhleb/javascript-algorithms)
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+- [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [DOM events](https://domevents.dev/)
@@ -55,6 +56,7 @@ Verwijder localStorage op iPhone
 - [Objection to orm hatred](https://www.jakso.me/blog/objection-to-orm-hatred)
 - [Multiple databases](https://blog.eperedo.com/2019/12/28/multiple-database-connection-objection-js-knex/)
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
+- [Knex cheatsheet](https://devhints.io/knex)
 
 # HTML / CSS
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
@@ -63,6 +65,7 @@ Verwijder localStorage op iPhone
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
 - [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
+- [Zeekat CSS!](https://zeekat.nl/index.html)
 
 # software enigineering
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)

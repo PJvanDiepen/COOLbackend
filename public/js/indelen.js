@@ -232,7 +232,7 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
  * @param i speler
  * @param j tegenstander
  * @param rondeNummer huidige ronde
- * @returns {boolean}
+ * @returns {boolean} indien deze speler liever nietTegen deze tegenstander
  */
 function nietTegen(r, i, j, rondeNummer) {
     if (!r[i].tegen(r[j], rondeNummer)) {
@@ -241,6 +241,12 @@ function nietTegen(r, i, j, rondeNummer) {
         return false;
     } else if (rondeNummer < 5) {
         return false;
+    } else if (r[i].knsbNummer === 7640798 && r[j].knsbNummer === 8388105) { // 0-0-0.nl versie 0.8.18 Johan en Marijn Wester
+        console.log(`${r[i].naam} niet tegen zoon ${r[j].naam}`);
+        return true;
+    } else if (r[j].knsbNummer === 7640798 && r[i].knsbNummer === 8388105) { // 0-0-0.nl versie 0.8.18 Marijn en Johan Wester
+        console.log(`${r[i].naam} niet tegen vader ${r[j].naam}`);
+        return true;
     } else if (rondeNummer / r[i].intern() < 2 && rondeNummer / r[j].intern() < 2) { // spelers hebben niet te weinig gespeeld
         return false
     } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) { // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3

@@ -436,6 +436,8 @@ select * from mutatie order by tijdstip desc;
 -- verwijder mutaties
 delete from mutatie where knsbNummer = 97; -- and invloed = 0;
 
+select * from team where seizoen = @seizoen;
+
 use waagtoren;
 set @seizoen = '2223';
 set @knsbNummer = 7504310;
