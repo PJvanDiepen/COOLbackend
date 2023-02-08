@@ -280,10 +280,11 @@ async function competitieRondenVerwerken() {
  */
 async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
-    const eersteKeuzes = [[IEDEREEN, "\u2630"], // hamburger bovenaan in het menu
+    const eersteKeuzes = [
         [IEDEREEN, "menu", function () {
         naarAnderePagina("start.html");
-    }]];
+    }],
+        [IEDEREEN, "\u2630"]]; // hamburger bovenaan in het menu
     for (const keuze of eersteKeuzes) {
         menuKeuzes.unshift(keuze);
     }
