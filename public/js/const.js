@@ -280,14 +280,14 @@ async function competitieRondenVerwerken() {
  */
 async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
-    const eersteKeuzes = [
-        [IEDEREEN, "menu", function () {
-        naarAnderePagina("start.html");
-    }],
-        [IEDEREEN, "\u2630"]]; // hamburger bovenaan in het menu
-    for (const keuze of eersteKeuzes) {
-        menuKeuzes.unshift(keuze);
+    const eersteKeuzes = JSON.parse(sessionStorage.getItem("menu"));
+    console.log(eersteKeuzes);
+    for (const [minimumRechten, tekst, naarPagina] of eersteKeuzes) {
+        menuKeuzes.unshift([minimumRechten, tekst, function() {
+            naarAnderePagina(naarPagina);
+        }]);
     }
+    menuKeuzes.unshift([IEDEREEN, "\u2630"]); // hamburger bovenaan in het menu
     menuKeuzes.push([GEREGISTREERD, "systeembeheer", function () { // onderaan in het menu
         naarAnderePagina("beheer.html");
     }]); // TODO naar documentatie voor deze pagina
