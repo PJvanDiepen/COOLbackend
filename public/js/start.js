@@ -33,7 +33,6 @@ function menuKeuze(elementId, minimumRechten, tekst, naarPagina) {
     if (gebruiker.mutatieRechten >= TEAMLEIDER) {
         menuKeuze("teamleider", TEAMLEIDER, `Overzicht voor teamleiders`, "teamleider.html");
     }
-    console.log(menuKeuzes);
     sessionStorage.setItem("menu", JSON.stringify(menuKeuzes));
     seizoenSelecteren(INTERNE_COMPETITIE);
     competitieSelecteren();

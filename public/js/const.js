@@ -281,7 +281,6 @@ async function competitieRondenVerwerken() {
 async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     const eersteKeuzes = JSON.parse(sessionStorage.getItem("menu"));
-    console.log(eersteKeuzes);
     for (const [minimumRechten, tekst, naarPagina] of eersteKeuzes) {
         menuKeuzes.unshift([minimumRechten, tekst, function() {
             naarAnderePagina(naarPagina);
