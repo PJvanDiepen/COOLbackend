@@ -424,6 +424,11 @@ left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNumm
 where r.seizoen = @seizoen and r.teamCode = @teamCode
 order by r.rondeNummer;
 
+-- aantal uitslagen per seizoen, partij
+select seizoen, partij, count(partij) from uitslag 
+group by seizoen, partij
+order by seizoen, partij;
+
 -- aantal mutaties per gebruiker
 select naam, m.knsbNummer, count(*) sort
 from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0

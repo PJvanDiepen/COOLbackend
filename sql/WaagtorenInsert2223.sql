@@ -404,10 +404,6 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ("2223", "kbe", 1, "u", "Bergen", '2022-10-27'),
 ("2223", "kbe", 2, "u", "Caissa-Eenhoorn", '2022-12-03');
 
-use waagtoren; -- TODO KNSB beker
-select * from ronde where seizoen = '2223' and teamCode = 'kbe';
-select * from uitslag where seizoen = '2223' and teamCode = 'kbe' and rondeNummer = 3;
-
 -- NHSB competitie
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ('2223', 'n1', '1', 'u', 'Kennemer Combinatie N1', '2022-09-30'),
@@ -1928,8 +1924,17 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "1", 5, 7, 7468417, "e", "w", 0, "0", '2022-12-17', "int"),
 ("2223", "1", 5, 8, 8611922, "e", "z", 0, "1", '2022-12-17', "int"),
 ("2223", "1", 5, 9, 6483455, "e", "w", 0, "½", '2022-12-17', "int"),
-("2223", "1", 5, 10, 7099950, "e", "z", 0, "1", '2022-12-17', "int");
-
+("2223", "1", 5, 10, 7099950, "e", "z", 0, "1", '2022-12-17', "int"),
+("2223", "1", 6, 1, 7970094, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "1", 6, 2, 7657342, "e", "w", 0, "½", '2023-02-11', "int"),
+("2223", "1", 6, 3, 7359913, "e", "z", 0, "1", '2023-02-11', "int"),
+("2223", "1", 6, 4, 7428960, "e", "w", 0, "1", '2023-02-11', "int"),
+("2223", "1", 6, 5, 7584566, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "1", 6, 6, 8096242, "e", "w", 0, "1", '2023-02-11', "int"),
+("2223", "1", 6, 7, 8285574, "e", "z", 0, "0", '2023-02-11', "int"),
+("2223", "1", 6, 8, 7468417, "e", "w", 0, "1", '2023-02-11', "int"),
+("2223", "1", 6, 9, 7099950, "e", "z", 0, "1", '2023-02-11', "int"),
+("2223", "1", 6, 10, 8611922, "e", "w", 0, "½", '2023-02-11', "int");
 
 -- Waagtoren 2
 select * from uitslag where seizoen = "2223" and teamCode = "2" order by rondeNummer, bordNummer;
@@ -1975,7 +1980,15 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "2", 5, 5, 7707832, "e", "w", 0, "0", '2022-12-17', "int"),
 ("2223", "2", 5, 6, 8112654, "e", "z", 0, "0", '2022-12-17', "int"),
 ("2223", "2", 5, 7, 6225934, "e", "w", 0, "1", '2022-12-17', "int"),
-("2223", "2", 5, 8, 7292043, "e", "z", 0, "½", '2022-12-17', "int");
+("2223", "2", 5, 8, 7292043, "e", "z", 0, "½", '2022-12-17', "int"),
+("2223", "2", 6, 1, 6483455, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "2", 6, 2, 6335670, "e", "w", 0, "½", '2023-02-11', "int"),
+("2223", "2", 6, 3, 7509920, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "2", 6, 4, 7879520, "e", "w", 0, "1", '2023-02-11', "int"),
+("2223", "2", 6, 5, 7129991, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "2", 6, 6, 8112654, "e", "w", 0, "0", '2023-02-11', "int"),
+("2223", "2", 6, 7, 6225934, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "2", 6, 8, 8552038, "e", "w", 0, "1", '2023-02-11', "int");
 
 -- Waagtoren 3
 select * from uitslag where seizoen = "2223" and teamCode = "3" order by rondeNummer, bordNummer;
@@ -2021,7 +2034,15 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "3", 5, 5, 7758014, "e", "w", 0, "½", '2022-12-17', "int"),
 ("2223", "3", 5, 6, 7699010, "e", "z", 0, "1", '2022-12-17', "int"),
 ("2223", "3", 5, 7, 8400183, "e", "w", 0, "1", '2022-12-17', "int"),
-("2223", "3", 5, 8, 7504310, "e", "z", 0, "½", '2022-12-17', "int");
+("2223", "3", 5, 8, 7504310, "e", "z", 0, "½", '2022-12-17', "int"),
+("2223", "3", 6, 1, 7758014, "e", "z", 0, "0", '2023-02-11', "int"),
+("2223", "3", 6, 2, 8484443, "e", "w", 0, "0", '2023-02-11', "int"),
+("2223", "3", 6, 3, 8587337, "e", "z", 0, "1", '2023-02-11', "int"),
+("2223", "3", 6, 4, 6572511, "e", "w", 0, "½", '2023-02-11', "int"),
+("2223", "3", 6, 5, 7535385, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "3", 6, 6, 7699010, "e", "w", 0, "½", '2023-02-11', "int"),
+("2223", "3", 6, 7, 8400183, "e", "z", 0, "1", '2023-02-11', "int"),
+("2223", "3", 6, 8, 7504310, "e", "w", 0, "0", '2023-02-11', "int");
 
 -- Waagtoren 4
 select * from uitslag where seizoen = "2223" and teamCode = "4" order by rondeNummer, bordNummer;
@@ -2063,7 +2084,15 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "4", 4, 5, 7649213, "e", "w", 0, "½", '2022-12-17', "int"),
 ("2223", "4", 4, 6, 8485059, "e", "z", 0, "1", '2022-12-17', "int"),
 ("2223", "4", 4, 7, 8224502, "e", "w", 0, "1", '2022-12-17', "int"),
-("2223", "4", 4, 8, 7321534, "e", "z", 0, "1", '2022-12-17', "int");
+("2223", "4", 4, 8, 7321534, "e", "z", 0, "1", '2022-12-17', "int"),
+("2223", "4", 5, 1, 7809285, "e", "z", 0, "0", '2023-02-11', "int"),
+("2223", "4", 5, 2, 7399469, "e", "w", 0, "1", '2023-02-11', "int"),
+("2223", "4", 5, 3, 7282033, "e", "z", 0, "0", '2023-02-11', "int"),
+("2223", "4", 5, 4, 8276752, "e", "w", 0, "1", '2023-02-11', "int"),
+("2223", "4", 5, 5, 7649213, "e", "z", 0, "0", '2023-02-11', "int"),
+("2223", "4", 5, 6, 6212404, "e", "w", 0, "0", '2023-02-11', "int"),
+("2223", "4", 5, 7, 8472530, "e", "z", 0, "½", '2023-02-11', "int"),
+("2223", "4", 5, 8, 8485059, "e", "w", 0, "0", '2023-02-11', "int");
 
 -- Waagtoren n1
 select * from uitslag where seizoen = "2223" and teamCode = "n1" order by rondeNummer, bordNummer;
@@ -2183,10 +2212,9 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "n3", 3, 5, 7210137, "e", "w", 0, "0", '2022-11-29', "int"),
 ("2223", "n3", 3, 6, 7731812, "e", "z", 0, "½", '2022-11-29', "int");
 
-use waagtoren;
 -- Waagtoren nv1
 select * from uitslag where seizoen = "2223" and teamCode = "nv1" order by rondeNummer, bordNummer;
-delete from uitslag where seizoen = "2223" and teamCode = "nv1" and rondeNummer = 3; -- TODO wijzigen
+delete from uitslag where seizoen = "2223" and teamCode = "nv1" and rondeNummer = 4; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "nv1", 1, 1, 6212404, "e", "w", 0, "½", '2022-11-22', "int"),
@@ -2200,7 +2228,11 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "nv1", 3, 1, 6212404, "e", "w", 0, "1", '2023-01-12', "int"),
 ("2223", "nv1", 3, 2, 7101193, "e", "z", 0, "1", '2023-01-12', "int"),
 ("2223", "nv1", 3, 3, 7321534, "e", "w", 0, "½", '2023-01-12', "int"),
-("2223", "nv1", 3, 4, 8073978, "e", "z", 0, "0", '2023-01-12', "int");
+("2223", "nv1", 3, 4, 8073978, "e", "z", 0, "0", '2023-01-12', "int"),
+("2223", "nv1", 4, 1, 6212404, "e", "z", 0, "1", '2023-02-07', "int"),
+("2223", "nv1", 4, 2, 7321534, "e", "w", 0, "½", '2023-02-07', "int"),
+("2223", "nv1", 4, 3, 7518203, "e", "z", 0, "½", '2023-02-07', "int"),
+("2223", "nv1", 4, 4, 8073978, "e", "w", 0, "½", '2023-02-07', "int");
 
 -- Waagtoren nv2
 select * from uitslag where seizoen = "2223" and teamCode = "nv2" order by rondeNummer, bordNummer;

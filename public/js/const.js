@@ -435,7 +435,7 @@ function naarZelfdePagina(parameters) {
 }
 
 function naarSpeler(speler) {
-    const link = htmlLink(`speler.html?team=${o_o_o.competitie}&speler=${speler.knsbNummer}&naam=${speler.naam}`, speler.naam);
+    const link = htmlLinkEnTerug(`speler.html?team=${o_o_o.competitie}&speler=${speler.knsbNummer}&naam=${speler.naam}`, speler.naam);
     htmlVet(link, speler.knsbNummer === gebruiker.knsbNummer);
     return link;
 }
