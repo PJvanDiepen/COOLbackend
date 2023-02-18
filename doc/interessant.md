@@ -33,7 +33,7 @@ Verwijder localStorage op iPhone
 - [DOM events](https://domevents.dev/)
 - [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
 - [async await json](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
-- [Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
+- [Best practise Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
 - [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)

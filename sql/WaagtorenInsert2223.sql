@@ -2210,7 +2210,13 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "n3", 3, 3, 8276752, "e", "w", 0, "0", '2022-11-29', "int"),
 ("2223", "n3", 3, 4, 7282033, "e", "z", 0, "0", '2022-11-29', "int"),
 ("2223", "n3", 3, 5, 7210137, "e", "w", 0, "0", '2022-11-29', "int"),
-("2223", "n3", 3, 6, 7731812, "e", "z", 0, "½", '2022-11-29', "int");
+("2223", "n3", 3, 6, 7731812, "e", "z", 0, "½", '2022-11-29', "int"),
+("2223", "n3", 4, 1, 6214153, "e", "z", 0, "½", '2023-02-14', "int"),
+("2223", "n3", 4, 2, 8372881, "e", "w", 0, "1", '2023-02-14', "int"),
+("2223", "n3", 4, 3, 8276752, "e", "z", 0, "1", '2023-02-14', "int"),
+("2223", "n3", 4, 4, 7282033, "e", "w", 0, "1", '2023-02-14', "int"),
+("2223", "n3", 4, 5, 7210137, "e", "z", 0, "½", '2023-02-14', "int"),
+("2223", "n3", 4, 6, 7731812, "e", "w", 0, "½", '2023-02-14', "int");
 
 -- Waagtoren nv1
 select * from uitslag where seizoen = "2223" and teamCode = "nv1" order by rondeNummer, bordNummer;
@@ -2510,14 +2516,14 @@ use waagtoren;
 
 set @seizoen = '2223';
 set @competitie = 'int';
-set @ronde = 18;
+set @ronde = 20;
 set @bord = 17;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
 
-set @wit = 101; -- Ramon
-set @zwart = 133; -- Arman
+set @wit = 133; -- Ramon
+set @zwart = 101; -- Arman
 set @oneven = 106; -- Abdulrashid
 set @afwezig = 135; -- Miquel
 
