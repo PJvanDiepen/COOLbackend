@@ -1,8 +1,8 @@
 'use strict'
 
-const o_o_o = require('./o_o_o.js');
+const o_o_o = require('./hoera.js');
 
-const { hoera } = require('./o_o_o.js');
+const { hoera } = require('./hoera.js');
 
 const Gebruiker = require('./models/gebruiker');
 const Mutatie = require('./models/mutatie');

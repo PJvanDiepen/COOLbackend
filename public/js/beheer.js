@@ -1,5 +1,7 @@
 "use strict";
 
+import { hoera } from "/modules/o_o_o.js";
+
 /*
 TODO mutaties per gebruiker afsplitsen
 TODO mutaties met filters
@@ -34,8 +36,9 @@ TODO mutaties met verwijderen
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     const versie = await serverFetch(`/versie`);
+    const hoeraTekst = hoera();
     document.getElementById("computer").appendChild(
-        htmlTekst(`${versie} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
+        htmlTekst(`${versie} ${hoeraTekst} met operating system: ${navigator.platform} en browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function gebruikers(lijst) {
