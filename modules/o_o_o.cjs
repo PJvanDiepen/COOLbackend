@@ -1,5 +1,5 @@
 module.exports = {
     hoera() {
-        return " hoera!!";
+        return " hoera!";
     }
 }
