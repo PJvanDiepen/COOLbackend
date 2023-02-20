@@ -1,6 +1,6 @@
 {
   "name": "cool_backend",
-  "version": "0.8.20",
+  "version": "0.8.21",
   "description": "Backend for 0-0-0.nl",
   "main": "app.js",
   "scripts": {

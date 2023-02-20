@@ -1,7 +1,5 @@
 'use strict'
 
-const o_o_o = require('./modules/o_o_o.cjs');
-
 const { hoera } = require('./modules/o_o_o.cjs');
 
 const Gebruiker = require('./models/gebruiker');
@@ -57,7 +55,7 @@ module.exports = router => {
     Zie beheer.js
      */
     router.get('/versie', async function (ctx) {
-        ctx.body = JSON.stringify(package_json.version + o_o_o.hoera() + hoera());
+        ctx.body = JSON.stringify(package_json.version + hoera()); // o_o_o.hoera() + hoera());
     });
 
     /*
