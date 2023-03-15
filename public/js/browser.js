@@ -1,15 +1,61 @@
 "use strict";
 
+console.log("*** begin const.js ***");
+
+import {
+    // mutatie.invloed
+    GEEN_INVLOED,
+    OPNIEUW_INDELEN,
+    NIEUWE_RANGLIJST,
+
+    // teamCode
+    INTERNE_COMPETITIE,
+    RAPID_COMPETTIE,
+    JEUGD_COMPETTIE,
+    SNELSCHAKEN,
+    ZWITSERS_TEST,
+
+    // uitslag.partij
+    AFWEZIG,
+    EXTERNE_PARTIJ,
+    INTERNE_PARTIJ,
+    VRAAG_INVALLER,
+    MEEDOEN,               // na aanmelden
+    NIET_MEEDOEN,          // na afzeggen
+    ONEVEN,
+    REGLEMENTAIRE_REMISE,  // vrijgesteld
+    EXTERN_THUIS,          // na aanmelden voor externe partij thuis op dinsdag
+    EXTERN_UIT,            // na aanmelden voor externe partij uit op dinsdag
+    REGLEMENTAIR_VERLIES,
+    REGLEMENTAIRE_WINST,
+    ONBEKEND,              // na wijzigen indeling
+    WIT_TEGEN,             // na wijzigen indeling
+    ZWART_TEGEN,           // na wijzigen indeling
+
+    // uitslag.witZwart
+    WIT,
+    ZWART,
+    // uitslag.resultaat
+    REMISE,
+    WINST,
+    VERLIES,
+    // uitslag.uithuis
+    THUIS,
+    UIT,
+
+    // gebruiker.mutatieRechten
+    IEDEREEN,
+    GEREGISTREERD,
+    TEAMLEIDER,
+    BESTUUR,
+    WEDSTRIJDLEIDER,
+    BEHEERDER,
+
+    hoera                  // ()
+} from "/modules/o_o_o.js";
+
 const LAAGSTE_RATING = 1000; // volgens Alkmaar Systeem
 const HOOGSTE_RATING = 2000;
-
-// teamCode
-const INTERNE_COMPETITIE = "int";
-const RAPID_COMPETTIE    = "ira";
-const JEUGD_COMPETTIE    = "ije";
-const SNELSCHAKEN        = "izs";
-const ZWITSERS_TEST      = "izt";
-const HALVE_COMPETITIE   = "ict";
 
 function teamOfCompetitie(teamCode) {
     return teamCode === "" ? false : teamCode.substring(0,1) !== " ";
@@ -50,32 +96,6 @@ function wedstrijdVoluit(ronde) {
     return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
 }
 
-// uitslag.partij
-const AFWEZIG              = "a";
-const EXTERNE_PARTIJ       = "e";
-const INTERNE_PARTIJ       = "i";
-const AGENDA               = "?"; // indien nog niet aanmelden of afzeggen bijvoorbeeld invaller vragen
-const MEEDOEN              = "m"; // na aanmelden
-const NIET_MEEDOEN         = "n"; // na afzeggen
-const ONEVEN               = "o";
-const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
-const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij thuis op dinsdag
-const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op dinsdag
-const REGLEMENTAIR_VERLIES = "v";
-const REGLEMENTAIRE_WINST  = "w";
-const ONBEKEND             = "x"; // na wijzigen indeling
-const WIT_TEGEN            = "y"; // na wijzigen indeling
-const ZWART_TEGEN          = "z"; // na wijzigen indeling
-// uitslag.witZwart
-const WIT = "w";
-const ZWART = "z";
-// uitslag.resultaat
-const REMISE = "½";
-const WINST = "1";
-const VERLIES = "0";
-// uitslag.uithuis
-const THUIS = "t";
-const UIT = "u";
 // score
 const PUNTEN_UIT = " uit ";
 // kop
@@ -118,18 +138,6 @@ const uuidActiveren = params.get("uuid");
 const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
 const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 const gebruiker = {}; // gebruikerVerwerken
-// gebruiker.mutatieRechten
-const IEDEREEN = 0;
-const GEREGISTREERD = 1;
-const TEAMLEIDER = 2;
-const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 8;
-const BEHEERDER = 9;
-
-// mutatie.invloed
-const GEEN_INVLOED = 0;
-const OPNIEUW_INDELEN = 1;
-const NIEUWE_RANGLIJST = 2;
 
 /**
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
@@ -918,4 +926,62 @@ function jsonDate(jsonDatum) {
         }
     }
     return false;
+}
+
+export {
+    teamOfCompetitie,         // (teamCode)
+    interneCompetitie,        // (teamCode)
+    zwitsers,                 // (teamCode)
+    teamVoluit,               // (teamCode)
+    wedstrijdVoluit,          // (ronde)
+    // score
+    PUNTEN_UIT,
+    // kop
+    SCHEIDING,
+    VINKJE,
+    STREEP,
+    KRUISJE,
+    FOUTJE,
+    ZELFDE,
+    pagina,
+    server,
+    params,
+    ditSeizoen,
+    eindeSeizoen,             // (seizoen)
+    o_o_o,
+    competitieTitel,          // ()
+    init,                     // ()
+    gebruikerFunctie,         // (lid)
+    menu,                     // (...menuKeuzes)
+    gewijzigd,                // ()
+    localFetch,               // (url)
+    serverFetch,              // (url)
+    htmlCheckbox,             // (id, value, tekst)
+    htmlOptie,                // (value, text)
+    htmlTekst,                // (tekst)
+    htmlFout,                 // (htmlNode, indien)
+    htmlVerwerkt,             // (htmlNode, indien)
+    htmlVet,                  // (htmlNode, indien)
+    htmlRij,                  // (...kolommen)
+    htmlLinkEnTerug,          // (link, tekst)
+    htmlLink,                 // (link, tekst)
+    naarAnderePagina,         // (naarPagina)
+    naarZelfdePagina,         // (parameters)
+    naarSpeler,               // (speler)
+    naarTeam,                 // (uitslag)
+    seizoenVoluit,            // (seizoen)
+    tijdGeleden,              // (jsonDatum)
+    datumLeesbaar,            // (object)
+    datumSQL,                 // (jsonDatum, dagen)
+    voorloopNul,              // (getal)
+    score,                    // (winst, remise, verlies)
+    wedstrijdUitslag,         // (winst, remise, verlies)
+    uitslagTeam,              // (uithuis, winst, verlies, remise)
+    percentage,               // (winst, remise, verlies)
+    teamSelecteren,           // (teamCode)
+    rondeSelecteren,          // (teamCode, rondeNummer)
+    ranglijst,                // (rondeNummer, selectie)
+    spelerTotalen,            // (speler)
+    uitslagenTeamAlleRonden,  // (teamCode)
+    backupSQL                 // (tabel, rijen)
 }

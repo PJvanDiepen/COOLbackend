@@ -20,8 +20,8 @@ Verwijder localStorage op iPhone
 # JavaScript
 
 - [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [JavaScript nieuwe mogelijkheden](https://betterprogramming.pub/all-javascript-and-typescript-features-of-the-last-3-years-629c57e73e42)
 - [Spread and rest ... erg leuke website](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
-- [call function without ()](https://portswigger.net/research/the-seventh-way-to-call-a-javascript-function-without-parentheses)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
@@ -31,22 +31,20 @@ Verwijder localStorage op iPhone
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [DOM events](https://domevents.dev/)
-- [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
-- [async await json](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
-- [Best practise Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
-- [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
+- [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
 - [JavaScipt date & time](https://blog.openreplay.com/is-it-time-for-the-javascript-temporal-api/)
 
 # node.js
-- [Overview node.js](https://2ality.com/2022/09/nodejs-overview.html)
+- [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
 - [CORS](https://jakearchibald.com/2021/cors/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
+- [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
 
 # Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
@@ -120,6 +118,7 @@ Verwijder localStorage op iPhone
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 # Later
+- [3D in JavaScript](https://discoverthreejs.com/)
 - [IBM Carbon Design System](https://carbondesignsystem.com/)
 - [JavaScript frameworks](https://qr.ae/pvWvGt)
 - [IntelliJ on Chromebook](https://medium.com/@jeffrey.cardillo/using-intellij-and-other-linux-apps-on-your-chromebook-51fd7fadb9db)

@@ -43,35 +43,6 @@ async function spelersLijst(rondeNummer, kop, lijst, promoties) {
                 speler.percentageExtern()));
         }
     }
-    const laagsteSubgroep = [];
-    for (let j = 0; j < spelers.length; j++) {
-        if (spelers[j].prijs()) {
-            laagsteSubgroep[spelers[j].eigenWaardeCijfer()] = j;
-        }
-    }
-    for (let j = laagsteSubgroep.length - 1; j > 0; j--) {
-        if (laagsteSubgroep[j]) {
-            console.log(`${spelers[laagsteSubgroep[j]].naam} laagste in ${spelers[laagsteSubgroep[j]].subgroep}`);
-        }
-    }
-    for (let j = 0; j < spelers.length; j++) {
-        if (spelers[j].prijs()) {
-            console.log(`${spelers[j].naam} in ${spelers[j].subgroep} promoveert ${promotieSubgroep(j, spelers, laagsteSubgroep, promoties)}`);
-        }
-    }
-}
-
-function promotieSubgroep(j, spelers, laagsteSubgroep, promoties) {
-    for (let i = laagsteSubgroep.length - 1; i > 0; i--) {
-        const k = laagsteSubgroep[i];
-        if (spelers[k].eigenWaardeCijfer() <= spelers[j].eigenWaardeCijfer()) {
-            return "niet";
-        } else if (laagsteSubgroep[i] > j) {
-            promoties.appendChild(htmlRij(j + 1, spelers[j].naam, `van ${spelers[j].subgroep} naar ${spelers[k].subgroep}`))
-            return `naar ${spelers[k].subgroep}`;
-        }
-    }
-    return "niet ?";
 }
 
 function versieSelecteren(versies) {  // TODO: versies en teksten in database

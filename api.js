@@ -1,6 +1,56 @@
 'use strict'
 
-const { hoera } = require('./modules/o_o_o.cjs');
+const {
+    // mutatie.invloed
+    GEEN_INVLOED,
+    OPNIEUW_INDELEN,
+    NIEUWE_RANGLIJST,
+
+    // teamCode
+    INTERNE_COMPETITIE,
+    RAPID_COMPETTIE,
+    JEUGD_COMPETTIE,
+    SNELSCHAKEN,
+    ZWITSERS_TEST,
+
+    // uitslag.partij
+    AFWEZIG,
+    EXTERNE_PARTIJ,
+    INTERNE_PARTIJ,
+    VRAAG_INVALLER,
+    MEEDOEN,               // na aanmelden
+    NIET_MEEDOEN,          // na afzeggen
+    ONEVEN,
+    REGLEMENTAIRE_REMISE,  // vrijgesteld
+    EXTERN_THUIS,          // na aanmelden voor externe partij thuis op dinsdag
+    EXTERN_UIT,            // na aanmelden voor externe partij uit op dinsdag
+    REGLEMENTAIR_VERLIES,
+    REGLEMENTAIRE_WINST,
+    ONBEKEND,              // na wijzigen indeling
+    WIT_TEGEN,             // na wijzigen indeling
+    ZWART_TEGEN,           // na wijzigen indeling
+
+    // uitslag.witZwart
+    WIT,
+    ZWART,
+    // uitslag.resultaat
+    REMISE,
+    WINST,
+    VERLIES,
+    // uitslag.uithuis
+    THUIS,
+    UIT,
+
+    // gebruiker.mutatieRechten
+    IEDEREEN,
+    GEREGISTREERD,
+    TEAMLEIDER,
+    BESTUUR,
+    WEDSTRIJDLEIDER,
+    BEHEERDER,
+
+    hoera
+} = require('./modules/o_o_o.cjs');
 
 const Gebruiker = require('./models/gebruiker');
 const Mutatie = require('./models/mutatie');
@@ -14,11 +64,6 @@ const { fn, ref } = require('objection');
 
 const package_json = require('./package.json');
 const knex = require("knex");
-
-// mutatie.invloed
-const GEEN_INVLOED = 0;
-const OPNIEUW_INDELEN = 1;
-const NIEUWE_RANGLIJST = 2;
 
 const laatsteMutaties = [];
 let uniekeMutaties = 0;
@@ -1232,26 +1277,6 @@ module.exports = router => {
 
 }
 
-// teamCode
-const INTERNE_COMPETITIE = "int";
-const RAPID_COMPETTIE    = "ira";
-const JEUGD_COMPETTIE    = "ije";
-const SNELSCHAKEN        = "izs";
-const ZWITSERS_TEST      = "izt";
-// uitslag.partij
-const AFWEZIG              = "a";
-const EXTERNE_PARTIJ       = "e";
-const INTERNE_PARTIJ       = "i";
-const VRAAG_INVALLER       = "?";
-const MEEDOEN              = "m"; // na aanmelden
-const NIET_MEEDOEN         = "n"; // na afzeggen
-const ONEVEN               = "o";
-const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
-const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij thuis op dinsdag
-const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op dinsdag
-const REGLEMENTAIR_VERLIES = "v";
-const REGLEMENTAIRE_WINST  = "w";
-
 function aanmeldenAfzeggen(ronden, teamCode, rondeNummer, partijNieuw) {
     let partijOud = "";
     for (const ronde of ronden) {
@@ -1279,17 +1304,6 @@ function rondeMuteren(ronde, teamCode, rondeNummer, partij) {
     }
     return false;
 }
-
-// uitslag.witZwart
-const WIT = "w";
-const ZWART = "z";
-// uitslag.resultaat
-const REMISE = "½";
-const WINST = "1";
-const VERLIES = "0";
-// uitslag.uithuis
-const THUIS = "t";
-const UIT = "u";
 
 function resultaatCorrect(resultaat) {
     return resultaat === REMISE || resultaat === WINST || resultaat === VERLIES || resultaat === "";
@@ -1320,14 +1334,6 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
     }
     return false;
 }
-
-// gebruiker.mutatieRechten
-const GEEN_LID = 0;
-const GEREGISTREERD = 1;
-const TEAMLEIDER = 2;
-const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 8;
-const BEHEERDER = 9;
 
 async function gebruikerRechten(uuidToken) {
     const dader = await Gebruiker.query()
