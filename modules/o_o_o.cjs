@@ -50,7 +50,7 @@ const BEHEERDER = 9;
 
 
 function hoera() {
-    return " mjs hoera!";
+    return " cjs hoera!";
 }
 
 /*
