@@ -1,4 +1,6 @@
 /*
+db uit de MySQL database
+
 globale variabelen voor server en pagina's in de browser
  */
 
@@ -54,9 +56,9 @@ function hoera() {
 }
 
 /*
-o_o_o.js ES6 voor browser: export { .. };
+db.js ES6 voor browser: export { .. };
 
-o_o_o.cjs CommonJS voor node.js: module.exports = { .. };
+db.cjs CommonJS voor node.js: module.exports = { .. };
  */
 
 export {

@@ -52,7 +52,7 @@ import {
     BEHEERDER,
 
     hoera                  // ()
-} from "/modules/o_o_o.js";
+} from "/modules/db.js";
 
 const LAAGSTE_RATING = 1000; // volgens Alkmaar Systeem
 const HOOGSTE_RATING = 2000;

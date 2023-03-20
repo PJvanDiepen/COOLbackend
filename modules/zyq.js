@@ -11,19 +11,31 @@ const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
 const HALVE_COMPETITIE   = "ict";
 
-function teamOfCompetitie(teamCode) {
+export {
+    LAAGSTE_RATING,
+    HOOGSTE_RATING,
+// teamCode
+    INTERNE_COMPETITIE,
+    RAPID_COMPETTIE,
+    JEUGD_COMPETTIE,
+    SNELSCHAKEN,
+    ZWITSERS_TEST,
+    HALVE_COMPETITIE
+}
+
+export function teamOfCompetitie(teamCode) {
     return teamCode === "" ? false : teamCode.substring(0,1) !== " ";
 }
 
-function interneCompetitie(teamCode) {
+export function interneCompetitie(teamCode) {
     return teamCode === "" ? false : teamCode.substring(0,1) === "i";
 }
 
-function zwitsers(teamCode) {
+export function zwitsers(teamCode) {
     return teamCode.substring(1,2) === "z";
 }
 
-function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
+export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
     } else if (teamCode === RAPID_COMPETTIE) {
@@ -45,10 +57,12 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en
     }
 }
 
-function wedstrijdVoluit(ronde) {
+export function wedstrijdVoluit(ronde) {
     const eigenTeam = teamVoluit(ronde.teamCode);
     return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
 }
+
+// TODO import * db.js
 
 // uitslag.partij
 const AFWEZIG              = "a";
@@ -76,6 +90,7 @@ const VERLIES = "0";
 // uitslag.uithuis
 const THUIS = "t";
 const UIT = "u";
+
 // score
 const PUNTEN_UIT = " uit ";
 // kop
@@ -96,11 +111,29 @@ const ditSeizoen = (function () {
     return `${voorloopNul(i)}${voorloopNul(i + 1)}`;
 })();
 
-function eindeSeizoen(seizoen) {
+export {
+// score
+    PUNTEN_UIT,
+// kop
+    SCHEIDING,
+    VINKJE,
+    STREEP,
+    KRUISJE,
+    FOUTJE,
+    ZELFDE,
+
+    pagina,
+    server,
+    params,
+
+    ditSeizoen
+}
+
+export function eindeSeizoen(seizoen) {
     return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
 }
 
-const o_o_o = {
+export const o_o_o = {
     vereniging: "Waagtoren",
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
@@ -110,14 +143,17 @@ const o_o_o = {
     naam: ""
 };
 
-function competitieTitel() {
+export function competitieTitel() {
     document.getElementById("competitie").innerHTML = o_o_o.vereniging + SCHEIDING + teamVoluit(o_o_o.competitie);
 }
 
-const uuidActiveren = params.get("uuid");
-const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
-const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
-const gebruiker = {}; // gebruikerVerwerken
+export const uuidActiveren = params.get("uuid");
+export const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
+export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
+export const gebruiker = {}; // gebruikerVerwerken
+
+// TODO import * db.js
+
 // gebruiker.mutatieRechten
 const IEDEREEN = 0;
 const GEREGISTREERD = 1;
@@ -137,7 +173,7 @@ const NIEUWE_RANGLIJST = 2;
  *
  * @returns {Promise<void>}
  */
-async function init() {
+export async function init() {
     await gebruikerVerwerken();
     urlVerwerken();
     await competitieBepalen();
@@ -155,7 +191,7 @@ async function init() {
  *
  * @returns {Promise<void>}
  */
-async function gebruikerVerwerken() {
+export async function gebruikerVerwerken() {
     if (uuidActiveren && uuidActiveren === uuidToken) {
         await serverFetch("/activeer/" + uuidToken);
         volgendeSessie(uuidToken);
@@ -172,7 +208,7 @@ async function gebruikerVerwerken() {
     }
 }
 
-function gebruikerFunctie(lid) {
+export function gebruikerFunctie(lid) {
     if (!lid.datumEmail) {
         return KRUISJE; // TODO eventueel verwijderen
     } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
@@ -190,11 +226,11 @@ function gebruikerFunctie(lid) {
     }
 }
 
-function uuidCorrect(uuid) {
+export function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
-function volgendeSessie(json) {
+export function volgendeSessie(json) {
     try {
         localStorage.setItem(o_o_o.vereniging, json);
     } catch (error) {
@@ -202,7 +238,7 @@ function volgendeSessie(json) {
     }
 }
 
-function urlVerwerken() {
+export function urlVerwerken() {
     for (let [key, value] of Object.entries(o_o_o)) {
         let parameter = params.get(key); // inlezen van url
         if (parameter) {
@@ -216,7 +252,7 @@ function urlVerwerken() {
     }
 }
 
-async function competitieBepalen() {
+export async function competitieBepalen() {
     if (!interneCompetitie(o_o_o.competitie)) {
         const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
         const vandaag = datumSQL();
@@ -229,7 +265,7 @@ async function competitieBepalen() {
     }
 }
 
-function versieBepalen() {
+export function versieBepalen() {
     // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
     if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
@@ -244,7 +280,7 @@ function versieBepalen() {
     }
 }
 
-async function competitieRondenVerwerken() {
+export async function competitieRondenVerwerken() {
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
@@ -277,7 +313,7 @@ async function competitieRondenVerwerken() {
  * @param menuKeuzes
  * @returns {Promise<void>}
  */
-async function menu(...menuKeuzes) {
+export async function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     const startKeuzes = JSON.parse(sessionStorage.getItem("menu")); // menu van start pagina (in omgekeerde volgorde)
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
@@ -308,7 +344,7 @@ async function menu(...menuKeuzes) {
         });
 }
 
-async function gewijzigd() {
+export async function gewijzigd() {
     const laatsteMutaties = await serverFetch("/gewijzigd");
     return laatsteMutaties;
 }
@@ -320,7 +356,7 @@ async function gewijzigd() {
  * @param url de vraag aan de database op de server
  * @returns {Promise<any>} het antwoord van de server
  */
-async function localFetch(url) {
+export async function localFetch(url) {
     let object = JSON.parse(sessionStorage.getItem(url));
     if (!object) {
         object = await serverFetch(url);
@@ -335,7 +371,7 @@ async function localFetch(url) {
  * @param url de vraag aan de database op de server
  * @returns {Promise<any>} het antwoord van de server
  */
-async function serverFetch(url) {
+export async function serverFetch(url) {
     try {
         const response = await fetch(server + url);
         if (response.ok) {
@@ -357,7 +393,7 @@ TODO const html = {id1: , id2: } alle DOM elementen met id
 https://stackoverflow.com/questions/59068548/how-to-get-all-of-the-element-ids-on-the-same-time-in-javascript
  */
 
-function htmlCheckbox(id, value, tekst) {
+export function htmlCheckbox(id, value, tekst) {
     const input = document.createElement("input");
     input.type = "checkbox";
     input.id = id;
@@ -368,36 +404,36 @@ function htmlCheckbox(id, value, tekst) {
     return label;
 }
 
-function htmlOptie(value, text) {
+export function htmlOptie(value, text) {
     const option = document.createElement("option");
     option.value = value;
     option.text = text;
     return option;
 }
 
-function htmlTekst(tekst) {
+export function htmlTekst(tekst) {
     return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
 }
 
-function htmlFout(htmlNode, indien) {
+export function htmlFout(htmlNode, indien) {
     if (indien) {
         htmlNode.classList.add("fout");
     }
 }
 
-function htmlVerwerkt(htmlNode, indien) {
+export function htmlVerwerkt(htmlNode, indien) {
     if (indien) {
         htmlNode.classList.add("verwerkt");
     }
 }
 
-function htmlVet(htmlNode, indien) {
+export function htmlVet(htmlNode, indien) {
     if (indien) {
         htmlNode.classList.add("vet");
     }
 }
 
-function htmlRij(...kolommen) {
+export function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
         const td = document.createElement("td");
@@ -407,14 +443,14 @@ function htmlRij(...kolommen) {
     return tr;
 }
 
-function htmlLinkEnTerug(link, tekst) {
+export function htmlLinkEnTerug(link, tekst) {
     const a = document.createElement("a");
     a.appendChild(htmlTekst(tekst));
     a.href = link;
     return a;
 }
 
-function htmlLink(link, tekst) {
+export function htmlLink(link, tekst) {
     const a = document.createElement("a");
     a.appendChild(htmlTekst(tekst));
     a.href = "";
@@ -425,25 +461,25 @@ function htmlLink(link, tekst) {
     return a;
 }
 
-function naarAnderePagina(naarPagina) { // pagina en parameters
+export function naarAnderePagina(naarPagina) { // pagina en parameters
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
-function naarZelfdePagina(parameters) {
+export function naarZelfdePagina(parameters) {
     location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 
-function naarSpeler(speler) {
+export function naarSpeler(speler) {
     const link = htmlLinkEnTerug(`speler.html?team=${o_o_o.competitie}&speler=${speler.knsbNummer}&naam=${speler.naam}`, speler.naam);
     htmlVet(link, speler.knsbNummer === gebruiker.knsbNummer);
     return link;
 }
 
-function naarTeam(uitslag) {
+export function naarTeam(uitslag) {
     return htmlLink(`team.html?team=${uitslag.teamCode}#ronde${uitslag.rondeNummer}`, wedstrijdVoluit(uitslag));
 }
 
-function seizoenVoluit(seizoen) {
+export function seizoenVoluit(seizoen) {
     if (seizoen.substring(2,4) === "ra") { // TODO verwijderen?
         return `rapid 20${seizoen.substring(0,2)}-20${voorloopNul(Number(seizoen.substring(0,2)))}`;
     } else {
@@ -451,7 +487,7 @@ function seizoenVoluit(seizoen) {
     }
 }
 
-function tijdGeleden(jsonDatum) {
+export function tijdGeleden(jsonDatum) {
     const seconden = (new Date() - new Date(jsonDatum)) / 1000;
     if (seconden < 60) {
         return Math.round(seconden) + " sec";
@@ -480,7 +516,7 @@ function tijdGeleden(jsonDatum) {
     }
 }
 
-function datumLeesbaar(object) {
+export function datumLeesbaar(object) {
     const datum = new Date(object.datum);
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
 }
@@ -494,7 +530,7 @@ function datumLeesbaar(object) {
  * @param dagen optellen bij gegeven datum
  * @returns {string} jjjj-mm-dd evenetueel met voorloopNul voor maand en dag
  */
-function datumSQL(jsonDatum, dagen) {
+export function datumSQL(jsonDatum, dagen) {
     const datum = jsonDatum ? new Date(jsonDatum) : new Date();
     if (dagen) {
         datum.setDate(datum.getDate() + dagen);
@@ -502,11 +538,11 @@ function datumSQL(jsonDatum, dagen) {
     return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
 }
 
-function voorloopNul(getal) {
+export function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
 
-function score(winst, remise, verlies) {
+export function score(winst, remise, verlies) {
     const partijen = winst + remise + verlies;
     if (partijen) {
         while (remise >= 2) {
@@ -525,7 +561,7 @@ function score(winst, remise, verlies) {
     }
 }
 
-function wedstrijdUitslag(winst, remise, verlies) {
+export function wedstrijdUitslag(winst, remise, verlies) {
     while (remise >= 2) {
         winst += 1;
         verlies += 1;
@@ -544,11 +580,11 @@ function wedstrijdUitslag(winst, remise, verlies) {
     }
 }
 
-function uitslagTeam(uithuis, winst, verlies, remise) {
+export function uitslagTeam(uithuis, winst, verlies, remise) {
     return uithuis === THUIS ? wedstrijdUitslag(winst, remise, verlies) : wedstrijdUitslag(verlies, remise, winst);
 }
 
-function percentage(winst, remise, verlies) {
+export function percentage(winst, remise, verlies) {
     const partijen = winst + remise + verlies;
     if (partijen) {
         return (100 * (winst + remise / 2) / partijen).toFixed() + "%";
@@ -557,7 +593,7 @@ function percentage(winst, remise, verlies) {
     }
 }
 
-async function teamSelecteren(teamCode) {
+export async function teamSelecteren(teamCode) {
     const teams = document.getElementById("teamSelecteren");
     (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
         function (team) {
@@ -575,7 +611,7 @@ async function teamSelecteren(teamCode) {
     });
 }
 
-async function rondeSelecteren(teamCode, rondeNummer) {
+export async function rondeSelecteren(teamCode, rondeNummer) {
     o_o_o.team = o_o_o.competitie;
     const ronden = document.getElementById("rondeSelecteren");
     (await localFetch("/ronden/" + o_o_o.seizoen + "/" + teamCode)).forEach(
@@ -599,7 +635,7 @@ async function rondeSelecteren(teamCode, rondeNummer) {
  * @param selectie indien null dan alle spelers
  * @returns {Promise<*>}
  */
-async function ranglijst(rondeNummer, selectie) {
+export async function ranglijst(rondeNummer, selectie) {
     const totDatum = rondeNummer === o_o_o.laatsteRonde ? eindeSeizoen(o_o_o.seizoen) : o_o_o.ronde[rondeNummer + 1].datum;
     let spelers = await localFetch(
         `/ranglijst/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${datumSQL(totDatum)}/${o_o_o.versie}`);
@@ -638,7 +674,7 @@ tegenstanders met n = 0, 4, 8, enz.
 [23 + n] resultaat (0 = verlies, 1 = remise, 2 = winst)
 einde indien rondeNummer = 0
  */
-function spelerTotalen(speler) {
+export function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
     const naam = speler.naam;
     const subgroep = speler.subgroep;
@@ -861,7 +897,7 @@ join persoon on uitslag.knsbNummer = persoon.knsbNummer
 where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
 order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  */
-async function uitslagenTeamAlleRonden(teamCode) {
+export async function uitslagenTeamAlleRonden(teamCode) {
     const rondeUitslagen = [];
     (await localFetch("/ronden/" + o_o_o.seizoen + "/" + teamCode)).forEach(
         function (ronde) {
@@ -882,7 +918,7 @@ async function uitslagenTeamAlleRonden(teamCode) {
     return rondeUitslagen;
 }
 
-function backupSQL(tabel, rijen) {
+export function backupSQL(tabel, rijen) {
     let velden = [];
     for (const [key, value] of Object.entries(rijen[0])) {
         velden.push(key);
@@ -898,7 +934,7 @@ function backupSQL(tabel, rijen) {
     console.log(tekst);
 }
 
-function valueSQL(key, value) {
+export function valueSQL(key, value) {
     if (typeof value === "number") { // number zonder quotes
         return value;
     } else if (typeof value !== "string") {
@@ -910,7 +946,7 @@ function valueSQL(key, value) {
     }
 }
 
-function jsonDate(jsonDatum) {
+export function jsonDate(jsonDatum) {
     if (jsonDatum.length > 10) {
         const datum = new Date(jsonDatum);
         if (datum instanceof Date) {

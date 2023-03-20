@@ -1,6 +1,6 @@
 "use strict";
 
-import { hoera } from "/modules/o_o_o.js";
+import { hoera } from "/modules/db.js";
 
 /*
 TODO mutaties per gebruiker afsplitsen

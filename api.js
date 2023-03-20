@@ -50,7 +50,7 @@ const {
     BEHEERDER,
 
     hoera
-} = import('./modules/o_o_o.mjs');
+} = require('./modules/db.cjs');
 
 const Gebruiker = require('./models/gebruiker');
 const Mutatie = require('./models/mutatie');
