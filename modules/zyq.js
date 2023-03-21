@@ -1,5 +1,9 @@
 "use strict";
 
+/*
+kopie van const.js met export, zodat zyq.js een module is
+ */
+
 const LAAGSTE_RATING = 1000; // volgens Alkmaar Systeem
 const HOOGSTE_RATING = 2000;
 
@@ -105,6 +109,8 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
+// TODO verplaats naar db.js
+
 const ditSeizoen = (function () {
     const datum = new Date();
     const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001);
@@ -174,6 +180,7 @@ const NIEUWE_RANGLIJST = 2;
  * @returns {Promise<void>}
  */
 export async function init() {
+    console.log("zyq.init");
     await gebruikerVerwerken();
     urlVerwerken();
     await competitieBepalen();
@@ -325,7 +332,7 @@ export async function menu(...menuKeuzes) {
     }
     menuKeuzes.unshift([IEDEREEN, "\u2630"]); // hamburger bovenaan in het menu
     menuKeuzes.push([GEREGISTREERD, "systeembeheer", function () { // onderaan in het menu
-        naarAnderePagina("beheer.html");
+        naarAnderePagina("beheer.html"); // TODO niet indien huidige pagina = beheer.html
     }]); // TODO naar documentatie voor deze pagina
     let functies = [];
     for (let [minimumRechten, tekst, functie] of menuKeuzes) {
@@ -537,6 +544,8 @@ export function datumSQL(jsonDatum, dagen) {
     }
     return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
 }
+
+// TODO verplaats naar db.js
 
 export function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
