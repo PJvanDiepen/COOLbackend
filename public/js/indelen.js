@@ -389,7 +389,7 @@ const indelenFun = [
                     j++; // volgende indien al ingedeeld of oneven of mag niet tegen
                 }
                 if (j < r.length) {
-                    if (r[i].metWit(r[j])) {
+                    if (r[i].metWit(rondeNummer, r[j])) {
                         wit.push(i);
                         zwart.push(j);
                     } else {
@@ -411,7 +411,7 @@ function vooruitIndelen(r, wit, zwart, oneven, rondeNummer) {
                 j++; // volgende indien al ingedeeld of oneven of mag niet tegen
             }
             if (j < r.length) {
-                if (r[i].metWit(r[j])) {
+                if (r[i].metWit(rondeNummer, r[j])) {
                     wit.push(i);
                     zwart.push(j);
                 } else {
@@ -438,7 +438,7 @@ function spelerIndelenHeuristiek(speler, richting, r, wit, zwart, oneven, rondeN
         j = j + richting; // volgende / vorige indien al ingedeeld of oneven of mag niet tegen
     }
     if (j >= 0 && j < r.length) {
-        if (r[speler].metWit(r[j])) {
+        if (r[speler].metWit(rondeNummer, r[j])) {
             wit.push(speler);
             zwart.push(j);
         } else {
@@ -458,7 +458,7 @@ function spelerIndelen(speler, richting, r, wit, zwart, oneven, rondeNummer) {
         j = j + richting; // volgende / vorige indien al ingedeeld of oneven of mag niet tegen
     }
     if (j >= 0 && j < r.length) {
-        if (r[speler].metWit(r[j])) {
+        if (r[speler].metWit(rondeNummer, r[j])) {
             wit.push(speler);
             zwart.push(j);
         } else {

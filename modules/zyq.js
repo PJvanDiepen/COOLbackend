@@ -1,4 +1,4 @@
-"use strict";
+// because this is a module, I'm strict by default
 
 /*
 kopie van const.js met export, zodat zyq.js een module is
@@ -793,6 +793,8 @@ export function spelerTotalen(speler) {
     function rondenVerschil() {
         return totalen[19];
     }
+
+    // TODO niet tot of voorbij gevraagde ronde (parameter rondeNummer toevoegen)
 
     function vorigeKeer(tegenstander) {
         let i = 20;

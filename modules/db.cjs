@@ -1,4 +1,8 @@
 /*
+db uit de MySQL database
+
+TODO hier ook alle api-calls vastleggen?
+
 globale variabelen voor server en pagina's in de browser
  */
 

@@ -749,10 +749,12 @@ function spelerTotalen(speler) {
         return totalen[19];
     }
 
-    function vorigeKeer(tegenstander) {
+    // TODO niet tot of voorbij rondeTot
+
+    function vorigeKeer(rondeTot, tegenstander) {
         let i = 20;
         let j = 0;
-        while (totalen[i]) { // indien rondeNummer
+        while (totalen[i] && totalen[i] < rondeTot) { // indien rondeNummer en voor rondeTot
             if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
                 j = i;
             }
@@ -765,11 +767,11 @@ function spelerTotalen(speler) {
         console.log(`${naam} met ${totalen[i + 1] ? "zwart" : "wit" } tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
     }
 
-    function tegen(tegenstander, rondeNummer = 0)  {
-        const i = vorigeKeer(tegenstander);
+    function tegen(tegenstander, rondeTot = 0)  {
+        const i = vorigeKeer(rondeTot, tegenstander);
         if (i) {
             vorigeAfdrukken(i, tegenstander);
-            return (rondeNummer - totalen[i]) > rondenVerschil();
+            return (rondeTot - totalen[i]) > rondenVerschil();
         } else {
             return true; // nog niet tegen gespeeld
         }
@@ -788,11 +790,12 @@ function spelerTotalen(speler) {
     /**
      * metWit berekent welke kleur tegen tegenstander
      *
+     * @param rondeTot niet na deze ronde
      * @param tegenstander totalen
-     * @returns {boolean|*} indien wit anders zwart
+     * @returns {boolean|*}
      */
-    function metWit(tegenstander) {
-        const zelfdeTegenstander = vorigeKeer(tegenstander);
+    function metWit(rondeTot, tegenstander) {
+        const zelfdeTegenstander = vorigeKeer(rondeTot, tegenstander);
         if (zelfdeTegenstander) {
             return totalen[zelfdeTegenstander + 1] === 1 // wit indien vorige keer zwart = 1 tegen zelfdeTegenstander
         }
