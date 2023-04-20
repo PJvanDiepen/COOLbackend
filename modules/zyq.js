@@ -198,7 +198,7 @@ export async function init() {
  *
  * @returns {Promise<void>}
  */
-export async function gebruikerVerwerken() {
+async function gebruikerVerwerken() {
     if (uuidActiveren && uuidActiveren === uuidToken) {
         await serverFetch("/activeer/" + uuidToken);
         volgendeSessie(uuidToken);
@@ -233,7 +233,7 @@ export function gebruikerFunctie(lid) {
     }
 }
 
-export function uuidCorrect(uuid) {
+function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
@@ -245,7 +245,7 @@ export function volgendeSessie(json) {
     }
 }
 
-export function urlVerwerken() {
+function urlVerwerken() {
     for (let [key, value] of Object.entries(o_o_o)) {
         let parameter = params.get(key); // inlezen van url
         if (parameter) {
@@ -259,7 +259,7 @@ export function urlVerwerken() {
     }
 }
 
-export async function competitieBepalen() {
+async function competitieBepalen() {
     if (!interneCompetitie(o_o_o.competitie)) {
         const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
         const vandaag = datumSQL();
@@ -272,7 +272,7 @@ export async function competitieBepalen() {
     }
 }
 
-export function versieBepalen() {
+function versieBepalen() {
     // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
     if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
@@ -287,7 +287,7 @@ export function versieBepalen() {
     }
 }
 
-export async function competitieRondenVerwerken() {
+async function competitieRondenVerwerken() {
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
@@ -682,6 +682,8 @@ tegenstanders met n = 0, 4, 8, enz.
 [22 + n] tegenstander
 [23 + n] resultaat (0 = verlies, 1 = remise, 2 = winst)
 einde indien rondeNummer = 0
+
+TODO spelerTotalen moeten compleet zijn tot een bepaalde datum en rondeNummer inclusief de tellingen, dat moet op server geregeld worden
  */
 export function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
@@ -793,8 +795,6 @@ export function spelerTotalen(speler) {
     function rondenVerschil() {
         return totalen[19];
     }
-
-    // TODO niet tot of voorbij gevraagde ronde (parameter rondeNummer toevoegen)
 
     function vorigeKeer(tegenstander) {
         let i = 20;
@@ -945,7 +945,7 @@ export function backupSQL(tabel, rijen) {
     console.log(tekst);
 }
 
-export function valueSQL(key, value) {
+function valueSQL(key, value) {
     if (typeof value === "number") { // number zonder quotes
         return value;
     } else if (typeof value !== "string") {

@@ -23,6 +23,7 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
     const tijdelijkNummer = await serverFetch(`/nummer`); // vanaf 100
     tabel.appendChild(htmlRij(
         htmlLink(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
+        "", // knsbNummer
         "", // knsbRating
         "", // eventueel interne rating
         "", // knsbTeam
@@ -46,6 +47,7 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             } else {
                 tabel.appendChild(htmlRij(
                     htmlLink(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam),
+                    knsbNummer > 1000000 ? knsbNummer : "",
                     olaRegel.knsbRating,
                     "", // interne rating
                     "", // knsbTeam
@@ -96,6 +98,7 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             const olaRating = !olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number" ? 0 : Number(olaLid[knsbNummer].knsbRating);
             tabel.appendChild(htmlRij(
                 link,
+                knsbNummer > 1000000 ? knsbNummer : "",
                 olaRating ? olaRating : lid.knsbRating === null ? "" : lid.knsbRating,
                 lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? ZELFDE : lid.interneRating,
                 lid.knsbTeam === null ? "" : lid.knsbTeam,

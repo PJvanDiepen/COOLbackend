@@ -2204,7 +2204,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 -- Waagtoren n1
 select * from uitslag where seizoen = "2223" and teamCode = "n1" order by rondeNummer, bordNummer;
-delete from uitslag where seizoen = "2223" and teamCode = "n1" and rondeNummer = 7; -- TODO wijzigen
+delete from uitslag where seizoen = "2223" and teamCode = "n1" and rondeNummer = 8; -- TODO wijzigen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2223", "n1", 1, 1, 7970094, "e", "w", 0, "1", '2022-09-30', "int"),
@@ -2263,7 +2263,15 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2223", "n1", 7, 5, 7099950, "e", "w", 0, "1", '2023-03-28', "int"),
 ("2223", "n1", 7, 6, 7099620, "e", "z", 0, "1", '2023-03-28', "int"),
 ("2223", "n1", 7, 7, 7613166, "e", "w", 0, "½", '2023-03-28', "int"),
-("2223", "n1", 7, 8, 6225934, "e", "z", 0, "1", '2023-03-28', "int");
+("2223", "n1", 7, 8, 6225934, "e", "z", 0, "1", '2023-03-28', "int"),
+("2223", "n1", 8, 1, 7613166, "e", "z", 0, "0", '2023-04-11', "int"),
+("2223", "n1", 8, 2, 7099620, "e", "w", 0, "0", '2023-04-11', "int"),
+("2223", "n1", 8, 3, 8096242, "e", "z", 0, "1", '2023-04-11', "int"),
+("2223", "n1", 8, 4, 6225934, "e", "w", 0, "1", '2023-04-11', "int"),
+("2223", "n1", 8, 5, 7758014, "e", "z", 0, "0", '2023-04-11', "int"),
+("2223", "n1", 8, 6, 7428960, "e", "w", 0, "0", '2023-04-11', "int"),
+("2223", "n1", 8, 7, 7129991, "e", "z", 0, "1", '2023-04-11', "int"),
+("2223", "n1", 8, 8, 7099950, "e", "w", 0, "1", '2023-04-11', "int");
 
 -- Waagtoren n2
 select * from uitslag where seizoen = "2223" and teamCode = "n2" order by rondeNummer, bordNummer;
@@ -2690,16 +2698,20 @@ use waagtoren;
 
 set @seizoen = '2223';
 set @competitie = 'int';
-set @ronde = 23;
-set @bord = 11;
+set @ronde = 27;
+set @bord = 2;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
 
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
+
 set @wit = 7419621; -- Fritz
 set @zwart = 8886625; -- Richard
-set @oneven = 106; -- Abdulrashid
+set @oneven = 8484443; -- Chaim
 set @afwezig = 106; -- Simon
+set @extern = 7758014; -- Alex
 
 update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
 where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
@@ -2719,6 +2731,11 @@ where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and
 
 update uitslag set bordNummer = 0, partij = 'o', witZwart = '', tegenstanderNummer = 0, resultaat = ''
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @oneven;
+
+-- TODO extern maken
+
+update uitslag set bordNummer = 0, partij = 'e', witZwart = '', tegenstanderNummer = 0, resultaat = ''
+where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @extern;
 
 -- TODO partij wijzigen
 
