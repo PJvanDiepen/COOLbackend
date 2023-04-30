@@ -1230,51 +1230,31 @@ module.exports = router => {
     });
 
     /*
-    Zie speler.js
+    Zie lid.js
      */
-    router.get('/:uuidToken/verwijder/speler/:seizoen/:knsbNummer', async function (ctx) {
+    router.get('/:uuidToken/verwijder/persoon/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.vorigSeizoen(BEHEERDER, ctx.params.seizoen)) {
+        if (gebruiker.juisteRechten(BEHEERDER)) {
             const uitslagen = await Uitslag.query()
-                .where('seizoen', ctx.params.seizoen)
-                .andWhere('knsbNummer', ctx.params.knsbNummer)
+                .where('knsbNummer', ctx.params.knsbNummer)
                 .limit(1);
-            if (uitslagen.length === 0) { // speler verwijderen indien geen uitslagen
-                aantal = await Speler.query()
+            if (uitslagen.length === 0) { // speler, gebruiker en persoon verwijderen indien geen uitslagen
+                const spelers = await Speler.query()
                     .delete()
-                    .where('seizoen', ctx.params.seizoen)
-                    .andWhere('knsbNummer', ctx.params.knsbNummer);
+                    .where('knsbNummer', ctx.params.knsbNummer);
+                const gebruikers = await Gebruiker.query()
+                    .delete()
+                    .where('knsbNummer', ctx.params.knsbNummer);
+                const personen = await Persoon.query()
+                    .delete()
+                    .where('knsbNummer', ctx.params.knsbNummer);
+                aantal = spelers + gebruikers + personen;
                 await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
             }
         }
         ctx.body = aantal;
     });
-
-    /*
-    Zie speler.js
-     */
-    router.get('/:uuidToken/verwijder/afzeggingen/:seizoen/:knsbNummer', async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        let aantal = 0;
-        if (gebruiker.vorigSeizoen(BEHEERDER, ctx.params.seizoen)) {
-            const intern = await Uitslag.query()
-                .where('seizoen', ctx.params.seizoen)
-                .andWhere('knsbNummer',ctx.params.knsbNummer)
-                .andWhere('partij', INTERNE_PARTIJ)
-                .limit(1);
-            if (intern.length === 0) { // afzeggingen verwijderen indien geen interne partijen
-                aantal = await Uitslag.query()
-                    .delete()
-                    .where('seizoen', ctx.params.seizoen)
-                    .andWhere('knsbNummer',ctx.params.knsbNummer)
-                    .andWhere('partij', AFWEZIG);
-                await mutatie(gebruiker, ctx, aantal, GEEN_INVLOED);
-            }
-        }
-        ctx.body = aantal;
-    });
-
 }
 
 function aanmeldenAfzeggen(ronden, teamCode, rondeNummer, partijNieuw) {
@@ -1349,19 +1329,5 @@ async function gebruikerRechten(uuidToken) {
         return juisteRechten(minimum) && dader.knsbNummer === Number(knsbNummer);
     }
 
-    function vorigSeizoen(minimum, seizoen) {
-        return juisteRechten(minimum) && ditSeizoen() !== seizoen;
-    }
-
-    function ditSeizoen() {  // TODO zie const.js
-        const datum = new Date();
-        const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001); // na juli dit jaar anders vorig jaar
-        return `${voorloopNul(i)}${voorloopNul(i+1)}`;
-    }
-
-    function voorloopNul(getal) { // TODO zie const.js
-        return getal < 10 ? "0" + getal : getal;
-    }
-
-    return Object.freeze({dader, juisteRechten, eigenData, vorigSeizoen});
+    return Object.freeze({dader, juisteRechten, eigenData});
 }

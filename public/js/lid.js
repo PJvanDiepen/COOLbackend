@@ -17,6 +17,14 @@ const knsbWijzigen = params.get("knsb") === "wijzigen";
                 naarZelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
             }
         }],
+        [BEHEERDER, `${persoon.naam} verwijderen`, async function () {
+            const mutaties = await serverFetch(`/${uuidToken}/verwijder/persoon/${lidNummer}`);
+            if (mutaties) {
+                naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
+            } else {
+                console.log(`${persoon.naam} is niet verwijderd`);
+            }
+        }],
         [WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }]);

@@ -9,22 +9,6 @@
         [BEHEERDER, `backup uitslagen ${o_o_o.naam}` , async function () {
             const rijen = await serverFetch(`/backup/speler/uitslag/${o_o_o.seizoen}/${o_o_o.speler}`);
             backupSQL("uitslag", rijen);
-        }],
-        [BEHEERDER, "afzeggingen verwijderen", async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/afzeggingen/${o_o_o.seizoen}/${o_o_o.speler}`);
-            if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.speler}/${o_o_o.competitie}`);
-                sessionStorage.removeItem(`/ranglijst/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.competitie}/${datumSQL()}`);
-                naarZelfdePagina();
-            }
-        }],
-        [BEHEERDER, `${o_o_o.naam} verwijderen`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/speler/${o_o_o.seizoen}/${o_o_o.speler}`);
-            if (mutaties) {
-                sessionStorage.removeItem(`/uitslagen/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.speler}/${o_o_o.competitie}`);
-                sessionStorage.removeItem(`/ranglijst/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.competitie}/${datumSQL()}`);
-                naarAnderePagina("ranglijst.html");
-            }
         }]);
     uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
 })();

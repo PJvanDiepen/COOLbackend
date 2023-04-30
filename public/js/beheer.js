@@ -40,7 +40,7 @@ TODO mutaties met verwijderen
     const versie = await zyq.serverFetch(`/versie`);
     const hoeraTekst = hoera();
     document.getElementById("computer").appendChild(
-        zyq.htmlTekst(`${versie} ${hoeraTekst} met browser: ${navigator.vendor}`));  // TODO client hints
+        zyq.htmlTekst(`0-0-0 versie ${versie} ${hoeraTekst} met browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function gebruikers(lijst) {
