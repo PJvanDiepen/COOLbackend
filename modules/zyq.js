@@ -237,7 +237,7 @@ function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
-export function volgendeSessie(json) {
+function volgendeSessie(json) {
     try {
         localStorage.setItem(o_o_o.vereniging, json);
     } catch (error) {
@@ -544,8 +544,6 @@ export function datumSQL(jsonDatum, dagen) {
     }
     return `${datum.getFullYear()}-${voorloopNul(datum.getMonth()+1)}-${voorloopNul(datum.getDate())}`;
 }
-
-// TODO verplaats naar db.js
 
 export function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;

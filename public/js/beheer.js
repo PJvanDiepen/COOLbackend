@@ -38,9 +38,9 @@ TODO mutaties met verwijderen
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     const versie = await zyq.serverFetch(`/versie`);
-    const hoeraTekst = hoera();
+    console.log(hoera());
     document.getElementById("computer").appendChild(
-        zyq.htmlTekst(`0-0-0 versie ${versie} ${hoeraTekst} met browser: ${navigator.vendor}`));  // TODO client hints
+        zyq.htmlTekst(`0-0-0 versie ${versie} met browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function gebruikers(lijst) {

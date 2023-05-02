@@ -17,9 +17,6 @@
         [WEDSTRIJDLEIDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
             naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);
         }],
-        [WEDSTRIJDLEIDER, `ronde ${rondeNummer} wijzigen`, function () {
-            naarAnderePagina(`wijzig.html?ronde=${rondeNummer}`);
-        }],
         [BEHEERDER, `ranglijst ${ditSeizoen} opnieuw verwerken`, function () {
             for (const key of Object.keys(sessionStorage)) {
                 if (key.startsWith(`/ranglijst/${ditSeizoen}`)) {

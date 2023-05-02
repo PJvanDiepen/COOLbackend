@@ -100,7 +100,7 @@ module.exports = router => {
     Zie beheer.js
      */
     router.get('/versie', async function (ctx) {
-        ctx.body = JSON.stringify(package_json.version + hoera()); // o_o_o.hoera() + hoera());
+        ctx.body = JSON.stringify(package_json.version);
     });
 
     /*
@@ -281,7 +281,7 @@ module.exports = router => {
             .select('teamCode', 'rondeNUmmer', 'datum')
             .where('seizoen', ctx.params.seizoen)
             .andWhere(fn('substring', ref('teamCode'), 1, 1), "i")
-            .orderBy('datum', 'rondeNummer');
+            .orderBy(['datum', 'rondeNummer']);
     });
 
     /*
@@ -613,7 +613,7 @@ module.exports = router => {
      */
     router.get('/backup/persoon', async function (ctx) {
         ctx.body = await Persoon.query()
-            .orderBy('naam');
+            .orderBy(['naam', 'knsbNummer']);
     });
 
     /*
@@ -651,7 +651,7 @@ module.exports = router => {
             .where('seizoen', ctx.params.seizoen)
             .andWhere('teamCode', ctx.params.teamCode)
             .whereBetween('rondeNummer', [ctx.params.van, ctx.params.tot])
-            .orderBy(['rondeNummer','bordNummer','partij','witZwart', 'knsbNummer']);
+            .orderBy(['rondeNummer', 'bordNummer', 'partij', 'witZwart', 'knsbNummer']);
     });
 
     /*
