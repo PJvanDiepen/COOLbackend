@@ -763,11 +763,6 @@ function spelerTotalen(speler) {
         return j; // vorigeKeer zelfde tegenstander of 0
     }
 
-    function vorigeAfdrukken(i, tegenstander) {
-        console.log(`${naam} met ${totalen[i + 1] ? "zwart" : "wit" } tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
-        console.log(`${naam} speelde ${laatsteKeer(tegenstander)} partijen geleden tegen ${tegenstander.naam}`)
-    }
-
     function laatsteKeer(tegenstander) {
         let i = 20;
         let partijenGeleden = 1000;
@@ -783,10 +778,11 @@ function spelerTotalen(speler) {
     }
 
     function tegen(tegenstander, rondeNummer = 0)  {
-        const i = vorigeKeer(tegenstander);
-        if (i) {
-            vorigeAfdrukken(i, tegenstander);
-            return (rondeNummer - totalen[i]) > rondenVerschil(); // TODO PvD hier moet het gebeuren
+        const zelfdeTegenstander = vorigeKeer(tegenstander);
+        if (zelfdeTegenstander) {
+            afdrukken(tegenstander, totalen[zelfdeTegenstander + 1], `in ronde ${totalen[zelfdeTegenstander]}`);
+            console.log(`${naam} speelde ${laatsteKeer(tegenstander)} partijen geleden tegen ${tegenstander.naam}`);
+            return (rondeNummer - totalen[zelfdeTegenstander]) > rondenVerschil(); // TODO PvD hier moet het gebeuren
         } else {
             return true; // nog niet tegen gespeeld
         }
@@ -814,20 +810,20 @@ function spelerTotalen(speler) {
             return totalen[zelfdeTegenstander + 1] === 1 // wit indien vorige keer zwart = 1 tegen zelfdeTegenstander
         }
         if (saldoWitZwart() !== tegenstander.saldoWitZwart()) { // wit indien vaker met zwart
-            return afdrukken(zelfdeTegenstander, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
+            return afdrukken(tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wegens wit-zwart");
         }
         const kleur = vorigeKleur();
         if (kleur !== tegenstander.vorigeKleur()) { // wit indien vorige kleur zwart en vorige kleur tegenstander wit
-            return afdrukken(zelfdeTegenstander, tegenstander, kleur === 1, "vorige kleur");
+            return afdrukken(tegenstander, kleur === 1, "wegens vorige kleur");
         } else if (totaal() !== tegenstander.totaal()) { // wit indien minder punten
-            return afdrukken(zelfdeTegenstander, tegenstander, totaal() < tegenstander.totaal(), "punten");
+            return afdrukken(tegenstander, totaal() < tegenstander.totaal(), "wegens punten");
         } else { // wit indien lagere rating
-            return afdrukken(zelfdeTegenstander, tegenstander, rating() < tegenstander.rating(), "rating");
+            return afdrukken(tegenstander, rating() < tegenstander.rating(), "wegens rating");
         }
     }
 
-    function afdrukken(i, tegenstander, kleur, wegens) {
-        console.log(`${naam} met ${kleur ? "wit" : "zwart"} tegen ${tegenstander.naam} wegens ${wegens}`);
+    function afdrukken(tegenstander, kleur, wegens) {
+        console.log(`${naam} met ${kleur ? "wit" : "zwart"} tegen ${tegenstander.naam} ${wegens}`);
         return kleur;
     }
 
