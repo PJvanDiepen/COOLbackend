@@ -765,13 +765,28 @@ function spelerTotalen(speler) {
 
     function vorigeAfdrukken(i, tegenstander) {
         console.log(`${naam} met ${totalen[i + 1] ? "zwart" : "wit" } tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
+        console.log(`${naam} speelde ${laatsteKeer(tegenstander)} partijen geleden tegen ${tegenstander.naam}`)
+    }
+
+    function laatsteKeer(tegenstander) {
+        let i = 20;
+        let partijenGeleden = 1000;
+        while (totalen[i]) { // indien rondeNummer
+            if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
+                partijenGeleden = 1;
+            } else {
+                partijenGeleden++;
+            }
+            i = i + 4; // volgende rondeNummer, kleur (0 = wit, 1 = zwart), knsbNummer en resultaat (0 = verlies, 1 = remise, 2 = winst)
+        }
+        return partijenGeleden; // laatsteKeer zelfde tegenstander was partijenGeleden of groter dan 1000
     }
 
     function tegen(tegenstander, rondeNummer = 0)  {
         const i = vorigeKeer(tegenstander);
         if (i) {
             vorigeAfdrukken(i, tegenstander);
-            return (rondeNummer - totalen[i]) > rondenVerschil();
+            return (rondeNummer - totalen[i]) > rondenVerschil(); // TODO PvD hier moet het gebeuren
         } else {
             return true; // nog niet tegen gespeeld
         }
