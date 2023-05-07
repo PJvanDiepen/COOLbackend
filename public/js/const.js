@@ -751,6 +751,18 @@ function spelerTotalen(speler) {
         return totalen[19];
     }
 
+    function tegen(tegenstander)  {
+        const zelfdeTegenstander = vorigeKeer(tegenstander);
+        if (zelfdeTegenstander) {
+            afdrukken(tegenstander, totalen[zelfdeTegenstander + 1], `in ronde ${totalen[zelfdeTegenstander]}`);
+            const partijenGeleden = laatsteKeer(tegenstander);
+            console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
+            return partijenGeleden > rondenVerschil(); // alleen indien meer dan rondenVerschil partijenGeleden
+        } else {
+            return true; // nog niet tegen gespeeld
+        }
+    }
+
     function vorigeKeer(tegenstander) {
         let i = 20;
         let j = 0;
@@ -775,17 +787,6 @@ function spelerTotalen(speler) {
             i = i + 4; // volgende rondeNummer, kleur (0 = wit, 1 = zwart), knsbNummer en resultaat (0 = verlies, 1 = remise, 2 = winst)
         }
         return partijenGeleden; // laatsteKeer zelfde tegenstander was partijenGeleden of groter dan 1000
-    }
-
-    function tegen(tegenstander, rondeNummer = 0)  {
-        const zelfdeTegenstander = vorigeKeer(tegenstander);
-        if (zelfdeTegenstander) {
-            afdrukken(tegenstander, totalen[zelfdeTegenstander + 1], `in ronde ${totalen[zelfdeTegenstander]}`);
-            console.log(`${naam} speelde ${laatsteKeer(tegenstander)} partijen geleden tegen ${tegenstander.naam}`);
-            return (rondeNummer - totalen[zelfdeTegenstander]) > rondenVerschil(); // TODO PvD hier moet het gebeuren
-        } else {
-            return true; // nog niet tegen gespeeld
-        }
     }
 
     function vorigeKleur() {

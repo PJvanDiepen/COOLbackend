@@ -235,7 +235,7 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
  * @returns {boolean} indien deze speler liever nietTegen deze tegenstander
  */
 function nietTegen(r, i, j, rondeNummer) {
-    if (!r[i].tegen(r[j], rondeNummer)) {
+    if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) {
         return true;
     } else if (o_o_o.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
@@ -385,7 +385,7 @@ const indelenFun = [
         for (let i = 0; i < r.length; i++) {
             if (!ingedeeld(i, wit, zwart, oneven)) { // indien niet ingedeeld of oneven
                 let j = i + 1;
-                while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j], rondeNummer))) {
+                while (j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[i].tegen(r[j]) || !r[j].tegen(r[i]))) {
                     j++; // volgende indien al ingedeeld of oneven of mag niet tegen
                 }
                 if (j < r.length) {
@@ -454,7 +454,7 @@ function spelerIndelenHeuristiek(speler, richting, r, wit, zwart, oneven, rondeN
 function spelerIndelen(speler, richting, r, wit, zwart, oneven, rondeNummer) {
     console.log(`--- ${r[speler].naam} ${richting === VOORUIT ? "vooruit" : "achteruit"} indelen ---`);
     let j = speler + richting;
-    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j], rondeNummer))) { // zonder heuristieken
+    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j]) || !r[j].tegen(r[speler]))) { // zonder heuristieken
         j = j + richting; // volgende / vorige indien al ingedeeld of oneven of mag niet tegen
     }
     if (j >= 0 && j < r.length) {
