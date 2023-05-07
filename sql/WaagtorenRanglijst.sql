@@ -163,7 +163,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.7.27
+drop function totalen; -- 0-0-0.nl versie 0.8.21
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -188,7 +188,7 @@ begin
     declare verliesExtern int default 0; -- 16
     declare witExtern int default 0; -- 17
     declare zwartExtern int default 0; -- 18
-   	declare rondenVerschil int default 0; -- 19
+   	declare partijenVerschil int default 0; -- 19
     declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
@@ -212,11 +212,11 @@ begin
             and u.anderTeam = competitie;
     declare continue handler for not found set found = false;
     if versie = 4 or versie = 5 then -- rapid competitie en Zwitsers systeem
-        set rondenVerschil = 99; -- niet opnieuw tegen elkaar
+        set partijenVerschil = 99; -- niet opnieuw tegen elkaar
     else -- interne competitie
         set startPunten = 300; -- reglement artikel 11
 		set minimumInternePartijen = 20; -- reglement artikel 2
-		set rondenVerschil = 7; -- reglement artikel 3
+		set partijenVerschil = 7; -- reglement artikel 3
 	end if;
     set interneRating = rating(seizoen, knsbNummer);
     set eigenWaardeCijfer = waardeCijfer(versie, interneRating);
