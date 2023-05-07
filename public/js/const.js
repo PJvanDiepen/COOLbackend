@@ -630,7 +630,7 @@ totalen
 [16] verliesExtern
 [17] witExtern
 [18] zwartExtern
-[19] rondenVerschil
+[19] partijenVerschil
 tegenstanders met n = 0, 4, 8, enz.
 [20 + n] rondeNummer
 [21 + n] kleur (0 = wit, 1 = zwart)
@@ -747,7 +747,7 @@ function spelerTotalen(speler) {
         return totalen[17] - totalen[18];
     }
 
-    function rondenVerschil() {
+    function partijenVerschil() {
         return totalen[19];
     }
 
@@ -756,11 +756,12 @@ function spelerTotalen(speler) {
         if (zelfdeTegenstander) {
             afdrukken(tegenstander, totalen[zelfdeTegenstander + 1], `in ronde ${totalen[zelfdeTegenstander]}`);
             const partijenGeleden = laatsteKeer(tegenstander);
-            console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
-            return partijenGeleden > rondenVerschil(); // alleen indien meer dan rondenVerschil partijenGeleden
-        } else {
-            return true; // nog niet tegen gespeeld
+            if (partijenGeleden < partijenVerschil()) {
+                console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
+                return false; // indien minder dan partijenVerschil tegen gespeeld
+            }
         }
+        return true; // nog niet tegen gespeeld of mag nog een keer tegen spelen
     }
 
     function vorigeKeer(tegenstander) {
@@ -855,7 +856,7 @@ function spelerTotalen(speler) {
         scoreExtern,
         percentageExtern,
         saldoWitZwartExtern,
-        rondenVerschil,
+        partijenVerschil,
         tegen,
         vorigeKleur,
         metWit
