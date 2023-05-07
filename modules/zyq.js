@@ -673,7 +673,7 @@ totalen
 [16] verliesExtern
 [17] witExtern
 [18] zwartExtern
-[19] rondenVerschil
+[19] partijenVerschil
 tegenstanders met n = 0, 4, 8, enz.
 [20 + n] rondeNummer
 [21 + n] kleur (0 = wit, 1 = zwart)
@@ -790,8 +790,21 @@ export function spelerTotalen(speler) {
         return totalen[17] - totalen[18];
     }
 
-    function rondenVerschil() {
+    function partijenVerschil() {
         return totalen[19];
+    }
+
+    function tegen(tegenstander)  {
+        const zelfdeTegenstander = vorigeKeer(tegenstander);
+        if (zelfdeTegenstander) {
+            afdrukken(tegenstander, totalen[zelfdeTegenstander + 1], `in ronde ${totalen[zelfdeTegenstander]}`);
+            const partijenGeleden = laatsteKeer(tegenstander);
+            if (partijenGeleden < partijenVerschil()) {
+                console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
+                return false; // indien minder dan partijenVerschil tegen gespeeld
+            }
+        }
+        return true; // nog niet tegen gespeeld of mag nog een keer tegen spelen
     }
 
     function vorigeKeer(tegenstander) {
@@ -806,18 +819,18 @@ export function spelerTotalen(speler) {
         return j; // vorigeKeer zelfde tegenstander of 0
     }
 
-    function vorigeAfdrukken(i, tegenstander) {
-        console.log(`${naam} met ${totalen[i + 1] ? "zwart" : "wit" } tegen ${tegenstander.naam} in ronde ${totalen[i]}`);
-    }
-
-    function tegen(tegenstander, rondeNummer = 0)  {
-        const i = vorigeKeer(tegenstander);
-        if (i) {
-            vorigeAfdrukken(i, tegenstander);
-            return (rondeNummer - totalen[i]) > rondenVerschil();
+    function laatsteKeer(tegenstander) {
+        let i = 20;
+        let partijenGeleden = 1000;
+        while (totalen[i]) { // indien rondeNummer
+            if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
+                partijenGeleden = 1;
         } else {
-            return true; // nog niet tegen gespeeld
+                partijenGeleden++;
         }
+            i = i + 4; // volgende rondeNummer, kleur (0 = wit, 1 = zwart), knsbNummer en resultaat (0 = verlies, 1 = remise, 2 = winst)
+        }
+        return partijenGeleden; // laatsteKeer zelfde tegenstander was partijenGeleden of groter dan 1000
     }
 
     function vorigeKleur() {
@@ -842,20 +855,20 @@ export function spelerTotalen(speler) {
             return totalen[zelfdeTegenstander + 1] === 1 // wit indien vorige keer zwart = 1 tegen zelfdeTegenstander
         }
         if (saldoWitZwart() !== tegenstander.saldoWitZwart()) { // wit indien vaker met zwart
-            return afdrukken(zelfdeTegenstander, tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wit-zwart");
+            return afdrukken(tegenstander, saldoWitZwart() < tegenstander.saldoWitZwart(), "wegens wit-zwart");
         }
         const kleur = vorigeKleur();
         if (kleur !== tegenstander.vorigeKleur()) { // wit indien vorige kleur zwart en vorige kleur tegenstander wit
-            return afdrukken(zelfdeTegenstander, tegenstander, kleur === 1, "vorige kleur");
+            return afdrukken(tegenstander, kleur === 1, "wegens vorige kleur");
         } else if (totaal() !== tegenstander.totaal()) { // wit indien minder punten
-            return afdrukken(zelfdeTegenstander, tegenstander, totaal() < tegenstander.totaal(), "punten");
+            return afdrukken(tegenstander, totaal() < tegenstander.totaal(), "wegens punten");
         } else { // wit indien lagere rating
-            return afdrukken(zelfdeTegenstander, tegenstander, rating() < tegenstander.rating(), "rating");
+            return afdrukken(tegenstander, rating() < tegenstander.rating(), "wegens rating");
         }
     }
 
-    function afdrukken(i, tegenstander, kleur, wegens) {
-        console.log(`${naam} met ${kleur ? "wit" : "zwart"} tegen ${tegenstander.naam} wegens ${wegens}`);
+    function afdrukken(tegenstander, kleur, wegens) {
+        console.log(`${naam} met ${kleur ? "wit" : "zwart"} tegen ${tegenstander.naam} ${wegens}`);
         return kleur;
     }
 
@@ -886,7 +899,7 @@ export function spelerTotalen(speler) {
         scoreExtern,
         percentageExtern,
         saldoWitZwartExtern,
-        rondenVerschil,
+        partijenVerschil,
         tegen,
         vorigeKleur,
         metWit
