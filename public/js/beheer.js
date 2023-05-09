@@ -1,6 +1,6 @@
 "use strict";
 
-import { BEHEERDER, hoera } from "./db.js";
+import { BEHEERDER, hoera} from "./db.js";
 
 import * as zyq from "./zyq.js";
 

@@ -54,7 +54,7 @@ const BEHEERDER = 9;
 
 
 function hoera() {
-    return " cjs hoera!";
+    return " db.cjs hoera!";
 }
 
 /*
