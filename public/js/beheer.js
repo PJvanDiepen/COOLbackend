@@ -1,6 +1,6 @@
 "use strict";
 
-import { hoera } from "./modules/db.js";
+import { hoera } from "./db.js";
 
 // import * as zyq from "./modules/zyq.js";
 
@@ -977,7 +977,7 @@ function jsonDate(jsonDatum) {
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     const versie = await serverFetch(`/versie`);
-    // console.log(hoera());
+    console.log(hoera());
     document.getElementById("computer").appendChild(
         htmlTekst(`0-0-0 versie ${versie} met browser: ${navigator.vendor}`));  // TODO client hints
 })();
