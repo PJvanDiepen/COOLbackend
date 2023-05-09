@@ -45,6 +45,10 @@ Verwijder localStorage op iPhone
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
+
+# deno
+- [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
+- [verschillen node en deno](https://cult.honeypot.io/reads/deno-vs-node-main-differences/)
 - [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
 
 # Objection / Knex
@@ -119,6 +123,7 @@ Verwijder localStorage op iPhone
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 # Later
+- [clickable area on image](https://www.imagemaps.net/)
 - [3D in JavaScript](https://discoverthreejs.com/)
 - [IBM Carbon Design System](https://carbondesignsystem.com/)
 - [JavaScript frameworks](https://qr.ae/pvWvGt)
@@ -155,7 +160,6 @@ Verwijder localStorage op iPhone
 - [comic book speech bubbles with SVG and javascript](https://humaan.com/blog/creating-comic-book-speech-bubbles-with-svg-and-javascript/?ref=sidebar)
 - [vloeistof projecties](https://tympanus.net/codrops/2021/01/19/drawing-2d-metaballs-with-webgl2/)
 - [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/)
-- [Denon alternatief voor node.js](https://opensource.com/article/21/2/deno)
 - [Spaceinvaders](https://github.com/kubowania/space-invaders) 
 - [pipe](https://www.obvibase.com/dev-blog/i-ve-used-the-pipe-function-2-560-times-and-i-can-tell-you-it-s-good)
 - [Kaart met legenda](https://codepen.io/haakseth/pen/KQbjdO)

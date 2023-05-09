@@ -168,7 +168,7 @@ module.exports = router => {
     /*
     Zie indelen.js
      */
-    router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer/:partij', async function (ctx) {
+    router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let deelnemers = {};
         if (gebruiker.juisteRechten(GEREGISTREERD)) { // voorlopige indeling uitsluitend voor geregistreerde gebruikers
