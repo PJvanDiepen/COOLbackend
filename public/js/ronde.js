@@ -11,10 +11,10 @@
     competitieTitel();
     o_o_o.team = o_o_o.competitie;
     const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde || 1;
-    menu([WEDSTRIJDLEIDER, `ranglijst na ronde ${rondeNummer}`, function() {
+    menu([BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             naarAnderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
-        [WEDSTRIJDLEIDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
+        [BEHEERDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
             naarAnderePagina(`indelen.html?ronde=${rondeNummer}`);
         }],
         [BEHEERDER, `ranglijst ${ditSeizoen} opnieuw verwerken`, function () {
@@ -28,7 +28,7 @@
             const rijen = await serverFetch(`/backup/ronde/uitslag/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/${rondeNummer}`);
             backupSQL("uitslag", rijen);
         }],
-        [BEHEERDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
+        [WEDSTRIJDLEIDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await serverFetch(`/${uuidToken}/verwijder/indeling/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
                 sessionStorage.removeItem(`/ronde/${o_o_o.seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien

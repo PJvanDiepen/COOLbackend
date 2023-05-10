@@ -166,7 +166,7 @@ module.exports = router => {
     });
 
     /*
-    Zie indelen_0_8_21.js
+    Zie indelen.js
      */
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -195,7 +195,7 @@ module.exports = router => {
     /*
     spelers die externe competitie spelen tijdens interne competitie
 
-    Zie indelen_0_8_21.js
+    Zie indelen.js
      */
     router.get('/:uuidToken/uithuis/:seizoen/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -994,7 +994,7 @@ module.exports = router => {
     });
 
     /*
-    Zie indelen_0_8_21.js
+    Zie indelen.js
      */
     router.get('/:uuidToken/indelen/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -1030,7 +1030,7 @@ module.exports = router => {
     });
 
     /*
-    Zie indelen_0_8_21.js
+    Zie indelen.js
      */
     router.get('/:uuidToken/oneven/:seizoen/:teamCode/:rondeNummer/:knsbNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -1048,7 +1048,7 @@ module.exports = router => {
     });
 
     /*
-    Zie indelen_0_8_21.js
+    Zie indelen.js
      */
     router.get('/:uuidToken/afwezig/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -1066,7 +1066,7 @@ module.exports = router => {
     });
 
     /*
-    Zie indelen_0_8_21.js
+    Zie indelen.js
      */
     router.get('/:uuidToken/extern/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
