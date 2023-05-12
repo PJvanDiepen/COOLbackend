@@ -49,7 +49,9 @@ const {
     WEDSTRIJDLEIDER,
     BEHEERDER,
 
-    hoera
+    hoera,
+    lijst
+
 } = require('./modules/db.cjs');
 
 const Gebruiker = require('./models/gebruiker');
@@ -95,6 +97,13 @@ function teamCodes(competities) {
 module.exports = router => {
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
+
+    /*
+    Zie const.js
+    */
+    router.get('/lijst', async function (ctx) {
+        ctx.body = JSON.stringify(lijst);
+    });
 
     /*
     Zie beheer.js

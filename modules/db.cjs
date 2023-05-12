@@ -6,6 +6,8 @@ TODO hier ook alle api-calls vastleggen?
 globale variabelen voor server en pagina's in de browser
  */
 
+const lijst = [];
+
 // mutatie.invloed
 const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
@@ -64,6 +66,8 @@ db.cjs CommonJS voor node.js: module.exports = { .. };
  */
 
 module.exports = {
+    lijst,
+
     // mutatie.invloed
     GEEN_INVLOED,
     OPNIEUW_INDELEN,
@@ -112,5 +116,5 @@ module.exports = {
     WEDSTRIJDLEIDER,
     BEHEERDER,
 
-    hoera                  // ()
+    hoera
 }
