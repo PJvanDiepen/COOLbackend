@@ -1,12 +1,14 @@
 "use strict";
 
+import * as zyq from "./zyq.js";
+
 /*
     verwerk email=[email] // zie beheer.js
  */
 
 (async function() {
-    await init();
-    menu([]);
+    await zyq.init();
+    zyq.menu([]);
     gebruikerTekst(
         document.getElementById("emailAan"),
         document.getElementById("naamAan"),
@@ -14,12 +16,15 @@
 })();
 
 async function gebruikerTekst(emailAan, naamAan, activeer) {
-    const leden = await serverFetch(`/${uuidToken}/email/${o_o_o.speler}`);
-    if (leden.length > 1) {
-        console.log(leden); // TODO zorgen dat gebruiker uniek is
+    const leden = await zyq.serverFetch(`/${zyq.uuidToken}/email/${zyq.o_o_o.speler}`);
+    if (leden.length === 0) {
+        console.log("alleen de beheerder krijgt informatie over gebruikers");
+    } else if (leden.length > 1) {
+        console.log("er zijn meer gebruikers met zelfde uuuidToken"); // TODO zorgen dat gebruiker uniek is
+        console.log(leden);
     }
     const lid = leden[0];
-    emailAan.appendChild(htmlTekst(lid.email));
-    naamAan.appendChild(htmlTekst(`${lid.naam},`));
-    activeer.appendChild(htmlTekst(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}&uuid=${lid.uuidToken}`));
+    emailAan.appendChild(zyq.htmlTekst(lid.email));
+    naamAan.appendChild(zyq.htmlTekst(`${lid.naam},`));
+    activeer.appendChild(zyq.htmlTekst(`https://0-0-0.nl/start.html?vereniging=${zyq.o_o_o.vereniging}&uuid=${lid.uuidToken}`));
 }

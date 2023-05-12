@@ -1,6 +1,6 @@
 "use strict";
 
-import { BEHEERDER, hoera} from "./db.js";
+import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
@@ -12,33 +12,33 @@ TODO mutaties met verwijderen
 
 (async function() {
     await zyq.init();
-    zyq.menu([BEHEERDER, `backup gebruikers` , async function () {
+    zyq.menu([db.BEHEERDER, `backup gebruikers` , async function () {
             const rijen = await zyq.serverFetch(`/${zyq.uuidToken}/backup/gebruiker`);
             zyq.backupSQL("gebruiker", rijen);
         }],
-        [BEHEERDER, `backup personen` , async function () {
+        [db.BEHEERDER, `backup personen` , async function () {
             const rijen = await zyq.serverFetch(`/backup/persoon`);
             zyq.backupSQL("persoon", rijen);
         }],
-        [BEHEERDER, `backup spelers ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
+        [db.BEHEERDER, `backup spelers ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/speler/${zyq.o_o_o.seizoen}`);
             zyq.backupSQL("speler", rijen);
         }],
-        [BEHEERDER, `backup teams ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
+        [db.BEHEERDER, `backup teams ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/team/${zyq.o_o_o.seizoen}`);
             zyq.backupSQL("team", rijen);
         }],
-        [BEHEERDER, `backup ronden ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
+        [db.BEHEERDER, `backup ronden ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/ronde/${zyq.o_o_o.seizoen}`);
             zyq.backupSQL("ronde", rijen);
         }],
-        [BEHEERDER, "test API", function () {
+        [db.BEHEERDER, "test API", function () {
             zyq.naarAnderePagina("api.html");
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     const versie = await zyq.serverFetch(`/versie`);
-    console.log(hoera());
+    console.log(db.hoera());
     document.getElementById("computer").appendChild(
         zyq.htmlTekst(`0-0-0 versie ${versie} met browser: ${navigator.vendor}`));  // TODO client hints
 })();
@@ -50,13 +50,13 @@ async function gebruikers(lijst) {
         lijst.appendChild(zyq.htmlRij(
             ++aantal,
             zyq.naarSpeler(lid),
-            zyq.gebruiker.mutatieRechten === BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
+            zyq.gebruiker.mutatieRechten === db.BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
             zyq.gebruikerFunctie(lid)));
     }
 }
 
 function gebruikerEmailSturen(lid) {
-    return zyq.htmlLink(`email.html?speler=${lid.knsbNummer}&email=${lid.email}`, lid.email);
+    return zyq.htmlLinkEnTerug(`email.html?speler=${lid.knsbNummer}&email=${lid.email}`, lid.email);
 }
 
 // TODO gebruiker hoger of lagere functie geven

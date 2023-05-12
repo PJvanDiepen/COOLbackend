@@ -17,7 +17,7 @@ vanuit de Online Leden Administratie (OLA) van de KNSB naar `Persoon` en `Speler
 vanuit Rokade, het informatiesysteem voor de interne competitie naar `Ronde` en `Uitslag` en
 vanuit de KNSB en de NHSB websites voor de externe competitie naar `Team`, `Ronde` en `Uitslag`.
 
-##Competitie
+## Competitie
 De database per schaakvereniging heeft een tabel `Team` voor teams en competities.
 De eerste letter van `teamCode` in `Team` maakt het onderscheid tussen team en competitie.
 De `teamCode` van een interne competitie begint met de letter i.
