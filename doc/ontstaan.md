@@ -1,3 +1,13 @@
+# Ontstaansgeschiedenis 0-0-0
+
+Ik schaak al sinds 1971 in interne competities van schaakverenigingen. 
+Eerst bij Lasker in Uitgeest, daarna bij Schaakvereniging Castricum, 0-0-0 in Alkmaar en tegenwoordig bij de Waagtoren in Alkmaar.
+Bij Lasker en Castricum gebruikten ze voor het Keizersysteem voor de interne competitie.
+Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het 
+[Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) en dat gebruiken we bij de Waagtoren nog steeds.
+
+[Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/)
+
 TODO alle design beslissingen inclusief planning
 
 Alles draait om de eenvoud
@@ -48,8 +58,6 @@ maar is uitsluitend zichtbaar voor 0-0-0.nl en niet voor andere websites dankzij
 
 # Rokade wordt 0-0-0
 
-Tot voor kort gebruikte schaakvereniging de Waagtoren [Rokade van Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 
-voor het maken van indelingen en ranglijsten voor de interne competitie volgens het [Alkmaarse systeem](https://www.waagtoren.nl/historie/alksys.html). 
 Sinds het schaakseizoen 2021-2022 wordt Rokade vervangen door 0-0-0.
 
 ## Uitslagen en ranglijsten
