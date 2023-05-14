@@ -6,7 +6,7 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    await zyq.menu([]);
+    zyq.menu([]);
     await agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
 })();
 

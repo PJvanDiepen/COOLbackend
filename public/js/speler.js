@@ -1,14 +1,18 @@
 "use strict";
 
+import * as db from "./db.js";
+
+import * as zyq from "./zyq.js";
+
 (async function() {
-    await init();
-    competitieTitel();
-    menu([WEDSTRIJDLEIDER, `agenda van ${o_o_o.naam}`, function () {
-            naarAnderePagina(`agenda.html?gebruiker=${o_o_o.speler}&naamGebruiker=${o_o_o.naam}`);
+    await zyq.init();
+    zyq.competitieTitel();
+    zyq.menu([db.WEDSTRIJDLEIDER, `agenda van ${zyq.o_o_o.naam}`, function () {
+            zyq.naarAnderePagina(`agenda.html?gebruiker=${zyq.o_o_o.speler}&naamGebruiker=${zyq.o_o_o.naam}`);
         }],
-        [BEHEERDER, `backup uitslagen ${o_o_o.naam}` , async function () {
-            const rijen = await serverFetch(`/backup/speler/uitslag/${o_o_o.seizoen}/${o_o_o.speler}`);
-            backupSQL("uitslag", rijen);
+        [db.BEHEERDER, `backup uitslagen ${zyq.o_o_o.naam}` , async function () {
+            const rijen = await zyq.serverFetch(`/backup/speler/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.speler}`);
+            zyq.backupSQL("uitslag", rijen);
         }]);
     uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
 })();
@@ -37,13 +41,13 @@
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    const t = (await ranglijst(o_o_o.vorigeRonde, [o_o_o.speler]))[0];
-    kop.innerHTML = t.naam + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
+    const t = (await zyq.ranglijst(zyq.o_o_o.vorigeRonde, [zyq.o_o_o.speler]))[0];
+    kop.innerHTML = t.naam + zyq.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern() && t.eigenWaardeCijfer()) {
-        lijst.appendChild(htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
+        lijst.appendChild(zyq.htmlRij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
-    const uitslagen = await localFetch(`/uitslagen/${o_o_o.seizoen}/${o_o_o.versie}/${o_o_o.speler}/${o_o_o.competitie}`);
+    const uitslagen = await zyq.localFetch(`/uitslagen/${zyq.o_o_o.seizoen}/${zyq.o_o_o.versie}/${zyq.o_o_o.speler}/${zyq.o_o_o.competitie}`);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
         if (samenvoegen < i && geenGeplandePartij(uitslagen, i)) { // verwerken indien niet samengevoegd
@@ -52,9 +56,9 @@ async function uitslagenSpeler(kop, lijst) {
                 if (t.intern()) {
                     totaal += uitslagen[i].punten + uitslagen[i + 1].punten;
                 }
-                if (uitslagen[i].teamCode === o_o_o.competitie) { // TODO verplaatsen naar externePartijTijdensInterneRonde
+                if (uitslagen[i].teamCode === zyq.o_o_o.competitie) { // TODO verplaatsen naar externePartijTijdensInterneRonde
                     lijst.appendChild(externePartijTijdensInterneRonde(uitslagen[i + 1], totaal, uitslagen[i]));
-                } else if (uitslagen[i + 1].teamCode === o_o_o.competitie) {
+                } else if (uitslagen[i + 1].teamCode === zyq.o_o_o.competitie) {
                     lijst.appendChild(externePartijTijdensInterneRonde(uitslagen[i], totaal, uitslagen[i + 1]));
                 } else {
                     console.log("--- fout met externePartijTijdensInterneRonde ---");
@@ -63,9 +67,9 @@ async function uitslagenSpeler(kop, lijst) {
                 if (t.intern()) {
                     totaal += uitslagen[i].punten;
                 }
-                if (uitslagen[i].partij === INTERNE_PARTIJ) {
+                if (uitslagen[i].partij === db.INTERNE_PARTIJ) {
                     lijst.appendChild(internePartij(uitslagen[i], totaal));
-                } else if (uitslagen[i].partij === EXTERNE_PARTIJ && uitslagen[i].teamCode !== INTERNE_COMPETITIE) {
+                } else if (uitslagen[i].partij === db.EXTERNE_PARTIJ && uitslagen[i].teamCode !== db.INTERNE_COMPETITIE) {
                     lijst.appendChild(externePartij(uitslagen[i], totaal));
                 } else {
                     lijst.appendChild(geenPartij(uitslagen[i], totaal));
@@ -77,15 +81,15 @@ async function uitslagenSpeler(kop, lijst) {
         lijst.appendChild(htmlRij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
     }
     if (!t.intern() && t.afzeggingen()) {
-        lijst.appendChild(htmlRij("", "", "uitsluitend afzeggingen", "", "", "", "", ""));
+        lijst.appendChild(zyq.htmlRij("", "", "uitsluitend afzeggingen", "", "", "", "", ""));
     }
     if (!t.intern() && !t.extern()) {
-        lijst.appendChild(htmlRij("", "", "geen interne en geen externe partijen", "", "", "", "", ""));
+        lijst.appendChild(zyq.htmlRij("", "", "geen interne en geen externe partijen", "", "", "", "", ""));
     }
 }
 
 function externTijdensIntern(uitslagen, i) {
-    if (i + 1 < uitslagen.length && uitslagen[i].partij === EXTERNE_PARTIJ && uitslagen[i + 1].partij === EXTERNE_PARTIJ) {
+    if (i + 1 < uitslagen.length && uitslagen[i].partij === db.EXTERNE_PARTIJ && uitslagen[i + 1].partij === db.EXTERNE_PARTIJ) {
         return uitslagen[i].datum === uitslagen[i + 1].datum ? i + 1 : -1;
     } else {
         return -1;
@@ -93,7 +97,7 @@ function externTijdensIntern(uitslagen, i) {
 }
 
 function geenGeplandePartij(uitslagen, i) {
-    return ![MEEDOEN, NIET_MEEDOEN, EXTERN_THUIS, EXTERN_UIT].includes(uitslagen[i].partij);
+    return ![db.MEEDOEN, db.NIET_MEEDOEN, db.EXTERN_THUIS, db.EXTERN_UIT].includes(uitslagen[i].partij);
 }
 
 /*
@@ -110,34 +114,34 @@ kolommen in lijst
 
 function internePartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
-    const tegenstanderKolom = naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.naam});
-    return htmlRij(uitslag.rondeNummer, datumKolom, tegenstanderKolom, "", uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
+    const tegenstanderKolom = zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.naam});
+    return zyq.htmlRij(uitslag.rondeNummer, datumKolom, tegenstanderKolom, "", uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
 }
 
 function externePartijTijdensInterneRonde(uitslag, totaal, interneRonde) {
     const datumKolom = naarRonde(uitslag);
-    const tegenstanderKolom = naarTeam(uitslag);
+    const tegenstanderKolom = zyq.naarTeam(uitslag);
     const puntenKolom = interneRonde.punten + uitslag.punten;
-    return htmlRij(interneRonde.rondeNummer, datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, puntenKolom, totaal);
+    return zyq.htmlRij(interneRonde.rondeNummer, datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, puntenKolom, totaal);
 }
 
 function externePartij(uitslag, totaal) {
-    const datumKolom = datumLeesbaar(uitslag);
-    const tegenstanderKolom = naarTeam(uitslag);
-    return htmlRij("", datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
+    const datumKolom = zyq.datumLeesbaar(uitslag);
+    const tegenstanderKolom = zyq.naarTeam(uitslag);
+    return zyq.htmlRij("", datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
 }
 
 function geenPartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
-    const omschrijving = uitslag.partij === AFWEZIG ? "afgezegd"
-        : uitslag.partij === ONEVEN                 ? "oneven"
-        : uitslag.partij === REGLEMENTAIRE_REMISE   ? "vrijgesteld"
-        : uitslag.partij === REGLEMENTAIR_VERLIES   ? "reglementair verlies"
-        : uitslag.partij === REGLEMENTAIRE_WINST    ? "reglementaire winst"
-        : uitslag.partij === EXTERNE_PARTIJ         ? "externe partij" : "???";
-    return htmlRij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", "", uitslag.punten, totaal);
+    const omschrijving = uitslag.partij === db.AFWEZIG ? "afgezegd"
+        : uitslag.partij === db.ONEVEN                 ? "oneven"
+        : uitslag.partij === db.REGLEMENTAIRE_REMISE   ? "vrijgesteld"
+        : uitslag.partij === db.REGLEMENTAIR_VERLIES   ? "reglementair verlies"
+        : uitslag.partij === db.REGLEMENTAIRE_WINST    ? "reglementaire winst"
+        : uitslag.partij === db.EXTERNE_PARTIJ         ? "externe partij" : "???";
+    return zyq.htmlRij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", "", uitslag.punten, totaal);
 }
 
 function naarRonde(uitslag) {
-    return htmlLink(`ronde.html?ronde=${uitslag.rondeNummer}`, datumLeesbaar(uitslag));
+    return zyq.htmlLink(`ronde.html?ronde=${uitslag.rondeNummer}`, zyq.datumLeesbaar(uitslag));
 }

@@ -277,7 +277,7 @@ async function competitieRondenVerwerken() {
  * @param menuKeuzes
  * @returns {Promise<void>}
  */
-async function menu(...menuKeuzes) {
+function menu(...menuKeuzes) {
     const acties = document.getElementById("menu");
     const startKeuzes = JSON.parse(sessionStorage.getItem("menu")); // menu van start pagina (in omgekeerde volgorde)
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
