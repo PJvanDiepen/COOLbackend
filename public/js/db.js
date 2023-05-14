@@ -1,10 +1,10 @@
 /*
 db uit de MySQL database
 
-TODO hier ook alle api-calls vastleggen?
-
 globale variabelen voor server en pagina's in de browser
  */
+
+const apiLijst = [];
 
 // mutatie.invloed
 const GEEN_INVLOED = 0;
@@ -64,6 +64,8 @@ db.cjs CommonJS voor node.js: module.exports = { .. };
  */
 
 export {
+    apiLijst,
+
     // mutatie.invloed
     GEEN_INVLOED,
     OPNIEUW_INDELEN,

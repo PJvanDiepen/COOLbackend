@@ -8,7 +8,7 @@ const config = require('config');
 
 const registerApi = require('./api');
 
-const { lijst } = require('./modules/db.cjs');
+const { apiLijst } = require('./modules/db.cjs');
 
 const { Model, ForeignKeyViolationError, ValidationError } = require('objection');
 
@@ -24,7 +24,7 @@ app.use(cors()); // Also worth mentioning that app.use(cors()) has to go before 
 registerApi(router);
 
 for (const route of router.stack) {
-  lijst.push(route.path); // lijst van routes in api.js
+  apiLijst.push(route.path); // lijst van routes in api.js
 }
 
 app.use(bodyParser());

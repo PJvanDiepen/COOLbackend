@@ -50,7 +50,7 @@ const {
     BEHEERDER,
 
     hoera,
-    lijst
+    apiLijst
 
 } = require('./modules/db.cjs');
 
@@ -101,8 +101,8 @@ module.exports = router => {
     /*
     Zie const.js
     */
-    router.get('/lijst', async function (ctx) {
-        ctx.body = JSON.stringify(lijst);
+    router.get('/api', async function (ctx) {
+        ctx.body = JSON.stringify(apiLijst);
     });
 
     /*
