@@ -18,8 +18,8 @@ import * as zyq from "./zyq.js";
     const rondeNummer = Number(params.get("ronde"));
     zyq.menu([]);
     document.getElementById("kop").innerHTML =
-        "Ronde " + rondeNummer + SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
-    if (zyq.o_o_o.competitie === INTERNE_COMPETITIE) {
+        "Ronde " + rondeNummer + zyq.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
+    if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) {
         document.getElementById("subkop").innerHTML = "Andere ronden en wedstrijden";
     }
 })();
@@ -29,11 +29,11 @@ async function spelerSelecteren(rondeNummer, deelnemers) {
     spelers.appendChild(htmlOptie(0, "selecteer naam"));
     (await zyq.localFetch(`/spelers/${o_o_o.seizoen}`)).forEach(
         function (speler) {
-            spelers.appendChild(zyq.htmlOptie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  KRUISJE : "")));
+            spelers.appendChild(zyq.htmlOptie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  zyq.KRUISJE : "")));
         });
     spelers.addEventListener("input",async function () {
         const knsbNummer = Number(spelers.value);
-        const partij = deelnemers.includes(knsbNummer) ? NIET_MEEDOEN : MEEDOEN;
+        const partij = deelnemers.includes(knsbNummer) ? db.NIET_MEEDOEN : db.MEEDOEN;
         const datum = zyq.datumSQL(o_o_o.ronde[rondeNummer].datum);
         zyq.naarZelfdePagina(); // TODO mutatie na init() en speler geel maken indien gelukt
     });

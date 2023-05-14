@@ -1,19 +1,23 @@
 "use strict";
 
+import * as db from "./db.js";
+
+import * as zyq from "./zyq.js";
+
 /*
     verwerk leden=0
            &ronde=<rondeNummer>
  */
 
-const alleLeden = Number(params.get("leden"));
+const alleLeden = Number(zyq.params.get("leden"));
 
 (async function() {
-    await init();
-    competitieTitel();
-    const rondeNummer = Number(params.get("ronde")) || o_o_o.vorigeRonde || 1;
-    menu([]);
-    teamSelecteren(o_o_o.competitie);
-    rondeSelecteren(o_o_o.competitie, rondeNummer);
+    await zyq.init();
+    zyq.competitieTitel();
+    const rondeNummer = Number(zyq.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
+    zyq.menu([]);
+    zyq.teamSelecteren(zyq.o_o_o.competitie);
+    zyq.rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     versieSelecteren(document.getElementById("versies"));
     ledenSelecteren(document.getElementById("leden"));
     spelersLijst(rondeNummer,
@@ -23,15 +27,15 @@ const alleLeden = Number(params.get("leden"));
 })();
 
 async function spelersLijst(rondeNummer, kop, lijst, promoties) {
-    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "ranglijst na ronde " + rondeNummer;
+    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + zyq.SCHEIDING + "ranglijst na ronde " + rondeNummer;
     let i = 0;
     const winnaars = {}; // voor winnaarSubgroep() in totalen
-    const spelers = await ranglijst(rondeNummer);
+    const spelers = await zyq.ranglijst(rondeNummer);
     for (const speler of spelers) {
         if (speler.intern() || speler.oneven() || speler.extern() || alleLeden) {
-            lijst.appendChild(htmlRij(
+            lijst.appendChild(zyq.htmlRij(
                 ++i,
-                naarSpeler(speler),
+                zyq.naarSpeler(speler),
                 speler.intern() || speler.oneven() ? speler.punten() : "",
                 speler.winnaarSubgroep(winnaars),
                 speler.rating(),
@@ -46,24 +50,24 @@ async function spelersLijst(rondeNummer, kop, lijst, promoties) {
 }
 
 function versieSelecteren(versies) {  // TODO: versies en teksten in database
-    versies.appendChild(htmlOptie(0, "versie 0 volgens reglement interne competitie van het seizoen"));
-    versies.appendChild(htmlOptie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));
-    versies.appendChild(htmlOptie(3, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
-    versies.appendChild(htmlOptie(4, "versie 4 volgens reglement rapid competitie"));
-    versies.appendChild(htmlOptie(5, "versie 5 voor snelschaken"));
-    versies.value = o_o_o.versie;
+    versies.appendChild(zyq.htmlOptie(0, "versie 0 volgens reglement interne competitie van het seizoen"));
+    versies.appendChild(zyq.htmlOptie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));
+    versies.appendChild(zyq.htmlOptie(3, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
+    versies.appendChild(zyq.htmlOptie(4, "versie 4 volgens reglement rapid competitie"));
+    versies.appendChild(zyq.htmlOptie(5, "versie 5 voor snelschaken"));
+    versies.value = zyq.o_o_o.versie;
     versies.addEventListener("input",
         function () {
-            naarZelfdePagina(`versie=${versies.value}`);
+            zyq.naarZelfdePagina(`versie=${versies.value}`);
         });
 }
 
 function ledenSelecteren(leden) {
-    leden.appendChild(htmlOptie(0, "alleen actieve leden"));
-    leden.appendChild(htmlOptie(1, "inclusief niet actieve spelers"));
+    leden.appendChild(zyq.htmlOptie(0, "alleen actieve leden"));
+    leden.appendChild(zyq.htmlOptie(1, "inclusief niet actieve spelers"));
     leden.value = alleLeden;
     leden.addEventListener("input",
         function () {
-            naarZelfdePagina(`leden=${leden.value}`);
+            zyq.naarZelfdePagina(`leden=${leden.value}`);
         })
 }

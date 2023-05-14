@@ -1,7 +1,5 @@
 "use strict";
 
-import * as db from "./db.js";
-
 import * as zyq from "./zyq.js";
 
 (async function() {

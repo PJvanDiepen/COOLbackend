@@ -1,3 +1,9 @@
+"use strict";
+
+import * as db from "./db.js";
+
+import * as zyq from "./zyq.js";
+
 /*
     verwerk vereniging=[vereniging]
  */
@@ -6,33 +12,34 @@ const menuKeuzes = []; // in omgekeerde volgorde
 
 function menuKeuze(elementId, minimumRechten, tekst, naarPagina) {
     menuKeuzes.unshift([minimumRechten, tekst, naarPagina]);
-    document.getElementById(elementId).appendChild(htmlLinkEnTerug(naarPagina,tekst));
+    document.getElementById(elementId).appendChild(zyq.htmlLinkEnTerug(naarPagina,tekst));
 }
 
 (async function() {
-    await init();
-    document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen) + SCHEIDING + teamVoluit(o_o_o.competitie);
+    await zyq.init();
+    document.getElementById("kop").innerHTML =
+        zyq.o_o_o.vereniging + zyq.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen) + zyq.SCHEIDING + zyq.teamVoluit(zyq.o_o_o.competitie);
     const plaatje = document.getElementById("plaatje");
-    if (o_o_o.vereniging === "Waagtoren") {
+    if (zyq.o_o_o.vereniging === "Waagtoren") {
         plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
     }
-    menuKeuze("ranglijst", IEDEREEN, `Ranglijst na ronde ${o_o_o.vorigeRonde}`,"ranglijst.html");
-    menuKeuze("ronde", IEDEREEN, `Uitslagen ronde ${o_o_o.vorigeRonde}`,"ronde.html");
-    if (gebruiker.mutatieRechten >= GEREGISTREERD) {
-        if (o_o_o.huidigeRonde && o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
-            menuKeuze("indelen", GEREGISTREERD, `Definitieve indeling ronde ${o_o_o.huidigeRonde}`, `ronde.html?ronde=${o_o_o.huidigeRonde}`);
-        } else if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
-            menuKeuze("indelen", GEREGISTREERD, `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`, "indelen.html");
+    menuKeuze("ranglijst", db.IEDEREEN, `Ranglijst na ronde ${zyq.o_o_o.vorigeRonde}`,"ranglijst.html");
+    menuKeuze("ronde", db.IEDEREEN, `Uitslagen ronde ${zyq.o_o_o.vorigeRonde}`,"ronde.html");
+    if (zyq.gebruiker.mutatieRechten >= db.GEREGISTREERD) {
+        if (zyq.o_o_o.huidigeRonde && zyq.o_o_o.ronde[zyq.o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
+            menuKeuze("indelen", db.GEREGISTREERD, `Definitieve indeling ronde ${zyq.o_o_o.huidigeRonde}`, `ronde.html?ronde=${zyq.o_o_o.huidigeRonde}`);
+        } else if (zyq.o_o_o.vorigeRonde < zyq.o_o_o.laatsteRonde) {
+            menuKeuze("indelen", db.GEREGISTREERD, `Voorlopige indeling ronde ${zyq.o_o_o.huidigeRonde}`, "indelen.html");
         }
     }
-    if (gebruiker.mutatieRechten >= BESTUUR) {
-        menuKeuze("bestuur", BESTUUR, `Overzicht voor bestuur`, "bestuur.html");
+    if (zyq.gebruiker.mutatieRechten >= db.BESTUUR) {
+        menuKeuze("bestuur", db.BESTUUR, `Overzicht voor bestuur`, "bestuur.html");
     }
-    if (gebruiker.mutatieRechten >= TEAMLEIDER) {
-        menuKeuze("teamleider", TEAMLEIDER, `Overzicht voor teamleiders`, "teamleider.html");
+    if (zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER) {
+        menuKeuze("teamleider", db.TEAMLEIDER, `Overzicht voor teamleiders`, "teamleider.html");
     }
     sessionStorage.setItem("menu", JSON.stringify(menuKeuzes));
-    seizoenSelecteren(INTERNE_COMPETITIE);
+    seizoenSelecteren(db.INTERNE_COMPETITIE);
     competitieSelecteren();
 })();
 
@@ -53,44 +60,39 @@ function htmlPlaatje(plaatje, percentage, breed, hoog) {
 async function seizoenSelecteren(teamCode) {
     const seizoenen = document.getElementById("seizoenSelecteren");
     let ditSeizoentoevoegen = true;
-    (await localFetch("/seizoenen/" + teamCode)).forEach(
+    (await zyq.localFetch("/seizoenen/" + teamCode)).forEach(
         function (seizoen) {
-            if (seizoen === ditSeizoen) {
+            if (seizoen === zyq.ditSeizoen) {
                 ditSeizoentoevoegen = false;
             }
-            seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
+            seizoenen.appendChild(zyq.htmlOptie(seizoen, zyq.seizoenVoluit(seizoen)));
         });
     if (ditSeizoentoevoegen) {
-        seizoenen.appendChild(htmlOptie(ditSeizoen, seizoenVoluit(ditSeizoen)));
+        seizoenen.appendChild(zyq.htmlOptie(zyq.ditSeizoen, zyq.seizoenVoluit(ditSeizoen)));
     }
-    seizoenen.value = o_o_o.seizoen; // werkt uitsluitend na await
+    seizoenen.value = zyq.o_o_o.seizoen; // werkt uitsluitend na await
     seizoenen.addEventListener("input",
         function () {
             sessionStorage.setItem("seizoen", seizoenen.value);
-            sessionStorage.setItem("competitie", INTERNE_COMPETITIE);
-            sessionStorage.setItem("team", INTERNE_COMPETITIE);
-            naarZelfdePagina();
+            sessionStorage.setItem("competitie", db.INTERNE_COMPETITIE);
+            sessionStorage.setItem("team", db.INTERNE_COMPETITIE);
+            zyq.naarZelfdePagina();
         });
 }
 
 async function competitieSelecteren() {
     const competities = document.getElementById("competitieSelecteren");
-    (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
+    (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).forEach(
         function (team) {
-            if (interneCompetitie(team.teamCode)) {
-                competities.appendChild(htmlOptie(team.teamCode, team.omschrijving));
+            if (zyq.interneCompetitie(team.teamCode)) {
+                competities.appendChild(zyq.htmlOptie(team.teamCode, team.omschrijving));
             }
         });
-    competities.value = o_o_o.competitie; // werkt uitsluitend na await
+    competities.value = zyq.o_o_o.competitie; // werkt uitsluitend na await
     competities.addEventListener("input",
         function () {
             sessionStorage.setItem("competitie", competities.value);
             sessionStorage.setItem("team", competities.value);
-            naarZelfdePagina();
+            zyq.naarZelfdePagina();
         });
 }
-
-console.log("*** einde start.js ***");
-
-
-

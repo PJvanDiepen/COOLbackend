@@ -180,7 +180,6 @@ const NIEUWE_RANGLIJST = 2;
  * @returns {Promise<void>}
  */
 export async function init() {
-    console.log("zyq.init");
     await gebruikerVerwerken();
     urlVerwerken();
     await competitieBepalen();
