@@ -4,7 +4,7 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    zyq.menu([]);
+    await zyq.menu([]);
     const apiLijst = await zyq.serverFetch(`/api`);
     const lijst = document.getElementById("lijst");
     for (const apiCall of apiLijst) {
