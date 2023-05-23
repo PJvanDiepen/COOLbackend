@@ -1,5 +1,9 @@
 "use strict";
 
+import * as db from "./db.js";
+
+import * as zyq from "./zyq.js";
+
 /*
     verwerk ronde=<ronde>
            &rangnummers=aan
@@ -7,20 +11,20 @@
  */
 
 (async function() {
-    await init();
-    competitieTitel();
-    const rondeNummer = Number(params.get("ronde")) || o_o_o.huidigeRonde;
-    const totDatum = o_o_o.ronde[rondeNummer].datum;
+    await zyq.init();
+    zyq.competitieTitel();
+    const rondeNummer = Number(zyq.params.get("ronde")) || zyq.o_o_o.huidigeRonde;
+    const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");
-    subkop.innerHTML = "Indeling ronde " + rondeNummer + SCHEIDING + datumLeesbaar({datum: totDatum});
+    subkop.innerHTML = "Indeling ronde " + rondeNummer + zyq.SCHEIDING + zyq.datumLeesbaar({datum: totDatum});
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
     const deelnemers = await deelnemersRonde(rondeNummer);
-    const r = zwitsers(o_o_o.competitie) // TODO weer 1 ranglijstSorteren
+    const r = zyq.zwitsers(zyq.o_o_o.competitie) // TODO weer 1 ranglijstSorteren
         ? await ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers)
         : await ranglijstOpPuntenRating(rondeNummer, deelnemers);
-    if (zwitsers(o_o_o.competitie)) {
+    if (zyq.zwitsers(zyq.o_o_o.competitie)) {
         console.log("--- Zwitsers systeem ---");
         for (const speler of r) {
             console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.weerstandsPunten()}`);
@@ -46,44 +50,44 @@
         oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const uithuis = await serverFetch(`/${uuidToken}/uithuis/${o_o_o.seizoen}/${datumSQL(totDatum)}`); // actuele situatie
+    const uithuis = await zyq.serverFetch(`/${zyq.uuidToken}/uithuis/${zyq.o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
     partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), uithuis);
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
     }
-    menu([WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
+    zyq.menu([db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
-                if (await serverFetch(
-                    `/${uuidToken}/indelen/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
+                if (await zyq.serverFetch(
+                    `/${zyq.uuidToken}/indelen/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
                     mutaties += 2;
                 }
             }
             if (oneven) {
-                if (await serverFetch(
-                    `/${uuidToken}/oneven/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${r[oneven].knsbNummer}`)) {
+                if (await zyq.serverFetch(
+                    `/${zyq.uuidToken}/oneven/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${r[oneven].knsbNummer}`)) {
                     mutaties += 1;
                 }
             }
-            mutaties += await serverFetch(`/${uuidToken}/afwezig/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
-            mutaties += await serverFetch(`/${uuidToken}/extern/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`);
+            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/afwezig/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
+            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/extern/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
-                naarAnderePagina(`ronde.html?ronde=${rondeNummer}`);
+                zyq.naarAnderePagina(`ronde.html?ronde=${rondeNummer}`);
             }
         }]);
     versieSelecteren(document.getElementById("versies"), rondeNummer);
 })();
 
 async function deelnemersRonde(rondeNummer) {
-    if (GEREGISTREERD <= gebruiker.mutatieRechten) {
-        return await serverFetch(`/${uuidToken}/deelnemers/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`); // actuele situatie
+    if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
+        return await zyq.serverFetch(`/${zyq.uuidToken}/deelnemers/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`); // actuele situatie
     } else {
         return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd
     }
 }
 
 async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
-    const lijst = await ranglijst(rondeNummer, deelnemers);
+    const lijst = await zyq.ranglijst(rondeNummer, deelnemers);
     lijst.sort(function (een, ander) {
         return ander.totaal() - een.totaal(); // van hoog naar laag
     });
@@ -91,7 +95,7 @@ async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
 }
 
 async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
-    const lijst = await ranglijst(rondeNummer, deelnemers);
+    const lijst = await zyq.ranglijst(rondeNummer, deelnemers);
     for (const speler of lijst) {
         let i = 20;
         let wp = speler.oneven() * 5; // bijtelling oneven
@@ -127,12 +131,12 @@ async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
 }
 
 function rangnummersToggle(rangnummers, rondeNummer) {
-    const rangnummersAan = params.get("rangnummers");
+    const rangnummersAan = zyq.params.get("rangnummers");
     if (rangnummersAan) {
         rangnummers.open = true;
     } else {
         rangnummers.addEventListener("toggle",function () {
-            naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
+            zyq.naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
         });
     }
     return rangnummersAan;
@@ -140,27 +144,35 @@ function rangnummersToggle(rangnummers, rondeNummer) {
 
 function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
     for (let i = 0; i < wit.length; i++) {
-        partijen.appendChild(htmlRij(
+        partijen.appendChild(zyq.htmlRij(
             i + 1,
-            naarSpeler(r[wit[i]]),
-            naarSpeler(r[zwart[i]]),
+            zyq.naarSpeler(r[wit[i]]),
+            zyq.naarSpeler(r[zwart[i]]),
             rangnummers ? `${wit[i] + 1} - ${zwart[i] + 1}` : ""
         ));
     }
     if (oneven) {
-        partijen.appendChild(htmlRij("", naarSpeler(r[oneven]), "", "oneven"));
+        partijen.appendChild(zyq.htmlRij(
+            "",
+            zyq.naarSpeler(r[oneven]),
+            "",
+            "oneven"));
     }
     let bord = wit.length;
     for (const speler of extern) { // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
-        partijen.appendChild(htmlRij(speler.partij === EXTERN_THUIS ? ++bord : "", naarSpeler(speler), "", "extern"));
+        partijen.appendChild(zyq.htmlRij(
+            speler.partij === db.EXTERN_THUIS ? ++bord : "",
+            zyq.naarSpeler(speler),
+            "",
+            "extern"));
     }
 }
 
 function deelnemersLijst(r, lijst) {
     r.forEach(function(t, i) {
-        lijst.appendChild(htmlRij(
+        lijst.appendChild(zyq.htmlRij(
             i + 1,
-            naarSpeler(t),
+            zyq.naarSpeler(t),
             t.totaal(), // TODO t.punten() ?
             t.eigenWaardeCijfer(),
             t.intern() ? t.intern() : "",
@@ -206,16 +218,16 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
     }
 }
 
-const versieIndelen = Number(params.get("indelen")) || 0;
+const versieIndelen = Number(zyq.params.get("indelen")) || 0;
 
 function versieSelecteren(versies, rondeNummer) {
     for (let i = 0; i < indelenFun.length; i++) {
-        versies.appendChild(htmlOptie(i, indelenFun[i][0]));
+        versies.appendChild(zyq.htmlOptie(i, indelenFun[i][0]));
     }
     versies.value = versieIndelen;
     versies.addEventListener("input",
         function () {
-            naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versies.value}&rangnummers=aan`);
+            zyq.naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versies.value}&rangnummers=aan`);
         });
 }
 
@@ -237,7 +249,7 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
 function nietTegen(r, i, j, rondeNummer) {
     if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) {
         return true;
-    } else if (o_o_o.competitie === RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
+    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
     } else if (rondeNummer < 5) {
         return false;
@@ -683,4 +695,3 @@ function metZwart(speler, tegenstander) {
         return 0; // zwakste speler heeft voorkeur voor wit
     }
 }
-
