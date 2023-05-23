@@ -1,38 +1,40 @@
 "use strict";
 
+import * as db from "./db.js";
+
+import * as zyq from "./zyq.js";
+
 /*
     verwerk lid=<knsbNummer>
            &knsb=wijzigen
  */
-const lidNummer = Number(params.get("lid"));
-const knsbWijzigen = params.get("knsb") === "wijzigen";
+const lidNummer = Number(zyq.params.get("lid"));
+const knsbWijzigen = zyq.params.get("knsb") === "wijzigen";
 
 (async function() {
-    await init();
-    document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
+    await zyq.init();
+    document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + zyq.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     const persoon = await persoonLezen();
     const ola = olaLezen();
-    menu([BEHEERDER, "wijzig KNSB gegevens (pas op!)", function () {
-            if (gebruiker.mutatieRechten >= BEHEERDER) {
-                naarZelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
-            }
+    zyq.menu([db.BEHEERDER, "wijzig KNSB gegevens (pas op!)", function () {
+            zyq.naarZelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
         }],
-        [BEHEERDER, `${persoon.naam} verwijderen`, async function () {
-            const mutaties = await serverFetch(`/${uuidToken}/verwijder/persoon/${lidNummer}`);
+        [db.BEHEERDER, `${persoon.naam} verwijderen`, async function () {
+            const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/persoon/${lidNummer}`);
             if (mutaties) {
-                naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
+                zyq.naarAnderePagina(`bestuur.html?lid=${lidNummer}`);
             } else {
                 console.log(`${persoon.naam} is niet verwijderd`);
             }
         }],
-        [WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
-            naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
+        [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
+            zyq.naarAnderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }]);
     lidFormulier(persoon, ola);
 })();
 
 async function persoonLezen() {
-    const personen = await serverFetch(`/personen/${o_o_o.seizoen}`); // TODO 1 persoon lezen
+    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`); // TODO 1 persoon lezen
     for (const persoon of personen) {
         if (Number(persoon.knsbNummer) === lidNummer) {
             return persoon;
@@ -66,7 +68,6 @@ function speeltIntern(persoon, teamCode) { // volgens database
 }
 
 async function lidFormulier(persoon, ola) {
-
     // formulier invullen
     const knsbNummer = document.getElementById("knsbNummer");
     knsbNummer.value = lidNummer;
@@ -86,7 +87,7 @@ async function lidFormulier(persoon, ola) {
     const gebruikerSoort = document.getElementById("gebruiker");
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
     if (!gebruikerToevoegen) {
-        gebruikerSoort.value = gebruikerFunctie(persoon);
+        gebruikerSoort.value = zyq.gebruikerFunctie(persoon);
     }
     const knsbRating = document.getElementById("knsbRating");
     knsbRating.value = 0;
@@ -99,11 +100,11 @@ async function lidFormulier(persoon, ola) {
     }
     const interneRating = document.getElementById("interneRating");
     if (knsbRating.value > 0) {
-        interneRating.appendChild(htmlOptie(knsbRating.value, "zie KNSB rating"));
+        interneRating.appendChild(zyq.htmlOptie(knsbRating.value, "zie KNSB rating"));
     }
-    for (let ratingOptie = LAAGSTE_RATING; ratingOptie <= HOOGSTE_RATING; ratingOptie += 100) {
+    for (let ratingOptie = zyq.LAAGSTE_RATING; ratingOptie <= zyq.HOOGSTE_RATING; ratingOptie += 100) {
         if (ratingOptie > knsbRating.value) {
-            interneRating.appendChild(htmlOptie(ratingOptie, ratingOptie));
+            interneRating.appendChild(zyq.htmlOptie(ratingOptie, ratingOptie));
         }
     }
     if (!spelerToevoegen && persoon.interneRating !== null && persoon.interneRating > knsbRating.value) {
@@ -111,7 +112,7 @@ async function lidFormulier(persoon, ola) {
     } else if (knsbRating.value > 0) {
         interneRating.value = knsbRating.value;
     } else {
-        interneRating.value = LAAGSTE_RATING;
+        interneRating.value = zyq.LAAGSTE_RATING;
     }
     const nhsbTeam = document.getElementById("nhsbTeam");
     const knsbTeam = document.getElementById("knsbTeam");
@@ -119,24 +120,24 @@ async function lidFormulier(persoon, ola) {
     const competitie = [];
     let competitieNummer = 0;
     let speeltInAantalCompetities = 0;
-    const teams = await localFetch("/teams/" + o_o_o.seizoen);
+    const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
     for (const team of teams) {
-        if (!teamOfCompetitie(team.teamCode)) {
-            nhsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
-            knsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+        if (!zyq.teamOfCompetitie(team.teamCode)) {
+            nhsbTeam.appendChild(zyq.htmlOptie(team.teamCode, zyq.teamVoluit(team.teamCode)));
+            knsbTeam.appendChild(zyq.htmlOptie(team.teamCode, zyq.teamVoluit(team.teamCode)));
         } else if (team.bond === "n") {
-            nhsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            nhsbTeam.appendChild(zyq.htmlOptie(team.teamCode, zyq.teamVoluit(team.teamCode)));
             if (persoon && persoon.nhsbTeam === team.teamCode) { // speelt persoon in dit nhsbTeam?
                 nhsbTeam.value = team.teamCode;
             }
         } else if (team.bond === "k") {
-            knsbTeam.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            knsbTeam.appendChild(zyq.htmlOptie(team.teamCode, zyq.teamVoluit(team.teamCode)));
             if (persoon && persoon.knsbTeam === team.teamCode) { // speelt persoon in dit knsbTeam?
                 knsbTeam.value = team.teamCode;
             }
-        } else if (interneCompetitie(team.teamCode)) {
+        } else if (zyq.interneCompetitie(team.teamCode)) {
             const id = `intern${competitieNummer + 1}`;
-            competities.appendChild(htmlCheckbox(id, team.teamCode, teamVoluit(team.teamCode)));
+            competities.appendChild(zyq.htmlCheckbox(id, team.teamCode, zyq.teamVoluit(team.teamCode)));
             competitie[competitieNummer] = document.getElementById(id);
             if (speeltIntern(persoon, team.teamCode)) {
                 competitie[competitieNummer].checked = true;
@@ -149,30 +150,26 @@ async function lidFormulier(persoon, ola) {
         knsbNummer.disabled = false; // enable input
         knsbRating.disabled = false; // enable input
     }
-
     // formulier verwerken
     document.getElementById("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();
         let mutaties = 0;
-
         // persoon verwerken
         if (!persoon) {
-            if (await serverFetch(`/${uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
+            if (await zyq.serverFetch(`/${zyq.uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
                 mutaties++;
             }
         } else if (false) { // TODO naam of knsbNummer gewijzigd
             // TODO persoon wijzigen
         }
-
         // gebruiker verwerken
         if (gebruikerToevoegen && email.value !== "") { // TODO e-mailadres controleren
-            if (await serverFetch(`/${uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
+            if (await zyq.serverFetch(`/${zyq.uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
                 mutaties++;
             }
         } else if (false) { // TODO email gewijzigd
             // TODO gebruiker wijzigen
         }
-
         // speler verwerken
         const rating = knsbRating.value;
         const ratingIntern = interneRating.value;
@@ -190,7 +187,7 @@ async function lidFormulier(persoon, ola) {
         }
         vinkjes += " "; // minstens 1 vinkje voor blanko teamCode
         if (spelerToevoegen) {
-            if (await serverFetch(`/${uuidToken}/speler/toevoegen/${o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${datumSQL()}`)) {
+            if (await zyq.serverFetch(`/${zyq.uuidToken}/speler/toevoegen/${zyq.o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${zyq.datumSQL()}`)) {
                 mutaties++;
             }
         } else if (persoon) {
@@ -204,17 +201,17 @@ async function lidFormulier(persoon, ola) {
                 nietGewijzigd = nietGewijzigd && speeltIntern(persoon, intern[i].trim());
             }
             if (!nietGewijzigd) { // wel gewijzigd
-                if (await serverFetch(`/${uuidToken}/speler/wijzigen/${o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${datumSQL()}`)) {
+                if (await zyq.serverFetch(`/${zyq.uuidToken}/speler/wijzigen/${zyq.o_o_o.seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${zyq.datumSQL()}`)) {
                     mutaties++;
                 }
             }
         }
         if (knsbWijzigen && Number(knsbNummer.value) !== lidNummer) {
-            if (await serverFetch(`/${uuidToken}/knsb/${lidNummer}/${knsbNummer.value}`)){
+            if (await zyq.serverFetch(`/${zyq.uuidToken}/knsb/${lidNummer}/${knsbNummer.value}`)){
                 mutaties++;
             }
         }
         // TODO iets doen met mutaties of variable mutaties verwijderen?
-        naarAnderePagina(`bestuur.html?lid=${knsbNummer.value}`);
+        zyq.naarAnderePagina(`bestuur.html?lid=${knsbNummer.value}`);
     });
 }

@@ -1,13 +1,17 @@
 "use strict";
 
+import * as db from "./db.js";
+
+import * as zyq from "./zyq.js";
+
 /*
     verwerk datum=<datum>
  */
 (async function() {
-    await init();
-    menu([]);
-    const wedstrijden = await localFetch("/wedstrijden/" + o_o_o.seizoen);
-    const wedstrijdDatum = params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
+    await zyq.init();
+    zyq.menu([]);
+    const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
+    const wedstrijdDatum = zyq.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
     await spelersOverzicht(
         document.getElementById("kop"),
@@ -19,11 +23,11 @@
 })();
 
 function volgendeWedstrijdDatum(wedstrijden) {
-    const vandaag = datumSQL();
+    const vandaag = zyq.datumSQL();
     let datum;
     for (const wedstrijd of wedstrijden) {
         datum = wedstrijd.datum;
-        if (datumSQL(datum) >= vandaag) {
+        if (zyq.datumSQL(datum) >= vandaag) {
             return datum;
         }
     }
@@ -31,24 +35,24 @@ function volgendeWedstrijdDatum(wedstrijden) {
 }
 
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
-    const vandaag = datumSQL();
+    const vandaag = zyq.datumSQL();
     const datums = document.getElementById("datumSelecteren");
     wedstrijden.forEach(
         function (wedstrijd) {
-            if ((datumSQL(wedstrijd.datum) >= vandaag)) {
-                datums.appendChild(htmlOptie(wedstrijd.datum, datumLeesbaar(wedstrijd) + SCHEIDING + wedstrijdVoluit(wedstrijd)));
+            if ((zyq.datumSQL(wedstrijd.datum) >= vandaag)) {
+                datums.appendChild(zyq.htmlOptie(wedstrijd.datum, zyq.datumLeesbaar(wedstrijd) + zyq.SCHEIDING + zyq.wedstrijdVoluit(wedstrijd)));
             }
         });
     datums.value = wedstrijdDatum; // werkt uitsluitend na await
     datums.addEventListener("input",
         function () {
-            naarZelfdePagina(`datum=${datums.value}`);
+            zyq.naarZelfdePagina(`datum=${datums.value}`);
         });
 }
 
 async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedstrijdDatum) {
-    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor teamleiders";
-    const spelers = await serverFetch(`/${uuidToken}/teamleider/${o_o_o.seizoen}/${datumSQL(wedstrijdDatum)}`);
+    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + zyq.SCHEIDING + "overzicht voor teamleiders";
+    const spelers = await zyq.serverFetch(`/${zyq.uuidToken}/teamleider/${zyq.o_o_o.seizoen}/${zyq.datumSQL(wedstrijdDatum)}`);
     let nhsb = false;
     let aantalWedstrijden = 0;
     let wedstrijd = [];
@@ -61,10 +65,10 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             wedstrijd[aantalWedstrijden++] = w;
         }
     }
-    tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${datumLeesbaar({datum: wedstrijdDatum})}`;
+    tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${zyq.datumLeesbaar({datum: wedstrijdDatum})}`;
     let vorigeSpeler = 0;
     for (const s of spelers) {
-        const heeftToegezegd = s.partij === EXTERN_THUIS || s.partij === EXTERN_UIT; // heeft voor 1 team toegezegd
+        const heeftToegezegd = s.partij === db.EXTERN_THUIS || s.partij === db.EXTERN_UIT; // heeft voor 1 team toegezegd
         let knsbVast = "";
         let nhsbVast = "";
         let invallerTeam = s.teamCode === null || s.teamCode === "" ? "" : s.teamCode === s.knsbTeam || s.teamCode === s.nhsbTeam ? "" : s.teamCode;
@@ -78,31 +82,31 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
                 if (heeftToegezegd) {
                     w.toegezegd++;
                     if (w.teamCode === s.knsbTeam) {
-                        knsbVast = VINKJE;
+                        knsbVast = zyq.VINKJE;
                     } else if (w.teamCode === s.nhsbTeam) {
-                        nhsbVast = VINKJE;
+                        nhsbVast = zyq.VINKJE;
                     } else {
-                        invaller = VINKJE;
+                        invaller = zyq.VINKJE;
                     }
                 } else {
                     if (w.teamCode === s.knsbTeam) {
-                        knsbVast = STREEP;
+                        knsbVast = zyq.STREEP;
                     } else if (w.teamCode === s.nhsbTeam) {
-                        nhsbVast = STREEP;
+                        nhsbVast = zyq.STREEP;
                     } else {
-                        invaller = STREEP;
+                        invaller = zyq.STREEP;
                     }
                 }
             }
         }
         const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
         const invallerWedstrijd =
-            s.knsbNummer === vorigeSpeler ? teamVoluit(invallerTeam) + "  " : wedstrijdSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
+            s.knsbNummer === vorigeSpeler ? zyq.teamVoluit(invallerTeam) + "  " : wedstrijdSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
         vorigeSpeler = s.knsbNummer;
-        tabel.appendChild(htmlRij(naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerWedstrijd, invaller));
+        tabel.appendChild(zyq.htmlRij(zyq.naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerWedstrijd, invaller));
     }
     for (const w of wedstrijd) {
-        lijst.appendChild(htmlRij(wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? VINKJE : STREEP));
+        lijst.appendChild(zyq.htmlRij(zyq.wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? zyq.VINKJE : zyq.STREEP));
     }
 }
 
@@ -122,7 +126,7 @@ function wedstrijdSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
     const select = document.createElement("select");
     let wedstrijdNummer = -1; // geen wedstrijd;
     if (invallerTeam === "") {
-        select.appendChild(htmlOptie(wedstrijdNummer, ""));
+        select.appendChild(zyq.htmlOptie(wedstrijdNummer, ""));
     }
     for (let i = 0; i < wedstrijd.length; i++) {
         if (wedstrijd[i].teamCode === invallerTeam) {
@@ -132,7 +136,7 @@ function wedstrijdSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
             speler.nhsbTeam !== wedstrijd[i].teamCode &&
             speler.knsbRating < wedstrijd[i].hoogsteRating) {
             invallerMogelijkheden++;
-            select.appendChild(htmlOptie(i, teamVoluit(wedstrijd[i].teamCode)));
+            select.appendChild(zyq.htmlOptie(i, zyq.teamVoluit(wedstrijd[i].teamCode)));
         }
     }
     if (invallerMogelijkheden === 0) {
@@ -142,9 +146,9 @@ function wedstrijdSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
         select.addEventListener("input",async function () {
             const team = wedstrijd[select.value].teamCode;
             const ronde = wedstrijd[select.value].rondeNummer;
-            const mutaties = await serverFetch(
-                `/${uuidToken}/agenda/${o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/n/${datumSQL(wedstrijdDatum)}/int`);
-            naarZelfdePagina(`datum=${wedstrijdDatum}&wedstrijd=${select.value}`);
+            const mutaties = await zyq.serverFetch(
+                `/${zyq.uuidToken}/agenda/${zyq.o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/n/${zyq.datumSQL(wedstrijdDatum)}/int`);
+            zyq.naarZelfdePagina(`datum=${wedstrijdDatum}&wedstrijd=${select.value}`);
         });
         return select;
     }

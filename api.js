@@ -902,7 +902,7 @@ module.exports = router => {
                 .findById([ctx.params.seizoen, ctx.params.knsbNummer])
                 .patch({
                     knsbRating: ctx.params.knsbRating,
-                    datum: ctx.params.datum,
+                    datum: ctx.params.datum, // TODO datum automatisch in SQL of hier
                     interneRating: ctx.params.interneRating,
                     nhsbTeam: ctx.params.nhsb,
                     knsbTeam: ctx.params.knsb,
