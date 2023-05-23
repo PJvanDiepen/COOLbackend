@@ -1,13 +1,17 @@
 "use strict";
 
+import * as db from "./db.js";
+
+import * as zyq from "./zyq.js";
+
 /*
     verwerk lid=<knsbNummer>
  */
 
 (async function() {
-    await init();
-    const lidNummer = Number(params.get("lid"));
-    menu([]);
+    await zyq.init();
+    const lidNummer = Number(zyq.params.get("lid"));
+    zyq.menu([]);
     ledenLijst(
         lidNummer,
         document.getElementById("kop"),
@@ -17,12 +21,12 @@
 })();
 
 async function ledenLijst(lidNummer, kop, competities, tabel) {
-    kop.innerHTML = seizoenVoluit(o_o_o.seizoen) + SCHEIDING + "overzicht voor bestuur";
-    const personen = await serverFetch(`/personen/${o_o_o.seizoen}`);
-    competities.appendChild(htmlRij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
-    const tijdelijkNummer = await serverFetch(`/nummer`); // vanaf 100
-    tabel.appendChild(htmlRij(
-        htmlLink(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
+    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + zyq.SCHEIDING + "overzicht voor bestuur";
+    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
+    competities.appendChild(zyq.htmlRij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
+    const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
+    tabel.appendChild(zyq.htmlRij(
+        zyq.htmlLink(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
         "", // knsbNummer
         "", // knsbRating
         "", // eventueel interne rating
@@ -30,7 +34,6 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
         "", // nhsbTeam
         "", // competities
         "")); // functie
-
     const olaLid = [];
     for (const lid of personen) {
         const knsbNummer = Number(lid.knsbNummer);
@@ -45,8 +48,8 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             } else if (olaLid[knsbNummer] === knsbNummer) {
                 olaLid[Number(knsbNummer)] = olaRegel; // bekend in persoon tabel
             } else {
-                tabel.appendChild(htmlRij(
-                    htmlLink(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam),
+                tabel.appendChild(zyq.htmlRij(
+                    zyq.htmlLink(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam),
                     knsbNummer > 1000000 ? knsbNummer : "",
                     olaRegel.knsbRating,
                     "", // interne rating
@@ -57,12 +60,11 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             }
         }
     }
-
     let aantalGebruikers = 0;
     let aantalPerTeam = {};
-    const teams = await localFetch("/teams/" + o_o_o.seizoen); // competities en teams
+    const teams = await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen); // competities en teams
     for (const team of teams) {
-        if (teamOfCompetitie(team.teamCode)) {
+        if (zyq.teamOfCompetitie(team.teamCode)) {
             aantalPerTeam[team.teamCode] = 0;
         }
     }
@@ -93,26 +95,26 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             if (lid.intern5 !== null &&  lid.intern5) {
                 aantalPerTeam[lid.intern5]++;
             }
-            const link = htmlLink(`lid.html?lid=${knsbNummer}`, lid.naam);
-            htmlVerwerkt(link,knsbNummer === lidNummer);
+            const link = zyq.htmlLink(`lid.html?lid=${knsbNummer}`, lid.naam);
+            zyq.htmlVerwerkt(link,knsbNummer === lidNummer);
             const olaRating = !olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number" ? 0 : Number(olaLid[knsbNummer].knsbRating);
-            tabel.appendChild(htmlRij(
+            tabel.appendChild(zyq.htmlRij(
                 link,
                 knsbNummer > 1000000 ? knsbNummer : "",
                 olaRating ? olaRating : lid.knsbRating === null ? "" : lid.knsbRating,
-                lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? ZELFDE : lid.interneRating,
+                lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? zyq.ZELFDE : lid.interneRating,
                 lid.knsbTeam === null ? "" : lid.knsbTeam,
                 lid.nhsbTeam === null ? "" : lid.nhsbTeam,
                 lid.intern1 === null ? "" : [lid.intern1, lid.intern2, lid.intern3, lid.intern4, lid.intern5].join(", "),
-                lid.mutatieRechten === null ? "" : gebruikerFunctie(lid)
+                lid.mutatieRechten === null ? "" : zyq.gebruikerFunctie(lid)
             ));
         }
     }
-    competities.appendChild(htmlRij("gebruikers van 0-0-0", "", aantalGebruikers));
-    competities.appendChild(htmlRij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
+    competities.appendChild(zyq.htmlRij("gebruikers van 0-0-0", "", aantalGebruikers));
+    competities.appendChild(zyq.htmlRij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
     for (const team of teams) {
         if (teamOfCompetitie(team.teamCode)) {
-            competities.appendChild(htmlRij(teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
+            competities.appendChild(zyq.htmlRij(zyq.teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
         }
     }
 }
@@ -139,7 +141,7 @@ function olaBestandLezen() {
                 olaVerwerken(olaTabel, csv(regel));
             }
             sessionStorage.setItem("OLA", JSON.stringify(olaTabel));
-            naarZelfdePagina(); // TODO comment om te testen
+            zyq.naarZelfdePagina(); // TODO comment om te testen
         };
     });
 }
