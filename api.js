@@ -99,7 +99,7 @@ module.exports = router => {
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
     /*
-    Zie const.js
+    Zie zyq.js
     */
     router.get('/api', async function (ctx) {
         ctx.body = JSON.stringify(apiLijst);
@@ -113,7 +113,7 @@ module.exports = router => {
     });
 
     /*
-    Zie const.js
+    Zie zyq.js
      */
     router.get('/gewijzigd', async function (ctx) {
         ctx.body = laatsteMutaties;
@@ -144,7 +144,7 @@ module.exports = router => {
     /*
      Heeft deze ronde al een indeling en nog geen uitslagen?
 
-     Zie const.js
+     Zie zyq.js
      */
     router.get('/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
         const uitslagen = await Uitslag.query()
@@ -272,7 +272,7 @@ module.exports = router => {
     });
 
     /*
-    Zie const.js, start.js, team.js, bestuur.js, lid.js
+    Zie zyq.js, start.js, team.js, bestuur.js, lid.js
      */
     router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
@@ -303,7 +303,7 @@ module.exports = router => {
     where r.seizoen = @seizoen and r.teamCode = @teamCode
     order by r.rondeNummer;
 
-    Zie const.js
+    Zie zyq.js
      */
     router.get('/ronden/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Ronde.query()
@@ -342,7 +342,7 @@ module.exports = router => {
     where seizoen = @seizoen
     order by totalen desc;
 
-    Zie const.js, ronde.js*, speler.js*
+    Zie zyq.js, ronde.js*, speler.js*
      */
     router.get('/ranglijst/:seizoen/:competitie/:ronde/:datum/:versie', async function (ctx) {
         ctx.body = await Speler.query()
@@ -572,7 +572,7 @@ module.exports = router => {
     where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode and uitslag.team = 'e'
     order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
 
-    Zie const.js
+    Zie zyq.js
      */
     router.get('/team/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Uitslag.query()
@@ -746,7 +746,7 @@ module.exports = router => {
     /*
     knsbNummer, naam en mutatieRechten van gebruiker opzoeken
 
-    Zie const.js
+    Zie zyq.js
     */
     router.get('/gebruiker/:uuidToken', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
@@ -758,7 +758,7 @@ module.exports = router => {
     /*
     registratie voor gebruiker activeren
 
-    Zie const.js
+    Zie zyq.js
      */
     router.get('/activeer/:uuidToken', async function (ctx) {
         ctx.body = await Gebruiker.query()

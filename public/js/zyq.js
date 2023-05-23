@@ -1,9 +1,5 @@
 // because this is a module, I'm strict by default
 
-/*
-kopie van const.js met export, zodat zyq.js een module is
- */
-
 const LAAGSTE_RATING = 1000; // volgens Alkmaar Systeem
 const HOOGSTE_RATING = 2000;
 
