@@ -44,6 +44,10 @@ const VERLIES = "0";
 const THUIS = "t";
 const UIT = "u";
 
+function agenda(partij) {
+    return partij === MEEDOEN || partij === NIET_MEEDOEN || partij === EXTERN_THUIS || partij === EXTERN_UIT;
+}
+
 // gebruiker.mutatieRechten
 const IEDEREEN = 0;
 const GEREGISTREERD = 1;
@@ -94,6 +98,7 @@ export {
     ONBEKEND,              // na wijzigen indeling
     WIT_TEGEN,             // na wijzigen indeling
     ZWART_TEGEN,           // na wijzigen indeling
+    agenda,                // (partij)
 
     // uitslag.witZwart
     WIT,

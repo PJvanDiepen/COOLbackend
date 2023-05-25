@@ -213,6 +213,8 @@ FOREIGN KEY (seizoen, anderTeam) REFERENCES Team (seizoen, teamCode)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 ```
 
+TODO uitleg over het onderscheid tussen uitslag en agenda (en wijzig)
+
 Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en voor zwart.
 Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
 een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.

@@ -44,8 +44,9 @@ async function agenda(kop, lijst) {
     if (await agendaAanvullen(andereGebruiker, wedstrijden)) {
         wedstrijden = await agendaLezen(andereGebruiker);
     }
+    let agendaLijst = false;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
-        if (w.partij === db.MEEDOEN || w.partij === db.NIET_MEEDOEN || w.partij === db.EXTERN_THUIS || w.partij === db.EXTERN_UIT) {
+        if (db.agenda(w.partij)) {
             const teamleden = await zyq.serverFetch( // actuele situatie
                 `/${zyq.uuidToken}/teamleden/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
             const link = zyq.htmlLink(
@@ -58,6 +59,9 @@ async function agenda(kop, lijst) {
                 zyq.interneCompetitie(w.teamCode) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
                 teamleden.length,
                 link));
+            agendaLijst = true;
+        } else if (agendaLijst) {
+            console.log(w); // TODO er kan nog geen uitslag zijn!
         }
     }
 }

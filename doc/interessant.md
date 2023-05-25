@@ -26,6 +26,7 @@ Verwijder localStorage op iPhone
 
 - [ECMA JavaScript](https://262.ecma-international.org/)
 - [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [Type support with plain JavaScript](https://www.pausly.app/blog/full-type-support-with-plain-javascript)
 - [JavaScript nieuwe mogelijkheden](https://betterprogramming.pub/all-javascript-and-typescript-features-of-the-last-3-years-629c57e73e42)
 - [Spread and rest ... erg leuke website](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
@@ -105,6 +106,7 @@ Verwijder localStorage op iPhone
 - [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [Svelte](https://svelte.dev/)
+- [Vanilla JavaScript: VanJs](https://vanjs.org/)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
 - [TODO in verschillende frameworks](https://todomvc.com/)
 - [unit test met vitest](https://vitest.dev/)

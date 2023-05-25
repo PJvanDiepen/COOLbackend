@@ -17,6 +17,7 @@ const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
 const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
+
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -43,6 +44,10 @@ const VERLIES = "0";
 // uitslag.uithuis
 const THUIS = "t";
 const UIT = "u";
+
+function agenda(partij) {
+    return partij === MEEDOEN || partij === NIET_MEEDOEN || partij === EXTERN_THUIS || partij === EXTERN_UIT;
+}
 
 // gebruiker.mutatieRechten
 const IEDEREEN = 0;
@@ -94,6 +99,7 @@ module.exports = {
     ONBEKEND,              // na wijzigen indeling
     WIT_TEGEN,             // na wijzigen indeling
     ZWART_TEGEN,           // na wijzigen indeling
+    agenda,                // (partij)
 
     // uitslag.witZwart
     WIT,
