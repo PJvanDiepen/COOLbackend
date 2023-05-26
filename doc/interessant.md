@@ -1,8 +1,4 @@
 # Client
-- [Refresh your cache](https://refreshyourcache.com/nl/home/)
-- [Refresh js-files](https://www.tutorialspoint.com/How-can-I-force-clients-to-refresh-JavaScript-files)
-- [dito](https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files)
-
 Verwijder localStorage op Android browser Chrome
 - 3 puntjes
 - Instellingen

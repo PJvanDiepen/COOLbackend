@@ -113,7 +113,7 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
     competities.appendChild(zyq.htmlRij("gebruikers van 0-0-0", "", aantalGebruikers));
     competities.appendChild(zyq.htmlRij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
     for (const team of teams) {
-        if (teamOfCompetitie(team.teamCode)) {
+        if (zyq.teamOfCompetitie(team.teamCode)) {
             competities.appendChild(zyq.htmlRij(zyq.teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
         }
     }
