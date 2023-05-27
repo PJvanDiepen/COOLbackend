@@ -1,4 +1,6 @@
-// because this is a module, I'm strict by default
+/*
+ * Deze module bevat alle code voor interactie met HTML
+ */
 
 export const SCHEIDING = " \u232A ";
 export const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
@@ -132,4 +134,13 @@ export function plaatje(bestand, percentage, breed, hoog) {
         img.height = Math.round(hoog * factor);
     }
     return img;
+}
+
+export function tabblad(link) {
+    const a = document.createElement("a");
+    a.append(link);
+    a.href = server + link;
+    a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
+    a.rel = "noopener noreferrer"
+    return a;
 }

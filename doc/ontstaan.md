@@ -1,17 +1,39 @@
 # Ontstaansgeschiedenis 0-0-0
 
-Ik schaak al sinds 1971 in interne competities van schaakverenigingen. 
-Eerst bij Lasker in Uitgeest, daarna bij Schaakvereniging Castricum, 0-0-0 in Alkmaar en tegenwoordig bij de Waagtoren in Alkmaar.
-Bij Lasker en Castricum gebruikten ze voor het Keizersysteem voor de interne competitie.
-Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het 
-[Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) en dat gebruiken we bij de Waagtoren nog steeds.
-
-[Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/)
-
-TODO alle design beslissingen inclusief planning
+0-0-0 is geleidelijk ontstaan. Hieronder beschrijft Peter van Diepen hoe dat ging en de geschiedenis van de belangrijkste ontwerpbeslissingen.
 
 Alles draait om de eenvoud
 (Het Goede Doel)
+
+## Wat vooraf ging
+
+Ik schaak al sinds 1971 in interne competities van schaakverenigingen. 
+Eerst bij Lasker in Uitgeest, daarna bij Schaakvereniging Castricum, 0-0-0 in Alkmaar en tegenwoordig bij de Waagtoren in Alkmaar.
+Bij Lasker en Castricum gebruikten ze het Keizersysteem voor de interne competitie.
+Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het 
+[Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) en dat gebruiken we bij de Waagtoren nog steeds.
+
+Sinds 1974 programmeer ik computers. In het begin waren dat CDC-, Univac-, DEC- en IBM-computers later microcomputers en de IBM PC. 
+In 2003 werd ik docent wiskunde en in 2017 docent software engineering aan de Hogeschool van Amsterdam.
+
+In 2016 werd ik intern wedstrijdleider van de Waagtoren. 
+Toen gebruikte ik Rokade van [Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 
+om de uitslagen van de interne competitie te verwerken, ranglijsten te berekenen, de indeling te maken en op de website te publiceren. 
+
+## Schaakseizoen 2021-2022
+ 
+0-0-0 was nog lang niet compleet, maar ik meende dat ik 0-0-0 tijdens dit seizoen wel compleet kon maken.
+Het algoritme voor het indelen van de eerste ronde had ik al met het offline Java-programma in de praktijk getest
+en ik had wat ideeën voor het indelen van de andere ronden. Ik wist dat indelen later in het seizoen moeilijker zou worden,
+maar ik dacht dat ik die problemen snel genoeg kon oplossen tussen de ronden. 
+Kortom ik meende dat ik Rokade niet meer nodig zou hebben. 
+
+Zo is het inderdaad gegaan. 2021-2022 was het eerste seizoen dat de interne competitie van de Waagtoren volledig draaide met 0-0-0.
+En ook de rapid competitie, maar dat ging niet helemaal goed.
+
+## Schaakseizoen 2022-2023
+
+## Planning voor schaakseizoen 2023-2024
 
 We hebben je e-mailadres nodig om je een link met een unieke code op te sturen waarmee 0-0-0.nl je herkent.
 Indien 0-0-0.nl je niet meer herkent, kan je opnieuw een registratie aanvragen.

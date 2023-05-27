@@ -1,7 +1,5 @@
 /*
-db uit de MySQL database
-
-globale variabelen voor server en pagina's in de browser
+ * Deze module bevat alle code voor interactie met de MySQL database
  */
 
 const apiLijst = [];
