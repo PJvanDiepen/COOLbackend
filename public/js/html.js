@@ -32,9 +32,27 @@ export function checkbox(id, value, text) {
     input.id = id;
     input.value = value;
     const label = document.createElement("label");
-    label.appendChild(input);
-    label.appendChild(tekst(` ${text}`)); // spatie tussen checkbox en label
+    label.append(input, ` ${text}`); // spatie tussen checkbox en label
     return label;
+}
+
+/**
+ * selectie uit keuzes aan HTML knop koppelen en geselecteerde keuze verwerken
+ *
+ * @param selectieId van HTML knop
+ * @param selectieKeuzes keuze / tekst paren
+ * @param selectieValue huidige keuze
+ * @param selectieFun om de geselecteerde keuze te verwerken
+ */
+export function selectie(selectieId, selectieKeuzes, selectieValue, selectieFun) {
+    const knop = document.getElementById(selectieId);
+    for (const [value, text] of selectieKeuzes) {
+        knop.append(optie(value, text));
+    }
+    knop.value = selectieValue;
+    knop.addEventListener("input",function () {
+        selectieFun(knop.value);
+    });
 }
 
 export function optie(value, text) {
@@ -44,7 +62,7 @@ export function optie(value, text) {
     return option;
 }
 
-export function tekst(text) {
+export function tekst(text) { // TODO is deze nog nodig?
     return text.nodeType === Node.ELEMENT_NODE ? text : document.createTextNode(text);
 }
 
@@ -70,22 +88,22 @@ export function rij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
         const td = document.createElement("td");
-        td.appendChild(tekst(kolom));
-        tr.appendChild(td);
+        td.append(kolom);
+        tr.append(td);
     });
     return tr;
 }
 
 export function naarPaginaEnTerug(link, text) {
     const a = document.createElement("a");
-    a.appendChild(tekst(text));
+    a.append(text);
     a.href = link;
     return a;
 }
 
 export function naarPagina(link, text) {
     const a = document.createElement("a");
-    a.appendChild(tekst(text));
+    a.append(text);
     a.href = "";
     a.addEventListener("click", function (event) {
         event.preventDefault();
