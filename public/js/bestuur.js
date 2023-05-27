@@ -1,6 +1,6 @@
 "use strict";
 
-import * as db from "./db.js";
+import * as html from "./html.js";
 
 import * as zyq from "./zyq.js";
 
@@ -10,7 +10,7 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    const lidNummer = Number(zyq.params.get("lid"));
+    const lidNummer = Number(html.params.get("lid"));
     zyq.menu([]);
     ledenLijst(
         lidNummer,
@@ -21,12 +21,12 @@ import * as zyq from "./zyq.js";
 })();
 
 async function ledenLijst(lidNummer, kop, competities, tabel) {
-    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + zyq.SCHEIDING + "overzicht voor bestuur";
+    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor bestuur";
     const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
-    competities.appendChild(zyq.htmlRij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
+    competities.append(html.rij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
-    tabel.appendChild(zyq.htmlRij(
-        zyq.htmlLink(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
+    tabel.append(html.rij(
+        html.naarPagina(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
         "", // knsbNummer
         "", // knsbRating
         "", // eventueel interne rating
@@ -48,8 +48,8 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             } else if (olaLid[knsbNummer] === knsbNummer) {
                 olaLid[Number(knsbNummer)] = olaRegel; // bekend in persoon tabel
             } else {
-                tabel.appendChild(zyq.htmlRij(
-                    zyq.htmlLink(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam),
+                tabel.append(html.rij(
+                    html.naarPagina(`lid.html?lid=${knsbNummer}`, olaRegel.olaNaam),
                     knsbNummer > 1000000 ? knsbNummer : "",
                     olaRegel.knsbRating,
                     "", // interne rating
@@ -95,10 +95,10 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             if (lid.intern5 !== null &&  lid.intern5) {
                 aantalPerTeam[lid.intern5]++;
             }
-            const link = zyq.htmlLink(`lid.html?lid=${knsbNummer}`, lid.naam);
-            zyq.htmlVerwerkt(link,knsbNummer === lidNummer);
+            const link = html.naarPagina(`lid.html?lid=${knsbNummer}`, lid.naam);
+            html.verwerkt(link,knsbNummer === lidNummer);
             const olaRating = !olaLid[knsbNummer] || typeof olaLid[knsbNummer] === "number" ? 0 : Number(olaLid[knsbNummer].knsbRating);
-            tabel.appendChild(zyq.htmlRij(
+            tabel.append(html.rij(
                 link,
                 knsbNummer > 1000000 ? knsbNummer : "",
                 olaRating ? olaRating : lid.knsbRating === null ? "" : lid.knsbRating,
@@ -110,11 +110,11 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
             ));
         }
     }
-    competities.appendChild(zyq.htmlRij("gebruikers van 0-0-0", "", aantalGebruikers));
-    competities.appendChild(zyq.htmlRij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
+    competities.append(html.rij("gebruikers van 0-0-0", "", aantalGebruikers));
+    competities.append(html.rij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
     for (const team of teams) {
         if (zyq.teamOfCompetitie(team.teamCode)) {
-            competities.appendChild(zyq.htmlRij(zyq.teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
+            competities.append(html.rij(zyq.teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
         }
     }
 }
@@ -141,7 +141,7 @@ function olaBestandLezen() {
                 olaVerwerken(olaTabel, csv(regel));
             }
             sessionStorage.setItem("OLA", JSON.stringify(olaTabel));
-            zyq.naarZelfdePagina(); // TODO comment om te testen
+            html.zelfdePagina(); // TODO comment om te testen
         };
     });
 }

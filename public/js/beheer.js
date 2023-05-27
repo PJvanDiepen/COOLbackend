@@ -1,5 +1,6 @@
 "use strict";
 
+import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
@@ -33,13 +34,13 @@ TODO mutaties met verwijderen
             zyq.backupSQL("ronde", rijen);
         }],
         [db.BEHEERDER, "test API", function () {
-            zyq.naarAnderePagina("api.html");
+            html.anderePagina("api.html");
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));
     const versie = await zyq.serverFetch(`/versie`);
     console.log(db.hoera());
-    document.getElementById("computer").appendChild(
+    document.getElementById("computer").append(
         zyq.htmlTekst(`0-0-0 versie ${versie} met browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
@@ -47,7 +48,7 @@ async function gebruikers(lijst) {
     const leden = await zyq.serverFetch(`/${zyq.uuidToken}/gebruikers`);
     let aantal = 0;
     for (const lid of leden) {
-        lijst.appendChild(zyq.htmlRij(
+        lijst.append(html.rij(
             ++aantal,
             zyq.naarSpeler(lid),
             zyq.gebruiker.mutatieRechten === db.BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
@@ -56,7 +57,7 @@ async function gebruikers(lijst) {
 }
 
 function gebruikerEmailSturen(lid) {
-    return zyq.htmlLinkEnTerug(`email.html?speler=${lid.knsbNummer}&email=${lid.email}`, lid.email);
+    return html.naarPaginaEnTerug(`email.html?speler=${lid.knsbNummer}&email=${lid.email}`, lid.email);
 }
 
 // TODO gebruiker hoger of lagere functie geven
@@ -65,7 +66,7 @@ async function laatsteMutaties(lijst) {
     const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/mutaties/0/9/100`); // laatste 100 mutaties
     let vorige = 0;
     for (const mutatie of mutaties) {
-        lijst.appendChild(zyq.htmlRij(
+        lijst.append(html.rij(
             zyq.tijdGeleden(mutatie.tijdstip),
             mutatie.knsbNummer === vorige ? "" : zyq.naarSpeler(mutatie),
             mutatie.knsbNummer === vorige ? "" : mutatie.knsbNummer,

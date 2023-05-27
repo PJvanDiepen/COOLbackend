@@ -24,7 +24,7 @@ async function gebruikerTekst(emailAan, naamAan, activeer) {
         console.log(leden);
     }
     const lid = leden[0];
-    emailAan.appendChild(zyq.htmlTekst(lid.email));
-    naamAan.appendChild(zyq.htmlTekst(`${lid.naam},`));
-    activeer.appendChild(zyq.htmlTekst(`https://0-0-0.nl/start.html?vereniging=${zyq.o_o_o.vereniging}&uuid=${lid.uuidToken}`));
+    emailAan.append(lid.email);
+    naamAan.append(`${lid.naam},`);
+    activeer.append(`https://0-0-0.nl/start.html?vereniging=${zyq.o_o_o.vereniging}&uuid=${lid.uuidToken}`);
 }

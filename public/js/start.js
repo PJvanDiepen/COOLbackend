@@ -60,7 +60,7 @@ async function seizoenSelecteren(teamCode) {
         seizoenen.push([zyq.ditSeizoen, zyq.seizoenVoluit(zyq.ditSeizoen)]);
     }
     html.selectie("seizoenSelecteren", seizoenen, zyq.o_o_o.seizoen, function (seizoen) {
-        html.naarZelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
+        html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
     });
 }
 
@@ -72,6 +72,6 @@ async function competitieSelecteren() {
         }
     });
     html.selectie("competitieSelecteren", competities, zyq.o_o_o.competitie, function (competitie) {
-        html.naarZelfdePagina(`team=${competitie}&competitie=${competitie}`);
+        html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
     });
 }

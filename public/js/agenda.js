@@ -1,12 +1,13 @@
 "use strict";
 
+import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    zyq.menu([]);
+    await zyq.menu([]);
     await agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
 })();
 
@@ -36,10 +37,10 @@ import * as zyq from "./zyq.js";
 
  */
 async function agenda(kop, lijst) {
-    const andereGebruiker = Number(zyq.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
+    const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
     const gewijzigd = await agendaMutatie(andereGebruiker);
-    const naam = zyq.params.get("naamGebruiker") || zyq.gebruiker.naam;
-    kop.innerHTML = "Agenda" + zyq.SCHEIDING + naam;
+    const naam = html.params.get("naamGebruiker") || zyq.gebruiker.naam;
+    kop.innerHTML = "Agenda" + html.SCHEIDING + naam;
     let wedstrijden = await agendaLezen(andereGebruiker);
     if (await agendaAanvullen(andereGebruiker, wedstrijden)) {
         wedstrijden = await agendaLezen(andereGebruiker);
@@ -49,11 +50,11 @@ async function agenda(kop, lijst) {
         if (db.agenda(w.partij)) {
             const teamleden = await zyq.serverFetch( // actuele situatie
                 `/${zyq.uuidToken}/teamleden/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
-            const link = zyq.htmlLink(
+            const link = html.naarPagina(
                 `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${zyq.datumSQL(w.datum)}&partij=${wijzig(w)}`,
                 vinkje(w));
-            zyq.htmlVerwerkt(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
-            lijst.appendChild(zyq.htmlRij(
+            html.rij(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
+            lijst.append(html.rij(
                 zyq.interneCompetitie(w.teamCode) ? w.rondeNummer : "",
                 zyq.datumLeesbaar(w),
                 zyq.interneCompetitie(w.teamCode) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
@@ -67,10 +68,10 @@ async function agenda(kop, lijst) {
 }
 
 async function agendaMutatie(knsbNummer) {
-    const teamCode = zyq.params.get("team");
-    const rondeNummer = Number(zyq.params.get("ronde"));
-    const datum = zyq.params.get("datum");
-    const partij = zyq.params.get("partij");
+    const teamCode = html.params.get("team");
+    const rondeNummer = Number(html.params.get("ronde"));
+    const datum = html.params.get("datum");
+    const partij = html.params.get("partij");
     if (teamCode && rondeNummer && datum && partij) {
         if (await zyq.serverFetch(`/${zyq.uuidToken}/aanwezig/${zyq.ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`)) {
             return {"teamCode": teamCode, "rondeNummer": rondeNummer};

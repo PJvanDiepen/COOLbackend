@@ -1,6 +1,20 @@
 /*
  * Deze module bevat alle code voor interactie met HTML
+ *
+ * De eerste pagina staat in index.html en start.html is de pagina, die 0-0-0 app start.
+ * De bijhorende start.js verwerkt de url, vult de pagina aan en reageert op de gebruiker.
+ *
+ * Dit geldt voor alle vervolg pagina's. Bij agenda.html hoort agenda.js, bij api.htm hoort api.js en zo voort.
+ * Daarnaast zijn er modules:
+ *
+ * html.js voor interactie met html
+ * db.js voor interactie met de MySQL database
+ * en zo voort
  */
+
+export const pagina = new URL(location);
+export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+export const params = pagina.searchParams;
 
 export const SCHEIDING = " \u232A ";
 export const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
@@ -8,10 +22,6 @@ export const STREEP = "___";
 export const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
 export const FOUTJE = "\u00a0\u00a0?\u00a0\u00a0"; // met no break spaces
 export const ZELFDE = "\u00a0\u00a0=\u00a0\u00a0"; // met no break spaces
-
-export const pagina = new URL(location);
-export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
-export const params = pagina.searchParams;
 
 /*
 TODO const html = {id1: , id2: } alle DOM elementen met id
@@ -68,21 +78,9 @@ export function tekst(text) { // TODO is deze nog nodig?
     return text.nodeType === Node.ELEMENT_NODE ? text : document.createTextNode(text);
 }
 
-export function fout(node, indien) {
-    if (indien) {
-        node.classList.add("fout");
-    }
-}
-
 export function verwerkt(node, indien) {
     if (indien) {
         node.classList.add("verwerkt");
-    }
-}
-
-export function vet(node, indien) {
-    if (indien) {
-        node.classList.add("vet");
     }
 }
 
@@ -109,16 +107,16 @@ export function naarPagina(link, text) {
     a.href = "";
     a.addEventListener("click", function (event) {
         event.preventDefault();
-        naarAnderePagina(link);
+        anderePagina(link);
     });
     return a;
 }
 
-export function naarAnderePagina(naarPagina) { // pagina en parameters
+export function anderePagina(naarPagina) { // pagina en parameters
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
-export function naarZelfdePagina(parameters) {
+export function zelfdePagina(parameters) {
     location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 

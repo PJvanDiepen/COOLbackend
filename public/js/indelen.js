@@ -1,5 +1,6 @@
 "use strict";
 
+import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
@@ -13,10 +14,10 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     zyq.competitieTitel();
-    const rondeNummer = Number(zyq.params.get("ronde")) || zyq.o_o_o.huidigeRonde;
+    const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.huidigeRonde;
     const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
     const subkop = document.getElementById("subkop");
-    subkop.innerHTML = "Indeling ronde " + rondeNummer + zyq.SCHEIDING + zyq.datumLeesbaar({datum: totDatum});
+    subkop.innerHTML = "Indeling ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar({datum: totDatum});
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
@@ -72,7 +73,7 @@ import * as zyq from "./zyq.js";
             mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/afwezig/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
             mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/extern/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
-                zyq.naarAnderePagina(`ronde.html?ronde=${rondeNummer}`);
+                html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
             }
         }]);
     versieSelecteren(document.getElementById("versies"), rondeNummer);
@@ -131,12 +132,12 @@ async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
 }
 
 function rangnummersToggle(rangnummers, rondeNummer) {
-    const rangnummersAan = zyq.params.get("rangnummers");
+    const rangnummersAan = html.params.get("rangnummers");
     if (rangnummersAan) {
         rangnummers.open = true;
     } else {
         rangnummers.addEventListener("toggle",function () {
-            zyq.naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
+            html.zelfdePagina(`ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
         });
     }
     return rangnummersAan;
@@ -144,7 +145,7 @@ function rangnummersToggle(rangnummers, rondeNummer) {
 
 function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
     for (let i = 0; i < wit.length; i++) {
-        partijen.appendChild(zyq.htmlRij(
+        partijen.append(html.rij(
             i + 1,
             zyq.naarSpeler(r[wit[i]]),
             zyq.naarSpeler(r[zwart[i]]),
@@ -152,7 +153,7 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
         ));
     }
     if (oneven) {
-        partijen.appendChild(zyq.htmlRij(
+        partijen.append(html.rij(
             "",
             zyq.naarSpeler(r[oneven]),
             "",
@@ -160,7 +161,7 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
     }
     let bord = wit.length;
     for (const speler of extern) { // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
-        partijen.appendChild(zyq.htmlRij(
+        partijen.append(html.rij(
             speler.partij === db.EXTERN_THUIS ? ++bord : "",
             zyq.naarSpeler(speler),
             "",
@@ -170,7 +171,7 @@ function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
 
 function deelnemersLijst(r, lijst) {
     r.forEach(function(t, i) {
-        lijst.appendChild(zyq.htmlRij(
+        lijst.append(html.rij(
             i + 1,
             zyq.naarSpeler(t),
             t.totaal(), // TODO t.punten() ?
@@ -218,16 +219,16 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
     }
 }
 
-const versieIndelen = Number(zyq.params.get("indelen")) || 0;
+const versieIndelen = Number(html.params.get("indelen")) || 0;
 
 function versieSelecteren(versies, rondeNummer) {
     for (let i = 0; i < indelenFun.length; i++) {
-        versies.appendChild(zyq.htmlOptie(i, indelenFun[i][0]));
+        versies.append(html.optie(i, indelenFun[i][0]));
     }
     versies.value = versieIndelen;
     versies.addEventListener("input",
         function () {
-            zyq.naarZelfdePagina(`ronde=${rondeNummer}&indelen=${versies.value}&rangnummers=aan`);
+            html.zelfdePagina(`ronde=${rondeNummer}&indelen=${versies.value}&rangnummers=aan`);
         });
 }
 
