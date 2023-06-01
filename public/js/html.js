@@ -49,6 +49,41 @@ export function checkbox(id, value, text) {
 }
 
 /**
+ * selectie verwerkt alle selectieOpties tot een select-knop met opties en zet een eventListener klaar om een optie te verwerken.
+ *
+ * Elke selectieOptie bestaat uit [<waarde>, <tekst>, <functie>].
+ * Elke optie krijgt een volgnummer en een tekst.
+ * Het volgnummer verwijst naar de bijbehorende functie in functies en de bijbehorende waarde in waardes.
+ *
+ * De eventListener krijgt het volgnummer door en start de bijbehorende functie met de bijbehorende waarde.
+ *
+ * @param selectieId van HTML knop
+ * @param selectieWaarde huidige optie
+ * @param selectieOpties opties met waarde, tekst en functie om deze waarde te verwerken
+ */
+export function selecty(selectieId, selectieWaarde, ...selectieOpties) {
+    const knop = document.getElementById(selectieId);
+    const functies = [];
+    const waardes = [];
+    for (const [waarde, tekst, functie] of selectieOpties) {
+        const volgnummer = functies.length; // optie 0, 1, 2 enz.
+        knop.append(optie(volgnummer, tekst));
+        functies.push(functie ? functie :
+            function (optieNummer) {
+                console.log(`${optieNummer} waarde: ${waarde} tekst: ${tekst}`);
+            });
+        waardes.push(waarde);
+        if (waarde === selectieWaarde) {
+            knop.value = volgnummer;
+        }
+    }
+    knop.addEventListener("input",
+        function () {
+            functies[knop.value](waardes[knop.value]);
+        });
+}
+
+/**
  * selectie uit keuzes aan HTML knop koppelen en geselecteerde keuze verwerken
  *
  * @param selectieId van HTML knop
@@ -67,15 +102,11 @@ export function selectie(selectieId, selectieKeuzes, selectieValue, selectieFun)
     });
 }
 
-export function optie(value, text) {
+export function optie(value, text) { // TODO zonder export?
     const option = document.createElement("option");
     option.value = value;
     option.text = text;
     return option;
-}
-
-export function tekst(text) { // TODO is deze nog nodig?
-    return text.nodeType === Node.ELEMENT_NODE ? text : document.createTextNode(text);
 }
 
 export function verwerkt(node, indien) {

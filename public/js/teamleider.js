@@ -37,6 +37,7 @@ function volgendeWedstrijdDatum(wedstrijden) {
 
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
     const vandaag = zyq.datumSQL();
+    // TODO html.selectie toepassen
     const datums = document.getElementById("datumSelecteren");
     wedstrijden.forEach(
         function (wedstrijd) {
@@ -122,6 +123,7 @@ function ratingInvaller(spelers, teamCode, nhsb) {
     return 3000; // hoogste rating indien team zonder vaste spelers
 }
 
+// TODO html.selectie toepassen
 function wedstrijdSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
     let invallerMogelijkheden = 0;
     const select = document.createElement("select");

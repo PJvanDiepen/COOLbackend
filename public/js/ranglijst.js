@@ -15,12 +15,26 @@ const alleLeden = Number(html.params.get("leden"));
     await zyq.init();
     zyq.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
-    zyq.menu([]);
-    zyq.teamSelecteren(zyq.o_o_o.competitie);
-    zyq.rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
-    versieSelecteren(document.getElementById("versies"));
-    ledenSelecteren(document.getElementById("leden"));
-    spelersLijst(rondeNummer,
+    await zyq.menu([]);
+    await zyq.teamSelecteren(zyq.o_o_o.competitie);
+    await zyq.rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
+    const versies = [
+        [0, "versie 0 volgens reglement interne competitie van het seizoen"],
+        [2, "versie 2 met afzeggingenaftrek zoals in seizoen = 1819, 1920, 2021"],
+        [3, "versie 3 zonder afzeggingenaftrek vanaf seizoen = 2122"],
+        [4, "versie 4 volgens reglement rapid competitie"],
+        [5, "versie 5 voor snelschaken"]];
+    html.selectie("versies", versies, zyq.o_o_o.versie,function (versie) {
+        html.zelfdePagina(`versie=${versie}`);
+    });
+    const welkeLeden = [
+        [0, "alleen actieve leden"],
+        [1, "inclusief niet actieve spelers"]];
+    html.selectie("leden", welkeLeden, alleLeden,function (leden) {
+        html.zelfdePagina(`versie=${leden}`);
+    });
+    // ledenSelecteren(document.getElementById("leden"));
+    await spelersLijst(rondeNummer,
         document.getElementById("kop"),
         document.getElementById("tabel"),
         document.getElementById("promoties"));
@@ -47,19 +61,6 @@ async function spelersLijst(rondeNummer, kop, lijst) {
                 speler.percentageExtern()));
         }
     }
-}
-
-function versieSelecteren(versies) {  // TODO: versies en teksten in database
-    versies.append(html.optie(0, "versie 0 volgens reglement interne competitie van het seizoen"));
-    versies.append(html.optie(2, "versie 2 met afzeggingenAftrek zoals in seizoen = 1819, 1920, 2021"));
-    versies.append(html.optie(3, "versie 3 zonder afzeggingenAftrek vanaf seizoen = 2122"));
-    versies.append(html.optie(4, "versie 4 volgens reglement rapid competitie"));
-    versies.append(html.optie(5, "versie 5 voor snelschaken"));
-    versies.value = zyq.o_o_o.versie;
-    versies.addEventListener("input",
-        function () {
-            html.zelfdePagina(`versie=${versies.value}`);
-        });
 }
 
 function ledenSelecteren(leden) {

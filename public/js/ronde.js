@@ -137,6 +137,7 @@ function uitslagWijzigen(uitslag)  {
     }
 }
 
+// TODO html.selectie toepassen
 function uitslagSelecteren(rondeNummer, uitslag) {
     const select = document.createElement("select");
     select.append(html.optie(db.WINST, "1-0"));

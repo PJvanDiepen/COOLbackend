@@ -99,6 +99,7 @@ async function lidFormulier(persoon, ola) {
     if (ola) {
         knsbRating.value = ola.knsbRating; // in OLA bestand van augustus staat juiste KNSB rating
     }
+    // TODO html.selectie toepassen
     const interneRating = document.getElementById("interneRating");
     if (knsbRating.value > 0) {
         interneRating.append(html.optie(knsbRating.value, "zie KNSB rating"));

@@ -79,7 +79,7 @@ async function uitslagenSpeler(kop, lijst) {
         }
     }
     if (t.aftrek()) {
-        lijst.append(htmlRij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
+        lijst.append(html.rij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
     }
     if (!t.intern() && t.afzeggingen()) {
         lijst.append(html.rij("", "", "uitsluitend afzeggingen", "", "", "", "", ""));

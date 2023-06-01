@@ -221,6 +221,7 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
 
 const versieIndelen = Number(html.params.get("indelen")) || 0;
 
+// TODO html.selectie toepassen
 function versieSelecteren(versies, rondeNummer) {
     for (let i = 0; i < indelenFun.length; i++) {
         versies.append(html.optie(i, indelenFun[i][0]));
