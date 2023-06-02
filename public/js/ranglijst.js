@@ -30,10 +30,9 @@ const alleLeden = Number(html.params.get("leden"));
     const ledenFun = function (leden) {
         html.zelfdePagina(`leden=${leden}`);
     };
-    const welkeLeden = [
+    html.selectie("leden", alleLeden,[ // TODO ook toepassen bij bestuur.js
         [0, "alleen actieve leden", ledenFun],
-        [1, "inclusief niet actieve spelers", ledenFun]];
-    html.selectie("leden", alleLeden, welkeLeden, ledenFun);
+        [1, "inclusief niet actieve spelers", ledenFun]]);
     await spelersLijst(rondeNummer,
         document.getElementById("kop"),
         document.getElementById("tabel"),
@@ -61,14 +60,4 @@ async function spelersLijst(rondeNummer, kop, lijst) {
                 speler.percentageExtern()));
         }
     }
-}
-
-function ledenSelecteren(leden) {
-    leden.append(html.optie(0, "alleen actieve leden"));
-    leden.append(html.optie(1, "inclusief niet actieve spelers"));
-    leden.value = alleLeden;
-    leden.addEventListener("input",
-        function () {
-            html.zelfdePagina(`leden=${leden.value}`);
-        })
 }

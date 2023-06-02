@@ -92,6 +92,7 @@ Verwijder localStorage op iPhone
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
 - [Schaken in HTML en JavaScript](https://www.chessengines.org/)
 - [betafish](https://github.com/Strryke/betafish)
+- [CQL](http://www.gadycosteff.com/cql/index.html)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)

@@ -62,7 +62,7 @@ async function seizoenSelecteren(teamCode) {
     if (ditSeizoentoevoegen) {
         seizoenen.push([zyq.ditSeizoen, zyq.seizoenVoluit(zyq.ditSeizoen), seizoenFun]);
     }
-    html.selectie("seizoenSelecteren", zyq.o_o_o.seizoen, seizoenen, seizoenFun);
+    html.selectie("seizoenSelecteren", zyq.o_o_o.seizoen, seizoenen);
 }
 
 async function competitieSelecteren() {
@@ -75,5 +75,5 @@ async function competitieSelecteren() {
             competities.push([team.teamCode, team.omschrijving, competitieFun]);
         }
     });
-    html.selectie("competitieSelecteren", zyq.o_o_o.competitie, competities, competitieFun);
+    html.selectie("competitieSelecteren", zyq.o_o_o.competitie, competities);
 }

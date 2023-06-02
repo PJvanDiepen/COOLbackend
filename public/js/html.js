@@ -61,37 +61,7 @@ export function checkbox(id, value, text) {
  * @param selectieWaarde huidige optie
  * @param selectieOpties opties met waarde, tekst en functie om deze waarde te verwerken
  */
-export function selecty(selectieId, selectieWaarde, ...selectieOpties) {
-    const knop = document.getElementById(selectieId);
-    const functies = [];
-    const waardes = [];
-    for (const [waarde, tekst, functie] of selectieOpties) {
-        const volgnummer = functies.length; // optie 0, 1, 2 enz.
-        knop.append(optie(volgnummer, tekst));
-        functies.push(functie ? functie :
-            function (optieNummer) {
-                console.log(`${optieNummer} waarde: ${waarde} tekst: ${tekst}`);
-            });
-        waardes.push(waarde);
-        if (waarde === selectieWaarde) {
-            knop.value = volgnummer;
-        }
-    }
-    knop.addEventListener("input",
-        function () {
-            functies[knop.value](waardes[knop.value]);
-        });
-}
-
-/**
- * selectie uit keuzes aan HTML knop koppelen en geselecteerde keuze verwerken
- *
- * @param selectieId van HTML knop
- * @param selectieWaarde huidige keuze
- * @param selectieOpties keuze / tekst paren
- * @param selectieFun om de geselecteerde keuze te verwerken
- */
-export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFun) {
+export function selectie(selectieId, selectieWaarde, selectieOpties) {
     const knop = document.getElementById(selectieId);
     const functies = [];
     const waardes = [];
@@ -102,15 +72,12 @@ export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFun
                 console.log(`${optieNummer} waarde: ${waarde} tekst: ${tekst}`);
             });
         waardes.push(waarde);
-        // knop.append(optie(waarde, tekst));
         knop.append(optie(volgnummer, tekst));
         if (waarde === selectieWaarde) {
             knop.value = volgnummer;
         }
     }
-    // knop.value = selectieWaarde;  // overschrijf
     knop.addEventListener("input",function () {
-        // selectieFun(knop.value);
         functies[knop.value](waardes[knop.value]);
     });
 }

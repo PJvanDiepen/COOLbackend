@@ -283,11 +283,9 @@ function versieBepalen() {
 }
 
 async function competitieRondenVerwerken() {
-    console.log("--- competitieRondenVerwerken() ---")
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
-    console.log(o_o_o.competitie);
     const ronden = await localFetch(`/ronden/${o_o_o.seizoen}/${o_o_o.competitie}`);
     for (const ronde of ronden) {
         o_o_o.ronde[ronde.rondeNummer] = ronde;
