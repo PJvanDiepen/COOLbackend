@@ -4,7 +4,7 @@ Dit zijn velden uit tabellen van de MySQL database of velden die zijn gemaakt do
 
 # Test procedure
 1. test.sql 
-2. api.js
+2. test.js
 3. default.json "debug": true
 4. localhost:3000/ API call
 5. default.json "debug": false

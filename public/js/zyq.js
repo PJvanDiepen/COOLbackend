@@ -154,15 +154,14 @@ export const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
 export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 export const gebruiker = {}; // gebruikerVerwerken
 
-// TODO import * db.js
-
-// gebruiker.mutatieRechten
+// gebruiker.mutatieRechten TODO import * db.js
 const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;
 const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 8;
-const BEHEERDER = 9;
+const WEDSTRIJDLEIDER = 4;
+const BEHEERDER = 8;
+const ONTWIKKElAAR = 9;
 
 // mutatie.invloed
 const GEEN_INVLOED = 0;
@@ -213,16 +212,18 @@ async function gebruikerVerwerken() {
 export function gebruikerFunctie(lid) {
     if (!lid.datumEmail) {
         return KRUISJE; // TODO eventueel verwijderen
-    } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
-        return datumLeesbaar({datum: lid.datumEmail});
+    } else if (Number(lid.mutatieRechten) === ONTWIKKElAAR) { // TODO uit database reglement tabel
+        return "ontwikkelaar";
     } else if (Number(lid.mutatieRechten) === BEHEERDER) {
         return "systeembeheerder";
     } else if (Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
         return "wedstrijdleider";
-    } else if (Number(lid.mutatieRechten) === TEAMLEIDER) {
-        return "teamleider";
     } else if (Number(lid.mutatieRechten) === BESTUUR) {
         return "bestuur";
+    } else if (Number(lid.mutatieRechten) === TEAMLEIDER) {
+        return "teamleider";
+    } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
+        return datumLeesbaar({datum: lid.datumEmail});
     } else {
         return "geen gebruiker"
     }

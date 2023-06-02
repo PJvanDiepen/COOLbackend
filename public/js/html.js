@@ -4,7 +4,7 @@
  * De eerste pagina staat in index.html en start.html is de pagina, die 0-0-0 app start.
  * De bijhorende start.js verwerkt de url, vult de pagina aan en reageert op de gebruiker.
  *
- * Dit geldt voor alle vervolg pagina's. Bij agenda.html hoort agenda.js, bij api.htm hoort api.js en zo voort.
+ * Dit geldt voor alle vervolg pagina's. Bij agenda.html hoort agenda.js, bij api.htm hoort test.js en zo voort.
  * Daarnaast zijn er modules:
  *
  * html.js voor interactie met html
@@ -37,16 +37,6 @@ https://support.mozilla.org/en-US/kb/how-clear-firefox-cache
 https://help.overdrive.com/en-us/0518.html
 https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDesktop&oco=1
  */
-
-export function checkbox(id, value, text) {
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    input.id = id;
-    input.value = value;
-    const label = document.createElement("label");
-    label.append(input, ` ${text}`); // spatie tussen checkbox en label
-    return label;
-}
 
 /**
  * selectie verwerkt alle selectieOpties tot een select-knop met opties en zet een eventListener klaar om een optie te verwerken.
@@ -87,6 +77,16 @@ export function optie(value, text) { // TODO zonder export?
     option.value = value;
     option.text = text;
     return option;
+}
+
+export function checkbox(id, value, text) {
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.id = id;
+    input.value = value;
+    const label = document.createElement("label");
+    label.append(input, ` ${text}`); // spatie tussen checkbox en label
+    return label;
 }
 
 export function verwerkt(node, indien) {

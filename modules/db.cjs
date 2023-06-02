@@ -1,7 +1,5 @@
 /*
-db uit de MySQL database
-
-globale variabelen voor server en pagina's in de browser
+ * Deze module bevat alle code voor interactie met de MySQL database
  */
 
 const apiLijst = [];
@@ -54,9 +52,9 @@ const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;
 const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 8;
-const BEHEERDER = 9;
-
+const WEDSTRIJDLEIDER = 4;
+const BEHEERDER = 8;
+const ONTWIKKElAAR = 9;
 
 function hoera() {
     return " db.cjs hoera!";
@@ -119,6 +117,7 @@ module.exports = {
     BESTUUR,
     WEDSTRIJDLEIDER,
     BEHEERDER,
+    ONTWIKKElAAR,
 
     hoera                  // ()
 }

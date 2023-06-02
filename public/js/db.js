@@ -15,6 +15,7 @@ const RAPID_COMPETTIE    = "ira";
 const JEUGD_COMPETTIE    = "ije";
 const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
+
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -51,9 +52,9 @@ const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;
 const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 8;
-const BEHEERDER = 9;
-
+const WEDSTRIJDLEIDER = 4;
+const BEHEERDER = 8;
+const ONTWIKKElAAR = 9;
 
 function hoera() {
     return " db.js hoera!";
@@ -116,6 +117,7 @@ export {
     BESTUUR,
     WEDSTRIJDLEIDER,
     BEHEERDER,
+    ONTWIKKElAAR,
 
     hoera                  // ()
 }

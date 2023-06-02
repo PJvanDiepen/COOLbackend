@@ -13,28 +13,28 @@ TODO mutaties met verwijderen
 
 (async function() {
     await zyq.init();
-    zyq.menu([db.BEHEERDER, `backup gebruikers` , async function () {
+    zyq.menu([db.ONTWIKKElAAR, `backup gebruikers` , async function () {
             const rijen = await zyq.serverFetch(`/${zyq.uuidToken}/backup/gebruiker`);
             zyq.backupSQL("gebruiker", rijen);
         }],
-        [db.BEHEERDER, `backup personen` , async function () {
+        [db.ONTWIKKElAAR, `backup personen` , async function () {
             const rijen = await zyq.serverFetch(`/backup/persoon`);
             zyq.backupSQL("persoon", rijen);
         }],
-        [db.BEHEERDER, `backup spelers ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
+        [db.ONTWIKKElAAR, `backup spelers ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/speler/${zyq.o_o_o.seizoen}`);
             zyq.backupSQL("speler", rijen);
         }],
-        [db.BEHEERDER, `backup teams ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
+        [db.ONTWIKKElAAR, `backup teams ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/team/${zyq.o_o_o.seizoen}`);
             zyq.backupSQL("team", rijen);
         }],
-        [db.BEHEERDER, `backup ronden ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
+        [db.ONTWIKKElAAR, `backup ronden ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/ronde/${zyq.o_o_o.seizoen}`);
             zyq.backupSQL("ronde", rijen);
         }],
-        [db.BEHEERDER, "test API", function () {
-            html.anderePagina("api.html");
+        [db.ONTWIKKElAAR, "test API", function () {
+            html.anderePagina("test.html");
         }]);
     gebruikers(document.getElementById("gebruikers"));
     laatsteMutaties(document.getElementById("mutaties"));

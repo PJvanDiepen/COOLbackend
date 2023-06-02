@@ -24,7 +24,7 @@ app.use(cors()); // Also worth mentioning that app.use(cors()) has to go before 
 registerApi(router);
 
 for (const route of router.stack) {
-  apiLijst.push(route.path); // lijst van routes in api.js
+  apiLijst.push(route.path); // lijst van routes in test.js
 }
 
 app.use(bodyParser());

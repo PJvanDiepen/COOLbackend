@@ -29,7 +29,7 @@ import * as zyq from "./zyq.js";
                 }
             }
         }],
-        [db.BEHEERDER, `backup uitslagen ronde ${rondeNummer}` , async function () {
+        [db.ONTWIKKElAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/ronde/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/${rondeNummer}`);
             zyq.backupSQL("uitslag", rijen);
         }],
