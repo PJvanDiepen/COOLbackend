@@ -50,28 +50,30 @@ function menuKeuze(elementId, minimumRechten, tekst, naarPagina) {
 async function seizoenSelecteren(teamCode) {
     let ditSeizoentoevoegen = true;
     const seizoenen = [];
+    const seizoenFun = function (seizoen) {
+        html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
+    };
     (await zyq.localFetch("/seizoenen/" + teamCode)).forEach(function (seizoen) {
         if (seizoen === zyq.ditSeizoen) {
             ditSeizoentoevoegen = false;
         }
-        seizoenen.push([seizoen, zyq.seizoenVoluit(seizoen)]);
+        seizoenen.push([seizoen, zyq.seizoenVoluit(seizoen), seizoenFun]);
     });
     if (ditSeizoentoevoegen) {
-        seizoenen.push([zyq.ditSeizoen, zyq.seizoenVoluit(zyq.ditSeizoen)]);
+        seizoenen.push([zyq.ditSeizoen, zyq.seizoenVoluit(zyq.ditSeizoen), seizoenFun]);
     }
-    html.selectie("seizoenSelecteren", seizoenen, zyq.o_o_o.seizoen, function (seizoen) {
-        html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
-    });
+    html.selectie("seizoenSelecteren", zyq.o_o_o.seizoen, seizoenen, seizoenFun);
 }
 
 async function competitieSelecteren() {
     const competities = [];
+    const competitieFun = function (competitie) {
+        html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
+    };
     (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).forEach(function (team) {
         if (zyq.interneCompetitie(team.teamCode)) {
-            competities.push([team.teamCode, team.omschrijving]);
+            competities.push([team.teamCode, team.omschrijving, competitieFun]);
         }
     });
-    html.selectie("competitieSelecteren", competities, zyq.o_o_o.competitie, function (competitie) {
-        html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
-    });
+    html.selectie("competitieSelecteren", zyq.o_o_o.competitie, competities, competitieFun);
 }

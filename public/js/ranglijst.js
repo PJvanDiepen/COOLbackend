@@ -24,16 +24,16 @@ const alleLeden = Number(html.params.get("leden"));
         [3, "versie 3 zonder afzeggingenaftrek vanaf seizoen = 2122"],
         [4, "versie 4 volgens reglement rapid competitie"],
         [5, "versie 5 voor snelschaken"]];
-    html.selectie("versies", versies, zyq.o_o_o.versie,function (versie) {
+    html.selectie("versies", zyq.o_o_o.versie, versies, function (versie) {
         html.zelfdePagina(`versie=${versie}`);
     });
+    const ledenFun = function (leden) {
+        html.zelfdePagina(`leden=${leden}`);
+    };
     const welkeLeden = [
-        [0, "alleen actieve leden"],
-        [1, "inclusief niet actieve spelers"]];
-    html.selectie("leden", welkeLeden, alleLeden,function (leden) {
-        html.zelfdePagina(`versie=${leden}`);
-    });
-    // ledenSelecteren(document.getElementById("leden"));
+        [0, "alleen actieve leden", ledenFun],
+        [1, "inclusief niet actieve spelers", ledenFun]];
+    html.selectie("leden", alleLeden, welkeLeden, ledenFun);
     await spelersLijst(rondeNummer,
         document.getElementById("kop"),
         document.getElementById("tabel"),

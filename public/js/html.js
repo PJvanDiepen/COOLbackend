@@ -87,18 +87,31 @@ export function selecty(selectieId, selectieWaarde, ...selectieOpties) {
  * selectie uit keuzes aan HTML knop koppelen en geselecteerde keuze verwerken
  *
  * @param selectieId van HTML knop
- * @param selectieKeuzes keuze / tekst paren
- * @param selectieValue huidige keuze
+ * @param selectieWaarde huidige keuze
+ * @param selectieOpties keuze / tekst paren
  * @param selectieFun om de geselecteerde keuze te verwerken
  */
-export function selectie(selectieId, selectieKeuzes, selectieValue, selectieFun) {
+export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFun) {
     const knop = document.getElementById(selectieId);
-    for (const [value, text] of selectieKeuzes) {
-        knop.append(optie(value, text));
+    const functies = [];
+    const waardes = [];
+    for (const [waarde, tekst, functie] of selectieOpties) {
+        const volgnummer = functies.length; // optie 0, 1, 2 enz.
+        functies.push(functie ? functie :
+            function (optieNummer) {
+                console.log(`${optieNummer} waarde: ${waarde} tekst: ${tekst}`);
+            });
+        waardes.push(waarde);
+        // knop.append(optie(waarde, tekst));
+        knop.append(optie(volgnummer, tekst));
+        if (waarde === selectieWaarde) {
+            knop.value = volgnummer;
+        }
     }
-    knop.value = selectieValue;
+    // knop.value = selectieWaarde;  // overschrijf
     knop.addEventListener("input",function () {
-        selectieFun(knop.value);
+        // selectieFun(knop.value);
+        functies[knop.value](waardes[knop.value]);
     });
 }
 
