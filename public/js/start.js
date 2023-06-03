@@ -59,9 +59,9 @@ async function seizoenSelecteren(teamCode) {
     if (ditSeizoentoevoegen) {
         seizoenen.push([zyq.ditSeizoen, zyq.seizoenVoluit(zyq.ditSeizoen)]);
     }
-    html.selectie("seizoenSelecteren", zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
+    html.selectie("seizoenSelecteren", zyq.o_o_o.seizoen, seizoenen); /*, function (seizoen) {
         html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
-    });
+    }); */
 }
 
 async function competitieSelecteren() {

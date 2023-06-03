@@ -53,7 +53,9 @@ https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDeskt
  * @param selectieOpties opties met waarde, tekst en eventueel een functie om deze waarde te verwerken
  * @param selectieFunctie functie om de geselecteerde waarde te verwerken (indien er geen functie bij de opties is gespecificeerd)
  */
-export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFunctie) {
+export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFunctie = function (waarde) {
+    console.log(`--- selectie(${selectieId}, ${waarde} van ${selectieOpties.length} opties) ---`);
+}) {
     const knop = document.getElementById(selectieId);
     const functies = [];
     const waardes = [];
