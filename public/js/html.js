@@ -43,24 +43,23 @@ https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDeskt
  *
  * Elke selectieOptie bestaat uit [<waarde>, <tekst>, <functie>].
  * Elke optie krijgt een volgnummer en een tekst.
+ * Er is een functie per optie of een functie voor alle opties (selektieFunctie).
  * Het volgnummer verwijst naar de bijbehorende functie in functies en de bijbehorende waarde in waardes.
  *
  * De eventListener krijgt het volgnummer door en start de bijbehorende functie met de bijbehorende waarde.
  *
  * @param selectieId van HTML knop
  * @param selectieWaarde huidige optie
- * @param selectieOpties opties met waarde, tekst en functie om deze waarde te verwerken
+ * @param selectieOpties opties met waarde, tekst en eventueel een functie om deze waarde te verwerken
+ * @param selectieFunctie functie om de geselecteerde waarde te verwerken (indien er geen functie bij de opties is gespecificeerd)
  */
-export function selectie(selectieId, selectieWaarde, selectieOpties) {
+export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFunctie) {
     const knop = document.getElementById(selectieId);
     const functies = [];
     const waardes = [];
     for (const [waarde, tekst, functie] of selectieOpties) {
         const volgnummer = functies.length; // optie 0, 1, 2 enz.
-        functies.push(functie ? functie :
-            function (optieNummer) {
-                console.log(`${optieNummer} waarde: ${waarde} tekst: ${tekst}`);
-            });
+        functies.push(functie ? functie : selectieFunctie);
         waardes.push(waarde);
         knop.append(optie(volgnummer, tekst));
         if (waarde === selectieWaarde) {

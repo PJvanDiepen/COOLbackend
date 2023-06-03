@@ -28,7 +28,7 @@ import * as zyq from "./zyq.js";
 async function spelerSelecteren(rondeNummer, deelnemers) {
     // TODO html.selectie toepassen
     const spelers = document.getElementById("spelerSelecteren");
-    spelers.append(htmlOptie(0, "selecteer naam"));
+    spelers.append(html.optie(0, "selecteer naam"));
     (await zyq.localFetch(`/spelers/${o_o_o.seizoen}`)).forEach(
         function (speler) {
             spelers.append(html.optie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  zyq.KRUISJE : "")));

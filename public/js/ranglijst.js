@@ -27,12 +27,12 @@ const alleLeden = Number(html.params.get("leden"));
     html.selectie("versies", zyq.o_o_o.versie, versies, function (versie) {
         html.zelfdePagina(`versie=${versie}`);
     });
-    const ledenFun = function (leden) {
+    const optiesLeden = [
+        [0, "alleen actieve leden"],
+        [1, "inclusief niet actieve spelers"]];
+    html.selectie("leden", alleLeden, optiesLeden, function (leden) {
         html.zelfdePagina(`leden=${leden}`);
-    };
-    html.selectie("leden", alleLeden,[ // TODO ook toepassen bij bestuur.js
-        [0, "alleen actieve leden", ledenFun],
-        [1, "inclusief niet actieve spelers", ledenFun]]);
+    });
     await spelersLijst(rondeNummer,
         document.getElementById("kop"),
         document.getElementById("tabel"),
