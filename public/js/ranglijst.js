@@ -15,7 +15,7 @@ const alleLeden = Number(html.params.get("leden"));
     await zyq.init();
     zyq.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
-    await zyq.menu([]);
+    await html.menu(zyq.gebruiker.mutatieRechten,[]);
     await zyq.teamSelecteren(zyq.o_o_o.competitie);
     await zyq.rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     const versies = [

@@ -11,7 +11,7 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     const lidNummer = Number(html.params.get("lid"));
-    zyq.menu([]);
+    await html.menu(zyq.gebruiker.mutatieRechten,[]);
     ledenLijst(
         lidNummer,
         document.getElementById("kop"),

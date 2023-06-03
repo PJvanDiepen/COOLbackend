@@ -56,7 +56,7 @@ import * as zyq from "./zyq.js";
     if (rangnummers) {
         deelnemersLijst(r, document.getElementById("lijst"));
     }
-    zyq.menu([db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await zyq.serverFetch(

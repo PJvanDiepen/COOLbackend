@@ -13,7 +13,8 @@ TODO mutaties met verwijderen
 
 (async function() {
     await zyq.init();
-    zyq.menu([db.ONTWIKKElAAR, `backup gebruikers` , async function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,
+        [db.ONTWIKKElAAR, `backup gebruikers` , async function () {
             const rijen = await zyq.serverFetch(`/${zyq.uuidToken}/backup/gebruiker`);
             zyq.backupSQL("gebruiker", rijen);
         }],
@@ -51,7 +52,7 @@ async function gebruikers(lijst) {
         lijst.append(html.rij(
             ++aantal,
             zyq.naarSpeler(lid),
-            zyq.gebruiker.mutatieRechten === db.BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
+            zyq.gebruiker.mutatieRechten >= db.BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
             zyq.gebruikerFunctie(lid)));
     }
 }

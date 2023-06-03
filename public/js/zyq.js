@@ -317,8 +317,12 @@ async function competitieRondenVerwerken() {
  * @returns {Promise<void>}
  */
 export function menu(...menuKeuzes) {
+    console.log("--- menuKeuzes ---");
+    console.log(menuKeuzes);
     const acties = document.getElementById("menu");
     const startKeuzes = JSON.parse(sessionStorage.getItem("menu")); // menu van start pagina (in omgekeerde volgorde)
+    console.log("--- startKeuzes ---");
+    console.log(startKeuzes);
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
         if (!pagina.href.includes(naarPagina)) { // niet naar huidige pagina
             menuKeuzes.unshift([minimumRechten, tekst, function() {

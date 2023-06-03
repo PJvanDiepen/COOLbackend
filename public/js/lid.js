@@ -17,7 +17,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
     document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     const persoon = await persoonLezen();
     const ola = olaLezen();
-    zyq.menu([db.BEHEERDER, "wijzig KNSB gegevens (pas op!)", function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, "wijzig KNSB gegevens (pas op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
         }],
         [db.BEHEERDER, `${persoon.naam} verwijderen`, async function () {

@@ -10,7 +10,7 @@ import * as zyq from "./zyq.js";
  */
 (async function() {
     await zyq.init();
-    zyq.menu([]);
+    await html.menu(zyq.gebruiker.mutatieRechten,[]);
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);

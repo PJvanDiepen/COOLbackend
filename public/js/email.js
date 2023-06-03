@@ -1,6 +1,7 @@
 "use strict";
 
 import * as zyq from "./zyq.js";
+import * as html from "./html.js";
 
 /*
     verwerk email=[email] // zie beheer.js
@@ -8,7 +9,7 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    zyq.menu([]);
+    await html.menu(zyq.gebruiker.mutatieRechten,[]);
     gebruikerTekst(
         document.getElementById("emailAan"),
         document.getElementById("naamAan"),

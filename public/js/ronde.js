@@ -16,7 +16,7 @@ import * as zyq from "./zyq.js";
     zyq.competitieTitel();
     zyq.o_o_o.team = zyq.o_o_o.competitie;
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
-    zyq.menu([db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
         [db.BEHEERDER, `ronde ${rondeNummer} opnieuw indelen`, function () {

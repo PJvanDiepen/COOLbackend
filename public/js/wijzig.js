@@ -17,7 +17,7 @@ import * as zyq from "./zyq.js";
     zyq.competitieTitel();
     zyq.o_o_o.team = zyq.o_o_o.competitie;
     const rondeNummer = Number(params.get("ronde"));
-    zyq.menu([]);
+    await html.menu(zyq.gebruiker.mutatieRechten,[]);
     document.getElementById("kop").innerHTML =
         "Ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
     if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) {

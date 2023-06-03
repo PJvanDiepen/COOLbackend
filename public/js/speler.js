@@ -8,7 +8,7 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     zyq.competitieTitel();
-    zyq.menu([db.WEDSTRIJDLEIDER, `agenda van ${zyq.o_o_o.naam}`, function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, `agenda van ${zyq.o_o_o.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${zyq.o_o_o.speler}&naamGebruiker=${zyq.o_o_o.naam}`);
         }],
         [db.ONTWIKKElAAR, `backup uitslagen ${zyq.o_o_o.naam}` , async function () {

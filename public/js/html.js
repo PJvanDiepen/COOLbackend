@@ -12,6 +12,8 @@
  * en zo voort
  */
 
+import * as db from "./db.js";
+
 export const pagina = new URL(location);
 export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 export const params = pagina.searchParams;
@@ -37,6 +39,41 @@ https://support.mozilla.org/en-US/kb/how-clear-firefox-cache
 https://help.overdrive.com/en-us/0518.html
 https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDesktop&oco=1
  */
+
+/**
+ * menu() verwerkt alle menuKeuzes tot een select-knop
+ *
+ * Elke menuKeuze bestaat uit [ <minimumRechten>, <menuKeuze tekst>, <bijhorende functie> ].
+ * Indien gebruiker niet voldoende menuRechten heeft, komt de menuKeuze niet in het menu.
+ *
+ * @param menuRechten TODO db.gebruiker.mutatieRechten
+ * @param menuKeuzes
+ */
+export function menu(menuRechten, ...menuKeuzes) {
+    const startKeuzes = JSON.parse(sessionStorage.getItem("menu")); // menu van start pagina (in omgekeerde volgorde)
+    for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
+        if (!pagina.href.includes(naarPagina)) { // niet naar huidige pagina
+            menuKeuzes.unshift([minimumRechten, tekst, function() {
+                anderePagina(naarPagina);
+            }]);
+        }
+    }
+    const HAMBURGER = "\u2630";
+    menuKeuzes.unshift([db.IEDEREEN, HAMBURGER]); // bovenaan in het menu
+    const BEHEER = "beheer.html";
+    if (!pagina.href.includes(BEHEER)) {
+        menuKeuzes.push([db.GEREGISTREERD, "systeembeheer", function () { // onderaan in het menu
+            anderePagina(BEHEER);
+        }]);
+    }
+    let opties = [];
+    for (let [minimumRechten, tekst, functie] of menuKeuzes) {
+        if (minimumRechten <= menuRechten) {
+            opties.push([tekst, tekst, functie]);
+        }
+    }
+    selectie("menu", HAMBURGER, opties);
+}
 
 /**
  * selectie verwerkt alle selectieOpties tot een select-knop met opties en zet een eventListener klaar om een optie te verwerken.
