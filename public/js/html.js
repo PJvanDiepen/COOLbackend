@@ -41,54 +41,54 @@ https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDeskt
  */
 
 /**
- * menu() verwerkt alle menuKeuzes tot een select-knop
+ * menu() verwerkt een algemeen menu van de start-pagina en alle menuKeuzes tot een select-knop
  *
- * Elke menuKeuze bestaat uit [ <minimumRechten>, <menuKeuze tekst>, <bijhorende functie> ].
- * Indien gebruiker niet voldoende menuRechten heeft, komt de menuKeuze niet in het menu.
+ * @param menuRechten mutatieRechten van gebruiker (TODO db.gebruiker.mutatieRechten?)
+ * @param menuKeuzes elke keuze bestaat uit minimumRechten, tekst en bijhorende functie
  *
- * @param menuRechten TODO db.gebruiker.mutatieRechten
- * @param menuKeuzes
+ * De start-pagina maakt een algemeen menu voor de startKeuzes waarin elke keuze bestaat uit minimumRechten, tekst en naarPagina.
+ * menu() voegt alle menuKeuzes samen met de startKeuzes en maakt daarbij van de naarPagina de bijbehorende functie.
+ * Het samenvoegen begint met de startKeuzes, bij IEDEREEN, MENU komen de menuKeuzes daarna komt de rest van de startKeuzes.
+ *
+ * menu() maakt opties voor select() met uitsluitend de menuKeuzes waarvoor de gebruiker voldoende menuRechten heeft.
  */
 export function menu(menuRechten, ...menuKeuzes) {
-    const startKeuzes = JSON.parse(sessionStorage.getItem("menu")); // menu van start pagina (in omgekeerde volgorde)
+    const MENU = "menu";
+    const startKeuzes = JSON.parse(sessionStorage.getItem(MENU)); // algemeen menu van start pagina
+    startKeuzes.push([db.IEDEREEN, MENU]);
+    startKeuzes.push([db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
+    const HAMBURGER = "\u2630";
+    const opties = [[HAMBURGER, HAMBURGER]];  // geen functie
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
-        if (!pagina.href.includes(naarPagina)) { // niet naar huidige pagina
-            menuKeuzes.unshift([minimumRechten, tekst, function() {
+        if (minimumRechten === db.IEDEREEN && tekst === MENU) {
+            for (const [minimumRechten, tekst, functie] of menuKeuzes) {
+                if (minimumRechten <= menuRechten) {
+                    opties.push(["", tekst, functie]);
+                }
+            }
+        } else if (minimumRechten <= menuRechten && !pagina.href.includes(naarPagina)) { // juiste rechten en niet naar huidige pagina
+            opties.push(["", tekst, function() {
                 anderePagina(naarPagina);
             }]);
         }
     }
-    const HAMBURGER = "\u2630";
-    menuKeuzes.unshift([db.IEDEREEN, HAMBURGER]); // bovenaan in het menu
-    const BEHEER = "beheer.html";
-    if (!pagina.href.includes(BEHEER)) {
-        menuKeuzes.push([db.GEREGISTREERD, "systeembeheer", function () { // onderaan in het menu
-            anderePagina(BEHEER);
-        }]);
-    }
-    let opties = [];
-    for (let [minimumRechten, tekst, functie] of menuKeuzes) {
-        if (minimumRechten <= menuRechten) {
-            opties.push([tekst, tekst, functie]);
-        }
-    }
-    selectie("menu", HAMBURGER, opties);
+    selectie(MENU, HAMBURGER, opties);
 }
 
 /**
- * selectie verwerkt alle selectieOpties tot een select-knop met opties en zet een eventListener klaar om een optie te verwerken.
- *
- * Elke selectieOptie bestaat uit [<waarde>, <tekst>, <functie>].
- * Elke optie krijgt een volgnummer en een tekst.
- * Er is een functie per optie of een functie voor alle opties (selektieFunctie).
- * Het volgnummer verwijst naar de bijbehorende functie in functies en de bijbehorende waarde in waardes.
- *
- * De eventListener krijgt het volgnummer door en start de bijbehorende functie met de bijbehorende waarde.
+ * selectie zet alle selectieOpties op een select-knop met opties en zet een eventListener klaar om een optie te verwerken.
  *
  * @param selectieId van HTML knop
  * @param selectieWaarde huidige optie
  * @param selectieOpties opties met waarde, tekst en eventueel een functie om deze waarde te verwerken
  * @param selectieFunctie functie om de geselecteerde waarde te verwerken (indien er geen functie bij de opties is gespecificeerd)
+ *
+ * Elke selectieOptie bestaat uit waarde, tekst en bijbehorend functie.
+ * Elke optie krijgt een volgnummer en een tekst.
+ * Er is een functie per optie of een functie voor alle opties (selektieFunctie).
+ * Het volgnummer verwijst naar de bijbehorende functie in functies en de bijbehorende waarde in waardes.
+ *
+ * De eventListener krijgt het volgnummer door en start de bijbehorende functie met de bijbehorende waarde.
  */
 export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFunctie = function (waarde) {
     console.log(`--- selectie(${selectieId}, ${waarde} van ${selectieOpties.length} opties) ---`);

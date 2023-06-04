@@ -1,5 +1,7 @@
 /*
  * Deze module bevat alle code voor interactie met de MySQL database
+ *
+ * Valideren
  */
 
 const apiLijst = [];

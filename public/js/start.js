@@ -12,6 +12,17 @@ import * as zyq from "./zyq.js";
            &competitie=<teamCode>
  */
 
+/* TODO menuKeuzes naar sessionstorage menu
+ ten eerste die van de startpagina
+ dan "menu" specifiek voor die pagina
+ en tenslotte die onder alle alle menu's van alle pagina's hoort
+
+ niet in omgekeerde volgorde!
+
+ Elke menuKeuze heeft minimumRechten, tekst en naarPagina
+
+ */
+
 const menuKeuzes = []; // in omgekeerde volgorde
 
 function menuKeuze(elementId, minimumRechten, tekst, naarPagina) {

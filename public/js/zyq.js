@@ -303,54 +303,6 @@ async function competitieRondenVerwerken() {
     }
 }
 
-/**
- * menu() verwerkt alle menuKeuzes tot een select-menu met htmlOptie's en zet een eventListener klaar.
- *
- * Elke menuKeuze bestaat uit [ <minimumRechten>, <menuKeuze tekst>, <bijhorende functie> ].
- * Indien gebruiker niet voldoende mutatieRechten heeft, komt de menuKeuze niet in het menu.
- * Elke htmlOptie krijgt een tekst en een volgnummer.
- * Het volgnummer verwijst naar de bijbehorende functie in functies.
- *
- * De eventListener krijgt het volgnummer door en start de bijbehorende functie.
- *
- * @param menuKeuzes
- * @returns {Promise<void>}
- */
-export function menu(...menuKeuzes) {
-    console.log("--- menuKeuzes ---");
-    console.log(menuKeuzes);
-    const acties = document.getElementById("menu");
-    const startKeuzes = JSON.parse(sessionStorage.getItem("menu")); // menu van start pagina (in omgekeerde volgorde)
-    console.log("--- startKeuzes ---");
-    console.log(startKeuzes);
-    for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
-        if (!pagina.href.includes(naarPagina)) { // niet naar huidige pagina
-            menuKeuzes.unshift([minimumRechten, tekst, function() {
-                naarAnderePagina(naarPagina);
-            }]);
-        }
-    }
-    menuKeuzes.unshift([IEDEREEN, "\u2630"]); // hamburger bovenaan in het menu
-    menuKeuzes.push([GEREGISTREERD, "systeembeheer", function () { // onderaan in het menu
-        naarAnderePagina("beheer.html"); // TODO niet indien huidige pagina = beheer.html
-    }]); // TODO naar documentatie voor deze pagina
-    let functies = [];
-    for (let [minimumRechten, tekst, functie] of menuKeuzes) {
-        if (minimumRechten <= gebruiker.mutatieRechten) {
-            acties.appendChild(htmlOptie(functies.length, tekst));
-            functies.push(functie ? functie :
-                function () {
-                    console.log(tekst);
-                });
-        }
-    }
-    acties.addEventListener("input",
-        function () {
-            functies[acties.value]();
-            acties.value = 0;
-        });
-}
-
 export async function gewijzigd() {
     const laatsteMutaties = await serverFetch("/gewijzigd");
     return laatsteMutaties;
@@ -394,23 +346,6 @@ export async function serverFetch(url) {
     }
 }
 
-/*
-TODO const html = {id1: , id2: } alle DOM elementen met id
-
-https://stackoverflow.com/questions/59068548/how-to-get-all-of-the-element-ids-on-the-same-time-in-javascript
- */
-
-export function htmlCheckbox(id, value, tekst) {
-    const input = document.createElement("input");
-    input.type = "checkbox";
-    input.id = id;
-    input.value = value;
-    const label = document.createElement("label");
-    label.appendChild(input);
-    label.appendChild(htmlTekst(` ${tekst}`)); // spatie tussen checkbox en label
-    return label;
-}
-
 export function htmlOptie(value, text) {
     const option = document.createElement("option");
     option.value = value;
@@ -420,18 +355,6 @@ export function htmlOptie(value, text) {
 
 export function htmlTekst(tekst) {
     return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
-}
-
-export function htmlFout(htmlNode, indien) {
-    if (indien) {
-        htmlNode.classList.add("fout");
-    }
-}
-
-export function htmlVerwerkt(htmlNode, indien) {
-    if (indien) {
-        htmlNode.classList.add("verwerkt");
-    }
 }
 
 export function htmlVet(htmlNode, indien) {
