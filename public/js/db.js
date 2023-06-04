@@ -58,6 +58,9 @@ const WEDSTRIJDLEIDER = 4;
 const BEHEERDER = 8;
 const ONTWIKKElAAR = 9;
 
+// html
+const MENU = "menu";
+
 function hoera() {
     return " db.js hoera!";
 }
@@ -120,6 +123,9 @@ export {
     WEDSTRIJDLEIDER,
     BEHEERDER,
     ONTWIKKElAAR,
+
+    // html
+    MENU,
 
     hoera                  // ()
 }

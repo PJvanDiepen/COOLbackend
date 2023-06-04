@@ -1,5 +1,7 @@
 /*
  * Deze module bevat alle code voor interactie met de MySQL database
+ *
+ * Valideren
  */
 
 const apiLijst = [];
@@ -55,6 +57,9 @@ const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 4;
 const BEHEERDER = 8;
 const ONTWIKKElAAR = 9;
+
+// html
+const MENU = "menu";
 
 function hoera() {
     return " db.cjs hoera!";
@@ -118,6 +123,9 @@ module.exports = {
     WEDSTRIJDLEIDER,
     BEHEERDER,
     ONTWIKKElAAR,
+
+    // html
+    MENU,
 
     hoera                  // ()
 }

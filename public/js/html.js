@@ -53,14 +53,11 @@ https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDeskt
  * menu() maakt opties voor select() met uitsluitend de menuKeuzes waarvoor de gebruiker voldoende menuRechten heeft.
  */
 export function menu(menuRechten, ...menuKeuzes) {
-    const MENU = "menu";
-    const startKeuzes = JSON.parse(sessionStorage.getItem(MENU)); // algemeen menu van start pagina
-    startKeuzes.push([db.IEDEREEN, MENU]);
-    startKeuzes.push([db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
+    const startKeuzes = JSON.parse(sessionStorage.getItem(db.MENU)); // algemeen menu van start pagina
     const HAMBURGER = "\u2630";
     const opties = [[HAMBURGER, HAMBURGER]];  // geen functie
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
-        if (minimumRechten === db.IEDEREEN && tekst === MENU) {
+        if (minimumRechten === db.IEDEREEN && tekst === db.MENU) {
             for (const [minimumRechten, tekst, functie] of menuKeuzes) {
                 if (minimumRechten <= menuRechten) {
                     opties.push(["", tekst, functie]);
@@ -72,7 +69,7 @@ export function menu(menuRechten, ...menuKeuzes) {
             }]);
         }
     }
-    selectie(MENU, HAMBURGER, opties);
+    selectie(db.MENU, HAMBURGER, opties);
 }
 
 /**

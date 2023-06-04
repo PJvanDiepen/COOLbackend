@@ -12,24 +12,6 @@ import * as zyq from "./zyq.js";
            &competitie=<teamCode>
  */
 
-/* TODO menuKeuzes naar sessionstorage menu
- ten eerste die van de startpagina
- dan "menu" specifiek voor die pagina
- en tenslotte die onder alle alle menu's van alle pagina's hoort
-
- niet in omgekeerde volgorde!
-
- Elke menuKeuze heeft minimumRechten, tekst en naarPagina
-
- */
-
-const menuKeuzes = []; // in omgekeerde volgorde
-
-function menuKeuze(elementId, minimumRechten, tekst, naarPagina) {
-    menuKeuzes.unshift([minimumRechten, tekst, naarPagina]);
-    document.getElementById(elementId).append(html.naarPaginaEnTerug(naarPagina,tekst));
-}
-
 (async function() {
     await zyq.init();
     document.getElementById("kop").innerHTML =
@@ -38,22 +20,26 @@ function menuKeuze(elementId, minimumRechten, tekst, naarPagina) {
     if (zyq.o_o_o.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
-    menuKeuze("ranglijst", db.IEDEREEN, `Ranglijst na ronde ${zyq.o_o_o.vorigeRonde}`,"ranglijst.html");
-    menuKeuze("ronde", db.IEDEREEN, `Uitslagen ronde ${zyq.o_o_o.vorigeRonde}`,"ronde.html");
-    if (zyq.gebruiker.mutatieRechten >= db.GEREGISTREERD) {
-        if (zyq.o_o_o.huidigeRonde && zyq.o_o_o.ronde[zyq.o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
-            menuKeuze("indelen", db.GEREGISTREERD, `Definitieve indeling ronde ${zyq.o_o_o.huidigeRonde}`, `ronde.html?ronde=${zyq.o_o_o.huidigeRonde}`);
-        } else if (zyq.o_o_o.vorigeRonde < zyq.o_o_o.laatsteRonde) {
-            menuKeuze("indelen", db.GEREGISTREERD, `Voorlopige indeling ronde ${zyq.o_o_o.huidigeRonde}`, "indelen.html");
+    const menuKeuzes = [];
+    menuKeuzes.push([db.IEDEREEN, `Ranglijst na ronde ${zyq.o_o_o.vorigeRonde}`,"ranglijst.html"]); // menu0
+    menuKeuzes.push([db.IEDEREEN, `Uitslagen ronde ${zyq.o_o_o.vorigeRonde}`,"ronde.html"]); // menu1
+    if (zyq.o_o_o.huidigeRonde && zyq.o_o_o.ronde[zyq.o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
+        menuKeuzes.push(db.GEREGISTREERD, `Definitieve indeling ronde ${zyq.o_o_o.huidigeRonde}`, `ronde.html?ronde=${zyq.o_o_o.huidigeRonde}`); // menu2
+    } else if (zyq.o_o_o.vorigeRonde < zyq.o_o_o.laatsteRonde) {
+        menuKeuzes.push(db.GEREGISTREERD, `Voorlopige indeling ronde ${zyq.o_o_o.huidigeRonde}`, "indelen.html"); // menu2
+    }
+    menuKeuzes.push([db.GEREGISTREERD, `Aanmelden / Afzeggen`, "agenda.html"]); // menu3
+    menuKeuzes.push([db.BESTUUR, `Overzicht voor bestuur`, "bestuur.html"]); // menu4
+    menuKeuzes.push([db.TEAMLEIDER, `Overzicht voor teamleiders`, "teamleider.html"]); // menu5
+    for (let i = 0; i < 5; i++) {
+        const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
+        if (minimumRechten <= zyq.gebruiker.mutatieRechten ) {
+            document.getElementById(`menu${i}`).append(html.naarPaginaEnTerug(naarPagina,tekst)); // menu op deze pagina
         }
     }
-    if (zyq.gebruiker.mutatieRechten >= db.BESTUUR) {
-        menuKeuze("bestuur", db.BESTUUR, `Overzicht voor bestuur`, "bestuur.html");
-    }
-    if (zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER) {
-        menuKeuze("teamleider", db.TEAMLEIDER, `Overzicht voor teamleiders`, "teamleider.html");
-    }
-    sessionStorage.setItem("menu", JSON.stringify(menuKeuzes));
+    menuKeuzes.push([db.IEDEREEN, db.MENU]);
+    menuKeuzes.push([db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
+    sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
     await seizoenSelecteren(db.INTERNE_COMPETITIE);
     await competitieSelecteren();
 })();
