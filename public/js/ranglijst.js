@@ -5,12 +5,8 @@ import * as html from "./html.js";
 import * as zyq from "./zyq.js";
 
 /*
-    verwerk leden=0
-           &ronde=<rondeNummer>
+    verwerk leden=<alleleden>&ronde=<rondeNummer>
  */
-
-const alleLeden = Number(html.params.get("leden"));
-
 (async function() {
     await zyq.init();
     zyq.competitieTitel();
@@ -27,37 +23,30 @@ const alleLeden = Number(html.params.get("leden"));
     html.selectie("versies", zyq.o_o_o.versie, versies, function (versie) {
         html.zelfdePagina(`versie=${versie}`);
     });
+    const alleLeden = Number(html.params.get("leden")); // 0 indien niet alleLeden
     const optiesLeden = [
         [0, "alleen actieve leden"],
         [1, "inclusief niet actieve spelers"]];
     html.selectie("leden", alleLeden, optiesLeden, function (leden) {
         html.zelfdePagina(`leden=${leden}`);
     });
-    await spelersLijst(rondeNummer,
-        document.getElementById("kop"),
-        document.getElementById("tabel"),
-        document.getElementById("promoties"));
-})();
-
-async function spelersLijst(rondeNummer, kop, lijst) {
-    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "ranglijst na ronde " + rondeNummer;
-    let i = 0;
+    document.getElementById("kop").innerHTML =
+        zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "ranglijst na ronde " + rondeNummer;
+    const lijst = document.getElementById("tabel");
     const winnaars = {}; // voor winnaarSubgroep() in totalen
-    const spelers = await zyq.ranglijst(rondeNummer);
-    for (const speler of spelers) {
-        if (speler.intern() || speler.oneven() || speler.extern() || alleLeden) {
-            lijst.append(html.rij(
-                ++i,
-                zyq.naarSpeler(speler),
-                speler.intern() || speler.oneven() ? speler.punten() : "",
-                speler.winnaarSubgroep(winnaars),
-                speler.rating(),
-                speler.scoreIntern(),
-                speler.percentageIntern(),
-                speler.saldoWitZwart() ? speler.saldoWitZwart() : "",
-                speler.oneven() ? speler.oneven() : "",
-                speler.scoreExtern(),
-                speler.percentageExtern()));
-        }
-    }
-}
+    (await zyq.ranglijst(rondeNummer)).filter(function (speler) {
+        return speler.intern() || speler.oneven() || speler.extern() || alleLeden;
+    }).forEach(function (speler, rangnummer) {
+        lijst.append(html.rij(rangnummer + 1,
+            zyq.naarSpeler(speler),
+            speler.intern() || speler.oneven() ? speler.punten() : "",
+            speler.winnaarSubgroep(winnaars),
+            speler.rating(),
+            speler.scoreIntern(),
+            speler.percentageIntern(),
+            speler.saldoWitZwart() ? speler.saldoWitZwart() : "",
+            speler.oneven() ? speler.oneven() : "",
+            speler.scoreExtern(),
+            speler.percentageExtern()));
+    });
+})();
