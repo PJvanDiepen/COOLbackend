@@ -166,6 +166,10 @@ export function zelfdePagina(parameters) {
     location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 
+export function vorigePagina(parameters) {
+    location.replace(document.referrer.match(/\w+.html/) + (parameters ? "?" + parameters : ""));
+}
+
 export function plaatje(bestand, percentage, breed, hoog) {
     const img = document.createElement("img");
     img.src = bestand;

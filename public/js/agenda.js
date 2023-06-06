@@ -8,7 +8,11 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await agenda(document.getElementById("kop"), document.getElementById("wedstrijden"));
+    await agenda(
+        document.getElementById("kop"),
+        document.getElementById("wedstrijden"),
+        document.getElementById("speler")
+    );
 })();
 
 /*
@@ -36,11 +40,11 @@ import * as zyq from "./zyq.js";
     en partij = EXTERN_UIT of EXTERN_THUIS.
 
  */
-async function agenda(kop, lijst) {
+async function agenda(kop, lijst, speler) {
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
     const gewijzigd = await agendaMutatie(andereGebruiker);
     const naam = html.params.get("naamGebruiker") || zyq.gebruiker.naam;
-    kop.innerHTML = "Agenda" + html.SCHEIDING + naam;
+    kop.append(`Agenda${html.SCHEIDING}${naam}`);
     let wedstrijden = await agendaLezen(andereGebruiker);
     if (await agendaAanvullen(andereGebruiker, wedstrijden)) {
         wedstrijden = await agendaLezen(andereGebruiker);
@@ -65,6 +69,7 @@ async function agenda(kop, lijst) {
             console.log(w); // TODO er kan nog geen uitslag zijn!
         }
     }
+    speler.append(`Agenda${html.SCHEIDING}${naam}`);
 }
 
 async function agendaMutatie(knsbNummer) {

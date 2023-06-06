@@ -131,6 +131,7 @@ Verwijder localStorage op iPhone
 
 # Later
 - [clickable area on image](https://www.imagemaps.net/)
+- [interactieve kaarten](https://agafonkin.com/)
 - [3D in JavaScript](https://discoverthreejs.com/)
 - [IBM Carbon Design System](https://carbondesignsystem.com/)
 - [JavaScript frameworks](https://qr.ae/pvWvGt)

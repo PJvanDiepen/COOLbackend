@@ -8,6 +8,8 @@ import * as zyq from "./zyq.js";
 /*
     verwerk lid=<knsbNummer>
            &knsb=wijzigen
+
+    terug naar agenda.html of bestuur.html
  */
 const lidNummer = Number(html.params.get("lid"));
 const knsbWijzigen = html.params.get("knsb") === "wijzigen";
@@ -84,6 +86,8 @@ async function lidFormulier(persoon, ola) {
     const email = document.getElementById("email");
     if (ola) {
         email.value = ola.email;
+    } else {
+        // TODO gebruiker.email invullen indien gebruiker.knsbNummer === lidNummer
     }
     const gebruikerSoort = document.getElementById("gebruiker");
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
@@ -213,7 +217,7 @@ async function lidFormulier(persoon, ola) {
                 mutaties++;
             }
         }
-        // TODO iets doen met mutaties of variable mutaties verwijderen?
-        html.anderePagina(`bestuur.html?lid=${knsbNummer.value}`);
+        // TODO iets doen met mutaties of de variable mutaties verwijderen?
+        html.vorigePagina(`lid=${knsbNummer.value}`); // naar agenda.html of bestuur.html
     });
 }
