@@ -69,7 +69,7 @@ async function agenda(kop, lijst, speler) {
             console.log(w); // TODO er kan nog geen uitslag zijn!
         }
     }
-    speler.append(`Agenda${html.SCHEIDING}${naam}`);
+    speler.append(html.naarPagina(`lid.html?lid=${andereGebruiker}`, `Teams en competities ${naam}`));
 }
 
 async function agendaMutatie(knsbNummer) {

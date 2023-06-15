@@ -107,7 +107,7 @@ export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFun
     });
 }
 
-export function optie(value, text) { // TODO zonder export?
+export function optie(value, text) {
     const option = document.createElement("option");
     option.value = value;
     option.text = text;
@@ -162,12 +162,12 @@ export function anderePagina(naarPagina) { // pagina en parameters
     location.replace(pagina.pathname.replace(/\w+.html/, naarPagina));
 }
 
-export function zelfdePagina(parameters) {
-    location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
-}
-
 export function vorigePagina(parameters) {
     location.replace(document.referrer.match(/\w+.html/) + (parameters ? "?" + parameters : ""));
+}
+
+export function zelfdePagina(parameters) {
+    location.replace(pagina.pathname + (parameters ? "?" + parameters : ""));
 }
 
 export function plaatje(bestand, percentage, breed, hoog) {

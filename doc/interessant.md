@@ -86,12 +86,14 @@ Verwijder localStorage op iPhone
 
 # schaken
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
+- [FIDE Dutch System](https://estima.com/chess/wintdhelp/index.html?pairingsystemfidedutchsystem.html)
 - [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
 - [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
 - [Sevilla](https://www.jbfsoftware.com/)
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
 - [Schaken in HTML en JavaScript](https://www.chessengines.org/)
 - [betafish](https://github.com/Strryke/betafish)
+- [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
 
 # marketing
@@ -165,6 +167,7 @@ Verwijder localStorage op iPhone
 # Misschien
 
 - [Vlaggen van de wereld](https://codepen.io/raddevus/pen/WNQbOpK)
+- [Tekenen](https://developer.mozilla.org/en-US/blog/javascript-shape-drawing-function/)
 - [comic book speech bubbles with SVG and javascript](https://humaan.com/blog/creating-comic-book-speech-bubbles-with-svg-and-javascript/?ref=sidebar)
 - [vloeistof projecties](https://tympanus.net/codrops/2021/01/19/drawing-2d-metaballs-with-webgl2/)
 - [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/)
@@ -174,11 +177,11 @@ Verwijder localStorage op iPhone
 - [TypeScript](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/)
 - [alle JavaScript events](https://www.perimeterx.com/tech-blog/2019/list-every-event-that-exists-in-the-browser/)
 - [IntelliJ klokje](https://www.jetbrains.com/company/contacts/#headquarters-international-sales)
-- [MongoDb](https://www.quora.com/Which-one-would-you-prefer-to-use-MongoDB-or-MySQL-Why/answer/MongoDB-15)
+- [PostgreSQL](https://www.red-gate.com/blog/database-development/what-is-postgresql-and-why-do-businesses-need-to-know-more-about-it)
+- [MongoDB](https://www.quora.com/Which-one-would-you-prefer-to-use-MongoDB-or-MySQL-Why/answer/MongoDB-15)
 - [@property CSS](https://css-tricks.com/exploring-property-and-its-animating-powers/)
 - [scroll-snap-stop CSS](https://css-tricks.com/almanac/properties/s/scroll-snap-stop/)
 - [CSS animation](https://www.joshwcomeau.com/animation/keyframe-animations/?utm_source=DigitalOcean_Newsletter&mkt_tok=MTEzLURUTi0yNjYAAAF_aoSFBy0NUtyxPkeZsVuCv6qE6f3fiyegEOSH6AEv-JiqCq_I1o3ISlI9DHKEXT6Or39kiNlTJKODn4CiPts327YIyvfQvhWKfEDOSELI)
 - [Nationaal Cyber Security Centrum](https://www.ncsc.nl/)
-- [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [Diagrammen in Markdown](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)
 - [cursus algoritmes en datastructuren](https://frontendmasters.com/courses/algorithms/)

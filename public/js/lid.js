@@ -19,7 +19,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
     document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     const persoon = await persoonLezen();
     const ola = olaLezen();
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, "wijzig KNSB gegevens (pas op!)", function () {
+    await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig OLA gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
         }],
         [db.BEHEERDER, `${persoon.naam} verwijderen`, async function () {
@@ -33,7 +33,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
         [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }]);
-    lidFormulier(persoon, ola);
+    await lidFormulier(persoon, ola);
 })();
 
 async function persoonLezen() {
@@ -103,7 +103,6 @@ async function lidFormulier(persoon, ola) {
     if (ola) {
         knsbRating.value = ola.knsbRating; // in OLA bestand van augustus staat juiste KNSB rating
     }
-    // TODO html.selectie toepassen
     const interneRating = document.getElementById("interneRating");
     if (knsbRating.value > 0) {
         interneRating.append(html.optie(knsbRating.value, "zie KNSB rating"));
