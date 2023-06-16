@@ -62,8 +62,6 @@ export function wedstrijdVoluit(ronde) {
     return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
 }
 
-// TODO import * db.js
-
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -105,15 +103,13 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
-// TODO verplaats naar db.js
-
 const ditSeizoen = (function () {
     const datum = new Date();
     const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001);
     return `${voorloopNul(i)}${voorloopNul(i + 1)}`;
 })();
 
-export {
+export { // TODO geen export, maar import db
 // score
     PUNTEN_UIT,
 // kop
@@ -154,7 +150,7 @@ export const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
 export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 export const gebruiker = {}; // gebruikerVerwerken
 
-// gebruiker.mutatieRechten TODO import * db.js
+// gebruiker.mutatieRechten
 const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;

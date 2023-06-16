@@ -41,6 +41,10 @@ const ZWART = "z";
 const REMISE = "½";
 const WINST = "1";
 const VERLIES = "0";
+const resultaten = [
+    [WINST, "1-0"],
+    [REMISE, "½-½"],
+    [VERLIES, "0-1"]];
 // uitslag.uithuis
 const THUIS = "t";
 const UIT = "u";
@@ -111,6 +115,7 @@ module.exports = {
     REMISE,
     WINST,
     VERLIES,
+    resultaten,
     // uitslag.uithuis
     THUIS,
     UIT,

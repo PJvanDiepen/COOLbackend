@@ -26,17 +26,13 @@ import * as zyq from "./zyq.js";
 })();
 
 async function spelerSelecteren(rondeNummer, deelnemers) {
-    // TODO html.selectie toepassen
-    const spelers = document.getElementById("spelerSelecteren");
-    spelers.append(html.optie(0, "selecteer naam"));
-    (await zyq.localFetch(`/spelers/${o_o_o.seizoen}`)).forEach(
-        function (speler) {
-            spelers.append(html.optie(speler.knsbNummer, speler.naam + (deelnemers.includes(speler.knsbNummer) ?  zyq.KRUISJE : "")));
-        });
-    spelers.addEventListener("input",async function () {
-        const knsbNummer = Number(spelers.value);
-        const partij = deelnemers.includes(knsbNummer) ? db.NIET_MEEDOEN : db.MEEDOEN;
+    const spelers = (await zyq.localFetch(`/spelers/${o_o_o.seizoen}`)).map(function (speler) {
+        return [Number(speler.knsbNummer), speler.naam + (deelnemers.includes(speler.knsbNummer) ?  html.KRUISJE : "")];
+    });
+    spelers.unshift([0, "selecteer naam"]);
+    html.selectie(document.getElementById("spelerSelecteren"), 0, spelers, function (knsbNummer) {
+        const partij = deelnemers.includes(knsbNummer) ? db.NIET_MEEDOEN : db.MEEDOEN; // TODO mutatie en na init() en speler geel maken indien gelukt
         const datum = zyq.datumSQL(o_o_o.ronde[rondeNummer].datum);
-        html.zelfdePagina(); // TODO mutatie na init() en speler geel maken indien gelukt
+        html.zelfdePagina();
     });
 }

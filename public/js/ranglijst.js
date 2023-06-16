@@ -20,14 +20,14 @@ import * as zyq from "./zyq.js";
         [3, "versie 3 zonder afzeggingenaftrek vanaf seizoen = 2122"],
         [4, "versie 4 volgens reglement rapid competitie"],
         [5, "versie 5 voor snelschaken"]];
-    html.selectie("versies", zyq.o_o_o.versie, versies, function (versie) {
+    html.selectie(document.getElementById("versies"), zyq.o_o_o.versie, versies, function (versie) {
         html.zelfdePagina(`versie=${versie}`);
     });
     const alleLeden = Number(html.params.get("leden")); // 0 indien niet alleLeden
     const optiesLeden = [
         [0, "alleen actieve leden"],
         [1, "inclusief niet actieve spelers"]];
-    html.selectie("leden", alleLeden, optiesLeden, function (leden) {
+    html.selectie(document.getElementById("leden"), alleLeden, optiesLeden, function (leden) {
         html.zelfdePagina(`leden=${leden}`);
     });
     document.getElementById("kop").innerHTML =

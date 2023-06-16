@@ -76,13 +76,13 @@ async function uitslagenRonde(rondeNummer, lijst) {
     const uitslagen = await zyq.serverFetch(`/ronde/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
-            const uitslagKolom = uitslagVerwerken(rondeNummer, uitslag);
-            html.rij(uitslagKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
+            const resultaatKolom = resultaatVoluit(rondeNummer, uitslag);
+            html.verwerkt(resultaatKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
             lijst.append(html.rij(
                 uitslag.bordNummer,
                 zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
                 zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                uitslagKolom));
+                resultaatKolom));
         }
     } else {
         lijst.append(html.rij("nog", "geen", "uitslagen", ""));
@@ -111,17 +111,17 @@ async function uitslagMutatie(rondeNummer) {
     return {"wit": Number(wit), "zwart": Number(zwart)};
 }
 
-function uitslagVerwerken(rondeNummer, uitslag) {
+function resultaatVoluit(rondeNummer, uitslag) {
+    let resultaat = "";
+    for (const [kort, lang] of db.resultaten) {
+        if (kort === uitslag.resultaat) {
+            resultaat = lang;
+        }
+    }
     if (uitslagWijzigen(uitslag)) {
-        return uitslagSelecteren(rondeNummer, uitslag)
-    } else if (uitslag.resultaat === db.WINST) {
-        return "1-0";
-    } else if (uitslag.resultaat === db.REMISE) {
-        return "½-½";
-    } else if (uitslag.resultaat === db.VERLIES) {
-        return "0-1";
+        return resultaatSelecteren(rondeNummer, uitslag)
     } else {
-        return "";
+        return resultaat;
     }
 }
 
@@ -130,25 +130,23 @@ function uitslagWijzigen(uitslag)  {
         return false;
     } else if (zyq.gebruiker.mutatieRechten >= db.WEDSTRIJDLEIDER) {
         return true;
-    } else if (zyq.gebruiker.mutatieRechten >= db.GEREGISTREERD && uitslag.resultaat === "") {
+    } else if (zyq.gebruiker.mutatieRechten >= db.GEREGISTREERD && uitslag.resultaat === "") { // indien nog geen resultaat
         return uitslag.knsbNummer === gebruiker.knsbNummer || uitslag.tegenstanderNummer === gebruiker.knsbNummer;
     } else {
         return false;
     }
 }
 
-// TODO html.selectie toepassen
-function uitslagSelecteren(rondeNummer, uitslag) {
-    const select = document.createElement("select");
-    select.append(html.optie(db.WINST, "1-0"));
-    select.append(html.optie(db.REMISE, "½-½"));
-    select.append(html.optie(db.VERLIES, "0-1"));
-    select.value = uitslag.resultaat;
-    select.addEventListener("input",function () {
-        html.zelfdePagina(
-            `ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${select.value}`);
+function resultaatSelecteren(rondeNummer, uitslag) {
+    const knop = document.createElement("select");
+    const resultaten = [...db.resultaten]; // kopie
+    if (uitslag.resultaat === "") {
+        resultaten.unshift(["", ""]); // nog geen reultaat
+    }
+    html.selectie(knop, uitslag.resultaat, resultaten, function (resultaat) {
+        html.zelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${resultaat}`);
     });
-    return select;
+    return knop;
 }
 
 async function wedstrijdenBijRonde(rondeNummer, lijst) {

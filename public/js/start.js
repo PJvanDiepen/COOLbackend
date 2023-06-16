@@ -49,7 +49,7 @@ async function seizoenSelecteren(teamCode) {
     const seizoenen = (await zyq.localFetch("/seizoenen/" + teamCode)).map(function (seizoen) {
         return [seizoen, zyq.seizoenVoluit(seizoen)];
     });
-    html.selectie("seizoenSelecteren", zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
+    html.selectie(document.getElementById("seizoenSelecteren"), zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
         html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
     });
 }
@@ -60,7 +60,7 @@ async function competitieSelecteren() {
     }).map(function (team) {
         return [team.teamCode, team.omschrijving];
     });
-    html.selectie("competitieSelecteren", zyq.o_o_o.competitie, competities, function (competitie) {
+    html.selectie(document.getElementById("competitieSelecteren"), zyq.o_o_o.competitie, competities, function (competitie) {
         html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
     });
 }

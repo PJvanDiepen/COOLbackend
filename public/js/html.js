@@ -69,36 +69,34 @@ export function menu(menuRechten, ...menuKeuzes) {
             }]);
         }
     }
-    selectie(db.MENU, HAMBURGER, opties);
+    selectie(document.getElementById(db.MENU), HAMBURGER, opties);
 }
 
 /**
- * selectie zet alle selectieOpties op een select-knop met opties en zet een eventListener klaar om een optie te verwerken.
+ * selectie zet alle opties op een select-knop en zet een eventListener klaar om een optie te verwerken.
  *
- * @param selectieId van HTML knop
- * @param selectieWaarde huidige optie
- * @param selectieOpties opties met waarde, tekst en eventueel een functie om deze waarde te verwerken
- * @param selectieFunctie functie om de geselecteerde waarde te verwerken (indien er geen functie bij de opties is gespecificeerd)
+ * @param knop HTML knop
+ * @param optieWaarde huidige optie
+ * @param opties met waarde, tekst en eventueel een functie om deze waarde te verwerken
+ * @param optieVerwerken functie om de geselecteerde waarde te verwerken (indien er geen functie bij de opties is gespecificeerd)
  *
- * Elke selectieOptie bestaat uit waarde, tekst en bijbehorend functie.
- * Elke optie krijgt een volgnummer en een tekst.
- * Er is een functie per optie of een functie voor alle opties (selektieFunctie).
+ * Elke optie bestaat uit waarde, tekst en bijbehorend functie en krijgt een volgnummer.
+ * Er is een functie per optie of een functie voor alle opties (optieVerwerken).
  * Het volgnummer verwijst naar de bijbehorende functie in functies en de bijbehorende waarde in waardes.
  *
  * De eventListener krijgt het volgnummer door en start de bijbehorende functie met de bijbehorende waarde.
  */
-export function selectie(selectieId, selectieWaarde, selectieOpties, selectieFunctie = function (waarde) {
-    console.log(`--- selectie(${selectieId}, ${waarde} van ${selectieOpties.length} opties) ---`);
+export function selectie(knop, optieWaarde, opties, optieVerwerken = function (waarde) {
+    console.log(`--- selectie(${waarde} van ${opties.length} opties) ---`);
 }) {
-    const knop = document.getElementById(selectieId);
     const functies = [];
     const waardes = [];
-    for (const [waarde, tekst, functie] of selectieOpties) {
+    for (const [waarde, tekst, functie] of opties) {
         const volgnummer = functies.length; // optie 0, 1, 2 enz.
-        functies.push(functie ? functie : selectieFunctie);
+        functies.push(functie ? functie : optieVerwerken);
         waardes.push(waarde);
         knop.append(optie(volgnummer, tekst));
-        if (waarde === selectieWaarde) {
+        if (waarde === optieWaarde) {
             knop.value = volgnummer;
         }
     }

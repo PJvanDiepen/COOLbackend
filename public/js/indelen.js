@@ -160,7 +160,7 @@ const indelenFun = [
     for (let i = 0; i < indelenFun.length; i++) {
         versieOpties.push([i, indelenFun[i][0]]);
     }
-    html.selectie("versies", versieIndelen, versieOpties, function (versie) {
+    html.selectie(document.getElementById("versies"), versieIndelen, versieOpties, function (versie) {
         html.zelfdePagina(`ronde=${rondeNummer}&indelen=${versie}&rangnummers=aan`);
     });
 })();
@@ -345,8 +345,6 @@ function nietTegen(r, i, j, rondeNummer) {
     return false;
 }
 
-
-
 function vooruitIndelen(r, wit, zwart, oneven, rondeNummer) {
     const nietIngedeeld = [];
     for (let i = 0; i < r.length; i++) {
@@ -375,26 +373,6 @@ function vooruitIndelen(r, wit, zwart, oneven, rondeNummer) {
 
 const VOORUIT = 1;
 const ACHTERUIT = -1;
-
-function spelerIndelenHeuristiek(speler, richting, r, wit, zwart, oneven, rondeNummer) {
-    console.log(`--- ${r[speler].naam} ${richting === VOORUIT ? "vooruit" : "achteruit"} indelen met heuristiek ---`);
-    let j = speler + richting;
-    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || nietTegen(r, speler, j, rondeNummer))) { // met heuristieken
-        j = j + richting; // volgende / vorige indien al ingedeeld of oneven of mag niet tegen
-    }
-    if (j >= 0 && j < r.length) {
-        if (r[speler].metWit(r[j])) {
-            wit.push(speler);
-            zwart.push(j);
-        } else {
-            wit.push(j);
-            zwart.push(speler);
-        }
-        return true;
-    } else {
-        return false;
-    }
-}
 
 function spelerIndelen(speler, richting, r, wit, zwart, oneven) {
     console.log(`--- ${r[speler].naam} ${richting === VOORUIT ? "vooruit" : "achteruit"} indelen ---`);
