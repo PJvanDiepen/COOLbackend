@@ -456,7 +456,7 @@ export function datumLeesbaar(object) {
  * @param dagen optellen bij gegeven datum
  * @returns {string} jjjj-mm-dd evenetueel met voorloopNul voor maand en dag
  */
-export function datumSQL(jsonDatum, dagen) {
+export function datumSQL(jsonDatum = null, dagen = 0) {
     const datum = jsonDatum ? new Date(jsonDatum) : new Date();
     if (dagen) {
         datum.setDate(datum.getDate() + dagen);

@@ -47,6 +47,7 @@ Verwijder localStorage op iPhone
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
+- [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)

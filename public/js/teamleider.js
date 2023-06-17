@@ -14,13 +14,13 @@ import * as zyq from "./zyq.js";
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
+    document.getElementById("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamleiders";
     await spelersOverzicht(
-        document.getElementById("kop"),
+        wedstrijdDatum,
+        wedstrijden,
         document.getElementById("tabel"),
         document.getElementById("tussenkop"),
-        document.getElementById("lijst"),
-        wedstrijden,
-        wedstrijdDatum);
+        document.getElementById("lijst"));
 })();
 
 function volgendeWedstrijdDatum(wedstrijden) {
@@ -37,23 +37,17 @@ function volgendeWedstrijdDatum(wedstrijden) {
 
 function datumSelecteren(wedstrijdDatum, wedstrijden) {
     const vandaag = zyq.datumSQL();
-    // TODO html.selectie toepassen
-    const datums = document.getElementById("datumSelecteren");
-    wedstrijden.forEach(
-        function (wedstrijd) {
-            if ((zyq.datumSQL(wedstrijd.datum) >= vandaag)) {
-                datums.append(html.optie(wedstrijd.datum, zyq.datumLeesbaar(wedstrijd) + html.SCHEIDING + zyq.wedstrijdVoluit(wedstrijd)));
-            }
-        });
-    datums.value = wedstrijdDatum; // werkt uitsluitend na await
-    datums.addEventListener("input",
-        function () {
-            html.zelfdePagina(`datum=${datums.value}`);
-        });
+    const datums = wedstrijden.filter(function (wedstrijd) {
+        return zyq.datumSQL(wedstrijd.datum) >= vandaag;
+    }).map(function (wedstrijd) {
+        return [wedstrijd.datum, zyq.datumLeesbaar(wedstrijd) + html.SCHEIDING + zyq.wedstrijdVoluit(wedstrijd)];
+    });
+    html.selectie(document.getElementById("datumSelecteren"), wedstrijdDatum,datums, function (datum) {
+        html.zelfdePagina(`datum=${datum}`);
+    });
 }
 
-async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedstrijdDatum) {
-    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamleiders";
+async function spelersOverzicht(wedstrijdDatum, wedstrijden, tabel, tussenkop, lijst) {
     const spelers = await zyq.serverFetch(`/${zyq.uuidToken}/teamleider/${zyq.o_o_o.seizoen}/${zyq.datumSQL(wedstrijdDatum)}`);
     let nhsb = false;
     let aantalWedstrijden = 0;
@@ -67,7 +61,8 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             wedstrijd[aantalWedstrijden++] = w;
         }
     }
-    tussenkop.innerHTML = `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${zyq.datumLeesbaar({datum: wedstrijdDatum})}`;
+    tussenkop.innerHTML =
+        `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${zyq.datumLeesbaar({datum: wedstrijdDatum})}`;
     let vorigeSpeler = 0;
     for (const s of spelers) {
         const heeftToegezegd = s.partij === db.EXTERN_THUIS || s.partij === db.EXTERN_UIT; // heeft voor 1 team toegezegd
@@ -102,10 +97,10 @@ async function spelersOverzicht(kop, tabel, tussenkop, lijst, wedstrijden, wedst
             }
         }
         const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
-        const invallerWedstrijd =
-            s.knsbNummer === vorigeSpeler ? zyq.teamVoluit(invallerTeam) + "  " : wedstrijdSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
+        const invallerVragen =
+            s.knsbNummer === vorigeSpeler ? zyq.teamVoluit(invallerTeam) + "  " : teamSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
         vorigeSpeler = s.knsbNummer;
-        tabel.append(html.rij(zyq.naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerWedstrijd, invaller));
+        tabel.append(html.rij(zyq.naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerVragen, invaller));
     }
     for (const w of wedstrijd) {
         lijst.append(html.rij(zyq.wedstrijdVoluit(w), w.naam, w.gevraagd, w.toegezegd, w.borden === w.toegezegd ? zyq.VINKJE : zyq.STREEP));
@@ -123,14 +118,10 @@ function ratingInvaller(spelers, teamCode, nhsb) {
     return 3000; // hoogste rating indien team zonder vaste spelers
 }
 
-// TODO html.selectie toepassen
-function wedstrijdSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
-    let invallerMogelijkheden = 0;
-    const select = document.createElement("select");
+function teamSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
     let wedstrijdNummer = -1; // geen wedstrijd;
-    if (invallerTeam === "") {
-        select.append(html.optie(wedstrijdNummer, ""));
-    }
+    let invallerMogelijkheden = 0;
+    const teams = invallerTeam === "" ? [[-1, ""]] : [];
     for (let i = 0; i < wedstrijd.length; i++) {
         if (wedstrijd[i].teamCode === invallerTeam) {
             wedstrijdNummer = i;
@@ -139,20 +130,20 @@ function wedstrijdSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
             speler.nhsbTeam !== wedstrijd[i].teamCode &&
             speler.knsbRating < wedstrijd[i].hoogsteRating) {
             invallerMogelijkheden++;
-            select.append(html.optie(i, zyq.teamVoluit(wedstrijd[i].teamCode)));
+            teams.push([i, zyq.teamVoluit(wedstrijd[i].teamCode)]);
         }
     }
     if (invallerMogelijkheden === 0) {
         return invallerTeam;
     } else {
-        select.value = wedstrijdNummer;
-        select.addEventListener("input",async function () {
-            const team = wedstrijd[select.value].teamCode;
-            const ronde = wedstrijd[select.value].rondeNummer;
+        const knop = document.createElement("select");
+        html.selectie(knop, wedstrijdNummer, teams, async function (geselecteerdeTeam) {
+            const team = wedstrijd[geselecteerdeTeam].teamCode;
+            const ronde = wedstrijd[geselecteerdeTeam].rondeNummer;
             const mutaties = await zyq.serverFetch(
                 `/${zyq.uuidToken}/agenda/${zyq.o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/n/${zyq.datumSQL(wedstrijdDatum)}/int`);
-            html.zelfdePagina(`datum=${wedstrijdDatum}&wedstrijd=${select.value}`);
+            html.zelfdePagina(`datum=${wedstrijdDatum}&wedstrijd=${geselecteerdeTeam}`);
         });
-        return select;
+        return knop;
     }
 }
