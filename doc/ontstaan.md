@@ -1,6 +1,6 @@
 # Ontstaansgeschiedenis 0-0-0
 
-0-0-0 is geleidelijk ontstaan. Hieronder beschrijft Peter van Diepen hoe dat ging en de geschiedenis van de belangrijkste ontwerpbeslissingen.
+0-0-0 is geleidelijk ontstaan. Hieronder beschrijft Peter van Diepen de geschiedenis van de belangrijkste ontwerpbeslissingen.
 
 Alles draait om de eenvoud
 (Het Goede Doel)
@@ -14,11 +14,238 @@ Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het
 [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) en dat gebruiken we bij de Waagtoren nog steeds.
 
 Sinds 1974 programmeer ik computers. In het begin waren dat CDC-, Univac-, DEC- en IBM-computers later microcomputers en de IBM PC. 
-In 2003 werd ik docent wiskunde en in 2017 docent software engineering aan de Hogeschool van Amsterdam.
+In 2003 werd ik docent wiskunde en in 2004 werd daarnaast ook docent informatica in het voortgezet onderwijs.
+In 2017 werd ik docent software engineering aan de Hogeschool van Amsterdam.
 
-In 2016 werd ik intern wedstrijdleider van de Waagtoren. 
-Toen gebruikte ik Rokade van [Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 
-om de uitslagen van de interne competitie te verwerken, ranglijsten te berekenen, de indeling te maken en op de website te publiceren. 
+Vanaf 2016 werd ik intern wedstrijdleider van de Waagtoren en gebruikte ik Rokade 
+van [Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/).
+Met Rokade moest ik aanmeldingen en afzeggingen van leden verwerken, uitslagen invoeren en door middel van een upload naar de website
+indelingen, uitslagen en ranglijsten publiceren.
+Rokade gebruikte een [Microsoft Access](https://en.wikipedia.org/wiki/Microsoft_Access) database en draaide lokaal op mijn laptop.
+Dat wilde ik beter automatiseren. Daarom wilde ik in overleg met Herman Nijhuis Rokade aanpassen 
+
+Rokade is gemaakt met [Delphi](https://en.wikipedia.org/wiki/Delphi_(software)) van [Embarcadero](https://www.embarcadero.com/products/delphi).
+Een prachtig product dat ik nog kende uit de jaren 80 als [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal). 
+Delpi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
+Maar bij mij draaide Rokade niet meer op mijn nieuwste Windows laptop en uitsluitend op een oude laptop met Windows XP. 
+Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. 
+Om Rokade aan te passen, moest ik meer dan 1500 euro aan Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
+
+Zo onstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, die dus op een website moest draaien.
+
+## Eerste opzet
+
+Mijn eerste idee was om het een en ander te integreren op de [WordPress](https://en.wikipedia.org/wiki/WordPress) website van de Waagtoren.
+WordPress gebruikt [MySQL](https://en.wikipedia.org/wiki/MySQL) als on line database voor de artikelen en gebruikers. 
+Met alle leden in de database en paar extra tabellen voor uitslagen en wat [PHP](https://en.wikipedia.org/wiki/PHP) code 
+om ranglijsten te berekenen zou ik een begin kunnen maken met een web-app. Al snel vond ik WordPress niet geschikt voor deze toepassing
+en PHP te lelijk om zoiets als het algoritme voor indelen mee te programmeren.
+
+Als docent software engineering gebruikte ik vooral [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) en MySQL.
+Daarom begon ik in 2019 met het ontwerpen van de database met MySQL en schreef ik een Java-programma om de database te vullen.
+Dat was een off-line toepassing, omdat ik toen nog niet wist hoe ik de backend voor de on-line database zou gaan maken.
+
+De off-line toepassing was vooral bedoeld om informatie in te lezen uit andere systemen:
+- Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
+- de Microsoft Access database van Rokade en
+- een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
+
+In 2020 maakte Matheus de Boer van [Charper Bonaroo](https://www.bonaroo.nl/) de eerste opzet van de web-app 
+met MySQL voor de on-line database en [Node.js](https://nodejs.org/en/about) als de backend server.
+De web-app draaide toen op chessopenings.online. 
+
+
+
+
+Op dit moment verkeert het nieuwe systeem in fase 1: database ontwerpen en offline de database vullen.
+Ik probeer zo veel mogelijk informatie af te tappen van andere systemen zoals het OLA systeem van de KNSB, de ratinglijsten,
+de websites van de NHSB en KNSB voor de externe competities en bekercompetities en (voorlopig) van Rokade voor de interne competitie.
+
+Import en export van andere systemen blijven belangrijk voor het nieuwe systeem,
+want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen.
+In de toekomst is het misschien ook handig om informatie uit te wisselen met SwissMaster, Sevilla, enz.
+
+Rokade is 
+- Ledenadministratie
+- Competities en toernooien
+- Bondscompetitie
+- Financiële administratie
+
+De backend wil ik zo veel mogelijk met MySQL realiseren met zo min mogelijk extra backend software op een Node.js server. 
+De frontend verwerkt JSON en gebruikt zo standaard mogelijke HTML, CSS en JavaScript.
+
+Het belangrijkste verschil tussen Rokade en het nieuwe systeem is dat alles online komt en dat de databases en api zodanig worden ontworpen 
+dat het een universeel bruikbaar uitslagen en ranglijsten systeem wordt.
+
+Dit betekent dat de logica van het Alkmaar systeem in de database wordt vastgelegd en 
+dat we die kunnen vervangen door bijvoorbeeld het Keizer systeem. 
+De regels van het interne competitie reglement worden dus niet in software vastgelegd, maar in reglement-data. 
+Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data.
+
+Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data 
+en vervolgens nieuwe ranglijsten te genereren. Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan.
+
+Omdat externe wedstrijden soms meetellen voor de interne competitie moet het nieuwe systeem overzichten van scores in de externe competitie kunnen maken. 
+Met Rokade moest de intern wedstrijdleider deze administratie met de hand bijhouden. 
+Daarnaast administreerde de extern wedstrijdleider overzichten van de scores in de externe competitie. 
+Dubbel werk dus. Het nieuwe systeem moet beide administraties vervangen.
+
+Op dit moment verkeert het nieuwe systeem in fase 1: database ontwerpen en offline de database vullen. 
+Ik probeer zo veel mogelijk informatie af te tappen van andere systemen zoals het OLA systeem van de KNSB, de ratinglijsten, 
+de websites van de NHSB en KNSB voor de externe competities en bekercompetities en (voorlopig) van Rokade voor de interne competitie.
+
+Import en export van andere systemen blijven belangrijk voor het nieuwe systeem, 
+want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen. 
+In de toekomst is het misschien ook handig om informatie uit te wisselen met SwissMaster, Sevilla, enz.
+
+Het is de bedoeling dat er web-apps en apps voor mobiele telefoons komen om uitslagen in te voeren. 
+Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers (of de intern wedstrijdleider) de uitslag bevestigen. 
+Het een en ander moet op een moderne manier beveiligd worden.
+
+Beveiliging en backup van de database met uitslagen moet uiteraard goed geregeld worden met mogelijkheden om log-bestanden te bekijken 
+en fouten te herstellen.
+
+Voorlopig gebruik ik MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
+moet het ontwerp van het systeem zodanig zijn we MySQL kunnen vervangen.
+
+### Database ontwerpen en vullen
+
+Maar 0-0-0 berekent geen ratings en is geen leden administratie.
+In de database van 0-0-0 gebruiken we uitsluitend gegevens die noodzakelijk zijn voor de uitslagen en ranglijsten
+zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit OLA, de Online Leden Administratie van de KNSB.
+
+Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die informatie inleest uit andere systemen:
+-	Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
+-	de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
+-	een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
+
+Voor de online 0-0-0 gaan we meer geavanceerde koppelingen maken met andere systemen,
+want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen.
+Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers de uitslag bevestigen.
+Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen. Het een en ander moet op een moderne manier beveiligd worden.
+
+### Afzeggen en aanmelden
+Na fase 1 is er een online database en een website die vanuit de database uitslagen en ranglijsten laat zien die voor iedereen zichtbaar zijn. 
+Voor het bijwerken van de database zijn dan vooral offline tools gemaakt.
+
+In fase 2 wordt het nieuwe systeem interactief. 
+Spelers moeten zich aanmelden, want sommige lijsten zijn alleen zichtbaar voor de spelers zelf, teamleiders of competitieleiders.
+
+-	Lijsten per speler met interne en externe resultaten.
+-	Lijsten per speler met tegenstanders en kleuren in volgorde van voorkeur voor de indeling in de interne competitie.
+-	Lijsten per speler met vermeldingen wanneer ze afwezig zijn.
+
+In fase 3 kunnen spelers en competitieleiders de database bijwerken via de website.
+
+-	Spelers kunnen zich aanmelden en afzeggen voor de interne en externe competitie.
+-	Spelers kunnen partijen vastleggen om tegen elkaar te spelen.
+-	Spelers kunnen zelf uitslagen doorgeven.
+
+Deze lijst van specificaties moet nog verder uitgewerkt worden.
+
+### Indelen
+Voorlopig kan de interne competitieleider Rokade blijven gebruiken om in te delen. 
+Indelen is sowieso iets wat zo veel mogelijk onafhankelijk van de rest van het nieuwe systeem moet functioneren.
+
+In fase 4 zal een web-app of een app op een mobiele telefoon volledig automatisch een lijst van dinsdag te spelen partijen genereren.
+
+### Open source
+In fase 5 wil ik actief proberen of andere schaakverenigingen dit systeem willen gebruiken. 
+Ik zal zorgen dat het uitwisselen van gegevens met Rokade blijft functioneren, zodat verenigingen die Rokade al gebruiken eenvoudig kunnen overstappen.
+
+Eventueel kunnen andere schaakverenigingen hun databases ook op www.ChessOpenings.OnLine draaien.
+
+Het nieuwe systeem wordt ontwikkeld in duidelijk afgebakende delen, die je onafhankelijk van elkaar kunt vervangen of verbeteren. 
+De source code met documentatie zal ik open source beschikbaar stellen op GitHub, zodat andere programmeurs ook aan het nieuwe systeem kunnen werken.
+
+## Rokade wordt 0-0-0
+
+In 2021 kreeg de web-app een naam: 0-0-0 als opvolger van Rokade van Herman Nijhuis
+en als herinnering aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren heet. 
+0-0-0 draait op 0-0-0.nl en in de toekomst ook op 0-0-0.app
+
+Schaakvereniging de Waagtoren gebruikt Rokade van Herman Nijhuis voor het maken van indelingen en ranglijsten voor de interne competitie volgens het Alkmaarse systeem van Bert Buitink en Wim Andriessen.
+Rokade wil ik geleidelijk vervangen door een systeem op 0-0-0.nl.
+
+### Uitslagen en ranglijsten
+Rokade gebruikt een Microsoft Access database, die lokaal op de computer van de intern wedstrijdleider van de Waagtoren draait. 
+Vanuit Rokade maken we HTML en doen we uploads naar de Waagtoren-website.
+
+0-0-0 is een online database met een web-app die uitslagen en ranglijsten laat zien. 
+De backend bestaat uit MySQL en Node.js. De frontend verwerkt JSON en gebruikt zo standaard mogelijke HTML, CSS en JavaScript.
+
+Het belangrijkste verschil tussen 0-0-0 en Rokade is dus dat bij 0-0-0 alles online staat en niet lokaal en offline zoals bij Rokade. 
+Met 0-0-0 wordt het mogelijk om vanaf allerlei computers, tablets of smartphones de database te raadplegen en eventueel te muteren.
+
+Het is de bedoeling dat 0-0-0 een universeel bruikbaar uitslagen en ranglijsten systeem voor schaakverenigingen wordt. 
+De database en de api van 0-0-0 worden zodanig ontworpen dat de logica van het Alkmaar systeem in de database wordt vastgelegd, 
+zodat we die kunnen vervangen door bijvoorbeeld het Keizer systeem of het Zwitsers systeem. 
+De regels van het interne competitie reglement worden dus niet in software vastgelegd, maar in reglement-data. 
+Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data.
+
+Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data 
+en vervolgens nieuwe ranglijsten te genereren. Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan.
+
+Omdat externe wedstrijden in het Alkmaar systeem meetellen voor de interne competitie 
+maakt 0-0-0 overzichten van scores in de interne en externe competitie. 
+Met Rokade moest de intern wedstrijdleider de externe wedstijden, die niet op de avonden van de interne competitie werden gespeeld, 
+met de hand bijhouden in de kolom #XBP. Rokade geeft echter geen overzicht van de bijbehorende externe wedstrijden. 
+Met 0-0-0 kunnen de leden van de Waagtoren de ranglijst helemaal zelf controleren.
+
+### Kalender, voorlopige indeling en invallers
+Op 0-0-0.nl kan iedereen de uitslagen en ranglijsten zien van de laatste 3 seizoenen van de Waagtoren. 
+Als lid van de Waagtoren zie je bovendien een persoonlijke kalender met de ronden van de interne competitie 
+en jouw externe wedstrijden voor de rest van het seizoen.
+Op deze kalender-pagina kan je je per datum aanmelden of afzeggen.
+
+Op basis van de leden die zijn aangemeld voor de komende ronde van de interne competitie maakt 0-0-0 automatisch een voorlopige indeling, 
+die uitsluitend zichtbaar is voor leden. De intern wedstrijdleider hoeft de voorlopige indeling alleen maar definitief te maken.
+
+Voor de externe competitie houdt 0-0-0 overzichten bij voor de teamleiders met vaste spelers en mogelijke invallers. 
+De afmeldingen verschijnen automatisch in dat overzicht.
+
+Hoe de interactie tussen leden en 0-0-0 precies gaat werken, moeten we nog verder uitwerken.
+
+### Database ontwerpen en vullen
+Het ontwerp van de 0-0-0 database is afgerond voor wat betreft de ranglijst, uitslagen, indelen en de kalender. 
+Voor de reglement-data is een prototype gemaakt met een werkende versie van het Alkmaar systeem. 
+De algemene opzet voor reglement-data zal ongetwijfeld nog veranderen als we het Keizer systeem of Zwitsers systeem gaan implementeren.
+
+Maar 0-0-0 berekent geen ratings en is geen leden administratie. 
+In de database van 0-0-0 gebruiken we uitsluitend gegevens die noodzakelijk zijn voor de uitslagen en ranglijsten 
+zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit OLA, de Online Leden Administratie van de KNSB.
+
+Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die informatie inleest uit andere systemen:
+-	Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
+-	de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
+-	een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
+
+Voor de online 0-0-0 gaan we meer geavanceerde koppelingen maken met andere systemen, 
+want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen. 
+Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers de uitslag bevestigen. 
+Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen. Het een en ander moet op een moderne manier beveiligd worden.
+
+### Verdere ontwikkeling
+Op dit moment heeft 0-0-0 nog geen gebruikers die de database kunnen muteren. 
+0-0-0 kan nog niet functioneren zonder de offline toepassing. Bovendien is 0-0-0 voorlopig alleen beschikbaar voor de Waagtoren.
+
+Beveiliging en backup van de 0-0-0 database moeten we uiteraard goed regelen met mogelijkheden om log-bestanden te bekijken 
+en eventueel fouten te herstellen.
+
+Het is mijn bedoeling om 0-0-0 eerst helemaal functioneel te maken voor de Waagtoren. Daarna wil ik 0-0-0 geschikt maken
+-	voor andere schaakverenigingen,
+-	voor andere systemen dan alleen het Alkmaar systeem en
+-	voor andere (onder)bonden dan alleen KNSB en NHSB.
+
+Ik zal zorgen dat het uitwisselen van gegevens met Rokade blijft functioneren, 
+zodat verenigingen die Rokade al gebruiken eenvoudig kunnen overstappen.
+
+Eventueel kunnen andere schaakverenigingen ook op 0-0-0.nl draaien.
+
+De source code met documentatie zal ik open source beschikbaar stellen op GitHub, zodat andere programmeurs ook aan 0-0-0 kunnen werken.
+
+Voorlopig is 0-0-0 gebaseerd op MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
+is het ontwerp van de database zodanig zijn we MySQL kunnen vervangen.
 
 ## Schaakseizoen 2021-2022
  

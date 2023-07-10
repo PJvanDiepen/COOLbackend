@@ -128,6 +128,10 @@ a:hover {
 	background: #FFFF9F;
 }
 
+summary:hover {
+	background: #FFFF9F;
+}
+
 .verwerkt, a:active {
 	background: #F2BA49;
 }

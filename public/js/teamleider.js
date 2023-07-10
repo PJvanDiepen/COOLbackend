@@ -140,8 +140,9 @@ function teamSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
         html.selectie(knop, wedstrijdNummer, teams, async function (geselecteerdeTeam) {
             const team = wedstrijd[geselecteerdeTeam].teamCode;
             const ronde = wedstrijd[geselecteerdeTeam].rondeNummer;
+            const datum = zyq.datumSQL(wedstrijdDatum);
             const mutaties = await zyq.serverFetch(
-                `/${zyq.uuidToken}/agenda/${zyq.o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/n/${zyq.datumSQL(wedstrijdDatum)}/int`);
+                `/${zyq.uuidToken}/agenda/${zyq.o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/${db.VRAAG_INVALLER}/${datum}/int`);
             html.zelfdePagina(`datum=${wedstrijdDatum}&wedstrijd=${geselecteerdeTeam}`);
         });
         return knop;

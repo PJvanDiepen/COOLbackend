@@ -94,7 +94,7 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     for (const w of wedstrijden) {
         if (!w.partij) {
             /*
-            TODO voor interne competities bij gespeelde ronden afwezig invullen en daarna niet meedoen invullen
+            TODO voor interne competities bij gespeelde ronden afwezig invullen en daarna kandidaat deelnemer invullen
             uitsluitend nodig op de datum dat er meer ronden op 1 dag zijn
             op andere dagen is vergelijken met de datum van vandaag voldoende
             uitzoeken wat de meest actuele competititie (ook voor start.html)
@@ -105,7 +105,7 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
             const vanafVandaag = datum >= zyq.datumSQL();
             // voor interne competities voor vandaag afwezig invullen en vanafVandaag altijd niet meedoen invullen
             if (vanafVandaag || zyq.interneCompetitie(w.teamCode)) {
-                const afwezig = vanafVandaag ? db.NIET_MEEDOEN : db.AFWEZIG;
+                const afwezig = vanafVandaag ? db.NIET_MEEDOEN : db.VRAAG_INVALLER;
                 const competitie = zyq.interneCompetitie(w.teamCode) ? w.teamCode : db.INTERNE_COMPETITIE;
                 const mutaties = await zyq.serverFetch(
                     `/${zyq.uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datum}/${competitie}`);
@@ -116,7 +116,7 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     return aanvullingen;
 }
 
-function wijzig(w) {
+function wijzig(w) { // TODO verpllatsen naar db.js
     if (w.partij === db.NIET_MEEDOEN) {
         return db.MEEDOEN;
     } else if (w.partij === db.MEEDOEN) {

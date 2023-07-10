@@ -223,7 +223,7 @@ const tk = [
 function jarenVerwerken(jaren) {
     const laatsteJaar = tk[tk.length - 1].jaar;
     for (const kabinet of tk) {
-        jaren.appendChild(htmlLink(
+        jaren.append(htmlLink(
             "index.html?jaar=" + kabinet.jaar,
             " " + Math.round(kabinet.jaar) + (kabinet.verkiezing ? "*" : "") + (kabinet.jaar < laatsteJaar ? "," : ".")));
     }
@@ -253,8 +253,8 @@ function parametersVerwerken() {
 function kabinetVerwerken(kader, kop) {
     const i = jaarIndex(jaar);
     kop.innerHTML = "Kabinet in " + Math.round(jaar);
-    kader.appendChild(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
-    kader.appendChild(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
+    kader.append(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
+    kader.append(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
 }
 
 const DEEL = 55; // plaatje als percentage van window
@@ -277,7 +277,7 @@ function uitslagenVerwerken(kop, deLijsten) {
     let kamer = 0;
     for (const lijst of lijsten) {
         kamer = kamer + lijst.zetels;
-        deLijsten.appendChild(htmlRij(
+        deLijsten.append(htmlRij(
             ++nummer,
             lijst.partij,
             lijst.zetels,
@@ -286,7 +286,7 @@ function uitslagenVerwerken(kop, deLijsten) {
                 : htmlLink("index.html?wel=" + lijst.partij +"#h2lijsten", STREEP)));
     }
     if (kamer < 150 || kamer > 150) {
-        deLijsten.appendChild(htmlRij("", "", kamer, "?"));
+        deLijsten.append(htmlRij("", "", kamer, "?"));
     }
 }
 
@@ -313,7 +313,7 @@ function kabinetFormeren(kop, deKabinetten) {
             }
             j++;
         }
-        deKabinetten.appendChild(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
+        deKabinetten.append(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
         kabinetten.splice(i,1);
     }
 }
@@ -339,13 +339,9 @@ function kabinet(vanaf, coalitieZetels) {
     }
 }
 
-function htmlTekst(tekst) {
-    return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
-}
-
 function htmlParagraaf(tekst) {
     const p = document.createElement("p");
-    p.appendChild(htmlTekst(tekst));
+    p.append(tekst);
     return p;
 }
 
@@ -353,15 +349,15 @@ function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
         const td = document.createElement("td");
-        td.appendChild(htmlTekst(kolom));
-        tr.appendChild(td);
+        td.append(kolom);
+        tr.append(td);
     });
     return tr;
 }
 
 function htmlTabblad(link, tekst) {
     const a = document.createElement("a");
-    a.appendChild(htmlTekst(tekst));
+    a.append(tekst);
     a.href = link;
     a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
     a.rel = "noopener noreferrer"
@@ -370,7 +366,7 @@ function htmlTabblad(link, tekst) {
 
 function htmlLink(link, tekst) {
     const a = document.createElement("a");
-    a.appendChild(htmlTekst(tekst));
+    a.append(tekst);
     a.href = link;
     return a;
 }

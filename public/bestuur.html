@@ -24,15 +24,24 @@
             <th>aantal</th>
         </tr>
     </table>
-    <p>
-        OLA bestand inlezen:
-        <input type="file" id="olaFile" accept=".csv" />
+    <details>
+        <summary>KNSB-ratinglijst verwerken</summary>
+        <p>
+            0-0-0 gebruikt vooral de KNSB-ratinglijst van 1 augustus.
+            Daarnaast staan de meest recente ratinglijsten per maand in de database.
+            Hieronder staat een overzicht van ratinglijsten, die nog 0-0-0 moet verwerken.
+        </p>
+        <select id="ratinglijsten"></select>
+        <p>
+            OLA bestand inlezen:
+            <input type="file" id="olaFile" accept=".csv" />
         <div id="output"></div>
-    </p>
+        </p>
+    </details>
     <table id="tabel">
         <tr>
             <th></th>
-            <th>ola</th>
+            <th></th>
             <th>rating</th>
             <th>intern</th>
             <th>knsb</th>
