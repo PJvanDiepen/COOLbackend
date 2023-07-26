@@ -12,9 +12,10 @@ create table rating (
     partijen int not null,
     geboorteJaar int not null,
     sekse char(1),
-    datum date,
+	achterNaam int not null,
     maand int not null,
-    PRIMARY KEY (maand, knsbNummer)
+    jaar int not null,
+    PRIMARY KEY (knsbNummer, maand)
 );
 
 drop table if exists persoon; -- 0-0-0.nl versie 0.1

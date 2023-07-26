@@ -76,7 +76,7 @@ async function uitslagenRonde(rondeNummer, lijst) {
     const uitslagen = await zyq.serverFetch(`/ronde/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
-            const resultaatKolom = resultaatVoluit(rondeNummer, uitslag);
+            const resultaatKolom = resultaatSelecteren(rondeNummer, uitslag);
             html.verwerkt(resultaatKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
             lijst.append(html.rij(
                 uitslag.bordNummer,
@@ -111,17 +111,15 @@ async function uitslagMutatie(rondeNummer) {
     return {"wit": Number(wit), "zwart": Number(zwart)};
 }
 
-function resultaatVoluit(rondeNummer, uitslag) {
-    let resultaat = "";
-    for (const [kort, lang] of db.resultaten) {
-        if (kort === uitslag.resultaat) {
-            resultaat = lang;
-        }
-    }
+function resultaatSelecteren(rondeNummer, uitslag) {
     if (uitslagWijzigen(uitslag)) {
-        return resultaatSelecteren(rondeNummer, uitslag)
+        const knop = document.createElement("select");
+        html.selectie(knop, uitslag.resultaat, db.resultaatSelecteren(uitslag), function (resultaat) {
+            html.zelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${resultaat}`);
+        });
+        return knop;
     } else {
-        return resultaat;
+        return db.resultaatInvullen.get(uitslag.resultaat);
     }
 }
 
@@ -135,18 +133,6 @@ function uitslagWijzigen(uitslag)  {
     } else {
         return false;
     }
-}
-
-function resultaatSelecteren(rondeNummer, uitslag) {
-    const knop = document.createElement("select");
-    const resultaten = [...db.resultaten]; // kopie
-    if (uitslag.resultaat === "") {
-        resultaten.unshift(["", ""]); // nog geen reultaat
-    }
-    html.selectie(knop, uitslag.resultaat, resultaten, function (resultaat) {
-        html.zelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${resultaat}`);
-    });
-    return knop;
 }
 
 async function wedstrijdenBijRonde(rondeNummer, lijst) {

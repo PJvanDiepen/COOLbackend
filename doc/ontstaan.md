@@ -45,15 +45,39 @@ Als docent software engineering gebruikte ik vooral [Java](https://en.wikipedia.
 Daarom begon ik in 2019 met het ontwerpen van de database met MySQL en schreef ik een Java-programma om de database te vullen.
 Dat was een off-line toepassing, omdat ik toen nog niet wist hoe ik de backend voor de on-line database zou gaan maken.
 
-De off-line toepassing was vooral bedoeld om informatie in te lezen uit andere systemen:
+De Java toepassing was vooral bedoeld om informatie in te lezen uit andere systemen:
 - Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
 - de Microsoft Access database van Rokade en
 - een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
 
-In 2020 maakte Matheus de Boer van [Charper Bonaroo](https://www.bonaroo.nl/) de eerste opzet van de web-app 
-met MySQL voor de on-line database en [Node.js](https://nodejs.org/en/about) als de backend server.
-De web-app draaide toen op chessopenings.online. 
+Een web-app draait op minstens twee computers: de personal computer, mobiele telefoon of tablet van de gebruiker en
+de server computer ergens in de cloud op een website. De eerste noemen we frontend en de tweede backend.
+Daarnaast zijn frontend en backend via allerlei computers op het internet met elkaar verbonden.
+Op de frontend draait in ieder geval een browser die [HTML](https://en.wikipedia.org/wiki/HTML), 
+[CSS](https://en.wikipedia.org/wiki/CSS) en de programmeertaal [JavaScript](https://en.wikipedia.org/wiki/JavaScript) kan verwerken.
+De software van de backend daarentegen is ontzettend ingewikkeld. Bovendien bestaan in de praktijk veel verschillende oplossingen 
+in combinatie met allerlei programmeertalen. Ik heb uiteindelijk gekozen voor de combinatie [Node.js](https://nodejs.org/en/about) 
+en JavaScript, zodat ik alleen JavaScript hoefde te leren voor zowel de frontend als de backend.
 
+In 2020 maakte Matheus de Boer van [Charper Bonaroo](https://www.bonaroo.nl/) de eerste opzet voor de web-app 
+met MySQL voor de on-line database, Node.js voor de backend en nog een heleboel ondersteunende software:
+[koa](https://koajs.com/), [knex](https://knexjs.org/) en [objection](http://vincit.github.io/objection.js/).
+De web-app draaide toen op chessopenings.online (COOL) en daarom heet het project sindsdien COOLbackend.
+
+## Eerste ontwerpbeslissingen
+
+Die laag met backend software vond ik als beginner op het gebied van web-app's ontwikkelen heel verwarrend.
+In theorie kan je op de backend de HTML en CSS compleet maken en doorsturen naar de browser als statische webpagina's, 
+maar je kunt ook JavaScript toevoegen die dynamisch webpagina's genereert in de frontend.
+
+Mijn eerste ontwerpbeslissing was om in de backend geen HTML en CSS te genereren, maar uitsluitend JSON.
+Omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in SQL.
+De backend was voor mij vooral een doorgeefluik. De resultaten uit MySQL verwerkte ik tot JSON en die stuurde door naar de frontend.
+
+Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/),
+en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen en een van die frontend frameworks eigen te maken.
+Ik beperkte mij daarom tot zo standaard mogelijke HTML, CSS en JavaScript.
+Dit was niet echt een ontwerpbeslissing, maar een manier om alles voor mijzelf zo eenvoudig mogelijk te maken.
 
 
 

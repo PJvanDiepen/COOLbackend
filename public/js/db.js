@@ -1,7 +1,12 @@
 /*
- * Deze module bevat alle code voor interactie met de MySQL database
+ * Deze module bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
  *
- * Valideren
+ * Van deze module bestaan twee versies:
+ * - een Common.js versie voor node.js: db.cjs met module.exports = { .. };
+ * - een ES6 versie voor de browser: db.js met export { .. };
+ *
+ * Het enige verschil tussen de twee versies is de export-lijst.
+ * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  */
 
 const apiLijst = [];
@@ -41,13 +46,19 @@ const ZWART = "z";
 const REMISE = "½";
 const WINST = "1";
 const VERLIES = "0";
-const resultaten = [
-    [WINST, "1-0"],
-    [REMISE, "½-½"],
-    [VERLIES, "0-1"]];
 // uitslag.uithuis
 const THUIS = "t";
 const UIT = "u";
+
+const resultaatInvullen = new Map([
+    ["",""],
+    [WINST, "1-0"],
+    [REMISE, "½-½"],
+    [VERLIES, "0-1"]]);
+
+function resultaatSelecteren(uitslag) {
+    return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].slice(1); // met of zonder blanko resultaat
+}
 
 function agenda(partij) {
     return partij === MEEDOEN || partij === NIET_MEEDOEN || partij === EXTERN_THUIS || partij === EXTERN_UIT;
@@ -69,13 +80,7 @@ function hoera() {
     return " db.js hoera!";
 }
 
-/*
-db.js ES6 voor browser: export { .. };
-
-db.cjs CommonJS voor node.js: module.exports = { .. };
- */
-
-export {
+export { // ES6 voor browser
     apiLijst,
 
     // mutatie.invloed
@@ -115,10 +120,12 @@ export {
     REMISE,
     WINST,
     VERLIES,
-    resultaten,
     // uitslag.uithuis
     THUIS,
     UIT,
+
+    resultaatInvullen,
+    resultaatSelecteren,
 
     // gebruiker.mutatieRechten
     IEDEREEN,

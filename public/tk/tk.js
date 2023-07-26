@@ -208,16 +208,15 @@ const tk = [
         breed: 1566,
         hoog: 505,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
-    }
-/*
-    {jaar: 2025,
+    } /*,
+    {jaar: 2023,
         zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
         link: "https://www.verkiezingensite.nl"
     }
- */
+     */
 ]
 
 function jarenVerwerken(jaren) {
