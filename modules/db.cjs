@@ -60,6 +60,20 @@ function resultaatSelecteren(uitslag) {
     return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].slice(1); // met of zonder blanko resultaat
 }
 
+const maandInvullen = new Map([
+    [ 1, "januari"],
+    [ 2, "februari"],
+    [ 3, "maart"],
+    [ 4, "april"],
+    [ 5, "mei"],
+    [ 6, "juni"],
+    [ 7, "juli"],
+    [ 8, "augustus"],
+    [ 9, "september"],
+    [10, "oktober"],
+    [11, "november"],
+    [12, "december"]]);
+
 function agenda(partij) {
     return partij === MEEDOEN || partij === NIET_MEEDOEN || partij === EXTERN_THUIS || partij === EXTERN_UIT;
 }
@@ -111,7 +125,6 @@ module.exports = { // CommonJS voor node.js
     ONBEKEND,              // na wijzigen indeling
     WIT_TEGEN,             // na wijzigen indeling
     ZWART_TEGEN,           // na wijzigen indeling
-    agenda,                // (partij)
 
     // uitslag.witZwart
     WIT,
@@ -125,7 +138,9 @@ module.exports = { // CommonJS voor node.js
     UIT,
 
     resultaatInvullen,
-    resultaatSelecteren,
+    resultaatSelecteren,   // (uitslag)
+    maandInvullen,
+    agenda,                // (partij)
 
     // gebruiker.mutatieRechten
     IEDEREEN,

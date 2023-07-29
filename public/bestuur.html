@@ -8,10 +8,10 @@
     <style>
          #competities td:nth-child(3), #tabel td:nth-child(3), #tabel td:nth-child(4) {
             text-align: right; /* aantal, interne en KNSB rating */
-        }
-         #competities td:nth-child(2), #tabel td:nth-child(5), #tabel td:nth-child(6) {
+         }
+         #competities td:nth-child(2), #ratinglijsten td:nth-child(2), #tabel td:nth-child(5), #tabel td:nth-child(6) {
             text-align: center; /* code, knsb en nhsb */
-        }
+         }
     </style>
 </head>
 <body>
@@ -28,13 +28,21 @@
         <summary>KNSB-ratinglijst verwerken</summary>
         <p>
             0-0-0 gebruikt vooral de KNSB-ratinglijst van 1 augustus.
-            Daarnaast staan de meest recente ratinglijsten per maand in de database.
-            Hieronder staat een overzicht van ratinglijsten, die nog 0-0-0 moet verwerken.
+            Daarnaast staan de meest recente ratinglijsten per maand in de database. Dat zijn dus totaal 12 lijsten.
+            Hieronder staat een overzicht. Voor het inlezen van een ratinglijst heeft 0-0-0 (voorlopig) nog wat hulp nodig.
+            Een gebruiker moet de juiste ratinglijst downloaden van de KNSB-webside, het zip-bestand uitpakken en
+            het csv-bestand selecteren, zodat 0-0-0 die kan inlezen.
         </p>
-        <select id="ratinglijsten"></select>
+        <table id ="ratinglijsten">
+            <tr>
+                <th>download</th>
+                <th>verwerken</th>
+            </tr>
+        </table>
         <p>
             OLA bestand inlezen:
-            <input type="file" id="olaFile" accept=".csv" />
+            <input type="file" id="olaFile" accept=".csv" hidden/>
+            <label for="olaFile" id="bestand">Selecteer OLA-bestand</label>
         <div id="output"></div>
         </p>
     </details>

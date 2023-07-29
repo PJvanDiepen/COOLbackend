@@ -1,8 +1,10 @@
 "use strict";
 
 import * as html from "./html.js";
+import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
+import {voorloopNul} from "./zyq.js";
 
 /*
     verwerk lid=<knsbNummer>
@@ -17,6 +19,7 @@ import * as zyq from "./zyq.js";
         document.getElementById("kop"),
         document.getElementById("competities"),
         document.getElementById("tabel"));
+    downloadRatinglijsten(document.getElementById("ratinglijsten"));
     olaBestandLezen();
 })();
 
@@ -116,6 +119,21 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
         if (zyq.teamOfCompetitie(team.teamCode)) {
             competities.append(html.rij(zyq.teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
         }
+    }
+}
+
+function downloadRatinglijsten(lijst) {
+    const datum = new Date();
+    const ditJaar = datum.getFullYear();
+    const dezeMaand = datum.getMonth();
+    console.log({dezeMaand});
+    for (let i = 12; i > 0; i--) {
+        const maand = i >= dezeMaand ? i - dezeMaand + 1: i + dezeMaand + 1;
+        const jaar = i >= dezeMaand ? ditJaar : ditJaar - 1;
+        lijst.append(html.rij(html.naarPaginaEnTerug(
+            `https://schaakbond.nl/wp-content/uploads/${jaar}/${voorloopNul(maand)}/2023-${voorloopNul(maand)}-KNSB.zip`,
+            `Ratinglijst 1 ${db.maandInvullen.get(maand)} ${jaar}`),
+            html.KRUISJE));
     }
 }
 

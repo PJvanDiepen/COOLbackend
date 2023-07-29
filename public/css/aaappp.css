@@ -26,7 +26,7 @@ hr {
     border: 1px solid maroon;
 }
 
-.randje, input::file-selector-button, button, fieldset, legend, select, table, th, td {
+.randje, #bestand, button, fieldset, legend, select, table, th, td {
 	border: 1px solid maroon;
     padding: 5px;
 }
@@ -36,11 +36,11 @@ table select {
 	padding: 0px;
 }
 
-button, details {
+#bestand, button, details {
 	cursor: pointer;
 }
 
-button, input, select, textarea {
+#bestand, button, input, select, textarea {
 	font-family: inherit; /* https://developer.mozilla.org/en-US/docs/Learn/Forms/Styling_web_forms */
 	font-size: 100%; /* anders wordt font-size kleiner */
 	margin: 2px;
@@ -55,8 +55,12 @@ fieldset {
 	width: fit-content;
 }
 
-input::file-selector-button, button, legend, select {
+#bestand, button, legend, select {
 	border-radius: 5px;
+}
+
+#bestand { /* hoort bij label voor input type="file" */
+	width: fit-content;
 }
 
 #menu {
@@ -128,7 +132,7 @@ a:hover {
 	background: #FFFF9F;
 }
 
-summary:hover {
+#bestand:hover, summary:hover {
 	background: #FFFF9F;
 }
 
