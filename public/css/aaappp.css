@@ -31,7 +31,7 @@ hr {
     padding: 5px;
 }
 
-table select {
+table select { /* select binnen table heeft geen randje  */
 	border: none;
 	padding: 0px;
 }
@@ -51,16 +51,12 @@ table select {
 	display: block;
 }
 
-fieldset {
-	width: fit-content;
-}
-
 #bestand, button, legend, select {
 	border-radius: 5px;
 }
 
-#bestand { /* hoort bij label voor input type="file" */
-	width: fit-content;
+#bestand, fieldset {
+	width: fit-content; /* #bestand hoort bij label voor input type="file" */
 }
 
 #menu {

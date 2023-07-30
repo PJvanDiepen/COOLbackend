@@ -14,13 +14,13 @@ import {voorloopNul} from "./zyq.js";
     await zyq.init();
     const lidNummer = Number(html.params.get("lid"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    ledenLijst(
+    await ledenLijst(
         lidNummer,
         document.getElementById("kop"),
         document.getElementById("competities"),
         document.getElementById("tabel"));
-    downloadRatinglijsten(document.getElementById("ratinglijsten"));
-    olaBestandLezen();
+    alleRatinglijsten(document.getElementById("ratinglijsten"));
+    leesRatinglijst(document.getElementById("csvFile"), document.getElementById("csvInfo"));
 })();
 
 async function ledenLijst(lidNummer, kop, competities, tabel) {
@@ -122,20 +122,43 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
     }
 }
 
-function downloadRatinglijsten(lijst) {
+function alleRatinglijsten(lijst) {
     const datum = new Date();
     const ditJaar = datum.getFullYear();
     const dezeMaand = datum.getMonth();
-    console.log({dezeMaand});
     for (let i = 12; i > 0; i--) {
         const maand = i >= dezeMaand ? i - dezeMaand + 1: i + dezeMaand + 1;
         const jaar = i >= dezeMaand ? ditJaar : ditJaar - 1;
+        const naam = `${jaar}-${voorloopNul(maand)}-KNSB`;
         lijst.append(html.rij(html.naarPaginaEnTerug(
-            `https://schaakbond.nl/wp-content/uploads/${jaar}/${voorloopNul(maand)}/2023-${voorloopNul(maand)}-KNSB.zip`,
+            `https://schaakbond.nl/wp-content/uploads/${jaar}/${voorloopNul(maand)}/${naam}-KNSB.zip`,
             `Ratinglijst 1 ${db.maandInvullen.get(maand)} ${jaar}`),
-            html.KRUISJE));
+            `${naam}.zip`, // TODO blanko indien VINKJE
+            `${naam}.csv`, // TODO blanko indien VINKJE
+            html.KRUISJE)); // TODO of VINKJE
     }
 }
+
+function leesRatinglijst(filesList, output) {
+    filesList.addEventListener("change", function (event) {
+        const files = event.target.files;
+        const reader = new FileReader();
+        reader.readAsText(files[0]);
+        output.append(files[0].name);
+        reader.onerror = function() {
+            output.append("Could not read file, error code is " + reader.error.code);
+        };
+        reader.onload = function() {
+            const regels = reader.result.split('\r\n');
+            for (const regel of regels) {
+                const velden = regel.split(';');
+                // console.log(velden);
+            }
+            // html.zelfdePagina(); // TODO comment om te testen
+        };
+    });
+}
+
 
 /*
 Zie Matt Frisbie: Professional JavaScript for Web Developers blz. 760

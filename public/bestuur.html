@@ -36,15 +36,17 @@
         <table id ="ratinglijsten">
             <tr>
                 <th>download</th>
-                <th>verwerken</th>
+                <th>unzip</th>
+                <th>selecteren</th>
+                <th></th>
             </tr>
         </table>
         <p>
-            OLA bestand inlezen:
-            <input type="file" id="olaFile" accept=".csv" hidden/>
-            <label for="olaFile" id="bestand">Selecteer OLA-bestand</label>
-        <div id="output"></div>
+            Ratinglijst inlezen:
+            <input type="file" id="csvFile" accept=".csv" hidden/>
+            <label for="csvFile" id="bestand">Selecteer ratinglijst-bestand</label>
         </p>
+        <p id="csvInfo"></p>
     </details>
     <table id="tabel">
         <tr>
