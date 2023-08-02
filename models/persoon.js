@@ -8,4 +8,4 @@ class Persoon extends Model {
     static idColumn = 'knsbNummer'; // primary key
 }
 
-module.exports = Persoon
+module.exports = Persoon;

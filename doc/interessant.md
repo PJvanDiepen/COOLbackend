@@ -22,6 +22,7 @@ Verwijder localStorage op iPhone
 
 - [ECMA JavaScript](https://262.ecma-international.org/)
 - [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
 - [Type support with plain JavaScript](https://www.pausly.app/blog/full-type-support-with-plain-javascript)
 - [JavaScript nieuwe mogelijkheden](https://betterprogramming.pub/all-javascript-and-typescript-features-of-the-last-3-years-629c57e73e42)
 - [Spread and rest ... erg leuke website](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)

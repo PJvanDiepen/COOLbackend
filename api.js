@@ -5,6 +5,7 @@ const db = require('./modules/db.cjs');
 const Gebruiker = require('./models/gebruiker');
 const Mutatie = require('./models/mutatie');
 const Persoon = require('./models/persoon');
+const Rating = require('./models/rating');
 const Ronde = require('./models/ronde');
 const Speler = require('./models/speler');
 const Team = require('./models/team');
@@ -721,11 +722,11 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
-            if (await Gebruiker.query()
-                .insert({knsbNummer: ctx.params.knsbNummer,
-                    mutatieRechten: db.GEREGISTREERD,
-                    uuidToken: fn('uuid'),
-                    email: ctx.params.email})) {
+            if (await Gebruiker.query().insert( {
+                knsbNummer: ctx.params.knsbNummer,
+                mutatieRechten: db.GEREGISTREERD,
+                uuidToken: fn('uuid'),
+                email: ctx.params.email} )) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
@@ -765,7 +766,7 @@ module.exports = router => {
                 poule: "",
                 omschrijving: ctx.params.bond === "k" ? "KNSB poule" : ctx.params.bond === "k" ? "KNSB poule" : `${ctx.params.team} competitie`,
                 borden: 0,
-                teamleider: 0})) {
+                teamleider: 0} )) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
@@ -811,6 +812,44 @@ module.exports = router => {
     });
 
     /*
+    Zie bestuur.js
+    */
+    router.get('/:uuidToken/rating/verwijderen/:maand', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.BESTUUR)) {
+            aantal = await Rating.query().delete()
+                .andWhere('rating.maand', ctx.params.maand);
+            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    /*
+    Zie bestuur.js
+    */
+    router.get('/:uuidToken/rating/toevoegen/:maand/:jaar/:knsbNummer/:knsbNaam/:federatie/:knsbRating/:partijen/:geboorteJaar/:sekse', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.BESTUUR)) {
+            if (await Rating.query().insert({
+                knsbNummer: ctx.params.knsbNummer,
+                knsbNaam: ctx.params.knsbNaam,
+                federatie: ctx.params.federatie,
+                knsbRating: ctx.params.knsbRating,
+                partijen: ctx.params.partijen,
+                geboorteJaar: ctx.params.geboorteJaar,
+                sekse: ctx.params.sekse,
+                maand: ctx.params.maand,
+                jaar: ctx.params.jaar} )) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+            }
+        }
+        ctx.body = aantal;
+    });
+
+    /*
     Zie lid.js
      */
     router.get('/:uuidToken/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum', async function (ctx) {
@@ -830,7 +869,7 @@ module.exports = router => {
                 intern2: intern[1],
                 intern3: intern[2],
                 intern4: intern[3],
-                intern5: intern[4]})) {
+                intern5: intern[4]} )) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
@@ -876,8 +915,7 @@ module.exports = router => {
         let aantal = 0;
         if (gebruiker.juisteRechten(db.TEAMLEIDER) || // agenda van andere gebruiker
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen agenda
-            if (await Uitslag.query()
-                .insert({
+            if (await Uitslag.query().insert({
                     seizoen: ctx.params.seizoen,
                     teamCode: ctx.params.teamCode,
                     rondeNummer: ctx.params.rondeNummer,
@@ -888,7 +926,7 @@ module.exports = router => {
                     tegenstanderNummer: 0,
                     resultaat: "",
                     datum: ctx.params.datum,
-                    anderTeam: ctx.params.competitie})) { // TODO anderTeam = competitie
+                    anderTeam: ctx.params.competitie} )) { // TODO anderTeam = competitie
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
@@ -1169,13 +1207,11 @@ module.exports = router => {
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .limit(1);
             if (resultaten.length === 0) { // ronde en uitslagen verwijderen indien geen resultaten
-                const uitslagen = await Uitslag.query()
-                    .delete()
+                const uitslagen = await Uitslag.query().delete()
                     .andWhere('uitslag.seizoen', ctx.params.seizoen)
                     .andWhere('uitslag.teamCode', ctx.params.teamCode)
                     .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
-                const ronden = await Ronde.query()
-                    .delete()
+                const ronden = await Ronde.query().delete()
                     .andWhere('ronde.seizoen', ctx.params.seizoen)
                     .andWhere('ronde.teamCode', ctx.params.teamCode)
                     .andWhere('ronde.rondeNummer', ctx.params.rondeNummer);
@@ -1197,14 +1233,11 @@ module.exports = router => {
                 .where('knsbNummer', ctx.params.knsbNummer)
                 .limit(1);
             if (uitslagen.length === 0) { // speler, gebruiker en persoon verwijderen indien geen uitslagen
-                const spelers = await Speler.query()
-                    .delete()
+                const spelers = await Speler.query().delete()
                     .where('knsbNummer', ctx.params.knsbNummer);
-                const gebruikers = await Gebruiker.query()
-                    .delete()
+                const gebruikers = await Gebruiker.query().delete()
                     .where('knsbNummer', ctx.params.knsbNummer);
-                const personen = await Persoon.query()
-                    .delete()
+                const personen = await Persoon.query().delete()
                     .where('knsbNummer', ctx.params.knsbNummer);
                 aantal = spelers + gebruikers + personen;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
@@ -1220,8 +1253,7 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) {
-            aantal = await Mutatie.query()
-                .delete()
+            aantal = await Mutatie.query().delete()
                 .where('knsbNummer', gebruiker.dader.knsbNummer);
             await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
         }

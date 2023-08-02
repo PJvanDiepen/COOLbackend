@@ -8,4 +8,4 @@ class Gebruiker extends Model {
     static idColumn = 'uuidToken'; // primary key
 }
 
-module.exports = Gebruiker
+module.exports = Gebruiker;

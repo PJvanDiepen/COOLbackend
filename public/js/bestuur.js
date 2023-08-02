@@ -10,6 +10,8 @@ import {voorloopNul} from "./zyq.js";
     verwerk lid=<knsbNummer>
  */
 
+const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, jaar]]
+
 (async function() {
     await zyq.init();
     const lidNummer = Number(html.params.get("lid"));
@@ -125,10 +127,11 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
 function alleRatinglijsten(lijst) {
     const datum = new Date();
     const ditJaar = datum.getFullYear();
-    const dezeMaand = datum.getMonth();
+    const dezeMaand = datum.getMonth() + 1;
+    console.log({dezeMaand});
     for (let i = 12; i > 0; i--) {
-        const maand = i >= dezeMaand ? i - dezeMaand + 1: i + dezeMaand + 1;
-        const jaar = i >= dezeMaand ? ditJaar : ditJaar - 1;
+        const maand = (i + dezeMaand) > 12 ? (i + dezeMaand) - 12: (i + dezeMaand);
+        const jaar = (i + dezeMaand) > 12 ? ditJaar : ditJaar - 1;
         const naam = `${jaar}-${voorloopNul(maand)}-KNSB`;
         lijst.append(html.rij(html.naarPaginaEnTerug(
             `https://schaakbond.nl/wp-content/uploads/${jaar}/${voorloopNul(maand)}/${naam}-KNSB.zip`,
@@ -136,29 +139,47 @@ function alleRatinglijsten(lijst) {
             `${naam}.zip`, // TODO blanko indien VINKJE
             `${naam}.csv`, // TODO blanko indien VINKJE
             html.KRUISJE)); // TODO of VINKJE
+        ratinglijstMaandJaarInvullen.set(`${naam}.csv`, maand); // TODO [maand,jaar]
     }
 }
 
 function leesRatinglijst(filesList, output) {
     filesList.addEventListener("change", function (event) {
         const files = event.target.files;
-        const reader = new FileReader();
-        reader.readAsText(files[0]);
-        output.append(files[0].name);
-        reader.onerror = function() {
-            output.append("Could not read file, error code is " + reader.error.code);
-        };
-        reader.onload = function() {
-            const regels = reader.result.split('\r\n');
-            for (const regel of regels) {
-                const velden = regel.split(';');
-                // console.log(velden);
-            }
-            // html.zelfdePagina(); // TODO comment om te testen
-        };
+        if (!ratinglijstMaandJaarInvullen.has(files[0].name)) {
+            output.innerText += `\n${files[0].name} is geen ratinglijst.`;
+        } else {
+            const maand = ratinglijstMaandJaarInvullen.get(files[0].name); // TODO const [maand, jaar] =
+            output.innerText += `\n${files[0].name} verwerken met maand = ${maand}.`; // TODO en jaar =
+            const reader = new FileReader();
+            reader.readAsText(files[0]);
+            reader.onerror = function() {
+                output.innerText += `\n${files[0].name} lezen gaat fout met code: ${reader.error.code}.`;
+            };
+            reader.onload = function() {
+                const regels = reader.result.split('\r\n');
+                console.log(regels[0]);
+                console.log(regels[0] === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S");
+                console.log(regels[regels.length - 1]);
+                console.log(regels[regels.length - 1] === "");
+                if (regels.shift() === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S" && regels.pop() === "") { // zonder eerste en laatste regel
+                    for (const regel of regels) {
+                        verwerkRating(regel.split(';'), maand);
+                    }
+                    // html.zelfdePagina(`maand=&${maand}`); // TODO comment om te testen
+                } else {
+                    output.innerText += `\n${files[0].name} bevat geen ratinglijst.`;
+                }
+            };
+        }
     });
 }
 
+
+
+function verwerkRating(velden, maand) {
+    console.log(velden);
+}
 
 /*
 Zie Matt Frisbie: Professional JavaScript for Web Developers blz. 760
