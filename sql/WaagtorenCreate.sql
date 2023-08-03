@@ -7,7 +7,8 @@ drop table if exists rating; -- 0-0-0.nl versie 0.8.27
 create table rating (
 	knsbNummer int not null,
     knsbNaam varchar(45),
-    federatie char(3),
+    titel varchar(3),
+    federatie varchar(3),
     knsbRating int not null,
     partijen int not null,
     geboorteJaar int not null,

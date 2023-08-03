@@ -828,13 +828,14 @@ module.exports = router => {
     /*
     Zie bestuur.js
     */
-    router.get('/:uuidToken/rating/toevoegen/:maand/:jaar/:knsbNummer/:knsbNaam/:federatie/:knsbRating/:partijen/:geboorteJaar/:sekse', async function (ctx) {
+    router.get('/:uuidToken/rating/toevoegen/:maand/:jaar/:knsbNummer/:knsbNaam/:titel/:federatie/:knsbRating/:partijen/:geboorteJaar/:sekse', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
             if (await Rating.query().insert({
                 knsbNummer: ctx.params.knsbNummer,
                 knsbNaam: ctx.params.knsbNaam,
+                titel: ctx.params.titel,
                 federatie: ctx.params.federatie,
                 knsbRating: ctx.params.knsbRating,
                 partijen: ctx.params.partijen,
