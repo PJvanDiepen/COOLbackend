@@ -53,10 +53,10 @@ https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDeskt
  * menu() maakt opties voor select() met uitsluitend de menuKeuzes waarvoor de gebruiker voldoende menuRechten heeft.
  */
 export function menu(menuRechten, ...menuKeuzes) {
-    const startKeuzes = JSON.parse(sessionStorage.getItem(db.MENU)); // algemeen menu van start pagina
+    const startKeuzes = JSON.parse(sessionStorage.getItem(db.MENU)); // algemeen menu van start pagina TODO wat indien geen startKeuzes?
     const HAMBURGER = "\u2630";
     const opties = [[HAMBURGER, HAMBURGER]];  // geen functie
-    for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
+    for (const [minimumRechten, tekst, naarPagina] of startKeuzes) { // TODO dit gaat fout indien er geen startKeuzes zijn
         if (minimumRechten === db.IEDEREEN && tekst === db.MENU) {
             for (const [minimumRechten, tekst, functie] of menuKeuzes) {
                 if (minimumRechten <= menuRechten) {

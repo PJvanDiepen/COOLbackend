@@ -141,7 +141,7 @@ function alleRatinglijsten(lijst) {
     }
 }
 
-function leesRatinglijst(filesList, output) {
+async function leesRatinglijst(filesList, output) {
     filesList.addEventListener("change", function (event) {
         const files = event.target.files;
         if (!ratinglijstMaandJaarInvullen.has(files[0].name)) {
@@ -154,45 +154,22 @@ function leesRatinglijst(filesList, output) {
             reader.onerror = function() {
                 output.innerText += `\n${files[0].name} lezen gaat fout met code: ${reader.error.code}.`;
             };
-            reader.onload = function() {
+            reader.onload = async function() {
                 const regels = reader.result.split('\r\n');
                 if (regels.shift() === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S" && regels.pop() === "") { // zonder eerste en laatste regel
-                    for (let i = 0; i < regels.length; i += 1000) {
-                        verwerkRating(regels[i].split(';'), maand, jaar);
+                    const verwijderd = await zyq.serverFetch(`/${zyq.uuidToken}/rating/verwijderen/${maand}`);
+                    const toevoegen = regels.length;
+                    output.innerText += `\nDe ratinglijst van ${db.maandInvullen.get(maand)} had ${verwijderd} en krijgt ${toevoegen} KNSB leden.`;
+                    for (const regel of regels) {
+                        await zyq.serverFetch(`/${zyq.uuidToken}/rating/toevoegen/${maand}/${jaar}/${regel}`);
                     }
-                    // html.zelfdePagina(); // TODO comment om te testen
+                    html.zelfdePagina();
                 } else {
                     output.innerText += `\n${files[0].name} bevat geen ratinglijst.`;
                 }
             };
         }
     });
-}
-
-/*
-0 Relatienummer > knsbNummer
-1 Naam achternaam, voornaam > knsbNaam
-2 Titel IM, GM of ... > titel
-3 FED NED of ... > federatie
-4 Rating > knsbRating
-5 Nv > partijen
-6 Geboren > geboorteJaar
-7 S F of . > sekse
- */
-async function verwerkRating(veld, maand, jaar) {
-    const knsbNummer   = Number(veld[0]);
-    const knsbNaam     = veld[1];
-    const titel        = veld[2];
-    if (titel === "gm") {
-        console.log(knsbNaam);
-    }
-    const federatie    = veld[3];
-    const knsbRating   = Number(veld[4]);
-    const partijen     = Number(veld[5]);
-    const geboorteJaar = Number(veld[6]);
-    const sekse        = veld[7] === "" ? " " : veld[7];
-    await zyq.serverFetch(
-        `/${zyq.uuidToken}/rating/toevoegen/${maand}/${jaar}/${knsbNummer}/${knsbNaam}/${titel}/${federatie}/${knsbRating}/${partijen}/${geboorteJaar}/${sekse}`);
 }
 
 /*

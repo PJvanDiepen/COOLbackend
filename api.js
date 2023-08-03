@@ -826,25 +826,37 @@ module.exports = router => {
     });
 
     /*
+    KNSB ratinglijst is CSV bestand met 8 velden
+
+    0 Relatienummer > knsbNummer
+    1 Naam achternaam, voornaam > knsbNaam
+    2 Titel IM, GM of ... > titel
+    3 FED NED of ... > federatie
+    4 Rating > knsbRating
+    5 Nv > partijen
+    6 Geboren > geboorteJaar
+    7 S F of . > sekse
+
     Zie bestuur.js
     */
-    router.get('/:uuidToken/rating/toevoegen/:maand/:jaar/:knsbNummer/:knsbNaam/:titel/:federatie/:knsbRating/:partijen/:geboorteJaar/:sekse', async function (ctx) {
+    router.get('/:uuidToken/rating/toevoegen/:maand/:jaar/:csv', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
+            const csv = ctx.params.csv.split(';');
             if (await Rating.query().insert({
-                knsbNummer: ctx.params.knsbNummer,
-                knsbNaam: ctx.params.knsbNaam,
-                titel: ctx.params.titel,
-                federatie: ctx.params.federatie,
-                knsbRating: ctx.params.knsbRating,
-                partijen: ctx.params.partijen,
-                geboorteJaar: ctx.params.geboorteJaar,
-                sekse: ctx.params.sekse,
+                knsbNummer: Number(csv[0]),
+                knsbNaam: csv[1],
+                titel: csv[2],
+                federatie: csv[3],
+                knsbRating: Number(csv[4]),
+                partijen: Number(csv[5]),
+                geboorteJaar: Number(csv[6]),
+                sekse: csv[7],
                 maand: ctx.params.maand,
                 jaar: ctx.params.jaar} )) {
                 aantal = 1;
-                await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+                // await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
         }
         ctx.body = aantal;

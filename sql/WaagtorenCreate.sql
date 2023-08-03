@@ -6,7 +6,7 @@ USE `waagtoren`;
 drop table if exists rating; -- 0-0-0.nl versie 0.8.27
 create table rating (
 	knsbNummer int not null,
-    knsbNaam varchar(45),
+    knsbNaam varchar(60),
     titel varchar(3),
     federatie varchar(3),
     knsbRating int not null,
