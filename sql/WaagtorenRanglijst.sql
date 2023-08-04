@@ -373,7 +373,11 @@ from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
 group by m.knsbNummer
 order by naam;
 
--- agenda voor alle interne en externe ronden per speler
+-- alle ratinglijsten (met correlated subqueries)
+select a.maand, a.jaar from rating as a
+where a.knsbNummer = (select een.knsbNummer from rating as een where een.maand = a.maand limit 1);
+
+-- agenda voor alle interne en externe ronden per speler (met common table expressions)
 with
   s as (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer),
   u as (select * from uitslag where seizoen = @seizoen and knsbNummer = @knsbNummer)

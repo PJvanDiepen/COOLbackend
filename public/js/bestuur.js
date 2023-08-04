@@ -20,8 +20,8 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
         document.getElementById("kop"),
         document.getElementById("competities"),
         document.getElementById("tabel"));
-    alleRatinglijsten(document.getElementById("ratinglijsten"));
-    leesRatinglijst(document.getElementById("csvFile"), document.getElementById("csvInfo"));
+    await alleRatinglijsten(document.getElementById("ratinglijsten"));
+    await leesRatinglijst(document.getElementById("csvFile"), document.getElementById("csvInfo"));
 })();
 
 async function ledenLijst(lidNummer, kop, competities, tabel) {
@@ -123,20 +123,27 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
     }
 }
 
-function alleRatinglijsten(lijst) {
+async function alleRatinglijsten(lijst) {
+    const lijsten = await zyq.serverFetch(`/rating/lijsten`);
+    const ratingJaar = [];
+    for (const lijst of lijsten) {
+        const {maand, jaar} = lijst;
+        ratingJaar[Number(maand)] = Number(jaar);
+    }
     const datum = new Date();
     const ditJaar = datum.getFullYear();
     const dezeMaand = datum.getMonth() + 1;
     for (let i = 12; i > 0; i--) {
         const maand = (i + dezeMaand) > 12 ? (i + dezeMaand) - 12: (i + dezeMaand);
         const jaar = (i + dezeMaand) > 12 ? ditJaar : ditJaar - 1;
+        const juisteJaar = ratingJaar[maand] === jaar;
         const naam = `${jaar}-${voorloopNul(maand)}-KNSB`;
         lijst.append(html.rij(html.naarPaginaEnTerug(
-            `https://schaakbond.nl/wp-content/uploads/${jaar}/${voorloopNul(maand)}/${naam}-KNSB.zip`,
+            `https://schaakbond.nl/wp-content/uploads/${jaar}/${voorloopNul(maand)}/${naam}.zip`,
             `Ratinglijst 1 ${db.maandInvullen.get(maand)} ${jaar}`),
-            `${naam}.zip`, // TODO blanko indien VINKJE
-            `${naam}.csv`, // TODO blanko indien VINKJE
-            html.KRUISJE)); // TODO of VINKJE
+            juisteJaar ? "" : `${naam}.zip`,
+            juisteJaar ? "" : `${naam}.csv`,
+            juisteJaar ? html.VINKJE : html.KRUISJE));
         ratinglijstMaandJaarInvullen.set(`${naam}.csv`, [maand, jaar]);
     }
 }

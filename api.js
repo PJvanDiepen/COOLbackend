@@ -567,6 +567,23 @@ module.exports = router => {
     });
 
     /*
+    Zie bestuur.js
+    */
+    router.get('/rating/lijsten', async function (ctx) {
+        const lijsten = [];
+        for (let i = 0; i < 12; i++) {
+            const lijst = await Rating.query()
+                .select('rating.maand', 'rating.jaar')
+                .andWhere('rating.maand', i)
+                .limit(1);
+            if (lijst.length) {
+                lijsten.push(lijst[0]);
+            }
+        }
+        ctx.body = lijsten;
+    });
+
+    /*
     Zie beheer.js
      */
     router.get('/backup/persoon', async function (ctx) {
@@ -814,7 +831,7 @@ module.exports = router => {
     /*
     Zie bestuur.js
     */
-    router.get('/:uuidToken/rating/verwijderen/:maand', async function (ctx) {
+    router.get('/:uuidToken/rating/verwijderen/:maand/:jaar', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
