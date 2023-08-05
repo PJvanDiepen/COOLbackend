@@ -58,9 +58,9 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ("2324", "kbe", 2, "u", "Caissa-Eenhoorn", '2023-12-06');
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-("2324", "int", 1, "t", "", '2024-09-12'), -- interne competitie
-("2324", "int", 2, "t", "", '2024-09-19'),
-("2324", "int", 3, "t", "", '2024-09-26'),
+("2324", "int", 1, "t", "", '2023-09-12'), -- interne competitie
+("2324", "int", 2, "t", "", '2023-09-19'),
+("2324", "int", 3, "t", "", '2023-09-26'),
 ("2324", "int", 4, "t", "", '2023-10-03'),
 ("2324", "int", 5, "t", "", '2023-10-10'),
 ("2324", "int", 6, "t", "", '2023-10-17'),

@@ -584,6 +584,16 @@ module.exports = router => {
     });
 
     /*
+    Zie ???.js
+    */
+    router.get('/rating/:maand/:knsbNummer', async function (ctx) {
+        ctx.body = await Rating.query()
+            .select('knsbNummer', 'knsbNaam', 'knsbRating', 'maand', 'jaar')
+            .where('maand', ctx.params.maand)
+            .andWhere('knsbNummer', ctx.params.knsbNummer);
+    });
+
+    /*
     Zie beheer.js
      */
     router.get('/backup/persoon', async function (ctx) {

@@ -18,7 +18,6 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
     await zyq.init();
     document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     const persoon = await persoonLezen();
-    const ola = olaLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig OLA gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
         }],
@@ -33,7 +32,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
         [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
         }]);
-    await lidFormulier(persoon, ola);
+    await lidFormulier(persoon);
 })();
 
 async function persoonLezen() {
@@ -41,18 +40,6 @@ async function persoonLezen() {
     for (const persoon of personen) {
         if (Number(persoon.knsbNummer) === lidNummer) {
             return persoon;
-        }
-    }
-    return false;
-}
-
-function olaLezen() {
-    const olaBestand = JSON.parse(sessionStorage.getItem("OLA"));
-    if (olaBestand) {
-        for (const olaRegel of olaBestand) {
-            if (Number(olaRegel.knsbNummer) === lidNummer) {
-                return olaRegel;
-            }
         }
     }
     return false;
@@ -70,25 +57,17 @@ function speeltIntern(persoon, teamCode) { // volgens database
     }
 }
 
-async function lidFormulier(persoon, ola) {
+async function lidFormulier(persoon) {
     // formulier invullen
     const knsbNummer = document.getElementById("knsbNummer");
     knsbNummer.value = lidNummer;
     const naam = document.getElementById("naam");
-    if (!persoon && ola) {
-        naam.value = ola.naam;
-    } else if (persoon) {
+    if (persoon) {
         naam.value = persoon.naam;
-        if (ola && ola.naam !== persoon.naam) {
-            console.log(`verschillende namen in persoon: ${persoon.naam} en OLA: ${ola.naam}`);
-        }
     }
     const email = document.getElementById("email");
-    if (ola) {
-        email.value = ola.email;
-    } else {
-        // TODO gebruiker.email invullen indien gebruiker.knsbNummer === lidNummer
-    }
+    // TODO gebruiker.email invullen indien gebruiker.knsbNummer === lidNummer
+
     const gebruikerSoort = document.getElementById("gebruiker");
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
     if (!gebruikerToevoegen) {
@@ -99,9 +78,6 @@ async function lidFormulier(persoon, ola) {
     const spelerToevoegen = !persoon || persoon.knsbRating === null;
     if (!spelerToevoegen) {
         knsbRating.value = persoon.knsbRating;
-    }
-    if (ola) {
-        knsbRating.value = ola.knsbRating; // in OLA bestand van augustus staat juiste KNSB rating
     }
     const interneRating = document.getElementById("interneRating");
     if (knsbRating.value > 0) {

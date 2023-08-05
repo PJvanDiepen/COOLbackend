@@ -374,8 +374,8 @@ group by m.knsbNummer
 order by naam;
 
 -- alle ratinglijsten (met correlated subqueries)
-select a.maand, a.jaar from rating as a
-where a.knsbNummer = (select een.knsbNummer from rating as een where een.maand = a.maand limit 1);
+select r.maand, r.jaar from rating as r
+where r.knsbNummer = (select een.knsbNummer from rating as een where een.maand = r.maand limit 1);
 
 -- agenda voor alle interne en externe ronden per speler (met common table expressions)
 with
@@ -388,7 +388,7 @@ select r.*, u.partij
 where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5)
 order by r.datum, r.rondeNummer;
 
-set @seizoen = '2223';
+set @seizoen = '2324';
 set @knsbNummer = 6212404;
 set @datum = '2022-10-08';
 
