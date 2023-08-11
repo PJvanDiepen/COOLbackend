@@ -2,6 +2,10 @@ use waagtoren; -- ga naar TODO
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ("2324", "", "", "", "geen", 0, 0),
+("2324", "1", "k", "m", "KNSB meester", 8, 0),
+("2324", "2", "k", "3c", "KNSB 3c", 8, 0),
+("2324", "3", "k", "4c", "KNSB 4c", 8, 0),
+("2324", "4", "k", "6e", "KNSB 6e", 8, 0),
 ("2324", "int", "i", "nt", "interne competitie", 0, 0),
 ("2324", "ira", "i", "ra", "rapid competitie", 0, 0);
 
@@ -21,41 +25,39 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 select t.*, naam from team t join persoon p on t.teamleider = p.knsbNummer where seizoen = "2223";
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-("2324", "1", 1, "t", "En Passant 1", '2023-09-17'), -- KNSB competitie
-("2324", "1", 2, "u", "HWP Haarlem 1", '2023-10-08'),
-("2324", "1", 3, "u", "Caissa-Eenhoorn 1", '2023-11-05'),
-("2324", "1", 4, "t", "LSG 2", '2023-11-26'),
-("2324", "1", 5, "u", "MSV 1", '2023-12-17'),
-("2324", "1", 6, "t", "Philidor 1847 1", '2024-02-11'),
-("2324", "1", 7, "u", "Caissa 1", '2024-03-11'),
-("2324", "1", 8, "t", "Purmerend 1", '2024-04-01'),
-("2324", "1", 9, "u", "Wageningen 1", '2024-04-22'),
-("2324", "2", 1, "t", "Santpoort 1", '2023-09-17'),
-("2324", "2", 2, "u", "HWP Haarlem 2", '2023-10-08'),
-("2324", "2", 3, "u", "Amsterdam Berserkers 1", '2023-11-05'),
-("2324", "2", 4, "t", "Het Spaarne 1", '2023-11-26'),
-("2324", "2", 5, "u", "Aartswoud 1", '2023-12-17'),
-("2324", "2", 6, "t", "Paul Keres 3", '2024-02-11'),
-("2324", "2", 7, "u", "Caissa 2", '2024-03-11'),
-("2324", "2", 8, "t", "De Wijker Toren 2", '2024-04-01'),
-("2324", "2", 9, "u", "ZSC-HWP Combinatie 1", '2024-04-22'),
-("2324", "3", 1, "t", "Volendam 1", '2023-09-17'),
-("2324", "3", 2, "u", "HWP Haarlem 3", '2023-10-08'),
-("2324", "3", 3, "u", "Caissa-Eenhoorn 2", '2023-11-05'),
-("2324", "3", 4, "t", "Bergen 1", '2023-11-26'),
-("2324", "3", 5, "u", "ZSC-HWP Combinatie 3", '2023-12-17'),
-("2324", "3", 6, "t", "Heerhugowaard 1", '2024-02-11'),
-("2324", "3", 7, "u", "Kennemer Combinatie 3", '2024-03-11'),
-("2324", "3", 8, "t", "Purmerend 2", '2024-04-01'),
-("2324", "3", 9, "u", "HWP-ZSC Combinatie 2", '2024-04-22'),
-("2324", "4", 1, "u", "HWP Haarlem 5", '2023-10-08'),
-("2324", "4", 2, "u", "VAS 6", '2023-11-05'),
-("2324", "4", 3, "t", "Combiteam KL 2", '2023-11-26'),
-("2324", "4", 4, "u", "ZSC-Saende Combinatie 4", '2023-12-17'),
-("2324", "4", 5, "t", "Magnus Anna Paulowna Combinatie 3", '2024-02-11'),
-("2324", "4", 6, "u", "Almere 4", '2024-03-11'),
-("2324", "kbe", 1, "u", "Bergen", '2023-10-27'), -- KNSB beker
-("2324", "kbe", 2, "u", "Caissa-Eenhoorn", '2023-12-06');
+("2324", "1", 1, "t", "Paul Keres 1", '2023-09-16'), -- KNSB competitie
+("2324", "1", 2, "u", "Amevo Apeldoorn 1", '2023-10-07'),
+("2324", "1", 3, "t", "Zukertort Amstelveen 1", '2023-11-04'),
+("2324", "1", 4, "u", "HMC Den Bosch 1", '2023-11-25'),
+("2324", "1", 5, "u", "Groninger Combinatie 1", '2023-12-16'),
+("2324", "1", 6, "t", "LSG IntelliMagic 1", '2024-02-03'),
+("2324", "1", 7, "u", "Zuid Limburg 1", '2024-03-02'),
+("2324", "1", 8, "t", "Charlois Europoort 1", '2024-03-23'),
+("2324", "1", 9, "u", "Kennemer Combinatie 1", '2024-04-20'),
+("2324", "2", 1, "t", "AAS 1", '2023-09-16'),
+("2324", "2", 2, "u", "VAS 2", '2023-10-07'),
+("2324", "2", 3, "t", "De Wijker Toren 2", '2023-11-04'),
+("2324", "2", 4, "u", "Santpoort 1", '2023-11-25'),
+("2324", "2", 5, "u", "ZSC-HWP Combinatie 1", '2023-12-16'),
+("2324", "2", 6, "t", "Aartswoud 1", '2024-02-03'),
+("2324", "2", 7, "u", "Amsterdam West 1", '2024-03-02'),
+("2324", "2", 8, "t", "Caissa 3", '2024-03-23'),
+("2324", "2", 9, "u", "Caissa-Eenhoorn 2", '2024-04-20'),
+("2324", "3", 1, "t", "Paul Keres 5", '2023-09-16'),
+("2324", "3", 2, "u", "VAS 3", '2023-10-07'),
+("2324", "3", 3, "t", "De Amstel 1", '2023-11-04'),
+("2324", "3", 4, "u", "Bergen 1", '2023-11-25'),
+("2324", "3", 6, "t", "Heerhugowaard 1", '2024-02-03'),
+("2324", "3", 7, "u", "HWP-ZSC Combinatie 2", '2024-03-02'),
+("2324", "3", 8, "t", "Opening '64 1", '2024-03-23'),
+("2324", "3", 9, "u", "Purmerend 2", '2024-04-20'),
+("2324", "4", 1, "u", "Magnus Anna Paulowna Combinatie 3", '2023-10-07'),
+("2324", "4", 2, "t", "VAS 9", '2023-11-04'),
+("2324", "4", 3, "u", "VAS 7", '2023-11-25'),
+("2324", "4", 4, "u", "ZSC-Saende Combinatie 4", '2023-12-16'),
+("2324", "4", 5, "t", "Aartswoud 2", '2024-02-03'),
+("2324", "4", 6, "u", "Caissa 4", '2024-03-02'),
+("2324", "4", 7, "t", "Purmerend 3", '2024-03-23');
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2324", "int", 1, "t", "", '2023-09-12'), -- interne competitie

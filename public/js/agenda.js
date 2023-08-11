@@ -4,16 +4,22 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
+import {EXTERN_THUIS, EXTERN_UIT, MEEDOEN, NIET_MEEDOEN, PLANNING} from "./db.js";
 
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
+    await aanmelden(document.getElementById("aanmelden"));
     await agenda(
         document.getElementById("kop"),
         document.getElementById("wedstrijden"),
         document.getElementById("speler")
     );
 })();
+
+async function aanmelden(competities) {
+    console.log("aanmelden");
+}
 
 /*
     verwerk gebruiker=<andereGebruiker>
@@ -40,7 +46,7 @@ import * as zyq from "./zyq.js";
     en partij = EXTERN_UIT of EXTERN_THUIS.
 
  */
-async function agenda(kop, lijst, speler) {
+async function agenda(kop, lijst) {
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
     const gewijzigd = await agendaMutatie(andereGebruiker);
     const naam = html.params.get("naamGebruiker") || zyq.gebruiker.naam;
@@ -51,12 +57,13 @@ async function agenda(kop, lijst, speler) {
     }
     let agendaLijst = false;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
-        if (db.agenda(w.partij)) {
-            const teamleden = await zyq.serverFetch( // actuele situatie
-                `/${zyq.uuidToken}/teamleden/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
+        if (db.planningInvullen.has(w.partij)) {
+            const teamleden = await zyq.serverFetch(`/${zyq.uuidToken}/teamleden/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
+            const datum = zyq.datumSQL(w.datum);
+            // TODO uithuis van wedstrijd doorgeven
             const link = html.naarPagina(
-                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${zyq.datumSQL(w.datum)}&partij=${wijzig(w)}`,
-                vinkje(w));
+                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datum}&partij=${w.partij}`,
+                vinkjeInvullen.get(w.partij));
             html.rij(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.append(html.rij(
                 zyq.interneCompetitie(w.teamCode) ? w.rondeNummer : "",
@@ -66,10 +73,10 @@ async function agenda(kop, lijst, speler) {
                 link));
             agendaLijst = true;
         } else if (agendaLijst) {
-            console.log(w); // TODO er kan nog geen uitslag zijn!
+            console.log("er kan nog geen uitslag zijn!")
+            console.log(w);
         }
     }
-    speler.append(html.naarPagina(`lid.html?lid=${andereGebruiker}`, `Teams en competities ${naam}`));
 }
 
 async function agendaMutatie(knsbNummer) {
@@ -78,7 +85,7 @@ async function agendaMutatie(knsbNummer) {
     const datum = html.params.get("datum");
     const partij = html.params.get("partij");
     if (teamCode && rondeNummer && datum && partij) {
-        if (await zyq.serverFetch(`/${zyq.uuidToken}/aanwezig/${zyq.ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${datum}/${partij}`)) {
+        if (await zyq.serverFetch(`/${zyq.uuidToken}/planning/${zyq.ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}/${datum}`)) {
             return {"teamCode": teamCode, "rondeNummer": rondeNummer};
         }
     }
@@ -93,22 +100,13 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
     for (const w of wedstrijden) {
         if (!w.partij) {
-            /*
-            TODO voor interne competities bij gespeelde ronden afwezig invullen en daarna kandidaat deelnemer invullen
-            uitsluitend nodig op de datum dat er meer ronden op 1 dag zijn
-            op andere dagen is vergelijken met de datum van vandaag voldoende
-            uitzoeken wat de meest actuele competititie (ook voor start.html)
-             */
-            // console.log('--- deze wedstrijd invullen ----');
-            // console.log(w);
             const datum = zyq.datumSQL(w.datum);
             const vanafVandaag = datum >= zyq.datumSQL();
-            // voor interne competities voor vandaag afwezig invullen en vanafVandaag altijd niet meedoen invullen
             if (vanafVandaag || zyq.interneCompetitie(w.teamCode)) {
-                const afwezig = vanafVandaag ? db.NIET_MEEDOEN : db.VRAAG_INVALLER;
+                const partij = vanafVandaag ? db.PLANNING : db.AFWEZIG;  // voor interne competities voor vandaag afwezig invullen
                 const competitie = zyq.interneCompetitie(w.teamCode) ? w.teamCode : db.INTERNE_COMPETITIE;
                 const mutaties = await zyq.serverFetch(
-                    `/${zyq.uuidToken}/agenda/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${afwezig}/${datum}/${competitie}`);
+                    `/${zyq.uuidToken}/uitslag/toevoegen/${w.seizoen}/${w.teamCode}/${w.rondeNummer}/${knsbNummer}/${partij}/${datum}/${competitie}`);
                 aanvullingen += mutaties;
             }
         }
@@ -116,26 +114,9 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     return aanvullingen;
 }
 
-function wijzig(w) { // TODO verpllatsen naar db.js
-    if (w.partij === db.NIET_MEEDOEN) {
-        return db.MEEDOEN;
-    } else if (w.partij === db.MEEDOEN) {
-        return db.NIET_MEEDOEN;
-    } else if (w.teamCode === w.anderTeam) { // indien EXTERN_THUIS of EXTERN_UIT dan geen interne ronde
-        return db.MEEDOEN;
-    } else { // indien EXTERN_THUIS of EXTERN_UIT
-        return db.NIET_MEEDOEN;
-    }
-}
-
-function vinkje(w) {
-    if (w.partij === db.NIET_MEEDOEN) {
-        return zyq.STREEP;
-    } else if (w.partij === db.MEEDOEN) {
-        return zyq.VINKJE;
-    } else if (w.teamCode === w.anderTeam) { // indien EXTERN_THUIS of EXTERN_UIT dan geen interne ronde
-        return zyq.STREEP;
-    } else { // indien EXTERN_THUIS of EXTERN_UIT
-        return zyq.VINKJE;
-    }
-}
+const vinkjeInvullen = new Map([
+    [PLANNING, html.VRAAGTEKEN],
+    [NIET_MEEDOEN, html.KRUISJE],
+    [MEEDOEN, html.VINKJE],
+    [EXTERN_THUIS, html.VINKJE],
+    [EXTERN_UIT, html.VINKJE]]);

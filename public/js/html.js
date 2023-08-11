@@ -22,7 +22,7 @@ export const SCHEIDING = " \u232A ";
 export const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
 export const STREEP = "___";
 export const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
-export const FOUTJE = "\u00a0\u00a0?\u00a0\u00a0"; // met no break spaces
+export const VRAAGTEKEN = "\u00a0\u00a0?\u00a0\u00a0"; // met no break spaces
 export const ZELFDE = "\u00a0\u00a0=\u00a0\u00a0"; // met no break spaces
 
 /*

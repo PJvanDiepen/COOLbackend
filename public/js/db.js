@@ -27,13 +27,13 @@ const ZWITSERS_TEST      = "izt";
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
-const VRAAG_INVALLER       = "k"; // kandidaat deelnemer of invaller
-const MEEDOEN              = "m"; // na aanmelden
+const MEEDOEN              = "m"; // na aanmelden voor interne partij
 const NIET_MEEDOEN         = "n"; // na afzeggen
 const ONEVEN               = "o";
+const PLANNING             = "p";
 const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
-const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij thuis op dinsdag
-const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op dinsdag
+const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij
+const EXTERN_UIT           = "u"; // na aanmelden voor externe partij
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 const ONBEKEND             = "x"; // na wijzigen indeling
@@ -60,6 +60,17 @@ function resultaatSelecteren(uitslag) {
     return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].slice(1); // met of zonder blanko resultaat
 }
 
+const planningInvullen = new Map([
+    [PLANNING, MEEDOEN],
+    [NIET_MEEDOEN, MEEDOEN],
+    [MEEDOEN, NIET_MEEDOEN],
+    [EXTERN_THUIS, NIET_MEEDOEN],
+    [EXTERN_UIT, NIET_MEEDOEN]]);
+
+function meedoen(uitslag) {
+    return planningInvullen.get(uitslag.partij) === NIET_MEEDOEN;
+}
+
 const maandInvullen = new Map([
     [ 1, "januari"],
     [ 2, "februari"],
@@ -74,10 +85,6 @@ const maandInvullen = new Map([
     [11, "november"],
     [12, "december"]]);
 
-function agenda(partij) {
-    return partij === MEEDOEN || partij === NIET_MEEDOEN || partij === EXTERN_THUIS || partij === EXTERN_UIT;
-}
-
 // gebruiker.mutatieRechten
 const IEDEREEN = 0;
 const GEREGISTREERD = 1;
@@ -89,10 +96,6 @@ const ONTWIKKElAAR = 9;
 
 // html
 const MENU = "menu";
-
-function hoera() {
-    return " db.js hoera!";
-}
 
 export { // ES6 voor browser
     apiLijst,
@@ -113,13 +116,13 @@ export { // ES6 voor browser
     AFWEZIG,
     EXTERNE_PARTIJ,
     INTERNE_PARTIJ,
-    VRAAG_INVALLER,
     MEEDOEN,               // na aanmelden
     NIET_MEEDOEN,          // na afzeggen
     ONEVEN,
+    PLANNING,
     REGLEMENTAIRE_REMISE,  // vrijgesteld
-    EXTERN_THUIS,          // na aanmelden voor externe partij thuis op dinsdag
-    EXTERN_UIT,            // na aanmelden voor externe partij uit op dinsdag
+    EXTERN_THUIS,          // na aanmelden voor externe partij thuis
+    EXTERN_UIT,            // na aanmelden voor externe partij uit
     REGLEMENTAIR_VERLIES,
     REGLEMENTAIRE_WINST,
     ONBEKEND,              // na wijzigen indeling
@@ -139,8 +142,9 @@ export { // ES6 voor browser
 
     resultaatInvullen,
     resultaatSelecteren,   // (uitslag)
+    planningInvullen,
+    meedoen,               // (uitslag)
     maandInvullen,
-    agenda,                // (partij)
 
     // gebruiker.mutatieRechten
     IEDEREEN,
@@ -152,7 +156,5 @@ export { // ES6 voor browser
     ONTWIKKElAAR,
 
     // html
-    MENU,
-
-    hoera                  // ()
+    MENU
 }

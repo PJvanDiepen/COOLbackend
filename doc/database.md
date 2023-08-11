@@ -71,7 +71,6 @@ Voorlopig zijn dit de specificaties van `Persoon`:
 ```
 knsbNummer INT
 naam VARCHAR(45)
-dummy VARCHAR(45)
 PRIMARY KEY (knsbNummer)
 ```
 In dit systeem willen we zo min mogelijk persoonsgegevens vastleggen.
@@ -213,22 +212,32 @@ FOREIGN KEY (seizoen, anderTeam) REFERENCES Team (seizoen, teamCode)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 ```
 
-TODO uitleg over het onderscheid tussen uitslag en agenda (en wijzig)
+Een uitslag doorloopt 3 fases: planning, indeling en uitslag.
+
+1. De planning fase begint met `partij ='p'`. 
+Dit betekent dat een teamleider een speler heeft aangemeld voor een wedstrijd of dat een gebruiker zich heeft aangemeld voor een competitie.
+Vervolgens kan de gebruiker aangeven of ie wil meedoen of juist niet wil meedoen. 
+Meedoen kent 3 varianten: extern uit, extern thuis en (intern) meedoen.
+2. De indeling fase is als bekend wie de tegenstander wordt.
+3. De laatste fase is als het resultaat bekend is en de uitslag dus compleet is.
+
+De verschillende fases worden vooral vastgelegd in `partij`:
+- a = AFGEZEGD
+- e = EXTERNE_WEDSTRIJD
+- i = INTERNE_PARTIJ
+- m = MEEDOEN na aanmelden
+- n = NIET_MEEDOEN na afzeggen
+- o = ONEVEN
+- p = PLANNING
+- r = REGLEMENTAIRE_REMISE of vrijgesteld
+- t = EXTERN_THUIS
+- u = EXTERN_UIT
+- v = REGLEMENTAIR_VERLIES
+- w = REGLEMENTAIRE_WINST
 
 Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en voor zwart.
 Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
 een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
-
-De verschillende mogelijkheden voor `partij` zijn:
-- a = AFGEZEGD (Rokade WedstrijdType = 2)   
-- e = EXTERNE_WEDSTRIJD (Rokade WedstrijdType = 11 extern op dinsdag)
-- i = INTERNE_PARTIJ
-- m = MEEDOEN na aanmelden
-- n = NIET_MEEDOEN na afzeggen
-- o = ONEVEN (Rokade WedstrijdType = 3)
-- t = REGLEMENTAIRE_REMISE of vrijgesteld (Rokade WedstrijdType = 4)
-- v = REGLEMENTAIR_VERLIES (Rokade WedstrijdType = 6)
-- w = REGLEMENTAIRE_WINST (Rokade WedstrijdType = 5)
 
 Voor de externe competitie zijn er twee mogelijkheden.
 1. Indien de externe partij wordt gespeeld in plaats van een interne partij 
@@ -240,13 +249,13 @@ staat de uitslag een keer in `Uitslag` met de `teamCode` bij welke team deze uit
 Voor elke externe partij staat in `Uitslag` bij `knsbNummer` de speler 
 van de eigen schaakvereniging en meestal `tegenstanderNummer = 0`.
 Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstijd 
-tegen een team van de eigen schaakvereniging 
-(of als je alle tegenstanders ook in `Persoon` wilt opslaan).  
+tegen een team van de eigen schaakvereniging (of als alle tegenstanders in `Persoon` zijn vastgelegd).   
 Indien `anderTeam = 'int'` telt deze uitslag mee voor de interne competitie.
 
 De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
 - 0 = onbekend
-- TIJDELIJK_LID_NUMMER > 100
+- bordnummer 1..10 = geen tegenstander 
+- TIJDELIJK_LID_NUMMER > 100 < 1000000
 - KNSB_NUMMER > 1000000
 
 ## Mutatie

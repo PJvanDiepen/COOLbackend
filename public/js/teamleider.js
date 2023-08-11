@@ -142,7 +142,7 @@ function teamSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
             const ronde = wedstrijd[geselecteerdeTeam].rondeNummer;
             const datum = zyq.datumSQL(wedstrijdDatum);
             const mutaties = await zyq.serverFetch(
-                `/${zyq.uuidToken}/agenda/${zyq.o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/${db.VRAAG_INVALLER}/${datum}/int`);
+                `/${zyq.uuidToken}/uitslag/toevoegen/${zyq.o_o_o.seizoen}/${team}/${ronde}/${speler.knsbNummer}/${db.PLANNING}/${datum}/int`);
             html.zelfdePagina(`datum=${wedstrijdDatum}&wedstrijd=${geselecteerdeTeam}`);
         });
         return knop;
