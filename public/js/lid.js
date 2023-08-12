@@ -144,7 +144,8 @@ async function lidFormulier(persoon, augustusRating) {
         } else if (false) { // TODO naam of knsbNummer gewijzigd
             // TODO persoon wijzigen
         }
-        // gebruiker verwerken
+        // gebruiker verwerken TODO verplaatsen
+        /*
         if (gebruikerToevoegen && email.value !== "") { // TODO e-mailadres controleren
             if (await zyq.serverFetch(`/${zyq.uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
                 mutaties++;
@@ -152,6 +153,7 @@ async function lidFormulier(persoon, augustusRating) {
         } else if (false) { // TODO email gewijzigd
             // TODO gebruiker wijzigen
         }
+         */
         // speler verwerken
         const intern = []; // speeltIntern volgens lidformulier TODO Contents of collection 'intern' are updated, but never queried
         let internNummer = 0;
