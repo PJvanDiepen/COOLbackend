@@ -4,7 +4,6 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
-import {EXTERN_THUIS, EXTERN_UIT, MEEDOEN, NIET_MEEDOEN, PLANNING} from "./db.js";
 
 (async function() {
     await zyq.init();
@@ -58,9 +57,7 @@ async function agenda(kop, lijst) {
     let agendaLijst = false;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (db.planningInvullen.has(w.partij)) {
-            const teamleden = await zyq.serverFetch(`/${zyq.uuidToken}/teamleden/${w.seizoen}/${w.teamCode}/${w.rondeNummer}`);
             const datum = zyq.datumSQL(w.datum);
-            // TODO uithuis van wedstrijd doorgeven
             const link = html.naarPagina(
                 `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datum}&partij=${w.partij}`,
                 vinkjeInvullen.get(w.partij));
@@ -69,7 +66,6 @@ async function agenda(kop, lijst) {
                 zyq.interneCompetitie(w.teamCode) ? w.rondeNummer : "",
                 zyq.datumLeesbaar(w),
                 zyq.interneCompetitie(w.teamCode) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
-                teamleden.length,
                 link));
             agendaLijst = true;
         } else if (agendaLijst) {
@@ -98,6 +94,8 @@ async function agendaLezen(knsbNummer) {
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
+    console.log("agendaAanvullen()");
+    console.log(wedstrijden);
     for (const w of wedstrijden) {
         if (!w.partij) {
             const datum = zyq.datumSQL(w.datum);
@@ -115,8 +113,8 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
 }
 
 const vinkjeInvullen = new Map([
-    [PLANNING, html.VRAAGTEKEN],
-    [NIET_MEEDOEN, html.KRUISJE],
-    [MEEDOEN, html.VINKJE],
-    [EXTERN_THUIS, html.VINKJE],
-    [EXTERN_UIT, html.VINKJE]]);
+    [db.PLANNING, html.VRAAGTEKEN],
+    [db.NIET_MEEDOEN, html.STREEP],
+    [db.MEEDOEN, html.VINKJE],
+    [db.EXTERN_THUIS, html.VINKJE],
+    [db.EXTERN_UIT, html.VINKJE]]);

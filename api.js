@@ -107,23 +107,6 @@ module.exports = router => {
     });
 
     /*
-    Zie agenda.js
-     */
-    router.get('/:uuidToken/teamleden/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        let deelnemers = {};
-        if (gebruiker.juisteRechten(db.GEREGISTREERD)) { // in agenda van geregistreerde gebruikers
-            deelnemers = await Uitslag.query()
-                .select('uitslag.knsbNummer')
-                .whereIn('uitslag.partij', [db.MEEDOEN, db.EXTERN_THUIS, db.EXTERN_UIT])
-                .andWhere('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer);
-        }
-        ctx.body = deelnemers.map(function(uitslag) {return uitslag.knsbNummer});
-    });
-
-    /*
     Zie indelen.js
      */
     router.get('/:uuidToken/deelnemers/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
@@ -591,7 +574,9 @@ module.exports = router => {
             .select('knsbNummer', 'knsbNaam', 'knsbRating', 'maand', 'jaar')
             .where('maand', ctx.params.maand)
             .andWhere('knsbNummer', ctx.params.knsbNummer);
-        ctx.body = rating.length > 0 ? rating[0] : null;
+        ctx.body = rating.length > 0
+            ? rating[0]
+            : {knsbNummer: ctx.params.knsbNummer, knsbNaam: "onbekend", maand: 0, jaar: 0};
     });
 
     /*
@@ -991,7 +976,14 @@ module.exports = router => {
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
             const ronde = await Uitslag.query()
-                .select('uitslag.teamCode', 'uitslag.rondeNummer', 'uitslag.partij', 'uitslag.anderTeam', 'ronde.uithuis')
+                .select(
+                    'uitslag.seizoen',
+                    'uitslag.teamCode',
+                    'uitslag.rondeNummer',
+                    'uitslag.knsbNummer',
+                    'uitslag.partij',
+                    'uitslag.anderTeam',
+                    'ronde.uithuis')
                 .join('ronde', function (join) {
                     join.on('uitslag.seizoen', 'ronde.seizoen')
                         .andOn('uitslag.teamCode', 'ronde.teamCode')
@@ -1001,30 +993,26 @@ module.exports = router => {
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .andWhere('uitslag.datum', ctx.params.datum)
                 .orderBy(['uitslag.teamCode', 'uitslag.rondeNummer']);
-            // console.log(ronden);
             let rondeWijzigen = -1;
             let rondeMeedoen = -1;
             for (let i = 0; i < ronde.length; i++) {
-                if (ronde[i].teamCode === ctx.params.teamCode && ronde[i].rondeNummer === ctx.params.rondeNummer) {
+                if (ronde[i].teamCode === ctx.params.teamCode && ronde[i].rondeNummer === Number(ctx.params.rondeNummer)) {
                     rondeWijzigen = i;
                 }
-                if (db.meedoen(ronde[i].partij)) {
+                if (db.meedoen(ronde[i])) {
                     rondeMeedoen = i;
                 }
             }
-            if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
+            console.log("/:uuidToken/planning/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum");
+            console.log(ctx.params);
+            console.log(ronde);
+            console.log({rondeWijzigen});
+            console.log({rondeMeedoen});
+            if (rondeWijzigen >= 0 && ronde[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
                 if (rondeWijzigen === rondeMeedoen) {
-                    aantal += planningMuteren(ctx.params, ctx.params.teamCode, ctx.params.rondeNummer, db.NIET_MEEDOEN); // en klaar
-                } else if (rondeMeedoen >= 0) {
-                    aantal += planningMuteren(ctx.params, ronde[rondeMeedoen].teamCode, ronde[rondeMeedoen].rondeNummer, db.NIET_MEEDOEN);
-                    if (false) {
-                        // TODO uitwerken voor externe wedstrijd tijdens interne ronde EXTERN_UIT of THUIS
-                        // en klaar
-                    } else {
-                        for (let i = rondeWijzigen; i < ronde.length; i++) {
-                            // TODO uitwerken meer ronden op dezelfde dag
-                        }
-                    }
+                    aantal += await planningMuteren(ronde[rondeWijzigen], db.NIET_MEEDOEN); // en klaar
+                } else {
+                    aantal += await planningMuteren(ronde[rondeWijzigen], db.MEEDOEN);
                 }
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }
@@ -1305,8 +1293,8 @@ module.exports = router => {
     });
 }
 
-async function planningMuteren(params, teamCode, rondeNummer, partij) {
-    if (await Uitslag.query().findById([params.seizoen, teamCode, rondeNummer, params.knsbNummer]).patch({partij: partij})) {
+async function planningMuteren(uitslag, partij) {
+    if (await Uitslag.query().findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer]).patch({partij: partij})) {
         return 1;
     } else {
         return 0;
