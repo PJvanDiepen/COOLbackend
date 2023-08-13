@@ -18,7 +18,8 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 (async function() {
     await zyq.init();
     document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
-    const persoon = await persoonLezen(lidNummer);
+    const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
+    console.log(persoon);
     const augustusRating = await ratingLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
@@ -36,18 +37,6 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
         }]);
     await lidFormulier(persoon, augustusRating);
 })();
-
-async function persoonLezen(knsbNummer) {
-    console.log("--- persoonLezen() ---")
-    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`); // TODO 1 persoon lezen zie agenda
-    for (const persoon of personen) {
-        if (Number(persoon.knsbNummer) === knsbNummer) {
-            console.log(persoon);
-            return persoon;
-        }
-    }
-    return false;
-}
 
 async function ratingLezen() {
     const rating = await zyq.serverFetch(`/rating/8/${lidNummer}`); // 1 augustus dit seizoen
