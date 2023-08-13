@@ -1059,17 +1059,19 @@ module.exports = router => {
                     rondeMeedoen = i;
                 }
             }
+            /*
             console.log("/:uuidToken/planning/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum");
             console.log(ctx.params);
             console.log(ronde);
             console.log({rondeWijzigen});
             console.log({rondeMeedoen});
+             */
             if (rondeWijzigen >= 0 && ronde[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
                 if (rondeMeedoen >= 0) {
                     aantal += await planningMuteren(ronde[rondeMeedoen], db.NIET_MEEDOEN);
                 }
                 if (rondeMeedoen === rondeWijzigen) {
-                    console.log("de wijziging = afmelden oftewel niet meedoen");
+                    // console.log("de wijziging = afmelden oftewel niet meedoen");
                 } else {
                     for (let i = rondeWijzigen; i < ronde.length; i++) {
                         if (ronde[i].teamCode === ronde[rondeWijzigen].teamCode) {
