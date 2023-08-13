@@ -999,7 +999,7 @@ module.exports = router => {
                 if (ronde[i].teamCode === ctx.params.teamCode && ronde[i].rondeNummer === Number(ctx.params.rondeNummer)) {
                     rondeWijzigen = i;
                 }
-                if (db.meedoen(ronde[i])) {
+                if (rondeMeedoen < 0 && db.meedoen(ronde[i])) { // eerste rondeMeedoen
                     rondeMeedoen = i;
                 }
             }
@@ -1009,10 +1009,17 @@ module.exports = router => {
             console.log({rondeWijzigen});
             console.log({rondeMeedoen});
             if (rondeWijzigen >= 0 && ronde[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
-                if (rondeWijzigen === rondeMeedoen) {
-                    aantal += await planningMuteren(ronde[rondeWijzigen], db.NIET_MEEDOEN); // en klaar
+                if (rondeMeedoen >= 0) {
+                    aantal += await planningMuteren(ronde[rondeMeedoen], db.NIET_MEEDOEN);
+                }
+                if (rondeMeedoen === rondeWijzigen) {
+                    console.log("de wijziging = afmelden oftewel niet meedoen");
                 } else {
-                    aantal += await planningMuteren(ronde[rondeWijzigen], db.MEEDOEN);
+                    for (let i = rondeWijzigen; i < ronde.length; i++) {
+                        if (ronde[i].teamCode === ronde[rondeWijzigen].teamCode) {
+                            aantal += await planningMuteren(ronde[i], db.MEEDOEN);
+                        }
+                    }
                 }
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }

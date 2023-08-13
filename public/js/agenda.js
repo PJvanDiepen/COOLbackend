@@ -4,28 +4,37 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
+import {naarPagina} from "./html.js";
 
 (async function() {
     await zyq.init();
+    const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
+    const naam = html.params.get("naamGebruiker") || zyq.gebruiker.naam;
+    document.getElementById("kop").append(`Agenda${html.SCHEIDING}${naam}`);
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await aanmelden(document.getElementById("aanmelden"));
-    await agenda(
-        document.getElementById("kop"),
-        document.getElementById("wedstrijden"),
-        document.getElementById("speler")
-    );
+    await aanmelden(andereGebruiker, naam);
+    await agenda(andereGebruiker, naam, document.getElementById("wedstrijden"));
 })();
 
-async function aanmelden(competities) {
+async function aanmelden(knsbNummer, naam) {
     console.log("aanmelden");
+    const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
+    let intern = 0;
+    for (const team of teams) {
+        if (zyq.interneCompetitie(team.teamCode) ) { // if (speeltIntern(persoon, team.teamCode)) {
+            document.getElementById(`aanmelden${++intern}`).append(naarPagina(
+                `agenda.html?gebruiker=${knsbNummer}&gebruikerNaam=${naam}`,
+                `Aanmelden ${zyq.teamVoluit(team.teamCode)}`));
+        }
+    }
 }
 
 /*
-    verwerk gebruiker=<andereGebruiker>
-           &naamGebruiker=<naamGebruiker>
+    verwerk gebruiker=<knsbNummer>
+           &naamGebruiker=<naam>
            &team=<teamCode>
            &ronde=<rondeNummer>
-           &partij=[MEEDOEN of NIET_MEEDOEN]
+           &partij=<partij>
 
     De agenda gaat uitsluitend over nog niet gespeelde wedstrijden in het huidige seizoen.
 
@@ -45,26 +54,23 @@ async function aanmelden(competities) {
     en partij = EXTERN_UIT of EXTERN_THUIS.
 
  */
-async function agenda(kop, lijst) {
-    const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
-    const gewijzigd = await agendaMutatie(andereGebruiker);
-    const naam = html.params.get("naamGebruiker") || zyq.gebruiker.naam;
-    kop.append(`Agenda${html.SCHEIDING}${naam}`);
-    let wedstrijden = await agendaLezen(andereGebruiker);
-    if (await agendaAanvullen(andereGebruiker, wedstrijden)) {
-        wedstrijden = await agendaLezen(andereGebruiker);
+async function agenda(knsbNummer, naam, lijst) {
+    const gewijzigd = await agendaMutatie(knsbNummer);
+    let wedstrijden = await agendaLezen(knsbNummer);
+    if (await agendaAanvullen(knsbNummer, wedstrijden)) {
+        wedstrijden = await agendaLezen(knsbNummer);
     }
     let agendaLijst = false;
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (db.planningInvullen.has(w.partij)) {
             const datum = zyq.datumSQL(w.datum);
             const link = html.naarPagina(
-                `agenda.html?gebruiker=${andereGebruiker}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datum}&partij=${w.partij}`,
+                `agenda.html?gebruiker=${knsbNummer}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datum}&partij=${w.partij}`,
                 vinkjeInvullen.get(w.partij));
             html.rij(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.append(html.rij(
-                zyq.interneCompetitie(w.teamCode) ? w.rondeNummer : "",
                 zyq.datumLeesbaar(w),
+                zyq.interneCompetitie(w.teamCode) ? w.rondeNummer : "",
                 zyq.interneCompetitie(w.teamCode) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
                 link));
             agendaLijst = true;
@@ -94,8 +100,6 @@ async function agendaLezen(knsbNummer) {
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {
     let aanvullingen = 0;
-    console.log("agendaAanvullen()");
-    console.log(wedstrijden);
     for (const w of wedstrijden) {
         if (!w.partij) {
             const datum = zyq.datumSQL(w.datum);
