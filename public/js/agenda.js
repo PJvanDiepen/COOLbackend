@@ -8,22 +8,12 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
-    const persoon = await persoonLezen(andereGebruiker);
+    const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${andereGebruiker}`);
     document.getElementById("kop").append(`Agenda${html.SCHEIDING}${persoon.naam}`);
     document.getElementById("aanmelden").append(html.naarPagina(`lid.html?lid=${andereGebruiker}`,"Aanmelden voor competities"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     await agenda(persoon.knsbNummer, document.getElementById("wedstrijden"));
 })();
-
-async function persoonLezen(knsbNummer) {
-    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`); // TODO 1 persoon lezen zie lid.js
-    for (const persoon of personen) {
-        if (Number(persoon.knsbNummer) === knsbNummer) {
-            return persoon;
-        }
-    }
-    return false;
-}
 
 /*
     verwerk gebruiker=<knsbNummer>

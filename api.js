@@ -203,13 +203,23 @@ module.exports = router => {
             .orderBy('naam');
     });
 
-    // Zie lid.js TODO vereenvoudigen en toepassen
+    /*
+    with s as
+    (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer)
+    select p.*, s.*, g.mutatieRechten, g.datumEmail
+    from persoon p
+    left join s on s.knsbNummer = p.knsbNummer
+    left join gebruiker g on g.knsbNummer = p.knsbNummer
+    where p.knsbNummer = @knsbNummer;
 
+    Zie lid.js en agenda.js
+     */
     router.get('/persoon/:seizoen/:knsbNummer', async function (ctx) {
-        ctx.body = await Persoon.query()
+        const persoon = await Persoon.query()
             .with('s', function (qb) {
                 qb.from('speler')
                     .where('speler.seizoen', ctx.params.seizoen)
+                    .andWhere('speler.knsbNummer', ctx.params.knsbNummer)
             })
             .select(
                 'persoon.naam',
@@ -227,7 +237,9 @@ module.exports = router => {
                 'gebruiker.mutatieRechten',
                 'gebruiker.datumEmail')
             .leftJoin('s', 'persoon.knsbNummer', 's.knsbNummer')
-            .leftJoin('gebruiker', 'persoon.knsbNummer', 'gebruiker.knsbNummer');
+            .leftJoin('gebruiker', 'persoon.knsbNummer', 'gebruiker.knsbNummer')
+            .where('persoon.knsbNummer', ctx.params.knsbNummer);
+        ctx.body = persoon.length > 0 ? persoon[0] : {naam: "onbekend", knsbNummer: 0};
     });
 
     /*
