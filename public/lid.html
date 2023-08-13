@@ -13,7 +13,9 @@
         <fieldset>
             <legend>lid formulier</legend>
             <label for="naam">naam:</label>
-            <input type="text" id="naam" name="naam" size="40" required>
+            <input type="text" id="naam" name="naam" size="40" required disabled>
+            <label for="email">e-mail:</label>
+            <input type="email" id="email" name="email" size="40" disabled>
             <label for="gebruiker">0-0-0 gebruiker:</label>
             <input type="text" id="gebruiker" name="gebruiker" size="40" disabled>
             <label for="knsbNummer">KNSB nummer:</label>
@@ -21,11 +23,11 @@
             <label for="knsbRating" id="jaar">KNSB rating</label>
             <input type="number" id="knsbRating" name="knsbRating" disabled>
             <label>interne rating:</label>
-            <select id="interneRating"></select>
+            <select id="interneRating" disabled></select>
             <label for="knsbTeam">KNSB team:</label>
-            <select id="knsbTeam"></select>
+            <select id="knsbTeam" disabled></select>
             <label for="nhsbTeam">NHSB team:</label>
-            <select id="nhsbTeam"></select>
+            <select id="nhsbTeam"disabled></select>
             <label id="competities">speelt in competities:</label>
             <button type="submit" class="marge-boven">wijzigingen opslaan</button>
         </fieldset>

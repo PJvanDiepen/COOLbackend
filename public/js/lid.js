@@ -38,9 +38,11 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 })();
 
 async function persoonLezen(knsbNummer) {
+    console.log("--- persoonLezen() ---")
     const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`); // TODO 1 persoon lezen zie agenda
     for (const persoon of personen) {
         if (Number(persoon.knsbNummer) === knsbNummer) {
+            console.log(persoon);
             return persoon;
         }
     }
@@ -55,6 +57,20 @@ async function ratingLezen() {
     return false;
 }
 
+/*
+lidformulier heeft de volgende velden:
+
+naam
+email
+knsbNummer
+knsbRating
+knsbTeam
+nhsbTeam
+competities
+
+voor verschillende tables: persoon, gebruiker en speler
+ */
+
 async function lidFormulier(persoon, augustusRating) {
     // formulier invullen
     const knsbNummer = document.getElementById("knsbNummer");
@@ -65,7 +81,10 @@ async function lidFormulier(persoon, augustusRating) {
     } else if (augustusRating) {
         naam.value = augustusRating.knsbNaam;
     }
-
+    const email = document.getElementById("email");
+    if (lidNummer === zyq.gebruiker.knsbNummer) {
+        email.value = zyq.gebruiker.email;
+    }
     const gebruikerSoort = document.getElementById("gebruiker");
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
     if (!gebruikerToevoegen) {
@@ -75,7 +94,6 @@ async function lidFormulier(persoon, augustusRating) {
     const knsbRating = document.getElementById("knsbRating");
     knsbRating.value = 0;
     const spelerToevoegen = !persoon || persoon.knsbRating === null;
-
     if (augustusRating) {
         knsbRating.value = augustusRating.knsbRating;
     } else if (!spelerToevoegen) {
@@ -129,6 +147,7 @@ async function lidFormulier(persoon, augustusRating) {
     }
     if (knsbWijzigen) {
         knsbNummer.disabled = false; // enable input
+        knsbNummer.disabled = false; // enable input
         knsbRating.disabled = false; // enable input
     }
 
@@ -144,16 +163,13 @@ async function lidFormulier(persoon, augustusRating) {
         } else if (false) { // TODO naam of knsbNummer gewijzigd
             // TODO persoon wijzigen
         }
-        // gebruiker verwerken TODO verplaatsen
-        /*
-        if (gebruikerToevoegen && email.value !== "") { // TODO e-mailadres controleren
-            if (await zyq.serverFetch(`/${zyq.uuidToken}/gebruiker/toevoegen/${lidNummer}/${email.value}`)) {
+        // gebruiker verwerken
+        if (email.value !== "") { // TODO e-mailadres controleren
+            const actie = gebruikerToevoegen ? "toevoegen" : "email";
+            if (await zyq.serverFetch(`/${zyq.uuidToken}/gebruiker/${actie}/${lidNummer}/${email.value}`)) {
                 mutaties++;
             }
-        } else if (false) { // TODO email gewijzigd
-            // TODO gebruiker wijzigen
         }
-         */
         // speler verwerken
         const intern = []; // speeltIntern volgens lidformulier TODO Contents of collection 'intern' are updated, but never queried
         let internNummer = 0;

@@ -775,6 +775,23 @@ module.exports = router => {
     });
 
     /*
+    Zie lid.js
+     */
+    router.get('/:uuidToken/gebruiker/email/:knsbNummer/:email', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.BEHEERDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
+            if (await Gebruiker.query()
+                .findById(ctx.params.uuidToken)
+                .patch({email: ctx.params.email})) {
+                aantal = 1;
+            }
+            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    /*
    Zie lid.js
     */
     router.get('/:uuidToken/knsb/:lidNummer/:knsbNummer', async function (ctx) {
@@ -1328,7 +1345,9 @@ module.exports = router => {
 }
 
 async function planningMuteren(uitslag, partij) {
-    if (await Uitslag.query().findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer]).patch({partij: partij})) {
+    if (await Uitslag.query()
+        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
+        .patch({partij: partij})) {
         return 1;
     } else {
         return 0;
@@ -1368,7 +1387,7 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
 async function gebruikerRechten(uuidToken) {
     const dader = await Gebruiker.query()
         .findById(uuidToken)
-        .select('persoon.knsbNummer', 'mutatieRechten', 'naam')
+        .select('persoon.knsbNummer', 'mutatieRechten', 'naam', 'email')
         .join('persoon', 'gebruiker.knsbNummer', 'persoon.knsbNummer');
 
     function juisteRechten(minimum) {

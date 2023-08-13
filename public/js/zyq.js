@@ -189,19 +189,23 @@ export async function init() {
  * @returns {Promise<void>}
  */
 async function gebruikerVerwerken() {
+    console.log("--- gebruikerVerwerken() ---");
     if (uuidActiveren && uuidActiveren === uuidToken) {
         await serverFetch("/activeer/" + uuidToken);
-        volgendeSessie(uuidToken);
+        localStorage.setItem(o_o_o.vereniging, uuidToken);
     }
     if (uuidToken) {
         const registratie = await localFetch("/gebruiker/" + uuidToken);
         gebruiker.knsbNummer = Number(registratie.knsbNummer);
         gebruiker.naam = registratie.naam;
         gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
+        gebruiker.email = registratie.email;
+        console.log(gebruiker);
     } else {
         gebruiker.knsbNummer = 0;
         gebruiker.naam = "onbekend";
         gebruiker.mutatieRechten = 0;
+        gebruiker.email = "";
     }
 }
 
@@ -227,14 +231,6 @@ export function gebruikerFunctie(lid) {
 
 function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
-}
-
-function volgendeSessie(json) {
-    try {
-        localStorage.setItem(o_o_o.vereniging, json);
-    } catch (error) {
-        console.error(error); // TODO per sessie fouten verzamelen?
-    }
 }
 
 function urlVerwerken() {
