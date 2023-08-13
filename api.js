@@ -175,7 +175,7 @@ module.exports = router => {
     left join gebruiker g on g.knsbNummer = p.knsbNummer
     order by naam;
 
-    Zie bestuur.js, lid.js TODO /persoon/:seizoen/:knsbNummer uitsluitend voor lid.js
+    Zie bestuur.js
      */
     router.get('/personen/:seizoen', async function (ctx) {
         ctx.body = await Persoon.query()
@@ -201,6 +201,33 @@ module.exports = router => {
             .leftJoin('s', 'persoon.knsbNummer', 's.knsbNummer')
             .leftJoin('gebruiker', 'persoon.knsbNummer', 'gebruiker.knsbNummer')
             .orderBy('naam');
+    });
+
+    // Zie lid.js TODO vereenvoudigen en toepassen
+
+    router.get('/persoon/:seizoen/:knsbNummer', async function (ctx) {
+        ctx.body = await Persoon.query()
+            .with('s', function (qb) {
+                qb.from('speler')
+                    .where('speler.seizoen', ctx.params.seizoen)
+            })
+            .select(
+                'persoon.naam',
+                'persoon.knsbNummer',
+                's.nhsbTeam',
+                's.knsbTeam',
+                's.knsbRating',
+                's.datum',
+                's.interneRating',
+                's.intern1',
+                's.intern2',
+                's.intern3',
+                's.intern4',
+                's.intern5',
+                'gebruiker.mutatieRechten',
+                'gebruiker.datumEmail')
+            .leftJoin('s', 'persoon.knsbNummer', 's.knsbNummer')
+            .leftJoin('gebruiker', 'persoon.knsbNummer', 'gebruiker.knsbNummer');
     });
 
     /*

@@ -4,34 +4,29 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
-import {naarPagina} from "./html.js";
 
 (async function() {
     await zyq.init();
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
-    const naam = html.params.get("naamGebruiker") || zyq.gebruiker.naam;
-    document.getElementById("kop").append(`Agenda${html.SCHEIDING}${naam}`);
+    const persoon = await persoonLezen(andereGebruiker);
+    document.getElementById("kop").append(`Agenda${html.SCHEIDING}${persoon.naam}`);
+    document.getElementById("aanmelden").append(html.naarPagina(`lid.html?lid=${andereGebruiker}`,"Aanmelden voor competities"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await aanmelden(andereGebruiker, naam);
-    await agenda(andereGebruiker, naam, document.getElementById("wedstrijden"));
+    await agenda(persoon.knsbNummer, document.getElementById("wedstrijden"));
 })();
 
-async function aanmelden(knsbNummer, naam) {
-    console.log("aanmelden");
-    const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
-    let intern = 0;
-    for (const team of teams) {
-        if (zyq.interneCompetitie(team.teamCode) ) { // if (speeltIntern(persoon, team.teamCode)) {
-            document.getElementById(`aanmelden${++intern}`).append(naarPagina(
-                `agenda.html?gebruiker=${knsbNummer}&gebruikerNaam=${naam}`,
-                `Aanmelden ${zyq.teamVoluit(team.teamCode)}`));
+async function persoonLezen(knsbNummer) {
+    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`); // TODO 1 persoon lezen zie lid.js
+    for (const persoon of personen) {
+        if (Number(persoon.knsbNummer) === knsbNummer) {
+            return persoon;
         }
     }
+    return false;
 }
 
 /*
     verwerk gebruiker=<knsbNummer>
-           &naamGebruiker=<naam>
            &team=<teamCode>
            &ronde=<rondeNummer>
            &partij=<partij>
@@ -54,7 +49,7 @@ async function aanmelden(knsbNummer, naam) {
     en partij = EXTERN_UIT of EXTERN_THUIS.
 
  */
-async function agenda(knsbNummer, naam, lijst) {
+async function agenda(knsbNummer, lijst) {
     const gewijzigd = await agendaMutatie(knsbNummer);
     let wedstrijden = await agendaLezen(knsbNummer);
     if (await agendaAanvullen(knsbNummer, wedstrijden)) {
@@ -65,7 +60,7 @@ async function agenda(knsbNummer, naam, lijst) {
         if (db.planningInvullen.has(w.partij)) {
             const datum = zyq.datumSQL(w.datum);
             const link = html.naarPagina(
-                `agenda.html?gebruiker=${knsbNummer}&naamGebruiker=${naam}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datum}&partij=${w.partij}`,
+                `agenda.html?gebruiker=${knsbNummer}&team=${w.teamCode}&ronde=${w.rondeNummer}&datum=${datum}&partij=${w.partij}`,
                 vinkjeInvullen.get(w.partij));
             html.rij(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.append(html.rij(

@@ -18,7 +18,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 (async function() {
     await zyq.init();
     document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
-    const persoon = await persoonLezen();
+    const persoon = await persoonLezen(lidNummer);
     const augustusRating = await ratingLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
@@ -32,15 +32,15 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
             }
         }],
         [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
-            html.anderePagina(`agenda.html?gebruiker=${lidNummer}&naamGebruiker=${persoon.naam}`);
+            html.anderePagina(`agenda.html?gebruiker=${lidNummer}`);
         }]);
     await lidFormulier(persoon, augustusRating);
 })();
 
-async function persoonLezen() {
-    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`); // TODO 1 persoon lezen
+async function persoonLezen(knsbNummer) {
+    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`); // TODO 1 persoon lezen zie agenda
     for (const persoon of personen) {
-        if (Number(persoon.knsbNummer) === lidNummer) {
+        if (Number(persoon.knsbNummer) === knsbNummer) {
             return persoon;
         }
     }
