@@ -51,7 +51,7 @@ async function uitslagenSpeler(kop, lijst) {
     const uitslagen = await zyq.localFetch(`/uitslagen/${zyq.o_o_o.seizoen}/${zyq.o_o_o.versie}/${zyq.o_o_o.speler}/${zyq.o_o_o.competitie}`);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
-        if (samenvoegen < i && geenGeplandePartij(uitslagen, i)) { // verwerken indien niet samengevoegd
+        if (samenvoegen < i && !db.planningInvullen.has(uitslagen[i].partij)) { // verwerken indien niet samengevoegd en geen planning
             samenvoegen = externTijdensIntern(uitslagen, i);
             if (samenvoegen === i + 1) {
                 if (t.intern()) {
@@ -97,10 +97,6 @@ function externTijdensIntern(uitslagen, i) {
     }
 }
 
-function geenGeplandePartij(uitslagen, i) {
-    return ![db.MEEDOEN, db.NIET_MEEDOEN, db.EXTERN_THUIS, db.EXTERN_UIT].includes(uitslagen[i].partij);
-}
-
 /*
 kolommen in lijst
 1. rondeNummer + link naar interne ronde indien interne ronde
@@ -112,7 +108,6 @@ kolommen in lijst
 7. punten
 8. voortschrijdend totaal
  */
-
 function internePartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
     const tegenstanderKolom = zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.naam});
@@ -134,15 +129,17 @@ function externePartij(uitslag, totaal) {
 
 function geenPartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
-    const omschrijving = uitslag.partij === db.AFWEZIG ? "afgezegd"
-        : uitslag.partij === db.ONEVEN                 ? "oneven"
-        : uitslag.partij === db.REGLEMENTAIRE_REMISE   ? "vrijgesteld"
-        : uitslag.partij === db.REGLEMENTAIR_VERLIES   ? "reglementair verlies"
-        : uitslag.partij === db.REGLEMENTAIRE_WINST    ? "reglementaire winst"
-        : uitslag.partij === db.EXTERNE_PARTIJ         ? "externe partij" : "???";
+    const omschrijving = geenPartijInvullen.get(uitslag.partij);
     return html.rij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", "", uitslag.punten, totaal);
 }
 
 function naarRonde(uitslag) {
     return html.naarPagina(`ronde.html?ronde=${uitslag.rondeNummer}`, zyq.datumLeesbaar(uitslag));
 }
+
+const geenPartijInvullen = new Map([
+    [db.AFWEZIG, "afgezegd"],
+    [db.ONEVEN, "oneven"],
+    [db.REGLEMENTAIRE_REMISE, "vrijgesteld"],
+    [db.REGLEMENTAIR_VERLIES, "reglementair verlies"],
+    [db.REGLEMENTAIRE_WINST, "reglementaire winst"]]);

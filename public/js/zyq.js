@@ -189,7 +189,6 @@ export async function init() {
  * @returns {Promise<void>}
  */
 async function gebruikerVerwerken() {
-    console.log("--- gebruikerVerwerken() ---");
     if (uuidActiveren && uuidActiveren === uuidToken) {
         await serverFetch("/activeer/" + uuidToken);
         localStorage.setItem(o_o_o.vereniging, uuidToken);
@@ -200,7 +199,6 @@ async function gebruikerVerwerken() {
         gebruiker.naam = registratie.naam;
         gebruiker.mutatieRechten = Number(registratie.mutatieRechten);
         gebruiker.email = registratie.email;
-        console.log(gebruiker);
     } else {
         gebruiker.knsbNummer = 0;
         gebruiker.naam = "onbekend";
