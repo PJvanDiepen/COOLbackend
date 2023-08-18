@@ -1,5 +1,21 @@
 use waagtoren; -- ga naar TODO
 
+set @knsbNummer = 108; -- Aad Schuit
+set @knsbNummer = 9023234; -- Albert Boekema
+set @knsbNummer = 7269834; -- Arie Boots
+set @knsbNummer = 97; -- P.J. van Diepen
+set @seizoen = "2324";
+set @maand = 5; -- mei
+set @maand = 8; -- augustus
+
+select count(*) as aantal from rating where maand = @maand;
+
+select * from uitslag where seizoen = '2324' and knsbNummer = @knsbNummer;
+select * from speler where seizoen = '2324' and knsbNummer = @knsbNummer;
+
+delete from uitslag where seizoen = '2324' and knsbNummer = @knsbNummer;
+delete from speler where seizoen = '2324' and knsbNummer = @knsbNummer;
+
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ("2324", "", "", "", "geen", 0, 0),
 ("2324", "1", "k", "m", "KNSB meester", 8, 0),

@@ -56,7 +56,7 @@ export function menu(menuRechten, ...menuKeuzes) {
     const startKeuzes = sessionStorage.getItem(db.MENU) ? JSON.parse(sessionStorage.getItem(db.MENU)) : []; // algemeen menu van start pagina
     const HAMBURGER = "\u2630";
     const opties = [[HAMBURGER, HAMBURGER]];  // geen functie
-    for (const [minimumRechten, tekst, naarPagina] of startKeuzes) { // TODO dit gaat fout indien er geen startKeuzes zijn
+    for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
         if (minimumRechten === db.IEDEREEN && tekst === db.MENU) {
             for (const [minimumRechten, tekst, functie] of menuKeuzes) {
                 if (minimumRechten <= menuRechten) {

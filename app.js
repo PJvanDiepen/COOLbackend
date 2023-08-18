@@ -12,7 +12,7 @@ const { apiLijst } = require('./modules/db.cjs');
 
 const { Model, ForeignKeyViolationError, ValidationError } = require('objection');
 
-const knex = Knex(config.get('knex'));
+const knex = Knex(JSON.parse(JSON.stringify(config.get('knex'))));
 
 Model.knex(knex);
 
@@ -24,7 +24,7 @@ app.use(cors()); // Also worth mentioning that app.use(cors()) has to go before 
 registerApi(router);
 
 for (const route of router.stack) {
-  apiLijst.push(route.path); // lijst van routes in test.js
+  apiLijst.push(route.path); // lijst van routes in db.cjs
 }
 
 app.use(bodyParser());
