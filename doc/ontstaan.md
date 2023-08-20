@@ -2,6 +2,9 @@
 
 0-0-0 is geleidelijk ontstaan. Hieronder beschrijft Peter van Diepen de geschiedenis van de belangrijkste ontwerpbeslissingen.
 
+Ik heb het nog nooit gedaan dus ik denk dat ik het wel kan
+(Pipi Langkous)
+
 Alles draait om de eenvoud
 (Het Goede Doel)
 
@@ -53,6 +56,7 @@ De Java toepassing was vooral bedoeld om informatie in te lezen uit andere syste
 Een web-app draait op minstens twee computers: de personal computer, mobiele telefoon of tablet van de gebruiker en
 de server computer ergens in de cloud op een website. De eerste noemen we frontend en de tweede backend.
 Daarnaast zijn frontend en backend via allerlei computers op het internet met elkaar verbonden.
+
 Op de frontend draait in ieder geval een browser die [HTML](https://en.wikipedia.org/wiki/HTML), 
 [CSS](https://en.wikipedia.org/wiki/CSS) en de programmeertaal [JavaScript](https://en.wikipedia.org/wiki/JavaScript) kan verwerken.
 De software van de backend daarentegen is ontzettend ingewikkeld. Bovendien bestaan in de praktijk veel verschillende oplossingen 
@@ -72,10 +76,10 @@ maar je kunt ook JavaScript toevoegen die dynamisch webpagina's genereert in de 
 
 Mijn eerste ontwerpbeslissing was om in de backend geen HTML en CSS te genereren, maar uitsluitend JSON.
 Omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in SQL.
-De backend was voor mij vooral een doorgeefluik. De resultaten uit MySQL verwerkte ik tot JSON en die stuurde door naar de frontend.
+De backend was voor mij vooral een doorgeefluik. De resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
 
 Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/),
-en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen en een van die frontend frameworks eigen te maken.
+en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen en me een van die frontend frameworks eigen te maken.
 Ik beperkte mij daarom tot zo standaard mogelijke HTML, CSS en JavaScript.
 Dit was niet echt een ontwerpbeslissing, maar een manier om alles voor mijzelf zo eenvoudig mogelijk te maken.
 

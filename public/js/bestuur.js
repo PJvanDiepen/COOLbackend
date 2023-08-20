@@ -121,6 +121,9 @@ async function alleRatinglijsten(lijst) {
     }
 }
 
+/*
+Zie Matt Frisbie: Professional JavaScript for Web Developers blz. 760
+ */
 async function leesRatinglijst(filesList, output) {
     filesList.addEventListener("change", function (event) {
         const files = event.target.files;
@@ -150,4 +153,41 @@ async function leesRatinglijst(filesList, output) {
             };
         }
     });
+}
+
+
+const naamRegex = /(.*),.*\.\s(.*)\((.*)\)/;
+
+/**
+ * Zie https://regex101.com/codegen?language=javascript
+ *
+ * maak van de knsbNaam een normaleNaam
+ *
+ * @param knsbNaam uit Online Leden Administratie van KNSB
+ * @returns {string|*} voorNaam tussenvoegsel achterNaam
+ *
+ * Diepen, P.J. van (Peter) -> Peter van Diepen
+ * Bakker, J. (Jos) -> Jos Bakker
+ * Meiden, D. van der (Dirk) -> Dirk van der Meiden
+ * Horst, C.A. v.d. (Corné) -> Corné Horst (gaat fout wegens tussenvoegsel met punten!)
+ *
+ */
+function normaleNaam(knsbNaam) {
+    let voornaam = "";
+    let tussenvoegsel = "";
+    let achternaam = "";
+    let m;
+    if ((m = naamRegex.exec(knsbNaam)) !== null) {
+        m.forEach(function (match, groupIndex) {
+            if (groupIndex === 3) {
+                voornaam = match;
+            } else if (groupIndex === 2) {
+                tussenvoegsel = match;
+            } else if (groupIndex === 1) {
+                achternaam = match;
+            }
+        });
+        return `${voornaam} ${tussenvoegsel}${achternaam}`; // geen spatie tussen tussenvoegsel en achternaam!
+    }
+    return knsbNaam;
 }

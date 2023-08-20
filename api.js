@@ -618,6 +618,14 @@ module.exports = router => {
             : {knsbNummer: ctx.params.knsbNummer, knsbNaam: "onbekend", maand: 0, jaar: 0};
     });
 
+    router.get('/naam/:maand/:zoek', async function (ctx) {
+        ctx.body = await Rating.query()
+            .select('knsbNummer', 'knsbNaam', 'knsbRating', 'maand', 'jaar')
+            .where('maand', ctx.params.maand)
+            .andWhere('knsbNaam', '>=', ctx.params.zoek)
+            .andWhere('knsbNaam', '<=', `${ctx.params.zoek}z`);
+    });
+
     /*
     Zie beheer.js
      */
