@@ -64,6 +64,7 @@ Verwijder localStorage op iPhone
 - [Multiple databases](https://blog.eperedo.com/2019/12/28/multiple-database-connection-objection-js-knex/)
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
 - [Knex cheatsheet](https://devhints.io/knex)
+- [Knex probleem](https://evertpot.com/knex-sql-injection/)
 
 # HTML / CSS
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)

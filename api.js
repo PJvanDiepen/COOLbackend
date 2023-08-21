@@ -69,7 +69,7 @@ module.exports = router => {
     });
 
     /*
-    Zie bestuur.js
+    Zie bestuur.js TODO verplaatsen naar aanmelden.js
      */
     router.get('/nummer', async function (ctx) {
         const nummers = await Persoon.query()
@@ -618,12 +618,14 @@ module.exports = router => {
             : {knsbNummer: ctx.params.knsbNummer, knsbNaam: "onbekend", maand: 0, jaar: 0};
     });
 
+    /*
+    Zie aanmelden.js
+     */
     router.get('/naam/:maand/:zoek', async function (ctx) {
         ctx.body = await Rating.query()
-            .select('knsbNummer', 'knsbNaam', 'knsbRating', 'maand', 'jaar')
+            .select('knsbNummer', 'knsbNaam', 'knsbRating', 'geboorteJaar', 'sekse', 'maand', 'jaar')
             .where('maand', ctx.params.maand)
-            .andWhere('knsbNaam', '>=', ctx.params.zoek)
-            .andWhere('knsbNaam', '<=', `${ctx.params.zoek}z`);
+            .andWhere('knsbNaam', 'regexp', ctx.params.zoek);
     });
 
     /*
@@ -814,14 +816,14 @@ module.exports = router => {
     /*
    Zie lid.js
     */
-    router.get('/:uuidToken/knsb/:lidNummer/:knsbNummer', async function (ctx) {
+    router.get('/:uuidToken/persoon/wijzigen/:lidNummer/:knsbNummer/:naam', async function (ctx) {
         ctx.body = await Persoon.query()
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BEHEERDER)) {
             if (await Persoon.query()
                 .findById(ctx.params.lidNummer)
-                .patch({knsbNummer: ctx.params.knsbNummer})) {
+                .patch({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam})) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }

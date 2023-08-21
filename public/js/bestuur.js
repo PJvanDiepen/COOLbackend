@@ -30,8 +30,8 @@ async function ledenLijst(lidNummer, kop, competities, tabel) {
     competities.append(html.rij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     tabel.append(html.rij(
-        html.naarPagina(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"),
-        "", // knsbNummer
+        html.naarPagina(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"), // TODO verplaatsen naar start.js
+        tijdelijkNummer, // knsbNummer
         "", // knsbRating
         "", // eventueel interne rating
         "", // knsbTeam
