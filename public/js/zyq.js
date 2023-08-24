@@ -146,6 +146,9 @@ export function competitieTitel() {
 }
 
 export const uuidActiveren = params.get("uuid");
+if (uuidActiveren === "wissen") {
+    localStorage.clear();
+}
 export const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
 export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 export const gebruiker = {}; // gebruikerVerwerken
@@ -194,6 +197,7 @@ async function gebruikerVerwerken() {
         localStorage.setItem(o_o_o.vereniging, uuidToken);
     }
     if (uuidToken) {
+        console.log(uuidToken);
         const registratie = await localFetch("/gebruiker/" + uuidToken);
         gebruiker.knsbNummer = Number(registratie.knsbNummer);
         gebruiker.naam = registratie.naam;

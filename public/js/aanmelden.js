@@ -48,18 +48,18 @@ async function ratingLezen() {
 
 /*
 
-registratieFormulier     MySQL tabel
+registratieFormulier   MySQL tabel
 -----------------------------------------------------
-naam             persoon, rating
-email            gebruiker
-knsbNummer       persoon, rating, gebruiker
+naam                   persoon, rating
+email                  gebruiker
+knsbNummer             persoon, rating, gebruiker
 
 De knsbRating komt uit de rating lijst van 1 augustus van dit seizoen.
 
 In het registratieFormulier
-- kan bestuur naam van persoon wijzigen en indien nodig persoon toevoegen
-- kan een nieuwe gebruiker naam en email wijzigen en persoon en gebruiker toevoegen
-- kan een geregistreerd gebruiker email wijzigen en gebruiker wijzigen
+- kan bestuur naam van persoon intoetsen en persoon toevoegen
+- kan een nieuwe gebruiker naam en email intoetsen en persoon en gebruiker toevoegen
+- kan een geregistreerd gebruiker email wijzigen en gebruiker bijwerken
  */
 async function registratieFormulier(persoon, augustusRating) {
     // formulier invullen

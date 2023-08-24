@@ -16,6 +16,8 @@ const { fn, ref } = require('objection');
 const package_json = require('./package.json');
 const knex = require("knex");
 
+const os = require("os");
+
 const laatsteMutaties = [];
 let uniekeMutaties = 0;
 
@@ -59,6 +61,10 @@ module.exports = router => {
      */
     router.get('/versie', async function (ctx) {
         ctx.body = JSON.stringify(package_json.version);
+    });
+
+    router.get('/geheugen', async function (ctx) {
+        ctx.body = JSON.stringify([os.freemem(), os.totalmem()]);
     });
 
     /*
@@ -1353,9 +1359,6 @@ module.exports = router => {
         ctx.body = aantal;
     });
 
-    /*
-    Zie test.js
-    */
     router.get('/:uuidToken/verwijder/mutaties', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
