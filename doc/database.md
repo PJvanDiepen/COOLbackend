@@ -1,5 +1,3 @@
- uitslagen van teams staan in dit systeem, kunnen meetellen in de  
-De ranglijsten voor externe competies worden niet berekend in dit systeem.
 # Database
 Er is een MySQL database per schaakvereniging met de volgende tabellen:
 - `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie

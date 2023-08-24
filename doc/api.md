@@ -2,6 +2,16 @@
 De API specificeert hoe de backend informatie uit de MySQL database als JSON doorgeeft aan de frontend.
 Dit zijn velden uit tabellen van de MySQL database of velden die zijn gemaakt door MySQL stored functions.
 
+# Ontwerp procedure
+1. Ontwerp een test (omgeving) voor de nieuwe functie
+2. Begin bij het begin
+3. Beschrijf wat de nieuwe functie precies moet doen
+4. Programmeer een stukje voor de nieuwe functie
+5. Test dit stukje
+6. Ga terug naar stap 3 tot alles goed werkt
+7. commit, push, en zo voort
+8. Ga terug naar stap 1
+
 # Test procedure
 1. test.sql 
 2. test.js

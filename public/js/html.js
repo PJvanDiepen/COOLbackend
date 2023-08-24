@@ -57,7 +57,7 @@ export function menu(menuRechten, ...menuKeuzes) {
     const HAMBURGER = "\u2630";
     const opties = [[HAMBURGER, HAMBURGER]];  // geen functie
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
-        if (minimumRechten === db.IEDEREEN && tekst === db.MENU) {
+        if (minimumRechten === db.IEDEREEN && tekst === db.MENU) { // de menuKeuzes van een specifieke pagina tussenvoegen
             for (const [minimumRechten, tekst, functie] of menuKeuzes) {
                 if (minimumRechten <= menuRechten) {
                     opties.push(["", tekst, functie]);

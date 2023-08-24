@@ -6,8 +6,7 @@ import * as db from "./db.js";
 import * as zyq from "./zyq.js";
 
 /*
-    verwerk lid=<knsbNummer>
-           &knsb=wijzigen
+    verwerk zoek=<zoek>
 
     terug naar start.html ???
  */
@@ -17,7 +16,6 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 
 (async function() {
     await zyq.init();
-    document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
     const augustusRating = await ratingLezen();

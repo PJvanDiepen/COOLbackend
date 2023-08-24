@@ -28,18 +28,20 @@ import * as zyq from "./zyq.js";
     } else if (zyq.o_o_o.vorigeRonde < zyq.o_o_o.laatsteRonde) {
         menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${zyq.o_o_o.huidigeRonde}`, "indelen.html"]); // menu2
     }
+    const registratieFormulier = zyq.gebruiker.mutatieRechten === 0 ? db.IEDEREEN : db.BESTUUR; // indien niet geregistreerd of bestuur
     menuKeuzes.push(
-        [db.GEREGISTREERD, `Aanmelden / Afzeggen`, "agenda.html"], // menu3
-        [db.BESTUUR, `Overzicht voor bestuur`, "bestuur.html"], // menu4
-        [db.TEAMLEIDER, `Overzicht voor teamleiders`, "teamleider.html"]); // menu5
-    for (let i = 0; i < 5; i++) {
+        [registratieFormulier, "Aanmelden voor 0-0-0", "aanmelden.html"],
+        [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
+        [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
+        [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
+    for (let i = 0; i < menuKeuzes.length; i++) {
         const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
         if (minimumRechten <= zyq.gebruiker.mutatieRechten ) {
-            document.getElementById(`menu${i}`).append(html.naarPaginaEnTerug(naarPagina,tekst)); // menu0..5 op deze pagina
+            document.getElementById(`menu${i}`).append(html.naarPaginaEnTerug(naarPagina,tekst)); // menu0..6 op deze pagina
         }
     }
     menuKeuzes.push(
-        [db.IEDEREEN, db.MENU],
+        [db.IEDEREEN, db.MENU], // hier komen de menuKeuzes van andere pagina's
         [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
     sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
     await seizoenSelecteren(db.INTERNE_COMPETITIE);
