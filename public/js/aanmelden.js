@@ -21,9 +21,20 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
     const knsbSelectie = document.getElementById("rating");
     const knsbZoek = html.params.get("zoek") || "";
     zoek.value = knsbZoek;
-    if (!html.onzichtbaar(knsbSelectie, knsbZoek.length < 3)) {
-        console.log("knsbSelectieInvullen");
-    };
+    if (knsbZoek.length > 0) {
+        const aantal = 11;
+        const namen = (await zyq.serverFetch(`/naam/8/${knsbZoek}/${aantal}`)).map(function (naam) {
+            return [naam.knsbNaam, naam.knsbNaam];
+        });
+        const tekst = namen.length >= aantal ? `meer dan ${namen.length - 1}` : `${namen.length}`
+        namen.unshift("", `selecteer een van ${tekst} namen`)
+        console.log(namen);
+        html.selectie(knsbSelectie, "", namen, function (naam) {
+            console.log("--- selekteer ---");
+            console.log(naam);
+           // html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
+        });
+    }
     zoek.addEventListener("change",function () {
         html.zelfdePagina(`zoek=${zoek.value}`);
     });

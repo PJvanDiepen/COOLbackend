@@ -17,7 +17,7 @@
         Dat is nodig als je bijvoorbeeld een nieuwe telefoon krijgt of als de local storage van je browser is gewist.
     </p>
     <label for="zoek">Zoek in KNSB-ratinglijst:</label>
-    <input type="text" id="zoek" name="zoek" size="42">
+    <input type="text" id="zoek" name="zoek" size="42" onkeydown="return /[a-z, ]/i.test(event.key)">
     <select id="rating"></select>
     <form action="" id="formulier">
         <fieldset>

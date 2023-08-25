@@ -627,11 +627,12 @@ module.exports = router => {
     /*
     Zie aanmelden.js
      */
-    router.get('/naam/:maand/:zoek', async function (ctx) {
+    router.get('/naam/:maand/:zoek/:aantal', async function (ctx) {
         ctx.body = await Rating.query()
             .select('knsbNummer', 'knsbNaam', 'knsbRating', 'geboorteJaar', 'sekse', 'maand', 'jaar')
             .where('maand', ctx.params.maand)
-            .andWhere('knsbNaam', 'regexp', ctx.params.zoek);
+            .andWhere('knsbNaam', 'regexp', ctx.params.zoek)
+            .limit(Number(ctx.params.aantal));
     });
 
     /*

@@ -197,7 +197,6 @@ async function gebruikerVerwerken() {
         localStorage.setItem(o_o_o.vereniging, uuidToken);
     }
     if (uuidToken) {
-        console.log(uuidToken);
         const registratie = await localFetch("/gebruiker/" + uuidToken);
         gebruiker.knsbNummer = Number(registratie.knsbNummer);
         gebruiker.naam = registratie.naam;
