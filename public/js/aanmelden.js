@@ -4,6 +4,7 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
+import {onzichtbaar} from "./html.js";
 
 /*
     verwerk zoek=<zoek>
@@ -16,6 +17,18 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 
 (async function() {
     await zyq.init();
+    const zoek = document.getElementById("zoek");
+    const knsbSelectie = document.getElementById("rating");
+    const knsbZoek = html.params.get("zoek") || "";
+    zoek.value = knsbZoek;
+    if (!html.onzichtbaar(knsbSelectie, knsbZoek.length < 3)) {
+        console.log("knsbSelectieInvullen");
+    };
+    zoek.addEventListener("change",function () {
+        html.zelfdePagina(`zoek=${zoek.value}`);
+    });
+
+
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
     const augustusRating = await ratingLezen();

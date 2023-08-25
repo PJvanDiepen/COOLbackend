@@ -101,6 +101,7 @@ export function selectie(knop, optieWaarde, opties, optieVerwerken = function (w
         }
     }
     knop.addEventListener("input",function () {
+        // TODO event.preventDefault(); toevoegen?
         functies[knop.value](waardes[knop.value]);
     });
 }
@@ -128,6 +129,13 @@ export function verwerkt(node, indien) {
     }
 }
 
+export function onzichtbaar(node, indien) {
+    if (indien) {
+        node.classList.add("onzichtbaar");
+    }
+    return indien;
+}
+
 export function rij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {
@@ -150,7 +158,7 @@ export function naarPagina(link, text) {
     a.append(text);
     a.href = "";
     a.addEventListener("click", function (event) {
-        event.preventDefault();
+        event.preventDefault(); // TODO is dit nodig?
         anderePagina(link);
     });
     return a;
