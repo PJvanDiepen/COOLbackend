@@ -69,7 +69,17 @@ export function menu(menuRechten, ...menuKeuzes) {
             }]);
         }
     }
-    selectie(document.getElementById(db.MENU), HAMBURGER, opties);
+    selectie(id(db.MENU), HAMBURGER, opties);
+}
+
+/**
+ * id geeft node op huidige webpagina
+ *
+ * @param nodeId id van node op huidige webpagina
+ * @returns {HTMLElement}
+ */
+export function id(nodeId) {
+    return document.getElementById(nodeId);
 }
 
 /**

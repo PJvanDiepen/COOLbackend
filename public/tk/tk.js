@@ -208,6 +208,13 @@ const tk = [
         breed: 1566,
         hoog: 505,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
+    },
+    {jaar: 2023,
+        zetels: "NSC=31&PvdA/GL=28&VVD=22&PVV=13&BBB=13&PvdD=8&D66=7&SP=5&CU=4&SGP=4&CDA=3&FvD=3&Volt=3&JA21=3&Denk=3",
+        kabinet: "Peilingwijzer op basis van peilingen I&O Research en Ipsos EenVandaag",
+        breed: 640,
+        hoog: 427,
+        link: "https://peilingwijzer.tomlouwerse.nl"
     } /*,
     {jaar: 2023,
         zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
@@ -235,7 +242,6 @@ function parametersVerwerken() {
     const parameters = new URLSearchParams(pagina.search);
     const anderJaar = Number(parameters.get("jaar"));
     if (anderJaar) {
-        sessionStorage.clear();
         sessionStorage.setItem("jaar", anderJaar);
         jaar = anderJaar;
     }

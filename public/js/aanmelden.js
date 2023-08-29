@@ -4,61 +4,68 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
-import {onzichtbaar} from "./html.js";
 
 /*
     verwerk zoek=<zoek>
 
-    terug naar start.html ???
+            of indien wat gevonden
+
+    verwerk knsb=<knsbNummer>
+           &lidnaam=<naam>
+
+    terug naar start.html
  */
+
+const knsbZoek = html.params.get("zoek") || "";
+const lidNummer = Number(html.params.get("lidnummer")); // gevonden door selecteren
+const lidNaam = html.params.get("lidnaam");
+
+const zoek       = html.id("zoek");
+const knop       = html.id("knop");
+const naam       = html.id("naam");
+const email      = html.id("email");
+const knsbNummer = html.id("knsbNummer");
+const knsbRating = html.id("knsbRating");
+
 const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
-const lidNummer = Number(html.params.get("lid"));
-const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 
 (async function() {
     await zyq.init();
-    const zoek = document.getElementById("zoek");
-    const knsbSelectie = document.getElementById("rating");
-    const knsbZoek = html.params.get("zoek") || "";
-    zoek.value = knsbZoek;
-    if (knsbZoek.length > 0) {
-        const aantal = 11;
-        const namen = (await zyq.serverFetch(`/naam/8/${knsbZoek}/${aantal}`)).map(function (naam) {
-            return [naam.knsbNaam, naam.knsbNaam];
-        });
-        const tekst = namen.length >= aantal ? `meer dan ${namen.length - 1}` : `${namen.length}`
-        namen.unshift("", `selecteer een van ${tekst} namen`)
-        console.log(namen);
-        html.selectie(knsbSelectie, "", namen, function (naam) {
-            console.log("--- selekteer ---");
-            console.log(naam);
-           // html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
-        });
-    }
-    zoek.addEventListener("change",function () {
-        html.zelfdePagina(`zoek=${zoek.value}`);
-    });
-
-
+    await html.menu(zyq.gebruiker.mutatieRechten,[]);
+    await zoekInRating();
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
     const augustusRating = await ratingLezen();
-    await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
-            html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
-        }],
-        [db.BEHEERDER, `${persoon.naam} verwijderen`, async function () {
-            const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/persoon/${lidNummer}`);
-            if (mutaties) {
-                html.anderePagina(`bestuur.html?lid=${lidNummer}`);
-            } else {
-                console.log(`${persoon.naam} is niet verwijderd`);
-            }
-        }],
-        [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
-            html.anderePagina(`agenda.html?gebruiker=${lidNummer}`);
-        }]);
-    await registratieFormulier(persoon, augustusRating);
+    // await registratieFormulier(persoon, augustusRating);
 })();
+
+async function zoekInRating() {
+    const selectieLijst = [];
+    zoek.value = knsbZoek;
+    if (knsbZoek.length > 0) {
+        const aantal = 11;
+        const knsb = await zyq.serverFetch(`/naam/8/${knsbZoek}/${aantal}`);
+        console.log(knsb);
+        for (let i = 0; i < knsb.length; i++) {
+            const tekst = `${knsb[i].knsbNummer} ${knsb[i].knsbNaam} (${knsb[i].knsbRating})`
+            selectieLijst.push([i, tekst, function (selecteer) {
+                // html.zelfdePagina(`lidnummer=${knsb[selecteer].knsbNummer}`);
+                console.log("--- selecteer ---");
+                console.log(selecteer);
+                console.log(knsb[selecteer].knsbNummer);
+                console.log(knsb[selecteer].knsbNaam);
+                console.log(knsb[selecteer].knsbRating);
+            }]);
+        }
+        const tekst = knsb.length >= aantal ? `meer dan ${knsb.length - 1}` : `${knsb.length}`
+        selectieLijst.unshift([99, `selecteer een van ${tekst} namen`]);
+        console.log(selectieLijst);
+        html.selectie(knop, 99, selectieLijst);
+    }
+    zoek.addEventListener("change", function () {
+        html.zelfdePagina(`zoek=${zoek.value}`);
+    });
+}
 
 async function ratingLezen() {
     const rating = await zyq.serverFetch(`/rating/8/${lidNummer}`); // 1 augustus dit seizoen
@@ -85,9 +92,6 @@ In het registratieFormulier
  */
 async function registratieFormulier(persoon, augustusRating) {
     // formulier invullen
-    const knsbNummer = document.getElementById("knsbNummer");
-    knsbNummer.value = lidNummer;
-    const naam = document.getElementById("naam");
     if (persoon) {
         naam.value = persoon.naam;
     } else if (augustusRating) {
@@ -99,7 +103,6 @@ async function registratieFormulier(persoon, augustusRating) {
     }
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
     document.getElementById("jaar").append(` op 1 augustus ${jaar}`);
-    const knsbRating = document.getElementById("knsbRating");
     knsbRating.value = 0;
     const spelerToevoegen = !persoon || persoon.knsbRating === null;
     if (augustusRating) {
@@ -132,46 +135,7 @@ async function registratieFormulier(persoon, augustusRating) {
                 mutaties++;
             }
         }
-        // speler verwerken
-        const intern = []; // speeltIntern volgens lidformulier TODO Contents of collection 'intern' are updated, but never queried
-        let internNummer = 0;
-        let vinkjes = "";
-        for (let i = 0; i < competitie.length; i++) {
-            if (competitie[i].checked) {
-                intern[internNummer] = competitie[i].value;
-                internNummer++;
-                vinkjes += competitie[i].value;
-            }
-        }
-        vinkjes += " "; // minstens 1 vinkje voor blanko teamCode
-        const uuid = zyq.uuidToken;
-        const muteren = spelerToevoegen ? "speler/toevoegen" : "speler/wijzigen";
-        const seizoen = zyq.o_o_o.seizoen;
-        const rating = knsbRating.value;
-        const ratingIntern = interneRating.value;
-        const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
-        const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;
-        if (await zyq.serverFetch(`/${uuid}/${muteren}/${seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${jaar}-08-01`)) {
-            mutaties++;
-        }
-        if (knsbWijzigen && Number(knsbNummer.value) !== lidNummer) {
-            if (await zyq.serverFetch(`/${zyq.uuidToken}/knsb/${lidNummer}/${knsbNummer.value}`)){
-                mutaties++;
-            }
-        }
         // TODO iets doen met mutaties of de variable mutaties verwijderen?
-        html.vorigePagina(`lid=${knsbNummer.value}`); // naar agenda.html of bestuur.html
+        html.vorigePagina(`lid=${knsbNummer.value}`); // naar agenda.html of bestuur.html TODO naar start.html
     });
-}
-
-function speeltIntern(persoon, teamCode) { // volgens database
-    if (persoon) {
-        return persoon.intern1 === teamCode
-            || persoon.intern2 === teamCode
-            || persoon.intern3 === teamCode
-            || persoon.intern4 === teamCode
-            || persoon.intern5 === teamCode;
-    } else {
-        return false;
-    }
 }
