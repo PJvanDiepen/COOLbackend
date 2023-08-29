@@ -21,11 +21,12 @@ const lidNummer = Number(html.params.get("lidnummer")); // gevonden door selecte
 const lidNaam = html.params.get("lidnaam");
 
 const zoek       = html.id("zoek");
-const knop       = html.id("knop");
+const selecteer  = html.id("selecteer");
 const naam       = html.id("naam");
 const email      = html.id("email");
 const knsbNummer = html.id("knsbNummer");
 const knsbRating = html.id("knsbRating");
+const status     = html.id("status");
 
 const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
 
@@ -35,7 +36,9 @@ const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
     await zoekInRating();
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
+    console.log(persoon);
     const augustusRating = await ratingLezen();
+    status.value = "Dit is een test";
     // await registratieFormulier(persoon, augustusRating);
 })();
 
@@ -48,23 +51,26 @@ async function zoekInRating() {
         console.log(knsb);
         for (let i = 0; i < knsb.length; i++) {
             const tekst = `${knsb[i].knsbNummer} ${knsb[i].knsbNaam} (${knsb[i].knsbRating})`
-            selectieLijst.push([i, tekst, function (selecteer) {
-                // html.zelfdePagina(`lidnummer=${knsb[selecteer].knsbNummer}`);
-                console.log("--- selecteer ---");
-                console.log(selecteer);
-                console.log(knsb[selecteer].knsbNummer);
-                console.log(knsb[selecteer].knsbNaam);
-                console.log(knsb[selecteer].knsbRating);
+            selectieLijst.push([i, tekst, function (index) {
+                console.log(knsb[index]);
+                naam.value = normaleNaam(knsb[index].knsbNaam);
+                knsbNummer.value = knsb[index].knsbNummer;
+                knsbRating.value = knsb[index].knsbRating;
+                // html.zelfdePagina(`lidnummer=${knsb[selecteer].knsbNummer}`); // TODO gewoon invullen, niet pagina helemaal opbouwen
             }]);
         }
         const tekst = knsb.length >= aantal ? `meer dan ${knsb.length - 1}` : `${knsb.length}`
-        selectieLijst.unshift([99, `selecteer een van ${tekst} namen`]);
+        selectieLijst.unshift([99, `selecteer een uit ${tekst} namen`]);
         console.log(selectieLijst);
-        html.selectie(knop, 99, selectieLijst);
+        html.selectie(selecteer, 99, selectieLijst);
     }
     zoek.addEventListener("change", function () {
         html.zelfdePagina(`zoek=${zoek.value}`);
     });
+}
+
+function normaleNaam(knsbNaam) {
+    return knsbNaam.replace(/(.*), (.*)/g, "$2 $1"); // Zie blz. 155 Marijn Haverbeke: Eloquent JavaScript
 }
 
 async function ratingLezen() {
