@@ -368,10 +368,10 @@ where u.seizoen = @seizoen
 order by u.datum, u.bordNummer;
 
 -- aantal mutaties per gebruiker 
-select naam, m.knsbNummer, count(*)
+select naam, m.knsbNummer, count(*) mutaties
 from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
 group by m.knsbNummer
-order by naam;
+order by mutaties;
 
 -- alle ratinglijsten (met correlated subqueries)
 select r.maand, r.jaar from rating as r
@@ -428,10 +428,14 @@ left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNumm
 where r.seizoen = @seizoen and r.teamCode = @teamCode
 order by r.rondeNummer;
 
--- aantal uitslagen per seizoen, partij
-select seizoen, partij, count(partij) from uitslag 
+-- zoek in naam
+select p.*, g.* from persoon p left join gebruiker g on g.knsbNummer = p.knsbNUmmer
+where p.naam regexp 'jan';
+
+-- aantal uitslagen per seizoen per partij
+select seizoen, partij, count(partij) aantal from uitslag 
 group by seizoen, partij
-order by seizoen, partij;
+order by aantal desc;  --  seizoen, partij;
 
 -- aantal mutaties per gebruiker
 select naam, m.knsbNummer, count(*) mutaties

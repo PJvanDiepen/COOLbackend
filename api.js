@@ -636,6 +636,22 @@ module.exports = router => {
     });
 
     /*
+    -- zoek in naam
+    select p.*, g.*
+    from persoon p left join gebruiker g on g.knsbNummer = p.knsbNUmmer
+    where p.naam regexp 'jan';
+
+    Zie aanmelden.js leftJoin
+     */
+    router.get('/naam/gebruiker/:zoek', async function (ctx) {
+        ctx.body = await Persoon.query()
+            .select('persoon.knsbNummer', 'naam', 'gebruiker.mutatieRechten')
+            .leftJoin('gebruiker', function(join) {
+                join.on('gebruiker.knsbNummer', 'persoon.knsbNummer')})
+            .where('naam', 'regexp', ctx.params.zoek);
+    });
+
+    /*
     Zie beheer.js
      */
     router.get('/backup/persoon', async function (ctx) {
