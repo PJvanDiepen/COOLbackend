@@ -146,6 +146,14 @@ export function onzichtbaar(node, indien) {
     return indien;
 }
 
+export function tekstOverschrijven(node, tekst) {
+    node.innerText = tekst;
+}
+
+export function tekstToevoegen(node, tekst) {
+    node.innerText += tekst;
+}
+
 export function rij(...kolommen) {
     const tr = document.createElement("tr");
     kolommen.map(function (kolom) {

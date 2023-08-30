@@ -8,11 +8,6 @@ import * as zyq from "./zyq.js";
 /*
     verwerk zoek=<zoek>
 
-            of indien wat gevonden
-
-    verwerk knsb=<knsbNummer>
-           &lidnaam=<naam>
-
     terug naar start.html
  */
 
@@ -26,7 +21,7 @@ const naam       = html.id("naam");
 const email      = html.id("email");
 const knsbNummer = html.id("knsbNummer");
 const knsbRating = html.id("knsbRating");
-const status     = html.id("status");
+const informeer  = html.id("informeer");
 
 const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
 
@@ -38,7 +33,6 @@ const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
     console.log(persoon);
     const augustusRating = await ratingLezen();
-    status.value = "Dit is een test";
     // await registratieFormulier(persoon, augustusRating);
 })();
 
@@ -46,9 +40,9 @@ async function zoekInRating() {
     const selectieLijst = [];
     zoek.value = knsbZoek;
     if (knsbZoek.length > 0) {
-        const aantal = 11;
+        const aantal = 26;
         const knsb = await zyq.serverFetch(`/naam/8/${knsbZoek}/${aantal}`);
-        console.log(knsb);
+        // console.log(knsb);
         for (let i = 0; i < knsb.length; i++) {
             const tekst = `${knsb[i].knsbNummer} ${knsb[i].knsbNaam} (${knsb[i].knsbRating})`
             selectieLijst.push([i, tekst, function (index) {
@@ -56,13 +50,18 @@ async function zoekInRating() {
                 naam.value = normaleNaam(knsb[index].knsbNaam);
                 knsbNummer.value = knsb[index].knsbNummer;
                 knsbRating.value = knsb[index].knsbRating;
-                // html.zelfdePagina(`lidnummer=${knsb[selecteer].knsbNummer}`); // TODO gewoon invullen, niet pagina helemaal opbouwen
+                if (i > 4) {
+                    html.tekstOverschrijven(informeer, `${naam.value} heeft een rating van ${knsbRating.value}.\n`);
+                } else {
+                    html.tekstToevoegen(informeer, `${naam.value} heeft een rating van ${knsbRating.value}.\n`);
+                }
             }]);
         }
         const tekst = knsb.length >= aantal ? `meer dan ${knsb.length - 1}` : `${knsb.length}`
+        html.tekstToevoegen(informeer, `Met "${knsbZoek}" zijn ${tekst} namen gevonden.\n`);
+
         selectieLijst.unshift([99, `selecteer een uit ${tekst} namen`]);
-        console.log(selectieLijst);
-        html.selectie(selecteer, 99, selectieLijst);
+        html.selectie(selecteer, "", selectieLijst);
     }
     zoek.addEventListener("change", function () {
         html.zelfdePagina(`zoek=${zoek.value}`);
@@ -70,7 +69,10 @@ async function zoekInRating() {
 }
 
 function normaleNaam(knsbNaam) {
-    return knsbNaam.replace(/(.*), (.*)/g, "$2 $1"); // Zie blz. 155 Marijn Haverbeke: Eloquent JavaScript
+    const naam = knsbNaam.indexOf(" ") < knsbNaam.indexOf(", ")
+        ? knsbNaam.charAt(0).toLowerCase() + knsbNaam.slice(1) // geen hoofdletter in tussenvoegsel
+        : knsbNaam;
+    return naam.replace(/(.*), (.*)/g, "$2 $1"); // Zie blz. 155 Marijn Haverbeke: Eloquent JavaScript
 }
 
 async function ratingLezen() {

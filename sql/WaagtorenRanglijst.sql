@@ -434,10 +434,19 @@ group by seizoen, partij
 order by seizoen, partij;
 
 -- aantal mutaties per gebruiker
-select naam, m.knsbNummer, count(*) sort
+select naam, m.knsbNummer, count(*) mutaties
 from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
 group by m.knsbNummer
-order by sort desc;
+order by mutaties desc;
+
+-- wijzig mutatieRechten
+set @knsbNummer = 7101193; -- Jacob Bleijendaal
+set @knsbNummer = 6572511; -- Bert Buitink
+
+select * from gebruiker g join persoon p on p.knsbNummer = g.knsbNummer 
+where g.knsbNummer = @knsbNummer;
+
+update gebruiker set mutatieRechten = 4 where knsbNummer = @knsbNummer; -- systeembeheerder
 
 -- laatste mutaties
 select * from mutatie order by tijdstip desc;

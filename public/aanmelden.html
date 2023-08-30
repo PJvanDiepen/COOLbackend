@@ -10,7 +10,7 @@
     <select id="menu"></select>
     <h1>Aanmelden voor 0-0-0.nl</h1>
     <p>
-        Deze webpagina verschijnt als 0-0-0.nl je niet (meer) herkent als gebruiker.
+        Je komt op deze webpagina als 0-0-0.nl je niet (meer) herkent als gebruiker.
         Hieronder kan je eventueel je KNSB-nummer en KNSB-rating opzoeken. Je e-mailadres invullen is noodzakelijk,
         zodat de systeembeheerder je een e-mail kan sturen met een link om je registratie te activeren.
         Bewaar die e-mail, zodat je eventueel je registratie opnieuw kunt activeren.
@@ -19,6 +19,7 @@
     <label for="zoek">Zoek in KNSB-ratinglijst:</label>
     <input type="text" id="zoek" name="zoek" size="42" onkeydown="return /[a-z, ]/i.test(event.key)">
     <select id="selecteer"></select>
+    <p id="informeer"></p>
     <form action="" id="formulier">
         <fieldset>
             <legend>registratie formulier</legend>
@@ -33,7 +34,6 @@
             <button type="submit" class="marge-boven">wijzigingen opslaan</button>
         </fieldset>
     </form>
-    <input type="text" id="status" name="status" size="42" disabled>
     <script type="module" src="js/aanmelden.js"></script>
 </body>
 </html>
