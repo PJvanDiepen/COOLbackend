@@ -641,7 +641,7 @@ module.exports = router => {
     from persoon p left join gebruiker g on g.knsbNummer = p.knsbNUmmer
     where p.naam regexp 'jan';
 
-    Zie aanmelden.js leftJoin
+    Zie aanmelden.js
      */
     router.get('/naam/gebruiker/:zoek', async function (ctx) {
         ctx.body = await Persoon.query()

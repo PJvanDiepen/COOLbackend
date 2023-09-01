@@ -11,7 +11,7 @@ import * as zyq from "./zyq.js";
     terug naar start.html
  */
 
-const knsbZoek = html.params.get("zoek") || "";
+const zoekNaam = html.params.get("zoek") || "";
 const lidNummer = Number(html.params.get("lidnummer")); // gevonden door selecteren
 const lidNaam = html.params.get("lidnaam");
 
@@ -28,7 +28,7 @@ const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await zoekInRating();
+    await zoekPersoon();
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
     console.log(persoon);
@@ -36,13 +36,15 @@ const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
     // await registratieFormulier(persoon, augustusRating);
 })();
 
-async function zoekInRating() {
+async function zoekPersoon() {
     const selectieLijst = [];
-    zoek.value = knsbZoek;
-    if (knsbZoek.length > 0) {
+    zoek.value = zoekNaam;
+    if (zoekNaam.length > 0) {
         const aantal = 26;
-        const knsb = await zyq.serverFetch(`/naam/8/${knsbZoek}/${aantal}`);
-        // console.log(knsb);
+        const knsb = await zyq.serverFetch(`/naam/8/${zoekNaam}/${aantal}`);
+        console.log(knsb);
+        const database = await zyq.serverFetch(`/naam/gebruiker/${zoekNaam}`);
+        console.log(database);
         for (let i = 0; i < knsb.length; i++) {
             const tekst = `${knsb[i].knsbNummer} ${knsb[i].knsbNaam} (${knsb[i].knsbRating})`
             selectieLijst.push([i, tekst, function (index) {
@@ -57,9 +59,9 @@ async function zoekInRating() {
                 }
             }]);
         }
+        console.log(selectieLijst);
         const tekst = knsb.length >= aantal ? `meer dan ${knsb.length - 1}` : `${knsb.length}`
-        html.tekstToevoegen(informeer, `Met "${knsbZoek}" zijn ${tekst} namen gevonden.\n`);
-
+        html.tekstToevoegen(informeer, `Met "${zoekNaam}" zijn ${tekst} namen gevonden.\n`);
         selectieLijst.unshift([99, `selecteer een uit ${tekst} namen`]);
         html.selectie(selecteer, "", selectieLijst);
     }
@@ -68,9 +70,21 @@ async function zoekInRating() {
     });
 }
 
+/**
+ * maak van een knsbNaam een normaleNaam
+ *
+ * Giri, Anish -> Anish Giri
+ * Van Diepen, Peter --> Peter van Diepen
+ * Van der Meiden, Dirk --> Dirk van der Meiden
+ * Bennema Geerlings, Menno --> Menno Bennema Geerlings
+ *
+ * @param knsbNaam uit KNSB ratinglijst
+ * @returns {string} normaleNaam
+ */
 function normaleNaam(knsbNaam) {
-    const naam = knsbNaam.indexOf(" ") < knsbNaam.indexOf(", ")
-        ? knsbNaam.charAt(0).toLowerCase() + knsbNaam.slice(1) // geen hoofdletter in tussenvoegsel
+    const eersteSpatie = knsbNaam.indexOf(" ");
+    const naam = eersteSpatie < 4 && eersteSpatie < knsbNaam.indexOf(", ")
+        ? knsbNaam.charAt(0).toLowerCase() + knsbNaam.slice(1) // geen hoofdletter voor tussenvoegsel zoals: van, de, enz.
         : knsbNaam;
     return naam.replace(/(.*), (.*)/g, "$2 $1"); // Zie blz. 155 Marijn Haverbeke: Eloquent JavaScript
 }
@@ -105,12 +119,11 @@ async function registratieFormulier(persoon, augustusRating) {
     } else if (augustusRating) {
         naam.value = augustusRating.knsbNaam;
     }
-    const email = document.getElementById("email");
     if (lidNummer === zyq.gebruiker.knsbNummer) {
         email.value = zyq.gebruiker.email;
     }
     const gebruikerToevoegen = !persoon || persoon.mutatieRechten === null;
-    document.getElementById("jaar").append(` op 1 augustus ${jaar}`);
+    html.id("jaar").append(` op 1 augustus ${jaar}`);
     knsbRating.value = 0;
     const spelerToevoegen = !persoon || persoon.knsbRating === null;
     if (augustusRating) {
@@ -125,7 +138,7 @@ async function registratieFormulier(persoon, augustusRating) {
     }
 
     // formulier verwerken
-    document.getElementById("formulier").addEventListener("submit", async function (event) {
+    html.id("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();
         let mutaties = 0;
         // persoon verwerken

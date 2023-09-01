@@ -4,7 +4,6 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
-import {voorloopNul} from "./zyq.js";
 
 /*
     verwerk lid=<knsbNummer>
@@ -21,17 +20,16 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
         document.getElementById("competities"),
         document.getElementById("tabel"));
     await alleRatinglijsten(document.getElementById("ratinglijsten"));
-    await leesRatinglijst(document.getElementById("csvFile"), document.getElementById("csvInfo"));
+    await leesRatinglijst(document.getElementById("csvFile"), document.getElementById("informeer"));
 })();
 
 async function ledenLijst(lidNummer, kop, competities, tabel) {
     kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor bestuur";
     const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
     competities.append(html.rij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
-    const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     tabel.append(html.rij(
-        html.naarPagina(`lid.html?lid=${tijdelijkNummer}`, "----- iemand toevoegen -----"), // TODO verplaatsen naar start.js
-        tijdelijkNummer, // knsbNummer
+        html.naarPagina(`aanmelden.html`, "----- iemand toevoegen -----"),
+        "", // knsbNummer
         "", // knsbRating
         "", // eventueel interne rating
         "", // knsbTeam
@@ -110,9 +108,9 @@ async function alleRatinglijsten(lijst) {
         const maand = (i + dezeMaand) > 12 ? (i + dezeMaand) - 12: (i + dezeMaand);
         const jaar = (i + dezeMaand) > 12 ? ditJaar : ditJaar - 1;
         const juisteJaar = ratingJaar[maand] === jaar;
-        const naam = `${jaar}-${voorloopNul(maand)}-KNSB`;
+        const naam = `${jaar}-${zyq.voorloopNul(maand)}-KNSB`;
         lijst.append(html.rij(html.naarPaginaEnTerug(
-            `https://schaakbond.nl/wp-content/uploads/${jaar}/${voorloopNul(maand)}/${naam}.zip`,
+            `https://schaakbond.nl/wp-content/uploads/${jaar}/${zyq.voorloopNul(maand)}/${naam}.zip`,
             `Ratinglijst 1 ${db.maandInvullen.get(maand)} ${jaar}`),
             juisteJaar ? "" : `${naam}.zip`,
             juisteJaar ? "" : `${naam}.csv`,

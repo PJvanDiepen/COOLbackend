@@ -28,9 +28,10 @@ import * as zyq from "./zyq.js";
     } else if (zyq.o_o_o.vorigeRonde < zyq.o_o_o.laatsteRonde) {
         menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${zyq.o_o_o.huidigeRonde}`, "indelen.html"]); // menu2
     }
-    const registratieFormulier = zyq.gebruiker.mutatieRechten === 0 ? db.IEDEREEN : db.BESTUUR; // indien niet geregistreerd of bestuur
+    if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
+        menuKeuzes.push([db.IEDEREEN, "Aanmelden voor 0-0-0", "aanmelden.html"]);
+    }
     menuKeuzes.push(
-        [registratieFormulier, "Aanmelden voor 0-0-0", "aanmelden.html"],
         [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
         [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
         [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
@@ -41,7 +42,7 @@ import * as zyq from "./zyq.js";
         }
     }
     menuKeuzes.push(
-        [db.IEDEREEN, db.MENU], // hier komen de menuKeuzes van andere pagina's
+        [db.IEDEREEN, db.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
         [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
     sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
     await seizoenSelecteren(db.INTERNE_COMPETITIE);
