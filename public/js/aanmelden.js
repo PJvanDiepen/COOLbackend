@@ -32,7 +32,7 @@ const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
     const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
     console.log(persoon);
-    const augustusRating = await ratingLezen();
+    const augustusRating = await ratingLezen(); // TODO is dit nog nodig?
     // await registratieFormulier(persoon, augustusRating);
 })();
 
@@ -41,33 +41,56 @@ async function zoekPersoon() {
     zoek.value = zoekNaam;
     if (zoekNaam.length > 0) {
         const aantal = 26;
-        const knsb = await zyq.serverFetch(`/naam/8/${zoekNaam}/${aantal}`);
-        console.log(knsb);
-        const database = await zyq.serverFetch(`/naam/gebruiker/${zoekNaam}`);
-        console.log(database);
-        for (let i = 0; i < knsb.length; i++) {
-            const tekst = `${knsb[i].knsbNummer} ${knsb[i].knsbNaam} (${knsb[i].knsbRating})`
+        const leden = ledenSamenvoegen(
+            await zyq.serverFetch(`/naam/8/${zoekNaam}/${aantal}`),
+            await zyq.serverFetch(`/naam/gebruiker/${zoekNaam}`));
+        console.log(leden);
+        for (let i = 0; i < leden.length; i++) {
+            const tekst = `${leden[i].knsbNummer} ${leden[i].knsbNaam} (${leden[i].knsbRating})`
             selectieLijst.push([i, tekst, function (index) {
-                console.log(knsb[index]);
-                naam.value = normaleNaam(knsb[index].knsbNaam);
-                knsbNummer.value = knsb[index].knsbNummer;
-                knsbRating.value = knsb[index].knsbRating;
-                if (i > 4) {
-                    html.tekstOverschrijven(informeer, `${naam.value} heeft een rating van ${knsbRating.value}.\n`);
-                } else {
-                    html.tekstToevoegen(informeer, `${naam.value} heeft een rating van ${knsbRating.value}.\n`);
+                naam.value = "naam" in leden[index] ? leden[index].naam : normaleNaam(leden[index].knsbNaam);
+                knsbNummer.value = leden[index].knsbNummer;
+                knsbRating.value = leden[index].knsbRating;
+                if ("naam" in leden[index]) {
+                    html.tekstToevoegen(informeer, `${leden[index].naam} is bekend in 0-0-0.\n`);
                 }
             }]);
+
         }
         console.log(selectieLijst);
-        const tekst = knsb.length >= aantal ? `meer dan ${knsb.length - 1}` : `${knsb.length}`
-        html.tekstToevoegen(informeer, `Met "${zoekNaam}" zijn ${tekst} namen gevonden.\n`);
-        selectieLijst.unshift([99, `selecteer een uit ${tekst} namen`]);
-        html.selectie(selecteer, "", selectieLijst);
+        selectieLijst.unshift(["=", `selecteer een uit ${leden.length} namen`]);
+        html.selectie(selecteer, "=", selectieLijst);
+        html.tekstToevoegen(informeer, `Met "${zoekNaam}" zijn ${leden.length} namen gevonden.\n`);
     }
     zoek.addEventListener("change", function () {
         html.zelfdePagina(`zoek=${zoek.value}`);
     });
+}
+
+/**
+ * ledenSamenvoegen uit KNSB ratinglijst en eigen leden
+ *
+ * @param knsb leden met {knsbNummer, knsbNaam, knsbRating}
+ * @param eigen leden met {knsbNummer, naam, mutatieRechten }
+ * @returns {*} eigen leden samengevoegd in knsb leden
+ */
+function ledenSamenvoegen(knsb, eigen) {
+    console.log(knsb);
+    console.log(eigen);
+    for (const eigenLid of eigen) {
+        if (eigenLid.knsbNummer < db.KNSB_NUMMER) { // eigen lid, die nog geen KNSB lid is vooraan toevoegen
+            knsb.unshift(eigenLid);
+        } else {
+            for (const knsbLid of knsb) { // eigen lid samenvoegen met KNSB lid
+                if (eigenLid.knsbNummer === knsbLid.knsbNummer) {
+                    knsbLid.naam = eigenLid.naam;
+                    knsbLid.mutatieRechten = eigenLid.mutatieRechten;
+                    break;
+                }
+            }
+        }
+    }
+    return knsb;
 }
 
 /**

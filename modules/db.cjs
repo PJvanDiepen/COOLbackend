@@ -23,6 +23,10 @@ const JEUGD_COMPETTIE    = "ije";
 const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
 
+// knsbNummer
+const TIJDELIJK_LID_NUMMER = 100
+const KNSB_NUMMER          = 1000000;
+
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -111,6 +115,10 @@ module.exports = { // CommonJS voor node.js
     JEUGD_COMPETTIE,
     SNELSCHAKEN,
     ZWITSERS_TEST,
+
+    // knsbNummer
+    TIJDELIJK_LID_NUMMER,
+    KNSB_NUMMER,
 
     // uitslag.partij
     AFWEZIG,
