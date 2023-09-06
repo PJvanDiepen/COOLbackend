@@ -75,18 +75,6 @@ module.exports = router => {
     });
 
     /*
-    Zie bestuur.js TODO verplaatsen naar aanmelden.js
-     */
-    router.get('/nummer', async function (ctx) {
-        const nummers = await Persoon.query()
-            .select('knsbNummer')
-            .where('knsbNummer', '<', 1000000) // hoogste tijdelijke knsbNummer
-            .orderBy('knsbNummer', 'desc')
-            .limit(1);
-        ctx.body = nummers[0] ? Number(nummers[0].knsbNummer + 1) : 0;
-    });
-
-    /*
     Zie start.js
      */
     router.get('/seizoenen/:teamCode', async function (ctx) {
@@ -899,13 +887,22 @@ module.exports = router => {
     });
 
     /*
-    Zie lid.js
+    Zie aanmelden.js via bestuur.js
      */
     router.get('/:uuidToken/persoon/toevoegen/:knsbNummer/:naam', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
-            if (await Persoon.query().insert({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam})) {
+            let knsbNummer = Number(ctx.params.knsbNummer);
+            if (!knsbNummer) {
+                const nummers = await Persoon.query()
+                    .select('knsbNummer')
+                    .where('knsbNummer', '<', db.KNSB_NUMMER) // hoogste tijdelijke knsbNummer
+                    .orderBy('knsbNummer', 'desc')
+                    .limit(1);
+                knsbNummer = nummers[0] ? Number(nummers[0].knsbNummer + 1) : 0;
+            }
+            if (knsbNummer && await Persoon.query().insert({knsbNummer: knsbNummer, naam: ctx.params.naam})) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }

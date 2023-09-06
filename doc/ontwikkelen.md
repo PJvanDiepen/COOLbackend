@@ -9,8 +9,11 @@ Dit zijn velden uit tabellen van de MySQL database of velden die zijn gemaakt do
 4. Programmeer een stukje voor de nieuwe functie
 5. Test dit stukje
 6. Ga terug naar stap 3 tot alles goed werkt
-7. commit, push, en zo voort
+7. git commit, push, en zo voort
 8. Ga terug naar stap 1
+
+Voor elk stapje git commit met korte beschrijving.
+Vlak voor in productie nemen verwijder alle console.log()'s en git commit 0-0-0.nl versie x.y.z en resolve #issue
 
 # Test procedure
 1. test.sql 
@@ -35,8 +38,4 @@ Uitleg over hard reload in browsers.
 4. Misleidend of ontbrekend commentaar.
 5. Verkeerde namen voor variabelen of functies.
 
-
-   
-
-   
    

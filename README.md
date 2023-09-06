@@ -19,7 +19,7 @@ TODO: Merge your work into the `production` branch on GitHub (use a pull request
 De backend werkt met MySQL databases. In de database staan uitslagen, deelnemers en andere data per schaakvereniging.
 Bovendien is de logic van het wedstrijdreglement vastgelegd in de database.
 
-# [API](doc/api.md)
+# [API](doc/ontwikkelen.md)
 De backend bevat zo min mogelijk logic en geeft vooral data uit de database door aan de frontend.
 
 # Backend 

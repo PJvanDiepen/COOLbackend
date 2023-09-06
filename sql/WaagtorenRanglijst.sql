@@ -371,7 +371,7 @@ order by u.datum, u.bordNummer;
 select naam, m.knsbNummer, count(*) mutaties
 from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
 group by m.knsbNummer
-order by mutaties;
+order by mutaties desc;
 
 -- alle ratinglijsten (met correlated subqueries)
 select r.maand, r.jaar from rating as r

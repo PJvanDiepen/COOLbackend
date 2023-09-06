@@ -210,7 +210,7 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
     },
     {jaar: 2023,
-        zetels: "NSC=31&PvdA/GL=28&VVD=22&PVV=13&BBB=13&PvdD=8&D66=7&SP=5&CU=4&SGP=4&CDA=3&FvD=3&Volt=3&JA21=3&Denk=3",
+        zetels: "NSC=29&VVD=24&PvdA/GL=24&PVV=14&BBB=14&PvdD=9&D66=8&CU=5&SP=4&CDA=4&SGP=3&FvD=3&Volt=3&JA21=3&Denk=3",
         kabinet: "Peilingwijzer op basis van peilingen I&O Research en Ipsos EenVandaag",
         breed: 640,
         hoog: 427,

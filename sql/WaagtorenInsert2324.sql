@@ -5,10 +5,13 @@ set @knsbNummer = 9023234; -- Albert Boekema
 set @knsbNummer = 7269834; -- Arie Boots
 set @knsbNummer = 97; -- P.J. van Diepen
 set @seizoen = "2324";
-set @maand = 5; -- mei
+set @maand = 2; -- mei
 set @maand = 8; -- augustus
 
 select count(*) as aantal from rating where maand = @maand;
+
+-- aantal leden per maand 
+select maand, jaar, count(*) leden from rating group by maand, jaar;
 
 select * from uitslag where seizoen = '2324' and knsbNummer = @knsbNummer;
 select * from speler where seizoen = '2324' and knsbNummer = @knsbNummer;

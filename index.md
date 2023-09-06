@@ -15,7 +15,7 @@ Met 0-0-0 is het mogelijk om vanaf allerlei computers, tablets of smartphones de
 ## Uitslagen en ranglijsten
 
 Het is de bedoeling dat 0-0-0 een universeel bruikbaar uitslagen en ranglijsten systeem voor schaakverenigingen wordt. 
-De [database](doc/database.md) en de [api](doc/api.md) van 0-0-0 zijn daarom zodanig ontworpen 
+De [database](doc/database.md) en de [api](doc/ontwikkelen.md) van 0-0-0 zijn daarom zodanig ontworpen 
 dat de regels van het interne competitie reglement in de database zijn vastgelegd en niet in de software van 0-0-0.
 
 Voor de Waagtoren staat de logica van het Alkmaar systeem in reglement-data, maar die kunnen we vervangen door 
