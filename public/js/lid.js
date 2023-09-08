@@ -68,24 +68,18 @@ In het lidFormulier
 - kan een geregistreerd gebruiker competities van speler wijzigen en indien nodig speler toevoegen
  */
 async function lidFormulier(persoon, augustusRating) {
+    console.log("lidFormulier(persoon, augustusRating)");
+    console.log(persoon);
+    console.log(augustusRating);
     // formulier invullen
     const knsbNummer = document.getElementById("knsbNummer");
     knsbNummer.value = lidNummer;
     const naam = document.getElementById("naam");
     naam.value = persoon.naam;
-    const persoonToevoegen = persoon.knsbNummer === 0;
-    if (persoonToevoegen) {
-        naam.disabled = false; // enable input
-    }
     document.getElementById("gebruiker").value = zyq.gebruikerFunctie(persoon);
     document.getElementById("jaar").append(` op 1 augustus ${jaar}`);
     const knsbRating = document.getElementById("knsbRating");
-    if (augustusRating) {
-        naam.value = augustusRating.knsbNaam; // TODO achternaam, voornaam omwisselen
-        knsbRating.value = augustusRating.knsbRating;
-    } else {
-        knsbRating.value = persoon.knsbRating;
-    }
+    knsbRating.value = augustusRating ? augustusRating.knsbRating : 0;
     const interneRating = document.getElementById("interneRating");
     if (knsbRating.value > 0) {
         interneRating.append(html.optie(knsbRating.value, "zie KNSB rating"));
@@ -145,12 +139,7 @@ async function lidFormulier(persoon, augustusRating) {
     document.getElementById("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();
         let mutaties = 0;
-        // persoon verwerken
-        if (persoon.knsbNummer === 0 && await zyq.serverFetch(`/${zyq.uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
-            mutaties++;
-        }
-        // speler verwerken
-        const intern = []; // speeltIntern volgens lidformulier TODO Contents of collection 'intern' are updated, but never queried
+        const intern = []; // speeltIntern volgens lidformulier
         let internNummer = 0;
         let vinkjes = "";
         for (let i = 0; i < competitie.length; i++) {
@@ -162,7 +151,7 @@ async function lidFormulier(persoon, augustusRating) {
         }
         vinkjes += " "; // minstens 1 vinkje voor blanko teamCode
         const uuid = zyq.uuidToken;
-        const spelerMuteren = "datum" in persoon ? "speler/wijzigen" : "speler/toevoegen";
+        const spelerMuteren = persoon.datum === null ? "speler/toevoegen" : "speler/wijzigen";
         const seizoen = zyq.o_o_o.seizoen;
         const rating = knsbRating.value;
         const ratingIntern = interneRating.value;
@@ -175,8 +164,9 @@ async function lidFormulier(persoon, augustusRating) {
             await zyq.serverFetch(`/${zyq.uuidToken}/persoon/wijzigen/${lidNummer}/${knsbNummer.value}/${naam.value}`)) {
             mutaties++;
         }
-        // TODO iets doen met mutaties of de variable mutaties verwijderen?
-        html.vorigePagina(`lid=${knsbNummer.value}`); // naar agenda.html of bestuur.html
+        if (mutaties > 0) {
+            html.anderePagina(`bestuur.html?lid=${knsbNummer.value}`);
+        }
     });
 }
 

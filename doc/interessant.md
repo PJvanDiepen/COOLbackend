@@ -8,6 +8,20 @@ Verwijder localStorage op Android browser Chrome
 - Wissen en opnieuw instellen
  
 Verwijder localStorage op iPhone
+- TODO
+
+Refresh Firefox cache
+- Hamburger
+- Settings
+- Privacy & Security
+- Cookies & Site Data 
+- Clear Data...
+- Niet aanvinken: Cookies and Site Data
+- Wel aanvinken: Cached Web Content
+- Clear
+
+Refresh Android cache
+- TODO
 
 # MySQL
 
