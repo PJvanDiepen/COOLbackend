@@ -68,9 +68,6 @@ In het lidFormulier
 - kan een geregistreerd gebruiker competities van speler wijzigen en indien nodig speler toevoegen
  */
 async function lidFormulier(persoon, augustusRating) {
-    console.log("lidFormulier(persoon, augustusRating)");
-    console.log(persoon);
-    console.log(augustusRating);
     // formulier invullen
     const knsbNummer = document.getElementById("knsbNummer");
     knsbNummer.value = lidNummer;
