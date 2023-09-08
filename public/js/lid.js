@@ -26,7 +26,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
         [db.BEHEERDER, `${persoon.naam} verwijderen`, async function () {
             const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/persoon/${lidNummer}`);
             if (mutaties) {
-                html.anderePagina(`bestuur.html?lid=${lidNummer}`);
+                html.anderePagina("bestuur.html");
             } else {
                 console.log(`${persoon.naam} is niet verwijderd`);
             }
@@ -140,7 +140,10 @@ async function lidFormulier(persoon, augustusRating) {
         knsbNummer.disabled = false; // enable input
         knsbRating.disabled = false; // enable input
     }
-
+    if (db.BESTUUR <= zyq.gebruiker.mutatieRechten) {
+        knsbTeam.disabled = false; // enable input
+        nhsbTeam.disabled = false; // enable input
+    }
     // formulier verwerken
     document.getElementById("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();

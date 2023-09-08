@@ -8,7 +8,7 @@ import * as zyq from "./zyq.js";
 /*
     verwerk zoek=<zoek>
 
-    terug naar start.html
+    terug naar bestuur.html
  */
 
 const zoekNaam = html.params.get("zoek") || "";
@@ -23,6 +23,8 @@ const knsbRating = html.id("knsbRating");
 
 let persoonToevoegen = false;
 let gebruikerToevoegen = false;
+
+const MINIMUM_TEKST = 6;
 
 /*
 zoek, selecteer, informeer en verwerk registratie formulier
@@ -40,35 +42,34 @@ In het registratie formulier
  */
 (async function() {
     await zyq.init();
-    await html.menu(zyq.gebruiker.mutatieRechten,[]);
+    await html.menu(zyq.gebruiker.mutatieRechten, []);
     await zoekPersoon();
     html.id("formulier").addEventListener("submit", async function (event) {
+        console.log("formulier verwerken");
         event.preventDefault();
         let mutaties = 0;
-        // persoon verwerken
-        if (persoonToevoegen) {
-            if (await zyq.serverFetch(`/${zyq.uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`)) {
-                mutaties++;
-            }
-        } else if (false) { // TODO naam of knsbNummer gewijzigd
-            // TODO persoon wijzigen
-        }
-        // gebruiker verwerken
-        if (email.value !== "") { // TODO e-mailadres controleren
-            const actie = gebruikerToevoegen ? "toevoegen" : "email";
-            if (await zyq.serverFetch(`/${zyq.uuidToken}/gebruiker/${actie}/${lidNummer}/${email.value}`)) {
+        // verwerk persoon
+        let lidNummer = Number(knsbNummer.value); // 0 of knsbNummer uit KNSB ratinglijst
+        let nieuwLidNummer = 0;
+        if (naam.value.length > MINIMUM_TEKST && (persoonToevoegen || lidNummer === 0)) {
+            nieuwLidNummer = Number(await zyq.serverFetch(`/${zyq.uuidToken}/persoon/toevoegen/${lidNummer}/${naam.value}`));
+            if (nieuwLidNummer) {
                 mutaties++;
             }
         }
-        // TODO iets doen met mutaties of de variable mutaties verwijderen?
-        // html.vorigePagina(`lid=${knsbNummer.value}`); // naar agenda.html of bestuur.html TODO naar start.html
+        // verwerk gebruiker
+        if (email.value.length > MINIMUM_TEKST && (gebruikerToevoegen || nieuwLidNummer)) {
+            if (await zyq.serverFetch(`/${zyq.uuidToken}/gebruiker/toevoegen/${nieuwLidNummer}/${email.value}`)) {
+                mutaties++;
+            }
+        }
+        if (mutaties > 0) {
+            html.anderePagina(`bestuur.html?lid=${nieuwLidNummer}`);
+        }
+        if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
+            html.tekstToevoegen(informeer, `Probeer je registratie opnieuw te activeren.\n`);
+        }
     });
-
-    // const tijdelijkNummer = await zyq.serverFetch(`/nummer`); // vanaf 100
-    // const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
-    // console.log(persoon);
-    // const augustusRating = await ratingLezen();
-    // await registratieFormulier(persoon, augustusRating);
 })();
 
 async function zoekPersoon() {
@@ -91,6 +92,7 @@ async function zoekPersoon() {
                 naam.value = leden[index].naam;
                 knsbNummer.value = leden[index].knsbNummer;
                 knsbRating.value = leden[index].knsbRating;
+
                 if ("mutatieRechten" in leden[index]) {
                     gebruikerToevoegen = leden[index].mutatieRechten === null;
                     html.tekstToevoegen(informeer, `${leden[index].naam} is bekend in 0-0-0.\n`);
@@ -103,8 +105,6 @@ async function zoekPersoon() {
                 }
                 console.log({persoonToevoegen});
                 console.log({gebruikerToevoegen});
-
-
             }]);
         }
         console.log(selectieLijst);
@@ -154,7 +154,6 @@ function ledenSamenvoegen(knsb, eigen) {
  * @param knsbNaam uit KNSB ratinglijst
  * @returns {string} normaleNaam
  */
-
 function normaleNaam(knsbNaam) {
     const eersteSpatie = knsbNaam.indexOf(" ");
     const naam = eersteSpatie < 4 && eersteSpatie < knsbNaam.indexOf(", ")

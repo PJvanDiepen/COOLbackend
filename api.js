@@ -891,9 +891,9 @@ module.exports = router => {
      */
     router.get('/:uuidToken/persoon/toevoegen/:knsbNummer/:naam', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let knsbNummer = Number(ctx.params.knsbNummer);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
-            let knsbNummer = Number(ctx.params.knsbNummer);
             if (!knsbNummer) {
                 const nummers = await Persoon.query()
                     .select('knsbNummer')
@@ -907,7 +907,7 @@ module.exports = router => {
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
         }
-        ctx.body = aantal;
+        ctx.body = knsbNummer;
     });
 
     /*
