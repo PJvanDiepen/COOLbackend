@@ -129,6 +129,7 @@ async function lidFormulier(persoon, augustusRating) {
         knsbRating.disabled = false; // enable input
     }
     if (db.BESTUUR <= zyq.gebruiker.mutatieRechten) {
+        interneRating.disabled = false; // enable input
         knsbTeam.disabled = false; // enable input
         nhsbTeam.disabled = false; // enable input
     }
