@@ -45,7 +45,6 @@ In het registratie formulier
     await html.menu(zyq.gebruiker.mutatieRechten, []);
     await zoekPersoon();
     html.id("formulier").addEventListener("submit", async function (event) {
-        console.log("formulier verwerken");
         event.preventDefault();
         let mutaties = 0;
         // verwerk persoon
@@ -79,7 +78,6 @@ async function zoekPersoon() {
         const leden = ledenSamenvoegen(
             await zyq.serverFetch(`/naam/8/${zoekNaam}/1000`), // KNSB leden
             await zyq.serverFetch(`/naam/gebruiker/${zoekNaam}`)); // leden bekend in 0-0-0
-        console.log(leden);
         for (let i = 0; i < leden.length; i++) {
             if (leden[i].naam === undefined) {
                 leden[i].naam = normaleNaam(leden[i].knsbNaam);
@@ -103,11 +101,8 @@ async function zoekPersoon() {
                     persoonToevoegen = true;
                     naam.disabled = false;
                 }
-                console.log({persoonToevoegen});
-                console.log({gebruikerToevoegen});
             }]);
         }
-        console.log(selectieLijst);
         selectieLijst.unshift(["=", `selecteer KNSB nummer, naam (rating)`]);
         html.selectie(selecteer, "=", selectieLijst);
         html.tekstToevoegen(informeer, `Met "${zoekNaam}" zijn ${leden.length} namen gevonden.\n`);
@@ -125,8 +120,6 @@ async function zoekPersoon() {
  * @returns {*} eigen leden samengevoegd in knsb leden
  */
 function ledenSamenvoegen(knsb, eigen) {
-    console.log(knsb);
-    console.log(eigen);
     for (const eigenLid of eigen) {
         if (eigenLid.knsbNummer < db.KNSB_NUMMER) { // eigen lid, die nog geen KNSB lid is vooraan toevoegen
             knsb.unshift(eigenLid);
