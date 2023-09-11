@@ -913,12 +913,11 @@ module.exports = router => {
     /*
     Zie bestuur.js
     */
-    router.get('/:uuidToken/rating/verwijderen/:maand/:jaar', async function (ctx) {
+    router.get('/:uuidToken/rating/verwijderen/:maand', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
-            aantal = await Rating.query().delete()
-                .andWhere('rating.maand', ctx.params.maand);
+            aantal = await Rating.query().delete().where('rating.maand', ctx.params.maand);
             await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
         }
         ctx.body = aantal;

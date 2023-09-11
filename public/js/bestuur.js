@@ -126,27 +126,32 @@ async function leesRatinglijst(filesList, output) {
     filesList.addEventListener("change", function (event) {
         const files = event.target.files;
         if (!ratinglijstMaandJaarInvullen.has(files[0].name)) {
-            output.innerText += `\n${files[0].name} is geen ratinglijst.`;
+            html.tekstToevoegen(output, `\n${files[0].name} is geen ratinglijst.`);
         } else {
             const [maand, jaar] = ratinglijstMaandJaarInvullen.get(files[0].name);
-            output.innerText += `\n${files[0].name} verwerken met maand = ${maand} en jaar = ${jaar}.`;
+            html.tekstToevoegen(output, `\n${files[0].name} verwerken met maand = ${maand} en jaar = ${jaar}.`);
             const reader = new FileReader();
             reader.readAsText(files[0]);
             reader.onerror = function() {
-                output.innerText += `\n${files[0].name} lezen gaat fout met code: ${reader.error.code}.`;
+                html.tekstToevoegen(output, `\n${files[0].name} lezen gaat fout met code: ${reader.error.code}.`);
             };
             reader.onload = async function() {
                 const regels = reader.result.split('\r\n');
                 if (regels.shift() === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S" && regels.pop() === "") { // zonder eerste en laatste regel
                     const verwijderd = await zyq.serverFetch(`/${zyq.uuidToken}/rating/verwijderen/${maand}`);
                     const toevoegen = regels.length;
-                    output.innerText += `\nDe ratinglijst van ${db.maandInvullen.get(maand)} had ${verwijderd} en krijgt ${toevoegen} KNSB leden.`;
+                    html.tekstToevoegen(
+                        output,
+                        `\nDe ratinglijst van ${db.maandInvullen.get(maand)} had ${verwijderd} en krijgt ${toevoegen} KNSB leden.`);
+                    const begin = performance.now();
                     for (const regel of regels) {
                         await zyq.serverFetch(`/${zyq.uuidToken}/rating/toevoegen/${maand}/${jaar}/${regel}`);
                     }
-                    html.zelfdePagina();
+                    const einde = performance.now();
+                    console.log(`Dit duurde ${einde - begin} milliseconden.`);
+                    // html.zelfdePagina();
                 } else {
-                    output.innerText += `\n${files[0].name} bevat geen ratinglijst.`;
+                    html.tekstToevoegen(output, `\n${files[0].name} bevat geen ratinglijst.`);
                 }
             };
         }

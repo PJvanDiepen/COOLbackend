@@ -455,9 +455,6 @@ update gebruiker set mutatieRechten = 4 where knsbNummer = @knsbNummer; -- syste
 -- laatste mutaties
 select * from mutatie order by tijdstip desc;
 
--- verwijder mutaties
-delete from mutatie where knsbNummer = 97; -- and invloed = 0;
-
 select * from team where seizoen = @seizoen;
 
 use waagtoren;
