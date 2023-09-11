@@ -143,13 +143,10 @@ async function leesRatinglijst(filesList, output) {
                     html.tekstToevoegen(
                         output,
                         `\nDe ratinglijst van ${db.maandInvullen.get(maand)} had ${verwijderd} en krijgt ${toevoegen} KNSB leden.`);
-                    const begin = performance.now();
-                    for (const regel of regels) {
+                    regels.forEach(async function (regel) {
                         await zyq.serverFetch(`/${zyq.uuidToken}/rating/toevoegen/${maand}/${jaar}/${regel}`);
-                    }
-                    const einde = performance.now();
-                    console.log(`Dit duurde ${einde - begin} milliseconden.`);
-                    // html.zelfdePagina();
+                    });
+                    html.zelfdePagina();
                 } else {
                     html.tekstToevoegen(output, `\n${files[0].name} bevat geen ratinglijst.`);
                 }
