@@ -140,12 +140,10 @@ async function leesRatinglijst(filesList, output) {
                 if (regels.shift() === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S" && regels.pop() === "") { // zonder eerste en laatste regel
                     const verwijderd = await zyq.serverFetch(`/${zyq.uuidToken}/rating/verwijderen/${maand}`);
                     const toevoegen = regels.length;
-                    html.tekstToevoegen(
-                        output,
-                        `\nDe ratinglijst van ${db.maandInvullen.get(maand)} had ${verwijderd} en krijgt ${toevoegen} KNSB leden.`);
-                    regels.forEach(async function (regel) {
+                    html.tekstToevoegen(output, `\nDe ratinglijst van ${db.maandInvullen.get(maand)} had ${verwijderd} en krijgt ${toevoegen} KNSB leden.`);
+                    for (const regel of regels) {
                         await zyq.serverFetch(`/${zyq.uuidToken}/rating/toevoegen/${maand}/${jaar}/${regel}`);
-                    });
+                    }
                     html.zelfdePagina();
                 } else {
                     html.tekstToevoegen(output, `\n${files[0].name} bevat geen ratinglijst.`);
