@@ -32,7 +32,7 @@ Een prachtig product dat ik nog kende uit de jaren 80 als [Turbo Pascal](https:/
 Delpi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
 Maar bij mij draaide Rokade niet meer op mijn nieuwste Windows laptop en uitsluitend op een oude laptop met Windows XP. 
 Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. 
-Om Rokade aan te passen, moest ik meer dan 1500 euro aan Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
+Om Rokade aan te passen, zou ik meer dan 1500 euro moeten aan Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
 
 Zo onstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, die dus op een website moest draaien.
 
@@ -76,14 +76,34 @@ maar je kunt ook JavaScript toevoegen die dynamisch webpagina's genereert in de 
 
 Mijn eerste ontwerpbeslissing was om in de backend geen HTML en CSS te genereren, maar uitsluitend JSON.
 Omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in SQL.
-De backend was voor mij vooral een doorgeefluik. De resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
+De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
 
 Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/),
 en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen en me een van die frontend frameworks eigen te maken.
 Ik beperkte mij daarom tot zo standaard mogelijke HTML, CSS en JavaScript.
 Dit was niet echt een ontwerpbeslissing, maar een manier om alles voor mijzelf zo eenvoudig mogelijk te maken.
 
+Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application) maar verschillende webpagina's: 
+ranglijst.html, speler.html, team.html, enz. Ieder met eigen JavaScript: ranglijst.js, speler.js, team.js, enz.
+Een simpele manier om de webapp te splitsen in onderdelen, die ik los van elkaar kon testen.
 
+Toen functies ontstonden die ik op verschillende pagina's kon gebruiken, specificeerde ik in ranglijst.html behalve ranglijst.js ook const.js, 
+op speler.html behalve speler.js ook const.js, enz. Dus geen modules, maar gewoon twee JavaScript bestanden per webpagina.
+Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJs modules voor Node.js en ES6 modules voor de frontend gaan toepassen.
+
+## Rokade wordt 0-0-0
+
+In het seizoen 2020-2021 gebruikte ik nog Rokade voor het indelen. De uitslagen las ik vanuit Rokade in (met de Java toepassing)
+en gebruikte ik om de ranglijst te berekenen. Mijn eerste doel was 
+
+De web-app draaide toen op chessopenings.online (COOL) en daarom heet het project sindsdien COOLbackend. 0-0-0
+
+Omdat externe wedstrijden soms meetellen voor de interne competitie moet het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
+Met Rokade moest de intern wedstrijdleider deze administratie met de hand bijhouden.
+Daarnaast administreerde de extern wedstrijdleider overzichten van de scores in de externe competitie.
+Dubbel werk dus. Het nieuwe systeem moet beide administraties vervangen.
+
+Alle uitslagen inlezen. Elke keer weer!
 
 Op dit moment verkeert het nieuwe systeem in fase 1: database ontwerpen en offline de database vullen.
 Ik probeer zo veel mogelijk informatie af te tappen van andere systemen zoals het OLA systeem van de KNSB, de ratinglijsten,

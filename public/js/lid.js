@@ -52,6 +52,7 @@ of bestuur heeft persoon toegevoegd en die persoon kan gebruiker toevoegen.
 lidFormulier     MySQL tabel
 -----------------------------------------------------
 naam             persoon, rating
+email            gebruiker
 gebruikerSoort   gebruiker
 knsbNummer       persoon, rating, speler, gebruiker
 interneRating    speler
