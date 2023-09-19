@@ -129,7 +129,7 @@ function uitslagWijzigen(uitslag)  {
     } else if (zyq.gebruiker.mutatieRechten >= db.WEDSTRIJDLEIDER) {
         return true;
     } else if (zyq.gebruiker.mutatieRechten >= db.GEREGISTREERD && uitslag.resultaat === "") { // indien nog geen resultaat
-        return uitslag.knsbNummer === gebruiker.knsbNummer || uitslag.tegenstanderNummer === gebruiker.knsbNummer;
+        return uitslag.knsbNummer === zyq.gebruiker.knsbNummer || uitslag.tegenstanderNummer === zyq.gebruiker.knsbNummer;
     } else {
         return false;
     }
