@@ -74,23 +74,21 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 ("2324", "ira", "i", "ra", "rapid competitie", 0, 0),
 ("2324", "n1", "n", "t", "NHSB top", 8, 0),
 ("2324", "n2", "n", "1a", "NHSB 1a", 8, 0),
+("2324", "n3", "n", "2a", "NHSB 2a", 6, 0),
+("2324", "n4", "n", "3a", "NHSB 3a", 8, 0),
 ("2324", "nbe", "n", "be", "NHSB beker", 4, 0);
 
--- TODO teamleiders 2023-2024
-insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-("2324", "1", "k", "m", "KNSB meester", 10, 6214153), -- Jan Poland TODO 9 augustus 2023
-("2324", "2", "k", "3c", "KNSB 3d", 8, 7129991), -- Gerard de Geus
-("2324", "3", "k", "4d", "KNSB 4d", 8, 7758014), -- Alex Albrecht
-("2324", "4", "k", "6c", "KNSB 6c", 8, 6212404), -- Peter van Diepen
-("2324", "kbe", "k", "be", "KNSB beker", 4, 6214153), -- Jan Poland
-("2324", "n1", "n", "t", "NHSB top", 8, 7428960), -- Frank Agter
-("2324", "n2", "n", "1a", "NHSB 1a", 8, 7529522), -- Willem Meyles
-("2324", "n3", "n", "2b", "NHSB 2b", 6, 6214153), -- Jan Poland
-("2324", "nbe", "n", "be", "NHSB beker", 4, 7529522), -- Willem Meyles
-("2324", "nv1", "n", "vf", "NHSB vf", 4, 7321534), -- Ronald Kamps
-("2324", "nv2", "n", "vb", "NHSB vb", 4, 7691728); -- Karel Beentjes
-
-select t.*, naam from team t join persoon p on t.teamleider = p.knsbNummer where seizoen = "2324";
+-- teamleiders 2023-2024
+select naam, team.* from team join persoon on knsbNummer = teamleider where seizoen = "2324";
+update team set teamleider = 6214153 where seizoen = "2324" and teamCode = "1"; -- Jan Poland
+update team set teamleider = 7129991 where seizoen = "2324" and teamCode = "2"; -- Gerard de Geus
+update team set teamleider = 7758014 where seizoen = "2324" and teamCode = "3"; -- Alex Albrecht
+update team set teamleider = 6212404 where seizoen = "2324" and teamCode = "4"; -- Peter van Diepen
+update team set teamleider = 7321534 where seizoen = "2324" and teamCode = "5"; -- Ronald Kamps
+update team set teamleider = 7428960 where seizoen = "2324" and teamCode = "n1"; -- Frank Agter
+update team set teamleider = 7529522 where seizoen = "2324" and teamCode = "n2"; -- Willem Meyles
+update team set teamleider = 6214153 where seizoen = "2324" and teamCode = "n3"; -- Jan Poland
+update team set teamleider = 6212404 where seizoen = "2324" and teamCode = "n4"; -- Peter van Diepen
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2324", "1", 1, "t", "Paul Keres 1", '2023-09-16'), -- KNSB competitie
@@ -179,7 +177,7 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ("2324", "ira", 9, "t", "", '2024-04-30');
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-("2324", "n1", 1, "t", "Kennemer Combinatie N1", '2023-09-26'), -- NHSB competitie
+("2324", "n1", 1, "t", "Kennemer Combinatie N1", '2023-10-24'), -- NHSB competitie
 ("2324", "n1", 2, "u", "HWP Haarlem N1", '2023-10-17'),
 ("2324", "n1", 3, "t", "Bloemendaal N1", '2023-11-14'),
 ("2324", "n1", 4, "u", "Aartswoud N1", '2023-12-08'),
@@ -193,7 +191,19 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ("2324", "n2", 4, "u", "Noordkopcomb. Magnus N1", '2023-12-08'),
 ("2324", "n2", 5, "t", "Opening 64 N1", '2024-02-13'),
 ("2324", "n2", 6, "u", "Krommenie N1", '2024-03-12'),
-("2324", "n2", 7, "t", "Schaakmat N1", '2024-03-26');
+("2324", "n2", 7, "t", "Schaakmat N1", '2024-03-26'),
+("2324", "n3", 1, "u", "En Passant N", '2023-10-14'),
+("2324", "n3", 2, "u", "Oppositie N1", '2023-11-07'),
+("2324", "n3", 3, "t", "Noordkopcomb. MSC N2", '2023-11-28'),
+("2324", "n3", 4, "u", "Bergen N", '2024-02-15'),
+("2324", "n3", 5, "t", "Vredeburg N1", '2024-03-05');
+
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+("2324", "n4", 1, "u", "Noordk.comb. Magnus N3", '2023-10-11'),
+("2324", "n4", 2, "u", "Oppositie N2", '2023-11-14'),
+("2324", "n4", 3, "t", "Warmenh. /Strandloper N", '2023-12-12'),
+("2324", "n4", 4, "u", "Koedijk N2", '2024-02-27'),
+("2324", "n4", 5, "t", "Schaakmat N2", '2024-03-19');
 
 -- ronde 1 
 
@@ -288,7 +298,19 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "3", 1, 7, 8587337, "e", "z", 0, "1", '2023-09-16', "int"),
 ("2324", "3", 1, 8, 7699010, "e", "w", 0, "½", '2023-09-16', "int");
 
+set @team = "n2";
+set @ronde = 1;
+select * from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
+delete from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 
-
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2324", "n2", 1, 1, 7529522, "e", "z", 0, "½", '2023-09-26', "int"),
+("2324", "n2", 1, 2, 7758014, "e", "w", 0, "1", '2023-09-26', "int"),
+("2324", "n2", 1, 3, 6225934, "e", "z", 0, "1", '2023-09-26', "int"),
+("2324", "n2", 1, 4, 7535385, "e", "w", 0, "1", '2023-09-26', "int"),
+("2324", "n2", 1, 5, 8484443, "e", "z", 0, "½", '2023-09-26', "int"),
+("2324", "n2", 1, 6, 7468362, "e", "w", 0, "½", '2023-09-26', "int"),
+("2324", "n2", 1, 7, 8587337, "e", "z", 0, "0", '2023-09-26', "int"),
+("2324", "n2", 1, 8, 8400183, "e", "w", 0, "1", '2023-09-26', "int");
 
 

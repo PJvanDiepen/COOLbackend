@@ -75,7 +75,7 @@ In theorie kan je op de backend de HTML en CSS compleet maken en doorsturen naar
 maar je kunt ook JavaScript toevoegen die dynamisch webpagina's genereert in de frontend.
 
 Mijn eerste ontwerpbeslissing was om in de backend geen HTML en CSS te genereren, maar uitsluitend JSON.
-Omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in SQL.
+En omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in MySQL.
 De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
 
 Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/),
@@ -91,17 +91,22 @@ Toen functies ontstonden die ik op verschillende pagina's kon gebruiken, specifi
 op speler.html behalve speler.js ook const.js, enz. Dus geen modules, maar gewoon twee JavaScript bestanden per webpagina.
 Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJs modules voor Node.js en ES6 modules voor de frontend gaan toepassen.
 
-## Rokade wordt 0-0-0
+## Externe wedstrijden meetellen voor de interne competitie
 
-In het seizoen 2020-2021 gebruikte ik nog Rokade voor het indelen. De uitslagen las ik vanuit Rokade in (met de Java toepassing)
-en gebruikte ik om de ranglijst te berekenen. Mijn eerste doel was 
-
-De web-app draaide toen op chessopenings.online (COOL) en daarom heet het project sindsdien COOLbackend. 0-0-0
-
-Omdat externe wedstrijden soms meetellen voor de interne competitie moet het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
+In het Alkmaar systeem tellen externe wedstrijden mee voor de interne competitie. 
+Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in plaats van een interne partij.
+Vervolgens kwamen er spelers die hun externe partij van een andere dag mee wilden tellen, omdat ze die week geen interne partij konden spelen.
+Daarna kwamen er spelers die hun externe partij van een andere dag mee laten in een andere week, omdat ze in die andere week geen interne competitie konden spelen.
+rtellengeen interne  en Sinds 2017 telleNa de  moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
 Met Rokade moest de intern wedstrijdleider deze administratie met de hand bijhouden.
 Daarnaast administreerde de extern wedstrijdleider overzichten van de scores in de externe competitie.
 Dubbel werk dus. Het nieuwe systeem moet beide administraties vervangen.
+
+## Rokade wordt 0-0-0
+
+Omdat
+In het seizoen 2020-2021 gebruikte ik nog Rokade voor het indelen. De uitslagen las ik vanuit Rokade in (met de Java toepassing)
+en gebruikte ik om de ranglijst te berekenen. Mijn eerste doel was
 
 Alle uitslagen inlezen. Elke keer weer!
 
