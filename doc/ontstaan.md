@@ -94,17 +94,28 @@ Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJs modules voor Node.js en ES6 
 ## Externe wedstrijden meetellen voor de interne competitie
 
 In het Alkmaar systeem tellen externe wedstrijden mee voor de interne competitie. 
-Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in plaats van een interne partij.
-Vervolgens kwamen er spelers die hun externe partij van een andere dag mee wilden tellen, omdat ze die week geen interne partij konden spelen.
-Daarna kwamen er spelers die hun externe partij van een andere dag mee laten in een andere week, omdat ze in die andere week geen interne competitie konden spelen.
-rtellengeen interne  en Sinds 2017 telleNa de  moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
+Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in plaats van een interne partij op dezelfde dag.
+Toen vroegen spelers of hun externe partij van een andere dag kon meetellen in plaats van een interne partij.
+Daarvoor moesten we het reglement van de interne competitie aangepassen en moest de intern werdstrijdleider per externe partij administreren 
+of die wel of niet moest meetellen voor de interne competitie. 
+De interpretatie van het reglement bleek verwarrend, want toen waren er spelers die in een week een interne en een externe wedstrijd wilde spelen
+en die laten meetellen in een andere week. Bovendien ging het af en toe fout met de administratie.
+
+Daarom stelde ik als interne wedstrijdleider in 2017 voor om gewoon alle externe partijen te laten meetellen.
+Voor alle duidelijkheid: voor een externe partij in plaats van een interne partij krijg je meer punten dan voor een externe partij op een andere dag
+en je kunt ook extra punten voor externe partijen op andere dagen krijgen.
+
+Spelen in de externe competities van NHSB en KNSB is hierdoor aantrekkelijker geworden, maar het belangrijkste was
+dat ik als intern wedstijdleider minder administratie kreeg en dat het reglement eenvoudiger werd.
+
+## Rokade wordt 0-0-0
+
+Niet duidelijk zichtbaar was in de ranglijst van Rokade.
+Daarom moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
 Met Rokade moest de intern wedstrijdleider deze administratie met de hand bijhouden.
 Daarnaast administreerde de extern wedstrijdleider overzichten van de scores in de externe competitie.
 Dubbel werk dus. Het nieuwe systeem moet beide administraties vervangen.
 
-## Rokade wordt 0-0-0
-
-Omdat
 In het seizoen 2020-2021 gebruikte ik nog Rokade voor het indelen. De uitslagen las ik vanuit Rokade in (met de Java toepassing)
 en gebruikte ik om de ranglijst te berekenen. Mijn eerste doel was
 
