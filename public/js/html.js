@@ -82,6 +82,34 @@ export function id(nodeId) {
     return document.getElementById(nodeId);
 }
 
+// TODO voor team.js en ranglijst.js en misschien teamleider.js
+async function teamSelecteren(teamCode) {
+    const seizoenen = (await zyq.localFetch("/seizoenen/" + teamCode)).map(function (seizoen) {
+        return [seizoen, zyq.seizoenVoluit(seizoen)];
+    });
+    html.selectie(document.getElementById("seizoenSelecteren"), zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
+        zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
+    });
+}
+
+export async function teamSelecterenZYQ(teamCode) {
+    const teams = document.getElementById("teamSelecteren");
+    (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
+        function (team) {
+            if (teamOfCompetitie(team.teamCode)) {
+                teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
+            }
+        });
+    teams.value = teamCode; // werkt uitsluitend na await
+    teams.addEventListener("input", function () {
+        if (interneCompetitie(teams.value)) {
+            naarAnderePagina(`ranglijst.html?competitie=${teams.value}`);
+        } else {
+            naarAnderePagina(`team.html?team=${teams.value}`);
+        }
+    });
+}
+
 /**
  * selectie zet alle opties op een select-knop en zet een eventListener klaar om een optie te verwerken.
  *

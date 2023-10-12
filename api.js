@@ -1088,6 +1088,7 @@ module.exports = router => {
                     rondeMeedoen = i;
                 }
             }
+            // TODO issue #28
             /*
             console.log("/:uuidToken/planning/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum");
             console.log(ctx.params);
@@ -1176,10 +1177,10 @@ module.exports = router => {
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // afwezig definitief maken
             aantal = await Uitslag.query()
-                .where('uitslag.seizoen', ctx.params.seizoen)
+                .whereIn('uitslag.partij', [db.NIET_MEEDOEN, db.PLANNING])
+                .andWhere('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', '<=', ctx.params.rondeNummer) // ook voor eerdere ronden
-                .andWhere('uitslag.partij', db.NIET_MEEDOEN)
                 .patch({partij: db.AFWEZIG});
             await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
         }

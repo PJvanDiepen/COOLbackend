@@ -102,13 +102,31 @@ De interpretatie van het reglement bleek verwarrend, want toen waren er spelers 
 en die laten meetellen in een andere week. Bovendien ging het af en toe fout met de administratie.
 
 Daarom stelde ik als interne wedstrijdleider in 2017 voor om gewoon alle externe partijen te laten meetellen.
-Voor alle duidelijkheid: voor een externe partij in plaats van een interne partij krijg je meer punten dan voor een externe partij op een andere dag
-en je kunt ook extra punten voor externe partijen op andere dagen krijgen.
-
+Voor alle duidelijkheid: voor een externe partij in plaats van een interne partij krijg je meer punten dan voor een externe partij op een andere dag.
 Spelen in de externe competities van NHSB en KNSB is hierdoor aantrekkelijker geworden, maar het belangrijkste was
 dat ik als intern wedstijdleider minder administratie kreeg en dat het reglement eenvoudiger werd.
 
-## Rokade wordt 0-0-0
+## Rokade wordt 0-0-0 TODO hier tussenvoegen
+
+## Wat nog niet is gedaan
+
+In de loop van de tijd is vooral veel niet afgemaakte code ontstaan. Een duidelijk voorbeeld is zyq.js. 
+Daarin staan allerlei functies, die ik naar andere modules wil verplaatsen. Daarna kan zyq.js helemaal weg.
+
+Het is de bedoeling om ook de Java-software helemaal weg te gooien en te integreren in de JavaScript-software. 
+Maar de Java web crawler voor de websites van NHSB en KNSB gebruiken we nog om de uitslagen van externe wedstrijden in te lezen.
+En de Java toepassing om informatie in te lezen uit de Microsoft Access database van Rokade kan nog nuttig voor
+schaakverenigingen die willen overstappen van Rokade naar 0-0-0.
+
+Het is de bedoeling dat de systeembeheerder alles kan doen met 0-0-0.
+Maar ik gebruik MySQL Workbench nog voor:
+- Invoeren van uitslagen van NHSB en KNSB, die off line zijn aangemaakt.
+- Invoeren van uitslagen van 0-0-0 naar off line.
+- mutatieRechten van gebruiker aanpassen.
+- Overzicht maken met aantal mutaties per gebruiker.
+- TODO lijst compleet maken
+
+## Rokade wordt 0-0-0 TODO vanaf nog verwerken
 
 Niet duidelijk zichtbaar was in de ranglijst van Rokade.
 Daarom moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
