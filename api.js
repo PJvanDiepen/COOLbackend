@@ -1046,6 +1046,8 @@ module.exports = router => {
     });
 
     /*
+    wedstrijd in agenda wijzigen
+
     -- uitslagen / ronden op dezelfde datum
     select u.teamCode, u.rondeNummer, u.partij, u.anderTeam, r.uithuis
       from uitslag u
@@ -1088,7 +1090,6 @@ module.exports = router => {
                     rondeMeedoen = i;
                 }
             }
-            // TODO issue #28
             /*
             console.log("/:uuidToken/planning/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum");
             console.log(ctx.params);
@@ -1102,12 +1103,14 @@ module.exports = router => {
                 }
                 if (rondeMeedoen === rondeWijzigen) {
                     // console.log("de wijziging = afmelden oftewel niet meedoen");
-                } else {
+                } else if (ronde[rondeWijzigen].teamCode === ronde[rondeWijzigen].anderTeam) { // misschien meer ronden per datum
                     for (let i = rondeWijzigen; i < ronde.length; i++) {
                         if (ronde[i].teamCode === ronde[rondeWijzigen].teamCode) {
                             aantal += await planningMuteren(ronde[i], db.MEEDOEN);
                         }
                     }
+                } else {
+                    aantal += await planningMuteren(ronde[rondeWijzigen], ronde[rondeWijzigen].uithuis); // extern meedoen
                 }
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }
