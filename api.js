@@ -1090,27 +1090,26 @@ module.exports = router => {
                     rondeMeedoen = i;
                 }
             }
-            /*
             console.log("/:uuidToken/planning/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum");
             console.log(ctx.params);
             console.log(ronde);
             console.log({rondeWijzigen});
             console.log({rondeMeedoen});
-             */
             if (rondeWijzigen >= 0 && ronde[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
-                if (rondeMeedoen >= 0) {
-                    aantal += await planningMuteren(ronde[rondeMeedoen], db.NIET_MEEDOEN);
-                }
                 if (rondeMeedoen === rondeWijzigen) {
-                    // console.log("de wijziging = afmelden oftewel niet meedoen");
-                } else if (ronde[rondeWijzigen].teamCode === ronde[rondeWijzigen].anderTeam) { // misschien meer ronden per datum
-                    for (let i = rondeWijzigen; i < ronde.length; i++) {
-                        if (ronde[i].teamCode === ronde[rondeWijzigen].teamCode) {
-                            aantal += await planningMuteren(ronde[i], db.MEEDOEN);
+                    aantal += await planningMuteren(ronde[rondeMeedoen], db.NIET_MEEDOEN);
+                } else {
+                    for (let i = 0; i < ronde.length; i++) {
+                        if (i < rondeWijzigen) {
+                            aantal += await planningMuteren(ronde[i], db.NIET_MEEDOEN);
+                        } else if (i >= rondeWijzigen && ronde[i].teamCode === ronde[i].anderTeam) {
+                            aantal += await planningMuteren(ronde[i], db.MEEDOEN); // eventueel meer interne ronden per datum meedoen
+                        } else if (i === rondeWijzigen) {
+                            aantal += await planningMuteren(ronde[i], ronde[rondeWijzigen].uithuis); // extern uit of thuis meedoen
+                        } else {
+                            aantal += await planningMuteren(ronde[i], db.NIET_MEEDOEN);
                         }
                     }
-                } else {
-                    aantal += await planningMuteren(ronde[rondeWijzigen], ronde[rondeWijzigen].uithuis); // extern meedoen
                 }
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }

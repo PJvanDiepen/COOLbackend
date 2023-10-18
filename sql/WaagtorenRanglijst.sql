@@ -389,8 +389,8 @@ where r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1,
 order by r.datum, r.rondeNummer;
 
 set @seizoen = '2324';
-set @knsbNummer = 6212404;
-set @datum = '2022-10-08';
+set @knsbNummer = 7428960; -- Frank Agter
+set @datum = '2023-10-17';
 
 -- uitslagen / ronden op dezelfde datum
 select u.teamCode, u.rondeNummer, u.anderTeam, u.partij, r.uithuis 
