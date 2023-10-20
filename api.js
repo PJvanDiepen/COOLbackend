@@ -1062,7 +1062,7 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.TEAMLEIDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
-            const ronde = await Uitslag.query()
+            const ronden = await Uitslag.query()
                 .select(
                     'uitslag.seizoen',
                     'uitslag.teamCode',
@@ -1080,34 +1080,22 @@ module.exports = router => {
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .andWhere('uitslag.datum', ctx.params.datum)
                 .orderBy(['uitslag.teamCode', 'uitslag.rondeNummer']);
-            let rondeWijzigen = -1;
-            let rondeMeedoen = -1;
-            for (let i = 0; i < ronde.length; i++) {
-                if (ronde[i].teamCode === ctx.params.teamCode && ronde[i].rondeNummer === Number(ctx.params.rondeNummer)) {
-                    rondeWijzigen = i;
-                }
-                if (rondeMeedoen < 0 && db.meedoen(ronde[i])) { // eerste rondeMeedoen
-                    rondeMeedoen = i;
-                }
-            }
-            console.log("/:uuidToken/planning/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum");
-            console.log(ctx.params);
-            console.log(ronde);
-            console.log({rondeWijzigen});
-            console.log({rondeMeedoen});
-            if (rondeWijzigen >= 0 && ronde[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
-                if (rondeMeedoen === rondeWijzigen) {
-                    aantal += await planningMuteren(ronde[rondeMeedoen], db.NIET_MEEDOEN);
+            const rondeWijzigen = ronden.findIndex(function(ronde) {
+                return ronde.teamCode === ctx.params.teamCode && ronde.rondeNummer === Number(ctx.params.rondeNummer);
+            });
+            if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
+                if (db.meedoen(ronden[rondeWijzigen])) {
+                    aantal += await planningMuteren(ronden[rondeWijzigen], db.NIET_MEEDOEN);
                 } else {
-                    for (let i = 0; i < ronde.length; i++) {
+                    for (let i = 0; i < ronden.length; i++) {
                         if (i < rondeWijzigen) {
-                            aantal += await planningMuteren(ronde[i], db.NIET_MEEDOEN);
-                        } else if (i >= rondeWijzigen && ronde[i].teamCode === ronde[i].anderTeam) {
-                            aantal += await planningMuteren(ronde[i], db.MEEDOEN); // eventueel meer interne ronden per datum meedoen
+                            aantal += await planningMuteren(ronden[i], db.NIET_MEEDOEN);
+                        } else if (i >= rondeWijzigen && ronden[i].teamCode === ronden[i].anderTeam) { // indien meer interne ronden per datum
+                            aantal += await planningMuteren(ronden[i], db.MEEDOEN);
                         } else if (i === rondeWijzigen) {
-                            aantal += await planningMuteren(ronde[i], ronde[rondeWijzigen].uithuis); // extern uit of thuis meedoen
+                            aantal += await planningMuteren(ronden[i], ronden[rondeWijzigen].uithuis); // extern uit of thuis meedoen
                         } else {
-                            aantal += await planningMuteren(ronde[i], db.NIET_MEEDOEN);
+                            aantal += await planningMuteren(ronden[i], db.NIET_MEEDOEN);
                         }
                     }
                 }

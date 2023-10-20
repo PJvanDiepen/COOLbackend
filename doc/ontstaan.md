@@ -101,10 +101,9 @@ of die wel of niet moest meetellen voor de interne competitie.
 De interpretatie van het reglement bleek verwarrend, want toen waren er spelers die in een week een interne en een externe wedstrijd wilde spelen
 en die laten meetellen in een andere week. Bovendien ging het af en toe fout met de administratie.
 
-Daarom stelde ik als interne wedstrijdleider in 2017 voor om gewoon alle externe partijen te laten meetellen.
-Voor alle duidelijkheid: voor een externe partij in plaats van een interne partij krijg je meer punten dan voor een externe partij op een andere dag.
-Spelen in de externe competities van NHSB en KNSB is hierdoor aantrekkelijker geworden, maar het belangrijkste was
-dat ik als intern wedstijdleider minder administratie kreeg en dat het reglement eenvoudiger werd.
+Daarom tellen sinds 2017 gewoon alle externe partijen mee, maar voor een externe partij in plaats van een interne partij krijg meer punten 
+dan voor een externe partij op een andere dag. Spelen in de externe competities van NHSB en KNSB is hierdoor aantrekkelijker geworden. 
+Bovendien kreeg ik als intern wedstijdleider minder administratie en het reglement werd eenvoudiger.
 
 ## Rokade wordt 0-0-0 TODO hier tussenvoegen
 
@@ -119,14 +118,15 @@ En de Java toepassing om informatie in te lezen uit de Microsoft Access database
 schaakverenigingen die willen overstappen van Rokade naar 0-0-0.
 
 Het is de bedoeling dat de systeembeheerder alles kan doen met 0-0-0.
-Maar ik gebruik MySQL Workbench nog voor:
+Maar ik gebruik MySQL Workbench nu nog voor:
 - Invoeren van uitslagen van NHSB en KNSB, die off line zijn aangemaakt.
 - Invoeren van uitslagen van 0-0-0 naar off line.
 - mutatieRechten van gebruiker aanpassen.
 - Overzicht maken met aantal mutaties per gebruiker.
-- TODO lijst compleet maken
+- Hele partij of zwart / wit wijzigen.
+- Speler afwezig, oneven of extern maken.
 
-## Rokade wordt 0-0-0 TODO vanaf nog verwerken
+## Rokade wordt 0-0-0 TODO vanaf hier nog verwerken
 
 Niet duidelijk zichtbaar was in de ranglijst van Rokade.
 Daarom moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.

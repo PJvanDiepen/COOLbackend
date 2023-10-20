@@ -13,7 +13,6 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    console.log(zyq.gebruiker);
     document.getElementById("kop").innerHTML =
         zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + zyq.teamVoluit(zyq.o_o_o.competitie);
     const plaatje = document.getElementById("plaatje");
