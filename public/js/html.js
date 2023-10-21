@@ -92,24 +92,6 @@ async function teamSelecteren(teamCode) {
     });
 }
 
-export async function teamSelecterenZYQ(teamCode) {
-    const teams = document.getElementById("teamSelecteren");
-    (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
-        function (team) {
-            if (teamOfCompetitie(team.teamCode)) {
-                teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
-            }
-        });
-    teams.value = teamCode; // werkt uitsluitend na await
-    teams.addEventListener("input", function () {
-        if (interneCompetitie(teams.value)) {
-            naarAnderePagina(`ranglijst.html?competitie=${teams.value}`);
-        } else {
-            naarAnderePagina(`team.html?team=${teams.value}`);
-        }
-    });
-}
-
 /**
  * selectie zet alle opties op een select-knop en zet een eventListener klaar om een optie te verwerken.
  *
