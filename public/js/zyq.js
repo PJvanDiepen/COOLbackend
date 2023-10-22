@@ -249,14 +249,14 @@ function urlVerwerken() {
 }
 
 async function competitieBepalen() {
-    if (!interneCompetitie(o_o_o.competitie)) {
-        const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
-        const vandaag = datumSQL();
-        for (const ronde of ronden) {
-            if (datumSQL(ronde.datum) >= vandaag) {
-                o_o_o.competitie = ronde.teamCode;
-                return;
-            }
+    const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
+    const vandaag = datumSQL();
+    for (const ronde of ronden) {
+        console.log(ronde);
+        if (datumSQL(ronde.datum) >= vandaag) {
+            o_o_o.competitie = ronde.teamCode;
+            console.log("-----");
+            return;
         }
     }
 }

@@ -753,8 +753,8 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "5", 1, 8, 7771665, "e", "w", 0, "0", '2023-10-07', "int");
 
 -- nhsb TODO
-set @team = "n2";
-set @ronde = 2;
+set @team = "n3";
+set @ronde = 1;
 select * from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 
@@ -785,6 +785,14 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "n2", 2, 6, 7699010, "e", "z", 0, "½", '2023-10-19', "int"),
 ("2324", "n2", 2, 7, 8750093, "e", "w", 0, "1", '2023-10-19', "int"),
 ("2324", "n2", 2, 8, 7468362, "e", "z", 0, "1", '2023-10-19', "int");
+
+insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2324", "n3", 1, 1, 6207520, "e", "w", 0, "1", '2023-10-21', "int"),
+("2324", "n3", 1, 2, 6214153, "e", "z", 0, "0", '2023-10-21', "int"),
+("2324", "n3", 1, 3, 8372881, "e", "w", 0, "0", '2023-10-21', "int"),
+("2324", "n3", 1, 4, 8276752, "e", "z", 0, "0", '2023-10-21', "int"),
+("2324", "n3", 1, 5, 7546506, "e", "w", 0, "0", '2023-10-21', "int"),
+("2324", "n3", 1, 6, 7399469, "e", "z", 0, "1", '2023-10-21', "int");
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2324", "n4", 1, 1, 7699010, "e", "w", 0, "0", '2023-10-11', "int"),
