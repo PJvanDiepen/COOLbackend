@@ -62,25 +62,6 @@ export function wedstrijdVoluit(ronde) {
     return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
 }
 
-// uitslag.partij
-const AFWEZIG              = "a";
-const EXTERNE_PARTIJ       = "e";
-const INTERNE_PARTIJ       = "i";
-const AGENDA               = "?"; // indien nog niet aanmelden of afzeggen bijvoorbeeld invaller vragen
-const MEEDOEN              = "m"; // na aanmelden
-const NIET_MEEDOEN         = "n"; // na afzeggen
-const ONEVEN               = "o";
-const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
-const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij thuis op dinsdag
-const EXTERN_UIT           = "u"; // na aanmelden voor externe partij uit op dinsdag
-const REGLEMENTAIR_VERLIES = "v";
-const REGLEMENTAIRE_WINST  = "w";
-const ONBEKEND             = "x"; // na wijzigen indeling
-const WIT_TEGEN            = "y"; // na wijzigen indeling
-const ZWART_TEGEN          = "z"; // na wijzigen indeling
-// uitslag.witZwart
-const WIT = "w";
-const ZWART = "z";
 // uitslag.resultaat
 const REMISE = "½";
 const WINST = "1";
@@ -161,11 +142,6 @@ const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 4;
 const BEHEERDER = 8;
 const ONTWIKKElAAR = 9;
-
-// mutatie.invloed
-const GEEN_INVLOED = 0;
-const OPNIEUW_INDELEN = 1;
-const NIEUWE_RANGLIJST = 2;
 
 /**
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
@@ -252,10 +228,8 @@ async function competitieBepalen() {
     const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
     const vandaag = datumSQL();
     for (const ronde of ronden) {
-        console.log(ronde);
         if (datumSQL(ronde.datum) >= vandaag) {
             o_o_o.competitie = ronde.teamCode;
-            console.log("-----");
             return;
         }
     }
