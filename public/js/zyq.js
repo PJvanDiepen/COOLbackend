@@ -116,7 +116,7 @@ export const o_o_o = {
     vereniging: "Waagtoren",
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
-    competitie: INTERNE_COMPETITIE,
+    competitie: "", // zie competitieBepalen()
     team: INTERNE_COMPETITIE,
     speler: 0, // knsbNummer is een getal
     naam: ""
@@ -225,12 +225,14 @@ function urlVerwerken() {
 }
 
 async function competitieBepalen() {
-    const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
-    const vandaag = datumSQL();
-    for (const ronde of ronden) {
-        if (datumSQL(ronde.datum) >= vandaag) {
-            o_o_o.competitie = ronde.teamCode;
-            return;
+    if (!interneCompetitie(o_o_o.competitie)) {
+        const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
+        const vandaag = datumSQL();
+        for (const ronde of ronden) {
+            if (datumSQL(ronde.datum) >= vandaag) {
+                o_o_o.competitie = ronde.teamCode;
+                return;
+            }
         }
     }
 }
