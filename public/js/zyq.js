@@ -492,23 +492,6 @@ export function percentage(winst, remise, verlies) {
     }
 }
 
-export async function rondeSelecteren(teamCode, rondeNummer) {
-    o_o_o.team = o_o_o.competitie;
-    const ronden = document.getElementById("rondeSelecteren");
-    (await localFetch("/ronden/" + o_o_o.seizoen + "/" + teamCode)).forEach(
-        function (ronde) {
-            ronden.appendChild(htmlOptie(ronde.rondeNummer, datumLeesbaar(ronde) + SCHEIDING + "ronde " + ronde.rondeNummer));
-        });
-    ronden.appendChild(htmlOptie(0, ronden.length + " ronden"))
-    ronden.value = rondeNummer ? rondeNummer : 0; // werkt uitsluitend na await
-    ronden.addEventListener("input",
-        function () {
-            if (ronden.value) {
-                naarAnderePagina(`ronde.html?ronde=${ronden.value}`);
-            }
-        });
-}
-
 /**
  * ranglijst geeft lijst totalen van eventueel geselecteerde spelers op volgorde van totalen
  *

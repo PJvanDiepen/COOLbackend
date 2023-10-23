@@ -2,6 +2,8 @@
 
 import * as html from "./html.js";
 
+import {teamSelecteren, rondeSelecteren} from "./o_o_o.js"
+
 import * as zyq from "./zyq.js";
 
 /*
@@ -13,7 +15,7 @@ import * as zyq from "./zyq.js";
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     await teamSelecteren(zyq.o_o_o.competitie);
-    await zyq.rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
+    await rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     const versies = [
         [0, "versie 0 volgens reglement interne competitie van het seizoen"],
         [2, "versie 2 met afzeggingenaftrek zoals in seizoen = 1819, 1920, 2021"],
@@ -50,18 +52,3 @@ import * as zyq from "./zyq.js";
             speler.percentageExtern()));
     });
 })();
-
-export async function teamSelecteren(teamCode) {
-    const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
-        return zyq.teamOfCompetitie(team.teamCode);
-    }).map(function (team) {
-        return [team.teamCode, zyq.teamVoluit(team.teamCode)];
-    });
-    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (team) {
-        if (zyq.interneCompetitie(team)) {
-            html.anderePagina(`ranglijst.html?competitie=${team}`);
-        } else {
-            html.anderePagina(`team.html?team=${team}`);
-        }
-    });
-}

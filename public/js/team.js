@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {teamSelecteren} from "./ranglijst.js"
+import {teamSelecteren} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 

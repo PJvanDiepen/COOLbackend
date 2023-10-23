@@ -3,6 +3,8 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
+import {rondeSelecteren} from "./o_o_o.js"
+
 import * as zyq from "./zyq.js";
 
 /*
@@ -46,7 +48,7 @@ import * as zyq from "./zyq.js";
         [db.BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
             const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/ronde/${zyq.o_o_o.seizoen}/int/${rondeNummer}`);
         }]);
-    zyq.rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
+    rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, document.getElementById("uitslagen"));
     await wedstrijdenBijRonde(rondeNummer, document.getElementById("wedstrijden"));
     document.getElementById("kop").innerHTML =
