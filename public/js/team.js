@@ -14,9 +14,24 @@ verwerk team=<teamCode>
             const rijen = await zyq.serverFetch(`/backup/ronde/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/1/9`);
             zyq.backupSQL("uitslag", rijen);
         }]);
-    await zyq.teamSelecteren(zyq.o_o_o.team);
+    await teamSelecteren(zyq.o_o_o.team);
     await uitslagenTeam(document.getElementById("kop"), document.getElementById("ronden"));
 })();
+
+async function teamSelecteren(teamCode) {
+    const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
+        return zyq.teamOfCompetitie(team.teamCode);
+    }).map(function (team) {
+        return [team.teamCode, zyq.teamVoluit(team.teamCode)];
+    });
+    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (team) {
+        if (zyq.interneCompetitie(team)) {
+            html.anderePagina(`ranglijst.html?competitie=${team}`);
+        } else {
+            html.anderePagina(`team.html?team=${team}`);
+        }
+    });
+}
 
 async function uitslagenTeam(kop, rondenTabel) {
     const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);

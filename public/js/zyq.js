@@ -492,24 +492,6 @@ export function percentage(winst, remise, verlies) {
     }
 }
 
-export async function teamSelecteren(teamCode) {
-    const teams = document.getElementById("teamSelecteren");
-    (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
-        function (team) {
-            if (teamOfCompetitie(team.teamCode)) {
-                teams.appendChild(htmlOptie(team.teamCode, teamVoluit(team.teamCode)));
-            }
-        });
-    teams.value = teamCode; // werkt uitsluitend na await
-    teams.addEventListener("input", function () {
-        if (interneCompetitie(teams.value)) {
-            naarAnderePagina(`ranglijst.html?competitie=${teams.value}`);
-        } else {
-            naarAnderePagina(`team.html?team=${teams.value}`);
-        }
-    });
-}
-
 export async function rondeSelecteren(teamCode, rondeNummer) {
     o_o_o.team = o_o_o.competitie;
     const ronden = document.getElementById("rondeSelecteren");

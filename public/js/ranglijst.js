@@ -12,7 +12,7 @@ import * as zyq from "./zyq.js";
     zyq.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await zyq.teamSelecteren(zyq.o_o_o.competitie);
+    await teamSelecteren(zyq.o_o_o.competitie);
     await zyq.rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     const versies = [
         [0, "versie 0 volgens reglement interne competitie van het seizoen"],
@@ -50,3 +50,18 @@ import * as zyq from "./zyq.js";
             speler.percentageExtern()));
     });
 })();
+
+async function teamSelecteren(teamCode) {
+    const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
+        return zyq.teamOfCompetitie(team.teamCode);
+    }).map(function (team) {
+        return [team.teamCode, zyq.teamVoluit(team.teamCode)];
+    });
+    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (team) {
+        if (zyq.interneCompetitie(team)) {
+            html.anderePagina(`ranglijst.html?competitie=${team}`);
+        } else {
+            html.anderePagina(`team.html?team=${team}`);
+        }
+    });
+}
