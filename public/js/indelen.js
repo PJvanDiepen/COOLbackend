@@ -3,6 +3,8 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
+import {ranglijst} from "./o_o_o.js"
+
 import * as zyq from "./zyq.js";
 
 const versieIndelen = Number(html.params.get("indelen")) || 0;
@@ -174,7 +176,7 @@ async function deelnemersRonde(rondeNummer) {
 }
 
 async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
-    const lijst = await zyq.ranglijst(rondeNummer, deelnemers);
+    const lijst = await ranglijst(rondeNummer, deelnemers);
     lijst.sort(function (een, ander) {
         return ander.totaal() - een.totaal(); // van hoog naar laag
     });
@@ -182,7 +184,7 @@ async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
 }
 
 async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
-    const lijst = await zyq.ranglijst(rondeNummer, deelnemers);
+    const lijst = await ranglijst(rondeNummer, deelnemers);
     for (const speler of lijst) {
         let i = 20;
         let wp = speler.oneven() * 5; // bijtelling oneven

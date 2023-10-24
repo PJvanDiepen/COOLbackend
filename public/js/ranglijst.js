@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 
-import {teamSelecteren, rondeSelecteren} from "./o_o_o.js"
+import {teamSelecteren, rondeSelecteren, ranglijst} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -36,7 +36,7 @@ import * as zyq from "./zyq.js";
         zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "ranglijst na ronde " + rondeNummer;
     const lijst = document.getElementById("tabel");
     const winnaars = {}; // voor winnaarSubgroep() in totalen
-    (await zyq.ranglijst(rondeNummer)).filter(function (speler) {
+    (await ranglijst(rondeNummer)).filter(function (speler) {
         return speler.intern() || speler.oneven() || speler.extern() || alleLeden;
     }).forEach(function (speler, rangnummer) {
         lijst.append(html.rij(rangnummer + 1,
