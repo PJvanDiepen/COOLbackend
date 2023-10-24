@@ -6,10 +6,7 @@ const HOOGSTE_RATING = 2000;
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETTIE    = "ira";
-const JEUGD_COMPETTIE    = "ije";
 const SNELSCHAKEN        = "izs";
-const ZWITSERS_TEST      = "izt";
-const HALVE_COMPETITIE   = "ict";
 
 export {
     LAAGSTE_RATING,
@@ -17,10 +14,7 @@ export {
 // teamCode
     INTERNE_COMPETITIE,
     RAPID_COMPETTIE,
-    JEUGD_COMPETTIE,
-    SNELSCHAKEN,
-    ZWITSERS_TEST,
-    HALVE_COMPETITIE
+    SNELSCHAKEN
 }
 
 export function teamOfCompetitie(teamCode) {
@@ -272,11 +266,6 @@ async function competitieRondenVerwerken() {
     }
 }
 
-export async function gewijzigd() {
-    const laatsteMutaties = await serverFetch("/gewijzigd");
-    return laatsteMutaties;
-}
-
 /**
  * localFetch optimaliseert de verbinding met de database op de server
  * door het antwoord van de server ook lokaal op te slaan
@@ -315,36 +304,22 @@ export async function serverFetch(url) {
     }
 }
 
-export function htmlTekst(tekst) {
-    return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
-}
-
 export function htmlVet(htmlNode, indien) {
     if (indien) {
         htmlNode.classList.add("vet");
     }
 }
 
-export function htmlRij(...kolommen) {
-    const tr = document.createElement("tr");
-    kolommen.map(function (kolom) {
-        const td = document.createElement("td");
-        td.appendChild(htmlTekst(kolom));
-        tr.appendChild(td);
-    });
-    return tr;
-}
-
 export function htmlLinkEnTerug(link, tekst) {
     const a = document.createElement("a");
-    a.appendChild(htmlTekst(tekst));
+    a.append(tekst);
     a.href = link;
     return a;
 }
 
 export function htmlLink(link, tekst) {
     const a = document.createElement("a");
-    a.appendChild(htmlTekst(tekst));
+    a.append(tekst);
     a.href = "";
     a.addEventListener("click", function (event) {
         event.preventDefault();
@@ -481,40 +456,6 @@ export function percentage(winst, remise, verlies) {
     }
 }
 
-/*
--- uitslagen externe competitie per team
-select uitslag.rondeNummer,
-    uitslag.bordNummer,
-    uitslag.witZwart,
-    uitslag.resultaat,
-    uitslag.knsbNummer,
-    persoon.naam,
-from uitslag
-join persoon on uitslag.knsbNummer = persoon.knsbNummer
-where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
-order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
- */
-export async function uitslagenTeamAlleRonden(teamCode) {
-    const rondeUitslagen = [];
-    (await localFetch("/ronden/" + o_o_o.seizoen + "/" + teamCode)).forEach(
-        function (ronde) {
-            rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
-        });
-    (await localFetch("/team/" + o_o_o.seizoen + "/" + teamCode)).forEach(
-        function (u) {
-            const rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
-            if (u.resultaat === WINST) {
-                rondeUitslag.winst += 1;
-            } else if (u.resultaat === REMISE) {
-                rondeUitslag.remise += 1;
-            } else if (u.resultaat === VERLIES) {
-                rondeUitslag.verlies += 1;
-            }
-            rondeUitslag.uitslagen.push(htmlRij(u.bordNummer, naarSpeler(u), u.witZwart, u.resultaat));
-        });
-    return rondeUitslagen;
-}
-
 export function backupSQL(tabel, rijen) {
     let velden = [];
     for (const [key, value] of Object.entries(rijen[0])) {
@@ -547,7 +488,7 @@ export function jsonDate(jsonDatum) {
     if (jsonDatum.length > 10) {
         const datum = new Date(jsonDatum);
         if (datum instanceof Date) {
-            return !isNaN(datum)
+            return !isNaN(datum);
         }
     }
     return false;

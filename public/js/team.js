@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {teamSelecteren} from "./o_o_o.js"
+import {teamSelecteren, uitslagenTeamAlleRonden} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -28,7 +28,7 @@ async function uitslagenTeam(kop, rondenTabel) {
             break;
         }
     }
-    const rondeUitslagen = await zyq.uitslagenTeamAlleRonden(zyq.o_o_o.team);
+    const rondeUitslagen = await uitslagenTeamAlleRonden(zyq.o_o_o.team);
     for (let i = 0; i < rondeUitslagen.length; ++i) {
         uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
     }

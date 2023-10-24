@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {rondeSelecteren} from "./o_o_o.js"
+import {rondeSelecteren, uitslagenTeamAlleRonden} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -146,7 +146,7 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
             if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
                 const datumKolom = zyq.datumLeesbaar(wedstrijd);
                 const wedstrijdKolom = zyq.naarTeam(wedstrijd);
-                const rondeUitslagen = await zyq.uitslagenTeamAlleRonden(wedstrijd.teamCode);
+                const rondeUitslagen = await uitslagenTeamAlleRonden(wedstrijd.teamCode);
                 const u = rondeUitslagen[wedstrijd.rondeNummer - 1];
                 const uitslagKolom = zyq.uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
                 lijst.append(html.rij("", datumKolom, wedstrijdKolom, uitslagKolom));

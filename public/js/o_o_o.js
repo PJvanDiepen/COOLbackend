@@ -1,10 +1,11 @@
 /*
  * Deze module bevat alle code die op meer dan een pagina van de 0-0-0 app wordt toegepast
  *
- * init
+ * TODO standaard verwerking 0-0-0 app: init
  */
 
 import * as html from "./html.js";
+import * as db from "./db.js";
 
 import * as zyq from "./zyq.js"; // TODO verwijderen
 
@@ -44,6 +45,45 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
     html.selectie(html.id("rondeSelecteren"), rondeNummer, ronden, function (ronde) {
         html.anderePagina(`ronde.html?ronde=${ronde}`);
     });
+}
+
+/**
+ * uitslagenTeamAlleRonden voor ronde.js en team.js
+ *
+ * -- uitslagen externe competitie per team
+ * select uitslag.rondeNummer,
+ *     uitslag.bordNummer,
+ *     uitslag.witZwart,
+ *     uitslag.resultaat,
+ *     uitslag.knsbNummer,
+ *     persoon.naam,
+ * from uitslag
+ * join persoon on uitslag.knsbNummer = persoon.knsbNummer
+ * where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
+ * order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
+ *
+ * @param teamCode team
+ * @returns {Promise<*[]>}
+ */
+export async function uitslagenTeamAlleRonden(teamCode) {
+    const rondeUitslagen = [];
+    (await zyq.localFetch("/ronden/" + zyq.o_o_o.seizoen + "/" + teamCode)).forEach(
+        function (ronde) {
+            rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
+        });
+    (await zyq.localFetch("/team/" + zyq.o_o_o.seizoen + "/" + teamCode)).forEach(
+        function (u) {
+            const rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
+            if (u.resultaat === db.WINST) {
+                rondeUitslag.winst += 1;
+            } else if (u.resultaat === db.REMISE) {
+                rondeUitslag.remise += 1;
+            } else if (u.resultaat === db.VERLIES) {
+                rondeUitslag.verlies += 1;
+            }
+            rondeUitslag.uitslagen.push(html.rij(u.bordNummer, zyq.naarSpeler(u), u.witZwart, u.resultaat));
+        });
+    return rondeUitslagen;
 }
 
 /**
