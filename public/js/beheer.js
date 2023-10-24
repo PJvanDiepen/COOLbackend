@@ -37,11 +37,10 @@ TODO mutaties met verwijderen
         [db.ONTWIKKElAAR, "test API", function () {
             html.anderePagina("test.html");
         }]);
-    gebruikers(document.getElementById("gebruikers"));
-    laatsteMutaties(document.getElementById("mutaties"));
+    gebruikers(html.id("gebruikers"));
+    laatsteMutaties(html.id("mutaties"));
     const versie = await zyq.serverFetch(`/versie`);
-    document.getElementById("computer").append(
-        zyq.htmlTekst(`0-0-0 versie ${versie} met browser: ${navigator.vendor}`));  // TODO client hints
+    html.id("computer").append(zyq.htmlTekst(`0-0-0 versie ${versie} met browser: ${navigator.vendor}`));  // TODO client hints
 })();
 
 async function gebruikers(lijst) {

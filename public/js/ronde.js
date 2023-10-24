@@ -49,12 +49,11 @@ import * as zyq from "./zyq.js";
             const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/ronde/${zyq.o_o_o.seizoen}/int/${rondeNummer}`);
         }]);
     rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
-    await uitslagenRonde(rondeNummer, document.getElementById("uitslagen"));
-    await wedstrijdenBijRonde(rondeNummer, document.getElementById("wedstrijden"));
-    document.getElementById("kop").innerHTML =
-        "Ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
+    await uitslagenRonde(rondeNummer, html.id("uitslagen"));
+    await wedstrijdenBijRonde(rondeNummer, html.id("wedstrijden"));
+    html.id("kop").innerHTML = "Ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
     if (zyq.o_o_o.competitie === zyq.INTERNE_COMPETITIE) {
-        document.getElementById("subkop").innerHTML = "Andere ronden en wedstrijden";
+        html.id("subkop").innerHTML = "Andere ronden en wedstrijden";
     }
 })();
 

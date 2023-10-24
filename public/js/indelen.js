@@ -98,7 +98,7 @@ const indelenFun = [
     zyq.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.huidigeRonde;
     const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
-    const subkop = document.getElementById("subkop");
+    const subkop = html.id("subkop");
     subkop.innerHTML = "Indeling ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar({datum: totDatum});
     const wit = [];
     const zwart = [];
@@ -134,9 +134,9 @@ const indelenFun = [
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
     const uithuis = await zyq.serverFetch(`/${zyq.uuidToken}/uithuis/${zyq.o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
-    partijenLijst(r, wit, zwart, oneven, rangnummers, document.getElementById("partijen"), uithuis);
+    partijenLijst(r, wit, zwart, oneven, rangnummers, html.id("partijen"), uithuis);
     if (rangnummers) {
-        deelnemersLijst(r, document.getElementById("lijst"));
+        deelnemersLijst(r, html.id("lijst"));
     }
     await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
@@ -162,7 +162,7 @@ const indelenFun = [
     for (let i = 0; i < indelenFun.length; i++) {
         versieOpties.push([i, indelenFun[i][0]]);
     }
-    html.selectie(document.getElementById("versies"), versieIndelen, versieOpties, function (versie) {
+    html.selectie(html.id("versies"), versieIndelen, versieOpties, function (versie) {
         html.zelfdePagina(`ronde=${rondeNummer}&indelen=${versie}&rangnummers=aan`);
     });
 })();

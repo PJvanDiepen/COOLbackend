@@ -17,7 +17,7 @@ verwerk team=<teamCode>
             zyq.backupSQL("uitslag", rijen);
         }]);
     await teamSelecteren(zyq.o_o_o.team);
-    await uitslagenTeam(document.getElementById("kop"), document.getElementById("ronden"));
+    await uitslagenTeam(html.id("kop"), html.id("ronden"));
 })();
 
 async function uitslagenTeam(kop, rondenTabel) {
@@ -40,7 +40,7 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
         const uitslagKolom = zyq.uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
         rondenTabel.append(html.rij(u.ronde.rondeNummer, datumKolom, zyq.naarTeam(u.ronde), uitslagKolom));
         if (u.uitslagen.length) {
-            const div = document.getElementById("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
+            const div = html.id("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
             div.appendChild(document.createElement("h2")).innerHTML = ["Ronde " + rondeNummer, datumKolom].join(html.SCHEIDING);
             const tabel = div.appendChild(document.createElement("table"));
             tabel.append(html.rij("", zyq.wedstrijdVoluit(u.ronde), "", uitslagKolom));

@@ -17,7 +17,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 
 (async function() {
     await zyq.init();
-    document.getElementById("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
+    html.id("kop").innerHTML = zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
     const augustusRating = await ratingLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
@@ -70,15 +70,15 @@ In het lidFormulier
  */
 async function lidFormulier(persoon, augustusRating) {
     // formulier invullen
-    const knsbNummer = document.getElementById("knsbNummer");
+    const knsbNummer = html.id("knsbNummer");
     knsbNummer.value = lidNummer;
-    const naam = document.getElementById("naam");
+    const naam = html.id("naam");
     naam.value = persoon.naam;
-    document.getElementById("gebruiker").value = zyq.gebruikerFunctie(persoon);
-    document.getElementById("jaar").append(` op 1 augustus ${jaar}`);
-    const knsbRating = document.getElementById("knsbRating");
+    html.id("gebruiker").value = zyq.gebruikerFunctie(persoon);
+    html.id("jaar").append(` op 1 augustus ${jaar}`);
+    const knsbRating = html.id("knsbRating");
     knsbRating.value = augustusRating ? augustusRating.knsbRating : 0;
-    const interneRating = document.getElementById("interneRating");
+    const interneRating = html.id("interneRating");
     if (knsbRating.value > 0) {
         interneRating.append(html.optie(knsbRating.value, "zie KNSB rating"));
     }
@@ -94,9 +94,9 @@ async function lidFormulier(persoon, augustusRating) {
     } else {
         interneRating.value = zyq.LAAGSTE_RATING;
     }
-    const nhsbTeam = document.getElementById("nhsbTeam");
-    const knsbTeam = document.getElementById("knsbTeam");
-    const competities = document.getElementById("competities");
+    const nhsbTeam = html.id("nhsbTeam");
+    const knsbTeam = html.id("knsbTeam");
+    const competities = html.id("competities");
     const competitie = [];
     let competitieNummer = 0;
     const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
@@ -117,7 +117,7 @@ async function lidFormulier(persoon, augustusRating) {
         } else if (zyq.interneCompetitie(team.teamCode)) {
             const id = `intern${competitieNummer + 1}`;
             competities.append(html.checkbox(id, team.teamCode, zyq.teamVoluit(team.teamCode)));
-            competitie[competitieNummer] = document.getElementById(id);
+            competitie[competitieNummer] = html.id(id);
             if (speeltIntern(persoon, team.teamCode)) {
                 competitie[competitieNummer].checked = true;
             }
@@ -135,7 +135,7 @@ async function lidFormulier(persoon, augustusRating) {
         nhsbTeam.disabled = false; // enable input
     }
     // formulier verwerken
-    document.getElementById("formulier").addEventListener("submit", async function (event) {
+    html.id("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();
         let mutaties = 0;
         const intern = []; // speeltIntern volgens lidformulier

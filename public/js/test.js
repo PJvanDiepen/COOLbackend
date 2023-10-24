@@ -8,7 +8,7 @@ import * as zyq from "./zyq.js";
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     const apiLijst = await zyq.serverFetch(`/api`);
-    const lijst = document.getElementById("lijst");
+    const lijst = html.id("lijst");
     for (const apiCall of apiLijst) {
         const url = apiCall
             .replace(":uuidToken", zyq.uuidToken)

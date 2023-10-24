@@ -14,13 +14,8 @@ import * as zyq from "./zyq.js";
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
-    document.getElementById("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamlijders";
-    await spelersOverzicht(
-        wedstrijdDatum,
-        wedstrijden,
-        document.getElementById("tabel"),
-        document.getElementById("tussenkop"),
-        document.getElementById("lijst"));
+    html.id("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamlijders";
+    await spelersOverzicht(wedstrijdDatum, wedstrijden, html.id("tabel"), html.id("tussenkop"), html.id("lijst"));
 })();
 
 function volgendeWedstrijdDatum(wedstrijden) {
@@ -42,7 +37,7 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
     }).map(function (wedstrijd) {
         return [wedstrijd.datum, zyq.datumLeesbaar(wedstrijd) + html.SCHEIDING + zyq.wedstrijdVoluit(wedstrijd)];
     });
-    html.selectie(document.getElementById("datumSelecteren"), wedstrijdDatum,datums, function (datum) {
+    html.selectie(html.id("datumSelecteren"), wedstrijdDatum,datums, function (datum) {
         html.zelfdePagina(`datum=${datum}`);
     });
 }

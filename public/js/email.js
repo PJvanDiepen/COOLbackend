@@ -10,10 +10,7 @@ import * as html from "./html.js";
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    gebruikerTekst(
-        document.getElementById("emailAan"),
-        document.getElementById("naamAan"),
-        document.getElementById("activeer"));
+    gebruikerTekst(html.id("emailAan"), html.id("naamAan"), html.id("activeer"));
 })();
 
 async function gebruikerTekst(emailAan, naamAan, activeer) {

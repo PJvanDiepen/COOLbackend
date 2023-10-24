@@ -9,10 +9,10 @@ import * as zyq from "./zyq.js";
     await zyq.init();
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${andereGebruiker}`);
-    document.getElementById("kop").append(`Agenda${html.SCHEIDING}${persoon.naam}`);
-    document.getElementById("aanmelden").append(html.naarPagina(`lid.html?lid=${andereGebruiker}`,"Aanmelden voor competities"));
+    html.id("kop").append(`Agenda${html.SCHEIDING}${persoon.naam}`);
+    html.id("aanmelden").append(html.naarPagina(`lid.html?lid=${andereGebruiker}`,"Aanmelden voor competities"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await agenda(persoon.knsbNummer, document.getElementById("wedstrijden"));
+    await agenda(persoon.knsbNummer, html.id("wedstrijden"));
 })();
 
 /*

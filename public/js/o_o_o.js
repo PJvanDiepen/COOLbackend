@@ -47,7 +47,7 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
 }
 
 /**
- * ranglijst voor ranglijst.js en indelen.js
+ * ranglijst voor ranglijst.js, speler.js en indelen.js
  *
  * ranglijst geeft lijst totalen van eventueel geselecteerde spelers op volgorde van totalen
  *

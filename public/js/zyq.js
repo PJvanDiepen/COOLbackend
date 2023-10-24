@@ -123,7 +123,7 @@ export const o_o_o = {
 };
 
 export function competitieTitel() {
-    document.getElementById("competitie").innerHTML = o_o_o.vereniging + SCHEIDING + teamVoluit(o_o_o.competitie);
+    document.getElementById("competitie").innerHTML = o_o_o.vereniging + SCHEIDING + teamVoluit(o_o_o.competitie); // TODO html.id()
 }
 
 export const uuidActiveren = params.get("uuid");

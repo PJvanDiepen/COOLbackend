@@ -18,10 +18,9 @@ import * as zyq from "./zyq.js";
     zyq.o_o_o.team = zyq.o_o_o.competitie;
     const rondeNummer = Number(params.get("ronde"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    document.getElementById("kop").innerHTML =
-        "Ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
+    html.id("kop").innerHTML = "Ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
     if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) {
-        document.getElementById("subkop").innerHTML = "Andere ronden en wedstrijden";
+        html.id("subkop").innerHTML = "Andere ronden en wedstrijden";
     }
 })();
 
@@ -30,7 +29,7 @@ async function spelerSelecteren(rondeNummer, deelnemers) {
         return [Number(speler.knsbNummer), speler.naam + (deelnemers.includes(speler.knsbNummer) ?  html.KRUISJE : "")];
     });
     spelers.unshift([0, "selecteer naam"]);
-    html.selectie(document.getElementById("spelerSelecteren"), 0, spelers, function (knsbNummer) {
+    html.selectie(html.id("spelerSelecteren"), 0, spelers, function (knsbNummer) {
         const partij = deelnemers.includes(knsbNummer) ? db.NIET_MEEDOEN : db.MEEDOEN; // TODO mutatie en na init() en speler geel maken indien gelukt
         const datum = zyq.datumSQL(o_o_o.ronde[rondeNummer].datum);
         html.zelfdePagina();

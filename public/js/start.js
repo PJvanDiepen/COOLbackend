@@ -13,9 +13,9 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    document.getElementById("kop").innerHTML =
+    html.id("kop").innerHTML =
         zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + zyq.teamVoluit(zyq.o_o_o.competitie);
-    const plaatje = document.getElementById("plaatje");
+    const plaatje = html.id("plaatje");
     if (zyq.o_o_o.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
@@ -38,7 +38,7 @@ import * as zyq from "./zyq.js";
     for (let i = 0; i < menuKeuzes.length; i++) {
         const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
         if (minimumRechten <= zyq.gebruiker.mutatieRechten ) {
-            document.getElementById(`menu${i}`).append(html.naarPaginaEnTerug(naarPagina,tekst)); // menu0..6 op deze pagina
+            html.id(`menu${i}`).append(html.naarPaginaEnTerug(naarPagina,tekst)); // menu0..6 op deze pagina
         }
     }
     menuKeuzes.push(
@@ -53,7 +53,7 @@ async function seizoenSelecteren(teamCode) {
     const seizoenen = (await zyq.localFetch("/seizoenen/" + teamCode)).map(function (seizoen) {
         return [seizoen, zyq.seizoenVoluit(seizoen)];
     });
-    html.selectie(document.getElementById("seizoenSelecteren"), zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
+    html.selectie(html.id("seizoenSelecteren"), zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
         html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
     });
 }
@@ -64,7 +64,7 @@ async function competitieSelecteren() {
     }).map(function (team) {
         return [team.teamCode, team.omschrijving];
     });
-    html.selectie(document.getElementById("competitieSelecteren"), zyq.o_o_o.competitie, competities, function (competitie) {
+    html.selectie(html.id("competitieSelecteren"), zyq.o_o_o.competitie, competities, function (competitie) {
         html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
     });
 }

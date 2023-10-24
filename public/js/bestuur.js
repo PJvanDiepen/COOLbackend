@@ -14,13 +14,9 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await ledenLijst(
-        Number(html.params.get("lid")),
-        document.getElementById("kop"),
-        document.getElementById("competities"),
-        document.getElementById("tabel"));
-    await alleRatinglijsten(document.getElementById("ratinglijsten"));
-    await leesRatinglijst(document.getElementById("csvFile"), document.getElementById("informeer"));
+    await ledenLijst(Number(html.params.get("lid")), html.id("kop"), html.id("competities"), html.id("tabel"));
+    await alleRatinglijsten(html.id("ratinglijsten"));
+    await leesRatinglijst(html.id("csvFile"), html.id("informeer"));
 })();
 
 async function ledenLijst(lidNummer, kop, competities, tabel) {

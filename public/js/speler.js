@@ -3,6 +3,8 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
+import {ranglijst} from "./o_o_o.js"
+
 import * as zyq from "./zyq.js";
 
 (async function() {
@@ -15,7 +17,7 @@ import * as zyq from "./zyq.js";
             const rijen = await zyq.serverFetch(`/backup/speler/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.speler}`);
             zyq.backupSQL("uitslag", rijen);
         }]);
-    uitslagenSpeler(document.getElementById("kop"), document.getElementById("tabel"));
+    uitslagenSpeler(html.id("kop"), html.id("tabel"));
 })();
 
 /*
@@ -42,7 +44,7 @@ import * as zyq from "./zyq.js";
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    const t = (await zyq.ranglijst(zyq.o_o_o.vorigeRonde, [zyq.o_o_o.speler]))[0];
+    const t = (await ranglijst(zyq.o_o_o.vorigeRonde, [zyq.o_o_o.speler]))[0];
     kop.innerHTML = t.naam + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen);
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern() && t.eigenWaardeCijfer()) {

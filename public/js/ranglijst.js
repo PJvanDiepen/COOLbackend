@@ -22,19 +22,18 @@ import * as zyq from "./zyq.js";
         [3, "versie 3 zonder afzeggingenaftrek vanaf seizoen = 2122"],
         [4, "versie 4 volgens reglement rapid competitie"],
         [5, "versie 5 voor snelschaken"]];
-    html.selectie(document.getElementById("versies"), zyq.o_o_o.versie, versies, function (versie) {
+    html.selectie(html.id("versies"), zyq.o_o_o.versie, versies, function (versie) {
         html.zelfdePagina(`versie=${versie}`);
     });
     const alleLeden = Number(html.params.get("leden")); // 0 indien niet alleLeden
     const optiesLeden = [
         [0, "alleen actieve leden"],
         [1, "inclusief niet actieve spelers"]];
-    html.selectie(document.getElementById("leden"), alleLeden, optiesLeden, function (leden) {
+    html.selectie(html.id("leden"), alleLeden, optiesLeden, function (leden) {
         html.zelfdePagina(`leden=${leden}`);
     });
-    document.getElementById("kop").innerHTML =
-        zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "ranglijst na ronde " + rondeNummer;
-    const lijst = document.getElementById("tabel");
+    html.id("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "ranglijst na ronde " + rondeNummer;
+    const lijst = html.id("tabel");
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(rondeNummer)).filter(function (speler) {
         return speler.intern() || speler.oneven() || speler.extern() || alleLeden;
