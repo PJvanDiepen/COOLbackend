@@ -14,14 +14,15 @@ Ik schaak al sinds 1971 in interne competities van schaakverenigingen.
 Eerst bij Lasker in Uitgeest, daarna bij Schaakvereniging Castricum, 0-0-0 in Alkmaar en tegenwoordig bij de Waagtoren in Alkmaar.
 Bij Lasker en Castricum gebruikten ze het Keizersysteem voor de interne competitie.
 Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het 
-[Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) en dat gebruiken we bij de Waagtoren nog steeds.
+Alkmaarse Systeem [(1)](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) 
+en dat gebruiken we bij de Waagtoren nog steeds.
 
 Sinds 1974 programmeer ik computers. In het begin waren dat CDC-, Univac-, DEC- en IBM-computers later microcomputers en de IBM PC. 
 In 2003 werd ik docent wiskunde en in 2004 werd daarnaast ook docent informatica in het voortgezet onderwijs.
 In 2017 werd ik docent software engineering aan de Hogeschool van Amsterdam.
 
 Vanaf 2016 werd ik intern wedstrijdleider van de Waagtoren en gebruikte ik Rokade 
-van [Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/).
+van Herman Nijhuis [(2)](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/).
 Met Rokade moest ik aanmeldingen en afzeggingen van leden verwerken, uitslagen invoeren en door middel van een upload naar de website
 indelingen, uitslagen en ranglijsten publiceren.
 Rokade gebruikte een [Microsoft Access](https://en.wikipedia.org/wiki/Microsoft_Access) database en draaide lokaal op mijn laptop.
@@ -125,6 +126,15 @@ Maar ik gebruik MySQL Workbench nu nog voor:
 - Overzicht maken met aantal mutaties per gebruiker.
 - Hele partij of zwart / wit wijzigen.
 - Speler afwezig, oneven of extern maken.
+
+## Links
+- (1) [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) 
+- (2) [Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/)
+- (3) [0-0-0 voor aanmelden en afzeggen](https://www.waagtoren.nl/2021/07/10/0-0-0-nl-voor-aanmelden-afzeggen/)
+- (4) [Rapid als stress test voor 0-0-0](https://www.waagtoren.nl/2022/02/21/rapid-als-stress-test-voor-0-0-0/)
+- (5) [Bericht van de intern wedstrijdleider](https://www.waagtoren.nl/2022/09/08/bericht-van-de-intern-wedstrijdleider-2/)
+- (6) [Alberto Alvarez Alonso scoort 4 ui 4](https://www.waagtoren.nl/2023/10/27/alberto-alvarez-alonso-scoort-4-uit-4/)
+- (7) [Informatie interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/)
 
 ## Rokade wordt 0-0-0 TODO vanaf hier nog verwerken
 

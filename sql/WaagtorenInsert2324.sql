@@ -5,9 +5,9 @@ select maand, jaar, count(*) leden from rating group by maand, jaar;
 
 -- TODO partij wijzigen
 set @seizoen = '2324';
-set @competitie = 'int';
-set @ronde = 1;
-set @bord = 17;
+set @competitie = 'ira';
+set @ronde = 3;
+set @bord = 9;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -15,8 +15,10 @@ where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit = 7419621; -- Fritz
-set @zwart = 8886625; -- Richard
+set @wit = 146; -- Tigo
+set @zwart = 8587348; -- Merijn
+
+set @zwart = 7502143; -- Rob Heijink
 set @oneven = 6212404; -- Peter
 set @afwezig = 7691728; -- Karel
 set @extern = 7758014; -- Alex
@@ -47,9 +49,6 @@ where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and
 
 -- TODO partij wijzigen
 
-select * from uitslag
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
-
 update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
 update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
@@ -76,7 +75,9 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 ("2324", "n2", "n", "1a", "NHSB 1a", 8, 0),
 ("2324", "n3", "n", "2a", "NHSB 2a", 6, 0),
 ("2324", "n4", "n", "3a", "NHSB 3a", 8, 0),
-("2324", "nbe", "n", "be", "NHSB beker", 4, 0);
+("2324", "nbe", "n", "be", "NHSB beker", 4, 0),
+("2324", "nv1", "n", "vc", "NHSB vc", 4, 0),
+("2324", "nv2", "n", "vb", "NHSB vb", 4, 0);
 
 -- teamleiders 2023-2024
 select naam, team.* from team join persoon on knsbNummer = teamleider where seizoen = "2324";
@@ -89,6 +90,18 @@ update team set teamleider = 7428960 where seizoen = "2324" and teamCode = "n1";
 update team set teamleider = 7529522 where seizoen = "2324" and teamCode = "n2"; -- Willem Meyles
 update team set teamleider = 6214153 where seizoen = "2324" and teamCode = "n3"; -- Jan Poland
 update team set teamleider = 6212404 where seizoen = "2324" and teamCode = "n4"; -- Peter van Diepen
+update team set teamleider = 7321534 where seizoen = "2324" and teamCode = "nv1"; -- Ronald Kamps
+update team set teamleider = 9023168 where seizoen = "2324" and teamCode = "nv2"; -- Jos Albers
+
+select * from gebruiker where mutatieRechten > 1;
+
+update gebruiker set mutatieRechten = 2 where knsbNummer in
+(6214153, -- Jan Poland
+ 7129991, -- Gerard de Geus
+ 7758014, -- Alex Albrecht
+ 7321534, -- Ronald Kamps
+ 7529522, -- Willem Meyles
+ 9023168); -- Jos Albers
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2324", "1", 1, "t", "Paul Keres 1", '2023-09-16'), -- KNSB competitie
@@ -204,7 +217,19 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 ("2324", "n4", 2, "u", "Oppositie N2", '2023-11-14'),
 ("2324", "n4", 3, "t", "Warmenh. /Strandloper N", '2023-12-12'),
 ("2324", "n4", 4, "u", "Koedijk N2", '2024-02-27'),
-("2324", "n4", 5, "t", "Schaakmat N2", '2024-03-19');
+("2324", "n4", 5, "t", "Schaakmat N2", '2024-03-19'),
+("2324", "nv1", 1, "t", "Assendelft V", '2023-11-07'),
+("2324", "nv1", 2, "t", "De Groene Zes - Schaaklust V", '2023-11-21'),
+("2324", "nv1", 3, "u", "Aartswoud-Attaqueer Combin. V", '2023-12-15'),
+("2324", "nv1", 4, "u", "Assendelft V", '2024-02-05'),
+("2324", "nv1", 5, "t", "Aartswoud-Attaqueer Combin. V", '2024-03-05'),
+("2324", "nv1", 6, "u", "De Groene Zes - Schaaklust V", '2024-03-25'),
+("2324", "nv2", 1, "u", "Heerhugowaard V2", '2023-11-02'),
+("2324", "nv2", 2, "u", "Warmenhuizen'76 V2", '2023-11-24'),
+("2324", "nv2", 3, "t", "Magnus V", '2023-12-19'),
+("2324", "nv2", 4, "t", "Heerhugowaard V2", '2024-02-06'),
+("2324", "nv2", 5, "u", "Magnus V", '2024-03-06'),
+("2324", "nv2", 6, "t", "Warmenhuizen'76 V2", '2024-03-26');
 
 -- ronde 1 
 set @team = "int";
@@ -753,12 +778,20 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "5", 1, 8, 7771665, "e", "w", 0, "0", '2023-10-07', "int");
 
 -- nhsb TODO
-set @team = "n3";
+set @team = "n1";
 set @ronde = 1;
 select * from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
+("2324", "n1", 1, 1, 7099950, "e", "z", 0, "0", '2023-10-24', "int"),
+("2324", "n1", 1, 2, 5968611, "e", "w", 0, "½", '2023-10-24', "int"),
+("2324", "n1", 1, 3, 7428960, "e", "z", 0, "1", '2023-10-24', "int"),
+("2324", "n1", 1, 4, 7879520, "e", "w", 0, "1", '2023-10-24', "int"),
+("2324", "n1", 1, 5, 7613166, "e", "z", 0, "½", '2023-10-24', "int"),
+("2324", "n1", 1, 6, 8096242, "e", "w", 0, "0", '2023-10-24', "int"),
+("2324", "n1", 1, 7, 7099620, "e", "z", 0, "1", '2023-10-24', "int"),
+("2324", "n1", 1, 8, 7129991, "e", "w", 0, "½", '2023-10-24', "int"),
 ("2324", "n1", 2, 1, 7428960, "e", "w", 0, "1", '2023-10-17', "int"),
 ("2324", "n1", 2, 2, 8096242, "e", "z", 0, "1", '2023-10-17', "int"),
 ("2324", "n1", 2, 3, 7099620, "e", "w", 0, "0", '2023-10-17', "int"),

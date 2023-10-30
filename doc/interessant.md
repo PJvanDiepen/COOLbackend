@@ -81,6 +81,7 @@ Refresh Android cache
 - [Knex probleem](https://evertpot.com/knex-sql-injection/)
 
 # HTML / CSS
+- [eerste website](http://info.cern.ch/hypertext/WWW/TheProject.html)
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
@@ -122,6 +123,7 @@ Refresh Android cache
 
 - [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
+- [Svelte by Example](https://sveltebyexample.com/)
 - [Svelte](https://svelte.dev/)
 - [Progressively enhance HTML with lightweight JavaScript libraries](https://unsuckjs.com/)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)

@@ -1376,7 +1376,9 @@ module.exports = router => {
 }
 
 async function planningMuteren(uitslag, partij) {
-    if (await Uitslag.query()
+    if (!db.isPlanning(uitslag)) {
+        return 0;
+    } else if (await Uitslag.query()
         .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
         .patch({partij: partij})) {
         return 1;

@@ -71,7 +71,11 @@ const planningInvullen = new Map([
     [EXTERN_THUIS, NIET_MEEDOEN],
     [EXTERN_UIT, NIET_MEEDOEN]]);
 
-function meedoen(uitslag) {
+function isPlanning(uitslag) {
+    return planningInvullen.has(uitslag.partij);
+}
+
+function isMeedoen(uitslag) {
     return planningInvullen.get(uitslag.partij) === NIET_MEEDOEN;
 }
 
@@ -151,7 +155,8 @@ module.exports = { // CommonJS voor node.js
     resultaatInvullen,
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
-    meedoen,               // (uitslag)
+    isPlanning,            // (uitslag)
+    isMeedoen,             // (uitslag)
     maandInvullen,
 
     // gebruiker.mutatieRechten
