@@ -21,6 +21,7 @@ export function teamOfCompetitie(teamCode) {
     return teamCode === "" ? false : teamCode.substring(0,1) !== " ";
 }
 
+// TODO vervangen door db.js: isCompetitie
 export function interneCompetitie(teamCode) {
     return teamCode === "" ? false : teamCode.substring(0,1) === "i";
 }

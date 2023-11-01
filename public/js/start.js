@@ -33,8 +33,8 @@ import * as zyq from "./zyq.js";
     menuKeuzes.push(
         [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
         [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
-        [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
-        // [db.TEAMLEIDER, "Overzicht voor teamlijders", "teamlijder.html"]); // TODO teamleider.html
+        // [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
+        [db.TEAMLEIDER, "Overzicht voor teamlijders", "teamlijder.html"]); // TODO teamleider.html
     for (let i = 0; i < menuKeuzes.length; i++) {
         const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
         if (minimumRechten <= zyq.gebruiker.mutatieRechten ) {
@@ -58,6 +58,7 @@ async function seizoenSelecteren(teamCode) {
     });
 }
 
+// TODO zie o_o_o.js: teamSelecteren
 async function competitieSelecteren() {
     const competities = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
         return zyq.interneCompetitie(team.teamCode);

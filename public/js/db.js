@@ -23,6 +23,10 @@ const JEUGD_COMPETTIE    = "ije";
 const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
 
+export function isCompetitie(team) {
+    return team.teamCode === "" ? false : team.teamCode.substring(0,1) === "i";
+}
+
 // knsbNummer
 const TIJDELIJK_LID_NUMMER = 100
 const KNSB_NUMMER          = 1000000;

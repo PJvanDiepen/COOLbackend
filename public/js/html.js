@@ -97,7 +97,7 @@ export function id(nodeId) {
  * De eventListener krijgt het volgnummer door en start de bijbehorende functie met de bijbehorende waarde.
  */
 export function selectie(knop, optieWaarde, opties, optieVerwerken = function (waarde) {
-    console.log(`--- selectie(${waarde} van ${opties.length} opties) ---`);
+    console.log(`--- selectie(${waarde} van ${opties.length} opties) ---`); // indien geen functie voor alle opties (optieVerwerken)
 }) {
     const functies = [];
     const waardes = [];

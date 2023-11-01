@@ -11,12 +11,30 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
+    await teamSelecteren();
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
     html.id("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamlijders";
     await spelersOverzicht(wedstrijdDatum, wedstrijden, html.id("tabel"), html.id("tussenkop"), html.id("lijst"));
 })();
+
+// TODO zie o_o_o.js: teamSelecteren
+async function teamSelecteren() {
+    const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
+        return zyq.teamOfCompetitie(team.teamCode);
+    }).map(function (team) {
+        return [team.teamCode, zyq.teamVoluit(team.teamCode)];
+    });
+    const teamCode = teams[0].teamCode;
+    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (team) {
+        if (zyq.interneCompetitie(team)) {
+            html.anderePagina(`ranglijst.html?competitie=${team}`);
+        } else {
+            html.anderePagina(`team.html?team=${team}`);
+        }
+    });
+}
 
 function volgendeWedstrijdDatum(wedstrijden) {
     const vandaag = zyq.datumSQL();
@@ -93,7 +111,7 @@ async function spelersOverzicht(wedstrijdDatum, wedstrijden, tabel, tussenkop, l
         }
         const nummer = s.knsbNummer > 1000000 ? s.knsbNummer : "";
         const invallerVragen =
-            s.knsbNummer === vorigeSpeler ? zyq.teamVoluit(invallerTeam) + "  " : teamSelecteren(s, invallerTeam, wedstrijd, wedstrijdDatum);
+            s.knsbNummer === vorigeSpeler ? zyq.teamVoluit(invallerTeam) + "  " : teamSelecterenOud(s, invallerTeam, wedstrijd, wedstrijdDatum);
         vorigeSpeler = s.knsbNummer;
         tabel.append(html.rij(zyq.naarSpeler(s), nummer, s.knsbRating, s.knsbTeam, knsbVast, s.nhsbTeam, nhsbVast, invallerVragen, invaller));
     }
@@ -113,7 +131,7 @@ function ratingInvaller(spelers, teamCode, nhsb) {
     return 3000; // hoogste rating indien team zonder vaste spelers
 }
 
-function teamSelecteren(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
+function teamSelecterenOud(speler, invallerTeam, wedstrijd, wedstrijdDatum) {
     let wedstrijdNummer = -1; // geen wedstrijd;
     let invallerMogelijkheden = 0;
     const teams = invallerTeam === "" ? [[-1, ""]] : [];

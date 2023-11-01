@@ -1084,7 +1084,7 @@ module.exports = router => {
                 return ronde.teamCode === ctx.params.teamCode && ronde.rondeNummer === Number(ctx.params.rondeNummer);
             });
             if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
-                if (db.meedoen(ronden[rondeWijzigen])) {
+                if (db.isMeedoen(ronden[rondeWijzigen])) {
                     aantal += await planningMuteren(ronden[rondeWijzigen], db.NIET_MEEDOEN);
                 } else {
                     for (let i = 0; i < ronden.length; i++) {
@@ -1376,7 +1376,7 @@ module.exports = router => {
 }
 
 async function planningMuteren(uitslag, partij) {
-    if (!db.isPlanning(uitslag)) {
+    if (!db.isPlanning(uitslag)) { // uitsluitend planningMuteren
         return 0;
     } else if (await Uitslag.query()
         .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
