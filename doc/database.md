@@ -167,15 +167,15 @@ omschrijving VARCHAR(45)
 borden INT
 PRIMARY KEY (seizoen, teamCode)
 ```
-In elke seizoen heeft de schaakvereniging een interne competitie met `teamCode = 'int'` en
-teams die spelen in de landelijke competitie en beker competitie van de KNSB en
-de competitie en beker van de regionale onderbond. 
-Elk team heeft een unieke `teamCode` per `seizoen`.
-De Waagtoren heeft `teamCode = '1'` voor het eerste team in de KNSB,
-`teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = 'n1'` voor het eerste team in de NHSB enz.
 
-In `bond` staat een afkorting: i = intern, k = knsb en n = nhsb.
-Elk team speelt in een `poule` met een vast aantal `borden`.
+In elke seizoen heeft de schaakvereniging interne competities en teams die spelen in de externe competities van de KNSB en de regionale onderbond.
+0-0-0 berekent ranglijsten voor interne competities, maar niet voor teams in de externe competities. 
+De uitslagen van externe competities van de eigen teams de schaakvereniging staan wel in 0-0-0, omdat ze meetellen in de interne competitie. 
+
+Elk team heeft een unieke `teamCode` per `seizoen`.
+De Waagtoren heeft `teamCode = 'int'` voor de interne competitie, `teamCode = 'ira'` voor de rapid competitie,
+`teamCode = '1'` voor het eerste team in de KNSB, `teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = 'n1'` voor het eerste team in de NHSB enz.
+In `bond` staat een afkorting: i = intern, k = knsb en n = nhsb. Elk team speelt in een `poule` met een vast aantal `borden`.
 
 ## Ronde
 ```

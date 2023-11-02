@@ -1,15 +1,5 @@
 /*
- * Deze module bevat alle code voor interactie met HTML en CSS
- *
- * De eerste pagina staat in index.html en start.html is de pagina, die de 0-0-0 app start.
- * De bijhorende start.js verwerkt de url, vult de pagina aan en reageert op de gebruiker.
- *
- * Dit geldt voor alle vervolg pagina's. Bij agenda.html hoort agenda.js, bij bestuur.html hoort bestuur.js en zo voort.
- * Daarnaast zijn er modules:
- *
- * html.js (deze module) voor interactie met HTML en CSS
- * db.js bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
- * en zo voort
+ * Deze module bevat alle code voor interactie met HTML en CSS.
  */
 
 import * as db from "./db.js";

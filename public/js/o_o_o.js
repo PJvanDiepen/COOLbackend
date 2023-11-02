@@ -1,7 +1,15 @@
 /*
- * Deze module bevat alle code die op meer dan een pagina van de 0-0-0 app wordt toegepast
+ * Deze module bevat alle code die op meer dan een pagina van de 0-0-0 app wordt toegepast.
  *
- * TODO standaard verwerking 0-0-0 app: init
+ * De eerste pagina van 0-0-0.nl staat in index.html en start.html is de pagina, die de 0-0-0 app start.
+ * De bijhorende start.js verwerkt de url, vult de pagina aan en reageert op de gebruiker.
+ *
+ * Dit geldt voor alle vervolg pagina's. Bij agenda.html hoort agenda.js, bij bestuur.html hoort bestuur.js en zo voort.
+ * Daarnaast zijn er modules:
+ *
+ * html.js bevat alle code voor voor interactie met HTML en CSS
+ * db.js bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
+ * en zo voort
  */
 
 import * as html from "./html.js";
@@ -65,16 +73,20 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
  * order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
  *
  * @param teamCode team
- * @returns {Promise<*[]>}
+ * @returns {Promise<*[]>} rondenUitslagen
  */
 export async function uitslagenTeamAlleRonden(teamCode) {
     const rondeUitslagen = [];
+    console.log("--- ronden ---");
     (await zyq.localFetch("/ronden/" + zyq.o_o_o.seizoen + "/" + teamCode)).forEach(
         function (ronde) {
+            console.log(ronde);
             rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
         });
+    console.log("--- uitslagen ---");
     (await zyq.localFetch("/team/" + zyq.o_o_o.seizoen + "/" + teamCode)).forEach(
         function (u) {
+            console.log(u);
             const rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
             if (u.resultaat === db.WINST) {
                 rondeUitslag.winst += 1;
@@ -85,6 +97,8 @@ export async function uitslagenTeamAlleRonden(teamCode) {
             }
             rondeUitslag.uitslagen.push(html.rij(u.bordNummer, zyq.naarSpeler(u), u.witZwart, u.resultaat));
         });
+    console.log("--- resultaat ---");
+    console.log(rondeUitslagen);
     return rondeUitslagen;
 }
 

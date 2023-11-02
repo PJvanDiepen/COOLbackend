@@ -22,7 +22,7 @@ import * as zyq from "./zyq.js";
 // TODO zie o_o_o.js: teamSelecteren
 async function teamSelecteren() {
     const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
-        return zyq.teamOfCompetitie(team.teamCode);
+        return db.isTeam(team);
     }).map(function (team) {
         return [team.teamCode, zyq.teamVoluit(team.teamCode)];
     });

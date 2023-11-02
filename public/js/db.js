@@ -1,11 +1,13 @@
 /*
- * Deze module bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
+ * Deze module bevat alle code voor het valideren van de velden in de tabellen van de MySQL database.
  *
  * Van deze module bestaan twee versies:
  * - een Common.js versie voor node.js: db.cjs met module.exports = { .. };
  * - een ES6 versie voor de browser: db.js met export { .. };
  *
  * Het enige verschil tussen de twee versies is de export-lijst.
+ *
+ * Alleen db.cjs en db.js hebben export-lijsten.
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  */
 
@@ -23,8 +25,12 @@ const JEUGD_COMPETTIE    = "ije";
 const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
 
-export function isCompetitie(team) {
+function isCompetitie(team) {
     return team.teamCode === "" ? false : team.teamCode.substring(0,1) === "i";
+}
+
+function isTeam(team) {
+    return team.teamCode === "" ? false : team.teamCode.substring(0,1) !== "i";
 }
 
 // knsbNummer
@@ -123,6 +129,9 @@ export { // ES6 voor browser
     JEUGD_COMPETTIE,
     SNELSCHAKEN,
     ZWITSERS_TEST,
+
+    isCompetitie,          // (team)
+    isTeam,                // (team)
 
     // knsbNummer
     TIJDELIJK_LID_NUMMER,
