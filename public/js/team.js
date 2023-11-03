@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {teamSelecteren, uitslagenTeamAlleRonden} from "./o_o_o.js"
+import {teamSelecteren, perTeamRondenUitslagen} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -28,9 +28,9 @@ async function uitslagenTeam(kop, rondenTabel) {
             break;
         }
     }
-    const rondeUitslagen = await uitslagenTeamAlleRonden(zyq.o_o_o.team);
-    for (let i = 0; i < rondeUitslagen.length; ++i) {
-        uitslagenTeamPerRonde(rondeUitslagen[i], i + 1, rondenTabel);
+    const rondeUitslagen = await perTeamRondenUitslagen(zyq.o_o_o.team);
+    for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
+        uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
     }
 }
 
@@ -45,7 +45,7 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
             const tabel = div.appendChild(document.createElement("table"));
             tabel.append(html.rij("", zyq.wedstrijdVoluit(u.ronde), "", uitslagKolom));
             for (let uitslag of u.uitslagen) {
-                tabel.append(uitslag);
+                tabel.append(html.rij(uitslag.bordNummer, zyq.naarSpeler(uitslag), uitslag.witZwart, uitslag.resultaat));
             }
         }
     }

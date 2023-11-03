@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {rondeSelecteren, uitslagenTeamAlleRonden} from "./o_o_o.js"
+import {rondeSelecteren, perTeamRondenUitslagen} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -57,21 +57,6 @@ import * as zyq from "./zyq.js";
     }
 })();
 
-/*
-  -- uitslagen interne competitie per ronde
-  select
-      uitslag.bordNummer,
-      uitslag.knsbNummer,
-      wit.naam,
-      uitslag.tegenstanderNummer,
-      zwart.naam,
-      uitslag.resultaat
-  from uitslag
-  join persoon as wit on uitslag.knsbNummer = wit.knsbNummer
-  join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
-  where seizoen = @seizoen and teamCode = 'int' and rondeNummer = @rondeNummer and witZwart = 'w'
-  order by uitslag.seizoen, uitslag.bordNummer;
- */
 async function uitslagenRonde(rondeNummer, lijst) {
     const gewijzigd = await uitslagMutatie(rondeNummer);
     const uitslagen = await zyq.serverFetch(`/ronde/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`); // actuele situatie
@@ -146,8 +131,8 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
             if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
                 const datumKolom = zyq.datumLeesbaar(wedstrijd);
                 const wedstrijdKolom = zyq.naarTeam(wedstrijd);
-                const rondeUitslagen = await uitslagenTeamAlleRonden(wedstrijd.teamCode);
-                const u = rondeUitslagen[wedstrijd.rondeNummer - 1];
+                const rondeUitslagen = await perTeamRondenUitslagen(wedstrijd.teamCode);
+                const u = rondeUitslagen[wedstrijd.rondeNummer];
                 const uitslagKolom = zyq.uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
                 lijst.append(html.rij("", datumKolom, wedstrijdKolom, uitslagKolom));
             }

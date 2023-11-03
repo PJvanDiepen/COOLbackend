@@ -58,48 +58,34 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
 }
 
 /**
- * uitslagenTeamAlleRonden voor ronde.js en team.js
- *
- * -- uitslagen externe competitie per team
- * select uitslag.rondeNummer,
- *     uitslag.bordNummer,
- *     uitslag.witZwart,
- *     uitslag.resultaat,
- *     uitslag.knsbNummer,
- *     persoon.naam,
- * from uitslag
- * join persoon on uitslag.knsbNummer = persoon.knsbNummer
- * where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
- * order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
+ * perTeamRondenUitslagen voor ronde.js, team.js en teamleider.js TODO ook voor start.js
  *
  * @param teamCode team
  * @returns {Promise<*[]>} rondenUitslagen
+ *
+ * rondenUitslagen is een lijst van ronden
+ * met per ronde: ronde informatie, aantal keer winst, remise en verlies en een lijst met uitslagen
+ * met per uitslag: bordNummer, speler, kleur en resultaat
  */
-export async function uitslagenTeamAlleRonden(teamCode) {
-    const rondeUitslagen = [];
-    console.log("--- ronden ---");
-    (await zyq.localFetch("/ronden/" + zyq.o_o_o.seizoen + "/" + teamCode)).forEach(
+export async function perTeamRondenUitslagen(teamCode) {
+    const rondenUitslagen = [];
+    (await zyq.localFetch(`/ronden/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
         function (ronde) {
-            console.log(ronde);
-            rondeUitslagen[ronde.rondeNummer - 1] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
+            rondenUitslagen[ronde.rondeNummer] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
         });
-    console.log("--- uitslagen ---");
-    (await zyq.localFetch("/team/" + zyq.o_o_o.seizoen + "/" + teamCode)).forEach(
-        function (u) {
-            console.log(u);
-            const rondeUitslag = rondeUitslagen[u.rondeNummer - 1];
-            if (u.resultaat === db.WINST) {
+    (await zyq.localFetch(`/team/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
+        function (uitslag) {
+            const rondeUitslag = rondenUitslagen[uitslag.rondeNummer];
+            if (uitslag.resultaat === db.WINST) {
                 rondeUitslag.winst += 1;
-            } else if (u.resultaat === db.REMISE) {
+            } else if (uitslag.resultaat === db.REMISE) {
                 rondeUitslag.remise += 1;
-            } else if (u.resultaat === db.VERLIES) {
+            } else if (uitslag.resultaat === db.VERLIES) {
                 rondeUitslag.verlies += 1;
             }
-            rondeUitslag.uitslagen.push(html.rij(u.bordNummer, zyq.naarSpeler(u), u.witZwart, u.resultaat));
+            rondeUitslag.uitslagen.push(uitslag);
         });
-    console.log("--- resultaat ---");
-    console.log(rondeUitslagen);
-    return rondeUitslagen;
+    return rondenUitslagen;
 }
 
 /**

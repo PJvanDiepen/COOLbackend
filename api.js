@@ -537,7 +537,7 @@ module.exports = router => {
     where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode and uitslag.team = 'e'
     order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
 
-    Zie zyq.js
+    Zie 0-0-0.js
      */
     router.get('/team/:seizoen/:teamCode', async function (ctx) {
         ctx.body = await Uitslag.query()
