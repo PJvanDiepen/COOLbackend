@@ -6,12 +6,17 @@ import * as db from "./db.js";
 import * as zyq from "./zyq.js";
 
 /*
-    verwerk datum=<datum>
+    verwerk teamleider=<teamCode>
  */
+const teamleider = html.params.get("teamleider");
+
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     await teamSelecteren();
+    // TODO kop invullen met team (en teamleider?)
+    // TODO zie team.js: uitslagenTeam
+
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
@@ -26,13 +31,9 @@ async function teamSelecteren() {
     }).map(function (team) {
         return [team.teamCode, zyq.teamVoluit(team.teamCode)];
     });
-    const teamCode = teams[0].teamCode;
+    const teamCode = teamleider ? teamleider : teams[0].teamCode;
     html.selectie(html.id("teamSelecteren"), teamCode, teams, function (team) {
-        if (zyq.interneCompetitie(team)) {
-            html.anderePagina(`ranglijst.html?competitie=${team}`);
-        } else {
-            html.anderePagina(`team.html?team=${team}`);
-        }
+        html.zelfdePagina(`teamleider=${team}`);
     });
 }
 
