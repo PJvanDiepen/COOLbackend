@@ -48,8 +48,10 @@ Refresh Android cache
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
 - [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
+- [welke browser?](https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent)
 - [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [DOM events](https://domevents.dev/)
+- [DOM manpipulation](https://phuoc.ng/collection/html-dom/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
@@ -114,6 +116,7 @@ Refresh Android cache
 - [betafish](https://github.com/Strryke/betafish)
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
+- [CalvinBot](https://lichess.org/@/Calvin_Bot)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)

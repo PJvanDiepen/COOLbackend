@@ -3,6 +3,8 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
+import {perTeamRondenUitslagen} from "./o_o_o.js";
+
 import * as zyq from "./zyq.js";
 
 /*
@@ -13,9 +15,14 @@ const teamleider = html.params.get("teamleider");
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await teamSelecteren();
+    const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
+        return db.isTeam(team);
+    });
+    const teamCode = teamleider ? teamleider : teams[0].teamCode;
+    await teamSelecteren(teams, teamCode);
+    await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
+
     // TODO kop invullen met team (en teamleider?)
-    // TODO zie team.js: uitslagenTeam
 
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
@@ -25,14 +32,11 @@ const teamleider = html.params.get("teamleider");
 })();
 
 // TODO zie o_o_o.js: teamSelecteren
-async function teamSelecteren() {
-    const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
-        return db.isTeam(team);
-    }).map(function (team) {
+function teamSelecteren(teams, teamCode) {
+    const teamsSelectie = teams.map(function (team) {
         return [team.teamCode, zyq.teamVoluit(team.teamCode)];
     });
-    const teamCode = teamleider ? teamleider : teams[0].teamCode;
-    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (team) {
+    html.selectie(html.id("teamSelecteren"), teamCode, teamsSelectie, function (team) {
         html.zelfdePagina(`teamleider=${team}`);
     });
 }
@@ -59,6 +63,38 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
     html.selectie(html.id("datumSelecteren"), wedstrijdDatum,datums, function (datum) {
         html.zelfdePagina(`datum=${datum}`);
     });
+}
+
+async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
+    for (const team of teams) {
+        if (team.teamCode === teamCode) {
+            kop.innerHTML = [zyq.teamVoluit(teamCode), zyq.seizoenVoluit(zyq.o_o_o.seizoen), team.omschrijving].join(html.SCHEIDING);
+            break;
+        }
+    }
+    const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
+    for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
+        uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
+    }
+}
+
+function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
+    if (u) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
+        const datumKolom = zyq.datumLeesbaar(u.ronde);
+        const uitslagKolom = zyq.uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
+        rondenTabel.append(html.rij(u.ronde.rondeNummer, datumKolom, zyq.naarTeam(u.ronde), uitslagKolom));
+        if (u.uitslagen.length) {
+            /*
+            const div = html.id("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
+            div.appendChild(document.createElement("h2")).innerHTML = ["Ronde " + rondeNummer, datumKolom].join(html.SCHEIDING);
+            const tabel = div.appendChild(document.createElement("table"));
+            tabel.append(html.rij("", zyq.wedstrijdVoluit(u.ronde), "", uitslagKolom));
+            for (let uitslag of u.uitslagen) {
+                tabel.append(html.rij(uitslag.bordNummer, zyq.naarSpeler(uitslag), uitslag.witZwart, uitslag.resultaat));
+            }
+             */
+        }
+    }
 }
 
 async function spelersOverzicht(wedstrijdDatum, wedstrijden, tabel, tussenkop, lijst) {
