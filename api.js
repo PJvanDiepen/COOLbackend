@@ -525,16 +525,17 @@ module.exports = router => {
     });
 
     /*
-    -- uitslagen externe competitie per team
+    -- uitslagen en planning externe competitie per team
     select uitslag.rondeNummer,
         uitslag.bordNummer,
         uitslag.witZwart,
         uitslag.resultaat,
+        uitslag.partij,
         uitslag.knsbNummer,
         persoon.naam,
     from uitslag
     join persoon on uitslag.knsbNummer = persoon.knsbNummer
-    where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode and uitslag.team = 'e'
+    where uitslag.seizoen = @seizoen and uitslag.teamCode = @teamCode
     order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
 
     Zie 0-0-0.js
@@ -546,12 +547,12 @@ module.exports = router => {
                 'uitslag.bordNummer',
                 'uitslag.witZwart',
                 'uitslag.resultaat',
+                'uitslag.partij',
                 'uitslag.knsbNummer',
                 'persoon.naam')
             .join('persoon', 'uitslag.knsbNummer', 'persoon.knsbNummer')
             .where('uitslag.seizoen', ctx.params.seizoen)
             .andWhere('uitslag.teamCode', ctx.params.teamCode)
-            .andWhere('uitslag.partij', db.EXTERNE_PARTIJ)
             .orderBy(['uitslag.seizoen','uitslag.rondeNummer','uitslag.bordNummer']);
     });
 

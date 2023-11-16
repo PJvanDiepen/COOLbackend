@@ -22,7 +22,8 @@ const teamleider = html.params.get("teamleider");
     await teamSelecteren(teams, teamCode);
     await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
 
-    // TODO kop invullen met team (en teamleider?)
+    // TODO overzicht uitslagen
+    // TODO o_o_o.js: perTeamRondenUitslagen() aanpassen om toezeggingen, afzeggingen en weet-niets te tellen
 
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
@@ -66,13 +67,9 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
 }
 
 async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
-    for (const team of teams) {
-        if (team.teamCode === teamCode) {
-            kop.innerHTML = [zyq.teamVoluit(teamCode), zyq.seizoenVoluit(zyq.o_o_o.seizoen), team.omschrijving].join(html.SCHEIDING);
-            break;
-        }
-    }
+    kop.innerHTML = `Overzicht voor teamleider ${html.SCHEIDING} ${zyq.teamVoluit(teamCode)}`;
     const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
+    console.log(rondeUitslagen);
     for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
         uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
     }

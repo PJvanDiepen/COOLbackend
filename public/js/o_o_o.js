@@ -58,14 +58,17 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
 }
 
 /**
- * perTeamRondenUitslagen voor ronde.js, team.js en teamleider.js TODO ook voor start.js
+ * perTeamRondenUitslagen voor ronde.js, team.js en teamleider.js
+ *
+ * TODO ook voor start.js
+ * TODO verplaatsen naar server
  *
  * @param teamCode team
  * @returns {Promise<*[]>} rondenUitslagen
  *
  * rondenUitslagen is een lijst van ronden
  * met per ronde: ronde informatie, aantal keer winst, remise en verlies en een lijst met uitslagen
- * met per uitslag: bordNummer, speler, kleur en resultaat
+ * met per uitslag: bordNummer, speler (knsbNummer en naam), kleur, resultaat of planning (in partij)
  */
 export async function perTeamRondenUitslagen(teamCode) {
     const rondenUitslagen = [];

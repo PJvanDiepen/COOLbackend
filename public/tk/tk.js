@@ -210,14 +210,14 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
     },
     {jaar: 2023,
-        zetels: "NSC=28&VVD=28&PvdA/GL=23&PVV=18&BBB=9&PvdD=8&D66=7&SP=5&Volt=4&FvD=4&CDA=4&Denk=4&CU=4&SGP=3&JA21=1",
+        zetels: "VVD=28&NSC=26&PvdA/GL=23&PVV=19&BBB=9&D66=8&PvdD=6&SP=6&Volt=4&FvD=4&CDA=4&Denk=4&CU=4&SGP=3&JA21=2",
         kabinet: "Peilingwijzer op basis van peilingen I&O Research en Ipsos EenVandaag",
         breed: 640,
         hoog: 427,
         link: "https://peilingwijzer.tomlouwerse.nl"
     } /*,
     {jaar: 2023,
-        zetels: "VVD=27&NSC=26&PvdA/GL=24&PVV=18&BBB=12&PvdD=7&D66=7&SP=5&CDA=4&FvD=4&CU=4&Volt=4&SGP=3&Denk=3&JA21=2",
+        zetels: "NSC=28&VVD=28&PvdA/GL=23&PVV=18&BBB=9&PvdD=8&D66=7&SP=5&Volt=4&FvD=4&CDA=4&Denk=4&CU=4&SGP=3&JA21=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
