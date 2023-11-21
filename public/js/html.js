@@ -146,10 +146,20 @@ export function tekstToevoegen(node, tekst) {
 
 export function rij(...kolommen) {
     const tr = document.createElement("tr");
-    kolommen.map(function (kolom) {
+    kolommen.forEach(function (kolom) {
         const td = document.createElement("td");
         td.append(kolom);
         tr.append(td);
+    });
+    return tr;
+}
+
+export function bovenRij(...kolommen) {
+    const tr = document.createElement("tr");
+    kolommen.forEach(function (kolom) {
+        const th = document.createElement("th");
+        th.append(kolom);
+        tr.append(th);
     });
     return tr;
 }

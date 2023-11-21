@@ -490,6 +490,19 @@ module.exports = router => {
     });
 
     /*
+    Zie teamlijder.js
+
+     */
+    router.get('/teamlijder/:seizoen', async function (ctx) {
+        ctx.body = await Speler.query()
+            .select('speler.nhsbTeam', 'speler.knsbTeam', 'speler.knsbNummer', 'speler.knsbRating', 'persoon.naam')
+            .join('persoon', 'speler.knsbNummer', 'persoon.knsbNummer')
+            .where('speler.seizoen', ctx.params.seizoen)
+            .orderBy('speler.knsbRating', 'desc');
+    });
+
+
+    /*
     -- uitslagen interne competitie per ronde
     select
         uitslag.bordNummer,

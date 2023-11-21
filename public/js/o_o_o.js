@@ -67,26 +67,34 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
  * @returns {Promise<*[]>} rondenUitslagen
  *
  * rondenUitslagen is een lijst van ronden
- * met per ronde: ronde informatie, aantal keer winst, remise en verlies en een lijst met uitslagen
- * met per uitslag: bordNummer, speler (knsbNummer en naam), kleur, resultaat of planning (in partij)
+ * met per ronde: ronde informatie, aantal keer winst, remise en verlies, een lijst met uitslagen, aantal deelnemers, een lijst met geplandeUitslagen
+ * met per uitslag of geplande uitslag: bordNummer, speler (knsbNummer en naam), kleur, resultaat of planning (in partij)
  */
 export async function perTeamRondenUitslagen(teamCode) {
     const rondenUitslagen = [];
     (await zyq.localFetch(`/ronden/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
         function (ronde) {
-            rondenUitslagen[ronde.rondeNummer] = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: []};
+            rondenUitslagen[ronde.rondeNummer]
+                = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: [], deelnemers: 0, geplandeUitslagen: []};
         });
     (await zyq.localFetch(`/team/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
         function (uitslag) {
             const rondeUitslag = rondenUitslagen[uitslag.rondeNummer];
-            if (uitslag.resultaat === db.WINST) {
-                rondeUitslag.winst += 1;
-            } else if (uitslag.resultaat === db.REMISE) {
-                rondeUitslag.remise += 1;
-            } else if (uitslag.resultaat === db.VERLIES) {
-                rondeUitslag.verlies += 1;
+            if (uitslag.partij === db.EXTERNE_PARTIJ) {
+                if (uitslag.resultaat === db.WINST) {
+                    rondeUitslag.winst += 1;
+                } else if (uitslag.resultaat === db.REMISE) {
+                    rondeUitslag.remise += 1;
+                } else if (uitslag.resultaat === db.VERLIES) {
+                    rondeUitslag.verlies += 1;
+                }
+                rondeUitslag.uitslagen.push(uitslag);
+            } else {
+                if (db.isMeedoen(uitslag)) {
+                    rondeUitslag.deelnemers += 1;
+                }
+                rondeUitslag.geplandeUitslagen.push(uitslag);
             }
-            rondeUitslag.uitslagen.push(uitslag);
         });
     return rondenUitslagen;
 }

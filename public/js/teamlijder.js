@@ -18,12 +18,22 @@ const teamleider = html.params.get("teamleider");
     const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
         return db.isTeam(team);
     });
-    const teamCode = teamleider ? teamleider : teams[0].teamCode;
+    console.log(zyq.gebruiker);
+    const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);
     await teamSelecteren(teams, teamCode);
     await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
+    const spelers = await zyq.serverFetch(`/teamlijder/${zyq.o_o_o.seizoen}`);
+    const eersteSpeler = spelers.find(function(speler) {
+        return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode;
+    })
+    console.log(spelers);
+    console.log(eersteSpeler);
+    const vast = html.id("vast");
+    vast.append(html.bovenRij("naam", "nummer", "rating", ...[1, 2, 3, 4, 5]));
 
-    // TODO overzicht uitslagen
-    // TODO o_o_o.js: perTeamRondenUitslagen() aanpassen om toezeggingen, afzeggingen en weet-niets te tellen
+    // TODO variabele kop regel voor tabel overzicht uitslagen van spelers
+    // TODO overzicht uitslagen van spelers in team: gespeelde ronden en te spelen ronden met vraagtekens, weigeringen en vinkjes
+    // TODO overzicht spelers die mogen invallen (naam, knsbNummer, rating, knsbTeam, nhsbTeam, knop met tegenstanders
 
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
@@ -31,6 +41,15 @@ const teamleider = html.params.get("teamleider");
     html.id("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamlijders";
     await spelersOverzicht(wedstrijdDatum, wedstrijden, html.id("tabel"), html.id("tussenkop"), html.id("lijst"));
 })();
+
+function teamVoorkeur(teams, teamleider) {
+    for (const team of teams) {
+        if (team.teamleider === teamleider) { // dit team indien de gebruiker is teamleider van dit team
+            return team.teamCode;
+        }
+    }
+    return teams[0].teamCode; // anders eerste team uit lijst
+}
 
 // TODO zie o_o_o.js: teamSelecteren
 function teamSelecteren(teams, teamCode) {

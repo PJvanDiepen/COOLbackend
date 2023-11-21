@@ -35,7 +35,7 @@ async function uitslagenTeam(kop, rondenTabel) {
 }
 
 function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
-    if (u) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
+    if (u) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule of indien nog geen uitslag
         const datumKolom = zyq.datumLeesbaar(u.ronde);
         const uitslagKolom = zyq.uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
         rondenTabel.append(html.rij(u.ronde.rondeNummer, datumKolom, zyq.naarTeam(u.ronde), uitslagKolom));
