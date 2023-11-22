@@ -18,20 +18,31 @@ const teamleider = html.params.get("teamleider");
     const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
         return db.isTeam(team);
     });
-    console.log(zyq.gebruiker);
     const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);
     await teamSelecteren(teams, teamCode);
-    await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
+    const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
     const spelers = await zyq.serverFetch(`/teamlijder/${zyq.o_o_o.seizoen}`);
     const eersteSpeler = spelers.find(function(speler) {
         return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode;
     })
+    console.log(ronden);
     console.log(spelers);
     console.log(eersteSpeler);
+    const rondeNummers = [];
+    ronden.forEach(function (ronde) {
+        if (ronde) {
+            rondeNummers.push(ronde.ronde.rondeNummer);
+        }
+    });
     const vast = html.id("vast");
-    vast.append(html.bovenRij("naam", "nummer", "rating", ...[1, 2, 3, 4, 5]));
-
-    // TODO variabele kop regel voor tabel overzicht uitslagen van spelers
+    vast.append(html.bovenRij("naam", "nummer", "rating", ...rondeNummers));
+    const vasteSpelers = spelers.filter(function (speler) {
+        return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode || wasInvaller(speler.knsbNummer, ronden);
+    })
+    for (const speler of vasteSpelers) {
+        if (speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode)
+        vast.append(html.rij(speler.naam, speler.knsbNummer, speler.knsbRating, ...rondeNummers));
+    }
     // TODO overzicht uitslagen van spelers in team: gespeelde ronden en te spelen ronden met vraagtekens, weigeringen en vinkjes
     // TODO overzicht spelers die mogen invallen (naam, knsbNummer, rating, knsbTeam, nhsbTeam, knop met tegenstanders
 
@@ -61,6 +72,38 @@ function teamSelecteren(teams, teamCode) {
     });
 }
 
+async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
+    kop.innerHTML = `Overzicht voor teamleider ${html.SCHEIDING} ${zyq.teamVoluit(teamCode)}`;
+    const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
+    for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
+        uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
+    }
+    return rondeUitslagen;
+}
+
+function uitslagenTeamPerRonde(uitslag, rondeNummer, rondenTabel) {
+    if (uitslag) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
+        const datumKolom = zyq.datumLeesbaar(uitslag.ronde);
+        const uitslagKolom = zyq.uitslagTeam(uitslag.ronde.uithuis, uitslag.winst, uitslag.verlies, uitslag.remise);
+        rondenTabel.append(html.rij(uitslag.ronde.rondeNummer, datumKolom, zyq.naarTeam(uitslag.ronde), uitslagKolom));
+    }
+}
+
+function wasInvaller(knsbNummer, ronden) {
+    for (const ronde of ronden) {
+        if (ronde) {
+            for (const uitslag of ronde.uitslagen) {
+                if (uitslag.knsbNummer  === knsbNummer) {
+                    return uitslag.partij === db.EXTERNE_PARTIJ
+                }
+            }
+        }
+    }
+    return false;
+}
+
+////////////////////////////////////////////////////////////////
+
 function volgendeWedstrijdDatum(wedstrijden) {
     const vandaag = zyq.datumSQL();
     let datum;
@@ -83,34 +126,6 @@ function datumSelecteren(wedstrijdDatum, wedstrijden) {
     html.selectie(html.id("datumSelecteren"), wedstrijdDatum,datums, function (datum) {
         html.zelfdePagina(`datum=${datum}`);
     });
-}
-
-async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
-    kop.innerHTML = `Overzicht voor teamleider ${html.SCHEIDING} ${zyq.teamVoluit(teamCode)}`;
-    const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
-    console.log(rondeUitslagen);
-    for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
-        uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
-    }
-}
-
-function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
-    if (u) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
-        const datumKolom = zyq.datumLeesbaar(u.ronde);
-        const uitslagKolom = zyq.uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
-        rondenTabel.append(html.rij(u.ronde.rondeNummer, datumKolom, zyq.naarTeam(u.ronde), uitslagKolom));
-        if (u.uitslagen.length) {
-            /*
-            const div = html.id("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
-            div.appendChild(document.createElement("h2")).innerHTML = ["Ronde " + rondeNummer, datumKolom].join(html.SCHEIDING);
-            const tabel = div.appendChild(document.createElement("table"));
-            tabel.append(html.rij("", zyq.wedstrijdVoluit(u.ronde), "", uitslagKolom));
-            for (let uitslag of u.uitslagen) {
-                tabel.append(html.rij(uitslag.bordNummer, zyq.naarSpeler(uitslag), uitslag.witZwart, uitslag.resultaat));
-            }
-             */
-        }
-    }
 }
 
 async function spelersOverzicht(wedstrijdDatum, wedstrijden, tabel, tussenkop, lijst) {

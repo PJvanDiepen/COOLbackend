@@ -95,7 +95,9 @@ update team set teamleider = 7529522 where seizoen = "2324" and teamCode = "n2";
 update team set teamleider = 6214153 where seizoen = "2324" and teamCode = "n3"; -- Jan Poland
 update team set teamleider = 6212404 where seizoen = "2324" and teamCode = "n4"; -- Peter van Diepen
 update team set teamleider = 7321534 where seizoen = "2324" and teamCode = "nv1"; -- Ronald Kamps
-update team set teamleider = 9023168 where seizoen = "2324" and teamCode = "nv2"; -- Jos Albers
+update team set teamleider = 8950876 where seizoen = "2324" and teamCode = "nv2"; -- Jos Albers
+
+select * from persoon where knsbNummer = 9023168;
 
 select * from gebruiker where mutatieRechten > 1;
 
