@@ -133,7 +133,7 @@ Maar ik gebruik MySQL Workbench nu nog voor:
 - (3) [0-0-0 voor aanmelden en afzeggen](https://www.waagtoren.nl/2021/07/10/0-0-0-nl-voor-aanmelden-afzeggen/)
 - (4) [Rapid als stress test voor 0-0-0](https://www.waagtoren.nl/2022/02/21/rapid-als-stress-test-voor-0-0-0/)
 - (5) [Bericht van de intern wedstrijdleider](https://www.waagtoren.nl/2022/09/08/bericht-van-de-intern-wedstrijdleider-2/)
-- (6) [Alberto Alvarez Alonso scoort 4 ui 4](https://www.waagtoren.nl/2023/10/27/alberto-alvarez-alonso-scoort-4-uit-4/)
+- (6) [Alberto Alvarez Alonso scoort 4 uit 4](https://www.waagtoren.nl/2023/10/27/alberto-alvarez-alonso-scoort-4-uit-4/)
 - (7) [Informatie interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/)
 
 ## Rokade wordt 0-0-0 TODO vanaf hier nog verwerken

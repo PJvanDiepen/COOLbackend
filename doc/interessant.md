@@ -53,6 +53,7 @@ Refresh Android cache
 - [DOM events](https://domevents.dev/)
 - [DOM manpipulation](https://phuoc.ng/collection/html-dom/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
+- [promises training](https://github.com/henriqueinonhe/promises-training)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
@@ -117,6 +118,7 @@ Refresh Android cache
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
 - [CalvinBot](https://lichess.org/@/Calvin_Bot)
+- [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
