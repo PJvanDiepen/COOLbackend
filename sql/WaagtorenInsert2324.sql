@@ -206,7 +206,9 @@ update gebruiker set mutatieRechten = 2 where knsbNummer in
 ("2324", "nv2", "", 9023234, 0, '2023-08-01', 1500, "int", "ira", "", "", "");
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-("2324", "kbe", 2, "u", "EuroParcs/Autovakmeester Schaap", '2023-12-10'); -- KNSB beker
+("2324", "kbe", 2, "u", "EuroParcs/Autovakmeester Schaap", '2023-12-06'); -- KNSB beker
+
+update ronde set datum = '2023-12-06' where seizoen = "2324" and teamCode = "kbe" and rondeNummer = 2;
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2324", "1", 1, "t", "Paul Keres 1", '2023-09-16'), -- KNSB competitie
@@ -1433,11 +1435,13 @@ set @ronde = 2; -- let op: team 4 en 5 hebben andere ronde
 select * from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 
+update uitslag set datum = '2023-12-06' where seizoen = "2324" and teamCode = "kbe" and rondeNummer = 2;
+
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
-("2324", "kbe", 2, 1, 7970094, "e", "w", 0, "0", '2023-12-10', "int"),
-("2324", "kbe", 2, 2, 7584566, "e", "z", 0, "1", '2023-12-10', "int"),
-("2324", "kbe", 2, 3, 7657342, "e", "w", 0, "1", '2023-12-10', "int"),
-("2324", "kbe", 2, 4, 7428960, "e", "z", 0, "1", '2023-12-10', "int");
+("2324", "kbe", 2, 1, 7970094, "e", "w", 0, "0", '2023-12-06', "int"),
+("2324", "kbe", 2, 2, 7584566, "e", "z", 0, "1", '2023-12-06', "int"),
+("2324", "kbe", 2, 3, 7657342, "e", "w", 0, "1", '2023-12-06', "int"),
+("2324", "kbe", 2, 4, 7428960, "e", "z", 0, "1", '2023-12-06', "int");
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2324", "1", 1, 1, 7359913, "e", "z", 0, "1", '2023-09-16', "int"),
@@ -1634,6 +1638,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "n1", 3, 8, 7707832, "e", "w", 0, "1", '2023-11-14', "int");
 
 update uitslag set datum = '2023-11-28' where seizoen = "2324" and teamCode = "n2" and rondeNummer = 4 and knsbNummer in (7529522, 7758014); -- vooruit spelen
+update uitslag set partij = "e" where seizoen = "2324" and teamCode = "int" and rondeNummer = 11 and knsbNummer in (7529522, 7758014); -- vooruit spelen
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2324", "n2", 1, 1, 7529522, "e", "z", 0, "½", '2023-09-26', "int"),
