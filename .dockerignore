@@ -1,0 +1,7 @@
+*
+
+# Allow list
+!*.js
+!models/
+!package.json
+!node_modules/
