@@ -24,10 +24,16 @@ const teamleider = html.params.get("teamleider");
     const spelers = await zyq.serverFetch(`/teamlijder/${zyq.o_o_o.seizoen}`);
     const eersteSpeler = spelers.find(function(speler) {
         return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode;
-    })
+    });
+    const nhsbTeam = teamCode.substring(0,1) === "n";
+    const hoogsteRating = eersteSpeler.knsbRating + (nhsbTeam ? 80 : 40);
+
+    // TODO teamleider op deze pagina
     console.log(ronden);
     console.log(spelers);
     console.log(eersteSpeler);
+    console.log({hoogsteRating});
+
     const rondeNummers = [];
     ronden.forEach(function (ronde) {
         if (ronde) {
@@ -35,16 +41,28 @@ const teamleider = html.params.get("teamleider");
         }
     });
     const vast = html.id("vast");
-    vast.append(html.bovenRij("naam", "nummer", "rating", ...rondeNummers));
+    vast.append(html.bovenRij("naam","nummer", "rating", "team", ...rondeNummers));
     const vasteSpelers = spelers.filter(function (speler) {
-        return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode || wasInvaller(speler.knsbNummer, ronden);
+        return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode
+            || wasInvaller(speler.knsbNummer, ronden);
     })
     for (const speler of vasteSpelers) {
-        if (speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode)
-        vast.append(html.rij(speler.naam, speler.knsbNummer, speler.knsbRating, ...rondeNummers));
+        const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
+        vast.append(html.rij(speler.naam, speler.knsbNummer, speler.knsbRating, team, ...rondeNummers));
+    }
+    const inval = html.id("invallers");
+    const invallers = spelers.filter(function (speler) {
+        const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
+        return speler.knsbNummer > db.KNSB_NUMMER
+            && speler.knsbRating < hoogsteRating
+            && (team === "" || teamCode < team); // geen vast team of in lager team
+    })
+    for (const speler of invallers) {
+        const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
+        inval.append(html.rij(speler.naam, speler.knsbNummer, speler.knsbRating, team, "knop"));
     }
     // TODO overzicht uitslagen van spelers in team: gespeelde ronden en te spelen ronden met vraagtekens, weigeringen en vinkjes
-    // TODO overzicht spelers die mogen invallen (naam, knsbNummer, rating, knsbTeam, nhsbTeam, knop met tegenstanders
+    // TODO overzicht spelers die mogen invallen (naam, knsbNummer, rating, team, knop met tegenstanders
 
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
