@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {perTeamRondenUitslagen} from "./o_o_o.js";
+import {vinkjeInvullen, perTeamRondenUitslagen} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -15,7 +15,7 @@ const teamleider = html.params.get("teamleider"); // teamCode
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
+    const teams = (await zyq.serverFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
         return db.isTeam(team);
     });
     const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);
@@ -28,6 +28,7 @@ const teamleider = html.params.get("teamleider"); // teamCode
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = eersteSpeler.knsbRating + (nhsbTeam ? 80 : 40);
 
+    console.log(ronden);
     console.log(spelers);
     console.log(eersteSpeler);
     console.log({hoogsteRating});
@@ -36,7 +37,7 @@ const teamleider = html.params.get("teamleider"); // teamCode
     vast.append(html.bovenRij("naam", "nummer", "rating", "team", ...(rondeNummers(ronden))));
     const vasteSpelers = spelers.filter(function (speler) {
         return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode
-            || wasInvaller(speler.knsbNummer, ronden);
+            || isInvaller(speler.knsbNummer, ronden);
     })
     for (const speler of vasteSpelers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
@@ -118,12 +119,17 @@ function rondeNummers(ronden) {
     return nummers;
 }
 
-function wasInvaller(knsbNummer, ronden) {
+function isInvaller(knsbNummer, ronden) {
     for (const ronde of ronden) {
         if (ronde) {
             for (const uitslag of ronde.uitslagen) {
-                if (uitslag.knsbNummer  === knsbNummer) {
-                    return uitslag.partij === db.EXTERNE_PARTIJ
+                if (uitslag.knsbNummer  === knsbNummer && uitslag.partij === db.EXTERNE_PARTIJ) {
+                    return true; // was invaller
+                }
+            }
+            for (const geplandeUitslag of ronde.geplandeUitslagen) {
+                if (geplandeUitslag.knsbNummer  === knsbNummer) {
+                    return true; // geplande invaller
                 }
             }
         }
@@ -136,9 +142,20 @@ function rondenPerSpeler(knsbNummer, ronden) {
     ronden.forEach(function (ronde) {
         if (ronde) {
             const uitslag = ronde.uitslagen.find(function (u) {
-                return u.knsbNummer === knsbNummer && u.rondeNummer === ronde.ronde.rondeNummer;
+                return u.knsbNummer === knsbNummer;
             });
-            uitslagen.push(uitslag ? (`${uitslag.bordNummer}${uitslag.witZwart} ${uitslag.resultaat}`) : "");
+            if (uitslag) {
+                uitslagen.push(`${uitslag.bordNummer}${uitslag.witZwart} ${uitslag.resultaat}`);
+            } else {
+                const geplandeUitslag = ronde.geplandeUitslagen.find(function (u) {
+                    return u.knsbNummer === knsbNummer;
+                });
+                if (geplandeUitslag) {
+                    uitslagen.push(vinkjeInvullen.get(geplandeUitslag.partij));
+                } else {
+                    uitslagen.push("");
+                }
+            }
         }
     });
     return uitslagen;

@@ -18,6 +18,18 @@ import * as db from "./db.js";
 import * as zyq from "./zyq.js"; // TODO verwijderen
 
 /**
+ * vinkjeInvullen voor agenda.js en teamleider.js
+ *
+ * @type {Map<string, string>}
+ */
+export const vinkjeInvullen = new Map([
+    [db.PLANNING, html.VRAAGTEKEN],
+    [db.NIET_MEEDOEN, html.STREEP],
+    [db.MEEDOEN, html.VINKJE],
+    [db.EXTERN_THUIS, html.VINKJE],
+    [db.EXTERN_UIT, html.VINKJE]]);
+
+/**
  * teamSelecteren voor ranglijst.js en team.js
  *
  * TODO bijna hetzelfde als start.js: competitieSelecteren en teamlijder.js: teamSelecteren
@@ -72,12 +84,12 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
  */
 export async function perTeamRondenUitslagen(teamCode) {
     const rondenUitslagen = [];
-    (await zyq.localFetch(`/ronden/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
+    (await zyq.serverFetch(`/ronden/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
         function (ronde) {
             rondenUitslagen[ronde.rondeNummer]
                 = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: [], deelnemers: 0, geplandeUitslagen: []};
         });
-    (await zyq.localFetch(`/team/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
+    (await zyq.serverFetch(`/team/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
         function (uitslag) {
             const rondeUitslag = rondenUitslagen[uitslag.rondeNummer];
             if (uitslag.partij === db.EXTERNE_PARTIJ) {

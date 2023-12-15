@@ -141,7 +141,7 @@ module.exports = router => {
                 .join('persoon', 'persoon.knsbNummer', 'uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [db.EXTERN_THUIS, db.EXTERN_UIT])
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
-                .andWhereNot('uitslag.teamCode', ref('uitslag.anderTeam'))
+                .andWhereNot('uitslag.teamCode', ref('uitslag.anderTeam')) // TODO waarom ref()?
                 .andWhere('uitslag.datum',ctx.params.datum)
                 .orderBy(['uitslag.partij', 'naam']);
         }

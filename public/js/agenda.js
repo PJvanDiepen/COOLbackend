@@ -2,6 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
+import {vinkjeInvullen} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -100,10 +101,3 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
     }
     return aanvullingen;
 }
-
-const vinkjeInvullen = new Map([
-    [db.PLANNING, html.VRAAGTEKEN],
-    [db.NIET_MEEDOEN, html.STREEP],
-    [db.MEEDOEN, html.VINKJE],
-    [db.EXTERN_THUIS, html.VINKJE],
-    [db.EXTERN_UIT, html.VINKJE]]);
