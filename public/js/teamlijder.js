@@ -10,7 +10,7 @@ import * as zyq from "./zyq.js";
 /*
     verwerk teamleider=<teamCode>
  */
-const teamleider = html.params.get("teamleider");
+const teamleider = html.params.get("teamleider"); // teamCode
 
 (async function() {
     await zyq.init();
@@ -25,31 +25,31 @@ const teamleider = html.params.get("teamleider");
     const eersteSpeler = spelers.find(function(speler) {
         return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode;
     });
-    const nhsbTeam = teamCode.substring(0,1) === "n";
+    const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = eersteSpeler.knsbRating + (nhsbTeam ? 80 : 40);
 
-    // TODO teamleider op deze pagina
-    console.log(ronden);
     console.log(spelers);
     console.log(eersteSpeler);
     console.log({hoogsteRating});
 
-    const rondeNummers = [];
-    ronden.forEach(function (ronde) {
-        if (ronde) {
-            rondeNummers.push(ronde.ronde.rondeNummer);
-        }
-    });
     const vast = html.id("vast");
-    vast.append(html.bovenRij("naam","nummer", "rating", "team", ...rondeNummers));
+    vast.append(html.bovenRij("naam", "nummer", "rating", "team", ...(rondeNummers(ronden))));
     const vasteSpelers = spelers.filter(function (speler) {
         return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode
             || wasInvaller(speler.knsbNummer, ronden);
     })
     for (const speler of vasteSpelers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
-        vast.append(html.rij(speler.naam, speler.knsbNummer, speler.knsbRating, team, ...rondeNummers));
+        vast.append(html.rij(zyq.naarSpeler(speler),
+            speler.knsbNummer,
+            speler.knsbRating,
+            team,
+            ...(rondenPerSpeler(speler.knsbNummer, ronden))));
     }
+    const teamGegevens = teams.find(function (team) {
+        return team.teamCode === teamCode;
+    });
+    html.id("vragen").innerHTML = `Invallers vragen door ${teamGegevens.naam}`;
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
@@ -59,12 +59,13 @@ const teamleider = html.params.get("teamleider");
     })
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
-        inval.append(html.rij(speler.naam, speler.knsbNummer, speler.knsbRating, team, "knop"));
+        inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, "knop"));
     }
     // TODO overzicht uitslagen van spelers in team: gespeelde ronden en te spelen ronden met vraagtekens, weigeringen en vinkjes
     // TODO overzicht spelers die mogen invallen (naam, knsbNummer, rating, team, knop met tegenstanders
 
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
+
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
     html.id("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamlijders";
@@ -107,6 +108,16 @@ function uitslagenTeamPerRonde(uitslag, rondeNummer, rondenTabel) {
     }
 }
 
+function rondeNummers(ronden) {
+    const nummers = [];
+    ronden.forEach(function (ronde) {
+        if (ronde) {
+            nummers.push(ronde.ronde.rondeNummer);
+        }
+    });
+    return nummers;
+}
+
 function wasInvaller(knsbNummer, ronden) {
     for (const ronde of ronden) {
         if (ronde) {
@@ -118,6 +129,19 @@ function wasInvaller(knsbNummer, ronden) {
         }
     }
     return false;
+}
+
+function rondenPerSpeler(knsbNummer, ronden) {
+    const uitslagen = [];
+    ronden.forEach(function (ronde) {
+        if (ronde) {
+            const uitslag = ronde.uitslagen.find(function (u) {
+                return u.knsbNummer === knsbNummer && u.rondeNummer === ronde.ronde.rondeNummer;
+            });
+            uitslagen.push(uitslag ? (`${uitslag.bordNummer}${uitslag.witZwart} ${uitslag.resultaat}`) : "");
+        }
+    });
+    return uitslagen;
 }
 
 ////////////////////////////////////////////////////////////////

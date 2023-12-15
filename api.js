@@ -241,6 +241,8 @@ module.exports = router => {
      */
     router.get('/teams/:seizoen', async function (ctx) {
         ctx.body = await Team.query()
+            .select('team.*', 'persoon.naam')
+            .join('persoon', 'team.teamleider', 'persoon.knsbNummer')
             .where('team.seizoen', ctx.params.seizoen);
     });
 

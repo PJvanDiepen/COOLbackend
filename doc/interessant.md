@@ -95,6 +95,7 @@ Refresh Android cache
 - [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
 - [Zeekat CSS!](https://zeekat.nl/index.html)
 - [HTML uitleg](https://www.patrickweaver.net/blog/a-blog-post-with-every-html-element/)
+- [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
 
 # software enigineering
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
