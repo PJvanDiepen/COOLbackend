@@ -62,7 +62,6 @@ const teamleider = html.params.get("teamleider"); // teamCode
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, "knop"));
     }
-    // TODO overzicht uitslagen van spelers in team: gespeelde ronden en te spelen ronden met vraagtekens, weigeringen en vinkjes
     // TODO overzicht spelers die mogen invallen (naam, knsbNummer, rating, team, knop met tegenstanders
 
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
