@@ -150,7 +150,7 @@ export function rij(...kolommen) {
         const td = document.createElement("td");
         td.append(kolom);
         tr.append(td);
-    };
+    }
     return tr;
 }
 
@@ -160,7 +160,7 @@ export function bovenRij(...kolommen) {
         const th = document.createElement("th");
         th.append(kolom);
         tr.append(th);
-    };
+    }
     return tr;
 }
 

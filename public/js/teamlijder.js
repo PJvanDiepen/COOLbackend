@@ -57,7 +57,12 @@ const teamleider = html.params.get("teamleider"); // teamCode
     const tegenstanders = tegenstandersLijst(ronden);
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
-        inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, "knop"));
+        const knop = document.createElement("select");
+        inval.append(html.rij(zyq.naarSpeler(speler),
+            speler.knsbNummer,
+            speler.knsbRating,
+            team,
+            html.selectie(knop, 0, tegenstanders)));
     }
 
     // TODO vanaf hier verwijderen
@@ -170,7 +175,7 @@ function rondenPerSpeler(knsbNummer, ronden) {
                 }
             }
         }
-    };
+    }
     return uitslagen;
 }
 
@@ -185,7 +190,14 @@ function lagerTeam(team, hogerTeam) {
 }
 
 function tegenstandersLijst(ronden) {
-    return undefined;
+    const lijst = [[0, "selecteer tegenstander"]];
+    for (const ronde of ronden) {
+        if (ronde && ronde.uitslagen.length < 1) {
+            lijst.push([ronde.ronde.rondeNummer, ronde.ronde.tegenstander]);
+        }
+    }
+    console.log({lijst});
+    return lijst;
 }
 
 // TODO vanaf hier tot einde verwijderen

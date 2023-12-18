@@ -355,7 +355,7 @@ function htmlRij(...kolommen) {
         const td = document.createElement("td");
         td.append(kolom);
         tr.append(td);
-    };
+    }
     return tr;
 }
 
