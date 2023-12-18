@@ -351,11 +351,11 @@ function htmlParagraaf(tekst) {
 
 function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
-    kolommen.map(function (kolom) {
+    for (const kolom of kolommen) {
         const td = document.createElement("td");
         td.append(kolom);
         tr.append(td);
-    });
+    };
     return tr;
 }
 

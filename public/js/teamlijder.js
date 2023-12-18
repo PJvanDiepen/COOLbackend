@@ -54,6 +54,7 @@ const teamleider = html.params.get("teamleider"); // teamCode
             && speler.knsbRating < hoogsteRating
             && lagerTeam(team, teamCode); // niet vaste speler in hoger team
     })
+    const tegenstanders = tegenstandersLijst(ronden);
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, "knop"));
@@ -106,11 +107,11 @@ function uitslagenTeamPerRonde(uitslag, rondeNummer, rondenTabel) {
 
 function rondeNummers(ronden) {
     const nummers = [];
-    ronden.forEach(function (ronde) {
+    for (const ronde of ronden) {
         if (ronde) {
             nummers.push(ronde.ronde.rondeNummer);
         }
-    });
+    }
     return nummers;
 }
 
@@ -151,7 +152,7 @@ function isInvaller(knsbNummer, ronden) {
 
 function rondenPerSpeler(knsbNummer, ronden) {
     const uitslagen = [];
-    ronden.forEach(function (ronde) {
+    for (const ronde of ronden) {
         if (ronde) {
             const uitslag = ronde.uitslagen.find(function (u) {
                 return u.knsbNummer === knsbNummer;
@@ -169,7 +170,7 @@ function rondenPerSpeler(knsbNummer, ronden) {
                 }
             }
         }
-    });
+    };
     return uitslagen;
 }
 
@@ -181,6 +182,10 @@ function lagerTeam(team, hogerTeam) {
     } else {
         return hogerTeam < team; // hogerTeam heeft lager nummer
     }
+}
+
+function tegenstandersLijst(ronden) {
+    return undefined;
 }
 
 // TODO vanaf hier tot einde verwijderen

@@ -256,12 +256,12 @@ module.exports = router => {
         ctx.body = await Ronde.query()
             .select('teamCode', 'rondeNUmmer', 'datum')
             .where('seizoen', ctx.params.seizoen)
-            .andWhere(fn('substring', ref('teamCode'), 1, 1), "i")  // TODO zonder fn('substring', ref( enz.
+            .andWhere(fn('substring', ref('teamCode'), 1, 1), "i")
             .orderBy(['datum', 'rondeNummer']);
     });
 
     /*
-    -- ronden per seizoen en competitie met aantal uitslagen
+    -- ronden per seizoen en competitie met aantal uitslagen TODO wordt aantalResultaten ergens gebruikt?
     with u as
       (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten
       from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)
