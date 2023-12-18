@@ -51,9 +51,10 @@ import * as zyq from "./zyq.js";
     rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, html.id("uitslagen"));
     await wedstrijdenBijRonde(rondeNummer, html.id("wedstrijden"));
-    html.id("kop").innerHTML = "Ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
+    html.id("kop").textContent =
+        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer])}`;
     if (zyq.o_o_o.competitie === zyq.INTERNE_COMPETITIE) {
-        html.id("subkop").innerHTML = "Andere ronden en wedstrijden";
+        html.id("subkop").textContent = "Andere ronden en wedstrijden";
     }
 })();
 

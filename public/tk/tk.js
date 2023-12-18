@@ -256,7 +256,7 @@ function parametersVerwerken() {
 
 function kabinetVerwerken(kader, kop) {
     const i = jaarIndex(jaar);
-    kop.innerHTML = "Kabinet in " + Math.round(jaar);
+    kop.textContent = "Kabinet in " + Math.round(jaar);
     kader.append(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
     kader.append(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
 }
@@ -271,7 +271,7 @@ const kabinetten = [];
 
 function uitslagenVerwerken(kop, deLijsten) {
     const i = jaarIndex(jaar);
-    kop.innerHTML = "Zetels per partij in " + Math.round(jaar);
+    kop.textContent = "Zetels per partij in " + Math.round(jaar);
     const uitslagen = new URLSearchParams(tk[tk[i].verkiezing ? jaarIndex(tk[i].verkiezing) : i].zetels);
     for (const [partij, zetels] of uitslagen) {
         const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
@@ -303,7 +303,7 @@ function jaarIndex(jaar) {
 }
 
 function kabinetFormeren(kop, deKabinetten) {
-    kop.innerHTML = "Meerderheidskabinetten in " + Math.round(jaar);
+    kop.textContent = "Meerderheidskabinetten in " + Math.round(jaar);
     kabinet(0, 0);
     let nummer = 0;
     while (kabinetten.length > 0) {

@@ -98,8 +98,8 @@ const indelenFun = [
     zyq.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.huidigeRonde;
     const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
-    const subkop = html.id("subkop");
-    subkop.innerHTML = "Indeling ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar({datum: totDatum});
+    html.id("subkop").textContent =
+        `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven

@@ -14,13 +14,14 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await ledenLijst(Number(html.params.get("lid")), html.id("kop"), html.id("competities"), html.id("tabel"));
+    html.id("kop").textContent =
+        `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}overzicht voor bestuur`;
+    await ledenLijst(Number(html.params.get("lid")), html.id("competities"), html.id("tabel"));
     await alleRatinglijsten(html.id("ratinglijsten"));
     await leesRatinglijst(html.id("csvFile"), html.id("informeer"));
 })();
 
-async function ledenLijst(lidNummer, kop, competities, tabel) {
-    kop.innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor bestuur";
+async function ledenLijst(lidNummer, competities, tabel) {
     const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
     competities.append(html.rij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
     tabel.append(html.rij(

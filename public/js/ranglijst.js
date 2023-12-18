@@ -32,7 +32,8 @@ import * as zyq from "./zyq.js";
     html.selectie(html.id("leden"), alleLeden, optiesLeden, function (leden) {
         html.zelfdePagina(`leden=${leden}`);
     });
-    html.id("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "ranglijst na ronde " + rondeNummer;
+    html.id("kop").textContent =
+        `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}ranglijst na ronde ${rondeNummer}`;
     const lijst = html.id("tabel");
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     (await ranglijst(rondeNummer)).filter(function (speler) {

@@ -46,7 +46,7 @@ const teamleider = html.params.get("teamleider"); // teamCode
     const teamGegevens = teams.find(function (team) {
         return team.teamCode === teamCode;
     });
-    html.id("vragen").innerHTML = `Invallers vragen door ${teamGegevens.naam}`;
+    html.id("vragen").textContent = `Invallers vragen door ${teamGegevens.naam}`;
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
@@ -58,14 +58,14 @@ const teamleider = html.params.get("teamleider"); // teamCode
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, "knop"));
     }
-    // TODO overzicht spelers die mogen invallen (naam, knsbNummer, rating, team, knop met tegenstanders
 
+    // TODO vanaf hier verwijderen
     const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
-
     const wedstrijdDatum = html.params.get("datum") || volgendeWedstrijdDatum(wedstrijden);
     datumSelecteren(wedstrijdDatum, wedstrijden);
-    html.id("kop").innerHTML = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamlijders";
+    html.id("kop").textContent = zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + "overzicht voor teamlijders";
     await spelersOverzicht(wedstrijdDatum, wedstrijden, html.id("tabel"), html.id("tussenkop"), html.id("lijst"));
+    // TODO tot hier verwijderen
 })();
 
 function teamVoorkeur(teams, teamleider) {
@@ -88,7 +88,7 @@ function teamSelecteren(teams, teamCode) {
 }
 
 async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
-    kop.innerHTML = `Overzicht voor teamleider ${html.SCHEIDING} ${zyq.teamVoluit(teamCode)}`;
+    kop.textContent = `Overzicht voor teamleider ${html.SCHEIDING} ${zyq.teamVoluit(teamCode)}`;
     const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
     for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
         uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
@@ -183,8 +183,7 @@ function lagerTeam(team, hogerTeam) {
     }
 }
 
-////////////////////////////////////////////////////////////////
-
+// TODO vanaf hier tot einde verwijderen
 function volgendeWedstrijdDatum(wedstrijden) {
     const vandaag = zyq.datumSQL();
     let datum;
@@ -223,7 +222,7 @@ async function spelersOverzicht(wedstrijdDatum, wedstrijden, tabel, tussenkop, l
             wedstrijd[aantalWedstrijden++] = w;
         }
     }
-    tussenkop.innerHTML =
+    tussenkop.textContent =
         `${nhsb ? "NHSB" : "KNSB"} wedstrijd${aantalWedstrijden > 1 ? "en" : ""} op ${zyq.datumLeesbaar({datum: wedstrijdDatum})}`;
     let vorigeSpeler = 0;
     for (const s of spelers) {

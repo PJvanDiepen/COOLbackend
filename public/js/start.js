@@ -13,8 +13,8 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await zyq.init();
-    html.id("kop").innerHTML =
-        zyq.o_o_o.vereniging + html.SCHEIDING + zyq.seizoenVoluit(zyq.o_o_o.seizoen) + html.SCHEIDING + zyq.teamVoluit(zyq.o_o_o.competitie);
+    html.id("kop").textContent =
+        `${zyq.o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}${zyq.teamVoluit(zyq.o_o_o.competitie)}`;
     const plaatje = html.id("plaatje");
     if (zyq.o_o_o.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));

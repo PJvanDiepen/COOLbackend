@@ -137,11 +137,11 @@ export function onzichtbaar(node, indien) {
 }
 
 export function tekstOverschrijven(node, tekst) {
-    node.innerText = tekst;
+    node.textContent = tekst;
 }
 
 export function tekstToevoegen(node, tekst) {
-    node.innerText += tekst;
+    node.textContent += tekst;
 }
 
 export function rij(...kolommen) {

@@ -18,9 +18,10 @@ import * as zyq from "./zyq.js";
     zyq.o_o_o.team = zyq.o_o_o.competitie;
     const rondeNummer = Number(params.get("ronde"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    html.id("kop").innerHTML = "Ronde " + rondeNummer + html.SCHEIDING + zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer]);
+    html.id("kop").textContent =
+        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer])}`;
     if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) {
-        html.id("subkop").innerHTML = "Andere ronden en wedstrijden";
+        html.id("subkop").textContent = "Andere ronden en wedstrijden";
     }
 })();
 

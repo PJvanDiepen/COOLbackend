@@ -118,7 +118,8 @@ export const o_o_o = {
 };
 
 export function competitieTitel() {
-    document.getElementById("competitie").innerHTML = o_o_o.vereniging + SCHEIDING + teamVoluit(o_o_o.competitie); // TODO html.id()
+    document.getElementById("competitie").textContent = // TODO html.id()
+        `${o_o_o.vereniging}${SCHEIDING}${teamVoluit(o_o_o.competitie)}`;
 }
 
 export const uuidActiveren = params.get("uuid");
