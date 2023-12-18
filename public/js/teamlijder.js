@@ -22,15 +22,11 @@ const teamleider = html.params.get("teamleider"); // teamCode
     await teamSelecteren(teams, teamCode);
     const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
     const spelers = await zyq.serverFetch(`/teamlijder/${zyq.o_o_o.seizoen}`);
-    const eersteSpeler = spelers.find(function(speler) {
-        return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode;
-    });
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
-    const hoogsteRating = eersteSpeler.knsbRating + (nhsbTeam ? 80 : 40);
+    const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
 
     console.log(ronden);
     console.log(spelers);
-    console.log(eersteSpeler);
     console.log({hoogsteRating});
 
     const vast = html.id("vast");
@@ -56,7 +52,7 @@ const teamleider = html.params.get("teamleider"); // teamCode
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         return speler.knsbNummer > db.KNSB_NUMMER
             && speler.knsbRating < hoogsteRating
-            && (team === "" || teamCode < team); // geen vast team of in lager team
+            && lagerTeam(team, teamCode); // niet vaste speler in hoger team
     })
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
@@ -118,6 +114,23 @@ function rondeNummers(ronden) {
     return nummers;
 }
 
+function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
+    for (const speler of spelers) {
+        if (nhsbTeam && speler.nhsbTeam === teamCode) {
+            return speler.knsbRating + 80;
+        } else if (speler.knsbTeam === teamCode) {
+            return speler.knsbRating + 40;
+        }
+    }
+    if (teamCode === "nbb") { // NHSB beker (brons)
+        return 1600;
+    } else if (teamCode === "nbz") { // NHSB beker (zilver)
+        return 1900;
+    } else {
+        return 3000;
+    }
+}
+
 function isInvaller(knsbNummer, ronden) {
     for (const ronde of ronden) {
         if (ronde) {
@@ -160,6 +173,16 @@ function rondenPerSpeler(knsbNummer, ronden) {
     return uitslagen;
 }
 
+function lagerTeam(team, hogerTeam) {
+    if (team === "")
+        return true;
+    else if (team.substring(0,2) === "nv" && hogerTeam.substring(0,2) !== "nv") {
+        return true; // viertal is lagerTeam dan niet viertal
+    } else {
+        return hogerTeam < team; // hogerTeam heeft lager nummer
+    }
+}
+
 ////////////////////////////////////////////////////////////////
 
 function volgendeWedstrijdDatum(wedstrijden) {
@@ -196,7 +219,7 @@ async function spelersOverzicht(wedstrijdDatum, wedstrijden, tabel, tussenkop, l
             nhsb = nhsb || w.teamCode.substring(0,1) === "n"; // KNSB en NHSB wedstrijden nooit op dezelfde dag!
             w.gevraagd = 0;
             w.toegezegd = 0;
-            w.hoogsteRating = ratingInvaller(spelers, w.teamCode, nhsb);
+            w.hoogsteRating = ratingInvallerOud(spelers, w.teamCode, nhsb);
             wedstrijd[aantalWedstrijden++] = w;
         }
     }
@@ -246,7 +269,7 @@ async function spelersOverzicht(wedstrijdDatum, wedstrijden, tabel, tussenkop, l
     }
 }
 
-function ratingInvaller(spelers, teamCode, nhsb) {
+function ratingInvallerOud(spelers, teamCode, nhsb) {
     for (const s of spelers) {
         if (nhsb && s.nhsbTeam === teamCode) {
             return s.knsbRating + 80;
