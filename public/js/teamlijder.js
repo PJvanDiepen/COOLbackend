@@ -55,14 +55,15 @@ const teamleider = html.params.get("teamleider"); // teamCode
             && lagerTeam(team, teamCode); // niet vaste speler in hoger team
     })
     const tegenstanders = tegenstandersLijst(ronden);
+    html.selectie(html.id("tegen"), 0, tegenstanders);
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
-        const knop = document.createElement("select");
+
         inval.append(html.rij(zyq.naarSpeler(speler),
             speler.knsbNummer,
             speler.knsbRating,
             team,
-            html.selectie(knop, 0, tegenstanders)));
+            "knop"));
     }
 
     // TODO vanaf hier verwijderen
