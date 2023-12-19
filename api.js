@@ -453,49 +453,8 @@ module.exports = router => {
     /*
     Zie teamleider.js
 
-    with u as
-      (select * from uitslag where seizoen = @seizoen and not teamCode = anderTeam and datum = @datum)
-    select s.nhsbTeam, s.knsbTeam, s.knsbNummer, s.knsbRating, naam, u.teamCode, u.partij
-    from speler s
-      join persoon p on s.knsbNummer = p.knsbNummer
-      left join u on s.seizoen = @seizoen and s.knsbNummer = u.knsbNummer
-    where s.seizoen = @seizoen
-    order by knsbRating desc;
      */
-    router.get('/:uuidToken/teamleider/:seizoen/:datum', async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
-        if (gebruiker.juisteRechten(db.TEAMLEIDER)) {
-            ctx.body = await Speler.query()
-                .with('u',function (qb) {
-                    qb.from('uitslag')
-                        .where('uitslag.seizoen', ctx.params.seizoen)
-                        .andWhereNot('uitslag.teamCode', ref('uitslag.anderTeam'))
-                        .andWhere('uitslag.datum', ctx.params.datum)
-                })
-                .select(
-                    'speler.nhsbTeam',
-                    'speler.knsbTeam',
-                    'speler.knsbNummer',
-                    'speler.knsbRating',
-                    'persoon.naam',
-                    'u.teamCode',
-                    'u.partij')
-                .join('persoon', 'speler.knsbNummer', 'persoon.knsbNummer')
-                .leftJoin('u', function(join) {
-                    join.on('u.seizoen', 'speler.seizoen')
-                        .andOn('u.knsbNummer','speler.knsbNummer')})
-                .where('speler.seizoen', ctx.params.seizoen)
-                .orderBy('speler.knsbRating', 'desc');
-        } else {
-            ctx.body = [];
-        }
-    });
-
-    /*
-    Zie teamlijder.js
-
-     */
-    router.get('/teamlijder/:seizoen', async function (ctx) {
+    router.get('/teamleider/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
             .select('speler.nhsbTeam', 'speler.knsbTeam', 'speler.knsbNummer', 'speler.knsbRating', 'persoon.naam')
             .join('persoon', 'speler.knsbNummer', 'persoon.knsbNummer')

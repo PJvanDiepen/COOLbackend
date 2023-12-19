@@ -33,8 +33,7 @@ import * as zyq from "./zyq.js";
     menuKeuzes.push(
         [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
         [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
-        // [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
-        [db.TEAMLEIDER, "Overzicht voor teamlijder", "teamlijder.html"]); // TODO teamleider.html
+        [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
     for (let i = 0; i < menuKeuzes.length; i++) {
         const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
         if (minimumRechten <= zyq.gebruiker.mutatieRechten ) {

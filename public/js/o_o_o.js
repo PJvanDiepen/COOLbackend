@@ -32,7 +32,7 @@ export const vinkjeInvullen = new Map([
 /**
  * teamSelecteren voor ranglijst.js en team.js
  *
- * TODO bijna hetzelfde als start.js: competitieSelecteren en teamlijder.js: teamSelecteren
+ * TODO bijna hetzelfde als start.js: competitieSelecteren en teamleider.js: teamSelecteren
  *
  * @param teamCode team of competitie
  * @returns {Promise<void>}
