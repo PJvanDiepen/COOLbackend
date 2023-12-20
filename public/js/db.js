@@ -29,6 +29,10 @@ function isCompetitie(team) {
     return team.teamCode === "" ? false : team.teamCode.substring(0,1) === "i";
 }
 
+function isBekerCompetitie(team) {
+    return team.teamCode === "" ? false : team.teamCode.substring(1,2) === "b";
+}
+
 function isTeam(team) {
     return team.teamCode === "" ? false : team.teamCode.substring(0,1) !== "i";
 }
@@ -131,6 +135,7 @@ export { // ES6 voor browser
     ZWITSERS_TEST,
 
     isCompetitie,          // (team)
+    isBekerCompetitie,     // (team)
     isTeam,                // (team)
 
     // knsbNummer

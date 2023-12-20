@@ -38,15 +38,19 @@ export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst 
     } else if (teamCode === SNELSCHAKEN) {
         return "einde seizoen snelschaken";
     } else if (teamCode === "kbe") {
-        return o_o_o.vereniging + " KNSB bekerteam";
+        return o_o_o.vereniging + " KNSB beker";
     } else if (teamCode === "nbe") {
-        return o_o_o.vereniging + " NHSB bekerteam";
+        return o_o_o.vereniging + " NHSB beker";
+    } else if (teamCode === "nbz") {
+        return o_o_o.vereniging + " NHSB beker < 1900";
+    } else if (teamCode === "nbb") {
+        return o_o_o.vereniging + " NHSB beker < 1600";
     } else if (!teamOfCompetitie(teamCode)) {
         return "geen";
     } else if (teamCode.substring(0,2) === "nv") {
-        return o_o_o.vereniging + " V" + teamCode.substring(2);
+        return o_o_o.vereniging + " v" + teamCode.substring(2);
     } else if (teamCode.substring(0,1) === "n") {
-        return o_o_o.vereniging + " N" + teamCode.substring(1);
+        return o_o_o.vereniging + " n" + teamCode.substring(1);
     } else {
         return o_o_o.vereniging + " " + teamCode;
     }

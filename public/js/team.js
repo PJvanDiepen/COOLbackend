@@ -24,7 +24,11 @@ async function uitslagenTeam(kop, rondenTabel) {
     const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
     for (const team of teams) {
         if (team.teamCode === zyq.o_o_o.team) {
-            kop.textContent = [zyq.teamVoluit(zyq.o_o_o.team), zyq.seizoenVoluit(zyq.o_o_o.seizoen), team.omschrijving].join(html.SCHEIDING);
+            if (db.isBekerCompetitie(team)) {
+                kop.textContent = `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`;
+            } else { // TODO db.metScheiding(teksten..)
+                kop.textContent = [zyq.teamVoluit(team.teamCode), zyq.seizoenVoluit(zyq.o_o_o.seizoen), team.omschrijving].join(html.SCHEIDING);
+            }
             break;
         }
     }
