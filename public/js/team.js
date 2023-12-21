@@ -24,11 +24,9 @@ async function uitslagenTeam(kop, rondenTabel) {
     const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
     for (const team of teams) {
         if (team.teamCode === zyq.o_o_o.team) {
-            if (db.isBekerCompetitie(team)) {
-                kop.textContent = `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`;
-            } else { // TODO db.metScheiding(teksten..)
-                kop.textContent = [zyq.teamVoluit(team.teamCode), zyq.seizoenVoluit(zyq.o_o_o.seizoen), team.omschrijving].join(html.SCHEIDING);
-            }
+            kop.textContent = db.isBekerCompetitie(team)
+                ? `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`
+                : `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}${team.omschrijving}`;
             break;
         }
     }
@@ -46,7 +44,7 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
         if (u.uitslagen.length) {
             const div = html.id("ronde" + rondeNummer); // 9 x div met id="ronde1".."ronde9"
             div.appendChild(document.createElement("h2")).textContent =
-                ["Ronde " + rondeNummer, datumKolom].join(html.SCHEIDING);
+                `Ronde ${rondeNummer}${html.SCHEIDING}${datumKolom}`;
             const tabel = div.appendChild(document.createElement("table"));
             tabel.append(html.rij("", zyq.wedstrijdVoluit(u.ronde), "", uitslagKolom));
             for (let uitslag of u.uitslagen) {

@@ -1,7 +1,44 @@
 use waagtoren; -- ga naar TODO
 
--- aantal leden per maand 
+-- TODO issue #37 afwezig en externe wedstrijd op dinsdag
+set @seizoen = '2324'; -- per seizoen controleren!
+
+with 
+  e as (select * from uitslag where anderTeam = "int" and partij = "e")
+select p.naam, u.teamCode, u.rondeNummer, u.partij, e.* from uitslag u
+join persoon p on u.knsbNummer = p.knsbNummer
+join e on u.seizoen = e.seizoen and u.knsbNummer = e.knsbNummer and u.datum = e.datum
+where u.seizoen = @seizoen and u.teamCode = "int" and u.partij = "a";
+
+with
+  e as (select * from uitslag where anderTeam = "int" and partij = "e")
+update uitslag u
+join e on u.seizoen = e.seizoen and u.knsbNummer = e.knsbNummer and u.datum = e.datum
+set u.partij = "e"
+where u.seizoen = @seizoen and u.teamCode = "int" and u.partij = "a";
+
+-- externe partijen zonder uitslag
+select p.naam, u.* from uitslag u
+join persoon p on u.knsbNummer = p.knsbNummer
+where seizoen = @seizoen and partij = "e" and resultaat not in ("1", "½", "0") order by seizoen, datum;
+
+delete from uitslag
+where seizoen = @seizoen and partij = "e" and resultaat not in ("1", "½", "0") order by seizoen, datum;
+
+-- aantal rating leden per maand 
 select maand, jaar, count(*) leden from rating group by maand, jaar;
+
+-- TODO wijzig datum externe wedstrijd
+set @seizoen = '2324';
+set @team = 'nv2';
+set @ronde = 3;
+set @datum = '2024-02-20';
+
+select * from ronde where seizoen = @seizoen and teamCode = @team;
+select * from uitslag where seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+
+update ronde set datum = @datum where seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+update uitslag set partij = "p", datum = @datum where seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde; 
 
 -- TODO partij wijzigen
 set @seizoen = '2324';

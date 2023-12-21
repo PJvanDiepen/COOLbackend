@@ -62,7 +62,7 @@ export async function teamSelecteren(teamCode) {
 export async function rondeSelecteren(teamCode, rondeNummer) {
     zyq.o_o_o.team = zyq.o_o_o.competitie;
     const ronden = (await zyq.localFetch("/ronden/" + zyq.o_o_o.seizoen + "/" + teamCode)).map(function (ronde) {
-        return [ronde.rondeNummer, zyq.datumLeesbaar(ronde) + html.SCHEIDING + "ronde " + ronde.rondeNummer];
+        return [ronde.rondeNummer, `${zyq.datumLeesbaar(ronde)}${html.SCHEIDING}ronde ${ronde.rondeNummer}`];
     });
     html.selectie(html.id("rondeSelecteren"), rondeNummer, ronden, function (ronde) {
         html.anderePagina(`ronde.html?ronde=${ronde}`);
