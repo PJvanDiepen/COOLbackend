@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+    app:
+        image: nginx:1.25.3-alpine
+        depends_on:
+            - api
+        ports:
+            - "8080:80"
+        volumes:
+            - ./public:/usr/share/nginx/html:ro
+
+    api:
+        build:
+            context: .
+        depends_on:
+            - mysql
+        ports:
+            - "3000:3000"
+        volumes:
+            - ./:/usr/src/app
+
+    mysql:
+        image: mysql:8.2.0
+        environment:
+            MYSQL_ROOT_PASSWORD: secret

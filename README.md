@@ -11,6 +11,15 @@ npm install
 npm start
 ```
 
+# Run with docker
+
+```sh
+docker compose up
+```
+
+De app is beschikbaar op http://localhost:8080.
+
+
 # Deploy to 0-0-0.nl
 
 # [Database](doc/database.md)
