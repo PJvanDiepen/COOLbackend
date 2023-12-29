@@ -7,6 +7,7 @@ import * as zyq from "./zyq.js";
 
 /*
     verwerk lid=<knsbNummer>
+         of leden=<teamCode> alle leden of selectie
  */
 
 const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, jaar]]
@@ -16,15 +17,20 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     html.id("kop").textContent =
         `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}overzicht voor bestuur`;
-    await ledenLijst(Number(html.params.get("lid")), html.id("competities"), html.id("tabel"));
+    await ledenLijst(
+        Number(html.params.get("lid")),
+        html.id("competities"),
+        html.id("tabel"),
+        html.params.get("leden"));
     await alleRatinglijsten(html.id("ratinglijsten"));
     await leesRatinglijst(html.id("csvFile"), html.id("informeer"));
 })();
 
-async function ledenLijst(lidNummer, competities, tabel) {
+async function ledenLijst(lidNummer, competities, lijst, leden) {
+    console.log({leden});
     const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
     competities.append(html.rij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
-    tabel.append(html.rij(
+    lijst.append(html.rij(
         html.naarPagina(`aanmelden.html`, "----- iemand toevoegen -----"),
         "", // knsbNummer
         "", // knsbRating
@@ -42,6 +48,8 @@ async function ledenLijst(lidNummer, competities, tabel) {
         }
     }
     for (const lid of personen) {
+        let lidInLijst = leden ? leden === "alle" : true;
+        console.log({lidInLijst});
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
             if (lid.mutatieRechten !== null) {
@@ -49,44 +57,57 @@ async function ledenLijst(lidNummer, competities, tabel) {
             }
             if (lid.knsbTeam !== null && lid.knsbTeam) {
                 aantalPerTeam[lid.knsbTeam]++;
+                lidInLijst = lidInLijst || leden === lid.knsbTeam;
             }
             if (lid.nhsbTeam !== null && lid.nhsbTeam) {
                 aantalPerTeam[lid.nhsbTeam]++;
+                lidInLijst = lidInLijst || leden === lid.nhsbTeam;
             }
             if (lid.intern1 !== null &&  lid.intern1) {
                 aantalPerTeam[lid.intern1]++;
+                lidInLijst = lidInLijst || leden === lid.intern1;
             }
             if (lid.intern2 !== null &&  lid.intern2) {
                 aantalPerTeam[lid.intern2]++;
+                lidInLijst = lidInLijst || leden === lid.intern2;
             }
             if (lid.intern3 !== null &&  lid.intern3) {
                 aantalPerTeam[lid.intern3]++;
+                lidInLijst = lidInLijst || leden === lid.intern3;
             }
             if (lid.intern4 !== null &&  lid.intern4) {
                 aantalPerTeam[lid.intern4]++;
+                lidInLijst = lidInLijst || leden === lid.intern4;
             }
             if (lid.intern5 !== null &&  lid.intern5) {
                 aantalPerTeam[lid.intern5]++;
+                lidInLijst = lidInLijst || leden === lid.intern5;
             }
-            const link = html.naarPagina(`lid.html?lid=${knsbNummer}`, lid.naam);
-            html.verwerkt(link,knsbNummer === lidNummer);
-            tabel.append(html.rij(
-                link,
-                knsbNummer > 1000000 ? knsbNummer : "",
-                lid.knsbRating === null ? "" : lid.knsbRating,
-                lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? zyq.ZELFDE : lid.interneRating,
-                lid.knsbTeam === null ? "" : lid.knsbTeam,
-                lid.nhsbTeam === null ? "" : lid.nhsbTeam,
-                lid.intern1 === null ? "" : [lid.intern1, lid.intern2, lid.intern3, lid.intern4, lid.intern5].join(", "),
-                lid.mutatieRechten === null ? "" : zyq.gebruikerFunctie(lid)
-            ));
+            if (lidInLijst) {
+                const link = html.naarPagina(`lid.html?lid=${knsbNummer}`, lid.naam);
+                html.verwerkt(link,knsbNummer === lidNummer);
+                lijst.append(html.rij(
+                    link,
+                    knsbNummer > 1000000 ? knsbNummer : "",
+                    lid.knsbRating === null ? "" : lid.knsbRating,
+                    lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? zyq.ZELFDE : lid.interneRating,
+                    lid.knsbTeam === null ? "" : lid.knsbTeam,
+                    lid.nhsbTeam === null ? "" : lid.nhsbTeam,
+                    lid.intern1 === null ? "" : [lid.intern1, lid.intern2, lid.intern3, lid.intern4, lid.intern5].join(", "),
+                    lid.mutatieRechten === null ? "" : zyq.gebruikerFunctie(lid)
+                ));
+            }
         }
     }
     competities.append(html.rij("gebruikers van 0-0-0", "", aantalGebruikers));
     competities.append(html.rij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
     for (const team of teams) {
         if (zyq.teamOfCompetitie(team.teamCode)) {
-            competities.append(html.rij(zyq.teamVoluit(team.teamCode), team.teamCode, aantalPerTeam[team.teamCode]));
+            const link = html.naarPagina(
+                `bestuur.html?leden=${team.teamCode === leden ? "alle": team.teamCode}`,
+                zyq.teamVoluit(team.teamCode));
+            html.verwerkt(link,team.teamCode === leden);
+            competities.append(html.rij(link, team.teamCode, aantalPerTeam[team.teamCode]));
         }
     }
 }

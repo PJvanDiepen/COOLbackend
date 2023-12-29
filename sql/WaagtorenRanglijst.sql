@@ -17,14 +17,15 @@ $$
 delimiter ;
 
 -- subgroep, waardeCijfer, punten en totalen
--- bevatten de logica voor verschillende reglementen voor de interne competitie en de rapid competitie van de Waagtoren
+-- bevatten de logica voor verschillende reglementen voor de interne, rapid en jeugd competitie van de Waagtoren
 -- versie 1 is de oorspronkelijke versie van Alkmaar systeem (geen SQL code)
 -- versie 2 afzeggingenAftrek in seizoen = 1819, 1920, 2021
 -- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
 -- versie 4 rapidPunten voor rapid competitie
 -- versie 5 zwitsersPunten voor Zwitsers systeem
+-- versie 6 jeugd competitie heeft subgroep met kleine letter en verschoven waardeCijfer
 
-drop function subgroep; -- 0-0-0.nl versie 0.7.27
+drop function subgroep; -- 0-0-0.nl versie 0.8.39
 
 delimiter $$
 create function subgroep(seizoen char(4), versie int, knsbNummer int)
@@ -34,7 +35,15 @@ begin
     set interneRating = rating(seizoen, knsbNummer);
     if versie = 4 or versie = 5 then -- geen subgroep bij rapid competitie of Zwitsers systeem
         return ' ';
-	elseif interneRating < 1400 then
+	elseif versie = 6 and interneRating < 1100 then -- kleine letters voor jeugd competitie
+        return 'd';
+	elseif versie = 6 and interneRating < 1200 then
+        return 'c';
+    elseif versie = 6 and interneRating < 1300 then
+        return 'b';
+    elseif versie = 6 then
+        return 'a';    
+	elseif interneRating < 1400 then -- grote letters voor interne competitie 
         return 'H';
 	elseif interneRating < 1500 then
         return 'G';
@@ -55,7 +64,7 @@ end;
 $$
 delimiter ;
 
-drop function waardeCijfer; -- 0-0-0.nl versie 0.7.27
+drop function waardeCijfer; -- 0-0-0.nl versie 0.8.39
 
 delimiter $$
 create function waardeCijfer(versie int, interneRating int)
@@ -63,7 +72,15 @@ returns int deterministic
 begin
     if versie = 4 or versie = 5 then -- geen waardeCijfer bij rapid competitie of Zwitsers systeem
         return 0;
-    elseif interneRating < 1400 then
+	elseif versie = 6 and interneRating < 1100 then -- verschoven waardeCijfer voor jeugd competitie
+        return 9;
+	elseif versie = 6 and interneRating < 1200 then
+        return 10;
+    elseif versie = 6 and interneRating < 1300 then
+        return 11;
+    elseif versie = 6 then
+        return 12;    
+    elseif interneRating < 1400 then -- waardeCijfer voor interne competitie
         return 5; -- H
 	elseif interneRating < 1500 then
         return 6; -- G

@@ -325,7 +325,7 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
 function nietTegen(r, i, j, rondeNummer) {
     if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) {
         return true;
-    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETTIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
+    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
     } else if (rondeNummer < 5) {
         return false;

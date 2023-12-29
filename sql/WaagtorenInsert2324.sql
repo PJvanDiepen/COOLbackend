@@ -98,9 +98,9 @@ where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and
 update uitslag set witZwart = 'z'
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
--- teams
+-- teams 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-("2324", "kbe", "k", "be", "KNSB beker", 4, 0);
+("2324", "ije", "i", "je", "jeugd competitie", 0, 0);
 
 insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
 ("2324", "", "", "", "geen", 0, 0),
@@ -116,7 +116,6 @@ insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleid
 ("2324", "n2", "n", "1a", "NHSB 1a", 8, 0),
 ("2324", "n3", "n", "2a", "NHSB 2a", 6, 0),
 ("2324", "n4", "n", "3a", "NHSB 3a", 8, 0),
-("2324", "nbe", "n", "be", "NHSB beker", 4, 0),
 ("2324", "nv1", "n", "vc", "NHSB vc", 4, 0),
 ("2324", "nv2", "n", "vb", "NHSB vb", 4, 0);
 

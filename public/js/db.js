@@ -20,8 +20,8 @@ const NIEUWE_RANGLIJST = 2;
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
-const RAPID_COMPETTIE    = "ira";
-const JEUGD_COMPETTIE    = "ije";
+const RAPID_COMPETITIE    = "ira";
+const JEUGD_COMPETITIE    = "ije";
 const SNELSCHAKEN        = "izs";
 const ZWITSERS_TEST      = "izt";
 
@@ -129,8 +129,8 @@ export { // ES6 voor browser
 
     // teamCode
     INTERNE_COMPETITIE,
-    RAPID_COMPETTIE,
-    JEUGD_COMPETTIE,
+    RAPID_COMPETITIE,
+    JEUGD_COMPETITIE,
     SNELSCHAKEN,
     ZWITSERS_TEST,
 

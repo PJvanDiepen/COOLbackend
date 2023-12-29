@@ -13,7 +13,7 @@ import * as zyq from "./zyq.js";
     html.id("kop").append(`Agenda${html.SCHEIDING}${persoon.naam}`);
     html.id("aanmelden").append(html.naarPagina(`lid.html?lid=${andereGebruiker}`,"Aanmelden voor competities"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    await agenda(persoon.knsbNummer, html.id("wedstrijden"));
+    await agenda(persoon.knsbNummer, html.id("wedstrijden"), html.id("informeer"));
 })();
 
 /*
@@ -40,13 +40,14 @@ import * as zyq from "./zyq.js";
     en partij = EXTERN_UIT of EXTERN_THUIS.
 
  */
-async function agenda(knsbNummer, lijst) {
+async function agenda(knsbNummer, lijst, informeer) {
     const gewijzigd = await agendaMutatie(knsbNummer);
     let wedstrijden = await agendaLezen(knsbNummer);
     if (await agendaAanvullen(knsbNummer, wedstrijden)) {
         wedstrijden = await agendaLezen(knsbNummer);
     }
     let agendaLijst = false;
+    const vraagteken = []; // voor welke competities of teams is nog niets ingevuld
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (db.planningInvullen.has(w.partij)) {
             const datum = zyq.datumSQL(w.datum);
@@ -63,6 +64,9 @@ async function agenda(knsbNummer, lijst) {
         } else if (agendaLijst) {
             console.log("er kan nog geen uitslag zijn!")
             console.log(w);
+        }
+        if (w.partij === "p") {
+            // TODO hier is PvD gebleven!
         }
     }
 }

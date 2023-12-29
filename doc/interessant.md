@@ -102,6 +102,7 @@ Refresh Android cache
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Linus Torvalds on Git](https://www.youtube.com/watch?v=4XpnKHJAok8)
 - [Trunk based development](https://trunkbaseddevelopment.com/)
+- [Open source guides](https://opensource.guide/)
 - [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
 - [RexEgg](https://www.rexegg.com/)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)

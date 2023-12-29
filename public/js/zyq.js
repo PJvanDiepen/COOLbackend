@@ -5,7 +5,8 @@ const HOOGSTE_RATING = 2000;
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
-const RAPID_COMPETTIE    = "ira";
+const RAPID_COMPETITIE    = "ira";
+const JEUGD_COMPETITIE    = "ije";
 const SNELSCHAKEN        = "izs";
 
 export {
@@ -13,7 +14,7 @@ export {
     HOOGSTE_RATING,
 // teamCode
     INTERNE_COMPETITIE,
-    RAPID_COMPETTIE,
+    RAPID_COMPETITIE,
     SNELSCHAKEN
 }
 
@@ -33,8 +34,10 @@ export function zwitsers(teamCode) {
 export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
-    } else if (teamCode === RAPID_COMPETTIE) {
+    } else if (teamCode === RAPID_COMPETITIE) {
         return "rapid competitie";
+    } else if (teamCode === JEUGD_COMPETITIE) {
+        return "jeugd competitie";
     } else if (teamCode === SNELSCHAKEN) {
         return "einde seizoen snelschaken";
     } else if (teamCode === "kbe") {
@@ -245,10 +248,12 @@ function versieBepalen() {
         } else {
             o_o_o.versie = 3; // vanaf seizoen 2021-2022
         }
-    } else if (o_o_o.competitie === RAPID_COMPETTIE && o_o_o.versie === 0) {
+    } else if (o_o_o.competitie === RAPID_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 4;
     } else if (zwitsers(o_o_o.competitie) && o_o_o.versie === 0) {
         o_o_o.versie = 5; // Zwitsers systeem
+    } else if (o_o_o.competitie === JEUGD_COMPETITIE && o_o_o.versie === 0) {
+        o_o_o.versie = 6;
     }
 }
 

@@ -553,7 +553,7 @@ module.exports = router => {
                     .andOn('team.teamCode', 'ronde.teamCode')})
             .join('persoon', 'team.teamleider', 'persoon.knsbNummer')
             .where('ronde.seizoen', ctx.params.seizoen)
-            .whereNotIn('ronde.teamCode',[db.INTERNE_COMPETITIE, db.RAPID_COMPETTIE, db.SNELSCHAKEN, db.ZWITSERS_TEST])
+            .whereNotIn('ronde.teamCode',[db.INTERNE_COMPETITIE, db.RAPID_COMPETITIE, db.JEUGD_COMPETITIE])
             .orderBy(['ronde.datum', 'ronde.teamCode']);
     });
 
@@ -999,7 +999,7 @@ module.exports = router => {
     router.get('/:uuidToken/uitslag/toevoegen/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum/:competitie', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.TEAMLEIDER) || // agenda van andere gebruiker
+        if (gebruiker.juisteRechten(db.TEAMLEIDER) || // agenda van andere gebruiker TODO alleen eigen team
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen agenda
             if (await Uitslag.query().insert({
                     seizoen: ctx.params.seizoen,

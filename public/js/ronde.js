@@ -126,9 +126,14 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
     if (rondeNummer > 1) {
         lijst.append(rondeInterneCompetitie(rondeNummer - 1)); // vorige ronde
     }
+    let dezeRonde = false;
     if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
         const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
         for (const wedstrijd of wedstrijden) {
+            if (!dezeRonde && zyq.o_o_o.ronde[rondeNummer].datum === wedstrijd.datum) {
+                lijst.append(rondeInterneCompetitie(rondeNummer));
+                dezeRonde = true; // deze ronde een keer in de lijst
+            }
             if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
                 const datumKolom = zyq.datumLeesbaar(wedstrijd);
                 const wedstrijdKolom = zyq.naarTeam(wedstrijd);
