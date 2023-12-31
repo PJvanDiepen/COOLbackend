@@ -27,7 +27,6 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
 })();
 
 async function ledenLijst(lidNummer, competities, lijst, leden) {
-    console.log({leden});
     const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
     competities.append(html.rij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
     lijst.append(html.rij(
@@ -49,7 +48,6 @@ async function ledenLijst(lidNummer, competities, lijst, leden) {
     }
     for (const lid of personen) {
         let lidInLijst = leden ? leden === "alle" : true;
-        console.log({lidInLijst});
         const knsbNummer = Number(lid.knsbNummer);
         if (knsbNummer > 100) {
             if (lid.mutatieRechten !== null) {

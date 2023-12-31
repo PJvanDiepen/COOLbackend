@@ -24,7 +24,13 @@ TODO mutaties met verwijderen
         }],
         [db.ONTWIKKElAAR, `backup spelers ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/speler/${zyq.o_o_o.seizoen}`);
-            zyq.backupSQL("speler", rijen);
+            zyq.backupSQL("speler", rijen.filter(function (rij) {
+                return rij.knsbNummer < db.KNSB_NUMMER;
+            }));
+            zyq.backupSQL("speler", rijen.filter(function (rij) {
+                return rij.knsbNummer > db.KNSB_NUMMER;
+            }));
+            zyq.backupSQL("speler", rijen); // TODO waarom werkt dit niet?
         }],
         [db.ONTWIKKElAAR, `backup teams ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/team/${zyq.o_o_o.seizoen}`);

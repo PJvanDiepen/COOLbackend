@@ -26,11 +26,6 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const spelers = await zyq.serverFetch(`/teamleider/${zyq.o_o_o.seizoen}`);
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
-
-    console.log(ronden);
-    console.log(spelers);
-    console.log({hoogsteRating});
-
     const vast = html.id("vast");
     vast.append(html.bovenRij("naam", "nummer", "rating", "team", ...(rondeNummers(ronden))));
     const vasteSpelers = spelers.filter(function (speler) {
@@ -59,7 +54,6 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             && lagerTeam(team, teamCode); // niet vaste speler in hoger team
     })
     const wedstrijden = wedstrijdenLijst(ronden);
-    console.log(wedstrijden);
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         const invallen = wedstrijden.filter(function (wedstrijd) {
