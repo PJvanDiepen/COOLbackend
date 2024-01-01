@@ -144,6 +144,9 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
             }
         }
     }
+    if (!dezeRonde) { // indien deze ronde nog niet in de lijst
+        lijst.append(rondeInterneCompetitie(rondeNummer));
+    }
     if (zyq.o_o_o.laatsteRonde > rondeNummer) {
         lijst.append(rondeInterneCompetitie(rondeNummer + 1)); // volgende ronde
         }

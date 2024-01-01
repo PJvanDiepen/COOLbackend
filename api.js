@@ -2,6 +2,10 @@
 
 const db = require('./modules/db.cjs');
 
+/*
+TODO standaard api calls: uuid, schaakvereniging (0 = Waagtoren), laatste mutatie tijdstippen, enz.
+ */
+
 const Gebruiker = require('./models/gebruiker');
 const Mutatie = require('./models/mutatie');
 const Persoon = require('./models/persoon');

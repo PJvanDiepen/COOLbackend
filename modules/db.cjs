@@ -1,6 +1,9 @@
 /*
  * Deze module bevat alle code voor het valideren van de velden in de tabellen van de MySQL database.
  *
+ * TODO alle code voor het maken van een structuur (zoals in o_o_o.js: perTeamRondenUitslagen, ranglijst enz.)
+ *  met laatste mutatie tijdstippen voor synchroniseren tussen server en browser
+ *
  * Van deze module bestaan twee versies:
  * - een Common.js versie voor node.js: db.cjs met module.exports = { .. };
  * - een ES6 versie voor de browser: db.js met export { .. };
