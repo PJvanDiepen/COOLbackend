@@ -33,7 +33,7 @@ hr {
 
 table select { /* select binnen table heeft geen randje  */
 	border: none;
-	padding: 0px;
+	padding: 0;
 }
 
 #bestand, button, details {

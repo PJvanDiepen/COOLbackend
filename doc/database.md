@@ -19,18 +19,16 @@ vanuit de KNSB en de NHSB websites voor de externe competitie naar `Team`, `Rond
 De database per schaakvereniging heeft een tabel `Team` voor teams en competities.
 De eerste letter van `teamCode` in `Team` maakt het onderscheid tussen team en competitie.
 De `teamCode` van een interne competitie begint met de letter i.
-
-Een team speelt mee in een externe competitie. Bij de Waagtoren zijn dat teams,
-die meespelen voor de KNSB en de NHSB.
+De `teamCode` van een externe competitie begint met een andere letter of cijfer.
+Bij de Waagtoren zijn dat teams, die meespelen voor de NHSB met de letter n en de NHSB met een cijfer.
 Teams van andere schaakverenigingen kunnen spelen voor andere schaakbonden.
 
 Bij de Waagtoren tellen de uitslagen van teamleden in de externe competities mee voor de interne competitie.
-Daarom staan ze in dit systeem. Dit systeem berekent echter geen ranglijsten van externe competities.
+Daarom staan ze in 0-0-0. 0-0-0 berekent echter geen ranglijsten van externe competities.
+0-0-0 berekent dus uitsluitend ranglijsten van interne competities. Zie `Reglement`.
 
-Dit systeem berekent uitsluitend ranglijsten van externe competities. Zie `Reglement`.
-
-Het belangrijkste verschil tussen team en competitie is dus de verwerking door dit systeem.
-Behalve de eerste letter van `teamCode` is in de database verder geen verschil tussen team en competie.
+Het belangrijkste verschil tussen team en competitie is dus de verwerking door 0-0-0.
+Behalve de eerste letter van `teamCode` is in de database verder geen verschil tussen team en competitie.
 De specificaties voor competitie staan daarom bij `Team`.
 
 ## Reglement
@@ -71,14 +69,14 @@ knsbNummer INT
 naam VARCHAR(45)
 PRIMARY KEY (knsbNummer)
 ```
-In dit systeem willen we zo min mogelijk persoonsgegevens vastleggen.
+In 0-0-0 willen we zo min mogelijk persoonsgegevens vastleggen.
 Het `knsbNummer` komt uit [OLA](https://www.schaakbond.nl/voor-clubs/ledenadministratie), 
 de Online Leden Administratie van de KNSB.
 Voor uitslagen en ranglijsten is `naam` voldoende. 
 Andere persoonsgegevens staan in OLA en worden beheerd door de secretaris en de penningmeester en niet door de wedstrijdleider.
 
 In `Persoon` staan voorlopig uitsluitend leden van de eigen schaakvereniging.
-Dit systeem kan daarom wel complete uitslagen lijsten produceren van de interne competitie, 
+0-0-0 kan daarom wel complete uitslagen lijsten produceren van de interne competitie, 
 maar de bij uitslagen van externe competitie staat uitsluitend de `naam` van de eigen speler, bordnummer, kleur, resultaat en
 eventueel de naam van het team van de tegenstander, want die gegevens staan in `Ronde`.
    
@@ -100,7 +98,7 @@ Leden van de schaakvereniging mogen gegevens in de database wijzigen afhankelijk
 Gewone leden kunnen zich aanmelden of afzeggen.
 Een wedstrijdleider kan uitslagen invoeren en ronden aanmaken.
 
-Het systeem herkent een gebruiker aan het `uuidToken`, wat is opgeslagen op de computer van de gebruiker.
+0-0-0 herkent een gebruiker aan het `uuidToken`, wat is opgeslagen op de computer van de gebruiker.
 Een lid van de schaakvereniging kan zich als gebruiker registreren met een `email`.
 Via die `email` ontvangt zo'n gebruiker een link om het `uuidToken` te activeren.
 Na het activeren wordt dit vastgelegd in `datumEmail`.

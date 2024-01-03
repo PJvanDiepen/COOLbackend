@@ -33,9 +33,9 @@ Een prachtig product dat ik nog kende uit de jaren 80 als [Turbo Pascal](https:/
 Delpi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
 Maar bij mij draaide Rokade niet meer op mijn nieuwste Windows laptop en uitsluitend op een oude laptop met Windows XP. 
 Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. 
-Om Rokade aan te passen, zou ik meer dan 1500 euro moeten aan Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
+Om Rokade aan te passen, zou ik meer dan 1500 euro aan moeten Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
 
-Zo onstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, die dus op een website moest draaien.
+Zo ontstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, die dus op een website moest draaien.
 
 ## Eerste opzet
 
@@ -67,7 +67,8 @@ en JavaScript, zodat ik alleen JavaScript hoefde te leren voor zowel de frontend
 In 2020 maakte Matheus de Boer van [Charper Bonaroo](https://www.bonaroo.nl/) de eerste opzet voor de web-app 
 met MySQL voor de on-line database, Node.js voor de backend en nog een heleboel ondersteunende software:
 [koa](https://koajs.com/), [knex](https://knexjs.org/) en [objection](http://vincit.github.io/objection.js/).
-De web-app draaide toen op chessopenings.online (COOL) en daarom heet het project sindsdien COOLbackend.
+De web-app draaide toen op chessopenings.online (COOL). Daarom heet het project sindsdien COOLbackend.
+En de Java toepassing heet COOLoffline. COOLfrontend is er nooit gekomen, maar staat in public van COOLbackend.
 
 ## Eerste ontwerpbeslissingen
 
@@ -84,7 +85,7 @@ en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen e
 Ik beperkte mij daarom tot zo standaard mogelijke HTML, CSS en JavaScript.
 Dit was niet echt een ontwerpbeslissing, maar een manier om alles voor mijzelf zo eenvoudig mogelijk te maken.
 
-Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application) maar verschillende webpagina's: 
+Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application) maar verschillende webpagina's in public: 
 ranglijst.html, speler.html, team.html, enz. Ieder met eigen JavaScript: ranglijst.js, speler.js, team.js, enz.
 Een simpele manier om de webapp te splitsen in onderdelen, die ik los van elkaar kon testen.
 
@@ -97,38 +98,29 @@ Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJs modules voor Node.js en ES6 
 In het Alkmaar systeem tellen externe wedstrijden mee voor de interne competitie. 
 Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in plaats van een interne partij op dezelfde dag.
 Toen vroegen spelers of hun externe partij van een andere dag kon meetellen in plaats van een interne partij.
-Daarvoor moesten we het reglement van de interne competitie aangepassen en moest de intern werdstrijdleider per externe partij administreren 
+Daarvoor moesten we het reglement van de interne competitie aanpassen en moest de intern wedstrijdleider per externe partij administreren 
 of die wel of niet moest meetellen voor de interne competitie. 
 De interpretatie van het reglement bleek verwarrend, want toen waren er spelers die in een week een interne en een externe wedstrijd wilde spelen
-en die laten meetellen in een andere week. Bovendien ging het af en toe fout met de administratie.
+en die laten meetellen in een andere week, omdat ze in die andere week niet voor de interne competitie konden spelen. 
+De administratie werd zo heel ingewikkeld en ging daarom af en toe fout.
 
-Daarom tellen sinds 2017 gewoon alle externe partijen mee, maar voor een externe partij in plaats van een interne partij krijg meer punten 
-dan voor een externe partij op een andere dag. Spelen in de externe competities van NHSB en KNSB is hierdoor aantrekkelijker geworden. 
-Bovendien kreeg ik als intern wedstijdleider minder administratie en het reglement werd eenvoudiger.
+In 2017 is het reglement drastisch vereenvoudigd: alle externe partijen tellen mee voor de interne competitie.
+Maar voor een externe partij in plaats van een interne partij krijg je meer punten dan voor een externe partij op een andere dag. 
+Spelen in de externe competities van NHSB en KNSB is hierdoor aantrekkelijker geworden.
+Bovendien kreeg ik als intern wedstrijdleider minder administratie.
 
-## Rokade wordt 0-0-0 TODO hier tussenvoegen
+Maar ondanks de drastische vereenvoudiging bleef de administratie veel werk. Met Rokade moest de intern wedstrijdleider 
+namelijk de externe wedstrijden, die niet op de avonden van de interne competitie werden gespeeld, met de hand bijhouden 
+voor de kolom #XBP van de ranglijst. En Rokade gaf geen overzicht van de bijbehorende externe wedstrijden.
 
-## Wat nog niet is gedaan
+Een belangrijke ontwerpbeslissing was daarom dat de web-app die bijbehorende externe wedstrijden wel moest laten zien, 
+zodat de leden van de Waagtoren de ranglijst helemaal zelf kunnen controleren en dat die administratie helemaal wordt geautomatiseerd
+voor de intern wedstrijdleider.
 
-In de loop van de tijd is vooral veel niet afgemaakte code ontstaan. Een duidelijk voorbeeld is zyq.js. 
-Daarin staan allerlei functies, die ik naar andere modules wil verplaatsen. Daarna kan zyq.js helemaal weg.
-
-Het is de bedoeling om ook de Java-software helemaal weg te gooien en te integreren in de JavaScript-software. 
-Maar de Java web crawler voor de websites van NHSB en KNSB gebruiken we nog om de uitslagen van externe wedstrijden in te lezen.
-En de Java toepassing om informatie in te lezen uit de Microsoft Access database van Rokade kan nog nuttig voor
-schaakverenigingen die willen overstappen van Rokade naar 0-0-0.
-
-Het is de bedoeling dat de systeembeheerder alles kan doen met 0-0-0.
-Maar ik gebruik MySQL Workbench nu nog voor:
-- Invoeren van uitslagen van NHSB en KNSB, die off line zijn aangemaakt.
-- Invoeren van uitslagen van 0-0-0 naar off line.
-- mutatieRechten van gebruiker aanpassen.
-- Overzicht maken met aantal mutaties per gebruiker.
-- Hele partij of zwart / wit wijzigen.
-- Speler afwezig, oneven of extern maken.
+## Rokade en 0-0-0
 
 ## Links
-- (1) [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) 
+- (1) [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/)
 - (2) [Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/)
 - (3) [0-0-0 voor aanmelden en afzeggen](https://www.waagtoren.nl/2021/07/10/0-0-0-nl-voor-aanmelden-afzeggen/)
 - (4) [Rapid als stress test voor 0-0-0](https://www.waagtoren.nl/2022/02/21/rapid-als-stress-test-voor-0-0-0/)
@@ -136,7 +128,7 @@ Maar ik gebruik MySQL Workbench nu nog voor:
 - (6) [Alberto Alvarez Alonso scoort 4 uit 4](https://www.waagtoren.nl/2023/10/27/alberto-alvarez-alonso-scoort-4-uit-4/)
 - (7) [Informatie interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/)
 
-## Rokade wordt 0-0-0 TODO vanaf hier nog verwerken
+## Rokade wordt 0-0-0
 
 Niet duidelijk zichtbaar was in de ranglijst van Rokade.
 Daarom moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
@@ -393,9 +385,6 @@ Na het sluiten van je sessie met je browser staan die ranglijsten en uitslagen n
 0-0-0.nl gebruikt localStorage alleen voor de unieke code om jou te herkennen als geregistreerd gebruiker.
 Deze unieke code blijft daarom wel in het geheugen van je apparaat staan,
 maar is uitsluitend zichtbaar voor 0-0-0.nl en niet voor andere websites dankzij je browser.
-            </p>
-        </details>
-    </details>
 
 # Rokade wordt 0-0-0
 
