@@ -120,7 +120,7 @@ export async function perTeamRondenUitslagen(teamCode) {
  * @param selectie indien null dan alle spelers
  * @returns {Promise<*>}
  */
-export async function ranglijst(rondeNummer, selectie) {
+export async function ranglijst(rondeNummer, selectie = null) {
     const totDatum = rondeNummer === zyq.o_o_o.laatsteRonde ? zyq.eindeSeizoen(zyq.o_o_o.seizoen) : zyq.o_o_o.ronde[rondeNummer + 1].datum;
     let spelers = await zyq.localFetch(
         `/ranglijst/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${zyq.datumSQL(totDatum)}/${zyq.o_o_o.versie}`);
@@ -260,6 +260,10 @@ function spelerTotalen(speler) {
         return zyq.score(totalen[3],totalen[15],totalen[16]);
     }
 
+    function scoreGetalExtern() {
+        return (totalen[3] + totalen[15] * 0.5) / extern();
+    }
+
     function percentageExtern() {
         return zyq.percentage(totalen[3],totalen[15],totalen[16]);
     }
@@ -375,6 +379,7 @@ function spelerTotalen(speler) {
         eigenWaardeCijfer,
         extern,
         scoreExtern,
+        scoreGetalExtern,
         percentageExtern,
         saldoWitZwartExtern,
         partijenVerschil,

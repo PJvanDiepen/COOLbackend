@@ -49,7 +49,6 @@ Refresh Android cache
 - [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [welke browser?](https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent)
-- [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
 - [DOM events](https://domevents.dev/)
 - [DOM manpipulation](https://phuoc.ng/collection/html-dom/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
