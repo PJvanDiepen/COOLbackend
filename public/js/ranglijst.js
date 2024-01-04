@@ -47,16 +47,13 @@ import * as zyq from "./zyq.js";
         return speler.intern() || speler.oneven() || speler.extern() || alleLeden;
     });
     const externeWinnaars = externeScores(spelers, minimumVoorkeur);
-    console.log(externeWinnaars);
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     let rangnummer = 0;
     for (const speler of spelers) {
         rangnummer++;
-        console.log(speler.knsbNummer);
         const externeWinnaar = externeWinnaars.find(function (winnaar) {
             return winnaar.knsbNummer === speler.knsbNummer;
         });
-        console.log(externeWinnaar);
         lijst.append(html.rij(
             rangnummer,
             zyq.naarSpeler(speler),
@@ -79,7 +76,7 @@ function externeScores(spelers, minimum) {
         if (speler.extern()) {
             lijst.push({
                 knsbNummer: speler.knsbNummer,
-                naam: speler.naam,
+                naam: speler.naam, // overbodig
                 score: speler.scoreGetalExtern(),
                 aantal: speler.extern(),
                 winnaar: ""
@@ -104,6 +101,5 @@ function externeScores(spelers, minimum) {
             hoogsteScore = speler.score;
         }
     }
-    // console.log(lijst);
     return lijst;
 }
