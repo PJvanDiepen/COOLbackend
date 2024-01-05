@@ -202,14 +202,11 @@ function lagerTeam(team, hogerTeam) {
 }
 
 function jeugdCompetitie(speler) {
-    console.log(speler);
-    const ja = speler.intern1 === db.JEUGD_COMPETITIE ||
+    return speler.intern1 === db.JEUGD_COMPETITIE ||
            speler.intern2 === db.JEUGD_COMPETITIE ||
            speler.intern3 === db.JEUGD_COMPETITIE ||
            speler.intern4 === db.JEUGD_COMPETITIE ||
            speler.intern5 === db.JEUGD_COMPETITIE;
-    console.log({ja});
-    return ja;
 }
 
 function wedstrijdenLijst(ronden) {
