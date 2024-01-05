@@ -21,7 +21,6 @@ De eerste letter van `teamCode` in `Team` maakt het onderscheid tussen team en c
 De `teamCode` van een interne competitie begint met de letter i.
 De `teamCode` van een externe competitie begint met een andere letter of cijfer.
 Bij de Waagtoren zijn dat teams, die meespelen voor de NHSB met de letter n en de NHSB met een cijfer.
-Teams van andere schaakverenigingen kunnen spelen voor andere schaakbonden.
 
 Bij de Waagtoren tellen de uitslagen van teamleden in de externe competities mee voor de interne competitie.
 Daarom staan ze in 0-0-0. 0-0-0 berekent echter geen ranglijsten van externe competities.
@@ -34,7 +33,7 @@ De specificaties voor competitie staan daarom bij `Team`.
 ## Reglement
 De ranglijst van de Waagtoren wordt berekend volgens het [Alkmaar Systeem](https://www.waagtoren.nl/historie/alksys.html) 
 door middel van stored procedures / functions in MySQL. 
-Omdat het reglement van de interne competie per seizoen kan verschillen en 
+Omdat het reglement van de interne competitie per seizoen kan verschillen en 
 omdat het nuttig is om te kunnen experimenteren met aanpassingen van het reglement 
 willen we verschillende versies van parameters en formules voor de berekening van de ranglijst vastleggen in `Reglement`.
 De verwerking voor de ranglijst berekening is dan als volgt: selecteer de juiste versie volgens `Reglement` en 
@@ -113,8 +112,8 @@ datumCompleet DATE
 
 Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
 
-Voorlopig is er 1 database namelijk van de Waagtoren en zijn er 3 seizoenen: 2018-2019, 2019-2020 en 2020-2021.
-Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`, `seizoen = '1920` en `seizoen = '2021'`.
+Voorlopig is er 1 database namelijk van de Waagtoren vanaf seizoen 2018-2019.
+Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`.
 
 Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules 
 voor de berekening van de ranglijst in `Reglement`. 

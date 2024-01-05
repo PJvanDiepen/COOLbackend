@@ -32,7 +32,7 @@ import * as zyq from "./zyq.js";
     html.selectie(html.id("leden"), alleLeden, optiesLeden, function (leden) {
         html.zelfdePagina(`leden=${leden}`);
     });
-    const minimumVoorkeur = html.params.get("minimum") ? Number(html.params.get("minimum")) : 5;
+    const minimumVoorkeur = Number(html.params.get("minimum")) || 5;
     const minimumOpties = [
         [4, "minimaal 4 externe partijen"],
         [5, "minimaal 5 externe partijen"],
@@ -95,7 +95,7 @@ function externeScores(spelers, minimum) {
     let hoogsteScore = 0.0;
     for (const speler of lijst) {
         if (speler.aantal < minimum && speler.score >= hoogsteScore) {
-            speler.winnaar = "-";
+            speler.winnaar = "+";
         } else if (speler.score >= hoogsteScore) {
             speler.winnaar = "*";
             hoogsteScore = speler.score;

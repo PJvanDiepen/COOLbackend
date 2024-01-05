@@ -7,14 +7,17 @@ import * as zyq from "./zyq.js";
 
 /*
     verwerk zoek=<zoek>
+           &maand=<ratingMaand>
 
     terug naar bestuur.html
  */
 
 const zoekNaam = html.params.get("zoek") || "";
+const ratingMaand = Number(html.params.get("maand")) || 8; // augustus
 
 const zoek       = html.id("zoek");
 const selecteer  = html.id("selecteer");
+const maand      = html.id("maand");
 const informeer  = html.id("informeer");
 const naam       = html.id("naam");
 const email      = html.id("email");
@@ -38,11 +41,12 @@ knsbNummer             persoon, rating, gebruiker
 In het registratie formulier
 - kan bestuur naam van persoon intoetsen en persoon toevoegen
 - kan een nieuwe gebruiker naam en e-mail intoetsen en persoon en gebruiker toevoegen
-- kan een geregistreerd gebruiker e-mail wijzigen en gebruiker bijwerken
+- kan een geregistreerde gebruiker e-mail wijzigen en gebruiker bijwerken
  */
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten, []);
+    await selecteerRatingMaand(maand);
     await zoekPersoon();
     html.id("formulier").addEventListener("submit", async function (event) {
         event.preventDefault();
@@ -71,12 +75,27 @@ In het registratie formulier
     });
 })();
 
+async function selecteerRatingMaand(knop) {
+    const lijsten = (await zyq.localFetch(`/rating/lijsten`)).map(function (lijst) {
+        const {maand, jaar} = lijst;
+        return [maand, `${db.maandInvullen.get(maand)} ${jaar}`];
+    });
+    html.selectie(knop, ratingMaand, lijsten, function (maand) {
+        html.zelfdePagina(`zoek=${zoekNaam}&maand=${maand}`);
+    });
+}
+
+/**
+ * zoekPersoon in KNSB ratinglijst van ratingMaand
+ *
+ * @returns {Promise<void>}
+ */
 async function zoekPersoon() {
     const selectieLijst = [];
     zoek.value = zoekNaam;
     if (zoekNaam.length > 0) {
         const leden = ledenSamenvoegen(
-            await zyq.serverFetch(`/naam/8/${zoekNaam}/1000`), // KNSB leden
+            await zyq.serverFetch(`/naam/${ratingMaand}/${zoekNaam}/1000`), // KNSB leden
             await zyq.serverFetch(`/naam/gebruiker/${zoekNaam}`)); // leden bekend in 0-0-0
         for (let i = 0; i < leden.length; i++) {
             if (leden[i].naam === undefined) {
@@ -108,7 +127,7 @@ async function zoekPersoon() {
         html.tekstToevoegen(informeer, `Met "${zoekNaam}" zijn ${leden.length} namen gevonden.\n`);
     }
     zoek.addEventListener("change", function () {
-        html.zelfdePagina(`zoek=${zoek.value}`);
+        html.zelfdePagina(`zoek=${zoek.value}&maand=${ratingMaand}`);
     });
 }
 

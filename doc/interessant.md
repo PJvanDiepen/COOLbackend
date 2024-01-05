@@ -48,17 +48,18 @@ Refresh Android cache
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
 - [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
+- [Copy to clipboard](https://www.freecodecamp.org/news/copy-text-to-clipboard-javascript/)
 - [welke browser?](https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent)
 - [DOM events](https://domevents.dev/)
 - [DOM manpipulation](https://phuoc.ng/collection/html-dom/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [promises training](https://github.com/henriqueinonhe/promises-training)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
-
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
 - [JavaScipt date & time](https://blog.openreplay.com/is-it-time-for-the-javascript-temporal-api/)
 - [Uitleg over modern frameworks](https://nolanlawson.com/2023/12/02/lets-learn-how-modern-javascript-frameworks-work-by-building-one/)
 - [6 ways to declare functions](https://dmitripavlutin.com/6-ways-to-declare-javascript-functions/)
+- [Wat een JavaScript programmeur moet begrijpen in 2024](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-in-2024-c1044bcb0dfb)
 
 # node.js
 - [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
