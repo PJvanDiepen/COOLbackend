@@ -51,8 +51,9 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         return speler.knsbNummer > db.KNSB_NUMMER
             && speler.knsbRating < hoogsteRating
-            && lagerTeam(team, teamCode); // niet vaste speler in hoger team
-    })
+            && lagerTeam(team, teamCode) // niet vaste speler in hoger team
+            && !jeugdCompetitie(speler);
+    });
     const wedstrijden = wedstrijdenLijst(ronden);
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
@@ -198,6 +199,17 @@ function lagerTeam(team, hogerTeam) {
     } else {
         return hogerTeam < team; // hogerTeam heeft lager nummer
     }
+}
+
+function jeugdCompetitie(speler) {
+    console.log(speler);
+    const ja = speler.intern1 === db.JEUGD_COMPETITIE ||
+           speler.intern2 === db.JEUGD_COMPETITIE ||
+           speler.intern3 === db.JEUGD_COMPETITIE ||
+           speler.intern4 === db.JEUGD_COMPETITIE ||
+           speler.intern5 === db.JEUGD_COMPETITIE;
+    console.log({ja});
+    return ja;
 }
 
 function wedstrijdenLijst(ronden) {

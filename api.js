@@ -460,7 +460,7 @@ module.exports = router => {
      */
     router.get('/teamleider/:seizoen', async function (ctx) {
         ctx.body = await Speler.query()
-            .select('speler.nhsbTeam', 'speler.knsbTeam', 'speler.knsbNummer', 'speler.knsbRating', 'persoon.naam')
+            .select('speler.*', 'persoon.naam')
             .join('persoon', 'speler.knsbNummer', 'persoon.knsbNummer')
             .where('speler.seizoen', ctx.params.seizoen)
             .orderBy('speler.knsbRating', 'desc');
