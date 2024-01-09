@@ -101,7 +101,7 @@ end;
 $$
 delimiter ;
 
-drop function punten; -- 0-0-0.nl versie 0.7.24
+drop function punten; -- 0-0-0.nl versie 0.8.41
 
 delimiter $$
 create function punten(seizoen char(4), teamCode char(3), versie int, knsbNummer int, eigenWaardeCijfer int, partij char(1), tegenstander int, resultaat char(1))
@@ -111,6 +111,8 @@ begin
         return rapidPunten(partij, resultaat);
 	elseif versie = 5 then
         return zwitsersPunten(partij, resultaat);
+	elseif versie = 6 and partij = 'a' then -- jeugd competitie
+	    return eigenWaardeCijfer; 
     elseif partij = 'i' and resultaat = '1' then
         return waardeCijfer(versie, rating(seizoen, tegenstander)) + 12;
     elseif partij = 'i' and resultaat = '½' then

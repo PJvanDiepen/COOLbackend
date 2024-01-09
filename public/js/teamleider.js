@@ -53,6 +53,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             && speler.knsbRating < hoogsteRating
             && lagerTeam(team, teamCode) // niet vaste speler in hoger team
             && !jeugdCompetitie(speler);
+        // TODO niet meer dan 3 x invallen in hoger team
     });
     const wedstrijden = wedstrijdenLijst(ronden);
     for (const speler of invallers) {
@@ -124,9 +125,9 @@ function rondeNummers(ronden) {
 function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
     for (const speler of spelers) {
         if (nhsbTeam && speler.nhsbTeam === teamCode) {
-            return speler.knsbRating + 80;
+            return speler.knsbRating + 80; // NHSB reglement artikel 20
         } else if (speler.knsbTeam === teamCode) {
-            return speler.knsbRating + 40;
+            return speler.knsbRating + 40; // KNSB reglement artikel 13.2
         }
     }
     if (teamCode === "nbb") { // NHSB beker (brons)
