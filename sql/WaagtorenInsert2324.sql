@@ -43,8 +43,8 @@ update uitslag set partij = "p", datum = @datum where seizoen = @seizoen and tea
 -- TODO partij wijzigen
 set @seizoen = '2324';
 set @competitie = 'int';
-set @ronde = 11;
-set @bord = 21;
+set @ronde = 14;
+set @bord = 16;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -52,16 +52,13 @@ where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit = 9001586; -- Abdul Rashid
-set @zwart = 7824674; -- Guido
+set @wit = 6565801; -- Ernst Hoogenes
+set @zwart = 9001586; -- Abdul Rashid
 
 set @zwart = 7502143; -- Rob Heijink
 set @oneven = 6212404; -- Peter
 set @afwezig = 7691728; -- Karel
 set @extern = 7758014; -- Alex
-
-update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
-where seizoen = '2122' and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;

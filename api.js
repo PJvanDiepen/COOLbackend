@@ -1037,6 +1037,24 @@ module.exports = router => {
     });
 
     /*
+    Database: speler update
+
+    Frontend: bestuur.js
+     */
+    router.get('/:uuidToken/rating/wijzigen/:seizoen/:knsbNummer/:knsbRating/:datum', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.BESTUUR)) {
+            if (await Speler.query()
+                .findById([ctx.params.seizoen, ctx.params.knsbNummer])
+                .patch({knsbRating: ctx.params.knsbRating, datum: ctx.params.datum})) {
+                aantal = 1;
+            }
+        }
+        ctx.body = aantal;
+    });
+
+    /*
     wedstrijd in agenda toevoegen
 
     Database: uitslag insert

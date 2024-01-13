@@ -14,10 +14,28 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
 
 (async function() {
     await zyq.init();
-    await html.menu(zyq.gebruiker.mutatieRechten,[]);
+    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.ONTWIKKElAAR, "speler conversie", async function() {
+        let mutaties = 0;
+        const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
+        for (const speler of personen) {
+            if (speler.knsbNummer > db.KNSB_NUMMER) {
+                const rating = await zyq.serverFetch(`/rating/9/${speler.knsbNummer}`); // 1 september
+                if (rating) {
+                    const knsbRating = Number(rating.knsbRating);
+                    console.log({knsbRating}); // TODO NaN met knsbNummer = 8363982, 9050954, 6565801
+                    await zyq.serverFetch(
+                        `/${zyq.uuidToken}/rating/wijzigen/${zyq.o_o_o.seizoen}/${speler.knsbNummer}/${rating.knsbRating}/${jaar}-09-01`);
+                    mutaties++;
+                }
+            }
+        }
+        console.log({mutaties});
+    }]);
     html.id("kop").textContent =
         `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}overzicht voor bestuur`;
     await ledenLijst(
+        personen,
         Number(html.params.get("lid")),
         html.id("competities"),
         html.id("tabel"),
@@ -26,8 +44,7 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
     await leesRatinglijst(html.id("csvFile"), html.id("informeer"));
 })();
 
-async function ledenLijst(lidNummer, competities, lijst, leden) {
-    const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
+async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
     competities.append(html.rij("personen in 0-0-0", "", personen.length - 11)); // aantal personen zonder onbekend en 10 x niemand
     lijst.append(html.rij(
         html.naarPagina(`aanmelden.html`, "----- iemand toevoegen -----"),

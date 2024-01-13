@@ -59,7 +59,7 @@ Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de 
 - `punten()` per `Uitslag`,
 - `totalen()` van punten en andere totalen per speler op basis van alle uitslagen van een seizoen.
 
-De `interneRating` is in principe gelijk aan de `knsbRating`van 1 augustus aan het begin van het seizoen.
+De `interneRating` is in principe gelijk aan de `knsbRating`van 1 september aan het begin van het seizoen.
  
 ## Persoon
 Voorlopig zijn dit de specificaties van `Persoon`:

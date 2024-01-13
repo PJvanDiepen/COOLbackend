@@ -96,6 +96,10 @@ Refresh Android cache
 - [Zeekat CSS!](https://zeekat.nl/index.html)
 - [HTML uitleg](https://www.patrickweaver.net/blog/a-blog-post-with-every-html-element/)
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
+- [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
+
+# design patterns
+- [dependency injection to test functions](https://betterprogramming.pub/optional-di-in-javascript-2cb7f5bc68a)
 
 # software enigineering
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)

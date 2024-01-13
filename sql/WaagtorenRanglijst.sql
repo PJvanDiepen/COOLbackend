@@ -23,7 +23,7 @@ delimiter ;
 -- versie 3 geen afzeggingenAftrek vanaf seizoen = 2122
 -- versie 4 rapidPunten voor rapid competitie
 -- versie 5 zwitsersPunten voor Zwitsers systeem
--- versie 6 jeugd competitie heeft subgroep met kleine letter en verschoven waardeCijfer
+-- versie 6 jeugd competitie met barrière punten en drie keer afzeggen
 
 drop function subgroep; -- 0-0-0.nl versie 0.8.39
 
@@ -111,8 +111,8 @@ begin
         return rapidPunten(partij, resultaat);
 	elseif versie = 5 then
         return zwitsersPunten(partij, resultaat);
-	elseif versie = 6 and partij = 'a' then -- jeugd competitie
-	    return eigenWaardeCijfer; 
+    elseif versie = 6 and partij = 'j' then
+        return eigenWaardeCijfer + 4; -- uitsluitend voor de jeugd competitie   
     elseif partij = 'i' and resultaat = '1' then
         return waardeCijfer(versie, rating(seizoen, tegenstander)) + 12;
     elseif partij = 'i' and resultaat = '½' then
@@ -182,7 +182,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.8.37
+drop function totalen; -- 0-0-0.nl versie 0.8.41
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -207,7 +207,7 @@ begin
     declare verliesExtern int default 0; -- 16
     declare witExtern int default 0; -- 17
     declare zwartExtern int default 0; -- 18
-   	declare partijenVerschil int default 0; -- 19
+   	declare partijenVerschil int default 99; -- 19
     declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
@@ -230,14 +230,12 @@ begin
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
             and u.anderTeam = competitie;
     declare continue handler for not found set found = false;
-    if versie = 4 or versie = 5 then -- rapid competitie en Zwitsers systeem
-        set partijenVerschil = 99; -- niet opnieuw tegen elkaar
-    else -- interne competitie
-        set startPunten = 300; -- reglement artikel 11
+    if versie <= 4 then -- interne competitie
 		set minimumInternePartijen = 20; -- reglement artikel 2
 		set partijenVerschil = 7; -- reglement artikel 3
 	end if;
     set interneRating = rating(seizoen, knsbNummer);
+    set startPunten = extraPunten(versie, interneRating);
     set eigenWaardeCijfer = waardeCijfer(versie, interneRating);
     open uitslagen;
     fetch uitslagen into teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
@@ -324,14 +322,41 @@ end;
 $$
 delimiter ;
 
-drop function afzeggingenAftrek; -- 0-0-0.nl versie 0.7.14
+drop function extraPunten; -- 0-0-0.nl versie 0.8.41
+
+delimiter $$
+create function extraPunten(versie int, interneRating int)
+    returns int deterministic
+begin
+    if versie <= 3 then -- interne competitie reglement artikel 11
+        return 300;
+	elseif versie = 6 and interneRating < 1100 then -- barrière punten voor jeugd competitie
+        return 270;
+	elseif versie = 6 and interneRating < 1200 then
+        return 300;
+    elseif versie = 6 and interneRating < 1300 then
+        return 330;
+    elseif versie = 6 then
+        return 360;
+    else
+        return 0;
+    end if;
+end;
+$$
+delimiter ;
+
+drop function afzeggingenAftrek; -- 0-0-0.nl versie 0.8.41
 
 delimiter $$
 create function afzeggingenAftrek(versie int, afzeggingen int)
     returns int deterministic
 begin
-    if afzeggingen > 10 and versie = 2 then -- reglement artikel 12
+    if versie = 2 and afzeggingen > 10 then -- interne competitie reglement artikel 12
         return (afzeggingen - 10) * 8;
+    elseif versie = 6 and afzeggingen > 3 then -- jeugd competitie eerste drie keer afzeggen omgekeerde aftrek
+        return -12;
+    elseif versie = 6 then
+        return afzeggingen * -4;
 	else
         return 0;
     end if;

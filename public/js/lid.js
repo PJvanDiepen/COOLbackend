@@ -20,7 +20,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
     html.id("kop").textContent =
         `${zyq.o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`;
     const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${lidNummer}`);
-    const augustusRating = await ratingLezen();
+    const septemberRating = await ratingLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
         }],
@@ -35,11 +35,11 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
         [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${lidNummer}`);
         }]);
-    await lidFormulier(persoon, augustusRating);
+    await lidFormulier(persoon, septemberRating);
 })();
 
 async function ratingLezen() {
-    const rating = await zyq.serverFetch(`/rating/8/${lidNummer}`); // 1 augustus dit seizoen
+    const rating = await zyq.serverFetch(`/rating/9/${lidNummer}`); // 1 september dit seizoen
     if (Number(rating.knsbNummer) === lidNummer && Number(rating.jaar) === jaar) {
         return rating;
     }
@@ -62,23 +62,23 @@ knsbTeam         speler
 nhsbTeam         speler
 competities      speler
 
-De knsbRating komt uit de rating lijst van 1 augustus van dit seizoen.
+De knsbRating komt uit de rating lijst van 1 september van dit seizoen.
 
 In het lidFormulier
 - kan beheerder naam en ksnbNummer van persoon en knsbRating van speler wijzigen
 - kan bestuur knsbTeam, nhsbTeam en competities van speler wijzigen en indien nodig speler toevoegen
 - kan een geregistreerd gebruiker competities van speler wijzigen en indien nodig speler toevoegen
  */
-async function lidFormulier(persoon, augustusRating) {
+async function lidFormulier(persoon, septemberRating) {
     // formulier invullen
     const knsbNummer = html.id("knsbNummer");
     knsbNummer.value = lidNummer;
     const naam = html.id("naam");
     naam.value = persoon.naam;
     html.id("gebruiker").value = zyq.gebruikerFunctie(persoon);
-    html.id("jaar").append(` op 1 augustus ${jaar}`);
+    html.id("jaar").append(` op 1 september ${jaar}`);
     const knsbRating = html.id("knsbRating");
-    knsbRating.value = augustusRating ? augustusRating.knsbRating : 0;
+    knsbRating.value = septemberRating ? septemberRating.knsbRating : 0;
     const interneRating = html.id("interneRating");
     if (knsbRating.value > 0) {
         interneRating.append(html.optie(knsbRating.value, "zie KNSB rating"));
@@ -157,11 +157,11 @@ async function lidFormulier(persoon, augustusRating) {
         const ratingIntern = interneRating.value;
         const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
         const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;
-        if (await zyq.serverFetch(`/${uuid}/${spelerMuteren}/${seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${jaar}-08-01`)) {
+        if (await zyq.serverFetch(`/${uuid}/${spelerMuteren}/${seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${jaar}-09-01`)) {
             mutaties++;
         }
         if (knsbWijzigen && (Number(knsbNummer.value) !== lidNummer || naam.value !== persoon.naam) &&
-            await zyq.serverFetch(`/${zyq.uuidToken}/persoon/wijzigen/${lidNummer}/${knsbNummer.value}/${naam.value}`)) {
+            await zyq.serverFetch(`/${uuid}/persoon/wijzigen/${lidNummer}/${knsbNummer.value}/${naam.value}`)) {
             mutaties++;
         }
         if (mutaties > 0) {

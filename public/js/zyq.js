@@ -5,9 +5,10 @@ const HOOGSTE_RATING = 2000;
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
-const RAPID_COMPETITIE    = "ira";
-const JEUGD_COMPETITIE    = "ije";
-const SNELSCHAKEN        = "izs";
+const RAPID_COMPETITIE = "ira";
+const JEUGD_COMPETITIE = "ije";
+const JEUGD_COMPETITIE_VOORJAAR = "ijv";
+const SNELSCHAKEN = "izs";
 
 export {
     LAAGSTE_RATING,
@@ -38,6 +39,8 @@ export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst 
         return "rapid competitie";
     } else if (teamCode === JEUGD_COMPETITIE) {
         return "jeugd competitie";
+    } else if (teamCode === JEUGD_COMPETITIE_VOORJAAR) {
+        return "jeugd voorjaarscompetitie";
     } else if (teamCode === SNELSCHAKEN) {
         return "einde seizoen snelschaken";
     } else if (teamCode === "kbe") {
@@ -253,6 +256,8 @@ function versieBepalen() {
     } else if (zwitsers(o_o_o.competitie) && o_o_o.versie === 0) {
         o_o_o.versie = 5; // Zwitsers systeem
     } else if (o_o_o.competitie === JEUGD_COMPETITIE && o_o_o.versie === 0) {
+        o_o_o.versie = 6;
+    } else if (o_o_o.competitie === JEUGD_COMPETITIE_VOORJAAR && o_o_o.versie === 0) {
         o_o_o.versie = 6;
     }
 }

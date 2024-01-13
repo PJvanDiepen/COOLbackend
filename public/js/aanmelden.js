@@ -13,7 +13,7 @@ import * as zyq from "./zyq.js";
  */
 
 const zoekNaam = html.params.get("zoek") || "";
-const ratingMaand = Number(html.params.get("maand")) || 8; // augustus
+const ratingMaand = Number(html.params.get("maand")) || 9; // september
 
 const zoek       = html.id("zoek");
 const selecteer  = html.id("selecteer");

@@ -23,10 +23,11 @@ const NIEUWE_RANGLIJST = 2;
 
 // teamCode
 const INTERNE_COMPETITIE = "int";
-const RAPID_COMPETITIE    = "ira";
-const JEUGD_COMPETITIE    = "ije";
-const SNELSCHAKEN        = "izs";
-const ZWITSERS_TEST      = "izt";
+const RAPID_COMPETITIE= "ira";
+const JEUGD_COMPETITIE= "ije";
+const JEUGD_COMPETITIE_VOORJAAR= "ijv";
+const SNELSCHAKEN= "izs";
+const ZWITSERS_TEST= "izt";
 
 function isCompetitie(team) {
     return team.teamCode === "" ? false : team.teamCode.substring(0,1) === "i";

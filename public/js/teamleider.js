@@ -203,11 +203,11 @@ function lagerTeam(team, hogerTeam) {
 }
 
 function jeugdCompetitie(speler) {
-    return speler.intern1 === db.JEUGD_COMPETITIE ||
-           speler.intern2 === db.JEUGD_COMPETITIE ||
-           speler.intern3 === db.JEUGD_COMPETITIE ||
-           speler.intern4 === db.JEUGD_COMPETITIE ||
-           speler.intern5 === db.JEUGD_COMPETITIE;
+    return speler.intern1 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
+           speler.intern2 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
+           speler.intern3 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
+           speler.intern4 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
+           speler.intern1 === db.JEUGD_COMPETITIE || speler.intern5 === db.JEUGD_COMPETITIE_VOORJAAR;
 }
 
 function wedstrijdenLijst(ronden) {
