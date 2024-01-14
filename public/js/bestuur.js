@@ -19,13 +19,16 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
         let mutaties = 0;
         const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
         for (const speler of personen) {
-            if (speler.knsbNummer > db.KNSB_NUMMER) {
+            if (speler.knsbNummer > db.KNSB_NUMMER && speler.knsbRating && speler.interneRating) {
                 const rating = await zyq.serverFetch(`/rating/9/${speler.knsbNummer}`); // 1 september
                 if (rating) {
-                    const knsbRating = Number(rating.knsbRating);
-                    console.log({knsbRating}); // TODO NaN met knsbNummer = 8363982, 9050954, 6565801
+                    const uuid = zyq.uuidToken;
+                    const seizoen = zyq.o_o_o.seizoen;
+                    const knsbNummer = speler.knsbNummer;
+                    const knsbRating = rating.knsbRating;
+                    const interneRating = Math.max(speler.interneRating, knsbRating);
                     await zyq.serverFetch(
-                        `/${zyq.uuidToken}/rating/wijzigen/${zyq.o_o_o.seizoen}/${speler.knsbNummer}/${rating.knsbRating}/${jaar}-09-01`);
+                        `/${uuid}/rating/wijzigen/${seizoen}/${knsbNummer}/${knsbRating}/${interneRating}/${jaar}-09-01`);
                     mutaties++;
                 }
             }

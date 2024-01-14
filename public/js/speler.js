@@ -81,7 +81,8 @@ async function uitslagenSpeler(kop, lijst) {
         }
     }
     if (t.aftrek()) {
-        lijst.append(html.rij("", "", "aftrek", "", "", "", t.aftrek(), totaal + t.aftrek()));
+        const tekst = t.aftrek() > 0 ? "bijtelling" : "aftrek";
+        lijst.append(html.rij("", "", tekst, "", "", "", t.aftrek(), totaal + t.aftrek()));
     }
     if (!t.intern() && t.afzeggingen()) {
         lijst.append(html.rij("", "", "uitsluitend afzeggingen", "", "", "", "", ""));
@@ -144,4 +145,5 @@ const geenPartijInvullen = new Map([
     [db.ONEVEN, "oneven"],
     [db.REGLEMENTAIRE_REMISE, "vrijgesteld"],
     [db.REGLEMENTAIR_VERLIES, "reglementair verlies"],
-    [db.REGLEMENTAIRE_WINST, "reglementaire winst"]]);
+    [db.REGLEMENTAIRE_WINST, "reglementaire winst"],
+    ["j", "jeugd partij"]]); // TODO niet duidelijk

@@ -1041,13 +1041,16 @@ module.exports = router => {
 
     Frontend: bestuur.js
      */
-    router.get('/:uuidToken/rating/wijzigen/:seizoen/:knsbNummer/:knsbRating/:datum', async function (ctx) {
+    router.get('/:uuidToken/rating/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
             if (await Speler.query()
                 .findById([ctx.params.seizoen, ctx.params.knsbNummer])
-                .patch({knsbRating: ctx.params.knsbRating, datum: ctx.params.datum})) {
+                .patch({
+                    knsbRating: ctx.params.knsbRating,
+                    interneRating: ctx.params.interneRating,
+                    datum: ctx.params.datum})) {
                 aantal = 1;
             }
         }

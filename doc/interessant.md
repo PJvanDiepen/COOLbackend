@@ -100,6 +100,9 @@ Refresh Android cache
 
 # design patterns
 - [dependency injection to test functions](https://betterprogramming.pub/optional-di-in-javascript-2cb7f5bc68a)
+- [dependency injection and unittest](https://blog.appsignal.com/2022/02/16/dependency-injection-in-javascript-write-testable-code-easily.html)
+- [dependency injection class versus function](https://medium.com/geekculture/dependency-injection-in-javascript-2d2e4ad9df49)
+- [dependency injection and functional programming](https://jonbarnett.hashnode.dev/a-rollercoaster-ride-into-dependency-injection-and-functional-programming-in-javascript)
 
 # software enigineering
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
