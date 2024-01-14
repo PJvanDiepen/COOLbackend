@@ -143,7 +143,7 @@ function naarRonde(uitslag) {
 const geenPartijInvullen = new Map([
     [db.AFWEZIG, "afgezegd"],
     [db.ONEVEN, "oneven"],
-    [db.REGLEMENTAIRE_REMISE, "vrijgesteld"],
+    [db.REGLEMENTAIRE_REMISE, "reglementair remise"],
     [db.REGLEMENTAIR_VERLIES, "reglementair verlies"],
     [db.REGLEMENTAIRE_WINST, "reglementaire winst"],
-    ["j", "jeugd partij"]]); // TODO niet duidelijk
+    ["j", "niet gespeeld"]]);
