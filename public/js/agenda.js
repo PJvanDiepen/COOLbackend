@@ -46,8 +46,8 @@ async function agenda(knsbNummer, lijst, informeer) {
     if (await agendaAanvullen(knsbNummer, wedstrijden)) {
         wedstrijden = await agendaLezen(knsbNummer);
     }
-    const geenVraagteken = new Set(); // teams waarvoor speler planning heeft ingevuld
-    let vraagteken = false; // er is een team waarvoor speler geen planning heeft ingevuld
+    let vraagteken = false; // indien eerste wedstrijd van een team niet is aangevinkt
+    const geenVraagteken = new Set(); // reeds gecontroleerde teams
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (db.planningInvullen.has(w.partij)) {
             const datum = zyq.datumSQL(w.datum);
@@ -61,10 +61,10 @@ async function agenda(knsbNummer, lijst, informeer) {
                 zyq.interneCompetitie(w.teamCode) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
                 link));
             if (w.partij === db.PLANNING && db.isTeam(w) && !geenVraagteken.has(w.teamCode)) {
-                vraagteken = true;
+                vraagteken = true; // speler heeft voor komende wedstrijd van dit team niet aangevinkt
             }
             if (db.isTeam(w)) {
-                geenVraagteken.add(w.teamCode);
+                geenVraagteken.add(w.teamCode); // eerste wedstrijd van dit team is gecontroleerd
             }
         }
     }
