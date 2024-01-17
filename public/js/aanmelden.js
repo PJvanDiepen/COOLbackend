@@ -70,7 +70,7 @@ In het registratie formulier
             html.anderePagina(`bestuur.html?lid=${nieuwLidNummer}`);
         }
         if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
-            html.tekstToevoegen(informeer, `Probeer je registratie opnieuw te activeren.\n`);
+            html.tekstToevoegen(informeer, `Probeer je registratie opnieuw te activeren.`);
         }
     });
 })();
@@ -112,7 +112,7 @@ async function zoekPersoon() {
 
                 if ("mutatieRechten" in leden[index]) {
                     gebruikerToevoegen = leden[index].mutatieRechten === null;
-                    html.tekstToevoegen(informeer, `${leden[index].naam} is bekend in 0-0-0.\n`);
+                    html.tekstToevoegen(informeer, `${leden[index].naam} is bekend in 0-0-0.`);
                     persoonToevoegen = false;
                     naam.disabled = true; // naam niet meer veranderen
                 } else {
@@ -124,7 +124,7 @@ async function zoekPersoon() {
         }
         selectieLijst.unshift(["=", `selecteer KNSB nummer, naam (rating)`]);
         html.selectie(selecteer, "=", selectieLijst);
-        html.tekstToevoegen(informeer, `Met "${zoekNaam}" zijn ${leden.length} namen gevonden.\n`);
+        html.tekstToevoegen(informeer, `Met "${zoekNaam}" zijn ${leden.length} namen gevonden.`);
     }
     zoek.addEventListener("change", function () {
         html.zelfdePagina(`zoek=${zoek.value}&maand=${ratingMaand}`);

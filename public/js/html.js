@@ -9,11 +9,11 @@ export const server = pagina.host.match("localhost") ? "http://localhost:3000" :
 export const params = pagina.searchParams;
 
 export const SCHEIDING = " \u232A ";
-export const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
+export const VINKJE = "\u00a0\u00a0✔\u00a0"; // met no break spaces
 export const STREEP = "___";
-export const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
-export const VRAAGTEKEN = "\u00a0\u00a0?\u00a0\u00a0"; // met no break spaces
-export const ZELFDE = "\u00a0\u00a0=\u00a0\u00a0"; // met no break spaces
+export const KRUISJE = "\u00a0\u00a0✖\u00a0"; // met no break spaces
+export const VRAAGTEKEN = "\u00a0\u00a0?\u00a0"; // met no break spaces
+export const ZELFDE = "\u00a0\=\u00a0"; // met no break spaces
 
 /*
 TODO const html = {id1: , id2: } alle DOM elementen met id

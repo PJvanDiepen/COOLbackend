@@ -36,7 +36,7 @@ import * as zyq from "./zyq.js";
 
     Indien een externe wedstrijd meetelt voor de interne competitie (anderTeam = INTERNE_COMPETITIE)
     en de datum van de externe wedstrijd is de datum van een ronde van de interne competitie
-    dan wordt dit vastgelegd in 2 uitslagen met 2 verschillende teamCode (van team en van INTERNE_COMPETITIE)
+    dan wordt dit vastgelegd in 2 uitslagen met teamCode van team en van INTERNE_COMPETITIE
     en partij = EXTERN_UIT of EXTERN_THUIS.
 
  */
@@ -46,8 +46,8 @@ async function agenda(knsbNummer, lijst, informeer) {
     if (await agendaAanvullen(knsbNummer, wedstrijden)) {
         wedstrijden = await agendaLezen(knsbNummer);
     }
-    let agendaLijst = false;
-    const vraagteken = []; // voor welke competities of teams is nog niets ingevuld
+    const geenVraagteken = new Set(); // teams waarvoor speler planning heeft ingevuld
+    let vraagteken = false; // er is een team waarvoor speler geen planning heeft ingevuld
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (db.planningInvullen.has(w.partij)) {
             const datum = zyq.datumSQL(w.datum);
@@ -60,14 +60,19 @@ async function agenda(knsbNummer, lijst, informeer) {
                 zyq.interneCompetitie(w.teamCode) ? w.rondeNummer : "",
                 zyq.interneCompetitie(w.teamCode) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
                 link));
-            agendaLijst = true;
-        } else if (agendaLijst) {
-            console.log("er kan nog geen uitslag zijn!")
-            console.log(w);
+            if (w.partij === db.PLANNING && db.isTeam(w) && !geenVraagteken.has(w.teamCode)) {
+                vraagteken = true;
+            }
+            if (db.isTeam(w)) {
+                geenVraagteken.add(w.teamCode);
+            }
         }
-        if (w.partij === "p") {
-            // TODO hier is PvD gebleven!
-        }
+    }
+    if (vraagteken) {
+        html.tekstToevoegen(informeer, "Teamleiders willen graag weten of hun teams compleet zijn. " +
+            "Dat kunnen ze zien als je de vraagtekens bij de komende wedstrijden aanvinkt. " +
+            "Een vinkje betekent dat je meedoet. " +
+            "Een streep betekent dat je niet meedoet en dat de teamleider een invaller moet vragen.");
     }
 }
 

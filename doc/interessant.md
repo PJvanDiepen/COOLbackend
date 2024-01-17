@@ -116,6 +116,8 @@ Refresh Android cache
 - [Git uitleg](https://github.com/readme/guides/configure-git-environment)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
 - [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
+- [Contributing to open source software: Creating a pull request](https://www.youtube.com/watch?v=xPOPjGbv_TY)
+- [How I Started Contributing to Open Source and Why You Should Too](https://www.youtube.com/watch?v=GAqfMNB-YBU)
 
 # schaken
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
