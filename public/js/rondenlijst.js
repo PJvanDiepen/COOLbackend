@@ -23,7 +23,6 @@ import {ranglijst} from "./o_o_o.js";
     const spelers = (await ranglijst(rondeNummer)).filter(function (speler) {
         return speler.intern() || speler.oneven();
     });
-    console.log(spelers);
     spelers.forEach(function (speler, rangnummer) {
         lijst.append(html.rij(rangnummer + 1,
             zyq.naarSpeler(speler),
@@ -39,17 +38,15 @@ function rondeNummers(aantalRonden) {
 }
 
 function rondenPerSpeler(speler, spelers, aantalRonden) {
-    console.log(speler.naam);
     const ronden = [];
     for (let i = 1; i <= aantalRonden; i++) {
         const [kleur, tegenstander, resultaat] = speler.tegenstander(i);
-        console.log([kleur, tegenstander, resultaat]);
         if (tegenstander) {
             const rangnummer = 1 + spelers.findIndex(function (tegen) {
                 return tegen.knsbNummer === tegenstander;
             });
-            const score = kleur === 2 ? db.WINST : kleur === 1 ? db.REMISE : db.WINST;
-            ronden.push(`${rangnummer} ${kleur ? "z" : "w"} ${score}`);
+            const score = resultaat === 2 ? db.WINST : resultaat ? db.REMISE : db.VERLIES;
+            ronden.push(`${rangnummer}${kleur ? "z" : "w"}${score}`);
         } else {
             ronden.push("");
         }
