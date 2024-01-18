@@ -1,6 +1,7 @@
 "use strict";
 
 import * as html from "./html.js";
+import * as db from "./db.js";
 
 import {teamSelecteren, rondeSelecteren, ranglijst} from "./o_o_o.js"
 
@@ -15,7 +16,9 @@ import * as zyq from "./zyq.js";
     await zyq.init();
     zyq.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
-    await html.menu(zyq.gebruiker.mutatieRechten,[]);
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "Rondenlijst", function () {
+        html.anderePagina("rondenlijst.html");
+    }]);
     await teamSelecteren(zyq.o_o_o.competitie);
     await rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     const versies = [
@@ -46,6 +49,7 @@ import * as zyq from "./zyq.js";
     const spelers = (await ranglijst(rondeNummer)).filter(function (speler) {
         return speler.intern() || speler.oneven() || speler.extern() || alleLeden;
     });
+
     const externeWinnaars = externeScores(spelers, minimumVoorkeur);
     const winnaars = {}; // voor winnaarSubgroep() in totalen
     let rangnummer = 0;

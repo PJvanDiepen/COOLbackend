@@ -315,6 +315,17 @@ function spelerTotalen(speler) {
         return partijenGeleden; // laatsteKeer zelfde tegenstander was partijenGeleden of groter dan 1000
     }
 
+    function tegenstander(rondeNummer) {
+        let i = 20;
+        while (totalen[i]) { // indien rondeNummer
+            if (totalen[i] === rondeNummer) {
+                return [totalen[i + 1], totalen[i + 2], totalen[i + 3]];
+            }
+            i = i + 4; // volgende rondeNummer, kleur (0 = wit, 1 = zwart), knsbNummer en resultaat (0 = verlies, 1 = remise, 2 = winst)
+        }
+        return [-1, 0, -1]; // geen tegenstander
+    }
+
     function vorigeKleur() {
         let i = 20;
         let kleur = -1;
@@ -384,6 +395,7 @@ function spelerTotalen(speler) {
         saldoWitZwartExtern,
         partijenVerschil,
         tegen,
+        tegenstander,
         vorigeKleur,
         metWit
     });
