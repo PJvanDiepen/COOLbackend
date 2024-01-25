@@ -26,7 +26,6 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const spelers = await zyq.serverFetch(`/teamleider/${zyq.o_o_o.seizoen}`);
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
-    console.log({hoogsteRating});
     const vast = html.id("vast");
     vast.append(html.bovenRij("naam", "nummer", "rating", "team", ...(rondeNummers(ronden))));
     const vasteSpelers = spelers.filter(function (speler) {
@@ -49,10 +48,6 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     html.id("vragen").textContent = `Invallers vragen door ${teamGegevens.naam}`;
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
-        console.log(speler);
-        console.log(speler.knsbNummer > db.KNSB_NUMMER);
-        console.log(speler.knsbRating < hoogsteRating);
-        console.log(!jeugdCompetitie(speler));
         return speler.knsbNummer > db.KNSB_NUMMER
             && speler.knsbRating < hoogsteRating
             && !hogerTeam(teamCode, nhsbTeam ? speler.nhsbTeam : speler.knsbTeam)
@@ -197,17 +192,11 @@ function rondenPerSpeler(knsbNummer, ronden) {
 }
 
 function hogerTeam(teamCode, vastTeam) {
-    console.log({teamCode});
-    console.log({vastTeam});
-    if (vastTeam === "" || teamCode.substring(1,2) == "b") {
-        console.log("return false; // indien geen vastTeam of beker");
+    if (vastTeam === "" || teamCode.substring(1,2) === "b") {
         return false; // indien geen vastTeam of beker
     } else if (vastTeam.substring(0,2) !== "nv" && teamCode.substring(0,2) === "nv") {
-        console.log("return true; // niet viertal is hogerTeam dan viertal")
         return true; // niet viertal is hogerTeam dan viertal
     } else {
-        console.log("return teamCode > vastTeam; // hogerTeam heeft lager nummer");
-        console.log(teamCode > vastTeam);
         return teamCode > vastTeam; // hogerTeam heeft lager nummer
     }
 }
