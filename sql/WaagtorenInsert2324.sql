@@ -320,7 +320,8 @@ insert into speler (seizoen, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, 
 ("2324", "", "", 9050954, 0, '2023-08-01', 1000, "int", "ira", "", "", "");
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-("2324", "kbe", 2, "u", "EuroParcs/Autovakmeester Schaap", '2023-12-06'); -- KNSB beker
+("2324", "kbe", 2, "u", "EuroParcs/Autovakmeester Schaap", '2023-12-06'), -- KNSB beker
+("2324", "kbe", 3, "t", "Caissa-Eenhoorn", '2024-01-30');
 
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2324", "nbz", 1, "u", "Aartswoud", '2023-12-08'), -- KNSB beker
