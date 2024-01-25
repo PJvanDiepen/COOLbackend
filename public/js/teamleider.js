@@ -65,7 +65,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
             const mutaties = await zyq.serverFetch(
                 `/${zyq.uuidToken}/uitslag/toevoegen/${zyq.o_o_o.seizoen}/${teamCode}/${rondeNummer}/${speler.knsbNummer}/${db.PLANNING}/${datum}/int`);
-            html.zelfdePagina(`invaller=${speler.knsbNummer}`);
+            html.zelfdePagina(`teamleider=${teamCode}&invaller=${speler.knsbNummer}`);
         });
         inval.append(html.rij(zyq.naarSpeler(speler),
             speler.knsbNummer,
