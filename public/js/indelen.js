@@ -325,24 +325,30 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
 function nietTegen(r, i, j, rondeNummer) {
     if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) {
         return true;
-    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
-        return false;
+    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) {
+        return false; // rapid en oudere versies zonder heuristieken
+    } else if (r[i].knsbNummer === 7771665 && r[j].knsbNummer === 7777715) {
+        console.log(`${r[i].naam} niet tegen ${r[j].naam}`);
+        return true; // 0-0-0.nl versie 0.8.46 Yvonne Schol / Richard Gooijers
+    } else if (r[j].knsbNummer === 7771665 && r[i].knsbNummer === 7777715) {
+        console.log(`${r[i].naam} niet tegen ${r[j].naam}`);
+        return true; // 0-0-0.nl versie 0.8.46 Richard Gooijers / Richard Gooijers
+    } else if (r[i].knsbNummer === 7640798 && r[j].knsbNummer === 8388105) {
+        console.log(`${r[i].naam} niet tegen zoon ${r[j].naam}`);
+        return true; // 0-0-0.nl versie 0.8.18 Johan en Marijn Wester
+    } else if (r[j].knsbNummer === 7640798 && r[i].knsbNummer === 8388105) {
+        console.log(`${r[i].naam} niet tegen vader ${r[j].naam}`);
+        return true; // 0-0-0.nl versie 0.8.18 Marijn en Johan Wester
     } else if (rondeNummer < 5) {
         return false;
-    } else if (r[i].knsbNummer === 7640798 && r[j].knsbNummer === 8388105) { // 0-0-0.nl versie 0.8.18 Johan en Marijn Wester
-        console.log(`${r[i].naam} niet tegen zoon ${r[j].naam}`);
-        return true;
-    } else if (r[j].knsbNummer === 7640798 && r[i].knsbNummer === 8388105) { // 0-0-0.nl versie 0.8.18 Marijn en Johan Wester
-        console.log(`${r[i].naam} niet tegen vader ${r[j].naam}`);
-        return true;
-    } else if (rondeNummer / r[i].intern() < 2 && rondeNummer / r[j].intern() < 2) { // spelers hebben niet te weinig gespeeld
-        return false
-    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) { // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
+    } else if (rondeNummer / r[i].intern() < 2 && rondeNummer / r[j].intern() < 2) {
+        return false; // spelers hebben niet te weinig gespeeld
+    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) {
         console.log(`${r[i].naam} te sterk voor ${r[j].naam}`);
-        return true;
-    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) { // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
+        return true; // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
+    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) {
         console.log(`${r[i].naam} te zwak voor ${r[j].naam}`);
-        return true;
+        return true; // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
     }
     return false;
 }
