@@ -262,7 +262,7 @@ function deelnemersLijst(r, lijst) {
         lijst.append(html.rij(
             i + 1,
             zyq.naarSpeler(t),
-            t.totaal(), // TODO t.punten() ?
+            t.punten(),
             t.eigenWaardeCijfer(),
             t.intern() ? t.intern() : "",
             t.saldoWitZwart() ? t.saldoWitZwart() : ""));
@@ -308,9 +308,7 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
 }
 
 function indelenRonde(r, wit, zwart, rondeNummer) {
-    // console.log("--- indelenRonde ---");
-    // console.log("rondeNummer: " + rondeNummer);
-    return indelenFun[versieIndelen][1](r, wit, zwart, rondeNummer);
+    return indelenFun[versieIndelen][1](r, wit, zwart, rondeNummer); // TODO functie met 1 regel?
 }
 
 /**
@@ -325,30 +323,18 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
 function nietTegen(r, i, j, rondeNummer) {
     if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) {
         return true;
-    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) {
-        return false; // rapid en oudere versies zonder heuristieken
-    } else if (r[i].knsbNummer === 7771665 && r[j].knsbNummer === 7777715) {
-        console.log(`${r[i].naam} niet tegen ${r[j].naam}`);
-        return true; // 0-0-0.nl versie 0.8.46 Yvonne Schol / Richard Gooijers
-    } else if (r[j].knsbNummer === 7771665 && r[i].knsbNummer === 7777715) {
-        console.log(`${r[i].naam} niet tegen ${r[j].naam}`);
-        return true; // 0-0-0.nl versie 0.8.46 Richard Gooijers / Richard Gooijers
-    } else if (r[i].knsbNummer === 7640798 && r[j].knsbNummer === 8388105) {
-        console.log(`${r[i].naam} niet tegen zoon ${r[j].naam}`);
-        return true; // 0-0-0.nl versie 0.8.18 Johan en Marijn Wester
-    } else if (r[j].knsbNummer === 7640798 && r[i].knsbNummer === 8388105) {
-        console.log(`${r[i].naam} niet tegen vader ${r[j].naam}`);
-        return true; // 0-0-0.nl versie 0.8.18 Marijn en Johan Wester
+    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
+        return false;
     } else if (rondeNummer < 5) {
         return false;
     } else if (rondeNummer / r[i].intern() < 2 && rondeNummer / r[j].intern() < 2) {
         return false; // spelers hebben niet te weinig gespeeld
-    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) {
+    } else if (r[i].eigenWaardeCijfer() - r[j].eigenWaardeCijfer() > 3) { // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
         console.log(`${r[i].naam} te sterk voor ${r[j].naam}`);
-        return true; // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
-    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) {
+        return true;
+    } else if (r[j].eigenWaardeCijfer() - r[i].eigenWaardeCijfer() > 3) { // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
         console.log(`${r[i].naam} te zwak voor ${r[j].naam}`);
-        return true; // 0-0-0.nl versie 0.8.17 >= 3 verandert in > 3
+        return true;
     }
     return false;
 }

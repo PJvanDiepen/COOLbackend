@@ -166,6 +166,12 @@ function spelerTotalen(speler) {
     const naam = speler.naam;
     const subgroep = speler.subgroep;
     const totalen = speler.totalen.split(" ").map(Number);
+    const nietTegen =
+        knsbNummer === 7640798 ? [8388105] : // vader Johan niet tegen zoon Marijn Wester
+        knsbNummer === 8388105 ? [7640798] : // zoon Marijn niet tegen vader Johan Wester
+        knsbNummer === 7771665 ? [7777715] : // Yvonne Schol wegens geluid niet tegen Richard Gooijers
+        knsbNummer === 8350738 ? [7777715] : // Ramon Witte zegt geen zetten tegen Richard Gooijers
+        knsbNummer === 7777715 ? [7771665, 8350738] : [];
 
     let wp = 0;
 
@@ -277,13 +283,24 @@ function spelerTotalen(speler) {
     }
 
     function tegen(tegenstander)  {
+        if (nietTegen.length) {
+            console.log(knsbNummer);
+            console.log(naam);
+            console.log(nietTegen);
+            console.log(tegenstander);
+            console.log(nietTegen.includes(tegenstander.knsbNummer));
+        }
+        if (nietTegen.includes(tegenstander.knsbNummer)) {
+            console.log(`${naam} mag niet tegen ${tegenstander.naam}`);
+            return false;
+        }
         const zelfdeTegenstander = vorigeKeer(tegenstander);
         if (zelfdeTegenstander) {
             afdrukken(tegenstander, totalen[zelfdeTegenstander + 1], `in ronde ${totalen[zelfdeTegenstander]}`);
             const partijenGeleden = laatsteKeer(tegenstander);
             if (partijenGeleden < partijenVerschil()) {
                 console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
-                return false; // indien minder dan partijenVerschil tegen gespeeld
+                return false;
             }
         }
         return true; // nog niet tegen gespeeld of mag nog een keer tegen spelen
