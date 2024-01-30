@@ -60,18 +60,16 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
         const invallen = wedstrijden.filter(function (wedstrijd) {
             return nietGevraagd(speler.knsbNummer, ronden, wedstrijd[0]);
         });
-        const knop = document.createElement("select");
-        html.selectie(knop, 0, invallen, async function (rondeNummer){
-            const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
-            const mutaties = await zyq.serverFetch(
-                `/${zyq.uuidToken}/uitslag/toevoegen/${zyq.o_o_o.seizoen}/${teamCode}/${rondeNummer}/${speler.knsbNummer}/${db.PLANNING}/${datum}/int`);
-            html.zelfdePagina(`teamleider=${teamCode}&invaller=${speler.knsbNummer}`);
-        });
-        inval.append(html.rij(zyq.naarSpeler(speler),
-            speler.knsbNummer,
-            speler.knsbRating,
-            team,
-            knop));
+        if (invallen.length > 1) {
+            const knop = document.createElement("select");
+            html.selectie(knop, 0, invallen, async function (rondeNummer){
+                const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
+                const mutaties = await zyq.serverFetch(
+                    `/${zyq.uuidToken}/uitslag/toevoegen/${zyq.o_o_o.seizoen}/${teamCode}/${rondeNummer}/${speler.knsbNummer}/${db.PLANNING}/${datum}/int`);
+                html.zelfdePagina(`teamleider=${teamCode}&invaller=${speler.knsbNummer}`);
+            });
+            inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
+        }
     }
 })();
 
@@ -191,13 +189,13 @@ function rondenPerSpeler(knsbNummer, ronden) {
     return uitslagen;
 }
 
-function hogerTeam(teamCode, vastTeam) {
-    if (vastTeam === "" || teamCode.substring(1,2) === "b") {
+function hogerTeam(teamCode, vasteTeam) {
+    if (vasteTeam === "" || teamCode.substring(1,2) === "b") {
         return false; // indien geen vastTeam of beker
-    } else if (vastTeam.substring(0,2) !== "nv" && teamCode.substring(0,2) === "nv") {
+    } else if (vasteTeam.substring(0,2) !== "nv" && teamCode.substring(0,2) === "nv") {
         return true; // niet viertal is hogerTeam dan viertal
     } else {
-        return teamCode > vastTeam; // hogerTeam heeft lager nummer
+        return teamCode >= vasteTeam; // hogerTeam heeft lager nummer en in vallen voor vasteTeam mag ook niet
     }
 }
 
