@@ -283,13 +283,6 @@ function spelerTotalen(speler) {
     }
 
     function tegen(tegenstander)  {
-        if (nietTegen.length) {
-            console.log(knsbNummer);
-            console.log(naam);
-            console.log(nietTegen);
-            console.log(tegenstander);
-            console.log(nietTegen.includes(tegenstander.knsbNummer));
-        }
         if (nietTegen.includes(tegenstander.knsbNummer)) {
             console.log(`${naam} mag niet tegen ${tegenstander.naam}`);
             return false;
