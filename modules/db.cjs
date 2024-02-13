@@ -58,7 +58,6 @@ const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij
 const EXTERN_UIT           = "u"; // na aanmelden voor externe partij
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
-const ONBEKEND             = "x"; // na wijzigen indeling
 const WIT_TEGEN            = "y"; // na wijzigen indeling
 const ZWART_TEGEN          = "z"; // na wijzigen indeling
 // uitslag.witZwart
@@ -87,7 +86,13 @@ const planningInvullen = new Map([
     [NIET_MEEDOEN, MEEDOEN],
     [MEEDOEN, NIET_MEEDOEN],
     [EXTERN_THUIS, NIET_MEEDOEN],
-    [EXTERN_UIT, NIET_MEEDOEN]]);
+    [EXTERN_UIT, NIET_MEEDOEN],
+    [WIT_TEGEN, NIET_MEEDOEN],
+    [ZWART_TEGEN, NIET_MEEDOEN]]);
+
+function isParing(uitslag) {
+    return uitslag.partij === WIT_TEGEN || uitslag.partij === ZWART_TEGEN;
+}
 
 function isPlanning(uitslag) {
     return planningInvullen.has(uitslag.partij);
@@ -159,7 +164,6 @@ module.exports = { // CommonJS voor node.js
     EXTERN_UIT,            // na aanmelden voor externe partij uit
     REGLEMENTAIR_VERLIES,
     REGLEMENTAIRE_WINST,
-    ONBEKEND,              // na wijzigen indeling
     WIT_TEGEN,             // na wijzigen indeling
     ZWART_TEGEN,           // na wijzigen indeling
 
@@ -177,6 +181,7 @@ module.exports = { // CommonJS voor node.js
     resultaatInvullen,
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
+    isParing,              // (uitslag)
     isPlanning,            // (uitslag)
     isMeedoen,             // (uitslag)
     maandInvullen,

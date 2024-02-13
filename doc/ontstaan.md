@@ -1,6 +1,6 @@
 # Ontstaansgeschiedenis 0-0-0
 
-0-0-0 is geleidelijk ontstaan. Hieronder beschrijft Peter van Diepen de geschiedenis van de belangrijkste ontwerpbeslissingen.
+0-0-0 is geleidelijk ontstaan. Dit is de geschiedenis van de belangrijkste ontwerpbeslissingen.
 
 Ik heb het nog nooit gedaan dus ik denk dat ik het wel kan
 (Pipi Langkous)
@@ -10,7 +10,7 @@ Alles draait om de eenvoud
 
 ## Wat vooraf ging
 
-Ik schaak al sinds 1971 in interne competities van schaakverenigingen. 
+Ik (Peter van Diepen) schaak al sinds 1971 in interne competities van schaakverenigingen. 
 Eerst bij Lasker in Uitgeest, daarna bij Schaakvereniging Castricum, 0-0-0 in Alkmaar en tegenwoordig bij de Waagtoren in Alkmaar.
 Bij Lasker en Castricum gebruikten ze het Keizersysteem voor de interne competitie.
 Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het 
@@ -30,10 +30,10 @@ Dat wilde ik beter automatiseren. Daarom wilde ik in overleg met Herman Nijhuis 
 
 Rokade is gemaakt met [Delphi](https://en.wikipedia.org/wiki/Delphi_(software)) van [Embarcadero](https://www.embarcadero.com/products/delphi).
 Een prachtig product dat ik nog kende uit de jaren 80 als [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal). 
-Delpi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
-Maar bij mij draaide Rokade niet meer op mijn nieuwste Windows laptop en uitsluitend op een oude laptop met Windows XP. 
-Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. 
-Om Rokade aan te passen, zou ik meer dan 1500 euro aan moeten Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
+Delphi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
+Maar bij mij draaide Rokade niet meer op mijn Windows laptop en uitsluitend op een oude laptop met Windows XP. 
+Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. Om Rokade aan te passen, 
+zou ik meer dan 1500 euro aan moeten Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
 
 Zo ontstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, die dus op een website moest draaien.
 
@@ -85,13 +85,13 @@ en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen e
 Ik beperkte mij daarom tot zo standaard mogelijke HTML, CSS en JavaScript.
 Dit was niet echt een ontwerpbeslissing, maar een manier om alles voor mijzelf zo eenvoudig mogelijk te maken.
 
-Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application) maar verschillende webpagina's in public: 
+Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application), maar verschillende webpagina's in public: 
 ranglijst.html, speler.html, team.html, enz. Ieder met eigen JavaScript: ranglijst.js, speler.js, team.js, enz.
 Een simpele manier om de webapp te splitsen in onderdelen, die ik los van elkaar kon testen.
 
 Toen functies ontstonden die ik op verschillende pagina's kon gebruiken, specificeerde ik in ranglijst.html behalve ranglijst.js ook const.js, 
 op speler.html behalve speler.js ook const.js, enz. Dus geen modules, maar gewoon twee JavaScript bestanden per webpagina.
-Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJs modules voor Node.js en ES6 modules voor de frontend gaan toepassen.
+Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJS modules voor Node.js en ES6 modules voor de frontend gaan toepassen.
 
 ## Externe wedstrijden meetellen voor de interne competitie
 
@@ -114,10 +114,37 @@ namelijk de externe wedstrijden, die niet op de avonden van de interne competiti
 voor de kolom #XBP van de ranglijst. En Rokade gaf geen overzicht van de bijbehorende externe wedstrijden.
 
 Een belangrijke ontwerpbeslissing was daarom dat de web-app die bijbehorende externe wedstrijden wel moest laten zien, 
-zodat de leden van de Waagtoren de ranglijst helemaal zelf kunnen controleren en dat die administratie helemaal wordt geautomatiseerd
+zodat de leden van de Waagtoren de ranglijst helemaal zelf kunnen controleren en dat die administratie helemaal is geautomatiseerd
 voor de intern wedstrijdleider.
 
 ## Rokade en 0-0-0
+
+In begintijd Rokade en 0-0-0 samen
+
+## Rokade wordt 0-0-0
+
+In 2021 kreeg de web-app een nieuwe naam: 0-0-0 als opvolger van Rokade van Herman Nijhuis
+en als herinnering aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren heet.
+0-0-0 draait op 0-0-0.nl
+
+## 2023
+
+Invoering van CommonJS module voor node.js en ES6 modules voor frontend.
+
+OLA helemaal uit 0-0-0 gehaald en inlezen ratinglijsten van de KNSB.
+
+## 2024
+
+In het seizoen 2023-2024 werd besloten om voor de jeugd van de Waagtoren ook 0-0-0 te gebruiken. 
+In eerste instantie was de jeugd competitie een andere competitie naast de interne en rapid competitie
+met een eigen manier om de ranglijst te berekenen.
+De spelers in de interne en rapid competitie houden het hele seizoen de KNSB rating van 1 september (en subgroep),
+maar de jeugd heeft een najaar en voorjaar competitie met een andere rating / subgroep.
+Toen was het noodzakelijk om in 0-0-0 verschillende schaakverenigingen te onderscheiden met een clubCode
+en de jeugd met clubCode = 2 af te splitsen van de Waagtoren met clubCode = 3.
+
+Verschuiving van frontend naar backend en van MySQL naar backend
+Synchroniseren frontend met backend. Geen doorgeefluik meer.
 
 ## Links
 - (1) [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/)
@@ -127,8 +154,8 @@ voor de intern wedstrijdleider.
 - (5) [Bericht van de intern wedstrijdleider](https://www.waagtoren.nl/2022/09/08/bericht-van-de-intern-wedstrijdleider-2/)
 - (6) [Alberto Alvarez Alonso scoort 4 uit 4](https://www.waagtoren.nl/2023/10/27/alberto-alvarez-alonso-scoort-4-uit-4/)
 - (7) [Informatie interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/)
+- (8) [0-0-0 en de externe competitie](https://www.waagtoren.nl/2024/02/03/0-0-0-en-de-externe-competitie/)
 
-## Rokade wordt 0-0-0
 
 Niet duidelijk zichtbaar was in de ranglijst van Rokade.
 Daarom moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
@@ -244,9 +271,6 @@ De source code met documentatie zal ik open source beschikbaar stellen op GitHub
 
 ## Rokade wordt 0-0-0
 
-In 2021 kreeg de web-app een naam: 0-0-0 als opvolger van Rokade van Herman Nijhuis
-en als herinnering aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren heet. 
-0-0-0 draait op 0-0-0.nl en in de toekomst ook op 0-0-0.app
 
 Schaakvereniging de Waagtoren gebruikt Rokade van Herman Nijhuis voor het maken van indelingen en ranglijsten voor de interne competitie volgens het Alkmaarse systeem van Bert Buitink en Wim Andriessen.
 Rokade wil ik geleidelijk vervangen door een systeem op 0-0-0.nl.

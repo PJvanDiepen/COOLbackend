@@ -13,9 +13,9 @@ verwerk team=<teamCode>
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[db.ONTWIKKElAAR, "backup uitslagen van alle ronden" , async function () {
-            const rijen = await zyq.serverFetch(`/backup/ronde/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/1/9`);
-            zyq.backupSQL("uitslag", rijen);
-        }]);
+        const rijen = await zyq.serverFetch(`/backup/ronde/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/1/9`);
+        zyq.backupSQL("uitslag", rijen);
+    }]);
     await teamSelecteren(zyq.o_o_o.team);
     await uitslagenTeam(html.id("kop"), html.id("ronden"));
 })();

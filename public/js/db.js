@@ -38,7 +38,8 @@ function isBekerCompetitie(team) {
 }
 
 function isTeam(team) {
-    return team.teamCode === "" ? false : team.teamCode.substring(0,1) !== "i";
+    return team.teamCode === "" || team.teamCode === "0" || team.teamCode === "n0" ? false
+        : team.teamCode.substring(0,1) !== "i";
 }
 
 // knsbNummer
@@ -58,7 +59,6 @@ const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij
 const EXTERN_UIT           = "u"; // na aanmelden voor externe partij
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
-const ONBEKEND             = "x"; // na wijzigen indeling
 const WIT_TEGEN            = "y"; // na wijzigen indeling
 const ZWART_TEGEN          = "z"; // na wijzigen indeling
 // uitslag.witZwart
@@ -87,7 +87,13 @@ const planningInvullen = new Map([
     [NIET_MEEDOEN, MEEDOEN],
     [MEEDOEN, NIET_MEEDOEN],
     [EXTERN_THUIS, NIET_MEEDOEN],
-    [EXTERN_UIT, NIET_MEEDOEN]]);
+    [EXTERN_UIT, NIET_MEEDOEN],
+    [WIT_TEGEN, NIET_MEEDOEN],
+    [ZWART_TEGEN, NIET_MEEDOEN]]);
+
+function isParing(uitslag) {
+    return uitslag.partij === WIT_TEGEN || uitslag.partij === ZWART_TEGEN;
+}
 
 function isPlanning(uitslag) {
     return planningInvullen.has(uitslag.partij);
@@ -159,7 +165,6 @@ export { // ES6 voor browser
     EXTERN_UIT,            // na aanmelden voor externe partij uit
     REGLEMENTAIR_VERLIES,
     REGLEMENTAIRE_WINST,
-    ONBEKEND,              // na wijzigen indeling
     WIT_TEGEN,             // na wijzigen indeling
     ZWART_TEGEN,           // na wijzigen indeling
 
@@ -177,6 +182,7 @@ export { // ES6 voor browser
     resultaatInvullen,
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
+    isParing,              // (uitslag)
     isPlanning,            // (uitslag)
     isMeedoen,             // (uitslag)
     maandInvullen,

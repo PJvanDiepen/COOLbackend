@@ -1,22 +1,18 @@
 # Database
-Er is een MySQL database per schaakvereniging met de volgende tabellen:
-- `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie
-- `Persoon` leden van de schaakvereniging en eventueel van tegenstanders in de externe competitie
-- `Gebruiker` leden van de schaakvereniging, die gegevens in de database mogen wijzigen
-- `Seizoen` seizoensgegevens van de schaakvereniging 
+Er is een MySQL database voor schaakverenigingen en toernooien met de volgende tabellen:
+- `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie van een schaakvereniging
+- `Persoon` namen van leden van schaakverenigingen en deelnemers in toernooien
+- `Gebruiker` personen, die gegevens in de database mogen wijzigen
+- `Rol` van personen bij een schaakvereniging of toernooi 
+- `Seizoen` seizoensgegevens van een schaakvereniging of toernooi 
 - `Speler` spelers per seizoen
 - `Team` teams of competities per seizoen
 - `Ronde` ronden per team of competitie per seizoen
 - `Uitslag` uitslagen per ronde per team per seizoen
 - `Mutatie` chronologie van mutaties per gebruiker
- 
-Voorlopig is er 1 database van schaakvereniging de Waagtoren, die offline is gevuld 
-vanuit de Online Leden Administratie (OLA) van de KNSB naar `Persoon` en `Speler` en
-vanuit Rokade, het informatiesysteem voor de interne competitie naar `Ronde` en `Uitslag` en
-vanuit de KNSB en de NHSB websites voor de externe competitie naar `Team`, `Ronde` en `Uitslag`.
 
 ## Competitie
-De database per schaakvereniging heeft een tabel `Team` voor teams en competities.
+De database heeft een tabel `Team` voor teams en competities.
 De eerste letter van `teamCode` in `Team` maakt het onderscheid tussen team en competitie.
 De `teamCode` van een interne competitie begint met de letter i.
 De `teamCode` van een externe competitie begint met een andere letter of cijfer.
@@ -117,7 +113,8 @@ Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`.
 
 Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules 
 voor de berekening van de ranglijst in `Reglement`. 
-Bij elk seizoen van een schaakvereniging hoort een aantal spelers en een aantal teams in de interne en externe competitie.
+Bij elk seizoen van een schaakvereniging hoort een aantal spelers en 
+een aantal teams in de interne en externe competitie.
 Zie verder bij `Speler` en `Team`.
 
 De specificaties van de `Seizoen` tabel zijn nog niet verder uitgewerkt.
@@ -146,10 +143,11 @@ FOREIGN KEY (seizoen, intern4) REFERENCES Team (seizoen, teamCode)
 FOREIGN KEY (seizoen, intern5) REFERENCES Team (seizoen, teamCode)
 ```
 
-De leden van een schaakvereniging krijgen per `seizoen` uit OLA een nieuwe `knsbRating`,
+Een `Speler` is een deelnemer in een competitie of team. 
+Een `Speler` krijgt per `seizoen` uit een KNSB ratinglijst een nieuwe `knsbRating`,
 die wordt gebruikt voor de indeling in een team van de KNSB competitie `knsbTeam`, 
 een team in een onderbond competitie `nhsbTeam` en in een `subgroep` van de interne competitie.
-Volgens de reglementen geldt de `knsbRating` van 1 augustus aan het begin van het `seizoen`.
+Volgens de reglementen geldt de `knsbRating` van 1 september aan het begin van het `seizoen`.
 Daarom is ook de `datum` vastgelegd.
 
 Omdat de Waagtoren in de NHSB onderbond speelt heet het team in de onderbond voorlopig `nhsbTeam`.  

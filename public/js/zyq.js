@@ -43,6 +43,10 @@ export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst 
         return "jeugd voorjaarscompetitie";
     } else if (teamCode === SNELSCHAKEN) {
         return "einde seizoen snelschaken";
+    } else if (teamCode === "0") {
+        return "KNSB bij andere schaakvereniging";
+    } else if (teamCode === "n0") {
+        return "NHSB bij andere schaakvereniging";
     } else if (teamCode === "kbe") {
         return o_o_o.vereniging + " KNSB beker";
     } else if (teamCode === "nbe") {

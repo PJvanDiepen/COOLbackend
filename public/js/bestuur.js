@@ -15,26 +15,27 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
 (async function() {
     await zyq.init();
     const personen = await zyq.serverFetch(`/personen/${zyq.o_o_o.seizoen}`);
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.ONTWIKKElAAR, "speler conversie", async function() {
-        let mutaties = 0;
-        const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
-        for (const speler of personen) {
-            if (speler.knsbNummer > db.KNSB_NUMMER && speler.knsbRating && speler.interneRating) {
-                const rating = await zyq.serverFetch(`/rating/9/${speler.knsbNummer}`); // 1 september
-                if (rating) {
-                    const uuid = zyq.uuidToken;
-                    const seizoen = zyq.o_o_o.seizoen;
-                    const knsbNummer = speler.knsbNummer;
-                    const knsbRating = rating.knsbRating;
-                    const interneRating = Math.max(speler.interneRating, knsbRating);
-                    await zyq.serverFetch(
-                        `/${uuid}/rating/wijzigen/${seizoen}/${knsbNummer}/${knsbRating}/${interneRating}/${jaar}-09-01`);
-                    mutaties++;
+    await html.menu(zyq.gebruiker.mutatieRechten,
+        [db.ONTWIKKElAAR, "speler conversie", async function() {
+            let mutaties = 0;
+            const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0, 2));
+            for (const speler of personen) {
+                if (speler.knsbNummer > db.KNSB_NUMMER && speler.knsbRating && speler.interneRating) {
+                    const rating = await zyq.serverFetch(`/rating/9/${speler.knsbNummer}`); // 1 september
+                    if (rating) {
+                        const uuid = zyq.uuidToken;
+                        const seizoen = zyq.o_o_o.seizoen;
+                        const knsbNummer = speler.knsbNummer;
+                        const knsbRating = rating.knsbRating;
+                        const interneRating = Math.max(speler.interneRating, knsbRating);
+                        await zyq.serverFetch(
+                            `/${uuid}/rating/wijzigen/${seizoen}/${knsbNummer}/${knsbRating}/${interneRating}/${jaar}-09-01`);
+                        mutaties++;
+                    }
                 }
             }
-        }
-        console.log({mutaties});
-    }]);
+            console.log({mutaties});
+        }]);
     html.id("kop").textContent =
         `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}overzicht voor bestuur`;
     await ledenLijst(

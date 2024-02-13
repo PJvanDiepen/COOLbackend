@@ -138,7 +138,8 @@ const indelenFun = [
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"));
     }
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,
+        [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await zyq.serverFetch(
@@ -157,6 +158,9 @@ const indelenFun = [
             if (mutaties) {
                 html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
             }
+        }],
+        [db.BEHEERDER, `ronde ${rondeNummer} paren`, function () {
+            html.anderePagina(`paren.html?ronde=${rondeNummer}`);
         }]);
     const versieOpties = [];
     for (let i = 0; i < indelenFun.length; i++) {
