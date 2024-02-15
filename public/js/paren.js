@@ -34,22 +34,20 @@ const zwartSpeler = Number(html.params.get("zwart"));
         return [speler, speler.naam];
     });
     const partijen = html.id("partijen");
-    const witKnop = spelerSelecteren(true, spelers);
-    const zwartKnop = spelerSelecteren(false, spelers);
+    const witKnop = await spelerSelecteren(true, spelers);
+    const zwartKnop = await spelerSelecteren(false, spelers);
     partijen.append(html.rij(1, witKnop, zwartKnop, ""));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
 
     /*
-    TODO "w" + "z" inlezen (of "i" met definitieve indeling)
+    TODO "y" + "z" inlezen (of "i" met definitieve indeling)
     TODO klik op uitslag voor kleur wisselen, wit verwijderen, zwart verwijderen of alles verwijderen
-    TODO overbodige HTML van rondenlijst verwijderen
-    TODO overbodige code van rondenlijst verwijderen
     TODO overbodige CSS van rondenlijst verwijderen
      */
 
 })();
 
-function spelerSelecteren(metWit, spelers) {
+async function spelerSelecteren(metWit, spelers) {
     const naam = html.params.get("naam");
     if (metWit && witSpeler) {
         return zyq.naarSpeler({naam: naam, knsbNummer: witSpeler});
@@ -57,19 +55,25 @@ function spelerSelecteren(metWit, spelers) {
         return zyq.naarSpeler({naam: naam, knsbNummer: zwartSpeler});
     }
     const knop = document.createElement("select");
-    html.selectie(knop, 0, [[0,"selecteer speler"], ...spelers], function (speler) {
+    html.selectie(knop, 0, [[0,"selecteer speler"], ...spelers], async function (speler) {
         if (metWit && zwartSpeler) {
-            console.log(metWit);
-            console.log(speler);
-            console.log({naam: naam, knsbNummer: zwartSpeler});
+            await paarWitZwart(speler, {naam: naam, knsbNummer: zwartSpeler});
         } else if (!metWit && witSpeler) {
-            console.log(metWit);
-            console.log(speler);
-            console.log({naam: naam, knsbNummer: zwartSpeler});
+            await paarWitZwart({naam: naam, knsbNummer: zwartSpeler}, speler);
         } else {
             const kleur = metWit ? "wit" : "zwart";
             html.zelfdePagina(`ronde=${rondeNummer}&${kleur}=${speler.knsbNummer}&naam=${speler.naam}`);
         }
     });
     return knop;
+}
+
+async function paarWitZwart(wit, zwart) {
+    const uuid = zyq.uuidToken;
+    const seizoen = zyq.o_o_o.ronde[rondeNummer].seizoen;
+    const competitie = zyq.o_o_o.ronde[rondeNummer].teamCode;
+    const datum = zyq.datumSQL(zyq.o_o_o.ronde[rondeNummer].datum);
+    const mutaties = await zyq.serverFetch(
+        `/${uuid}/paren/${seizoen}/${competitie}/${rondeNummer}/${wit.knsbNummer}/${zwart.knsbNummer}`);
+    html.zelfdePagina(`ronde=${rondeNummer}`);
 }

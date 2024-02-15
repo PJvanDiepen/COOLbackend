@@ -1160,6 +1160,45 @@ module.exports = router => {
     Database: uitslag update
               mutatie insert
 
+    Frontend: paren.js
+    */
+    router.get('/:uuidToken/paren/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
+            if (await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                .patch({bordNummer: 0,
+                    partij: db.WIT_TEGEN,
+                    witZwart: "",
+                    tegenstanderNummer: ctx.params.tegenstanderNummer,
+                    resultaat: ""})) {
+                aantal++;
+                if (await Uitslag.query()
+                    .where('uitslag.seizoen', ctx.params.seizoen)
+                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                    .patch({bordNummer: 0,
+                        partij: db.ZWART_TEGEN,
+                        witZwart: "",
+                        tegenstanderNummer: ctx.params.knsbNummer,
+                        resultaat: ""})) {
+                    aantal++;
+                }
+            }
+            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+        }
+        ctx.body = aantal;
+    });
+
+    /*
+    Database: uitslag update
+              mutatie insert
+
     Frontend: indelen.js
      */
     router.get('/:uuidToken/indelen/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
