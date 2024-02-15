@@ -159,7 +159,7 @@ const indelenFun = [
                 html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
             }
         }],
-        [db.BEHEERDER, `ronde ${rondeNummer} paren`, function () {
+        [db.WEDSTRIJDLEIDER, `handmatig indelen ronde ${rondeNummer}`, function () {
             html.anderePagina(`paren.html?ronde=${rondeNummer}`);
         }]);
     const versieOpties = [];

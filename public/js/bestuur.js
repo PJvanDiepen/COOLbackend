@@ -9,7 +9,6 @@ import * as zyq from "./zyq.js";
     verwerk lid=<knsbNummer>
          of leden=<teamCode> alle leden of selectie
  */
-
 const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, jaar]]
 
 (async function() {

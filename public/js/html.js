@@ -76,17 +76,18 @@ export function id(nodeId) {
  * selectie zet alle opties op een select-knop en zet een eventListener klaar om een optie te verwerken.
  *
  * @param knop HTML knop
- * @param optieWaarde huidige optie
+ * @param optieNummer huidige optie
  * @param opties met waarde, tekst en eventueel een functie om deze waarde te verwerken
  * @param optieVerwerken functie om de geselecteerde waarde te verwerken (indien er geen functie bij de opties is gespecificeerd)
  *
  * Elke optie bestaat uit waarde, tekst en bijbehorend functie en krijgt een volgnummer.
+ * Waarde kan ook een object of array zijn.
  * Er is een functie per optie of een functie voor alle opties (optieVerwerken).
  * Het volgnummer verwijst naar de bijbehorende functie in functies en de bijbehorende waarde in waardes.
  *
  * De eventListener krijgt het volgnummer door en start de bijbehorende functie met de bijbehorende waarde.
  */
-export function selectie(knop, optieWaarde, opties, optieVerwerken = function (waarde) {
+export function selectie(knop, optieNummer, opties, optieVerwerken = function (waarde) {
     console.log(`--- selectie(${waarde} van ${opties.length} opties) ---`); // indien geen functie voor alle opties (optieVerwerken)
 }) {
     const functies = [];
@@ -96,7 +97,7 @@ export function selectie(knop, optieWaarde, opties, optieVerwerken = function (w
         functies.push(functie ? functie : optieVerwerken);
         waardes.push(waarde);
         knop.append(optie(volgnummer, tekst));
-        if (waarde === optieWaarde) {
+        if (waarde === optieNummer) {
             knop.value = volgnummer;
         }
     }

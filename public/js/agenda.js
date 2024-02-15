@@ -6,6 +6,12 @@ import {vinkjeInvullen} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
+/*
+    verwerk gebruiker=<knsbNummer>
+           &team=<teamCode>
+           &ronde=<rondeNummer>
+           &partij=<partij>
+ */
 (async function() {
     await zyq.init();
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
@@ -17,11 +23,6 @@ import * as zyq from "./zyq.js";
 })();
 
 /*
-    verwerk gebruiker=<knsbNummer>
-           &team=<teamCode>
-           &ronde=<rondeNummer>
-           &partij=<partij>
-
     De agenda gaat uitsluitend over nog niet gespeelde wedstrijden in het huidige seizoen.
 
     In de agenda van een speler staan wedstrijden vastgelegd in uitslagen met partij = MEEDOEN, NIET_MEEDOEN, EXTERN_UIT of EXTERN_THUIS.

@@ -9,47 +9,67 @@ import {ranglijst} from "./o_o_o.js";
 
 /*
     verwerk ronde=<rondeNummer>
+           &wit=<knsbNummer>
+           &zwart=<knsbNummer>
+
+    terug naar indelen.html
  */
+const rondeNummer = Number(html.params.get("ronde"));
+const witSpeler   = Number(html.params.get("wit"));
+const zwartSpeler = Number(html.params.get("zwart"));
 
 (async function() {
     await zyq.init();
     zyq.competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
-    await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    html.id("kop").textContent =
-        `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}rondenlijst na ronde ${rondeNummer}`;
-    const lijst = html.id("lijst");
-    lijst.append(html.bovenRij("", "naam", "on", ...(rondeNummers(rondeNummer))));
+    const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
+    html.id("subkop").textContent =
+        `Handmatig indelen ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
     const spelers = (await ranglijst(rondeNummer)).filter(function (speler) {
-        return speler.intern() || speler.oneven();
+        if (speler.knsbNummer === witSpeler || speler.knsbNummer === zwartSpeler) {
+            return false;
+        } else {
+            return speler.intern() || speler.oneven();
+        }
+    }).map(function (speler) {
+        return [speler, speler.naam];
     });
-    spelers.forEach(function (speler, rangnummer) {
-        lijst.append(html.rij(rangnummer + 1,
-            zyq.naarSpeler(speler),
-            speler.oneven() ? speler.oneven() : "",
-            ...(rondenPerSpeler(speler, spelers, rondeNummer))));
-    });
+    const partijen = html.id("partijen");
+    const witKnop = spelerSelecteren(true, spelers);
+    const zwartKnop = spelerSelecteren(false, spelers);
+    partijen.append(html.rij(1, witKnop, zwartKnop, ""));
+    await html.menu(zyq.gebruiker.mutatieRechten,[]);
+
+    /*
+    TODO "w" + "z" inlezen (of "i" met definitieve indeling)
+    TODO klik op uitslag voor kleur wisselen, wit verwijderen, zwart verwijderen of alles verwijderen
+    TODO overbodige HTML van rondenlijst verwijderen
+    TODO overbodige code van rondenlijst verwijderen
+    TODO overbodige CSS van rondenlijst verwijderen
+     */
+
 })();
 
-function rondeNummers(aantalRonden) {
-    return Array.from({length: aantalRonden}, function (ronden, i) {
-        return i + 1
-    });
-}
-
-function rondenPerSpeler(speler, spelers, aantalRonden) {
-    const ronden = [];
-    for (let i = 1; i <= aantalRonden; i++) {
-        const [kleur, tegenstander, resultaat] = speler.tegenstander(i);
-        if (tegenstander) {
-            const rangnummer = 1 + spelers.findIndex(function (tegen) {
-                return tegen.knsbNummer === tegenstander;
-            });
-            const score = resultaat === 2 ? db.WINST : resultaat ? db.REMISE : db.VERLIES;
-            ronden.push(`${rangnummer}${kleur ? "z" : "w"}${score}`);
-        } else {
-            ronden.push("");
-        }
+function spelerSelecteren(metWit, spelers) {
+    const naam = html.params.get("naam");
+    if (metWit && witSpeler) {
+        return zyq.naarSpeler({naam: naam, knsbNummer: witSpeler});
+    } else if (!metWit && zwartSpeler) {
+        return zyq.naarSpeler({naam: naam, knsbNummer: zwartSpeler});
     }
-    return ronden;
+    const knop = document.createElement("select");
+    html.selectie(knop, 0, [[0,"selecteer speler"], ...spelers], function (speler) {
+        if (metWit && zwartSpeler) {
+            console.log(metWit);
+            console.log(speler);
+            console.log({naam: naam, knsbNummer: zwartSpeler});
+        } else if (!metWit && witSpeler) {
+            console.log(metWit);
+            console.log(speler);
+            console.log({naam: naam, knsbNummer: zwartSpeler});
+        } else {
+            const kleur = metWit ? "wit" : "zwart";
+            html.zelfdePagina(`ronde=${rondeNummer}&${kleur}=${speler.knsbNummer}&naam=${speler.naam}`);
+        }
+    });
+    return knop;
 }
