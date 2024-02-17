@@ -19,10 +19,6 @@ export {
     SNELSCHAKEN
 }
 
-export function teamOfCompetitie(teamCode) {
-    return teamCode === "" ? false : teamCode.substring(0,1) !== " ";
-}
-
 // TODO vervangen door db.js: isCompetitie
 export function interneCompetitie(teamCode) {
     return teamCode === "" ? false : teamCode.substring(0,1) === "i";
@@ -55,7 +51,7 @@ export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst 
         return o_o_o.vereniging + " NHSB beker < 1900";
     } else if (teamCode === "nbb") {
         return o_o_o.vereniging + " NHSB beker < 1600";
-    } else if (!teamOfCompetitie(teamCode)) {
+    } else if (teamCode === "" || teamCode.substring(0,1) === " ") {
         return "geen";
     } else if (teamCode.substring(0,2) === "nv") {
         return o_o_o.vereniging + " v" + teamCode.substring(2);

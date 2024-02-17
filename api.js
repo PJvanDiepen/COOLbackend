@@ -1173,7 +1173,7 @@ module.exports = router => {
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .patch({bordNummer: 0,
                     partij: db.WIT_TEGEN,
-                    witZwart: "",
+                    witZwart: db.WIT,
                     tegenstanderNummer: ctx.params.tegenstanderNummer,
                     resultaat: ""})) {
                 aantal++;
@@ -1184,7 +1184,7 @@ module.exports = router => {
                     .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
                     .patch({bordNummer: 0,
                         partij: db.ZWART_TEGEN,
-                        witZwart: "",
+                        witZwart: db.ZWART,
                         tegenstanderNummer: ctx.params.knsbNummer,
                         resultaat: ""})) {
                     aantal++;

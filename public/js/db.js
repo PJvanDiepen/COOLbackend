@@ -14,6 +14,10 @@
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  */
 
+function key(object) {
+
+}
+
 const apiLijst = [];
 
 // mutatie.invloed

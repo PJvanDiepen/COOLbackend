@@ -39,7 +39,7 @@ export const vinkjeInvullen = new Map([
  */
 export async function teamSelecteren(teamCode) {
     const teams = (await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen)).filter(function (team) {
-        return zyq.teamOfCompetitie(team.teamCode);
+        return db.isCompetitie(team) || db.isTeam(team);
     }).map(function (team) {
         return [team.teamCode, zyq.teamVoluit(team.teamCode)];
     });

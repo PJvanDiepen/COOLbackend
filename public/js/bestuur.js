@@ -62,7 +62,7 @@ async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
     let aantalPerTeam = {};
     const teams = await zyq.localFetch("/teams/" + zyq.o_o_o.seizoen); // competities en teams
     for (const team of teams) {
-        if (zyq.teamOfCompetitie(team.teamCode)) {
+        if (db.isCompetitie(team) || db.isTeam(team)) {
             aantalPerTeam[team.teamCode] = 0;
         }
     }
@@ -120,7 +120,7 @@ async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
     competities.append(html.rij("gebruikers van 0-0-0", "", aantalGebruikers));
     competities.append(html.rij("----- competitie of team toevoegen -----", "")); // TODO naar competitie.html
     for (const team of teams) {
-        if (zyq.teamOfCompetitie(team.teamCode)) {
+        if (db.isCompetitie(team) || db.isTeam(team)) {
             const link = html.naarPagina(
                 `bestuur.html?leden=${team.teamCode === leden ? "alle": team.teamCode}`,
                 zyq.teamVoluit(team.teamCode));

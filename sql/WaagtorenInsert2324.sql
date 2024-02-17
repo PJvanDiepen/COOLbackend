@@ -3226,7 +3226,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "5", 5, 8, 7771665, "e", "w", 0, "0", '2024-02-03', "int");
 
 -- nhsb TODO
-set @team = "nv2";
+set @team = "n3";
 set @ronde = 4;
 select * from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where seizoen = "2324" and teamCode = @team and rondeNummer = @ronde;
@@ -3320,7 +3320,15 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "n2", 4, 5, 8484443, "e", "w", 0, "1", '2023-12-06', "int"),
 ("2324", "n2", 4, 6, 7535385, "e", "z", 0, "½", '2023-12-06', "int"),
 ("2324", "n2", 4, 7, 7699010, "e", "w", 0, "½", '2023-12-06', "int"),
-("2324", "n2", 4, 8, 7468362, "e", "z", 0, "0", '2023-12-06', "int");
+("2324", "n2", 4, 8, 7468362, "e", "z", 0, "0", '2023-12-06', "int"),
+("2324", "n2", 5, 1, 7529522, "e", "z", 0, "0", '2024-02-13', "int"),
+("2324", "n2", 5, 2, 7758014, "e", "w", 0, "0", '2024-02-13', "int"),
+("2324", "n2", 5, 3, 6225934, "e", "z", 0, "1", '2024-02-13', "int"),
+("2324", "n2", 5, 4, 8400183, "e", "w", 0, "0", '2024-02-13', "int"),
+("2324", "n2", 5, 5, 8484443, "e", "z", 0, "0", '2024-02-13', "int"),
+("2324", "n2", 5, 6, 7535385, "e", "w", 0, "1", '2024-02-13', "int"),
+("2324", "n2", 5, 7, 8587337, "e", "z", 0, "1", '2024-02-13', "int"),
+("2324", "n2", 5, 8, 7468362, "e", "w", 0, "1", '2024-02-13', "int");
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2324", "n3", 1, 1, 6207520, "e", "w", 0, "1", '2023-10-21', "int"),
@@ -3340,7 +3348,13 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 ("2324", "n3", 3, 3, 6214153, "e", "z", 0, "1", '2023-11-28', "int"),
 ("2324", "n3", 3, 4, 7546506, "e", "w", 0, "½", '2023-11-28', "int"),
 ("2324", "n3", 3, 5, 7282033, "e", "z", 0, "1", '2023-11-28', "int"),
-("2324", "n3", 3, 6, 8276752, "e", "w", 0, "½", '2023-11-28', "int");
+("2324", "n3", 3, 6, 8276752, "e", "w", 0, "½", '2023-11-28', "int"),
+("2324", "n3", 4, 1, 6207520, "e", "w", 0, "1", '2024-02-15', "int"),
+("2324", "n3", 4, 2, 7282033, "e", "z", 0, "0", '2024-02-15', "int"),
+("2324", "n3", 4, 3, 6214153, "e", "w", 0, "1", '2024-02-15', "int"),
+("2324", "n3", 4, 4, 7546506, "e", "z", 0, "1", '2024-02-15', "int"),
+("2324", "n3", 4, 5, 8276752, "e", "w", 0, "0", '2024-02-15', "int"),
+("2324", "n3", 4, 6, 7731812, "e", "z", 0, "1", '2024-02-15', "int");
 
 insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, anderTeam) values
 ("2324", "n4", 1, 1, 7699010, "e", "w", 0, "0", '2023-10-11', "int"),
