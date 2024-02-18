@@ -140,21 +140,21 @@ const indelenFun = [
     }
     await html.menu(zyq.gebruiker.mutatieRechten,
         [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
+        const planning = {seizoen: zyq.o_o_o.seizoen, teamCode: zyq.o_o_o.competitie, rondeNummer: rondeNummer};
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await zyq.serverFetch(
-                    `/${zyq.uuidToken}/indelen/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
+                    `/${zyq.uuidToken}/indelen/${db.key(planning)}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
                     mutaties += 2;
                 }
             }
             if (oneven) {
-                if (await zyq.serverFetch(
-                    `/${zyq.uuidToken}/oneven/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${r[oneven].knsbNummer}`)) {
+                if (await zyq.serverFetch(`/${zyq.uuidToken}/oneven/${db.key(planning)}/${r[oneven].knsbNummer}`)) {
                     mutaties += 1;
                 }
             }
-            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/afwezig/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
-            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/extern/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
+            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/afwezig/${db.key(planning)}`);
+            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/extern/${db.key(planning)}`);
             if (mutaties) {
                 html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
             }

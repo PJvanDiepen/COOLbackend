@@ -16,6 +16,19 @@
 
 const apiLijst = [];
 
+function key(object) {
+    if (object.teamCode) {
+        if (object.rondeNummer) {
+            if (object.knsbNummer) {
+                return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}/${object.knsbNummer}`;
+            }
+            return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}`;
+        }
+        return `${object.seizoen}/${object.teamCode}`;
+    }
+    return `${object.seizoen}`; // TODO <clubCode>/<seizoen>/...
+}
+
 // mutatie.invloed
 const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
@@ -38,7 +51,8 @@ function isBekerCompetitie(team) {
 }
 
 function isTeam(team) {
-    return team.teamCode === "" ? false : team.teamCode.substring(0,1) !== "i";
+    return team.teamCode === "" || team.teamCode === "0" || team.teamCode === "n0" ? false
+        : team.teamCode.substring(0,1) !== "i";
 }
 
 // knsbNummer
@@ -130,6 +144,8 @@ const MENU = "menu";
 
 module.exports = { // CommonJS voor node.js
     apiLijst,
+
+    key,                   // (object)
 
     // mutatie.invloed
     GEEN_INVLOED,

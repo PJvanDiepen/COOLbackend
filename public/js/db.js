@@ -20,7 +20,7 @@ function key(object) {
     if (object.teamCode) {
         if (object.rondeNummer) {
             if (object.knsbNummer) {
-                return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}${object.knsbNummer}`;
+                return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}/${object.knsbNummer}`;
             }
             return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}`;
         }

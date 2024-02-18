@@ -78,16 +78,19 @@ async function agenda(knsbNummer, lijst, informeer) {
 }
 
 async function agendaMutatie(knsbNummer) {
-    const teamCode = html.params.get("team");
-    const rondeNummer = Number(html.params.get("ronde"));
+    const planning = {
+        seizoen: zyq.ditSeizoen,
+        teamCode: html.params.get("team"),
+        rondeNummer: Number(html.params.get("ronde")),
+        knsbNummer: knsbNummer};
     const datum = html.params.get("datum");
     const partij = html.params.get("partij");
-    if (teamCode && rondeNummer && datum && partij) {
-        if (await zyq.serverFetch(`/${zyq.uuidToken}/planning/${zyq.ditSeizoen}/${teamCode}/${rondeNummer}/${knsbNummer}/${partij}/${datum}`)) {
-            return {"teamCode": teamCode, "rondeNummer": rondeNummer};
+    if (planning.teamCode && planning.rondeNummer && datum && partij) {
+        if (await zyq.serverFetch(`/${zyq.uuidToken}/planning/${db.key(planning)}/${partij}/${datum}`)) {
+            return {teamCode: planning.teamCode, rondeNummer: planning.rondeNummer};
         }
     }
-    return {"teamCode": "", "rondeNummer": 0};
+    return {teamCode: "", rondeNummer: 0};
 }
 
 async function agendaLezen(knsbNummer) {
