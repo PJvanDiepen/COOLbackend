@@ -69,11 +69,8 @@ async function spelerSelecteren(metWit, spelers) {
 }
 
 async function paarWitZwart(wit, zwart) {
-    const uuid = zyq.uuidToken;
-    const seizoen = zyq.o_o_o.ronde[rondeNummer].seizoen;
-    const competitie = zyq.o_o_o.ronde[rondeNummer].teamCode;
     const datum = zyq.datumSQL(zyq.o_o_o.ronde[rondeNummer].datum);
     const mutaties = await zyq.serverFetch(
-        `/${uuid}/paren/${seizoen}/${competitie}/${rondeNummer}/${wit.knsbNummer}/${zwart.knsbNummer}`);
+        `/${zyq.uuidToken}/paren/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${wit.knsbNummer}/${zwart.knsbNummer}`);
     html.zelfdePagina(`ronde=${rondeNummer}`);
 }
