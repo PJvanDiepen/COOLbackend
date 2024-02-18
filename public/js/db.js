@@ -14,11 +14,20 @@
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  */
 
-function key(object) {
-
-}
-
 const apiLijst = [];
+
+function key(object) {
+    if (object.teamCode) {
+        if (object.rondeNummer) {
+            if (object.knsbNummer) {
+                return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}${object.knsbNummer}`;
+            }
+            return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}`;
+        }
+        return `${object.seizoen}/${object.teamCode}`;
+    }
+    return `${object.seizoen}`; // TODO <clubCode>/<seizoen>/...
+}
 
 // mutatie.invloed
 const GEEN_INVLOED = 0;
@@ -135,6 +144,8 @@ const MENU = "menu";
 
 export { // ES6 voor browser
     apiLijst,
+
+    key,                   // (object)
 
     // mutatie.invloed
     GEEN_INVLOED,
