@@ -64,7 +64,7 @@ const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
 const MEEDOEN              = "m"; // na aanmelden voor interne partij
-const NIET_MEEDOEN         = "n"; // na afzeggen
+const NIET_MEEDOEN         = "n"; // na afzeggen voor interne partij
 const ONEVEN               = "o";
 const PLANNING             = "p";
 const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
@@ -72,8 +72,8 @@ const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij
 const EXTERN_UIT           = "u"; // na aanmelden voor externe partij
 const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
-const WIT_TEGEN            = "y"; // na wijzigen indeling
-const ZWART_TEGEN          = "z"; // na wijzigen indeling
+const TOCH_INGEDEELD       = "x"; // na handmatig indelen en niet aanmelden voor interne partij
+const INGEDEELD            = "y"; // na handmatig indelen en aanmelden voor interne partij
 // uitslag.witZwart
 const WIT = "w";
 const ZWART = "z";
@@ -101,11 +101,11 @@ const planningInvullen = new Map([
     [MEEDOEN, NIET_MEEDOEN],
     [EXTERN_THUIS, NIET_MEEDOEN],
     [EXTERN_UIT, NIET_MEEDOEN],
-    [WIT_TEGEN, NIET_MEEDOEN],
-    [ZWART_TEGEN, NIET_MEEDOEN]]);
+    [INGEDEELD, NIET_MEEDOEN],
+    [TOCH_INGEDEELD, NIET_MEEDOEN]]);
 
 function isParing(uitslag) {
-    return uitslag.partij === WIT_TEGEN || uitslag.partij === ZWART_TEGEN;
+    return uitslag.partij === TOCH_INGEDEELD || uitslag.partij === INGEDEELD;
 }
 
 function isPlanning(uitslag) {
@@ -180,8 +180,8 @@ module.exports = { // CommonJS voor node.js
     EXTERN_UIT,            // na aanmelden voor externe partij uit
     REGLEMENTAIR_VERLIES,
     REGLEMENTAIRE_WINST,
-    WIT_TEGEN,             // na wijzigen indeling
-    ZWART_TEGEN,           // na wijzigen indeling
+    TOCH_INGEDEELD,        // na handmatig indelen en niet aanmelden voor interne partij
+    INGEDEELD,             // na handmatig indelen en aanmelden voor interne partij
 
     // uitslag.witZwart
     WIT,

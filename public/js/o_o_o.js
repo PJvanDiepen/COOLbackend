@@ -15,7 +15,8 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import * as zyq from "./zyq.js"; // TODO verwijderen
+import * as zyq from "./zyq.js";
+import {EXTERN_UIT, INGEDEELD, NIET_MEEDOEN, TOCH_INGEDEELD} from "./db.js"; // TODO verwijderen
 
 /**
  * vinkjeInvullen voor agenda.js en teamleider.js
@@ -27,7 +28,9 @@ export const vinkjeInvullen = new Map([
     [db.NIET_MEEDOEN, html.STREEP],
     [db.MEEDOEN, html.VINKJE],
     [db.EXTERN_THUIS, html.VINKJE],
-    [db.EXTERN_UIT, html.VINKJE]]);
+    [db.EXTERN_UIT, html.VINKJE],
+    [db.INGEDEELD, html.VINKJE],
+    [db.TOCH_INGEDEELD, html.VINKJE]]);
 
 /**
  * teamSelecteren voor ranglijst.js en team.js

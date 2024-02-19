@@ -17,6 +17,8 @@ import {ranglijst} from "./o_o_o.js";
 const rondeNummer = Number(html.params.get("ronde"));
 const witSpeler   = Number(html.params.get("wit"));
 const zwartSpeler = Number(html.params.get("zwart"));
+console.log({witSpeler});
+console.log({zwartSpeler});
 
 (async function() {
     await zyq.init();
@@ -34,9 +36,17 @@ const zwartSpeler = Number(html.params.get("zwart"));
         return [speler, speler.naam];
     });
     const partijen = html.id("partijen");
-    const witKnop = await spelerSelecteren(true, spelers);
-    const zwartKnop = await spelerSelecteren(false, spelers);
-    partijen.append(html.rij(1, witKnop, zwartKnop, ""));
+    let bordNummer = 0;
+    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/paren/${db.key(zyq.o_o_o.ronde[rondeNummer])}`);
+    paren.forEach(function (paar) {
+       console.log(paar);
+       bordNummer = paar.bordNummer;
+       partijen.append(html.rij(bordNummer, paar.wit, paar.zwart));
+    });
+    bordNummer++;
+    const witKnop = await spelerSelecteren(bordNummer,true, spelers);
+    const zwartKnop = await spelerSelecteren(bordNummer, false, spelers);
+    partijen.append(html.rij(bordNummer, witKnop, zwartKnop, ""));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
 
     /*
@@ -47,7 +57,7 @@ const zwartSpeler = Number(html.params.get("zwart"));
 
 })();
 
-async function spelerSelecteren(metWit, spelers) {
+async function spelerSelecteren(bordNummer, metWit, spelers) {
     const naam = html.params.get("naam");
     if (metWit && witSpeler) {
         return zyq.naarSpeler({naam: naam, knsbNummer: witSpeler});
@@ -57,9 +67,9 @@ async function spelerSelecteren(metWit, spelers) {
     const knop = document.createElement("select");
     html.selectie(knop, 0, [[0,"selecteer speler"], ...spelers], async function (speler) {
         if (metWit && zwartSpeler) {
-            await paarWitZwart(speler, {naam: naam, knsbNummer: zwartSpeler});
+            await paarWitZwart(bordNummer, speler, {naam: naam, knsbNummer: zwartSpeler});
         } else if (!metWit && witSpeler) {
-            await paarWitZwart({naam: naam, knsbNummer: zwartSpeler}, speler);
+            await paarWitZwart(bordNummer, {naam: naam, knsbNummer: witSpeler}, speler);
         } else {
             const kleur = metWit ? "wit" : "zwart";
             html.zelfdePagina(`ronde=${rondeNummer}&${kleur}=${speler.knsbNummer}&naam=${speler.naam}`);
@@ -68,9 +78,14 @@ async function spelerSelecteren(metWit, spelers) {
     return knop;
 }
 
-async function paarWitZwart(wit, zwart) {
-    const datum = zyq.datumSQL(zyq.o_o_o.ronde[rondeNummer].datum);
+async function paarWitZwart(bordNummer, wit, zwart) {
+    console.log(wit);
+    console.log(zwart);
     const mutaties = await zyq.serverFetch(
-        `/${zyq.uuidToken}/paren/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${wit.knsbNummer}/${zwart.knsbNummer}`);
-    html.zelfdePagina(`ronde=${rondeNummer}`);
+        `/${zyq.uuidToken}/paar/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${bordNummer}/${wit.knsbNummer}/${zwart.knsbNummer}`);
+    if (mutaties) {
+        html.zelfdePagina(`ronde=${rondeNummer}`);
+    } else {
+        console.log(`Handmatig ${wit.knsbNummer} tegen ${zwart.knsbNummer} is mislukt.`);
+    }
 }

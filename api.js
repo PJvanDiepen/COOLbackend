@@ -148,7 +148,7 @@ module.exports = router => {
                 .join('persoon', 'persoon.knsbNummer', 'uitslag.knsbNummer')
                 .whereIn('uitslag.partij', [db.EXTERN_THUIS, db.EXTERN_UIT])
                 .andWhere('uitslag.seizoen', ctx.params.seizoen)
-                .andWhereNot('uitslag.teamCode', ref('uitslag.anderTeam')) // TODO waarom ref()?
+                .andWhereNot('uitslag.teamCode', ref('uitslag.anderTeam'))
                 .andWhere('uitslag.datum',ctx.params.datum)
                 .orderBy(['uitslag.partij', 'naam']);
         }
@@ -474,7 +474,6 @@ module.exports = router => {
             .where('speler.seizoen', ctx.params.seizoen)
             .orderBy('speler.knsbRating', 'desc');
     });
-
 
     /*
     -- uitslagen interne competitie per ronde
@@ -1157,22 +1156,55 @@ module.exports = router => {
     });
 
     /*
+    Paren door handmatig indelen
+
+    Frontend: paren.js en indelen.js
+     */
+
+    router.get('/:uuidToken/paren/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let paren = {};
+        if (gebruiker.juisteRechten(db.GEREGISTREERD)) {
+            paren = await Uitslag.query()
+                .select('uitslag.bordNummer',
+                    'uitslag.knsbNummer',
+                    {wit: ref('wit.naam')},
+                    'uitslag.tegenstanderNummer',
+                    {zwart: ref('zwart.naam')})
+                .join('persoon as wit', 'uitslag.knsbNummer', 'wit.knsbNummer')
+                .join('persoon as zwart', 'uitslag.tegenstanderNummer', 'zwart.knsbNummer')
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.witZwart', db.WIT)
+                .orderBy('uitslag.bordNummer');
+        }
+        ctx.body = paren;
+    });
+
+    /*
     Database: uitslag update
               mutatie insert
 
     Frontend: paren.js
     */
-    router.get('/:uuidToken/paren/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
+    router.get('/:uuidToken/paar/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
-            if (await Uitslag.query()
+            const partijWit = await Uitslag.query()
+                .select('uitslag.partij')
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
+            const partijZwart = await Uitslag.query()
+                .select('uitslag.partij')
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
+            if (magParen(partijWit.partij) && magParen(partijZwart.partij) && await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
-                .patch({bordNummer: 0,
-                    partij: db.WIT_TEGEN,
+                .patch({bordNummer: ctx.params.bordNummer,
+                    partij: partijWit.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD,
                     witZwart: db.WIT,
                     tegenstanderNummer: ctx.params.tegenstanderNummer,
                     resultaat: ""})) {
@@ -1182,8 +1214,8 @@ module.exports = router => {
                     .andWhere('uitslag.teamCode', ctx.params.teamCode)
                     .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                     .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
-                    .patch({bordNummer: 0,
-                        partij: db.ZWART_TEGEN,
+                    .patch({bordNummer: ctx.params.bordNummer,
+                        partij: partijZwart.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD,
                         witZwart: db.ZWART,
                         tegenstanderNummer: ctx.params.knsbNummer,
                         resultaat: ""})) {
@@ -1541,6 +1573,10 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
         }
     }
     return false;
+}
+
+function magParen(partij) {
+    return partij === db.PLANNING || partij === db.MEEDOEN || partij === db.NIET_MEEDOEN;
 }
 
 async function gebruikerRechten(uuidToken) {

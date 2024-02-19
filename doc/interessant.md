@@ -225,3 +225,4 @@ Refresh Android cache
 - [Latex in JavaScript](https://cortexjs.io/mathlive/)
 - [cursus algoritmes en datastructuren](https://frontendmasters.com/courses/algorithms/)
 - [Processing in JavaScript](https://github.com/processing/p5.js)
+- [Turing Award](https://amturing.acm.org/byyear.cfm)
