@@ -1083,7 +1083,7 @@ module.exports = router => {
                     datum: ctx.params.datum,
                     anderTeam: ctx.params.competitie} )) { // TODO anderTeam = competitie
                 aantal = 1;
-                await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+                await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }
         }
         ctx.body = aantal;
@@ -1222,7 +1222,51 @@ module.exports = router => {
                     aantal++;
                 }
             }
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+            await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
+        }
+        ctx.body = aantal;
+    });
+/*
+Database: uitslag update
+          mutatie insert
+
+Frontend: paren.js
+*/
+    router.get('/:uuidToken/los/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
+            const partijWit = await Uitslag.query()
+                .select('uitslag.partij')
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
+            const partijZwart = await Uitslag.query()
+                .select('uitslag.partij')
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
+            if (magLos(partijWit.partij) && magLos(partijZwart.partij) && await Uitslag.query()
+                .where('uitslag.seizoen', ctx.params.seizoen)
+                .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+                .patch({bordNummer: 0,
+                    partij: partijWit.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN,
+                    witZwart: "",
+                    tegenstanderNummer: ctx.params.tegenstanderNummer,
+                    resultaat: ""})) {
+                aantal++;
+                if (await Uitslag.query()
+                    .where('uitslag.seizoen', ctx.params.seizoen)
+                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
+                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
+                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                    .patch({bordNummer: 0,
+                        partij: partijZwart.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN,
+                        witZwart: "",
+                        tegenstanderNummer: ctx.params.knsbNummer,
+                        resultaat: ""})) {
+                    aantal++;
+                }
+            }
+            await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
         }
         ctx.body = aantal;
     });
@@ -1261,7 +1305,7 @@ module.exports = router => {
                     aantal++;
                 }
             }
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+            await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
         }
         ctx.body = aantal;
     });
@@ -1282,7 +1326,7 @@ module.exports = router => {
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .patch({partij: db.ONEVEN});
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+            await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
         }
         ctx.body = aantal;
     });
@@ -1303,7 +1347,7 @@ module.exports = router => {
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', '<=', ctx.params.rondeNummer) // ook voor eerdere ronden
                 .patch({partij: db.AFWEZIG});
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+            await mutatie(gebruiker, ctx, aantal, db.NIEUWE_RANGLIJST);
         }
         ctx.body = aantal;
     });
@@ -1324,7 +1368,7 @@ module.exports = router => {
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', '<=', ctx.params.rondeNummer) // ook voor eerdere ronden
                 .patch({partij: db.EXTERNE_PARTIJ});
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+            await mutatie(gebruiker, ctx, aantal, db.NIEUWE_RANGLIJST);
         }
         ctx.body = aantal;
     });
@@ -1363,7 +1407,7 @@ module.exports = router => {
                     tegenstanderNummer: 0,
                     resultaat: ""});
             aantal = aanmelden + afzeggen;
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
+            await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
         }
         ctx.body = aantal;
     });
@@ -1577,6 +1621,10 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
 
 function magParen(partij) {
     return partij === db.PLANNING || partij === db.MEEDOEN || partij === db.NIET_MEEDOEN;
+}
+
+function magLos(partij) {
+    return partij === db.INGEDEELD || partij === db.TOCH_INGEDEELD;
 }
 
 async function gebruikerRechten(uuidToken) {

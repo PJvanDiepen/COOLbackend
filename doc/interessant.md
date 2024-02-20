@@ -112,6 +112,7 @@ Refresh Android cache
 - [Open source guides](https://opensource.guide/)
 - [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
 - [RexEgg](https://www.rexegg.com/)
+- [Wanneer Reglar Expressions?](https://www.quora.com/Why-dont-more-programmers-use-regular-expressions-Somehow-most-of-the-programmers-I-know-prefer-to-use-split-substring-with-index-etc/answer/Christopher-F-Clark-1)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [Git uitleg](https://github.com/readme/guides/configure-git-environment)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
