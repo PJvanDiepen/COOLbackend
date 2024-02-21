@@ -104,10 +104,6 @@ const planningInvullen = new Map([
     [INGEDEELD, NIET_MEEDOEN],
     [TOCH_INGEDEELD, NIET_MEEDOEN]]);
 
-function isParing(uitslag) {
-    return uitslag.partij === TOCH_INGEDEELD || uitslag.partij === INGEDEELD;
-}
-
 function isPlanning(uitslag) {
     return planningInvullen.has(uitslag.partij);
 }
@@ -197,7 +193,6 @@ module.exports = { // CommonJS voor node.js
     resultaatInvullen,
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
-    isParing,              // (uitslag)
     isPlanning,            // (uitslag)
     isMeedoen,             // (uitslag)
     maandInvullen,

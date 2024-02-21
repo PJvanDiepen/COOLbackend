@@ -108,7 +108,11 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
                 const competitie = zyq.interneCompetitie(w.teamCode) ? w.teamCode : db.INTERNE_COMPETITIE;
                 const mutaties = await zyq.serverFetch(
                     `/${zyq.uuidToken}/uitslag/toevoegen/${db.key(w)}/${knsbNummer}/${partij}/${datum}/${competitie}`);
-                aanvullingen += mutaties;
+                if (mutaties) {
+                    aanvullingen += mutaties;
+                } else {
+                    console.log(`Agenda ${knsbNummer} aanvullen is mislukt na ${aanvullingen} aanvullingen.`);
+                }
             }
         }
     }

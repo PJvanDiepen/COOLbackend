@@ -1,5 +1,9 @@
 use waagtoren;
 
+insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+("2324", "ije", 13, "t", "", '2024-04-01');
+
+
 select p.naam, r.*, u.* from uitslag u
 join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and u.rondeNummer = r.rondeNummer
 join persoon p on p.knsbNummer = u.knsbNummer

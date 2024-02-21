@@ -1132,7 +1132,7 @@ module.exports = router => {
             if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
                 if (db.isMeedoen(ronden[rondeWijzigen])) {
                     aantal += await planningMuteren(ronden[rondeWijzigen], db.NIET_MEEDOEN);
-                    if (db.isParing(ronden[rondeWijzigen])) {
+                    if (ronden[rondeWijzigen].partij === db.INGEDEELD) {
                         console.log("planningMuteren van tegenstander met db.MEEDOEN");
                         console.log(ronden[rondeWijzigen]); // TODO tegenstander wel db.MEEDOEN
                     }

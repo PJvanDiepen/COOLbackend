@@ -17,8 +17,6 @@ import {ranglijst} from "./o_o_o.js";
 const rondeNummer = Number(html.params.get("ronde"));
 const witSpeler   = Number(html.params.get("wit"));
 const zwartSpeler = Number(html.params.get("zwart"));
-console.log({witSpeler});
-console.log({zwartSpeler});
 
 (async function() {
     await zyq.init();
@@ -60,8 +58,6 @@ console.log({zwartSpeler});
 async function eventueelVerwijderen(paar) {
     const knop = document.createElement("select");
     const opties = [[0, ""], [paar, "verwijder partij", async function (paar) {
-        console.log("--- verwijder partij ---");
-        console.log(paar);
         const mutaties = await zyq.serverFetch(
             `/${zyq.uuidToken}/los/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${paar.bordNummer}/${paar.knsbNummer}/${paar.tegenstanderNummer}`);
         if (mutaties) {
@@ -96,13 +92,11 @@ async function spelerSelecteren(bordNummer, metWit, spelers) {
 }
 
 async function paarWitZwart(bordNummer, wit, zwart) {
-    console.log(wit);
-    console.log(zwart);
     const mutaties = await zyq.serverFetch(
         `/${zyq.uuidToken}/paar/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${bordNummer}/${wit.knsbNummer}/${zwart.knsbNummer}`);
     if (mutaties) {
         html.zelfdePagina(`ronde=${rondeNummer}`);
     } else {
-        console.log(`Handmatig ${wit.knsbNummer} tegen ${zwart.knsbNummer} is mislukt.`);
+        console.log(`Handmatig indelen ${wit.knsbNummer} tegen ${zwart.knsbNummer} is mislukt.`);
     }
 }
