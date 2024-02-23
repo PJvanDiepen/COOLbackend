@@ -1,6 +1,6 @@
 {
   "name": "cool_backend",
-  "version": "0.8.49",
+  "version": "0.8.50",
   "description": "Backend for 0-0-0.nl",
   "main": "app.js",
   "scripts": {
@@ -22,9 +22,10 @@
   "author": "Peter van Diepen",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/PJvanDiepen/COOLbackend/issues"
+    "url": "https://github.com/PJvanDiepen/COOLbackend/issues",
+    "email": "pvdiepen@gmail.com"
   },
-  "homepage": "https://github.com/PJvanDiepen/COOLbackend#readme",
+  "homepage": "https://0-0-0.nl/",
   "dependencies": {
     "@koa/cors": "^5.0.0",
     "config": "^3.3.6",

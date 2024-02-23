@@ -8,84 +8,7 @@ import {ranglijst} from "./o_o_o.js"
 import * as zyq from "./zyq.js";
 
 const versieIndelen = Number(html.params.get("indelen")) || 0;
-
-const indelenFun = [
-    ["vooruit indelen met en laatste achteruit indelen zonder heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.8.17
-        const oneven = onevenSpeler(r);
-        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
-        // console.log(nietIngedeeld);
-        if (nietIngedeeld.length > 0) {
-            let pogingen = 0
-            let poging = [];
-            for (let volgnummer = 0; volgnummer < 6; volgnummer++) {
-                poging = [];
-                let speler = 999;
-                while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 13) {
-                    console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen + "/" + volgnummer);
-                    opnieuwIndelen(wit, zwart);
-                    speler = laatsteNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer);
-                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
-                    nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-                }
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
-                opnieuwIndelen(wit, zwart);
-                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
-                    // toevoegen aan poging
-                }
-                for (const speler of poging) {
-                    if (!ingedeeld(speler, wit, zwart, oneven)) {
-                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
-                    }
-                }
-                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- mislukt ---");
-            }
-        }
-        return oneven;
-    }],
-
-    ["vooruit indelen met en achteruit indelen zonder heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.7.8
-        const oneven = onevenSpeler(r);
-        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
-        console.log(nietIngedeeld);
-        if (nietIngedeeld.length > 0) {
-            let pogingen = 0
-            let poging = [];
-            for (let volgnummer = 0; volgnummer < 6; volgnummer++) {
-                poging = [];
-                let speler = 999;
-                while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 13) {
-                    console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen + "/" + volgnummer);
-                    opnieuwIndelen(wit, zwart);
-                    speler = volgendeNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer);
-                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
-                    nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-                }
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
-                opnieuwIndelen(wit, zwart);
-                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
-                    // toevoegen aan poging
-                }
-                for (const speler of poging) {
-                    if (!ingedeeld(speler, wit, zwart, oneven)) {
-                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) ||
-                        spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
-                    }
-                }
-                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
-            }
-            if (nietIngedeeld.length > 0) {
-                console.log("--- mislukt ---");
-            }
-        }
-        return oneven;
-    }]];
+const partijen = html.id("partijen");
 
 /*
     verwerk ronde=<ronde>
@@ -100,33 +23,29 @@ const indelenFun = [
     const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =
         `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
+
+    let bordNummer = 0;
+    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/paren/${db.key(zyq.o_o_o.ronde[rondeNummer])}`);
+    if (paren.length) {
+        for (const paar of paren) {
+            bordNummer = paar.bordNummer;
+            partijen.append(html.rij(bordNummer, paar.wit, paar.zwart, ""));
+        }
+    }
+
+    /*
+    TODO partijen lijst met db.INGEDEELD && db.TOCH_INGEDEELD en toevoegen in wit en zwart?
+    TODO alles in een overzichtelijke vorm zetten
+    TODO begin bij volgende bordNummer voor automatisch indelen
+    TODO invullen externe wedstrijden afsplitsen van partijenLijst()
+     */
+
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
     const deelnemers = await deelnemersRonde(rondeNummer);
-    const r = zyq.zwitsers(zyq.o_o_o.competitie) // TODO weer 1 ranglijstSorteren
-        ? await ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers)
-        : await ranglijstOpPuntenRating(rondeNummer, deelnemers);
-    if (zyq.zwitsers(zyq.o_o_o.competitie)) {
-        console.log("--- Zwitsers systeem ---");
-        for (const speler of r) {
-            console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.weerstandsPunten()}`);
-        }
-        const pogingen = [];
-        const partijen = zwitsersIndelen(r, pogingen);
-        const gesorteerdePartijen = partijen.sort(function (een, ander) {
-            return Math.min(een[0], een[1]) - Math.min(ander[0], ander[1]);
-        });
-        console.log(gesorteerdePartijen);
-        for (const p of gesorteerdePartijen) {
-            if (p[0] === p[1]) {
-                oneven = p[0];
-            } else {
-                wit.push(p[0]);
-                zwart.push(p[1]);
-            }
-        }
-    } else if (rondeNummer === 1) { // Alkmaar systeem eerste ronde
+    const r = await ranglijstOpPuntenRating(rondeNummer, deelnemers);
+    if (rondeNummer === 1) { // Alkmaar systeem eerste ronde
         oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
         indelenEersteRonde(oneven ? oneven : r.length, 3, wit, zwart);
     } else { // Alkmaar systeem andere ronden
@@ -134,30 +53,14 @@ const indelenFun = [
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
     const uithuis = await zyq.serverFetch(`/${zyq.uuidToken}/uithuis/${zyq.o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
-    partijenLijst(r, wit, zwart, oneven, rangnummers, html.id("partijen"), uithuis);
+    partijenLijst(r, wit, zwart, oneven, rangnummers, uithuis);
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"));
     }
-    await html.menu(zyq.gebruiker.mutatieRechten,
+    await html.menu(
+        zyq.gebruiker.mutatieRechten,
         [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
-        const planning = {seizoen: zyq.o_o_o.seizoen, teamCode: zyq.o_o_o.competitie, rondeNummer: rondeNummer};
-            let mutaties = 0;
-            for (let i = 0; i < wit.length; i++) {
-                if (await zyq.serverFetch(
-                    `/${zyq.uuidToken}/indelen/${db.key(planning)}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
-                    mutaties += 2;
-                }
-            }
-            if (oneven) {
-                if (await zyq.serverFetch(`/${zyq.uuidToken}/oneven/${db.key(planning)}/${r[oneven].knsbNummer}`)) {
-                    mutaties += 1;
-                }
-            }
-            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/afwezig/${db.key(planning)}`);
-            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/extern/${db.key(planning)}`);
-            if (mutaties) {
-                html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
-            }
+            await definitief(rondeNummer, wit, r, zwart, oneven);
         }],
         [db.WEDSTRIJDLEIDER, `handmatig indelen ronde ${rondeNummer}`, function () {
             html.anderePagina(`paren.html?ronde=${rondeNummer}`);
@@ -186,43 +89,6 @@ async function ranglijstOpPuntenRating(rondeNummer, deelnemers) {
     });
     return lijst;
 }
-
-async function ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers) {
-    const lijst = await ranglijst(rondeNummer, deelnemers);
-    for (const speler of lijst) {
-        let i = 20;
-        let wp = speler.oneven() * 5; // bijtelling oneven
-        let sb = speler.oneven() * 50;
-        while (speler.totalen[i]) { // indien rondeNummer
-            const knsbNummer = speler.totalen[i + 2];
-            if (knsbNummer) {
-                let tegenstander = 0;
-                while (lijst[tegenstander].knsbNummer !== knsbNummer) {
-                    tegenstander++;
-                }
-                wp += lijst[tegenstander].totaal() - lijst[tegenstander].oneven() * 5;  // aftrek oneven
-                if (speler.totalen[i + 3] === 2) { // wint van tegenstander
-                    sb += lijst[tegenstander].totaal() * 10 - lijst[tegenstander].oneven() * 50;
-                } else if (speler.totalen[i + 3] === 1) { // remise met tegenstander
-                    sb += lijst[tegenstander].totaal() * 5 - lijst[tegenstander].oneven() * 25;
-                }
-            } else {
-                if (speler.totalen[i] === rondeNummer - 1) {
-                    wp -= 5; // in ranglijst na vorige ronde geen aftrek of bijtelling oneven
-                    sb -= 50;
-                }
-            }
-            i = i + 4; // volgende rondeNummer, kleur, knsbNummer en resultaat
-        }
-        speler.weerstandsPuntenInvullen(wp);
-        speler.sonnebornBergerInvullen(sb);
-    }
-    lijst.sort(function (een, ander) {
-        return ander.totaal() - een.totaal() || ander.sonnebornBerger() - een.sonnebornBerger() || ander.weerstandsPunten() - een.weerstandsPunten();
-    });
-    return lijst;
-}
-
 function rangnummersToggle(rangnummers, rondeNummer) {
     const rangnummersAan = html.params.get("rangnummers");
     if (rangnummersAan) {
@@ -235,7 +101,28 @@ function rangnummersToggle(rangnummers, rondeNummer) {
     return rangnummersAan;
 }
 
-function partijenLijst(r, wit, zwart, oneven, rangnummers, partijen, extern) {
+async function definitief(rondeNummer, wit, r, zwart, oneven) {
+    const planning = {seizoen: zyq.o_o_o.seizoen, teamCode: zyq.o_o_o.competitie, rondeNummer: rondeNummer};
+    let mutaties = 0;
+    for (let i = 0; i < wit.length; i++) {
+        if (await zyq.serverFetch(
+            `/${zyq.uuidToken}/indelen/${db.key(planning)}/${i + 1}/${r[wit[i]].knsbNummer}/${r[zwart[i]].knsbNummer}`)) {
+            mutaties += 2;
+        }
+    }
+    if (oneven) {
+        if (await zyq.serverFetch(`/${zyq.uuidToken}/oneven/${db.key(planning)}/${r[oneven].knsbNummer}`)) {
+            mutaties += 1;
+        }
+    }
+    mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/afwezig/${db.key(planning)}`);
+    mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/extern/${db.key(planning)}`);
+    if (mutaties) {
+        html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
+    }
+}
+
+function partijenLijst(r, wit, zwart, oneven, rangnummers, extern) {
     for (let i = 0; i < wit.length; i++) {
         partijen.append(html.rij(
             i + 1,
@@ -314,6 +201,84 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
 function indelenRonde(r, wit, zwart, rondeNummer) {
     return indelenFun[versieIndelen][1](r, wit, zwart, rondeNummer); // TODO functie met 1 regel?
 }
+
+const indelenFun = [
+    ["vooruit indelen met en laatste achteruit indelen zonder heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.8.17
+        const oneven = onevenSpeler(r);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+        // console.log(nietIngedeeld);
+        if (nietIngedeeld.length > 0) {
+            let pogingen = 0
+            let poging = [];
+            for (let volgnummer = 0; volgnummer < 6; volgnummer++) {
+                poging = [];
+                let speler = 999;
+                while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 13) {
+                    console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen + "/" + volgnummer);
+                    opnieuwIndelen(wit, zwart);
+                    speler = laatsteNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer);
+                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                    nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+                }
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
+                opnieuwIndelen(wit, zwart);
+                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
+                    // toevoegen aan poging
+                }
+                for (const speler of poging) {
+                    if (!ingedeeld(speler, wit, zwart, oneven)) {
+                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                    }
+                }
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- mislukt ---");
+            }
+        }
+        return oneven;
+    }],
+
+    ["vooruit indelen met en achteruit indelen zonder heuristieken", function (r, wit, zwart, rondeNummer) { // 0-0-0.nl versie 0.7.8
+        const oneven = onevenSpeler(r);
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+        console.log(nietIngedeeld);
+        if (nietIngedeeld.length > 0) {
+            let pogingen = 0
+            let poging = [];
+            for (let volgnummer = 0; volgnummer < 6; volgnummer++) {
+                poging = [];
+                let speler = 999;
+                while (nietIngedeeld.length > 0 && speler > 0 && ++pogingen < 13) {
+                    console.log("--- 1 niet ingedeelde speler --- poging #" + pogingen + "/" + volgnummer);
+                    opnieuwIndelen(wit, zwart);
+                    speler = volgendeNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer);
+                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                    nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+                }
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- alle niet ingedeelde spelers --- poging #" + ++pogingen);
+                opnieuwIndelen(wit, zwart);
+                while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
+                    // toevoegen aan poging
+                }
+                for (const speler of poging) {
+                    if (!ingedeeld(speler, wit, zwart, oneven)) {
+                        spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) ||
+                        spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                    }
+                }
+                nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven);
+            }
+            if (nietIngedeeld.length > 0) {
+                console.log("--- mislukt ---");
+            }
+        }
+        return oneven;
+    }]];
 
 /**
  * Liever nietTegen volgens heuristieken.
@@ -462,210 +427,4 @@ function onevenSpeler(r) {
         console.log(`${r[oneven].naam} is oneven`);
     }
     return oneven;
-}
-
-/**
- * zwitsersIndelen deelt in volgens de reglementen van het FIDE Dutch system
- *
- * https://spp.fide.com/c-04-3-fide-dutch-system/
- *
- * ?param r ranglijst (= A.1 initial ranking list)
- * ?returns ingedeelde partijen of false
- */
-function zwitsersIndelen(r, pogingen, eerst) {
-    console.log(`=== zwitsersIndelen === poging #${pogingen.length}`);
-    let partijen = [];
-    let oneven = r.length % 2 === 0 ? 0 : r.length - 1;
-    if (oneven) {
-        while (r[oneven].oneven()) { // Absolute Criteria C.2
-            console.log(`${r[oneven].naam} was al oneven`);
-            oneven--;
-        }
-        console.log(`${r[oneven].naam} is oneven`);
-        partijen.push([oneven, oneven]);
-    }
-    if (eerst) {
-        console.log(`eerst indelen: ${r[eerst].naam}`);
-        if (!zwitsersVooruit(r, eerst, eerst + 1, partijen)) {
-            console.log(`eerst vooruit indelen: ${r[eerst].naam} is ook mislukt!`);
-            if (!zwitsersAchteruit(r, eerst, eerst - 1, partijen)) {
-                console.log(`eerst achteruit indelen: ${r[eerst].naam} is ook mislukt!`);
-                return false;
-            }
-        }
-    }
-    const mislukt = [];
-    let volgendeGroep = 0;
-    while (volgendeGroep < r.length) {
-        const van = volgendeGroep;
-        const tot = puntenGroep(r, van);
-        volgendeGroep = tot + 1;
-        const helftGroep = van + Math.floor((volgendeGroep - van) / 2);
-        let wisselKleur = 1; // indien geen kleurVoorkeur begin met 1 = zwart, 0 = wit
-        for (let i = van; i <= tot; i++) {
-            if (!reedsIngedeeld(r, i, partijen)) {
-                console.log(`indelen: ${r[i].naam}`);
-                if (!zwitsersVooruitIndelen(r, i, wisselKleur, helftGroep, partijen)) {
-                    console.log(`vooruit indelen: ${r[i].naam} is mislukt!`);
-                    mislukt.push(i);
-                }
-                wisselKleur = wisselKleur ? 0 : 1;
-            }
-        }
-    }
-    for (const speler of mislukt) {
-        if (!pogingen.includes(speler)) {
-            pogingen.push(speler);
-            partijen = zwitsersIndelen(r, pogingen, speler);
-            if (partijen) {
-                break;
-            }
-        }
-    }
-    return partijen;
-}
-
-/**
- * maak puntenGroep (= A.3 Scoregroup) in ranglijst van tot
- *
- * @param r ranglijst
- * @param van in ranglijst
- * @returns {number} tot in ranglijst
- */
-function puntenGroep(r, van) {
-    const einde = r.length - 1;
-    if (van >= einde) {
-        console.log(`geen nieuwe puntenGroep tot: ${einde}`);
-        return einde;
-    }
-    let tot = van;
-    for (let i = 0; i < r.length; i++) {
-        if (r[van].totaal() === r[i].totaal()) {
-            tot = i;
-        }
-    }
-    const helft = Math.floor((tot + 1 - van) / 2);
-    console.log(`helft: ${helft} *****`);
-    if (helft > 0) {
-        return tot;
-    }
-    console.log(`puntenGroep verlengen`);
-    return puntenGroep(r, tot + 1);
-}
-
-/**
- * indien speler in partijen staat is speler reedsIngedeeld
- *
- * @param r ranglijst TODO uitsluitend voor print
- * @param speler in ranglijst
- * @param partijen na indelen
- * @returns {boolean} indien reedsIngedeeld
- */
-function reedsIngedeeld(r, speler, partijen) {
-    for (const p of partijen) {
-        if (p.includes(speler)) {
-            console.log(`${r[speler].naam} reeds ingedeeld`);
-            return true;
-        }
-    }
-    return false;
-}
-
-/**
- * zwitsersVoooruitIndelen probeert speler in te delen met tegenstander lager op de ranglijst
- *
- * @param r ranglijst
- * @param speler in ranglijst
- * @param wisselKleur indien geen voorkeur 1 = zwart, 0 = wit
- * @param tegenstander in ranglijst
- * @param partijen na indelen
- * @returns {boolean} indien speler is ingedeeld
- */
-function zwitsersVooruitIndelen(r, speler, wisselKleur, tegenstander, partijen) {
-    for (let i = tegenstander; i < r.length; i++) {
-        if (!reedsIngedeeld(r, i, partijen)) {
-            console.log(`${r[speler].naam} tegen ${r[i].naam} ? ${r[speler].tegen(i)} en ${juisteKleurVoorkeur(r[speler], r[i])} kleur: ${metWit(r[speler], r[i], wisselKleur)}`);
-        }
-        if (!reedsIngedeeld(r, i, partijen) && r[speler].tegen(i) && juisteKleurVoorkeur(r[speler], r[i])) {
-            if (metWit(r[speler], r[i], wisselKleur)) {
-                partijen.push([i, speler]);
-            } else {
-                partijen.push([speler, i]);
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-function zwitsersVooruit(r, speler, tegenstander, partijen) {
-    for (let i = tegenstander; i < r.length; i++) {
-        if (!i === speler && !reedsIngedeeld(r, i, partijen) && !r[speler].tegen(i)) {
-            if (metWit(r[speler], r[i], metZwart(r[speler], r[i]))) {
-                partijen.push([i, speler]);
-            } else {
-                partijen.push([speler, i]);
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-function zwitsersAchteruit(r, speler, tegenstander, partijen) {
-    for (let i = tegenstander; i >= 0; i--) {
-        if (!i === speler && !reedsIngedeeld(r, i, partijen) && !r[speler].tegen(i)) {
-            if (metWit(r[speler], r[i], metZwart(r[speler], r[i]))) {
-                partijen.push([i, speler]);
-            } else {
-                partijen.push([speler, i]);
-            }
-            return true;
-        }
-    }
-    return false;
-}
-
-/**
- * juistKleurVoorkeur zorgt voor Absolute Criteria C.3
- * speler en tegenstander mogen niet dezelfde voorkeur hebben voor een kleur
- *
- * @param speler
- * @param tegenstander
- * @returns {boolean} indien juisteKleurVoorkeur
- */
-function juisteKleurVoorkeur(speler, tegenstander) {
-    if (speler.saldoWitZwart() > 0) { // speler heeft voorkeur voor wit
-        return tegenstander.saldoWitZwart() <= 0;
-    } else if (speler.saldoWitZwart() < 0) { // speler heeft voorkeur voor zwart
-        return tegenstander.saldoWitZwart() >= 0;
-    } else {
-        return true // speler heeft geen voorkeur
-    }
-}
-
-/**
- * metWit berekent welke kleur speler heeft tegen tegenstander
- *
- * @param speler
- * @param tegenstander
- * @param wisselKleur indien spelers geen voorkeur hebben
- * @returns {number|*} indien wit anders zwart
- */
-function metWit(speler, tegenstander, wisselKleur) {
-    if (speler.saldoWitZwart() < 0 || tegenstander.saldoWitZwart() > 0) { // speler heeft voorkeur voor wit of tegenstander heeft voorkeur voor zwart
-        return 0;
-    } else if (speler.saldoWitZwart() > 0 || tegenstander.saldoWitZwart() < 0) { // speler heeft voorkeur voor zwart of tegenstander heeft voorkeur voor zwart
-        return 1;
-    } else {
-        return wisselKleur; // spelers hebben geen voorkeur
-    }
-}
-
-function metZwart(speler, tegenstander) {
-    if (speler > tegenstander) { // sterkste speler heeft voorkeur voor zwart
-        return 1;
-    } else {
-        return 0; // zwakste speler heeft voorkeur voor wit
-    }
 }

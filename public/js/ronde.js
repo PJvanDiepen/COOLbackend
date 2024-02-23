@@ -36,17 +36,23 @@ import * as zyq from "./zyq.js";
             zyq.backupSQL("uitslag", rijen);
         }],
         [db.WEDSTRIJDLEIDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
-            const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/indeling/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
+            const mutaties = await zyq.serverFetch(
+                `/${zyq.uuidToken}/verwijder/indeling/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
             if (mutaties) {
-                sessionStorage.removeItem(`/ronde/${zyq.o_o_o.seizoen}/${rondeNummer}`);  // TODO ranglijst weggooien
-                html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
+                html.anderePagina(`indelen.html?ronde=${rondeNummer}`)
+            } else {
+                console.log(`Verwijder indeling ronde ${rondeNummer} is mislukt.`);
             }
         }],
         [db.BEHEERDER, `wijzig ronde ${rondeNummer}`, async function () {
             html.anderePagina(`wijzig.html?ronde=${rondeNummer}`);
         }],
         [db.BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
-            const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/ronde/${zyq.o_o_o.seizoen}/int/${rondeNummer}`);
+            const mutaties = await zyq.serverFetch(
+                `/${zyq.uuidToken}/verwijder/ronde/${zyq.o_o_o.seizoen}/int/${rondeNummer}`);
+            if (!mutaties) {
+                console.log(`Verwijder ronde ${rondeNummer} is mislukt.`);
+            }
         }]);
     rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, html.id("uitslagen"));
