@@ -101,7 +101,7 @@ async function uitslagMutatie(rondeNummer) {
             }
         }
     }
-    return {"wit": Number(wit), "zwart": Number(zwart)};
+    return {wit: Number(wit), zwart: Number(zwart)};
 }
 
 function resultaatSelecteren(rondeNummer, uitslag) {

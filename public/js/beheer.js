@@ -46,7 +46,8 @@ TODO mutaties met verwijderen
     gebruikers(html.id("gebruikers"));
     laatsteMutaties(html.id("mutaties"));
     const versie = await zyq.serverFetch(`/versie`);
-    html.id("computer").append(`0-0-0 versie ${versie}`);  // TODO client hints
+    html.id("computer").append(
+        `0-0-0 versie ${versie.versie} sinds ${zyq.tijdGeleden(versie.tijdstip)}`);
 })();
 
 async function gebruikers(lijst) {

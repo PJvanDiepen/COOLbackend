@@ -18,6 +18,8 @@ const Uitslag = require('./models/uitslag');
 const { fn, ref } = require('objection');
 
 const package_json = require('./package.json');
+const tijdstip = new Date();
+
 const knex = require("knex");
 
 const os = require("os");
@@ -64,7 +66,7 @@ module.exports = router => {
     Frontend: beheer.js
      */
     router.get('/versie', async function (ctx) {
-        ctx.body = JSON.stringify(package_json.version);
+        ctx.body = JSON.stringify({versie: package_json.version, tijdstip: tijdstip});
     });
 
     /*
