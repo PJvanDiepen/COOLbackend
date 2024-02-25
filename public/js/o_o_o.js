@@ -173,8 +173,9 @@ function spelerTotalen(speler) {
         knsbNummer === 7640798 ? [8388105] : // vader Johan niet tegen zoon Marijn Wester
         knsbNummer === 8388105 ? [7640798] : // zoon Marijn niet tegen vader Johan Wester
         knsbNummer === 7771665 ? [7777715] : // Yvonne Schol wegens geluid niet tegen Richard Gooijers
-        knsbNummer === 8350738 ? [7777715] : // Ramon Witte zegt geen zetten tegen Richard Gooijers
-        knsbNummer === 7777715 ? [7771665, 8350738] : [];
+        knsbNummer === 8350738 ? [7777715] : // Ramon Witte zegt niets tegen Richard Gooijers
+        knsbNummer === 8350738 ? [9001586] : // Abdul Rashid Ayobi spreekt geen Nederlands tegen Richard Gooijers
+        knsbNummer === 7777715 ? [7771665, 8350738, 9001586] : [];
 
     let wp = 0;
 
