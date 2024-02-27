@@ -16,7 +16,6 @@ import * as html from "./html.js";
 import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
-import {EXTERN_UIT, INGEDEELD, NIET_MEEDOEN, TOCH_INGEDEELD} from "./db.js"; // TODO verwijderen
 
 /**
  * vinkjeInvullen voor agenda.js en teamleider.js

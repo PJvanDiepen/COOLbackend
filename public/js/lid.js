@@ -119,7 +119,7 @@ async function lidFormulier(persoon, septemberRating) {
             const id = `intern${competitieNummer + 1}`;
             competities.append(html.checkbox(id, team.teamCode, zyq.teamVoluit(team.teamCode)));
             competitie[competitieNummer] = html.id(id);
-            if (speeltIntern(persoon, team.teamCode)) {
+            if (db.inCompetitie(persoon, team.teamCode)) {
                 competitie[competitieNummer].checked = true;
             }
             competitieNummer++;
@@ -168,16 +168,4 @@ async function lidFormulier(persoon, septemberRating) {
             html.anderePagina(`bestuur.html?lid=${knsbNummer.value}`);
         }
     });
-}
-
-function speeltIntern(persoon, teamCode) { // volgens database
-    if (persoon) {
-        return persoon.intern1 === teamCode
-            || persoon.intern2 === teamCode
-            || persoon.intern3 === teamCode
-            || persoon.intern4 === teamCode
-            || persoon.intern5 === teamCode;
-    } else {
-        return false;
-    }
 }

@@ -59,6 +59,19 @@ function isTeam(team) {
 const TIJDELIJK_LID_NUMMER = 100
 const KNSB_NUMMER          = 1000000;
 
+// speler.intern
+function inCompetitie(speler, teamCode) { // volgens database
+    if (speler) {
+        return speler.intern1 === teamCode
+            || speler.intern2 === teamCode
+            || speler.intern3 === teamCode
+            || speler.intern4 === teamCode
+            || speler.intern5 === teamCode;
+    } else {
+        return false;
+    }
+}
+
 // uitslag.partij
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
@@ -162,6 +175,8 @@ export { // ES6 voor browser
     // knsbNummer
     TIJDELIJK_LID_NUMMER,
     KNSB_NUMMER,
+
+    inCompetitie,            // (speler, teamCode)
 
     // uitslag.partij
     AFWEZIG,

@@ -1,5 +1,17 @@
 use waagtoren;
 
+select * from speler where seizoen = "2324" and knsbNummer = 7699010;
+
+update speler set intern2 = "ira" where seizoen = "2324" and knsbNummer = 7699010;
+
+select * from ronde where seizoen = "2324" and teamCode = "nv2" and rondeNummer = 5;
+update ronde set datum = '2024-03-08' where seizoen = "2324" and teamCode = "nv2" and rondeNummer = 5;
+
+
+select * from uitslag where seizoen = "2324" and teamCode = "nv2" and rondeNummer = 5;
+update uitslag set datum = '2024-03-08' where seizoen = "2324" and teamCode = "nv2" and rondeNummer = 5;
+
+
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2324", "ije", 13, "t", "", '2024-04-01');
 

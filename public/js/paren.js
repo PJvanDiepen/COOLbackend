@@ -42,7 +42,7 @@ const zwartSpeler = Number(html.params.get("zwart"));
                     return false;
                 }
             }
-            return speler.intern() || speler.oneven();
+            return true; // voorlopig iedereen TODO indien deelnemer db.inCompetitie()
         }
     }).map(function (speler) {
         return [speler, speler.naam];
