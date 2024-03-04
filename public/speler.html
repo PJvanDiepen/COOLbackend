@@ -12,6 +12,12 @@
         td:nth-child(7), td:nth-child(8)  {
             text-align: right; /* punten en totaal */
         }
+        #ratings td:nth-child(1) {
+            text-align: left; /* maand en jaar */
+        }
+        #ratings td:nth-child(2) {
+            text-align: right; /* rating */
+        }
     </style>
 </head>
 <body>
@@ -28,6 +34,13 @@
             <th></th>
             <th>punten</th>
             <th>totaal</th>
+        </tr>
+    </table>
+    <h2>KNSB ratings</h2>
+    <table id="ratings">
+        <tr>
+            <th>maand</th>
+            <th>rating</th>
         </tr>
     </table>
     <script type="module" src="js/speler.js"></script>

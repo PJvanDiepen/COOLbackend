@@ -54,7 +54,6 @@ const zwartSpeler = Number(html.params.get("zwart"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
 })();
 
-
 async function eventueelVerwijderen(paar) {
     const knop = document.createElement("select");
     const opties = [[0, ""], [paar, "verwijder partij", async function (paar) {

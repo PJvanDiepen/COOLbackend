@@ -603,6 +603,16 @@ module.exports = router => {
     });
 
     /*
+    Frontend: speler.js
+    */
+    router.get('/rating/:knsbNummer', async function (ctx) {
+        ctx.body = await Rating.query()
+            .select('knsbNummer', 'knsbNaam', 'knsbRating', 'maand', 'jaar')
+            .where('knsbNummer', ctx.params.knsbNummer)
+            .orderBy([{column: 'jaar', order: 'desc'}, {column: 'maand', order: 'desc'}]);
+    });
+
+    /*
     Frontend: aanmelden.js
      */
     router.get('/naam/:maand/:zoek/:aantal', async function (ctx) {

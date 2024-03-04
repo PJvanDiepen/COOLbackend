@@ -18,6 +18,7 @@ import * as zyq from "./zyq.js";
             zyq.backupSQL("uitslag", rijen);
         }]);
     uitslagenSpeler(html.id("kop"), html.id("tabel"));
+    await ratingPerMaandSpeler(html.id("ratings"), zyq.o_o_o.speler);
 })();
 
 /*
@@ -147,3 +148,15 @@ const geenPartijInvullen = new Map([
     [db.REGLEMENTAIR_VERLIES, "reglementair verlies"],
     [db.REGLEMENTAIRE_WINST, "reglementaire winst"],
     ["j", "niet gespeeld"]]);
+
+async function ratingPerMaandSpeler(lijst, speler) {
+    const ratings = await zyq.localFetch(`/rating/${speler}`);
+    if (ratings.length > 0) {
+        for (const rating of ratings) {
+            lijst.append(html.rij(`${db.maandInvullen.get(rating.maand)} ${rating.jaar}`, rating.knsbRating));
+        }
+    } else {
+        lijst.append(html.rij("", "geen rating"));
+    }
+
+}

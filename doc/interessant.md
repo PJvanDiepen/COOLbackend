@@ -81,6 +81,7 @@ Refresh Android cache
 - [My first Node web app](https://dev.to/ekafyi/tribute-to-swissted-introduction-2c6i)
 - [Objection and Knex](https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f)
 - [Multiple databases](https://blog.eperedo.com/2019/12/28/multiple-database-connection-objection-js-knex/)
+- [Uitleg over Objection models](https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f)
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
 - [Knex cheatsheet](https://devhints.io/knex)
 - [Knex probleem](https://evertpot.com/knex-sql-injection/)
@@ -227,3 +228,4 @@ Refresh Android cache
 - [cursus algoritmes en datastructuren](https://frontendmasters.com/courses/algorithms/)
 - [Processing in JavaScript](https://github.com/processing/p5.js)
 - [Turing Award](https://amturing.acm.org/byyear.cfm)
+- [wiskundige formules](https://runjs.app/blog/equations-that-changed-the-world-rewritten-in-javascript)
