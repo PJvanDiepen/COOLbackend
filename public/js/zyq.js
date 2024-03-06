@@ -48,9 +48,9 @@ export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst 
     } else if (teamCode === "nbe") {
         return o_o_o.vereniging + " NHSB beker";
     } else if (teamCode === "nbz") {
-        return o_o_o.vereniging + " NHSB beker < 1900";
+        return o_o_o.vereniging + " NHSB beker (zilver)";
     } else if (teamCode === "nbb") {
-        return o_o_o.vereniging + " NHSB beker < 1600";
+        return o_o_o.vereniging + " NHSB beker (brons)";
     } else if (teamCode === "" || teamCode.substring(0,1) === " ") {
         return "geen";
     } else if (teamCode.substring(0,2) === "nv") {

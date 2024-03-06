@@ -34,8 +34,7 @@ const partijen = html.id("partijen");
     }
 
     /*
-    TODO partijen lijst met db.INGEDEELD && db.TOCH_INGEDEELD en toevoegen in wit en zwart?
-    TODO alles in een overzichtelijke vorm zetten
+    TODO indelenEersteRonde en indelenRonde geven partijen indeling in paren
     TODO begin bij volgende bordNummer voor automatisch indelen
     TODO invullen externe wedstrijden afsplitsen van partijenLijst()
      */
@@ -52,7 +51,8 @@ const partijen = html.id("partijen");
         oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const uithuis = await zyq.serverFetch(`/${zyq.uuidToken}/uithuis/${zyq.o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
+    const uithuis = await zyq.serverFetch(
+        `/${zyq.uuidToken}/uithuis/${zyq.o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
     partijenLijst(r, wit, zwart, oneven, rangnummers, uithuis);
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"));
@@ -159,7 +159,29 @@ function deelnemersLijst(r, lijst) {
             t.saldoWitZwart() ? t.saldoWitZwart() : ""));
     });
 }
+/**
+ * indelenRonde
+ *
+ * @param r ranglijst
+ * @param wit
+ * @param zwart
+ * @param rondeNummer huidige ronde
+ * @returns {*} indeling partijen met paren
+ *
+ * een paar bestaat uit: wit tegen zwart
+ * of speler tegen zichzelf indien oneven
+ * of speler tegen niemand indien niet ingedeeld
+ */
 
+/**
+ * indelingEersteRonde
+ *
+ * @param aantalSpelers
+ * @param aantalGroepen
+ * @param wit
+ * @param zwart
+ * @returns {*[]}
+ */
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
     const aantalPartijen = aantalSpelers / 2;
     aantalGroepen = juisteAantalGroepen(aantalGroepen, aantalSpelers);
@@ -169,6 +191,7 @@ function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
         groepIndelenEersteRonde(van, van + helftGroep, wit, zwart);
     }
     groepIndelenEersteRonde(tot, aantalPartijen, wit, zwart);
+    return [];
 }
 
 function juisteAantalGroepen(aantalGroepen, aantalSpelers) {
@@ -198,6 +221,19 @@ function groepIndelenEersteRonde(van, tot, wit, zwart) {
     }
 }
 
+/**
+ * indelenRonde maakt indeling partijen
+ *
+ * @param r ranglijst
+ * @param wit
+ * @param zwart
+ * @param rondeNummer huidige ronde
+ * @returns {*} indeling partijen met paren
+ *
+ * een paar bestaat uit: wit tegen zwart
+ * of speler tegen zichzelf indien oneven
+ * of speler tegen niemand indien niet ingedeeld
+ */
 function indelenRonde(r, wit, zwart, rondeNummer) {
     return indelenFun[versieIndelen][1](r, wit, zwart, rondeNummer); // TODO functie met 1 regel?
 }
