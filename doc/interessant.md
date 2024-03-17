@@ -128,6 +128,7 @@ Refresh Android cache
 - [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
 - [FIDE Dutch System](https://estima.com/chess/wintdhelp/index.html?pairingsystemfidedutchsystem.html)
 - [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
+- [Uitleg door ChessManager](https://www.chessmanager.com/en/blog/swiss-system)
 - [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
 - [Sevilla](https://www.jbfsoftware.com/)
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
