@@ -34,7 +34,9 @@ const partijen = html.id("partijen");
     }
 
     /*
-    TODO indelenEersteRonde en indelenRonde geven partijen indeling in paren
+    TODO indelenEersteRonde geeft partijen indeling in paren
+    TODO indelenRonde geeft partijen indeling in paren
+    TODO parameters oneven, wit en zwart zijn overbodig
     TODO begin bij volgende bordNummer voor automatisch indelen
     TODO invullen externe wedstrijden afsplitsen van partijenLijst()
      */
@@ -44,6 +46,7 @@ const partijen = html.id("partijen");
     let oneven = 0; // eerste speler is nooit oneven
     const deelnemers = await deelnemersRonde(rondeNummer);
     const r = await ranglijstOpPuntenRating(rondeNummer, deelnemers);
+    const partijen = rondeNummer === 1 ? indelenRonde1 (r) : indelenRonde1 (r);
     if (rondeNummer === 1) { // Alkmaar systeem eerste ronde
         oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
         indelenEersteRonde(oneven ? oneven : r.length, 3, wit, zwart);
@@ -159,29 +162,54 @@ function deelnemersLijst(r, lijst) {
             t.saldoWitZwart() ? t.saldoWitZwart() : ""));
     });
 }
+
 /**
- * indelenRonde
+ * indelenRonde1
  *
  * @param r ranglijst
- * @param wit
- * @param zwart
- * @param rondeNummer huidige ronde
- * @returns {*} indeling partijen met paren
+ * @returns {*[]} indeling partijen als paren
  *
  * een paar bestaat uit: wit tegen zwart
  * of speler tegen zichzelf indien oneven
- * of speler tegen niemand indien niet ingedeeld
+ * of speler tegen -1 indien niet ingedeeld
  */
+function indelenRonde1(r) {
+    console.log(r);
+    const oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
+    const aantalSpelers = oneven ? oneven : r.length;
+    const aantalPartijen = aantalSpelers / 2;
+    const aantalGroepen = juisteAantalGroepen(3, aantalSpelers);
+    const helftGroep = Math.floor(aantalPartijen / aantalGroepen);
+    const tot = (aantalGroepen - 1) * helftGroep; // tot laatste groep
+    const partijen = [];
+    for (let van = 0; van < tot; van += helftGroep) {
+        groepIndelenRonde1(partijen, van, van + helftGroep);
+    }
+    groepIndelenRonde1(partijen, tot, aantalPartijen);
+    if (oneven) {
 
-/**
- * indelingEersteRonde
- *
- * @param aantalSpelers
- * @param aantalGroepen
- * @param wit
- * @param zwart
- * @returns {*[]}
- */
+        partijen.push([oneven, oneven]);
+    }
+    partijenAfdrukken(partijen, r);
+    console.log("--- indelenRonde1(r) ---"); // TODO PvD
+    return partijen;
+}
+
+function groepIndelenRonde1(partijen, van, tot) {
+    const sterkste = van % 2; // op van, van + 2, van + 4 heeft de sterkste speler zwart
+        for (let i = van; i < tot; i++) {
+        partijen.push(i % 2 === sterkste ? [i + tot, i + van] : [i + van, i + tot]);
+    }
+}
+
+function partijenAfdrukken(partijen, r) {
+    for (const [wit, zwart] of partijen) {
+        const partij = zwart < 0 ? `${r[wit].naam} niet ingedeeld` :
+            wit === zwart ? `${r[wit].naam} oneven` : `${r[wit].naam} - ${r[zwart].naam}`;
+        console.log(`${partij} (${wit + 1} - ${zwart + 1})`);
+    }
+}
+
 function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
     const aantalPartijen = aantalSpelers / 2;
     aantalGroepen = juisteAantalGroepen(aantalGroepen, aantalSpelers);
@@ -191,7 +219,6 @@ function indelenEersteRonde(aantalSpelers, aantalGroepen, wit, zwart) {
         groepIndelenEersteRonde(van, van + helftGroep, wit, zwart);
     }
     groepIndelenEersteRonde(tot, aantalPartijen, wit, zwart);
-    return [];
 }
 
 function juisteAantalGroepen(aantalGroepen, aantalSpelers) {

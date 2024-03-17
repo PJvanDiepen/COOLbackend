@@ -60,6 +60,7 @@ Refresh Android cache
 - [Uitleg over modern frameworks](https://nolanlawson.com/2023/12/02/lets-learn-how-modern-javascript-frameworks-work-by-building-one/)
 - [6 ways to declare functions](https://dmitripavlutin.com/6-ways-to-declare-javascript-functions/)
 - [Wat een JavaScript programmeur moet begrijpen in 2024](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-in-2024-c1044bcb0dfb)
+- [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
 
 # node.js
 - [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
@@ -74,6 +75,7 @@ Refresh Android cache
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
 - [verschillen node en deno](https://cult.honeypot.io/reads/deno-vs-node-main-differences/)
 - [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
+- [JSR i.p.v. npm](https://deno.com/blog/jsr_open_beta)
 
 # Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
@@ -114,6 +116,7 @@ Refresh Android cache
 - [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
 - [RexEgg](https://www.rexegg.com/)
 - [Wanneer Reglar Expressions?](https://www.quora.com/Why-dont-more-programmers-use-regular-expressions-Somehow-most-of-the-programmers-I-know-prefer-to-use-split-substring-with-index-etc/answer/Christopher-F-Clark-1)
+- [Genereer Regular Expressions](https://github.com/devongovett/regexgen)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [Git uitleg](https://github.com/readme/guides/configure-git-environment)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
