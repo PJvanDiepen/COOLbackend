@@ -290,9 +290,9 @@ function spelerTotalen(speler) {
             console.log(`${naam} mag niet tegen ${tegenstander.naam}`);
             return false;
         }
-        const zelfdeTegenstander = vorigeKeer(tegenstander);
-        if (zelfdeTegenstander) {
-            afdrukken(tegenstander, totalen[zelfdeTegenstander + 1], `in ronde ${totalen[zelfdeTegenstander]}`);
+        const ronde = vorigeKeer(tegenstander);
+        if (ronde) {
+            afdrukken(tegenstander, totalen[ronde + 1], `wegens in ronde ${totalen[ronde]}`);
             const partijenGeleden = laatsteKeer(tegenstander);
             if (partijenGeleden < partijenVerschil()) {
                 console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);

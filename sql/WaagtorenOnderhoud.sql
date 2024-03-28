@@ -1,6 +1,39 @@
 use waagtoren;
 
-select * from speler where seizoen = "2324" and knsbNummer = 7699010;
+set @seizoen = '2324';
+set @competitie = 'int';
+set @ronde = 22;
+
+select * from uitslag where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde; 
+delete from ronde where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde; 
+
+
+set @bord = 14;
+
+set @wit = 126;
+set @zwart = 9065100;
+
+select * from gebruiker where knsbNummer = @wit;
+select * from gebruiker where knsbNummer = @zwart;
+
+select * from mutatie where knsbNummer = @wit;
+select * from mutatie where knsbNummer = @zwart;
+
+select * from persoon where knsbNummer = @wit;
+select * from persoon where knsbNummer = @zwart;
+
+select * from ranglijst;
+
+select * from rating where knsbNummer = @zwart;
+
+select * from speler where knsbNummer = @wit;
+select * from speler where knsbNummer = @zwart;
+
+select * from uitslag where knsbNummer = @wit;
+select * from uitslag where knsbNummer = @zwart;
+
+show tables;
+
 
 update speler set intern2 = "ira" where seizoen = "2324" and knsbNummer = 7699010;
 
@@ -38,12 +71,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 
 delete from uitslag where seizoen = @seizoen and teamCode = "int" and knsbNummer = 7970094;
 
--- aantal interne uitslagen per speler per seizoen 
-select naam, u.knsbNummer, count(*) uitslagen
-from uitslag u join persoon p on u.knsbNummer = p.knsbNummer 
-where seizoen = @seizoen and teamCode = "int"
-group by u.knsbNummer
-order by uitslagen desc;
+
 
 select * from team where seizoen = "2324"; -- and teamCode = "nbb";
 select * from ronde where seizoen = "2324" and teamCode = "nbb";

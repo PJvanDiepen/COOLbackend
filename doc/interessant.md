@@ -44,6 +44,7 @@ Refresh Android cache
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
+- [Vanilla JavaScript](https://vanjs.org/)
 - [js algorithms](https://github.com/trekhleb/javascript-algorithms)
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
 - [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
@@ -98,6 +99,7 @@ Refresh Android cache
 - [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
 - [Zeekat CSS!](https://zeekat.nl/index.html)
 - [HTML uitleg](https://www.patrickweaver.net/blog/a-blog-post-with-every-html-element/)
+- [Unicode](https://tonsky.me/blog/unicode/)
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
 - [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
 

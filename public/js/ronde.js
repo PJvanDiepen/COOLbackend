@@ -21,16 +21,6 @@ import * as zyq from "./zyq.js";
     await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
-        [db.BEHEERDER, `ronde ${rondeNummer} opnieuw indelen`, function () {
-            html.anderePagina(`indelen.html?ronde=${rondeNummer}`);
-        }],
-        [db.BEHEERDER, `ranglijst ${zyq.ditSeizoen} opnieuw verwerken`, function () {
-            for (const key of Object.keys(sessionStorage)) {
-                if (key.startsWith(`/ranglijst/${zyq.ditSeizoen}`)) {
-                    sessionStorage.removeItem(key);
-                }
-            }
-        }],
         [db.ONTWIKKElAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
             const rijen = await zyq.serverFetch(`/backup/ronde/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/${rondeNummer}`);
             zyq.backupSQL("uitslag", rijen);
@@ -54,7 +44,7 @@ import * as zyq from "./zyq.js";
                 console.log(`Verwijder ronde ${rondeNummer} is mislukt.`);
             }
         }]);
-    rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
+    await rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, html.id("uitslagen"));
     await wedstrijdenBijRonde(rondeNummer, html.id("wedstrijden"));
     html.id("kop").textContent =
