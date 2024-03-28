@@ -151,12 +151,14 @@ const geenPartijInvullen = new Map([
 
 async function ratingPerMaandSpeler(lijst, speler) {
     const ratings = await zyq.localFetch(`/rating/${speler}`);
-    if (ratings.length > 0) {
-        for (const rating of ratings) {
+    let geenRating = true;
+    for (const rating of ratings) {
+        if (Number(rating.knsbRating)) {
+            geenRating = false;
             lijst.append(html.rij(`${db.maandInvullen.get(rating.maand)} ${rating.jaar}`, rating.knsbRating));
         }
-    } else {
+    }
+    if (geenRating) {
         lijst.append(html.rij("", "geen rating"));
     }
-
 }
