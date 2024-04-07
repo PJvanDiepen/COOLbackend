@@ -182,7 +182,7 @@ async function leesRatinglijst(filesList, output) {
                     }
                     html.zelfdePagina();
                 } else {
-                    html.tekstToevoegen(output, `\n${files[0].name} bevat geen ratinglijst.`);
+                    html.tekstToevoegen(output, `\n${files[0].name} heeft niet de juiste naam of bevat geen ratinglijst.`);
                 }
             };
         }

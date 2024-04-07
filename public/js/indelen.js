@@ -136,7 +136,6 @@ function indelenRonde1(r) {
     }
     groepIndelenRonde1(partijen, tot, aantalPartijen);
     if (oneven) {
-
         partijen.push([oneven, oneven]);
     }
     return partijen;
@@ -175,13 +174,6 @@ function rangnummersToggle(rangnummers, rondeNummer) {
     return rangnummersAan;
 }
 
-/*
-TODO definitief met externe partijen: uit en thuis (niet afwezig!)
-TODO definitief niet ingedeeld: oneven
-TODO indelenFun stap voor stap verbeteren
-TODO indelenFun: oneven, wit en zwart zijn overbodig
- */
-
 function deelnemersLijst(r, lijst) {
     r.forEach(function(t, i) {
         lijst.append(html.rij(
@@ -204,9 +196,47 @@ function deelnemersLijst(r, lijst) {
  * een paar bestaat uit: wit tegen zwart
  * of speler tegen zichzelf indien oneven
  * of speler tegen -1 indien niet ingedeeld
+ *
+ * TODO indelenFun stap voor stap verbeteren
+ * TODO indelenFun: oneven, wit en zwart zijn overbodig
  */
 const indelenFun = [
-    ["vooruit indelen met en laatste achteruit indelen zonder heuristieken", function (r, rondeNummer) { // 0-0-0.nl versie 0.8.17
+    ["0-0-0.nl versie 0.8.52", function (r, rondeNummer) {
+        const oneven = onevenSpeler(r);
+        const wit = [];
+        const zwart = [];
+        let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+        if (nietIngedeeld.length > 0) {
+            let poging = [];
+            console.log("--- alle niet ingedeelde spelers ---");
+            opnieuwIndelen(wit, zwart);
+            while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
+                // toevoegen aan poging
+            }
+            for (const speler of poging) {
+                if (!ingedeeld(speler, wit, zwart, oneven)) {
+                    spelerIndelen(speler, VOORUIT, r, wit, zwart, oneven) || spelerIndelen(speler, ACHTERUIT, r, wit, zwart, oneven);
+                }
+            }
+            nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
+            if (nietIngedeeld.length > 0) {
+                console.log("--- mislukt ---");
+            }
+        }
+        const partijen = [];
+        for (let i = 0; i < wit.length; i++) {
+            partijen.push([wit[i], zwart[i]]);
+        }
+        if (oneven) {
+            partijen.push([oneven, oneven]);
+        }
+        for (const speler of nietIngedeeld) {
+            partijen.push([speler, -1])
+        }
+        return partijen
+    }],
+
+    ["0-0-0.nl versie 0.8.17", function (r, rondeNummer) {
         const oneven = onevenSpeler(r);
         const wit = [];
         const zwart = [];
@@ -253,25 +283,6 @@ const indelenFun = [
             partijen.push([speler, -1])
         }
         return partijen
-    }],
-
-    ["eerste ronde in twee groepen", function (r, rondeNummer) {
-        const oneven = r.length % 2 === 0 ? 0 : r.length - 1;  // laatste speler is oneven
-        const aantalSpelers = oneven ? oneven : r.length;
-        const aantalPartijen = aantalSpelers / 2;
-        const aantalGroepen = juisteAantalGroepen(2, aantalSpelers);
-        const helftGroep = Math.floor(aantalPartijen / aantalGroepen);
-        const tot = (aantalGroepen - 1) * helftGroep; // tot laatste groep
-        const partijen = [];
-        for (let van = 0; van < tot; van += helftGroep) {
-            groepIndelenRonde1(partijen, van, van + helftGroep);
-        }
-        groepIndelenRonde1(partijen, tot, aantalPartijen);
-        if (oneven) {
-
-            partijen.push([oneven, oneven]);
-        }
-        return partijen;
     }]];
 
 /**
@@ -365,17 +376,6 @@ function opnieuwIndelen(wit, zwart) {
 function eenNietIngedeeldeSpeler(nietIngedeeld, poging) {
     for (const speler of nietIngedeeld) {
         if (!poging.includes(speler)) {
-            poging.push(speler);
-            return speler;
-        }
-    }
-    return 0;
-}
-
-function volgendeNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer) {
-    let nummer = 0;
-    for (const speler of nietIngedeeld) {
-        if (!poging.includes(speler) && ++nummer >= volgnummer) {
             poging.push(speler);
             return speler;
         }

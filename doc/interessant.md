@@ -71,6 +71,7 @@ Refresh Android cache
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
 - [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
+- [nginx config](https://github.com/digitalocean/nginxconfig.io)
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
@@ -94,6 +95,7 @@ Refresh Android cache
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
+- [Modern css](https://frontendmasters.com/blog/what-you-need-to-know-about-modern-css-spring-2024-edition/)
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
 - [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
