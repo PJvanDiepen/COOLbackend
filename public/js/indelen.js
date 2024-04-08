@@ -57,7 +57,7 @@ const indeling = html.id("indeling");
         indeling.append(html.rij(bord, zyq.naarSpeler(speler), "", "extern"));
     }
     if (rangnummers) {
-        deelnemersLijst(r, html.id("lijst"));
+        deelnemersLijst(r, html.id("lijst"), rondeNummer);
     }
     await html.menu(zyq.gebruiker.mutatieRechten,
         [db.WEDSTRIJDLEIDER, `handmatig indelen ronde ${rondeNummer}`, function () {
@@ -174,16 +174,27 @@ function rangnummersToggle(rangnummers, rondeNummer) {
     return rangnummersAan;
 }
 
-function deelnemersLijst(r, lijst) {
-    r.forEach(function(t, i) {
-        lijst.append(html.rij(
-            i + 1,
-            zyq.naarSpeler(t),
-            t.punten(),
-            t.eigenWaardeCijfer(),
-            t.intern() ? t.intern() : "",
-            t.saldoWitZwart() ? t.saldoWitZwart() : ""));
-    });
+function deelnemersLijst(r, lijst, rondeNummer) {
+    for (let i = 0; i < r.length; i++) {
+        const speler = r[i];
+        const magNietTegenstanders = [];
+        const lieverNietTegenstanders = [];
+        for (let j = 0; j < r.length; j++) {
+            if (!r[i].tegen(r[j])) {
+                magNietTegenstanders.push(j + 1);
+            } else if (nietTegen(r, i, j, rondeNummer)) {
+                lieverNietTegenstanders.push(j + 1);
+            }
+        }
+        lijst.append(html.rij(i + 1,
+            zyq.naarSpeler(speler),
+            speler.punten(),
+            speler.eigenWaardeCijfer(),
+            speler.intern() ? speler.intern() : "",
+            speler.saldoWitZwart() ? speler.saldoWitZwart() : "",
+            magNietTegenstanders.join(", "),
+            lieverNietTegenstanders.join(", ")));
+    }
 }
 
 /**
@@ -201,6 +212,7 @@ function deelnemersLijst(r, lijst) {
  * TODO indelenFun: oneven, wit en zwart zijn overbodig
  */
 const indelenFun = [
+    // het enige verschil tussen deze versie en 0.8.17 is dat een aantal regels code zijn verwijderd.
     ["0-0-0.nl versie 0.8.52", function (r, rondeNummer) {
         const oneven = onevenSpeler(r);
         const wit = [];
@@ -208,7 +220,7 @@ const indelenFun = [
         let nietIngedeeld = vooruitIndelen(r, wit, zwart, oneven, rondeNummer);
         if (nietIngedeeld.length > 0) {
             let poging = [];
-            console.log("--- alle niet ingedeelde spelers ---");
+            console.log("--- niet ingedeelde spelers eerst indelen ---");
             opnieuwIndelen(wit, zwart);
             while (eenNietIngedeeldeSpeler(nietIngedeeld, poging)) {
                 // toevoegen aan poging

@@ -23,6 +23,12 @@ Refresh Firefox cache
 Refresh Android cache
 - TODO
 
+# Browser
+- [welke browser?](https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent)
+- [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+- [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
+- [back forward cache](https://www.sabatino.dev/bfcache-explained/)
+
 # MySQL
 
 - [MySQL tutorial](https://www.mysqltutorial.org/)
@@ -46,11 +52,8 @@ Refresh Android cache
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
 - [Vanilla JavaScript](https://vanjs.org/)
 - [js algorithms](https://github.com/trekhleb/javascript-algorithms)
-- [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
-- [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [Copy to clipboard](https://www.freecodecamp.org/news/copy-text-to-clipboard-javascript/)
-- [welke browser?](https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent)
 - [DOM events](https://domevents.dev/)
 - [DOM manpipulation](https://phuoc.ng/collection/html-dom/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
@@ -223,7 +226,6 @@ Refresh Android cache
 - [pipe](https://www.obvibase.com/dev-blog/i-ve-used-the-pipe-function-2-560-times-and-i-can-tell-you-it-s-good)
 - [Kaart met legenda](https://codepen.io/haakseth/pen/KQbjdO)
 - [TypeScript](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/)
-- [alle JavaScript events](https://www.perimeterx.com/tech-blog/2019/list-every-event-that-exists-in-the-browser/)
 - [IntelliJ klokje](https://www.jetbrains.com/company/contacts/#headquarters-international-sales)
 - [PostgreSQL](https://www.red-gate.com/blog/database-development/what-is-postgresql-and-why-do-businesses-need-to-know-more-about-it)
 - [MongoDB](https://www.quora.com/Which-one-would-you-prefer-to-use-MongoDB-or-MySQL-Why/answer/MongoDB-15)
@@ -237,3 +239,4 @@ Refresh Android cache
 - [Processing in JavaScript](https://github.com/processing/p5.js)
 - [Turing Award](https://amturing.acm.org/byyear.cfm)
 - [wiskundige formules](https://runjs.app/blog/equations-that-changed-the-world-rewritten-in-javascript)
+- [OCR](https://simonwillison.net/2024/Mar/30/ocr-pdfs-images/)
