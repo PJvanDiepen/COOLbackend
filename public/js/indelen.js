@@ -190,10 +190,10 @@ function deelnemersLijst(r, lijst, rondeNummer) {
             zyq.naarSpeler(speler),
             speler.punten(),
             speler.eigenWaardeCijfer(),
-            speler.intern() ? speler.intern() : "",
-            speler.saldoWitZwart() ? speler.saldoWitZwart() : "",
+            speler.intern(),
             magNietTegenstanders.join(", "),
-            lieverNietTegenstanders.join(", ")));
+            lieverNietTegenstanders.join(", "),
+            speler.saldoWitZwart() ? speler.saldoWitZwart() : ""));
     }
 }
 

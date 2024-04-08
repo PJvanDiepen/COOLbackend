@@ -6,7 +6,7 @@
     <title>Indelen</title>
     <link rel="stylesheet" type="text/css" href="css/o_o_o.css">
     <style>
-        td:nth-child(1), #lijst td:nth-child(3), #lijst td:nth-child(4), #lijst td:nth-child(5),#lijst td:nth-child(6) {
+        td:nth-child(1), #lijst td:nth-child(3), #lijst td:nth-child(4), #lijst td:nth-child(5),#lijst td:nth-child(8) {
             text-align: right;
         }
     </style>
@@ -34,11 +34,11 @@
                 <th></th>
                 <th>naam</th>
                 <th>totaal</th>
-                <th>ei</th>
-                <th>int</th>
-                <th>w-z</th>
+                <th>wc</th>
+                <th>#</th>
                 <th>mag niet tegen</th>
                 <th>liever niet tegen</th>
+                <th>w-z</th>
             </tr>
         </table>
         <p>
@@ -47,7 +47,15 @@
             van de interne competitie kunnen spelers elkaar per seizoen meer dan 1 keer ontmoeten.
             Voor de volgende ontmoeting met dezelfde spelers moeten ze beiden 7 partijen tegen andere spelers hebben gespeeld.
             Bij elke volgende partij met dezelfde spelers wisselen de spelers van kleur.
-            Verder is kleur afhankelijk van aantal keren wit of zwart van beide spelers.
+            Bovendien is kleur afhankelijk van aantal keren wit of zwart van beide spelers.
+        </p>
+        <p>
+            In de kolom mag niet tegen staan per speler de tegenstanders waartegen ze volgens
+            het reglement niet mogen spelen.
+            In de kolom liever niet tegen staan per speler de tegenstanders waartegen ze volgens
+            een heuristiek niet mogen spelen.
+            Die heuristiek bepaalt dat aan de hand van het aantal gespeelde partijen # en het waardecijfer wc.
+            In de kolom w-z staat het wit - zwart saldo per speler.
         </p>
     </details>
     <script type="module" src="js/indelen.js"></script>
