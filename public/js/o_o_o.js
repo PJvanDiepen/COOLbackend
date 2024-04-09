@@ -153,7 +153,7 @@ totalen
 [16] verliesExtern
 [17] witExtern
 [18] zwartExtern
-[19] partijenVerschil
+[19] minimumPartijenGeleden
 tegenstanders met n = 0, 4, 8, enz.
 [20 + n] rondeNummer
 [21 + n] kleur (0 = wit, 1 = zwart)
@@ -281,7 +281,7 @@ function spelerTotalen(speler) {
         return totalen[17] - totalen[18];
     }
 
-    function partijenVerschil() {
+    function minimumPartijenGeleden() {
         return totalen[19];
     }
 
@@ -292,14 +292,12 @@ function spelerTotalen(speler) {
         }
         const ronde = vorigeKeer(tegenstander);
         if (ronde) {
-            afdrukken(tegenstander, totalen[ronde + 1], `wegens in ronde ${totalen[ronde]}`);
-            const partijenGeleden = laatsteKeer(tegenstander);
-            if (partijenGeleden < partijenVerschil()) {
-                console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
-                return false;
-            }
+            afdrukken(tegenstander, totalen[ronde + 1], `in ronde ${totalen[ronde]}`);
+            const x = weerTegen(tegenstander);
+            const y = tegenstander.weerTegen(speler);
+            return x && y ; // weerTegen(tegenstander) && tegenstander.weerTegen(speler); // mogen weerTegen elkaar
         }
-        return true; // nog niet tegen gespeeld of mag nog een keer tegen spelen
+        return true; // nog niet tegen elkaar gespeeld
     }
 
     function vorigeKeer(tegenstander) {
@@ -314,18 +312,23 @@ function spelerTotalen(speler) {
         return j; // vorigeKeer zelfde tegenstander of 0
     }
 
-    function laatsteKeer(tegenstander) {
+    function weerTegen(tegenstander) {
         let i = 20;
-        let partijenGeleden = 1000;
+        let partijenGeleden = minimumPartijenGeleden() + 1;
         while (totalen[i]) { // indien rondeNummer
-            if (totalen[i + 2] === tegenstander.knsbNummer) { // indien zelfde tegenstander
+            if (totalen[i + 2] === tegenstander.knsbNummer) { // zelfde tegenstander
                 partijenGeleden = 1;
             } else {
-                partijenGeleden++;
+                partijenGeleden++; // andere tegenstander
             }
             i = i + 4; // volgende rondeNummer, kleur (0 = wit, 1 = zwart), knsbNummer en resultaat (0 = verlies, 1 = remise, 2 = winst)
         }
-        return partijenGeleden; // laatsteKeer zelfde tegenstander was partijenGeleden of groter dan 1000
+        if (partijenGeleden < minimumPartijenGeleden()) {
+            console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
+            return false;
+        }
+        console.log(`(en ${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam})`);
+        return true;
     }
 
     function tegenstander(rondeNummer) {
@@ -406,8 +409,9 @@ function spelerTotalen(speler) {
         scoreGetalExtern,
         percentageExtern,
         saldoWitZwartExtern,
-        partijenVerschil,
+        minimumPartijenGeleden,
         tegen,
+        weerTegen,
         tegenstander,
         vorigeKleur,
         metWit

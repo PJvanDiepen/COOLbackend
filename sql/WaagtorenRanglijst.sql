@@ -182,7 +182,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.8.41
+drop function totalen; -- 0-0-0.nl versie 0.8.54
 
 delimiter $$
 create function totalen(seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -207,7 +207,7 @@ begin
     declare verliesExtern int default 0; -- 16
     declare witExtern int default 0; -- 17
     declare zwartExtern int default 0; -- 18
-   	declare partijenVerschil int default 99; -- 19
+   	declare minimumPartijenGeleden int default 99; -- 19
     declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
@@ -232,7 +232,7 @@ begin
     declare continue handler for not found set found = false;
     if versie <= 4 then -- interne competitie
 		set minimumInternePartijen = 20; -- reglement artikel 2
-		set partijenVerschil = 7; -- reglement artikel 3
+		set minimumPartijenGeleden = 7; -- reglement artikel 3
 	end if;
     set interneRating = rating(seizoen, knsbNummer);
     set startPunten = extraPunten(versie, interneRating);
@@ -316,7 +316,7 @@ begin
         verliesExtern, ' ', -- 16
         witExtern, ' ', -- 17
         zwartExtern, ' ', -- 18
-        partijenVerschil, -- 19
+        minimumPartijenGeleden, -- 19
         tegenstanders); -- 20
 end;
 $$
