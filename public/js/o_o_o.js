@@ -291,13 +291,11 @@ function spelerTotalen(speler) {
             return false;
         }
         const ronde = vorigeKeer(tegenstander);
-        if (ronde) {
-            afdrukken(tegenstander, totalen[ronde + 1], `in ronde ${totalen[ronde]}`);
-            const x = weerTegen(tegenstander);
-            const y = tegenstander.weerTegen(speler);
-            return x && y ; // weerTegen(tegenstander) && tegenstander.weerTegen(speler); // mogen weerTegen elkaar
+        if (ronde && weerTegen(tegenstander) && tegenstander.weerTegen(speler)) {
+            afdrukken(tegenstander, totalen[ronde + 1], `wegens kleur in ronde ${totalen[ronde]}`);
+            return true; // mogen weerTegen elkaar
         }
-        return true; // nog niet tegen elkaar gespeeld
+        return !ronde; // indien nog niet tegen elkaar gespeeld
     }
 
     function vorigeKeer(tegenstander) {
@@ -327,8 +325,7 @@ function spelerTotalen(speler) {
             console.log(`${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam}`);
             return false;
         }
-        console.log(`(en ${naam} speelde ${partijenGeleden} partijen geleden tegen ${tegenstander.naam})`);
-        return true;
+        return true; // mag weerTegen
     }
 
     function tegenstander(rondeNummer) {

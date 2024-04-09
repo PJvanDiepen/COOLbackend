@@ -34,7 +34,6 @@ const indeling = html.id("indeling");
             ""));
     }
     const r = await ranglijstOpPuntenRating(rondeNummer, await deelnemersRonde(rondeNummer));
-    // console.log(r);  // TODO verwijderen
     const partijen = rondeNummer === 1
         ? indelenRonde1 (r)
         : indelenFun[versieIndelen][1](r, rondeNummer);
@@ -180,7 +179,7 @@ function deelnemersLijst(r, lijst, rondeNummer) {
         const magNietTegenstanders = [];
         const lieverNietTegenstanders = [];
         for (let j = 0; j < r.length; j++) {
-            if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) { // ronden geleden voor beide spelers
+            if (!r[i].tegen(r[j])) {
                 magNietTegenstanders.push(j + 1);
             } else if (nietTegen(r, i, j, rondeNummer)) {
                 lieverNietTegenstanders.push(j + 1);
@@ -307,7 +306,7 @@ const indelenFun = [
  * @returns {boolean} indien deze speler liever nietTegen deze tegenstander
  */
 function nietTegen(r, i, j, rondeNummer) {
-    if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) { // ronden geleden voor beide spelers
+    if (!r[i].tegen(r[j])) {
         return true;
     } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
@@ -357,7 +356,7 @@ const ACHTERUIT = -1;
 function spelerIndelen(speler, richting, r, wit, zwart, oneven) {
     console.log(`--- ${r[speler].naam} ${richting === VOORUIT ? "vooruit" : "achteruit"} indelen ---`);
     let j = speler + richting;
-    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j]) || !r[j].tegen(r[speler]))) { // zonder heuristieken
+    while (j >= 0 && j < r.length && (ingedeeld(j, wit, zwart, oneven) || !r[speler].tegen(r[j]))) { // zonder heuristieken
         j = j + richting; // volgende / vorige indien al ingedeeld of oneven of mag niet tegen
     }
     if (j >= 0 && j < r.length) {
