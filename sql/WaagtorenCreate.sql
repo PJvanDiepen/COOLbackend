@@ -26,6 +26,10 @@ create table persoon (
 );
 
 drop table if exists gebruiker; -- 0-0-0.nl versie 0.1
+-- TODO knsbNummer unique
+-- TODO telefoon char(15)
+-- TODO wat nog meer vastleggen naast datumEmail ?
+-- TODO mutatieRechten naar rol
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,

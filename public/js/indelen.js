@@ -180,7 +180,7 @@ function deelnemersLijst(r, lijst, rondeNummer) {
         const magNietTegenstanders = [];
         const lieverNietTegenstanders = [];
         for (let j = 0; j < r.length; j++) {
-            if (!r[i].tegen(r[j])) {
+            if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) { // ronden geleden voor beide spelers
                 magNietTegenstanders.push(j + 1);
             } else if (nietTegen(r, i, j, rondeNummer)) {
                 lieverNietTegenstanders.push(j + 1);
@@ -307,7 +307,7 @@ const indelenFun = [
  * @returns {boolean} indien deze speler liever nietTegen deze tegenstander
  */
 function nietTegen(r, i, j, rondeNummer) {
-    if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) {
+    if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) { // ronden geleden voor beide spelers
         return true;
     } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;

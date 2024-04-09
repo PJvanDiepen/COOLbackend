@@ -1243,11 +1243,13 @@ Database: uitslag update
           mutatie insert
 
 Frontend: paren.js
+          agenda.js
 */
     router.get('/:uuidToken/los/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
+        if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER) || // handmatig indelen of kalender andere gebruiker
+            gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen kalender
             const partijWit = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
