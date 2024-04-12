@@ -121,6 +121,14 @@ function isPlanning(uitslag) {
     return planningInvullen.has(uitslag.partij);
 }
 
+function isPaar(uitslag) {
+    return uitslag.partij === INGEDEELD || uitslag.partij === TOCH_INGEDEELD;
+}
+
+function isGeenPaar(uitslag) {
+    return uitslag.partij === PLANNING || uitslag.partij === MEEDOEN || uitslag.partij === NIET_MEEDOEN;
+}
+
 function isMeedoen(uitslag) {
     return planningInvullen.get(uitslag.partij) === NIET_MEEDOEN;
 }
@@ -209,6 +217,8 @@ module.exports = { // CommonJS voor node.js
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
     isPlanning,            // (uitslag)
+    isPaar,                // (uitslag)
+    isGeenPaar,            // (uitslag)
     isMeedoen,             // (uitslag)
     maandInvullen,
 

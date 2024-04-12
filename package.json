@@ -28,12 +28,12 @@
   "homepage": "https://0-0-0.nl/",
   "dependencies": {
     "@koa/cors": "^5.0.0",
-    "config": "^3.3.6",
+    "config": "^3.3.11",
     "knex": "^3.0.1",
-    "koa": "^2.15.0",
+    "koa": "^2.15.2",
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^12.0.1",
     "mysql": "^2.18.1",
-    "objection": "^3.1.2"
+    "objection": "^3.1.4"
   }
 }

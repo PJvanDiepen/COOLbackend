@@ -26,6 +26,7 @@ const indeling = html.id("indeling");
 
     let laatsteBord = 0;
     const paren = await zyq.serverFetch(`/${zyq.uuidToken}/paren/${db.key(zyq.o_o_o.ronde[rondeNummer])}`);
+    console.log(paren);
     for (const paar of paren) {
         laatsteBord = paar.bordNummer;
         indeling.append(html.rij(laatsteBord,

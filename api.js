@@ -1105,7 +1105,7 @@ module.exports = router => {
     wedstrijd in agenda wijzigen
 
     -- uitslagen / ronden op dezelfde datum
-    select u.teamCode, u.rondeNummer, u.partij, u.anderTeam, r.uithuis
+    select u.*, r.uithuis
       from uitslag u
       join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where u.seizoen = @seizoen and u.knsbNummer = @knsbNummer and u.datum = @datum
@@ -1115,20 +1115,14 @@ module.exports = router => {
               mutatie insert
 
     Frontend: agenda.js
+
      */
     router.get('/:uuidToken/planning/:seizoen/:teamCode/:rondeNummer/:knsbNummer/:partij/:datum', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.TEAMLEIDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
             const ronden = await Uitslag.query()
-                .select(
-                    'uitslag.seizoen',
-                    'uitslag.teamCode',
-                    'uitslag.rondeNummer',
-                    'uitslag.knsbNummer',
-                    'uitslag.partij',
-                    'uitslag.anderTeam',
-                    'ronde.uithuis')
+                .select('uitslag.*', 'ronde.uithuis')
                 .join('ronde', function (join) {
                     join.on('uitslag.seizoen', 'ronde.seizoen')
                         .andOn('uitslag.teamCode', 'ronde.teamCode')
@@ -1141,13 +1135,11 @@ module.exports = router => {
             const rondeWijzigen = ronden.findIndex(function(ronde) {
                 return ronde.teamCode === ctx.params.teamCode && ronde.rondeNummer === Number(ctx.params.rondeNummer);
             });
-            if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij uit database moet hetzelfde zijn
-                if (db.isMeedoen(ronden[rondeWijzigen])) {
+            if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij niet gewijzigd?
+                if (db.isPaar(ronden[rondeWijzigen])) {
+                    aantal += await paarMuteren(ronden[rondeWijzigen]);
+                } else if (db.isMeedoen(ronden[rondeWijzigen])) {
                     aantal += await planningMuteren(ronden[rondeWijzigen], db.NIET_MEEDOEN);
-                    if (ronden[rondeWijzigen].partij === db.INGEDEELD) {
-                        console.log("planningMuteren van tegenstander met db.MEEDOEN");
-                        console.log(ronden[rondeWijzigen]); // TODO tegenstander wel db.MEEDOEN
-                    }
                 } else {
                     for (let i = 0; i < ronden.length; i++) {
                         if (i < rondeWijzigen) {
@@ -1204,19 +1196,19 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
-            const partijWit = await Uitslag.query()
+            const witSpeler = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
-            const partijZwart = await Uitslag.query()
+            const zwartSpeler = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
-            if (magParen(partijWit.partij) && magParen(partijZwart.partij) && await Uitslag.query()
+            if (db.isGeenPaar(witSpeler) && db.isGeenPaar(zwartSpeler) && await Uitslag.query()
                 .where('uitslag.seizoen', ctx.params.seizoen)
                 .andWhere('uitslag.teamCode', ctx.params.teamCode)
                 .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                 .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
                 .patch({bordNummer: ctx.params.bordNummer,
-                    partij: partijWit.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD,
+                    partij: witSpeler.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD, // indien NIET_MEEDOEN of PLANNING
                     witZwart: db.WIT,
                     tegenstanderNummer: ctx.params.tegenstanderNummer,
                     resultaat: ""})) {
@@ -1227,7 +1219,7 @@ module.exports = router => {
                     .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
                     .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
                     .patch({bordNummer: ctx.params.bordNummer,
-                        partij: partijZwart.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD,
+                        partij: zwartSpeler.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD, // indien NIET_MEEDOEN of PLANNING
                         witZwart: db.ZWART,
                         tegenstanderNummer: ctx.params.knsbNummer,
                         resultaat: ""})) {
@@ -1243,37 +1235,29 @@ Database: uitslag update
           mutatie insert
 
 Frontend: paren.js
-          agenda.js
 */
     router.get('/:uuidToken/los/:seizoen/:teamCode/:rondeNummer/:bordNummer/:knsbNummer/:tegenstanderNummer', async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER) || // handmatig indelen of kalender andere gebruiker
-            gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen kalender
-            const partijWit = await Uitslag.query()
+        if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
+            const witSpeler = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer]);
-            const partijZwart = await Uitslag.query()
+            const zwartSpeler = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
-            if (magLos(partijWit.partij) && magLos(partijZwart.partij) && await Uitslag.query()
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+            if (db.isPaar(witSpeler) && db.isPaar(zwartSpeler) && await Uitslag.query()
+                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
                 .patch({bordNummer: 0,
-                    partij: partijWit.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN,
+                    partij: witSpeler.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN, // indien TOCH_INGEDEELD
                     witZwart: "",
                     tegenstanderNummer: ctx.params.tegenstanderNummer,
                     resultaat: ""})) {
                 aantal++;
                 if (await Uitslag.query()
-                    .where('uitslag.seizoen', ctx.params.seizoen)
-                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                    .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
                     .patch({bordNummer: 0,
-                        partij: partijZwart.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN,
+                        partij: zwartSpeler.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN, // indien TOCH_INGEDEELD
                         witZwart: "",
                         tegenstanderNummer: ctx.params.knsbNummer,
                         resultaat: ""})) {
@@ -1591,6 +1575,29 @@ Frontend: paren.js
     });
 }
 
+async function paarMuteren(uitslag) {
+    // TODO PvD indien handmatig ingedeeld ook partij van planning van tegenstander wijzigen
+    // TODO eerst met uitsluiten NIET_MEEDOEN voor speler en MEE_DOEN voor tegenstander
+    // TODO daarna met INGEDEELD en TOCH_INGEDEELD
+    console.log("--- paarMuteren ---");
+    console.log(uitslag);
+    return 0; // TODO verwijder
+    let aantal = 0;
+    // speler zegt af
+    if (await Uitslag.query()
+        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
+        .patch({bordNummer: 0, partij: db.NIET_MEEDOEN, witZwart: "", tegenstanderNummer: 0})) {
+        aantal++;
+    }
+    // tegenstander doet wel mee
+    if (await Uitslag.query()
+        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer])
+        .patch({bordNummer: 0, partij: db.MEEDOEN, witZwart: "", tegenstanderNummer: 0})) {
+        aantal++;
+    }
+    return aantal;
+}
+
 async function planningMuteren(uitslag, partij) {
     if (!db.isPlanning(uitslag)) { // uitsluitend planningMuteren
         return 0;
@@ -1631,14 +1638,6 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
         }
     }
     return false;
-}
-
-function magParen(partij) {
-    return partij === db.PLANNING || partij === db.MEEDOEN || partij === db.NIET_MEEDOEN;
-}
-
-function magLos(partij) {
-    return partij === db.INGEDEELD || partij === db.TOCH_INGEDEELD;
 }
 
 async function gebruikerRechten(uuidToken) {
