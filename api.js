@@ -1558,12 +1558,8 @@ Frontend: paren.js
 }
 
 async function paarMuteren(uitslag) {
-    // TODO daarna met INGEDEELD en TOCH_INGEDEELD
-    console.log("--- paarMuteren ---");
-    console.log(uitslag);
     const tegenstander = await Uitslag.query()
         .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer]);
-    console.log(tegenstander);
     if (!db.isPaar(tegenstander)) { // uitsluitend indien paar
         return 0;
     }

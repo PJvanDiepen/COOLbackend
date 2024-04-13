@@ -38,7 +38,6 @@ const NIEUWE_RANGLIJST = 2;
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETITIE= "ira";
 const JEUGD_COMPETITIE= "ije";
-const JEUGD_COMPETITIE_VOORJAAR= "ijv";
 const SNELSCHAKEN= "izs";
 const ZWITSERS_TEST= "izt";
 
@@ -103,6 +102,10 @@ const resultaatInvullen = new Map([
     [WINST, "1-0"],
     [REMISE, "½-½"],
     [VERLIES, "0-1"]]);
+
+function isResultaat(uitslag) {
+    return resultaatInvullen.has(uitslag.resultaat);
+}
 
 function resultaatSelecteren(uitslag) {
     return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].slice(1); // met of zonder blanko resultaat
@@ -214,6 +217,7 @@ export { // ES6 voor browser
     UIT,
 
     resultaatInvullen,
+    isResultaat,           // (uitslag)
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
     isPlanning,            // (uitslag)
