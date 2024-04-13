@@ -1299,11 +1299,8 @@ Frontend: paren.js
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // oneven definitief maken
-            aantal = await Uitslag.query()
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+            aantal = await Uitslag.query().findById(
+                [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
                 .patch({partij: db.ONEVEN});
             await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
         }
@@ -1413,15 +1410,17 @@ Frontend: paren.js
                 .select('uitslag.resultaat')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
             if (resultaatWijzigen(eigenUitslag.resultaat, tegenstanderUitslag.resultaat, ctx.params.resultaat, allesWijzigen)) {
-                if (await Uitslag.query()
-                    .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
-                    .patch({resultaat: ctx.params.resultaat})) {
+                if (await Uitslag.query().findById(
+                    [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
+                    .patch(
+                        {resultaat: ctx.params.resultaat})) {
                     aantal++;
                 }
                 if (Number(ctx.params.tegenstanderNummer) > 0) {
-                    if (await Uitslag.query()
-                        .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
-                        .patch({resultaat: resultaatTegenstander(ctx.params.resultaat)})) {
+                    if (await Uitslag.query().findById(
+                        [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
+                        .patch(
+                            {resultaat: resultaatTegenstander(ctx.params.resultaat)})) {
                         aantal++;
                     }
                 }
@@ -1447,9 +1446,10 @@ Frontend: paren.js
             let naarRonde = 0;
             for (const ronde of ronden) {
                 if (ronde.rondeNummer > ++naarRonde) {
-                    if (await Ronde.query()
-                        .findById([ctx.params.seizoen, ctx.params.teamCode, ronde.rondeNummer])
-                        .patch({rondeNummer: naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
+                    if (await Ronde.query().findById(
+                        [ctx.params.seizoen, ctx.params.teamCode, ronde.rondeNummer])
+                        .patch(
+                            {rondeNummer: naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
                         aantal++;
                     }
                 }
@@ -1469,9 +1469,10 @@ Frontend: paren.js
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BEHEERDER)) {
-            if (await Ronde.query()
-                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer])
-                .patch({rondeNummer: ctx.params.naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
+            if (await Ronde.query().findById(
+                [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer])
+                .patch(
+                    {rondeNummer: ctx.params.naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
@@ -1563,24 +1564,22 @@ async function paarMuteren(uitslag) {
     const tegenstander = await Uitslag.query()
         .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer]);
     console.log(tegenstander);
-    if (!db.isPaar(tegenstander)) {
+    if (!db.isPaar(tegenstander)) { // uitsluitend indien paar
         return 0;
     }
     let aantal = 0;
-    // speler zegt af
-    if (await Uitslag.query()
-        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
+    if (await Uitslag.query().findById(
+        [uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
         .patch({bordNummer: 0,
-            partij: db.NIET_MEEDOEN,
+            partij: db.NIET_MEEDOEN, // speler heeft afgezegd
             witZwart: "",
             tegenstanderNummer: 0})) {
         aantal++;
     }
-    // tegenstander doet wel mee
-    if (await Uitslag.query()
-        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer])
+    if (await Uitslag.query().findById(
+        [uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer])
         .patch({bordNummer: 0,
-            partij: db.MEEDOEN, // TODO PvD
+            partij: uitslag.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN, // indien TOCH_INGEDEELD
             witZwart: "",
             tegenstanderNummer: 0})) {
         aantal++;
@@ -1589,11 +1588,12 @@ async function paarMuteren(uitslag) {
 }
 
 async function planningMuteren(uitslag, partij) {
-    if (!db.isPlanning(uitslag)) { // uitsluitend planningMuteren
+    if (!db.isPlanning(uitslag)) { // uitsluitend indien planning
         return 0;
-    } else if (await Uitslag.query()
-        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
-        .patch({partij: partij})) {
+    } else if (await Uitslag.query().findById(
+        [uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
+        .patch(
+            {partij: partij})) {
         return 1;
     } else {
         return 0;
