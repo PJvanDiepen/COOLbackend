@@ -785,8 +785,7 @@ module.exports = router => {
     Frontend: zyq.js
      */
     router.get('/activeer/:uuidToken', async function (ctx) {
-        ctx.body = await Gebruiker.query()
-            .findById(ctx.params.uuidToken)
+        ctx.body = await Gebruiker.query().findById(ctx.params.uuidToken)
             .patch({datumEmail: fn('curdate')});
     });
 
@@ -822,9 +821,8 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BEHEERDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
-            if (await Gebruiker.query()
-                .findById(ctx.params.uuidToken)
-                .patch({email: ctx.params.email})) {
+            if (await Gebruiker.query().findById(ctx.params.uuidToken).patch(
+                {email: ctx.params.email})) {
                 aantal = 1;
             }
             await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
@@ -871,9 +869,8 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BEHEERDER)) {
-            if (await Persoon.query()
-                .findById(ctx.params.lidNummer)
-                .patch({knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam})) {
+            if (await Persoon.query().findById(ctx.params.lidNummer).patch(
+                {knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam})) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
@@ -916,10 +913,8 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
-            if (await Team.query()
-                .findById([ctx.params.seizoen, ctx.params.team])
-                .patch({
-                    bond: ctx.params.bond,
+            if (await Team.query().findById([ctx.params.seizoen, ctx.params.team])
+                .patch({bond: ctx.params.bond,
                     poule: ctx.params.poule,
                     omschrijving: ctx.params.omschrijving,
                     borden: ctx.params.borden,
@@ -1027,10 +1022,8 @@ module.exports = router => {
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
             const intern = teamCodes(ctx.params.competities);
-            if (await Speler.query()
-                .findById([ctx.params.seizoen, ctx.params.knsbNummer])
-                .patch({
-                    knsbRating: ctx.params.knsbRating,
+            if (await Speler.query().findById([ctx.params.seizoen, ctx.params.knsbNummer])
+                .patch({knsbRating: ctx.params.knsbRating,
                     datum: ctx.params.datum,
                     interneRating: ctx.params.interneRating,
                     nhsbTeam: ctx.params.nhsb,
@@ -1056,10 +1049,8 @@ module.exports = router => {
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
-            if (await Speler.query()
-                .findById([ctx.params.seizoen, ctx.params.knsbNummer])
-                .patch({
-                    knsbRating: ctx.params.knsbRating,
+            if (await Speler.query().findById([ctx.params.seizoen, ctx.params.knsbNummer])
+                .patch({knsbRating: ctx.params.knsbRating,
                     interneRating: ctx.params.interneRating,
                     datum: ctx.params.datum})) {
                 aantal = 1;
@@ -1137,7 +1128,7 @@ module.exports = router => {
             });
             if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij niet gewijzigd?
                 if (db.isPaar(ronden[rondeWijzigen])) {
-                    aantal += await paarMuteren(ronden[rondeWijzigen]);
+                    aantal += await paarMuteren(ronden[rondeWijzigen]); // speler en tegenstander
                 } else if (db.isMeedoen(ronden[rondeWijzigen])) {
                     aantal += await planningMuteren(ronden[rondeWijzigen], db.NIET_MEEDOEN);
                 } else {
@@ -1576,23 +1567,32 @@ Frontend: paren.js
 }
 
 async function paarMuteren(uitslag) {
-    // TODO PvD indien handmatig ingedeeld ook partij van planning van tegenstander wijzigen
-    // TODO eerst met uitsluiten NIET_MEEDOEN voor speler en MEE_DOEN voor tegenstander
     // TODO daarna met INGEDEELD en TOCH_INGEDEELD
     console.log("--- paarMuteren ---");
     console.log(uitslag);
-    return 0; // TODO verwijder
+    const tegenstander = await Uitslag.query()
+        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer]);
+    console.log(tegenstander);
+    if (!db.isPaar(tegenstander)) {
+        return 0;
+    }
     let aantal = 0;
     // speler zegt af
     if (await Uitslag.query()
         .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
-        .patch({bordNummer: 0, partij: db.NIET_MEEDOEN, witZwart: "", tegenstanderNummer: 0})) {
+        .patch({bordNummer: 0,
+            partij: db.NIET_MEEDOEN,
+            witZwart: "",
+            tegenstanderNummer: 0})) {
         aantal++;
     }
     // tegenstander doet wel mee
     if (await Uitslag.query()
         .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer])
-        .patch({bordNummer: 0, partij: db.MEEDOEN, witZwart: "", tegenstanderNummer: 0})) {
+        .patch({bordNummer: 0,
+            partij: db.MEEDOEN, // TODO PvD
+            witZwart: "",
+            tegenstanderNummer: 0})) {
         aantal++;
     }
     return aantal;
