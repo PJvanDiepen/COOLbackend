@@ -1193,22 +1193,17 @@ module.exports = router => {
             const zwartSpeler = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
-            if (db.isGeenPaar(witSpeler) && db.isGeenPaar(zwartSpeler) && await Uitslag.query()
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+            if (db.isGeenPaar(witSpeler) && db.isGeenPaar(zwartSpeler)
+                && await Uitslag.query().findById(
+                    [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
                 .patch({bordNummer: ctx.params.bordNummer,
                     partij: witSpeler.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD, // indien NIET_MEEDOEN of PLANNING
                     witZwart: db.WIT,
                     tegenstanderNummer: ctx.params.tegenstanderNummer,
                     resultaat: ""})) {
                 aantal++;
-                if (await Uitslag.query()
-                    .where('uitslag.seizoen', ctx.params.seizoen)
-                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                if (await Uitslag.query().findById(
+                    [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
                     .patch({bordNummer: ctx.params.bordNummer,
                         partij: zwartSpeler.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD, // indien NIET_MEEDOEN of PLANNING
                         witZwart: db.ZWART,
@@ -1237,16 +1232,17 @@ Frontend: paren.js
             const zwartSpeler = await Uitslag.query()
                 .select('uitslag.partij')
                 .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer]);
-            if (db.isPaar(witSpeler) && db.isPaar(zwartSpeler) && await Uitslag.query()
-                .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
+            if (db.isPaar(witSpeler) && db.isPaar(zwartSpeler)
+                && await Uitslag.query().findById(
+                    [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
                 .patch({bordNummer: 0,
                     partij: witSpeler.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN, // indien TOCH_INGEDEELD
                     witZwart: "",
                     tegenstanderNummer: ctx.params.tegenstanderNummer,
                     resultaat: ""})) {
                 aantal++;
-                if (await Uitslag.query()
-                    .findById([ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
+                if (await Uitslag.query().findById(
+                    [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
                     .patch({bordNummer: 0,
                         partij: zwartSpeler.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN, // indien TOCH_INGEDEELD
                         witZwart: "",
@@ -1270,22 +1266,16 @@ Frontend: paren.js
         const gebruiker = await gebruikerRechten(ctx.params.uuidToken);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // indeling definitief maken
-            if (await Uitslag.query()
-                .where('uitslag.seizoen', ctx.params.seizoen)
-                .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                .andWhere('uitslag.knsbNummer', ctx.params.knsbNummer)
+            if (await Uitslag.query().findById(
+                [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.knsbNummer])
                 .patch({bordNummer: ctx.params.bordNummer,
                     partij: db.INTERNE_PARTIJ,
                     witZwart: db.WIT,
                     tegenstanderNummer: ctx.params.tegenstanderNummer,
                     resultaat: ""})) {
                 aantal++;
-                if (await Uitslag.query()
-                    .where('uitslag.seizoen', ctx.params.seizoen)
-                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                    .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-                    .andWhere('uitslag.knsbNummer', ctx.params.tegenstanderNummer)
+                if (await Uitslag.query().findById(
+                    [ctx.params.seizoen, ctx.params.teamCode, ctx.params.rondeNummer, ctx.params.tegenstanderNummer])
                     .patch({bordNummer: ctx.params.bordNummer,
                         partij: db.INTERNE_PARTIJ,
                         witZwart: db.ZWART,
