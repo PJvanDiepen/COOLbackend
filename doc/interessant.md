@@ -145,6 +145,9 @@ Refresh Android cache
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
 - [CalvinBot](https://lichess.org/@/Calvin_Bot)
+- [Monte Carlo simulatie](https://en.wikipedia.org/wiki/Monte_Carlo_method)
+- [Monte Carlo simulatie schaken](https://medium.com/@ishaan.gupta0401/monte-carlo-tree-search-application-on-chess-5573fc0efb75)
+- [Monte Carlo simulatie investeren](https://www.investopedia.com/terms/m/montecarlosimulation.asp)
 - [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
 
 # marketing

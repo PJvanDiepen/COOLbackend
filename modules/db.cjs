@@ -14,7 +14,7 @@
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  */
 
-const apiLijst = [];
+const apiLijst = []; // zie app.js
 
 function key(object) {
     if (object.teamCode) {
