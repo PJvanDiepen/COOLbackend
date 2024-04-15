@@ -46,14 +46,13 @@ add constraint fk_gebruiker_persoon
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
         
-drop table if exists team; -- 0-0-0.nl versie 0.5.2
--- TODO clubCode int not null
--- TODO ranglijst varchar(100)
--- TODO informatie varchar(100)
+drop table if exists team; -- 0-0-0.nl versie 0.8.55
+describe team;
 -- TODO primary key (clubCode, seizoen, teamCode)
 -- TODO bond en poule verwijderen
 -- TODO teamleider naar rol
 create table team (
+    clubCode int not null,
 	seizoen char(4) not null,
     teamCode char(3) not null,
     bond char(1),
@@ -71,18 +70,19 @@ add constraint fk_team_persoon
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
 
-DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.7.27
--- TODO clubCode int not null
--- TODO teamCodes char(27) comment 'teamCode1..9'
+DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.8.55
+describe speler;
 -- TODO primary key (clubCode, seizoen, knsbNummer)
 -- TODO datum verwijderen
 -- TODO teamCodes i.p.v. nhsbTeam, knsbTeam, intern1..5
 CREATE TABLE speler (
+    clubCode int not null,
     seizoen char(4) not null,
 	nhsbTeam char(3) not null,
 	knsbTeam char(3) not null,
     knsbNummer int not null,
     knsbRating int not null,
+    teamCodes varchar(45),
     datum date not null,
     interneRating int not null,
     intern1 char(3) not null,
@@ -149,10 +149,11 @@ add CONSTRAINT fk_speler_intern5
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-DROP TABLE IF EXISTS ronde; -- 0-0-0.nl versie 0.7.27
--- TODO clubCode int not null
+DROP TABLE IF EXISTS ronde; -- 0-0-0.nl versie 0.8.55
+describe ronde;
 -- TODO primary key (clubCode, seizoen, teamCode, rondeNummer)
 CREATE TABLE ronde (
+    clubCode int not null,
     seizoen char(4) not null,
     teamCode char(3) not null,
     rondeNummer int not null,
@@ -169,12 +170,14 @@ add CONSTRAINT fk_ronde_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.6.8
--- TODO clubCode int not null
--- TODO competitie char(3)
+DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.55
+alter table uitslag add column clubCode int not null first;
+alter table uitslag add column competitie char(3) not null after anderTeam;
+describe uitslag;
 -- TODO primary key (clubCode, seizoen, teamCode, knsbNummer)
 -- TODO competitie i.p.v. anderTeam
 CREATE TABLE uitslag (
+    clubCode int not null,
     seizoen char(4) not null,
     teamCode char(3) not null,
     rondeNummer int not null,
@@ -186,6 +189,7 @@ CREATE TABLE uitslag (
     resultaat char(1),
     datum date comment 'indien op een andere datum dan ronde',
     anderTeam char(3),
+    competitie char(3),
     PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
 );
 
@@ -222,21 +226,10 @@ add CONSTRAINT fk_uitslag_ronde
     FOREIGN KEY (seizoen, teamCode, rondeNummer)
     REFERENCES ronde (seizoen, teamCode, rondeNummer)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;        
-
-DROP TABLE IF EXISTS ranglijst; -- 0-0-0.nl versie 0.1
--- TODO clubCode int not null
--- TODO primary key (clubCode, seizoen, teamCode, versie)
-CREATE TABLE ranglijst (
-    seizoen char(4) not null,
-    teamCode char(3) not null,
-    versie char(1) not null comment 'a = actueel',
-    startPunten int default 300 comment 'artikel 11',
-    berekening varchar(300) comment 'SQL function', 
-    PRIMARY KEY (seizoen, teamCode, versie)
-);
+    ON UPDATE CASCADE;
 
 drop table if exists mutatie; -- 0-0-0.nl versie 0.2
+-- TODO volgNummer autoincrement
 create table mutatie (
     tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
     volgNummer int not null,
