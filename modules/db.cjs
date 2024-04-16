@@ -16,17 +16,20 @@
 
 const apiLijst = []; // zie app.js
 
-function key(object) {
-    if (object.teamCode) {
-        if (object.rondeNummer) {
-            if (object.knsbNummer) {
-                return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}/${object.knsbNummer}`;
+function key(o) {
+    if (o.clubCode) {
+        if (o.teamCode) {
+            if (o.rondeNummer) {
+                if (o.knsbNummer) {
+                    return `${o.clubCode}${o.seizoen}/${o.teamCode}/${o.rondeNummer}/${o.knsbNummer}`;
+                }
+                return `${o.clubCode}${o.seizoen}/${o.teamCode}/${o.rondeNummer}`;
             }
-            return `${object.seizoen}/${object.teamCode}/${object.rondeNummer}`;
+            return `${o.clubCode}${o.seizoen}/${o.teamCode}`;
         }
-        return `${object.seizoen}/${object.teamCode}`;
+        return `${o.clubCode}${o.seizoen}`;
     }
-    return `${object.seizoen}`; // TODO <clubCode>/<seizoen>/...
+    return `${o.clubCode}`;
 }
 
 // mutatie.invloed

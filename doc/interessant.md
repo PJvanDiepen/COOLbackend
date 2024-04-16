@@ -92,6 +92,7 @@ Refresh Android cache
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
 - [Knex cheatsheet](https://devhints.io/knex)
 - [Knex probleem](https://evertpot.com/knex-sql-injection/)
+- [Best ORMs in 2024](https://www.sitepoint.com/javascript-typescript-orms/)
 
 # HTML / CSS
 - [eerste website](http://info.cern.ch/hypertext/WWW/TheProject.html)

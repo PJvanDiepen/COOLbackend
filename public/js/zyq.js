@@ -119,6 +119,7 @@ export function eindeSeizoen(seizoen) {
 
 export const o_o_o = {
     vereniging: "Waagtoren",
+    clubCode: 0, // TODO ook 1 = jeugd, 2 = toernooien, enz.
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
     competitie: "", // zie competitieBepalen()
@@ -232,7 +233,7 @@ function urlVerwerken() {
 
 async function competitieBepalen() {
     if (!interneCompetitie(o_o_o.competitie)) {
-        const ronden = await localFetch(`/ronden/intern/${o_o_o.seizoen}`);
+        const ronden = await localFetch(`/${o_o_o.clubCode}/${o_o_o.seizoen}/ronden/intern`);
         const vandaag = datumSQL();
         for (const ronde of ronden) {
             if (datumSQL(ronde.datum) >= vandaag) {
@@ -266,7 +267,7 @@ async function competitieRondenVerwerken() {
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
-    const ronden = await localFetch(`/ronden/${o_o_o.seizoen}/${o_o_o.competitie}`);
+    const ronden = await localFetch(`/${o_o_o.clubCode}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
     for (const ronde of ronden) {
         o_o_o.ronde[ronde.rondeNummer] = ronde;
         o_o_o.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
@@ -275,7 +276,7 @@ async function competitieRondenVerwerken() {
         } else if (o_o_o.huidigeRonde === 0) {
             o_o_o.huidigeRonde = ronde.rondeNummer;
             if (await serverFetch( // actuele situatie
-                `/indeling/${o_o_o.seizoen}/${o_o_o.competitie}/${o_o_o.laatsteRonde}`)) {
+                `/${o_o_o.clubCode}/${o_o_o.seizoen}/${o_o_o.competitie}/indeling/${o_o_o.laatsteRonde}`)) {
                 o_o_o.ronde[o_o_o.huidigeRonde].resultaten = 0; // indeling zonder resultaten
             }
         }

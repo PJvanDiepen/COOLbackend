@@ -51,6 +51,34 @@ function teamCodes(competities) {
     return teamCode;
 }
 
+/**
+ * de url van een endpoint bestaat uit een of meer commando's en parameters
+ * de parameters van een endpoint staan in een vaste volgorde
+ *
+ *  :uuid
+ *      uuidToken van een gebruiker
+ *      deze ontbreekt indien de informatie openbaar is en de gebruiker niets muteert
+ *  :club
+ *      clubCode van de vereniging
+ *  :seizoen
+ *      van de interne competities en (externe) teams per vereniging
+ *  :team
+ *      teamCode van competitie of (extern) team
+ *  :speler
+ *      knsbNummer van deelnemer
+ *
+ *  na de vaste parameters volgt het commando van het endpoint
+ *  en daarna eventueel andere parameters
+ *      /:uuid/:club/:seizoen/:team/:speler:/uitslag/:tegenstander/:resultaat
+ *      TODO nog een voorbeeld
+ *      enz.
+ *
+ *  indien vaste parameters ontbreken staat het commando op die plek
+ *  behalve indien :uuid ontbreekt
+ *      /:club/:team/seizoenen/
+ *      TODO nog een voorbeeld
+ *      enz.
+ */
 module.exports = function (url) {
 
     console.log("--- endpoints ---"); // TODO haal tekst uit db.apiLijst en definieer function hier
@@ -60,38 +88,39 @@ module.exports = function (url) {
     /*
     Frontend: zyq.js
      */
-    url.get('/api', async function (ctx) {
+    url.get("/api", async function (ctx) {
         ctx.body = JSON.stringify(db.apiLijst); // zie app.js
     });
 
     /*
     Frontend: beheer.js
      */
-    url.get('/versie', async function (ctx) {
+    url.get("/versie", async function (ctx) {
         ctx.body = JSON.stringify({versie: package_json.version, tijdstip: tijdstip});
     });
 
     /*
     Frontend: beheer.js
      */
-    url.get('/geheugen', async function (ctx) {
+    url.get("/geheugen", async function (ctx) {
         ctx.body = JSON.stringify([os.freemem(), os.totalmem()]);
     });
 
     /*
     Frontend: zyq.js
      */
-    url.get('/gewijzigd', async function (ctx) {
+    url.get("/gewijzigd", async function (ctx) {
         ctx.body = laatsteMutaties;
     });
 
     /*
     Frontend: start.js
      */
-    url.get('/seizoenen/:teamCode', async function (ctx) {
+    url.get("/:club/seizoenen/:team", async function (ctx) {
         const seizoenen = await Team.query()
-            .select('team.seizoen')
-            .where('team.teamCode', ctx.params.teamCode);
+            .select("team.seizoen")
+            .where("team.clubCode", ctx.params.club)
+            .andWhere("team.teamCode", ctx.params.team);
         ctx.body = seizoenen.map(function(team) {return team.seizoen});
     });
 
@@ -100,13 +129,14 @@ module.exports = function (url) {
 
      Frontend: zyq.js
      */
-    url.get('/indeling/:seizoen/:teamCode/:rondeNummer', async function (ctx) {
+    url.get("/:club/:seizoen/:team/indeling/:ronde", async function (ctx) {
         const uitslagen = await Uitslag.query()
-            .where('uitslag.seizoen', ctx.params.seizoen)
-            .andWhere('uitslag.teamCode', ctx.params.teamCode)
-            .andWhere('uitslag.rondeNummer', ctx.params.rondeNummer)
-            .andWhere('uitslag.partij', db.INTERNE_PARTIJ)
-            .whereNotIn('uitslag.resultaat', [db.WINST, db.VERLIES, db.REMISE])
+            .where("uitslag.clubCode", ctx.params.club)
+            .andWhere("uitslag.seizoen", ctx.params.seizoen)
+            .andWhere("uitslag.teamCode", ctx.params.team)
+            .andWhere("uitslag.rondeNummer", ctx.params.ronde)
+            .andWhere("uitslag.partij", db.INTERNE_PARTIJ)
+            .whereNotIn("uitslag.resultaat", [db.WINST, db.VERLIES, db.REMISE])
             .limit(1);
         ctx.body = uitslagen.length; // 1 = indeling zonder uitslagen, 0 = geen indeling
     });
@@ -267,49 +297,50 @@ module.exports = function (url) {
 
     Frontend: start.js
      */
-    url.get('/ronden/intern/:seizoen', async function (ctx) {
+    url.get("/:club/:seizoen/ronden/intern", async function (ctx) {
         ctx.body = await Ronde.query()
-            .select('teamCode', 'rondeNUmmer', 'datum')
-            .where('seizoen', ctx.params.seizoen)
-            .andWhere(fn('substring', ref('teamCode'), 1, 1), "i")
-            .orderBy(['datum', 'rondeNummer']);
+            .select("teamCode", "rondeNummer", "datum")
+            .where("clubCode", ctx.params.club)
+            .andWhere("seizoen", ctx.params.seizoen)
+            .andWhere(fn("substring", ref("teamCode"), 1, 1), "i")
+            .orderBy(["datum", "rondeNummer"]);
     });
 
     /*
     -- ronden per seizoen en competitie met aantal uitslagen TODO wordt aantalResultaten ergens gebruikt?
     with u as
       (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten
-      from uitslag where seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)
+      from uitslag where seizoen = @seizoen and teamCode = @team and resultaat in ('1', '0', '½') group by rondeNummer)
     select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
     left join u on r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-    where r.seizoen = @seizoen and r.teamCode = @teamCode
+    where r.seizoen = @seizoen and r.teamCode = @team
     order by r.rondeNummer;
 
     Frontend: zyq.js
      */
-    url.get('/ronden/:seizoen/:teamCode', async function (ctx) {
+    url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
         ctx.body = await Ronde.query()
-            .with('u',function (qb) {
-                qb.from('uitslag')
+            .with("u",function (qb) {
+                qb.from("uitslag")
                     .select(
-                        'uitslag.seizoen',
-                        'uitslag.teamCode',
-                        'uitslag.rondeNummer',
-                        {aantalResultaten: fn('count', 'uitslag.resultaat')})
-                    .whereIn('uitslag.resultaat', [db.WINST, db.VERLIES, db.REMISE])
-                    .andWhere('uitslag.seizoen', ctx.params.seizoen)
-                    .andWhere('uitslag.teamCode', ctx.params.teamCode)
-                    .groupBy('uitslag.rondeNummer')
+                        "uitslag.seizoen",
+                        "uitslag.teamCode",
+                        "uitslag.rondeNummer",
+                        {aantalResultaten: fn("count", "uitslag.resultaat")})
+                    .whereIn("uitslag.resultaat", [db.WINST, db.VERLIES, db.REMISE])
+                    .andWhere("uitslag.seizoen", ctx.params.seizoen)
+                    .andWhere("uitslag.teamCode", ctx.params.team)
+                    .groupBy("uitslag.rondeNummer")
             })
-            .select('ronde.*',
-                {resultaten: fn('ifnull', ref('aantalResultaten'), -1)}) // TODO zie /indeling
-            .leftJoin('u', function(join) {
-                join.on('u.seizoen', 'ronde.seizoen')
-                    .andOn('u.teamCode', 'ronde.teamCode')
-                    .andOn('u.rondeNummer', 'ronde.rondeNummer')})
-            .where('ronde.seizoen', ctx.params.seizoen)
-            .andWhere('ronde.teamCode', ctx.params.teamCode)
-            .orderBy('ronde.rondeNummer');
+            .select("ronde.*",
+                {resultaten: fn("ifnull", ref("aantalResultaten"), -1)}) // TODO zie /indeling
+            .leftJoin("u", function(join) {
+                join.on("u.seizoen", "ronde.seizoen")
+                    .andOn("u.teamCode", "ronde.teamCode")
+                    .andOn("u.rondeNummer", "ronde.rondeNummer")})
+            .where("ronde.seizoen", ctx.params.seizoen)
+            .andWhere("ronde.teamCode", ctx.params.team)
+            .orderBy("ronde.rondeNummer");
     });
 
     /*

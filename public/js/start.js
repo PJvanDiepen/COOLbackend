@@ -44,12 +44,17 @@ import * as zyq from "./zyq.js";
         [db.IEDEREEN, db.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
         [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
     sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
+    console.log("--- hier 1 ---");
     await seizoenSelecteren(db.INTERNE_COMPETITIE);
+    console.log("--- hier 2 ---");
+
     await competitieSelecteren();
+    console.log("--- hier 3 ---");
+
 })();
 
 async function seizoenSelecteren(teamCode) {
-    const seizoenen = (await zyq.localFetch(`/seizoenen/${teamCode}`)).map(function (seizoen) {
+    const seizoenen = (await zyq.localFetch(`/${zyq.o_o_o.clubCode}/seizoenen/${teamCode}`)).map(function (seizoen) {
         return [seizoen, zyq.seizoenVoluit(seizoen)];
     });
     html.selectie(html.id("seizoenSelecteren"), zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
