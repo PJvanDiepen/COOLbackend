@@ -17,7 +17,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
 (async function() {
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    const teams = (await zyq.serverFetch(`/teams/${zyq.o_o_o.seizoen}`)).filter(function (team) {
+    const teams = (await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isTeam(team);
     });
     const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);

@@ -40,7 +40,7 @@ export const vinkjeInvullen = new Map([
  * @returns {Promise<void>}
  */
 export async function teamSelecteren(teamCode) {
-    const teams = (await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`)).filter(function (team) {
+    const teams = (await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isCompetitie(team) || db.isTeam(team);
     }).map(function (team) {
         return [team.teamCode, zyq.teamVoluit(team.teamCode)];
@@ -63,7 +63,7 @@ export async function teamSelecteren(teamCode) {
  */
 export async function rondeSelecteren(teamCode, rondeNummer) {
     zyq.o_o_o.team = zyq.o_o_o.competitie;
-    const ronden = (await zyq.localFetch(`/ronden/${zyq.o_o_o.seizoen}/${teamCode}`)).map(function (ronde) {
+    const ronden = (await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${teamCode}/ronden`)).map(function (ronde) {
         return [ronde.rondeNummer, `${zyq.datumLeesbaar(ronde)}${html.SCHEIDING}ronde ${ronde.rondeNummer}`];
     });
     html.selectie(html.id("rondeSelecteren"), rondeNummer, ronden, function (ronde) {

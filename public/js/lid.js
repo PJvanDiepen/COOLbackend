@@ -100,7 +100,7 @@ async function lidFormulier(persoon, septemberRating) {
     const competities = html.id("competities");
     const competitie = [];
     let competitieNummer = 0;
-    const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
+    const teams = await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`);
     for (const team of teams) {
         if (!db.isCompetitie(team) && !db.isTeam(team)) { // TODO wat gebeurt hier?
             nhsbTeam.append(html.optie(team.teamCode, zyq.teamVoluit(team.teamCode)));

@@ -60,7 +60,7 @@ async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
         "")); // functie
     let aantalGebruikers = 0;
     let aantalPerTeam = {};
-    const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`); // competities en teams
+    const teams = await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`); // competities en teams
     for (const team of teams) {
         if (db.isCompetitie(team) || db.isTeam(team)) {
             aantalPerTeam[team.teamCode] = 0;

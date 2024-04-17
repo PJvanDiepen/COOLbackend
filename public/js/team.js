@@ -21,7 +21,7 @@ verwerk team=<teamCode>
 })();
 
 async function uitslagenTeam(kop, rondenTabel) {
-    const teams = await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`);
+    const teams = await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`);
     for (const team of teams) {
         if (team.teamCode === zyq.o_o_o.team) {
             kop.textContent = db.isBekerCompetitie(team)

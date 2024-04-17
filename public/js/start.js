@@ -44,13 +44,8 @@ import * as zyq from "./zyq.js";
         [db.IEDEREEN, db.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
         [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
     sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
-    console.log("--- hier 1 ---");
     await seizoenSelecteren(db.INTERNE_COMPETITIE);
-    console.log("--- hier 2 ---");
-
     await competitieSelecteren();
-    console.log("--- hier 3 ---");
-
 })();
 
 async function seizoenSelecteren(teamCode) {
@@ -64,7 +59,7 @@ async function seizoenSelecteren(teamCode) {
 
 // TODO zie o_o_o.js: teamSelecteren
 async function competitieSelecteren() {
-    const competities = (await zyq.localFetch(`/teams/${zyq.o_o_o.seizoen}`)).filter(function (team) {
+    const competities = (await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
         return zyq.interneCompetitie(team.teamCode);
     }).map(function (team) {
         return [team.teamCode, team.omschrijving];

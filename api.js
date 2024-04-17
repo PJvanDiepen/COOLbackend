@@ -278,17 +278,17 @@ module.exports = function (url) {
     });
 
     /*
-    Frontend: zyq.js
+    Frontend: bestuur.js
+              lid.js
+              o_o_o.js
               start.js
               team.js
-              bestuur.js
-              lid.js
      */
-    url.get('/teams/:seizoen', async function (ctx) {
+    url.get("/:club/:seizoen/teams", async function (ctx) {
         ctx.body = await Team.query()
-            .select('team.*', 'persoon.naam')
-            .join('persoon', 'team.teamleider', 'persoon.knsbNummer')
-            .where('team.seizoen', ctx.params.seizoen);
+            .select("team.*", "persoon.naam")
+            .join("persoon", "team.teamleider", "persoon.knsbNummer")
+            .where("team.seizoen", ctx.params.seizoen);
     });
 
     /*
