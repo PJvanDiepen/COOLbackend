@@ -1,11 +1,11 @@
-'use strict'
+"use strict"
 
-const { Model } = require('objection')
+const { Model } = require("objection")
 
 class Mutatie extends Model {
-    static tableName = 'mutatie';
+    static tableName = "mutatie";
 
-    static idColumn = ['tijdstip','volgnummer'];  // primary key
+    static idColumn = ["tijdstip","volgnummer"];  // primary key
 }
 
 module.exports = Mutatie;

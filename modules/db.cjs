@@ -16,20 +16,26 @@
 
 const apiLijst = []; // zie app.js
 
+/**
+ * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
+ *
+ * @param o object
+ * @returns {string} string voor api-call
+ */
 function key(o) {
-    if (o.clubCode) {
-        if (o.teamCode) {
-            if (o.rondeNummer) {
-                if (o.knsbNummer) {
-                    return `${o.clubCode}${o.seizoen}/${o.teamCode}/${o.rondeNummer}/${o.knsbNummer}`;
-                }
-                return `${o.clubCode}${o.seizoen}/${o.teamCode}/${o.rondeNummer}`;
-            }
-            return `${o.clubCode}${o.seizoen}/${o.teamCode}`;
-        }
-        return `${o.clubCode}${o.seizoen}`;
+    if (o.clubCode === undefined) {
+        return "";
+    } else if (o.seizoen === undefined) {
+        return `${o.clubCode}`;
+    } else if (o.teamCode === undefined) {
+        return `${o.clubCode}/${o.seizoen}`;
+    } else if (o.rondeNummer === undefined) {
+        return `${o.clubCode}/${o.seizoen}/${o.teamCode}`;
+    } else if (o.knsbNummer === undefined) {
+        return `${o.clubCode}/${o.seizoen}/${o.teamCode}/${o.rondeNummer}`;
+    } else {
+        return `${o.clubCode}/${o.seizoen}/${o.teamCode}/${o.rondeNummer}/${o.knsbNummer}`;
     }
-    return `${o.clubCode}`;
 }
 
 // mutatie.invloed

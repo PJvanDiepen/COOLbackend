@@ -26,7 +26,7 @@ const zwartSpeler = Number(html.params.get("zwart"));
         `Handmatig indelen ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
     const partijen = html.id("partijen");
     let bordNummer = 0;
-    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/paren/${db.key(zyq.o_o_o.ronde[rondeNummer])}`);
+    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/paren`);
     if (paren.length) {
         for (const paar of paren) {
             bordNummer = paar.bordNummer;
@@ -58,7 +58,7 @@ async function eventueelVerwijderen(paar) {
     const knop = document.createElement("select");
     const opties = [[0, ""], [paar, "verwijder partij", async function (paar) {
         const mutaties = await zyq.serverFetch(
-            `/${zyq.uuidToken}/los/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${paar.bordNummer}/${paar.knsbNummer}/${paar.tegenstanderNummer}`);
+            `/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${paar.knsbNummer}/los/${paar.bordNummer}/${paar.tegenstanderNummer}`);
         if (mutaties) {
             html.zelfdePagina(`ronde=${rondeNummer}`);
         } else {
@@ -91,8 +91,9 @@ async function spelerSelecteren(bordNummer, metWit, spelers) {
 }
 
 async function paarWitZwart(bordNummer, wit, zwart) {
-    const mutaties = await zyq.serverFetch(
-        `/${zyq.uuidToken}/paar/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${bordNummer}/${wit.knsbNummer}/${zwart.knsbNummer}`);
+    console.log(zyq.o_o_o.ronde[rondeNummer]);
+    const mutaties = await zyq.serverFetch( // TODO PvD
+        `/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${wit.knsbNummer}/paar/${bordNummer}/${zwart.knsbNummer}`);
     if (mutaties) {
         html.zelfdePagina(`ronde=${rondeNummer}`);
     } else {

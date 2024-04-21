@@ -276,7 +276,7 @@ async function competitieRondenVerwerken() {
         } else if (o_o_o.huidigeRonde === 0) {
             o_o_o.huidigeRonde = ronde.rondeNummer;
             if (await serverFetch( // actuele situatie
-                `/${o_o_o.clubCode}/${o_o_o.seizoen}/${o_o_o.competitie}/indeling/${o_o_o.laatsteRonde}`)) {
+                `/${o_o_o.clubCode}/${o_o_o.seizoen}/${o_o_o.competitie}/${o_o_o.laatsteRonde}/indeling`)) {
                 o_o_o.ronde[o_o_o.huidigeRonde].resultaten = 0; // indeling zonder resultaten
             }
         }

@@ -25,8 +25,7 @@ const indeling = html.id("indeling");
         `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
 
     let laatsteBord = 0;
-    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/paren/${db.key(zyq.o_o_o.ronde[rondeNummer])}`);
-    console.log(paren);
+    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/paren`);
     for (const paar of paren) {
         laatsteBord = paar.bordNummer;
         indeling.append(html.rij(laatsteBord,
@@ -99,7 +98,8 @@ const indeling = html.id("indeling");
 
 async function deelnemersRonde(rondeNummer) {
     if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
-        return await zyq.serverFetch(`/${zyq.uuidToken}/deelnemers/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`); // actuele situatie
+        return await zyq.serverFetch(
+            `/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/deelnemers`); // actuele situatie
     } else {
         return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd
     }

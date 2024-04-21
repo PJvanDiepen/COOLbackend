@@ -465,6 +465,12 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 -- ("2324", "nbz", 1, "u", "Aartswoud", '2023-12-08'),
 ("2324", "nbz", 2, "t", "MSC", '2024-03-03');
 
+insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+(0, "2324", "nbb", 2, "t", "ZSC-Saende", '2024-05-07');
+
+select * from ronde where clubCode = 0 and seizoen = "2324" and teamCode = "nbb";
+update ronde set datum = "2024-05-07" where clubCode = 0 and seizoen = "2324" and teamCode = "nbb" and rondeNummer = 2;
+
 insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 ("2324", "n1", 1, "t", "Kennemer Combinatie N1", '2023-10-24'), -- NHSB competitie
 ("2324", "n1", 2, "u", "HWP Haarlem N1", '2023-10-17'),

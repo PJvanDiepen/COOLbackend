@@ -86,7 +86,7 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
  */
 export async function perTeamRondenUitslagen(teamCode) {
     const rondenUitslagen = [];
-    (await zyq.serverFetch(`/ronden/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
+    (await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${teamCode}/ronden`)).forEach(
         function (ronde) {
             rondenUitslagen[ronde.rondeNummer]
                 = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: [], deelnemers: 0, geplandeUitslagen: []};
