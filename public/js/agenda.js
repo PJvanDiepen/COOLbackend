@@ -15,7 +15,7 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
-    const persoon = await zyq.serverFetch(`/persoon/${zyq.o_o_o.seizoen}/${andereGebruiker}`);
+    const persoon = await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/persoon/${andereGebruiker}`);
     html.id("kop").append(`Agenda${html.SCHEIDING}${persoon.naam}`);
     html.id("aanmelden").append(html.naarPagina(`lid.html?lid=${andereGebruiker}`,"Aanmelden voor competities"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);

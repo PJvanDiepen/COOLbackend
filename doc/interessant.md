@@ -37,6 +37,8 @@ Refresh Android cache
 - [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
 - [Fix corrupted tables](https://www.digitalocean.com/community/tutorials/how-to-fix-corrupted-tables-in-mysql)
 - [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
+- [database design](https://vertabelo.com/blog/database-design-principles/)
+- [database design example](https://blog.devart.com/sql-database-design-basics-with-example.html)
 
 # JavaScript
 
@@ -65,6 +67,7 @@ Refresh Android cache
 - [6 ways to declare functions](https://dmitripavlutin.com/6-ways-to-declare-javascript-functions/)
 - [Wat een JavaScript programmeur moet begrijpen in 2024](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-in-2024-c1044bcb0dfb)
 - [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
+- [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
 
 # node.js
 - [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)

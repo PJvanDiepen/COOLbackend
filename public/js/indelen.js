@@ -49,7 +49,7 @@ const indeling = html.id("indeling");
     }
 
     const uithuis = await zyq.serverFetch(
-        `/${zyq.uuidToken}/uithuis/${zyq.o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
+        `/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/uithuis/${zyq.datumSQL(totDatum)}`); // actuele situatie
     for (const speler of uithuis) {
         const bord = // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
             speler.partij === db.EXTERN_THUIS ? ++bordNummer : "";

@@ -34,9 +34,6 @@ import * as zyq from "./zyq.js";
                 console.log(`Verwijder indeling ronde ${rondeNummer} is mislukt.`);
             }
         }],
-        [db.BEHEERDER, `wijzig ronde ${rondeNummer}`, async function () {
-            html.anderePagina(`wijzig.html?ronde=${rondeNummer}`);
-        }],
         [db.BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
             const mutaties = await zyq.serverFetch(
                 `/${zyq.uuidToken}/verwijder/ronde/${zyq.o_o_o.seizoen}/int/${rondeNummer}`);
