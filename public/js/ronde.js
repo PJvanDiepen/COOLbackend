@@ -78,15 +78,7 @@ async function uitslagMutatie(rondeNummer) {
     const uitslag = html.params.get("uitslag");
     if (wit && zwart && uitslag) {
         const mutaties = await zyq.serverFetch(
-            `/${zyq.uuidToken}/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${wit}/${zwart}/${uitslag}`);
-        if (mutaties > 0) {
-            for (const key of Object.keys(sessionStorage)) {
-                if (key.startsWith(`/ranglijst/${zyq.o_o_o.seizoen}`) ||
-                    key.startsWith(`/uitslagen/${zyq.o_o_o.seizoen}`)) {
-                    sessionStorage.removeItem(key);
-                }
-            }
-        }
+            `/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${wit}/uitslag/${zwart}/${uitslag}`);
     }
     return {wit: Number(wit), zwart: Number(zwart)};
 }

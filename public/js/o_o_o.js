@@ -125,7 +125,7 @@ export async function perTeamRondenUitslagen(teamCode) {
 export async function ranglijst(rondeNummer, selectie = null) {
     const totDatum = rondeNummer === zyq.o_o_o.laatsteRonde ? zyq.eindeSeizoen(zyq.o_o_o.seizoen) : zyq.o_o_o.ronde[rondeNummer + 1].datum;
     let spelers = await zyq.localFetch(
-        `/ranglijst/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${zyq.datumSQL(totDatum)}/${zyq.o_o_o.versie}`);
+        `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/ranglijst/${zyq.datumSQL(totDatum)}/${zyq.o_o_o.versie}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }
@@ -173,8 +173,8 @@ function spelerTotalen(speler) {
         knsbNummer === 8388105 ? [7640798] : // zoon Marijn niet tegen vader Johan Wester
         knsbNummer === 7771665 ? [7777715] : // Yvonne Schol wegens geluid niet tegen Richard Gooijers
         knsbNummer === 8350738 ? [7777715] : // Ramon Witte zegt niets tegen Richard Gooijers
-        knsbNummer === 8350738 ? [9001586] : // Abdul Rashid Ayobi spreekt geen Nederlands tegen Richard Gooijers
-        knsbNummer === 7777715 ? [7771665, 8350738, 9001586] : [];
+        knsbNummer === 9001586 ? [7777715] : // Abdul Rashid Ayobi spreekt geen Nederlands  tegen Richard Gooijers
+        knsbNummer === 7777715 ? [7771665, 8350738, 9001586] : []; // en Richard niet tegen hun
 
     let wp = 0;
 

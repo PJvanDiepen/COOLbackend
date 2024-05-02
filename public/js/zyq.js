@@ -267,6 +267,7 @@ async function competitieRondenVerwerken() {
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
+    console.log("competitieRondenVerwerken()");
     const ronden = await localFetch(`/${o_o_o.clubCode}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
     for (const ronde of ronden) {
         o_o_o.ronde[ronde.rondeNummer] = ronde;

@@ -51,7 +51,8 @@ async function uitslagenSpeler(kop, lijst) {
     if (t.intern() && t.eigenWaardeCijfer()) {
         lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
-    const uitslagen = await zyq.localFetch(`/uitslagen/${zyq.o_o_o.seizoen}/${zyq.o_o_o.versie}/${zyq.o_o_o.speler}/${zyq.o_o_o.competitie}`);
+    const uitslagen = await zyq.localFetch(
+        `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/uitslagen/${zyq.o_o_o.speler}/${zyq.o_o_o.versie}`);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
         if (samenvoegen < i && !db.planningInvullen.has(uitslagen[i].partij)) { // verwerken indien niet samengevoegd en geen planning
