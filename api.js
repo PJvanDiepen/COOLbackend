@@ -195,7 +195,7 @@ module.exports = function (url) {
     /*
     -- alle personen met spelers per seizoen
     with s as
-    (select * from speler where seizoen = @seizoen)
+    (select * from speler where clubCode = @club and seizoen = @seizoen)
     select p.*, s.*, gebruiker.mutatieRechten, gebruiker.datumEmail
     from persoon p
     left join s on s.knsbNummer = p.knsbNummer
@@ -211,8 +211,7 @@ module.exports = function (url) {
                     .where("speler.clubCode", ctx.params.club)
                     .andWhere("speler.seizoen", ctx.params.seizoen)
             })
-            .select(
-                "persoon.naam",
+            .select("persoon.naam",
                 "persoon.knsbNummer",
                 "s.nhsbTeam",
                 "s.knsbTeam",
@@ -233,7 +232,7 @@ module.exports = function (url) {
 
     /*
     with s as
-    (select * from speler where seizoen = @seizoen and knsbNummer = @knsbNummer)
+    (select * from speler clubCode = @club and seizoen = @seizoen and knsbNummer = @knsbNummer)
     select p.*, s.*, g.mutatieRechten, g.datumEmail
     from persoon p
     left join s on s.knsbNummer = p.knsbNummer
@@ -250,8 +249,7 @@ module.exports = function (url) {
                     .andWhere("speler.seizoen", ctx.params.seizoen)
                     .andWhere("speler.knsbNummer", ctx.params.knsbNummer)
             })
-            .select(
-                "persoon.naam",
+            .select("persoon.naam",
                 "persoon.knsbNummer",
                 "s.nhsbTeam",
                 "s.knsbTeam",
@@ -288,7 +286,7 @@ module.exports = function (url) {
 
     /*
     -- interne ronden per seizoen van verschillende competities
-    select teamCode, rondeNummer, datum from ronde where seizoen = @seizoen and substring(teamCode, 1, 1) = "i" order by datum, rondeNummer;
+    select teamCode, rondeNummer, datum from ronde where clubCode = @club and seizoen = @seizoen and substring(teamCode, 1, 1) = "i" order by datum, rondeNummer;
 
     Frontend: start.js
      */
@@ -305,7 +303,7 @@ module.exports = function (url) {
     -- ronden per seizoen en competitie met aantal uitslagen TODO wordt aantalResultaten ergens gebruikt?
     with u as
       (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten
-      from uitslag where seizoen = @seizoen and teamCode = @team and resultaat in ("1", "0", "½") group by rondeNummer)
+      from uitslag where clubCode = @club and seizoen = @seizoen and teamCode = @team and resultaat in ("1", "0", "½") group by rondeNummer)
     select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
     left join u on r.clubCode = u.clubCode and r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
     where r.seizoen = @seizoen and r.teamCode = @team
@@ -314,11 +312,10 @@ module.exports = function (url) {
     Frontend: zyq.js
      */
     url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
-        console.log("/:club/:seizoen/:team/ronden");
         ctx.body = await Ronde.query()
             .with("u",function (qb) {
                 qb.from("uitslag")
-                    .select(
+                    .select("uitslag.clubCode",
                         "uitslag.seizoen",
                         "uitslag.teamCode",
                         "uitslag.rondeNummer",
@@ -350,15 +347,14 @@ module.exports = function (url) {
       totalen(@seizoen, @versie, s.knsbNummer, @datum) as totalen
     from speler s
     join persoon p on s.knsbNummer = p.knsbNummer
-    where seizoen = @seizoen
+    where clubCode = @club and seizoen = @seizoen
     order by totalen desc;
 
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/:competitie/:ronde/ranglijst/:datum/:versie", async function (ctx) {
         ctx.body = await Speler.query()
-            .select(
-                "speler.knsbNummer",
+            .select("speler.knsbNummer",
                 "persoon.naam",
                 {subgroep: fn("subgroep", // TODO met :club
                         ctx.params.seizoen,
@@ -411,8 +407,7 @@ module.exports = function (url) {
      */
     url.get("/:club/:seizoen/:competitie/uitslagen/:knsbNummer/:versie", async function (ctx) {
         ctx.body = await Uitslag.query()
-            .select(
-                "uitslag.datum",
+            .select("uitslag.datum",
                 "uitslag.rondeNummer",
                 "uitslag.bordNummer",
                 "uitslag.witZwart",
@@ -507,11 +502,12 @@ module.exports = function (url) {
     /*
     Frontend: teamleider.js
      */
-    url.get("/teamleider/:seizoen", async function (ctx) {
+    url.get("/:club/:seizoen/teamleider", async function (ctx) {
         ctx.body = await Speler.query()
             .select("speler.*", "persoon.naam")
             .join("persoon", "speler.knsbNummer", "persoon.knsbNummer")
-            .where("speler.seizoen", ctx.params.seizoen)
+            .where("speler.clubCode", ctx.params.club)
+            .andWhere("speler.seizoen", ctx.params.seizoen)
             .orderBy("speler.knsbRating", "desc");
     });
 
@@ -527,15 +523,14 @@ module.exports = function (url) {
     from uitslag
     join persoon as wit on uitslag.knsbNummer = wit.knsbNummer
     join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
-    where seizoen = @seizoen and teamCode = @teamCode and rondeNummer = @ronde and witZwart = "w"
+    where clubCode = @club and seizoen = @seizoen and teamCode = @teamCode and rondeNummer = @ronde and witZwart = "w"
     order by uitslag.seizoen, bordNummer;
 
     Frontend: ronde.js
      */
-    url.get("/ronde/:seizoen/:team/:ronde", async function (ctx) {
+    url.get("/:club/:seizoen/:team/:ronde/ronde", async function (ctx) {
         ctx.body = await Uitslag.query()
-            .select(
-                "uitslag.bordNummer",
+            .select("uitslag.bordNummer",
                 "uitslag.knsbNummer",
                 {wit: ref("wit.naam")},
                 "uitslag.tegenstanderNummer",
@@ -543,7 +538,8 @@ module.exports = function (url) {
                 "resultaat")
             .join("persoon as wit", "uitslag.knsbNummer", "wit.knsbNummer")
             .join("persoon as zwart", "uitslag.tegenstanderNummer", "zwart.knsbNummer")
-            .where("uitslag.seizoen", ctx.params.seizoen)
+            .where("uitslag.clubCode", ctx.params.club)
+            .andWhere("uitslag.seizoen", ctx.params.seizoen)
             .andWhere("uitslag.teamCode", ctx.params.team)
             .andWhere("uitslag.rondeNummer", ctx.params.ronde)
             .andWhere("uitslag.witZwart", db.WIT)
@@ -561,15 +557,14 @@ module.exports = function (url) {
         persoon.naam,
     from uitslag
     join persoon on uitslag.knsbNummer = persoon.knsbNummer
-    where uitslag.seizoen = @seizoen and uitslag.teamCode = @team
+    where uitslag.clubCode = @club and uitslag.seizoen = @seizoen and uitslag.teamCode = @team
     order by uitslag.seizoen, uitslag.rondeNummer, uitslag.bordNummer;
 
     Frontend: 0-0-0.js
      */
-    url.get("/team/:seizoen/:team", async function (ctx) {
+    url.get("/:club/:seizoen/:team/team", async function (ctx) {
         ctx.body = await Uitslag.query()
-            .select(
-                "uitslag.rondeNummer",
+            .select("uitslag.rondeNummer",
                 "uitslag.bordNummer",
                 "uitslag.witZwart",
                 "uitslag.resultaat",
@@ -577,7 +572,8 @@ module.exports = function (url) {
                 "uitslag.knsbNummer",
                 "persoon.naam")
             .join("persoon", "uitslag.knsbNummer", "persoon.knsbNummer")
-            .where("uitslag.seizoen", ctx.params.seizoen)
+            .where("uitslag.clubCode", ctx.params.club)
+            .andWhere("uitslag.seizoen", ctx.params.seizoen)
             .andWhere("uitslag.teamCode", ctx.params.team)
             .orderBy(["uitslag.seizoen","uitslag.rondeNummer","uitslag.bordNummer"]);
     });
@@ -591,9 +587,8 @@ module.exports = function (url) {
     order by r.datum, r.teamCode;
 
     Frontend: ronde.js
-              teamleider.js
      */
-    url.get("/wedstrijden/:seizoen", async function (ctx) {
+    url.get(":club/:seizoen/wedstrijden", async function (ctx) {
         ctx.body = await Ronde.query()
             .select("ronde.*",
                 "team.bond",
@@ -602,10 +597,12 @@ module.exports = function (url) {
                 "team.borden",
                 "persoon.naam")
             .join("team", function(join) {
-                join.on("team.seizoen", "ronde.seizoen")
+                join.on("team.clubCode", "ronde.clubCode")
+                    .andOn("team.seizoen", "ronde.seizoen")
                     .andOn("team.teamCode", "ronde.teamCode")})
             .join("persoon", "team.teamleider", "persoon.knsbNummer")
-            .where("ronde.seizoen", ctx.params.seizoen)
+            .where("ronde.clubCode", ctx.params.club)
+            .andWhere("ronde.seizoen", ctx.params.seizoen)
             .whereNotIn("ronde.teamCode",[db.INTERNE_COMPETITIE, db.RAPID_COMPETITIE, db.JEUGD_COMPETITIE])
             .orderBy(["ronde.datum", "ronde.teamCode"]);
     });
@@ -942,29 +939,6 @@ module.exports = function (url) {
     });
 
     /*
-    Database: team update
-              mutatie insert
-
-    Frontend: ???
-     */
-    url.get("/:uuid/team/wijzigen/:seizoen/:team/:bond/:poule/:omschrijving/:borden/:teamleider", async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuid);
-        let aantal = 0;
-        if (gebruiker.juisteRechten(db.BESTUUR)) {
-            if (await Team.query().findById([ctx.params.seizoen, ctx.params.team])
-                .patch({bond: ctx.params.bond,
-                    poule: ctx.params.poule,
-                    omschrijving: ctx.params.omschrijving,
-                    borden: ctx.params.borden,
-                    teamleider: ctx.params.teamleider})) {
-                aantal = 1;
-                await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
-            }
-        }
-        ctx.body = aantal;
-    });
-
-    /*
     Database: rating delete
 
     Frontend: bestuur.js
@@ -1106,23 +1080,26 @@ module.exports = function (url) {
     Frontend: agenda.js
               teamleider.js
      */
-    url.get("/:uuid/uitslag/toevoegen/:seizoen/:team/:ronde/:knsbNummer/:partij/:datum/:competitie", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/uitslag/toevoegen/:partij/:datum/:competitie", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.TEAMLEIDER) || // agenda van andere gebruiker TODO alleen eigen team
-            gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) { // alleen eigen agenda
+            gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) { // alleen eigen agenda
             if (await Uitslag.query().insert({
+                    clubCode: ctx.params.club,
                     seizoen: ctx.params.seizoen,
                     teamCode: ctx.params.team,
                     rondeNummer: ctx.params.ronde,
                     bordNummer: 0,
-                    knsbNummer: ctx.params.knsbNummer,
+                    knsbNummer: ctx.params.speler,
                     partij: ctx.params.partij, // TODO :partij overbodig indien uitsluitend PLANNING in plaats van PLANNING of AFWEZIG
                     witZwart: "",
                     tegenstanderNummer: 0,
                     resultaat: "",
                     datum: ctx.params.datum,
-                    anderTeam: ctx.params.competitie} )) { // TODO anderTeam = competitie
+                    anderTeam: ctx.params.competitie,
+                    competitie: ctx.params.competitie
+            } )) { // TODO anderTeam = competitie
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }
@@ -1464,56 +1441,6 @@ module.exports = function (url) {
                 }
             }
             await mutatie(gebruiker, ctx, aantal, db.NIEUWE_RANGLIJST);
-        }
-        ctx.body = aantal;
-    });
-
-    /*
-    Database: ronde update
-              mutatie insert
-
-    Frontend: ???
-     */
-    url.get("/:uuid/rondenummers/:seizoen/:team", async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuid);
-        let aantal = 0;
-        if (gebruiker.juisteRechten(db.BEHEERDER)) {
-            const ronden = await Ronde.query()
-                .where("ronde.seizoen", ctx.params.seizoen)
-                .andWhere("ronde.teamCode", ctx.params.team);
-            let naarRonde = 0;
-            for (const ronde of ronden) {
-                if (ronde.rondeNummer > ++naarRonde) {
-                    if (await Ronde.query().findById(
-                        [ctx.params.seizoen, ctx.params.team, ronde.rondeNummer])
-                        .patch(
-                            {rondeNummer: naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
-                        aantal++;
-                    }
-                }
-            }
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
-        }
-        ctx.body = aantal;
-    });
-
-    /*
-    Database: ronde update
-              mutatie insert
-
-    Frontend: ???
-     */
-    url.get("/:uuid/schuif/ronde/:seizoen/:team/:ronde/:naarRonde", async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuid);
-        let aantal = 0;
-        if (gebruiker.juisteRechten(db.BEHEERDER)) {
-            if (await Ronde.query().findById(
-                [ctx.params.seizoen, ctx.params.team, ctx.params.ronde])
-                .patch(
-                    {rondeNummer: ctx.params.naarRonde})) { // plus bijbehorende uitslagen wegens fk_uitslag_ronde
-                aantal = 1;
-                await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
-            }
         }
         ctx.body = aantal;
     });

@@ -91,7 +91,7 @@ export async function perTeamRondenUitslagen(teamCode) {
             rondenUitslagen[ronde.rondeNummer]
                 = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: [], deelnemers: 0, geplandeUitslagen: []};
         });
-    (await zyq.serverFetch(`/team/${zyq.o_o_o.seizoen}/${teamCode}`)).forEach(
+    (await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${teamCode}/team`)).forEach(
         function (uitslag) {
             const rondeUitslag = rondenUitslagen[uitslag.rondeNummer];
             if (uitslag.partij === db.EXTERNE_PARTIJ) {
@@ -162,6 +162,7 @@ tegenstanders met n = 0, 4, 8, enz.
 einde indien rondeNummer = 0
 
 TODO spelerTotalen moeten compleet zijn tot een bepaalde datum en rondeNummer inclusief de tellingen, dat moet op server geregeld worden
+TODO nietTegen per clubCode
  */
 function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
@@ -173,8 +174,8 @@ function spelerTotalen(speler) {
         knsbNummer === 8388105 ? [7640798] : // zoon Marijn niet tegen vader Johan Wester
         knsbNummer === 7771665 ? [7777715] : // Yvonne Schol wegens geluid niet tegen Richard Gooijers
         knsbNummer === 8350738 ? [7777715] : // Ramon Witte zegt niets tegen Richard Gooijers
-        knsbNummer === 9001586 ? [7777715] : // Abdul Rashid Ayobi spreekt geen Nederlands  tegen Richard Gooijers
-        knsbNummer === 7777715 ? [7771665, 8350738, 9001586] : []; // en Richard niet tegen hun
+        knsbNummer === 9001586 ? [7777715] : // Abdul Rashid Ayobi spreekt geen Nederlands tegen Richard Gooijers
+        knsbNummer === 7777715 ? [7771665, 8350738, 9001586] : []; // Richard Gooijers niet tegen bovenstaande spelers
 
     let wp = 0;
 

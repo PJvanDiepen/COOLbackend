@@ -53,7 +53,8 @@ import * as zyq from "./zyq.js";
 
 async function uitslagenRonde(rondeNummer, lijst) {
     const gewijzigd = await uitslagMutatie(rondeNummer);
-    const uitslagen = await zyq.serverFetch(`/ronde/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`); // actuele situatie
+    const uitslagen = await zyq.serverFetch(
+        `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
             const resultaatKolom = resultaatSelecteren(rondeNummer, uitslag);
@@ -113,7 +114,7 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
     }
     let dezeRonde = false;
     if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
-        const wedstrijden = await zyq.localFetch(`/wedstrijden/${zyq.o_o_o.seizoen}`);
+        const wedstrijden = await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/wedstrijden`);
         for (const wedstrijd of wedstrijden) {
             if (!dezeRonde && zyq.o_o_o.ronde[rondeNummer].datum === wedstrijd.datum) {
                 lijst.append(rondeInterneCompetitie(rondeNummer));

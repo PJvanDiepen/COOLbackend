@@ -94,7 +94,7 @@ async function agendaMutatie(knsbNummer) {
 }
 
 async function agendaLezen(knsbNummer) {
-    return await zyq.serverFetch(`/${zyq.uuidToken}/kalender/${zyq.ditSeizoen}/${knsbNummer}`);
+    return await zyq.serverFetch(`/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.ditSeizoen}/kalender/${knsbNummer}`);
 }
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {
@@ -107,7 +107,7 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
                 const partij = vanafVandaag ? db.PLANNING : db.AFWEZIG;  // voor interne competities voor vandaag afwezig invullen
                 const competitie = zyq.interneCompetitie(w.teamCode) ? w.teamCode : db.INTERNE_COMPETITIE;
                 const mutaties = await zyq.serverFetch(
-                    `/${zyq.uuidToken}/uitslag/toevoegen/${db.key(w)}/${knsbNummer}/${partij}/${datum}/${competitie}`);
+                    `/${zyq.uuidToken}/${db.key(w)}/${knsbNummer}/uitslag/toevoegen/${partij}/${datum}/${competitie}`);
                 if (mutaties) {
                     aanvullingen += mutaties;
                 } else {

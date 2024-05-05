@@ -198,11 +198,9 @@ add CONSTRAINT fk_uitslag_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
 
-    
 alter table uitslag
 drop CONSTRAINT fk_uitslag_ander_team;
 
-    
 alter table uitslag
 add CONSTRAINT fk_uitslag_ander_team
     FOREIGN KEY (clubCode, seizoen, anderTeam)

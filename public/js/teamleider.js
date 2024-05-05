@@ -23,7 +23,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);
     await teamSelecteren(teams, teamCode);
     const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
-    const spelers = await zyq.serverFetch(`/teamleider/${zyq.o_o_o.seizoen}`);
+    const spelers = await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teamleider`);
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const vast = html.id("vast");
@@ -65,7 +65,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             html.selectie(knop, 0, invallen, async function (rondeNummer){
                 const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
                 const mutaties = await zyq.serverFetch(
-                    `/${zyq.uuidToken}/uitslag/toevoegen/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/${db.PLANNING}/${datum}/int`);
+                    `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/uitslag/toevoegen/${db.PLANNING}/${datum}/int`);
                 html.zelfdePagina(`teamleider=${teamCode}&invaller=${speler.knsbNummer}`);
             });
             inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
