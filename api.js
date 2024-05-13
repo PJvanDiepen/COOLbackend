@@ -588,7 +588,7 @@ module.exports = function (url) {
 
     Frontend: ronde.js
      */
-    url.get(":club/:seizoen/wedstrijden", async function (ctx) {
+    url.get("/:club/:seizoen/wedstrijden", async function (ctx) {
         ctx.body = await Ronde.query()
             .select("ronde.*",
                 "team.bond",
@@ -677,7 +677,7 @@ module.exports = function (url) {
     /*
     Frontend: beheer.js
      */
-    url.get("/backup/persoon", async function (ctx) {
+    url.get("/backup/personen", async function (ctx) {
         ctx.body = await Persoon.query()
             .orderBy(["naam", "knsbNummer"]);
     });
@@ -685,28 +685,32 @@ module.exports = function (url) {
     /*
     Frontend: beheer.js
      */
-    url.get("/backup/speler/:seizoen", async function (ctx) {
-        ctx.body = await Speler.query()
-            .where("seizoen", ctx.params.seizoen)
-            .orderBy("knsbNummer");
-    });
-
-    /*
-    Frontend: beheer.js
-     */
-    url.get("/backup/team/:seizoen", async function (ctx) {
+    url.get("/:club/:seizoen/backup/teams", async function (ctx) {
         ctx.body = await Team.query()
-            .where("seizoen", ctx.params.seizoen)
+            .where("team.clubCode", ctx.params.club)
+            .where("team.seizoen", ctx.params.seizoen)
             .orderBy("teamCode");
     });
 
     /*
     Frontend: beheer.js
      */
-    url.get("/backup/ronde/:seizoen", async function (ctx) {
+    url.get("/:club/:seizoen/backup/ronde", async function (ctx) { // TODO /ronden werkt niet!
         ctx.body = await Ronde.query()
-            .where("seizoen", ctx.params.seizoen)
+            .where("clubCode", ctx.params.club)
+            .andWhere("seizoen", ctx.params.seizoen)
             .orderBy(["teamCode", "rondeNummer"]);
+    });
+
+    /*
+    Frontend: beheer.js
+     */
+    url.get("/:club/:seizoen/:team/spelers", async function (ctx) {
+        ctx.body = await Speler.query()
+            .where("clubCode", ctx.params.club)
+            .where("seizoen", ctx.params.seizoen)
+            .where("teamCode", ctx.params.team)
+            .orderBy("knsbNummer");
     });
 
     /*
@@ -733,7 +737,7 @@ module.exports = function (url) {
     /*
     Frontend: beheer.js
      */
-    url.get("/:uuid/backup/gebruiker", async function (ctx) {
+    url.get("/:uuid/backup/gebruikers", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         if (gebruiker.juisteRechten(db.BEHEERDER)) {
             ctx.body = await Gebruiker.query().orderBy("knsbNummer");
