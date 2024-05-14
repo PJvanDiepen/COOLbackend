@@ -176,11 +176,11 @@ export async function init() {
  */
 async function gebruikerVerwerken() {
     if (uuidActiveren && uuidActiveren === uuidToken) {
-        await serverFetch("/activeer/" + uuidToken);
+        await serverFetch(`/${uuidToken}/activeer`);
         localStorage.setItem(o_o_o.vereniging, uuidToken);
     }
     if (uuidToken) {
-        const registratie = await localFetch("/gebruiker/" + uuidToken);
+        const registratie = await localFetch(`/${uuidToken}/gebruiker`);
         gebruiker.knsbNummer = Number(registratie.knsbNummer);
         gebruiker.naam = registratie.naam;
         gebruiker.mutatieRechten = Number(registratie.mutatieRechten);

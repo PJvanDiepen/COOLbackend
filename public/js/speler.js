@@ -14,8 +14,8 @@ import * as zyq from "./zyq.js";
             html.anderePagina(`agenda.html?gebruiker=${zyq.o_o_o.speler}&naamGebruiker=${zyq.o_o_o.naam}`);
         }],
         [db.ONTWIKKElAAR, `backup uitslagen ${zyq.o_o_o.naam}` , async function () {
-            const rijen = await zyq.serverFetch(`/backup/speler/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.speler}`);
-            zyq.backupSQL("uitslag", rijen);
+            zyq.backupSQL("uitslag", await zyq.serverFetch(
+                `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/backup/speler/${zyq.o_o_o.speler}`));
         }]);
     uitslagenSpeler(html.id("kop"), html.id("tabel"));
     await ratingPerMaandSpeler(html.id("ratings"), zyq.o_o_o.speler);

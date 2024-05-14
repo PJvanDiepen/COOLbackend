@@ -65,24 +65,24 @@ const indeling = html.id("indeling");
 
         [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
-            const planning = {seizoen: zyq.o_o_o.seizoen, teamCode: zyq.o_o_o.competitie, rondeNummer: rondeNummer};
+            const planning = {clubCode: zyq.o_o_o.clubCode, seizoen: zyq.o_o_o.seizoen, teamCode: zyq.o_o_o.competitie, rondeNummer: rondeNummer};
             for (const paar of paren) {
                 mutaties += await zyq.serverFetch(
-                    `/${zyq.uuidToken}/indelen/${db.key(planning)}/${paar.bordNummer}/${paar.knsbNummer}/${paar.tegenstanderNummer}`);
+                    `/${zyq.uuidToken}/${db.key(planning)}/${paar.knsbNummer}/indelen/${paar.bordNummer}/${paar.tegenstanderNummer}`);
             }
             let bordNummer = laatsteBord;
             for (const [wit, zwart] of partijen) {
                 if (zwart < 0 || wit === zwart) { // niet ingedeeld of oneven
                     mutaties += await zyq.serverFetch(
-                        `/${zyq.uuidToken}/oneven/${db.key(planning)}/${r[wit].knsbNummer}`);
+                        `/${zyq.uuidToken}/${db.key(planning)}/${r[wit].knsbNummer}/oneven`);
                 } else {
                     bordNummer++;
                     mutaties += await zyq.serverFetch(
-                        `/${zyq.uuidToken}/indelen/${db.key(planning)}/${bordNummer}/${r[wit].knsbNummer}/${r[zwart].knsbNummer}`);
+                        `/${zyq.uuidToken}/${db.key(planning)}/${r[wit].knsbNummer}/indelen/${bordNummer}/${r[zwart].knsbNummer}`);
                 }
             }
-            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/afwezig/${db.key(planning)}`);
-            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/extern/${db.key(planning)}`);
+            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(planning)}/afwezig`);
+            mutaties += await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(planning)}/extern`);
             if (mutaties) {
                 html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
             }

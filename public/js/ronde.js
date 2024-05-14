@@ -22,8 +22,8 @@ import * as zyq from "./zyq.js";
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
         [db.ONTWIKKElAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
-            const rijen = await zyq.serverFetch(`/backup/ronde/uitslag/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/${rondeNummer}`);
-            zyq.backupSQL("uitslag", rijen);
+            zyq.backupSQL("uitslag", await zyq.serverFetch(
+                `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/backup/uitslagen/${rondeNummer}`));
         }],
         [db.WEDSTRIJDLEIDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await zyq.serverFetch(

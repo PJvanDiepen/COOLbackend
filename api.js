@@ -716,22 +716,24 @@ module.exports = function (url) {
     /*
     Frontend: ronde.js
      */
-    url.get("/backup/ronde/uitslag/:seizoen/:team/:van/:tot", async function (ctx) {
+    url.get("/:club/:seizoen/:team/:ronde/backup/uitslagen/:tot", async function (ctx) {
         ctx.body = await Uitslag.query()
+            .where("clubCode", ctx.params.club)
             .where("seizoen", ctx.params.seizoen)
             .where("teamCode", ctx.params.team)
-            .whereBetween("rondeNummer", [ctx.params.van, ctx.params.tot])
+            .whereBetween("rondeNummer", [ctx.params.ronde, ctx.params.tot])
             .orderBy(["rondeNummer", "bordNummer", "partij", "witZwart", "knsbNummer"]);
     });
 
     /*
     Frontend: speler.js
      */
-    url.get("/backup/speler/uitslag/:seizoen/:knsbNummer", async function (ctx) {
+    url.get("/:club/:seizoen/backup/speler/:knsbNummer", async function (ctx) {
         ctx.body = await Uitslag.query()
+            .where("clubCode", ctx.params.club)
             .where("uitslag.seizoen", ctx.params.seizoen)
             .where("uitslag.knsbNummer", ctx.params.knsbNummer)
-            .orderBy(["datum","teamCode"]);
+            .orderBy(["datum","rondeNummer"]);
     });
 
     /*
@@ -809,7 +811,7 @@ module.exports = function (url) {
 
     Frontend: zyq.js
      */
-    url.get("/gebruiker/:uuid", async function (ctx) {
+    url.get("/:uuid/gebruiker", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         ctx.body = gebruiker.dader;
     });
@@ -918,31 +920,6 @@ module.exports = function (url) {
     });
 
     /*
-    Database: team insert
-              mutatie insert
-
-    Frontend: ???
-     */
-    url.get("/:uuid/team/toevoegen/:seizoen/:team/:bond", async function (ctx) { // TODO alle velden invullen
-        const gebruiker = await gebruikerRechten(ctx.params.uuid);
-        let aantal = 0;
-        if (gebruiker.juisteRechten(db.BESTUUR)) {
-            if (await Team.query().insert({
-                seizoen: ctx.params.seizoen,
-                teamCode: ctx.params.team,
-                bond: ctx.params.bond,
-                poule: "",
-                omschrijving: ctx.params.bond === "k" ? "KNSB poule" : ctx.params.bond === "k" ? "KNSB poule" : `${ctx.params.team} competitie`,
-                borden: 0,
-                teamleider: 0} )) {
-                aantal = 1;
-                await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
-            }
-        }
-        ctx.body = aantal;
-    });
-
-    /*
     Database: rating delete
 
     Frontend: bestuur.js
@@ -1000,7 +977,7 @@ module.exports = function (url) {
     Database: speler insert
               mutatie insert
 
-    Frontend: lid.js
+    TODO Frontend: lid.js
      */
     url.get("/:uuid/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
@@ -1031,7 +1008,7 @@ module.exports = function (url) {
     Database: speler update
               mutatie insert
 
-    Frontend: lid.js
+    TODO Frontend: lid.js
      */
     url.get("/:uuid/speler/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
@@ -1059,7 +1036,7 @@ module.exports = function (url) {
     /*
     Database: speler update
 
-    Frontend: bestuur.js
+    TODO Frontend: bestuur.js
      */
     url.get("/:uuid/rating/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
@@ -1124,7 +1101,7 @@ module.exports = function (url) {
     Database: uitslag update
               mutatie insert
 
-    Frontend: agenda.js
+    TODO Frontend: agenda.js
 
      */
     url.get("/:uuid/planning/:seizoen/:team/:ronde/:knsbNummer/:partij/:datum", async function (ctx) {
@@ -1281,12 +1258,12 @@ module.exports = function (url) {
 
     Frontend: indelen.js
      */
-    url.get("/:uuid/indelen/:seizoen/:team/:ronde/:bordNummer/:knsbNummer/:tegenstanderNummer", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:team/:ronde/:knsbNummer/indelen/:bordNummer/:tegenstanderNummer", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // indeling definitief maken
             if (await Uitslag.query().findById(
-                [ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.knsbNummer])
+                [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.knsbNummer])
                 .patch({bordNummer: ctx.params.bordNummer,
                     partij: db.INTERNE_PARTIJ,
                     witZwart: db.WIT,
@@ -1294,7 +1271,7 @@ module.exports = function (url) {
                     resultaat: ""})) {
                 aantal++;
                 if (await Uitslag.query().findById(
-                    [ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstanderNummer])
+                    [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstanderNummer])
                     .patch({bordNummer: ctx.params.bordNummer,
                         partij: db.INTERNE_PARTIJ,
                         witZwart: db.ZWART,
@@ -1314,12 +1291,12 @@ module.exports = function (url) {
 
     Frontend: indelen.js
      */
-    url.get("/:uuid/oneven/:seizoen/:team/:ronde/:knsbNummer", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/:knsbNummer/oneven", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // oneven definitief maken
             aantal = await Uitslag.query().findById(
-                [ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.knsbNummer])
+                [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.knsbNummer])
                 .patch({partij: db.ONEVEN});
             await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
         }
@@ -1332,12 +1309,13 @@ module.exports = function (url) {
 
     Frontend: indelen.js
      */
-    url.get("/:uuid/afwezig/:seizoen/:team/:ronde", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:team/:ronde/afwezig", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // afwezig definitief maken
             aantal = await Uitslag.query()
                 .whereIn("uitslag.partij", [db.NIET_MEEDOEN, db.PLANNING])
+                .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
                 .where("uitslag.teamCode", ctx.params.team)
                 .where("uitslag.rondeNummer", "<=", ctx.params.ronde) // ook voor eerdere ronden
@@ -1353,12 +1331,13 @@ module.exports = function (url) {
 
     Frontend: indelen.js
      */
-    url.get("/:uuid/extern/:seizoen/:team/:ronde", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:team/:ronde/extern", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // extern uit en extern thuis definitief maken
             aantal = await Uitslag.query()
                 .whereIn("uitslag.partij", [db.EXTERN_THUIS, db.EXTERN_UIT])
+                .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
                 .where("uitslag.teamCode", ctx.params.team)
                 .where("uitslag.rondeNummer", "<=", ctx.params.ronde) // ook voor eerdere ronden
@@ -1375,7 +1354,7 @@ module.exports = function (url) {
     Database: uitslag update
               mutatie insert
 
-    Frontend: ronde.js
+    TODO Frontend: ronde.js
      */
     url.get("/:uuid/verwijder/indeling/:seizoen/:team/:ronde", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
@@ -1453,7 +1432,7 @@ module.exports = function (url) {
     Database: uitslag en ronde delete
               mutatie insert
 
-    Frontend: ronde.js
+    TODO Frontend: ronde.js
      */
     url.get("/:uuid/verwijder/ronde/:seizoen/:team/:ronde", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
