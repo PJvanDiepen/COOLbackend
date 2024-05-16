@@ -65,7 +65,11 @@ const indeling = html.id("indeling");
 
         [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
-            const planning = {clubCode: zyq.o_o_o.clubCode, seizoen: zyq.o_o_o.seizoen, teamCode: zyq.o_o_o.competitie, rondeNummer: rondeNummer};
+            const planning = {
+                clubCode: zyq.o_o_o.clubCode,
+                seizoen: zyq.o_o_o.seizoen,
+                teamCode: zyq.o_o_o.competitie,
+                rondeNummer: rondeNummer};
             for (const paar of paren) {
                 mutaties += await zyq.serverFetch(
                     `/${zyq.uuidToken}/${db.key(planning)}/${paar.knsbNummer}/indelen/${paar.bordNummer}/${paar.tegenstanderNummer}`);

@@ -27,7 +27,7 @@ import * as zyq from "./zyq.js";
         }],
         [db.WEDSTRIJDLEIDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await zyq.serverFetch(
-                `/${zyq.uuidToken}/verwijder/indeling/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`);
+                `/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/verwijder/indeling`);
             if (mutaties) {
                 html.anderePagina(`indelen.html?ronde=${rondeNummer}`)
             } else {
@@ -36,7 +36,7 @@ import * as zyq from "./zyq.js";
         }],
         [db.BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
             const mutaties = await zyq.serverFetch(
-                `/${zyq.uuidToken}/verwijder/ronde/${zyq.o_o_o.seizoen}/int/${rondeNummer}`);
+                `/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/verwijder/ronde`);
             if (!mutaties) {
                 console.log(`Verwijder ronde ${rondeNummer} is mislukt.`);
             }

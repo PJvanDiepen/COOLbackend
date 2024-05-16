@@ -79,14 +79,15 @@ async function agenda(knsbNummer, lijst, informeer) {
 
 async function agendaMutatie(knsbNummer) {
     const planning = {
-        seizoen: zyq.ditSeizoen,
+        clubCode: zyq.o_o_o.clubCode,
+        seizoen: zyq.o_o_o.seizoen,
         teamCode: html.params.get("team"),
         rondeNummer: Number(html.params.get("ronde")),
         knsbNummer: knsbNummer};
     const datum = html.params.get("datum");
     const partij = html.params.get("partij");
     if (planning.teamCode && planning.rondeNummer && datum && partij) {
-        if (await zyq.serverFetch(`/${zyq.uuidToken}/planning${db.key(planning)}/${partij}/${datum}`)) {
+        if (await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(planning)}/planning/${partij}/${datum}`)) {
             return {teamCode: planning.teamCode, rondeNummer: planning.rondeNummer};
         }
     }
