@@ -311,7 +311,7 @@ module.exports = function (url) {
 
     Frontend: zyq.js
      */
-    url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
+    url.get("/:club/:seizoen/:competitie/ronden", async function (ctx) {
         ctx.body = await Ronde.query()
             .with("u",function (qb) {
                 qb.from("uitslag")
@@ -323,7 +323,7 @@ module.exports = function (url) {
                     .whereIn("uitslag.resultaat", [db.WINST, db.VERLIES, db.REMISE])
                     .where("uitslag.clubCode", ctx.params.club)
                     .where("uitslag.seizoen", ctx.params.seizoen)
-                    .where("uitslag.teamCode", ctx.params.team)
+                    .where("uitslag.teamCode", ctx.params.competitie)
                     .groupBy("uitslag.rondeNummer")
             })
             .select("ronde.*",
@@ -334,7 +334,7 @@ module.exports = function (url) {
                     .on("u.teamCode", "ronde.teamCode")
                     .on("u.rondeNummer", "ronde.rondeNummer")})
             .where("ronde.seizoen", ctx.params.seizoen)
-            .where("ronde.teamCode", ctx.params.team)
+            .where("ronde.teamCode", ctx.params.competitie)
             .orderBy("ronde.rondeNummer");
     });
 
@@ -1101,15 +1101,13 @@ module.exports = function (url) {
     Database: uitslag update
               mutatie insert
 
-    TODO Frontend: agenda.js
+    Frontend: agenda.js
 
      */
     url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/planning/:partij/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.TEAMLEIDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
-            console.log("tot hier!");
-            console.log(ctx.params);
             const ronden = await Uitslag.query()
                 .select("uitslag.*", "ronde.uithuis")
                 .join("ronde", function (join) {
@@ -1120,11 +1118,9 @@ module.exports = function (url) {
                 })
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .where("uitslag.knsbNummer", ctx.params.knsbNummer)
+                .where("uitslag.knsbNummer", ctx.params.speler)
                 .where("uitslag.datum", ctx.params.datum)
                 .orderBy(["uitslag.teamCode", "uitslag.rondeNummer"]);
-            console.log("tot hier!!");
-            console.log(ronden);
             const rondeWijzigen = ronden.findIndex(function(ronde) {
                 return ronde.teamCode === ctx.params.team && ronde.rondeNummer === Number(ctx.params.ronde);
             });
@@ -1157,7 +1153,7 @@ module.exports = function (url) {
 
     Frontend: paren.js en indelen.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/paren", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/paren", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let paren = {};
         if (gebruiker.juisteRechten(db.GEREGISTREERD)) {
@@ -1170,7 +1166,7 @@ module.exports = function (url) {
                 .join("persoon as wit", "uitslag.knsbNummer", "wit.knsbNummer")
                 .join("persoon as zwart", "uitslag.tegenstanderNummer", "zwart.knsbNummer")
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .where("uitslag.teamCode", ctx.params.team)
+                .where("uitslag.teamCode", ctx.params.competitie)
                 .where("uitslag.rondeNummer", ctx.params.ronde)
                 .where("uitslag.witZwart", db.WIT)
                 .orderBy("uitslag.bordNummer");
@@ -1184,19 +1180,19 @@ module.exports = function (url) {
 
     Frontend: paren.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/paar/:bord/:tegenstander", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/:speler/paar/:bord/:tegenstander", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
             const witSpeler = await Uitslag.query()
                 .select("uitslag.partij")
-                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler]);
+                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler]);
             const zwartSpeler = await Uitslag.query()
                 .select("uitslag.partij")
-                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstander]);
+                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander]);
             if (db.isGeenPaar(witSpeler) && db.isGeenPaar(zwartSpeler)
                 && await Uitslag.query().findById(
-                    [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler])
+                    [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                 .patch({bordNummer: ctx.params.bord,
                     partij: witSpeler.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD, // indien NIET_MEEDOEN of PLANNING
                     witZwart: db.WIT,
@@ -1204,7 +1200,7 @@ module.exports = function (url) {
                     resultaat: ""})) {
                 aantal++;
                 if (await Uitslag.query().findById(
-                    [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstander])
+                    [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander])
                     .patch({bordNummer: ctx.params.bord,
                         partij: zwartSpeler.partij === db.MEEDOEN ? db.INGEDEELD : db.TOCH_INGEDEELD, // indien NIET_MEEDOEN of PLANNING
                         witZwart: db.ZWART,
@@ -1224,19 +1220,19 @@ module.exports = function (url) {
 
     Frontend: paren.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/los/:bord/:tegenstander", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/:speler/los/:bord/:tegenstander", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // handmatig indelen
             const witSpeler = await Uitslag.query()
                 .select("uitslag.partij")
-                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler]);
+                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler]);
             const zwartSpeler = await Uitslag.query()
                 .select("uitslag.partij")
-                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstander]);
+                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander]);
             if (db.isPaar(witSpeler) && db.isPaar(zwartSpeler)
                 && await Uitslag.query().findById(
-                    [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler])
+                    [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                 .patch({bordNummer: 0,
                     partij: witSpeler.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN, // indien TOCH_INGEDEELD
                     witZwart: "",
@@ -1244,7 +1240,7 @@ module.exports = function (url) {
                     resultaat: ""})) {
                 aantal++;
                 if (await Uitslag.query().findById(
-                    [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstander])
+                    [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander])
                     .patch({bordNummer: 0,
                         partij: zwartSpeler.partij === db.INGEDEELD ? db.MEEDOEN : db.NIET_MEEDOEN, // indien TOCH_INGEDEELD
                         witZwart: "",
@@ -1264,12 +1260,12 @@ module.exports = function (url) {
 
     Frontend: indelen.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/indelen/:bordNummer/:tegenstanderNummer", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/:speler/indelen/:bordNummer/:tegenstanderNummer", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // indeling definitief maken
             if (await Uitslag.query().findById(
-                [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler])
+                [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                 .patch({bordNummer: ctx.params.bordNummer,
                     partij: db.INTERNE_PARTIJ,
                     witZwart: db.WIT,
@@ -1277,7 +1273,7 @@ module.exports = function (url) {
                     resultaat: ""})) {
                 aantal++;
                 if (await Uitslag.query().findById(
-                    [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstanderNummer])
+                    [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstanderNummer])
                     .patch({bordNummer: ctx.params.bordNummer,
                         partij: db.INTERNE_PARTIJ,
                         witZwart: db.ZWART,
@@ -1302,7 +1298,7 @@ module.exports = function (url) {
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // oneven definitief maken
             aantal = await Uitslag.query().findById(
-                [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler])
+                [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                 .patch({partij: db.ONEVEN});
             await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
         }
@@ -1315,7 +1311,7 @@ module.exports = function (url) {
 
     Frontend: indelen.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/afwezig", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/afwezig", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // afwezig definitief maken
@@ -1323,7 +1319,7 @@ module.exports = function (url) {
                 .whereIn("uitslag.partij", [db.NIET_MEEDOEN, db.PLANNING])
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .where("uitslag.teamCode", ctx.params.team)
+                .where("uitslag.teamCode", ctx.params.competitie)
                 .where("uitslag.rondeNummer", "<=", ctx.params.ronde) // ook voor eerdere ronden
                 .patch({partij: db.AFWEZIG});
             await mutatie(gebruiker, ctx, aantal, db.NIEUWE_RANGLIJST);
@@ -1337,7 +1333,7 @@ module.exports = function (url) {
 
     Frontend: indelen.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/extern", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/extern", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // extern uit en extern thuis definitief maken
@@ -1345,7 +1341,7 @@ module.exports = function (url) {
                 .whereIn("uitslag.partij", [db.EXTERN_THUIS, db.EXTERN_UIT])
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .where("uitslag.teamCode", ctx.params.team)
+                .where("uitslag.teamCode", ctx.params.competitie)
                 .where("uitslag.rondeNummer", "<=", ctx.params.ronde) // ook voor eerdere ronden
                 .patch({partij: db.EXTERNE_PARTIJ});
             await mutatie(gebruiker, ctx, aantal, db.NIEUWE_RANGLIJST);
@@ -1362,7 +1358,7 @@ module.exports = function (url) {
 
     Frontend: ronde.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/verwijder/indeling", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/verwijder/indeling", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER)) { // definitief maken terugdraaien
@@ -1370,7 +1366,7 @@ module.exports = function (url) {
                 .whereIn("uitslag.partij", [db.INTERNE_PARTIJ, db.ONEVEN, db.REGLEMENTAIRE_WINST])
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .where("uitslag.teamCode", ctx.params.team)
+                .where("uitslag.teamCode", ctx.params.competitie)
                 .where("uitslag.rondeNummer", ctx.params.ronde)
                 .patch({bordNummer: 0,
                     partij: db.MEEDOEN,
@@ -1380,7 +1376,7 @@ module.exports = function (url) {
             const afzeggen = await Uitslag.query()
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .where("uitslag.teamCode", ctx.params.team)
+                .where("uitslag.teamCode", ctx.params.competitie)
                 .where("uitslag.rondeNummer", ctx.params.ronde)
                 .where("uitslag.partij", db.AFWEZIG)
                 .patch({bordNummer: 0,
@@ -1402,7 +1398,7 @@ module.exports = function (url) {
 
     Frontend: ronde.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/uitslag/:tegenstander/:resultaat", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/:speler/uitslag/:tegenstander/:resultaat", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         const allesWijzigen = gebruiker.juisteRechten(db.WEDSTRIJDLEIDER); // uitslag van andere gebruiker wijzigen
@@ -1411,20 +1407,20 @@ module.exports = function (url) {
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.tegenstander)) {
             const eigenUitslag = await Uitslag.query()
                 .select("uitslag.resultaat")
-                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler]);
+                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler]);
             const tegenstanderUitslag = await Uitslag.query()
                 .select("uitslag.resultaat")
-                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstander]);
+                .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander]);
             if (resultaatWijzigen(eigenUitslag.resultaat, tegenstanderUitslag.resultaat, ctx.params.resultaat, allesWijzigen)) {
                 if (await Uitslag.query().findById(
-                    [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.speler])
+                    [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                     .patch(
                         {resultaat: ctx.params.resultaat})) {
                     aantal++;
                 }
                 if (Number(ctx.params.tegenstander) > 0) {
                     if (await Uitslag.query().findById(
-                        [ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde, ctx.params.tegenstander])
+                        [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander])
                         .patch(
                             {resultaat: resultaatTegenstander(ctx.params.resultaat)})) {
                         aantal++;
@@ -1442,7 +1438,7 @@ module.exports = function (url) {
 
     Frontend: ronde.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/verwijder/ronde", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/:ronde/verwijder/ronde", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BEHEERDER)) {
@@ -1450,19 +1446,19 @@ module.exports = function (url) {
                 .whereIn("uitslag.resultaat", [db.WINST, db.VERLIES, db.REMISE])
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .where("uitslag.teamCode", ctx.params.team)
+                .where("uitslag.teamCode", ctx.params.competitie)
                 .where("uitslag.rondeNummer", ctx.params.ronde)
                 .limit(1);
             if (resultaten.length === 0) { // ronde en uitslagen verwijderen indien geen resultaten
                 const uitslagen = await Uitslag.query().delete()
                     .where("uitslag.clubCode", ctx.params.club)
                     .where("uitslag.seizoen", ctx.params.seizoen)
-                    .where("uitslag.teamCode", ctx.params.team)
+                    .where("uitslag.teamCode", ctx.params.competitie)
                     .where("uitslag.rondeNummer", ctx.params.ronde);
                 const ronden = await Ronde.query().delete()
                     .where("uitslag.clubCode", ctx.params.club)
                     .where("ronde.seizoen", ctx.params.seizoen)
-                    .where("ronde.teamCode", ctx.params.team)
+                    .where("ronde.teamCode", ctx.params.competitie)
                     .where("ronde.rondeNummer", ctx.params.ronde);
                 aantal = uitslagen + ronden;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
@@ -1517,14 +1513,14 @@ module.exports = function (url) {
 }
 
 async function paarMuteren(uitslag) {
-    const tegenstander = await Uitslag.query()
-        .findById([uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer]);
+    const tegenstander = await Uitslag.query().findById(
+        [uitslag.clubCode, uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer]);
     if (!db.isPaar(tegenstander)) { // uitsluitend indien paar
         return 0;
     }
     let aantal = 0;
     if (await Uitslag.query().findById(
-        [uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
+        [uitslag.clubCode, uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
         .patch({bordNummer: 0,
             partij: db.NIET_MEEDOEN, // speler heeft afgezegd
             witZwart: "",
