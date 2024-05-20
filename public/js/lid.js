@@ -149,15 +149,15 @@ async function lidFormulier(persoon, septemberRating) {
                 vinkjes += competitie[i].value;
             }
         }
-        vinkjes += " "; // minstens 1 vinkje voor blanko teamCode
+        vinkjes += " "; // minstens 1 vinkje voor blanko teamCode${
         const uuid = zyq.uuidToken;
-        const spelerMuteren = persoon.datum === null ? "speler/toevoegen" : "speler/wijzigen";
-        const seizoen = zyq.o_o_o.seizoen;
+        const key = `${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/int`; // TODO voorlopig interne competitie
+        const muteren = persoon.datum === null ? "speler/toevoegen" : "speler/wijzigen";
         const rating = knsbRating.value;
         const ratingIntern = interneRating.value;
         const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
         const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;
-        if (await zyq.serverFetch(`/${uuid}/${spelerMuteren}/${seizoen}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${jaar}-09-01`)) {
+        if (await zyq.serverFetch(`/${uuid}/${key}/${muteren}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${jaar}-09-01`)) {
             mutaties++;
         }
         if (knsbWijzigen && (Number(knsbNummer.value) !== lidNummer || naam.value !== persoon.naam) &&

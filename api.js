@@ -977,17 +977,20 @@ module.exports = function (url) {
     Database: speler insert
               mutatie insert
 
-    TODO Frontend: lid.js
+    Frontend: lid.js
      */
-    url.get("/:uuid/speler/toevoegen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/speler/toevoegen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
             const intern = teamCodes(ctx.params.competities);
             if (await Speler.query().insert({
+                clubCode: ctx.params.club,
                 seizoen: ctx.params.seizoen,
+                teamCode: ctx.params.competitie,
                 knsbNummer: ctx.params.knsbNummer,
                 knsbRating: ctx.params.knsbRating,
+                rol: 0,
                 datum: ctx.params.datum,
                 interneRating: ctx.params.interneRating,
                 nhsbTeam: ctx.params.nhsb,
@@ -1008,14 +1011,14 @@ module.exports = function (url) {
     Database: speler update
               mutatie insert
 
-    TODO Frontend: lid.js
+    Frontend: lid.js
      */
-    url.get("/:uuid/speler/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/speler/wijzigen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
             const intern = teamCodes(ctx.params.competities);
-            if (await Speler.query().findById([ctx.params.seizoen, ctx.params.knsbNummer])
+            if (await Speler.query().findById([Number(ctx.params.club), ctx.params.seizoen, ctx.params.competitie, ctx.params.knsbNummer])
                 .patch({knsbRating: ctx.params.knsbRating,
                     datum: ctx.params.datum,
                     interneRating: ctx.params.interneRating,
@@ -1036,13 +1039,13 @@ module.exports = function (url) {
     /*
     Database: speler update
 
-    TODO Frontend: bestuur.js
+    Frontend: bestuur.js
      */
-    url.get("/:uuid/rating/wijzigen/:seizoen/:knsbNummer/:knsbRating/:interneRating/:datum", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:competitie/speler/rating/:knsbNummer/:knsbRating/:interneRating/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR)) {
-            if (await Speler.query().findById([ctx.params.seizoen, ctx.params.knsbNummer])
+            if (await Speler.query().findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.knsbNummer])
                 .patch({knsbRating: ctx.params.knsbRating,
                     interneRating: ctx.params.interneRating,
                     datum: ctx.params.datum})) {

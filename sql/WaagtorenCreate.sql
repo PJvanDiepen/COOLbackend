@@ -100,6 +100,7 @@ CREATE TABLE speler (
 	knsbTeam char(3) not null,
     knsbNummer int not null,
     knsbRating int not null,
+    rol int not null,
     datum date not null,
     interneRating int not null,
     intern1 char(3) not null,
