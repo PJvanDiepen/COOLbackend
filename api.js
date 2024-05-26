@@ -990,7 +990,6 @@ module.exports = function (url) {
                 teamCode: ctx.params.competitie,
                 knsbNummer: ctx.params.knsbNummer,
                 knsbRating: ctx.params.knsbRating,
-                rol: 0,
                 datum: ctx.params.datum,
                 interneRating: ctx.params.interneRating,
                 nhsbTeam: ctx.params.nhsb,
@@ -999,7 +998,10 @@ module.exports = function (url) {
                 intern2: intern[1],
                 intern3: intern[2],
                 intern4: intern[3],
-                intern5: intern[4]} )) {
+                intern5: intern[4],
+                rol: 0,
+                emailZien: 0,
+                telefoonZien: 0} )) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
