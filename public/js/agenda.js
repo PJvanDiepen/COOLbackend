@@ -89,6 +89,8 @@ async function agendaMutatie(knsbNummer) {
     if (planning.teamCode && planning.rondeNummer && datum && partij) {
         if (await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(planning)}/planning/${partij}/${datum}`)) {
             return {teamCode: planning.teamCode, rondeNummer: planning.rondeNummer};
+        } else {
+            console.log(`Mislukt: /${zyq.uuidToken}/${db.key(planning)}/planning/${partij}/${datum}`);
         }
     }
     return {teamCode: "", rondeNummer: 0};

@@ -825,7 +825,7 @@ module.exports = function (url) {
 
     Frontend: zyq.js
      */
-    url.get("/activeer/:uuid", async function (ctx) {
+    url.get("/:uuid/activeer", async function (ctx) {
         ctx.body = await Gebruiker.query().findById(ctx.params.uuid)
             .patch({datumEmail: fn("curdate")});
     });
@@ -1110,7 +1110,7 @@ module.exports = function (url) {
     url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/planning/:partij/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.TEAMLEIDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
+        if (gebruiker.juisteRechten(db.WEDSTRIJDLEIDER) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) {
             const ronden = await Uitslag.query()
                 .select("uitslag.*", "ronde.uithuis")
                 .join("ronde", function (join) {

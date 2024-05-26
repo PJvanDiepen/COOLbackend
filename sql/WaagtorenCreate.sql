@@ -29,7 +29,7 @@ drop table if exists gebruiker; -- 0-0-0.nl versie 0.1
 -- TODO knsbNummer unique
 -- TODO telefoon char(15)
 -- TODO wat nog meer vastleggen naast datumEmail ?
--- TODO mutatieRechten naar rol
+-- TODO mutatieRechten naar rol in speler
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,
@@ -48,8 +48,8 @@ add constraint fk_gebruiker_persoon
         
 drop table if exists team; -- 0-0-0.nl versie 0.8.56
 -- TODO bond en poule verwijderen
--- TODO teamleider naar rol
--- herstel foreign keys ronde_team en uitslag_team 
+-- TODO teamleider naar rol in speler
+-- TODO verwijder fk_team_persoon
 create table team (
     clubCode int not null,
 	seizoen char(4) not null,
@@ -62,26 +62,6 @@ create table team (
     primary key (clubCode, seizoen, teamCode)
 );
 
--- TODO conversie 0-0-0.nl versie 0.8.55 -> 0.8.56
-alter table speler drop constraint fk_speler_nhsb_team;
-alter table speler drop constraint fk_speler_knsb_team;
-alter table speler drop constraint fk_speler_intern1; -- team / competitie
-alter table speler drop constraint fk_speler_intern2;
-alter table speler drop constraint fk_speler_intern3;
-alter table speler drop constraint fk_speler_intern4;
-alter table speler drop constraint fk_speler_intern5;
-
-alter table ronde drop constraint fk_ronde_team;
-
-alter table uitslag drop constraint fk_uitslag_team;
-alter table uitslag drop constraint fk_uitslag_ander_team;
-
-alter table team drop primary key;
-
-alter table team add primary key (clubCode, seizoen, teamCode);
-
-describe team;
-
 alter table team
 add constraint fk_team_persoon
     foreign key (teamleider)
@@ -90,6 +70,7 @@ add constraint fk_team_persoon
     ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.8.56
+-- TODO telefoon int not null
 -- TODO datum verwijderen
 -- TODO nhsbTeam, knsbTeam, intern1..5 verwijderen
 CREATE TABLE speler (
@@ -100,7 +81,6 @@ CREATE TABLE speler (
 	knsbTeam char(3) not null,
     knsbNummer int not null,
     knsbRating int not null,
-    rol int not null,
     datum date not null,
     interneRating int not null,
     intern1 char(3) not null,
@@ -108,15 +88,11 @@ CREATE TABLE speler (
     intern3 char(3) not null,
     intern4 char(3) not null,
     intern5 char(3) not null,
+    rol int not null,
+    emailZien int not null,
+    telefoonZien int not null,
     PRIMARY KEY (clubCode, seizoen, teamCode, knsbNummer)
 );
-
--- TODO conversie 0-0-0.nl versie 0.8.55 -> 0.8.56
-alter table speler drop primary key;
-
-alter table speler add primary key (clubCode, seizoen, teamCode, knsbNummer);
-
-describe speler;
 
 alter table speler
 add CONSTRAINT fk_speler_team
@@ -133,8 +109,6 @@ add constraint fk_speler_persoon
     ON UPDATE CASCADE;
       
 DROP TABLE IF EXISTS ronde; -- 0-0-0.nl versie 0.8.56
-describe ronde;
--- TODO primary key (clubCode, seizoen, teamCode, rondeNummer)
 CREATE TABLE ronde (
     clubCode int not null,
     seizoen char(4) not null,
@@ -152,22 +126,10 @@ add CONSTRAINT fk_ronde_team
     REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-
--- TODO conversie 0-0-0.nl versie 0.8.55 -> 0.8.56
-alter table uitslag drop constraint fk_uitslag_ronde;
-
-alter table ronde drop primary key;
-
-alter table ronde add primary key (clubCode, seizoen, teamCode, rondeNummer);
-
-describe ronde;
     
 DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.56
-alter table uitslag add column clubCode int not null first;
-alter table uitslag add column competitie char(3) not null after anderTeam;
-describe uitslag;
--- TODO primary key (clubCode, seizoen, teamCode, knsbNummer)
 -- TODO competitie i.p.v. anderTeam
+-- TODO fk_uitslag_competitie i.p.v. fk_uitslag_ander_team 
 CREATE TABLE uitslag (
     clubCode int not null,
     seizoen char(4) not null,
@@ -185,22 +147,12 @@ CREATE TABLE uitslag (
     PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
 );
 
--- TODO conversie 0-0-0.nl versie 0.8.55 -> 0.8.56
-alter table uitslag drop primary key;
-
-alter table uitslag add primary key (clubCode, seizoen, teamCode, rondeNummer, knsbNummer);
-
-describe uitslag;
-
 alter table uitslag
 add CONSTRAINT fk_uitslag_team
     FOREIGN KEY (clubCode, seizoen, teamCode)
     REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-
-alter table uitslag
-drop CONSTRAINT fk_uitslag_ander_team;
 
 alter table uitslag
 add CONSTRAINT fk_uitslag_ander_team
