@@ -60,7 +60,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
         const invallen = wedstrijden.filter(function (wedstrijd) {
             return nietGevraagd(speler.knsbNummer, ronden, wedstrijd[0]);
         });
-        if (invallen.length > 1) {
+        if (invallen.length > 0) {
             const knop = document.createElement("select");
             html.selectie(knop, 0, invallen, async function (rondeNummer){
                 const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
