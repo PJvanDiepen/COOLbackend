@@ -356,11 +356,13 @@ module.exports = function (url) {
         ctx.body = await Speler.query()
             .select("speler.knsbNummer",
                 "persoon.naam",
-                {subgroep: fn("subgroep", // TODO met :club
+                {subgroep: fn("subgroep",
+                        ctx.params.club,
                         ctx.params.seizoen,
                         ctx.params.versie,
                         ref("speler.knsbNummer"))},
-                {totalen: fn("totalen", // TODO met :club
+                {totalen: fn("totalen",
+                        ctx.params.club,
                         ctx.params.seizoen,
                         ctx.params.competitie,
                         ctx.params.ronde,
@@ -423,7 +425,9 @@ module.exports = function (url) {
                         ref("uitslag.teamCode"),
                         ctx.params.versie,
                         ctx.params.knsbNummer,
-                        fn("waardeCijfer", ctx.params.versie, fn("rating", ctx.params.seizoen, ctx.params.knsbNummer)),
+                        fn("waardeCijfer",
+                            ctx.params.versie,
+                            fn("rating", ctx.params.club, ctx.params.seizoen, ctx.params.knsbNummer)),
                         ref("uitslag.partij"),
                         ref("uitslag.tegenstanderNummer"),
                         ref("uitslag.resultaat"))})
