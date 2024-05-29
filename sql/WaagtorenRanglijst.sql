@@ -227,7 +227,7 @@ begin
         where u.clubCode = clubCode and u.seizoen = seizoen and u.knsbNummer = knsbNummer
             -- uitslagen van interne competitie tot en met deze ronde of uitslagen van externe competitie tot deze datum
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
-            and u.anderTeam = competitie;
+            and u.competitie = competitie;
     declare continue handler for not found set found = false;
     if versie <= 4 then -- interne competitie
 		set minimumInternePartijen = 20; -- reglement artikel 2
@@ -410,7 +410,7 @@ join ronde r on u.clubCode = r.clubCode and u.seizoen = r.seizoen and u.teamCode
 where u.clubCode = @club 
     and u.seizoen = @seizoen
     and u.knsbNummer = @knsbNummer
-    and u.anderTeam = @competitie
+    and u.competitie = @competitie
 order by u.datum, u.bordNummer;
 
 -- aantal mutaties per gebruiker 
@@ -440,7 +440,7 @@ set @knsbNummer = 7428960; -- Frank Agter
 set @datum = '2023-10-17';
 
 -- uitslagen / ronden op dezelfde datum
-select u.teamCode, u.rondeNummer, u.anderTeam, u.partij, r.uithuis 
+select u.teamCode, u.rondeNummer, u.competitie, u.partij, r.uithuis
   from uitslag u 
   join ronde r on r.clubCode = u.clubCode and r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer  
 where u.clubCode = @club and  u.seizoen = @seizoen and u.knsbNummer = @knsbNummer and u.datum = @datum 
@@ -515,7 +515,7 @@ select t.*, naam from team t join persoon p on p.knsbNummer = t.teamleider where
 
 -- voor teamleiders
 with u as 
-  (select * from uitslag where clubCode = @club and seizoen = @seizoen and not teamCode = anderTeam and datum = @datum)   
+  (select * from uitslag where clubCode = @club and seizoen = @seizoen and not teamCode = competitie and datum = @datum)
 select s.nhsbTeam, s.knsbTeam, s.knsbNummer, s.knsbRating, naam, u.teamCode, u.partij
 from speler s
   join persoon p on s.knsbNummer = p.knsbNummer

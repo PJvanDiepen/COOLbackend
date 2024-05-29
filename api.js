@@ -185,7 +185,7 @@ module.exports = function (url) {
                 .whereIn("uitslag.partij", [db.EXTERN_THUIS, db.EXTERN_UIT])
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
-                .whereNot("uitslag.teamCode", ref("uitslag.anderTeam"))
+                .whereNot("uitslag.teamCode", ref("uitslag.competitie"))
                 .where("uitslag.datum",ctx.params.datum)
                 .orderBy(["uitslag.partij", "naam"]);
         }
@@ -402,7 +402,7 @@ module.exports = function (url) {
     join ronde r on u.clubCode = r.clubCode and u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
     where u.seizoen = @seizoen
         and u.knsbNummer = @knsbNummer
-        and u.anderTeam = @competitie
+        and u.competitie = @competitie
     order by u.datum, u.bordNummer;
 
     Frontend: speler.js
@@ -420,7 +420,8 @@ module.exports = function (url) {
                 "uitslag.partij",
                 "ronde.uithuis",
                 "ronde.tegenstander",
-                {punten: fn("punten", // TODO met :club
+                {punten: fn("punten",
+                        ctx.params.club,
                         ctx.params.seizoen,
                         ref("uitslag.teamCode"),
                         ctx.params.versie,
@@ -440,7 +441,7 @@ module.exports = function (url) {
             .where("uitslag.clubCode", ctx.params.club)
             .where("uitslag.seizoen", ctx.params.seizoen)
             .where("uitslag.knsbNummer", ctx.params.knsbNummer)
-            .where("uitslag.anderTeam", ctx.params.competitie) // TODO anderTeam = competitie
+            .where("uitslag.competitie", ctx.params.competitie)
             .orderBy(["uitslag.datum","uitslag.rondeNummer"]);
     });
 
@@ -449,7 +450,7 @@ module.exports = function (url) {
     with
       s as (select * from speler where clubCode = @club and seizoen = @seizoen and knsbNummer = @knsbNummer),
       u as (select * from uitslag where clubCode = @club and seizoen = @seizoen and knsbNummer = @knsbNummer)
-    select r.*, u.partij, u.anderTeam
+    select r.*, u.partij, u.competitie
       from ronde r
       join s on r.clubCode = s.clubCode and r.seizoen = s.seizoen
     left join u on u.clubCode = r.clubCode and r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
@@ -475,7 +476,7 @@ module.exports = function (url) {
                      .where("uitslag.seizoen", ctx.params.seizoen)
                      .where("uitslag.knsbNummer", ctx.params.knsbNummer)
              })
-             .select("ronde.*", "u.partij", "u.anderTeam")
+             .select("ronde.*", "u.partij", "u.competitie")
              .join("s", function(join) {
                  join.on("s.clubCode", "ronde.clubCode")
                      .on("s.seizoen", "ronde.seizoen")
@@ -488,15 +489,9 @@ module.exports = function (url) {
              })
              .where("ronde.clubCode", ctx.params.club)
              .where("ronde.seizoen", ctx.params.seizoen)
-             .whereIn("ronde.teamCode", [ // externe teams en interne competities van speler
-                 ref("s.knsbTeam"),
-                 ref("s.nhsbTeam"),
-                 ref("s.intern1"),
-                 ref("s.intern2"),
-                 ref("s.intern3"),
-                 ref("s.intern4"),
-                 ref("s.intern5"),
-                 ref("u.teamCode")]) // indien speler invaller is
+             .whereIn("ronde.teamCode", [ // indien speler
+                 ref("s.teamCode"), // indien vaste speler in team of deelnemer in competitie
+                 ref("u.teamCode")]) // indien speler invaller in team
              .orderBy(["ronde.datum", "ronde.teamCode", "ronde.rondeNummer"]);
         } else {
             ctx.body = [];
@@ -831,7 +826,7 @@ module.exports = function (url) {
      */
     url.get("/:uuid/activeer", async function (ctx) {
         ctx.body = await Gebruiker.query().findById(ctx.params.uuid)
-            .patch({datumEmail: fn("curdate")});
+            .patch({datumEmail: fn("curdate")}); // TODO naar log
     });
 
     /*
@@ -1087,9 +1082,9 @@ module.exports = function (url) {
                     tegenstanderNummer: 0,
                     resultaat: "",
                     datum: ctx.params.datum,
-                    anderTeam: ctx.params.competitie,
+                    anderTeam: ctx.params.competitie, // TODO verwijderen
                     competitie: ctx.params.competitie
-            } )) { // TODO anderTeam = competitie
+            } )) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }
@@ -1142,7 +1137,7 @@ module.exports = function (url) {
                     for (let i = 0; i < ronden.length; i++) {
                         if (i < rondeWijzigen) {
                             aantal += await planningMuteren(ronden[i], db.NIET_MEEDOEN);
-                        } else if (i >= rondeWijzigen && ronden[i].teamCode === ronden[i].anderTeam) { // indien meer interne ronden per datum
+                        } else if (i >= rondeWijzigen && ronden[i].teamCode === ronden[i].competitie) { // indien meer interne ronden per datum
                             aantal += await planningMuteren(ronden[i], db.MEEDOEN);
                         } else if (i === rondeWijzigen) {
                             aantal += await planningMuteren(ronden[i], ronden[rondeWijzigen].uithuis); // extern uit of thuis meedoen

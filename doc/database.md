@@ -199,9 +199,9 @@ witZwart CHAR(1)
 tegenstanderNummer INT
 resultaat CHAR(1)
 datum DATE
-anderTeam CHAR(3)
+competitie CHAR(3)
 PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
-FOREIGN KEY (seizoen, anderTeam) REFERENCES Team (seizoen, teamCode)
+FOREIGN KEY (seizoen, competitie) REFERENCES Team (seizoen, teamCode)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 ```
 
@@ -243,7 +243,7 @@ Voor elke externe partij staat in `Uitslag` bij `knsbNummer` de speler
 van de eigen schaakvereniging en meestal `tegenstanderNummer = 0`.
 Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstijd 
 tegen een team van de eigen schaakvereniging (of als alle tegenstanders in `Persoon` zijn vastgelegd).   
-Indien `anderTeam = 'int'` telt deze uitslag mee voor de interne competitie.
+Indien `competitie = 'int'` telt deze uitslag mee voor de interne competitie.
 
 De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
 - 0 = onbekend

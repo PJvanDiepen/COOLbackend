@@ -35,7 +35,7 @@ import * as zyq from "./zyq.js";
 
     Een speler kan per datum meedoen in 1 competitie of meedoen in 1 externe wedstrijd of niet meedoen.
 
-    Indien een externe wedstrijd meetelt voor de interne competitie (anderTeam = INTERNE_COMPETITIE)
+    Indien een externe wedstrijd meetelt voor de interne competitie (competitie = INTERNE_COMPETITIE)
     en de datum van de externe wedstrijd is de datum van een ronde van de interne competitie
     dan wordt dit vastgelegd in 2 uitslagen met teamCode van team en van INTERNE_COMPETITIE
     en partij = EXTERN_UIT of EXTERN_THUIS.

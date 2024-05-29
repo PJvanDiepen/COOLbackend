@@ -25,19 +25,22 @@ create table persoon (
     PRIMARY KEY (knsbNummer)
 );
 
-drop table if exists gebruiker; -- 0-0-0.nl versie 0.1
--- TODO knsbNummer unique
--- TODO telefoon char(15)
--- TODO wat nog meer vastleggen naast datumEmail ?
--- TODO mutatieRechten naar rol in speler
+drop table if exists gebruiker; -- 0-0-0.nl versie 0.8.58
+-- TODO mutatieRechten en datumEmail verwijderen
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,
     uuidToken char(36),
     email varchar(100),
     datumEmail date,
+    telefoon char(15),
     primary key (uuidToken)
 );
+
+describe gebruiker;
+
+alter table gebruiker
+add constraint gebruiker_1_persoon unique (knsbNummer);
 
 alter table gebruiker
 add constraint fk_gebruiker_persoon
@@ -47,8 +50,7 @@ add constraint fk_gebruiker_persoon
     ON UPDATE CASCADE;
         
 drop table if exists team; -- 0-0-0.nl versie 0.8.56
--- TODO bond en poule verwijderen
--- TODO teamleider naar rol in speler
+-- TODO bond, poule en teamleider verwijderen
 -- TODO verwijder fk_team_persoon
 create table team (
     clubCode int not null,
@@ -70,7 +72,6 @@ add constraint fk_team_persoon
     ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.8.56
--- TODO telefoon int not null
 -- TODO datum verwijderen
 -- TODO nhsbTeam, knsbTeam, intern1..5 verwijderen
 CREATE TABLE speler (
@@ -127,9 +128,7 @@ add CONSTRAINT fk_ronde_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.56
--- TODO competitie i.p.v. anderTeam
--- TODO fk_uitslag_competitie i.p.v. fk_uitslag_ander_team 
+DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.58
 CREATE TABLE uitslag (
     clubCode int not null,
     seizoen char(4) not null,
@@ -154,12 +153,21 @@ add CONSTRAINT fk_uitslag_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
 
+-- TODO conversie 0-0-0.nl versie 0.8.59
 alter table uitslag
-add CONSTRAINT fk_uitslag_ander_team
-    FOREIGN KEY (clubCode, seizoen, anderTeam)
+drop constraint fk_uitslag_ander_team;
+
+update uitslag set competitie = "int" where clubCode = 0 and anderTeam = "int";
+update uitslag set competitie = "ira" where clubCode = 0 and anderTeam = "ira";
+update uitslag set competitie = "ije" where clubCode = 0 and anderTeam = "ije";
+     
+-- TODO conversie versie 0.8.59        
+alter table uitslag
+add CONSTRAINT fk_uitslag_competitie
+    FOREIGN KEY (clubCode, seizoen, competitie)
     REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;
+    ON UPDATE CASCADE;    
             
 alter table uitslag
 add constraint fk_uitslag_persoon

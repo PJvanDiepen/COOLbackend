@@ -40,7 +40,7 @@ import * as zyq from "./zyq.js";
   join ronde r on u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
   where u.seizoen = @seizoen
       and u.knsbNummer = @knsbNummer
-      and u.anderTeam = 'int'
+      and u.competitie = 'int'
   order by u.datum, u.rondeNummer;
   */
 

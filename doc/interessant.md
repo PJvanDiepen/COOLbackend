@@ -24,10 +24,7 @@ Refresh Android cache
 - TODO
 
 # Browser
-- [welke browser?](https://developer.mozilla.org/en-US/docs/Web/HTTP/Browser_detection_using_the_user_agent)
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
-- [Chrome tracing](https://nolanlawson.com/2022/10/26/a-beginners-guide-to-chrome-tracing/)
-- [back forward cache](https://www.sabatino.dev/bfcache-explained/)
 
 # MySQL
 
@@ -244,8 +241,8 @@ Refresh Android cache
 - [Nationaal Cyber Security Centrum](https://www.ncsc.nl/)
 - [Diagrammen in Markdown](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)
 - [Latex in JavaScript](https://cortexjs.io/mathlive/)
-- [cursus algoritmes en datastructuren](https://frontendmasters.com/courses/algorithms/)
 - [Processing in JavaScript](https://github.com/processing/p5.js)
 - [Turing Award](https://amturing.acm.org/byyear.cfm)
 - [wiskundige formules](https://runjs.app/blog/equations-that-changed-the-world-rewritten-in-javascript)
 - [OCR](https://simonwillison.net/2024/Mar/30/ocr-pdfs-images/)
+- [Structure and Interpretation of Computer Programs](https://sourceacademy.org/sicpjs/index)
