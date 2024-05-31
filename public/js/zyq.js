@@ -89,7 +89,7 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
-const ditSeizoen = (function () {
+const ditSeizoen = (function () { // TODO verschillen tussen Waagtoren en Jeugd
     const datum = new Date();
     const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001);
     return `${voorloopNul(i)}${voorloopNul(i + 1)}`;

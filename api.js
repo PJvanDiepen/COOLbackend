@@ -1082,7 +1082,6 @@ module.exports = function (url) {
                     tegenstanderNummer: 0,
                     resultaat: "",
                     datum: ctx.params.datum,
-                    anderTeam: ctx.params.competitie, // TODO verwijderen
                     competitie: ctx.params.competitie
             } )) {
                 aantal = 1;

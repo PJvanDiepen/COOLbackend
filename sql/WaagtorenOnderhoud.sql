@@ -52,7 +52,7 @@ insert into ronde (seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum)
 select p.naam, r.*, u.* from uitslag u
 join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and u.rondeNummer = r.rondeNummer
 join persoon p on p.knsbNummer = u.knsbNummer
-where u.teamCode <> u.anderTeam and u.datum <> r.datum; 
+where u.teamCode <> u.competitie and u.datum <> r.datum;
 
 set @seizoen = "1920"; -- 20, 19, 18, 17, 16, 15, 13, 10, 8 en 1
 set @seizoen = "2021"; -- 17

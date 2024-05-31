@@ -1,8 +1,5 @@
 use waagtoren;
 
-CREATE DATABASE  IF NOT EXISTS `waagtoren`;
-USE `waagtoren`;
-
 drop table if exists rating; -- 0-0-0.nl versie 0.8.27
 create table rating (
 	knsbNummer int not null,
@@ -37,8 +34,6 @@ create table gebruiker (
     primary key (uuidToken)
 );
 
-describe gebruiker;
-
 alter table gebruiker
 add constraint gebruiker_1_persoon unique (knsbNummer);
 
@@ -72,8 +67,7 @@ add constraint fk_team_persoon
     ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.8.56
--- TODO datum verwijderen
--- TODO nhsbTeam, knsbTeam, intern1..5 verwijderen
+-- TODO datum, nhsbTeam, knsbTeam, intern1..5 verwijderen
 CREATE TABLE speler (
     clubCode int not null,
     seizoen char(4) not null,
@@ -128,7 +122,11 @@ add CONSTRAINT fk_ronde_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.58
+alter table uitslag drop column anderTeam;  
+
+describe uitslag;  
+    
+DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.59
 CREATE TABLE uitslag (
     clubCode int not null,
     seizoen char(4) not null,
@@ -141,7 +139,6 @@ CREATE TABLE uitslag (
     tegenstanderNummer int,
     resultaat char(1),
     datum date comment 'indien op een andere datum dan ronde',
-    anderTeam char(3),
     competitie char(3),
     PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
 );
@@ -152,16 +149,7 @@ add CONSTRAINT fk_uitslag_team
     REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-
--- TODO conversie 0-0-0.nl versie 0.8.59
-alter table uitslag
-drop constraint fk_uitslag_ander_team;
-
-update uitslag set competitie = "int" where clubCode = 0 and anderTeam = "int";
-update uitslag set competitie = "ira" where clubCode = 0 and anderTeam = "ira";
-update uitslag set competitie = "ije" where clubCode = 0 and anderTeam = "ije";
      
--- TODO conversie versie 0.8.59        
 alter table uitslag
 add CONSTRAINT fk_uitslag_competitie
     FOREIGN KEY (clubCode, seizoen, competitie)
@@ -191,7 +179,7 @@ add CONSTRAINT fk_uitslag_ronde
     ON UPDATE CASCADE;
 
 drop table if exists mutatie; -- 0-0-0.nl versie 0.2
--- TODO volgNummer autoincrement
+-- TODO vervangen door log
 create table mutatie (
     tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
     volgNummer int not null,
