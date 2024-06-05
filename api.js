@@ -1513,6 +1513,47 @@ module.exports = function (url) {
         }
         ctx.body = aantal;
     });
+
+    /*
+    conversie jeugd spelers 0-0-0.nl 0.8.61
+
+    Database: speler insert
+
+    Frontend: beheer.js
+     */
+    url.get("/:uuid/conversie", async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuid);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) {
+            const spelers = await Speler.query()
+                .where("clubCode", 0)
+                .where("seizoen", "2324")
+                .where("intern1", "ije");
+            for (const speler of spelers) {
+                if (await Speler.query().insert({
+                    clubCode: 1,
+                    seizoen: "2309",
+                    teamCode: "ije",
+                    knsbNummer: speler.knsbNummer,
+                    knsbRating: speler.knsbRating,
+                    datum: speler.datum,
+                    interneRating: speler.interneRating,
+                    nhsbTeam: "",
+                    knsbTeam: "",
+                    intern1: "",
+                    intern2: "",
+                    intern3: "",
+                    intern4: "",
+                    intern5: "",
+                    rol: 0,
+                    emailZien: 0,
+                    telefoonZien: 0})) {
+                    aantal++;
+                }
+            }
+        }
+        ctx.body = aantal;
+    });
 }
 
 async function paarMuteren(uitslag) {

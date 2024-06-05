@@ -20,14 +20,6 @@ TODO const html = {id1: , id2: } alle DOM elementen met id
 
 https://stackoverflow.com/questions/59068548/how-to-get-all-of-the-element-ids-on-the-same-time-in-javascript
 
-TODO cache legen indien nieuwe software versie
-
-https://www.tutorialspoint.com/how-to-clear-cache-memory-using-javascript
-https://stackoverflow.com/questions/32414/how-can-i-force-clients-to-refresh-javascript-files
-
-https://support.mozilla.org/en-US/kb/how-clear-firefox-cache
-https://help.overdrive.com/en-us/0518.html
-https://support.google.com/accounts/answer/32050?hl=en&co=GENIE.Platform%3DDesktop&oco=1
  */
 
 /**

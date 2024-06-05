@@ -11,7 +11,7 @@ import * as zyq from "./zyq.js";
     const lijst = html.id("lijst");
     for (const apiCall of apiLijst) {
         const url = apiCall
-            .replace(":uuidToken", zyq.uuidToken)
+            .replace(":uuid", zyq.uuidToken)
             .replace(":club", 0) // TODO niet uitsluitend de Waagtoren
             .replace(":seizoen", zyq.ditSeizoen)
             .replace(":datum", zyq.datumSQL());
