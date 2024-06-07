@@ -19,7 +19,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
     await zyq.init();
     html.id("kop").textContent =
         `${zyq.o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`;
-    const persoon = await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/persoon/${lidNummer}`);
+    const persoon = await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/persoon/${lidNummer}`);
     const septemberRating = await ratingLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
@@ -100,7 +100,7 @@ async function lidFormulier(persoon, septemberRating) {
     const competities = html.id("competities");
     const competitie = [];
     let competitieNummer = 0;
-    const teams = await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`);
+    const teams = await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`);
     for (const team of teams) {
         if (!db.isCompetitie(team) && !db.isTeam(team)) { // TODO wat gebeurt hier?
             nhsbTeam.append(html.optie(team.teamCode, zyq.teamVoluit(team.teamCode)));
@@ -151,7 +151,7 @@ async function lidFormulier(persoon, septemberRating) {
         }
         vinkjes += " "; // minstens 1 vinkje voor blanko teamCode${
         const uuid = zyq.uuidToken;
-        const key = `${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/int`; // TODO voorlopig interne competitie
+        const key = `${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/int`; // TODO voorlopig interne competitie
         const muteren = persoon.datum === null ? "speler/toevoegen" : "speler/wijzigen";
         const rating = knsbRating.value;
         const ratingIntern = interneRating.value;

@@ -14,14 +14,14 @@ verwerk team=<teamCode>
     await zyq.init();
     await html.menu(zyq.gebruiker.mutatieRechten,[db.ONTWIKKElAAR, "backup uitslagen van alle ronden" , async function () {
         zyq.backupSQL("uitslag", await zyq.serverFetch(
-            `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/1/backup/uitslagen/9`));
+            `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/1/backup/uitslagen/9`));
     }]);
     await teamSelecteren(zyq.o_o_o.team);
     await uitslagenTeam(html.id("kop"), html.id("ronden"));
 })();
 
 async function uitslagenTeam(kop, rondenTabel) {
-    const teams = await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`);
+    const teams = await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`);
     for (const team of teams) {
         if (team.teamCode === zyq.o_o_o.team) {
             kop.textContent = db.isBekerCompetitie(team)

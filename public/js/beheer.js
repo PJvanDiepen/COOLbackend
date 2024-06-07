@@ -23,15 +23,15 @@ TODO mutaties met verwijderen
         }],
         [db.ONTWIKKElAAR, `backup teams ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`, async function () {
             zyq.backupSQL("team", await zyq.serverFetch(
-                `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/backup/teams`));
+                `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/backup/teams`));
         }],
         [db.ONTWIKKElAAR, `backup ronden ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             zyq.backupSQL("ronde", await zyq.serverFetch(
-                `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/backup/ronde`)); // TODO /ronden werkt niet!
+                `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/backup/ronde`)); // TODO /ronden werkt niet!
         }],
         [db.ONTWIKKElAAR, `backup spelers ${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}` , async function () {
             zyq.backupSQL("speler", await zyq.serverFetch(
-                `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/schakers`));
+                `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/schakers`));
         }],
         [db.ONTWIKKElAAR, "test API", function () {
             html.anderePagina("test.html");

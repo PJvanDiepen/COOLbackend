@@ -15,7 +15,7 @@ import * as zyq from "./zyq.js";
         }],
         [db.ONTWIKKElAAR, `backup uitslagen ${zyq.o_o_o.naam}` , async function () {
             zyq.backupSQL("uitslag", await zyq.serverFetch(
-                `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/backup/speler/${zyq.o_o_o.speler}`));
+                `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/backup/speler/${zyq.o_o_o.speler}`));
         }]);
     uitslagenSpeler(html.id("kop"), html.id("tabel"));
     await ratingPerMaandSpeler(html.id("ratings"), zyq.o_o_o.speler);
@@ -52,7 +52,7 @@ async function uitslagenSpeler(kop, lijst) {
         lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
     const uitslagen = await zyq.localFetch(
-        `/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/uitslagen/${zyq.o_o_o.speler}/${zyq.o_o_o.versie}`);
+        `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/uitslagen/${zyq.o_o_o.speler}/${zyq.o_o_o.versie}`);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
         if (samenvoegen < i && !db.planningInvullen.has(uitslagen[i].partij)) { // verwerken indien niet samengevoegd en geen planning

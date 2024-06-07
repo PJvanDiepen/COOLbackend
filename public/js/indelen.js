@@ -49,7 +49,7 @@ const indeling = html.id("indeling");
     }
 
     const uithuis = await zyq.serverFetch(
-        `/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/uithuis/${zyq.datumSQL(totDatum)}`); // actuele situatie
+        `/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/uithuis/${zyq.datumSQL(totDatum)}`); // actuele situatie
     for (const speler of uithuis) {
         const bord = // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
             speler.partij === db.EXTERN_THUIS ? ++bordNummer : "";
@@ -66,7 +66,7 @@ const indeling = html.id("indeling");
         [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             const planning = {
-                clubCode: zyq.o_o_o.clubCode,
+                clubCode: zyq.o_o_o.club,
                 seizoen: zyq.o_o_o.seizoen,
                 teamCode: zyq.o_o_o.competitie,
                 rondeNummer: rondeNummer};
@@ -103,7 +103,7 @@ const indeling = html.id("indeling");
 async function deelnemersRonde(rondeNummer) {
     if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
         return await zyq.serverFetch(
-            `/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/deelnemers`); // actuele situatie
+            `/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/deelnemers`); // actuele situatie
     } else {
         return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd
     }

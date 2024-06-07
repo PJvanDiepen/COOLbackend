@@ -15,7 +15,7 @@ import * as zyq from "./zyq.js";
 (async function() {
     await zyq.init();
     const andereGebruiker = Number(html.params.get("gebruiker")) || zyq.gebruiker.knsbNummer;
-    const persoon = await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/persoon/${andereGebruiker}`);
+    const persoon = await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/persoon/${andereGebruiker}`);
     html.id("kop").append(`Agenda${html.SCHEIDING}${persoon.naam}`);
     html.id("aanmelden").append(html.naarPagina(`lid.html?lid=${andereGebruiker}`,"Aanmelden voor competities"));
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
@@ -79,7 +79,7 @@ async function agenda(knsbNummer, lijst, informeer) {
 
 async function agendaMutatie(knsbNummer) {
     const planning = {
-        clubCode: zyq.o_o_o.clubCode,
+        clubCode: zyq.o_o_o.club,
         seizoen: zyq.o_o_o.seizoen,
         teamCode: html.params.get("team"),
         rondeNummer: Number(html.params.get("ronde")),
@@ -97,7 +97,7 @@ async function agendaMutatie(knsbNummer) {
 }
 
 async function agendaLezen(knsbNummer) {
-    return await zyq.serverFetch(`/${zyq.uuidToken}/${zyq.o_o_o.clubCode}/${zyq.ditSeizoen}/kalender/${knsbNummer}`);
+    return await zyq.serverFetch(`/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.ditSeizoen}/kalender/${knsbNummer}`);
 }
 
 async function agendaAanvullen(knsbNummer, wedstrijden) {

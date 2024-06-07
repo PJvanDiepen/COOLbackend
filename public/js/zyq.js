@@ -69,11 +69,8 @@ export function wedstrijdVoluit(ronde) {
 
 // uitslag.resultaat
 const REMISE = "½";
-const WINST = "1";
-const VERLIES = "0";
 // uitslag.uithuis
 const THUIS = "t";
-const UIT = "u";
 
 // score
 const PUNTEN_UIT = " uit ";
@@ -88,6 +85,8 @@ const ZELFDE = "\u00a0\u00a0=\u00a0\u00a0"; // met no break spaces
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
+
+// TODO deze is voor club = 0, andere versie voor club = 1
 
 const ditSeizoen = (function () { // TODO verschillen tussen Waagtoren en Jeugd
     const datum = new Date();
@@ -117,9 +116,11 @@ export function eindeSeizoen(seizoen) {
     return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
 }
 
+// TODO verplaatsen naar o_o_o. en/of db.js
+
 export const o_o_o = {
     vereniging: "Waagtoren",
-    clubCode: 0, // TODO ook 1 = jeugd, 2 = toernooien, enz.
+    club: 0, // clubCode is een getal
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
     competitie: "", // zie competitieBepalen()
@@ -142,7 +143,6 @@ export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 export const gebruiker = {}; // gebruikerVerwerken
 
 // gebruiker.mutatieRechten
-const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;
 const BESTUUR = 3;

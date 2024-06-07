@@ -13,7 +13,7 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
 
 (async function() {
     await zyq.init();
-    const personen = await zyq.serverFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/personen`);
+    const personen = await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/personen`);
     await html.menu(zyq.gebruiker.mutatieRechten,
         [db.ONTWIKKElAAR, "speler conversie", async function() {
             let mutaties = 0;
@@ -60,7 +60,7 @@ async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
         "")); // functie
     let aantalGebruikers = 0;
     let aantalPerTeam = {};
-    const teams = await zyq.localFetch(`/${zyq.o_o_o.clubCode}/${zyq.o_o_o.seizoen}/teams`); // competities en teams
+    const teams = await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`); // competities en teams
     for (const team of teams) {
         if (db.isCompetitie(team) || db.isTeam(team)) {
             aantalPerTeam[team.teamCode] = 0;
