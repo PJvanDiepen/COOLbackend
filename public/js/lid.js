@@ -75,7 +75,7 @@ async function lidFormulier(persoon, septemberRating) {
     knsbNummer.value = lidNummer;
     const naam = html.id("naam");
     naam.value = persoon.naam;
-    html.id("gebruiker").value = zyq.gebruikerFunctie(persoon);
+    html.id("gebruiker").value = db.gebruikerFunctie(persoon);
     html.id("jaar").append(` op 1 september ${jaar}`);
     const knsbRating = html.id("knsbRating");
     knsbRating.value = septemberRating ? septemberRating.knsbRating : 0;

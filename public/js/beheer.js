@@ -51,7 +51,7 @@ async function gebruikers(lijst) {
             ++aantal,
             zyq.naarSpeler(lid),
             zyq.gebruiker.mutatieRechten >= db.BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
-            zyq.gebruikerFunctie(lid)));
+            db.gebruikerFunctie(lid)));
     }
 }
 

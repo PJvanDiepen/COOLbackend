@@ -108,11 +108,11 @@ async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
                     link,
                     knsbNummer > 1000000 ? knsbNummer : "",
                     lid.knsbRating === null ? "" : lid.knsbRating,
-                    lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? zyq.ZELFDE : lid.interneRating,
+                    lid.interneRating === null ? "" : lid.interneRating === lid.knsbRating ? html.ZELFDE : lid.interneRating,
                     lid.knsbTeam === null ? "" : lid.knsbTeam,
                     lid.nhsbTeam === null ? "" : lid.nhsbTeam,
                     lid.intern1 === null ? "" : [lid.intern1, lid.intern2, lid.intern3, lid.intern4, lid.intern5].join(", "),
-                    lid.mutatieRechten === null ? "" : zyq.gebruikerFunctie(lid)
+                    lid.mutatieRechten === null ? "" : db.gebruikerFunctie(lid)
                 ));
             }
         }

@@ -137,35 +137,6 @@ async function gebruikerVerwerken() {
     }
 }
 
-// gebruiker.mutatieRechten
-const GEREGISTREERD = 1;
-const TEAMLEIDER = 2;
-const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 4;
-const BEHEERDER = 8;
-const ONTWIKKElAAR = 9;
-
-const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
-export function gebruikerFunctie(lid) {
-    if (!lid.datumEmail) {
-        return KRUISJE; // TODO eventueel verwijderen
-    } else if (Number(lid.mutatieRechten) === ONTWIKKElAAR) { // TODO uit database reglement tabel
-        return "ontwikkelaar";
-    } else if (Number(lid.mutatieRechten) === BEHEERDER) {
-        return "systeembeheerder";
-    } else if (Number(lid.mutatieRechten) === WEDSTRIJDLEIDER) {
-        return "wedstrijdleider";
-    } else if (Number(lid.mutatieRechten) === BESTUUR) {
-        return "bestuur";
-    } else if (Number(lid.mutatieRechten) === TEAMLEIDER) {
-        return "teamleider";
-    } else if (Number(lid.mutatieRechten) === GEREGISTREERD) {
-        return datumLeesbaar({datum: lid.datumEmail});
-    } else {
-        return "geen gebruiker"
-    }
-}
-
 function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }

@@ -168,6 +168,22 @@ const WEDSTRIJDLEIDER = 4;
 const BEHEERDER = 8;
 const ONTWIKKElAAR = 9;
 
+const functieInvullen = new Map ([
+    [ONTWIKKElAAR, "ontwikkelaar"],
+    [BEHEERDER, "systeembeheerder"],
+    [WEDSTRIJDLEIDER, "wedstrijdleider"],
+    [BESTUUR, "bestuur"],
+    [TEAMLEIDER, "teamleider"],
+    [GEREGISTREERD, "geregistreerd"]]);
+
+function gebruikerFunctie(speler) {
+    if (functieInvullen.has(Number(speler.mutatieRechten))) {
+        return functieInvullen.get((Number(speler.mutatieRechten)));
+    } else {
+        return "geen gebruiker"
+    }
+}
+
 // html
 const MENU = "menu";
 
@@ -243,6 +259,9 @@ export { // ES6 voor browser
     WEDSTRIJDLEIDER,
     BEHEERDER,
     ONTWIKKElAAR,
+
+    functieInvullen,
+    gebruikerFunctie,      // (speler)
 
     // html
     MENU
