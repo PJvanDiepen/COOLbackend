@@ -1,5 +1,5 @@
 /*
- * Deze module bevat alle code die op meer dan een pagina van de 0-0-0 app wordt toegepast.
+ * Deze module bevat globale variabelen en code die op meer dan een pagina wordt gebruikt.
  *
  * De eerste pagina van 0-0-0.nl staat in index.html en start.html is de pagina, die de 0-0-0 app start.
  * De bijhorende start.js verwerkt de url, vult de pagina aan en reageert op de gebruiker.
@@ -45,11 +45,11 @@ export async function teamSelecteren(teamCode) {
     }).map(function (team) {
         return [team.teamCode, zyq.teamVoluit(team.teamCode)];
     });
-    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (team) {
-        if (zyq.interneCompetitie(team)) {
-            html.anderePagina(`ranglijst.html?competitie=${team}`);
+    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (teamCode) {
+        if (teamCode === "" ? false : teamCode.substring(0,1) === "i") {
+            html.anderePagina(`ranglijst.html?competitie=${teamCode}`);
         } else {
-            html.anderePagina(`team.html?team=${team}`);
+            html.anderePagina(`team.html?team=${teamCode}`);
         }
     });
 }

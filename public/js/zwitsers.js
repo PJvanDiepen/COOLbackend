@@ -110,10 +110,10 @@ const indelenFun = [
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
     const deelnemers = await deelnemersRonde(rondeNummer);
-    const r = zyq.zwitsers(zyq.o_o_o.competitie) // TODO weer 1 ranglijstSorteren
+    const r = zwitsers(zyq.o_o_o.competitie) // TODO weer 1 ranglijstSorteren
         ? await ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers)
         : await ranglijstOpPuntenRating(rondeNummer, deelnemers);
-    if (zyq.zwitsers(zyq.o_o_o.competitie)) {
+    if (zwitsers(zyq.o_o_o.competitie)) {
         console.log("--- Zwitsers systeem ---");
         for (const speler of r) {
             console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.weerstandsPunten()}`);
@@ -176,6 +176,10 @@ const indelenFun = [
         html.zelfdePagina(`ronde=${rondeNummer}&indelen=${versie}&rangnummers=aan`);
     });
 })();
+
+function zwitsers(teamCode) {
+    return teamCode.substring(1,2) === "z";
+}
 
 async function deelnemersRonde(rondeNummer) {
     if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {

@@ -60,7 +60,7 @@ async function seizoenSelecteren(teamCode) {
 // TODO zie o_o_o.js: teamSelecteren
 async function competitieSelecteren() {
     const competities = (await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
-        return zyq.interneCompetitie(team.teamCode);
+        return db.isCompetitie(team);
     }).map(function (team) {
         return [team.teamCode, team.omschrijving];
     });

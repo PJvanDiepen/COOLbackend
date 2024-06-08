@@ -46,7 +46,7 @@ import * as zyq from "./zyq.js";
     await wedstrijdenBijRonde(rondeNummer, html.id("wedstrijden"));
     html.id("kop").textContent =
         `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer])}`;
-    if (zyq.o_o_o.competitie === zyq.INTERNE_COMPETITIE) {
+    if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) {
         html.id("subkop").textContent = "Andere ronden en wedstrijden";
     }
 })();

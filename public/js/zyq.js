@@ -1,32 +1,11 @@
 // because this is a module, I'm strict by default
 
-const LAAGSTE_RATING = 1000; // volgens Alkmaar Systeem
-const HOOGSTE_RATING = 2000;
-
 // teamCode
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETITIE = "ira";
 const JEUGD_COMPETITIE = "ije";
 const JEUGD_COMPETITIE_VOORJAAR = "ijv";
 const SNELSCHAKEN = "izs";
-
-export {
-    LAAGSTE_RATING,
-    HOOGSTE_RATING,
-// teamCode
-    INTERNE_COMPETITIE,
-    RAPID_COMPETITIE,
-    SNELSCHAKEN
-}
-
-// TODO vervangen door db.js: isCompetitie
-export function interneCompetitie(teamCode) {
-    return teamCode === "" ? false : teamCode.substring(0,1) === "i";
-}
-
-export function zwitsers(teamCode) {
-    return teamCode.substring(1,2) === "z";
-}
 
 export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
     if (teamCode === INTERNE_COMPETITIE) {
@@ -72,45 +51,17 @@ const REMISE = "½";
 // uitslag.uithuis
 const THUIS = "t";
 
-// score
-const PUNTEN_UIT = " uit ";
-// kop
-const SCHEIDING = " \u232A ";
-const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0"; // met no break spaces
-const STREEP = "___";
-const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
-const FOUTJE = "\u00a0\u00a0?\u00a0\u00a0"; // met no break spaces
-const ZELFDE = "\u00a0\u00a0=\u00a0\u00a0"; // met no break spaces
-
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
 // TODO deze is voor club = 0, andere versie voor club = 1
 
-const ditSeizoen = (function () { // TODO verschillen tussen Waagtoren en Jeugd
+export const ditSeizoen = (function () { // TODO verschillen tussen Waagtoren en Jeugd
     const datum = new Date();
     const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001);
     return `${voorloopNul(i)}${voorloopNul(i + 1)}`;
 })();
-
-export { // TODO geen export, maar import db
-// score
-    PUNTEN_UIT,
-// kop
-    SCHEIDING,
-    VINKJE,
-    STREEP,
-    KRUISJE,
-    FOUTJE,
-    ZELFDE,
-
-    pagina,
-    server,
-    params,
-
-    ditSeizoen
-}
 
 export function eindeSeizoen(seizoen) {
     return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
@@ -129,6 +80,7 @@ export const o_o_o = {
     naam: ""
 };
 
+const SCHEIDING = " \u232A ";
 export function competitieTitel() {
     document.getElementById("competitie").textContent = // TODO html.id()
         `${o_o_o.vereniging}${SCHEIDING}${teamVoluit(o_o_o.competitie)}`;
@@ -141,14 +93,6 @@ if (uuidActiveren === "wissen") {
 export const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
 export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
 export const gebruiker = {}; // gebruikerVerwerken
-
-// gebruiker.mutatieRechten
-const GEREGISTREERD = 1;
-const TEAMLEIDER = 2;
-const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 4;
-const BEHEERDER = 8;
-const ONTWIKKElAAR = 9;
 
 /**
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
@@ -193,6 +137,15 @@ async function gebruikerVerwerken() {
     }
 }
 
+// gebruiker.mutatieRechten
+const GEREGISTREERD = 1;
+const TEAMLEIDER = 2;
+const BESTUUR = 3;
+const WEDSTRIJDLEIDER = 4;
+const BEHEERDER = 8;
+const ONTWIKKElAAR = 9;
+
+const KRUISJE = "\u00a0\u00a0✖\u00a0\u00a0"; // met no break spaces
 export function gebruikerFunctie(lid) {
     if (!lid.datumEmail) {
         return KRUISJE; // TODO eventueel verwijderen
@@ -218,6 +171,8 @@ function uuidCorrect(uuid) {
 }
 
 function urlVerwerken() {
+    console.log("--- begin urlVerwerken ---");
+    console.log(o_o_o);
     for (let [key, value] of Object.entries(o_o_o)) {
         let parameter = params.get(key); // inlezen van url
         if (parameter) {
@@ -229,11 +184,17 @@ function urlVerwerken() {
             o_o_o[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
         }
     }
+    if (o_o_o.club === 1) {
+        o_o_o.seizoen = "2309";
+        o_o_o.competitie = "ije";
+    }
+    console.log(o_o_o);
+    console.log("--- einde urlVerwerken ---");
 }
 
 async function competitieBepalen() {
-    if (!interneCompetitie(o_o_o.competitie)) {
-        const ronden = await localFetch(`/${o_o_o.clubCode}/${o_o_o.seizoen}/ronden/intern`);
+    if (o_o_o.competitie.substring(0,1) !== "i") { // TODO vervangen door db.isCompetitie
+        const ronden = await localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/ronden/intern`);
         const vandaag = datumSQL();
         for (const ronde of ronden) {
             if (datumSQL(ronde.datum) >= vandaag) {
@@ -254,7 +215,7 @@ function versieBepalen() {
         }
     } else if (o_o_o.competitie === RAPID_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 4;
-    } else if (zwitsers(o_o_o.competitie) && o_o_o.versie === 0) {
+    } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
         o_o_o.versie = 5; // Zwitsers systeem
     } else if (o_o_o.competitie === JEUGD_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 6;
@@ -267,7 +228,7 @@ async function competitieRondenVerwerken() {
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
-    const ronden = await localFetch(`/${o_o_o.clubCode}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
+    const ronden = await localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
     for (const ronde of ronden) {
         o_o_o.ronde[ronde.rondeNummer] = ronde;
         o_o_o.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
@@ -276,7 +237,7 @@ async function competitieRondenVerwerken() {
         } else if (o_o_o.huidigeRonde === 0) {
             o_o_o.huidigeRonde = ronde.rondeNummer;
             if (await serverFetch( // actuele situatie
-                `/${o_o_o.clubCode}/${o_o_o.seizoen}/${o_o_o.competitie}/${o_o_o.laatsteRonde}/indeling`)) {
+                `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${o_o_o.laatsteRonde}/indeling`)) {
                 o_o_o.ronde[o_o_o.huidigeRonde].resultaten = 0; // indeling zonder resultaten
             }
         }
@@ -422,6 +383,7 @@ export function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
 
+const PUNTEN_UIT = " uit ";
 export function score(winst, remise, verlies) {
     const partijen = winst + remise + verlies;
     if (partijen) {

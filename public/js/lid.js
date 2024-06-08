@@ -115,7 +115,7 @@ async function lidFormulier(persoon, septemberRating) {
             if (persoon && persoon.knsbTeam === team.teamCode) { // speelt persoon in dit knsbTeam?
                 knsbTeam.value = team.teamCode;
             }
-        } else if (zyq.interneCompetitie(team.teamCode)) {
+        } else if (db.isCompetitie(team)) {
             const id = `intern${competitieNummer + 1}`;
             competities.append(html.checkbox(id, team.teamCode, zyq.teamVoluit(team.teamCode)));
             competitie[competitieNummer] = html.id(id);

@@ -58,8 +58,8 @@ async function agenda(knsbNummer, lijst, informeer) {
             html.rij(link,w.teamCode === gewijzigd.teamCode && w.rondeNummer === gewijzigd.rondeNummer);
             lijst.append(html.rij(
                 zyq.datumLeesbaar(w),
-                zyq.interneCompetitie(w.teamCode) ? w.rondeNummer : "",
-                zyq.interneCompetitie(w.teamCode) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
+                db.isCompetitie(w) ? w.rondeNummer : "",
+                db.isCompetitie(w) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
                 link));
             if (w.partij === db.PLANNING && db.isTeam(w) && !geenVraagteken.has(w.teamCode)) {
                 vraagteken = true; // speler heeft voor komende wedstrijd van dit team niet aangevinkt
@@ -106,9 +106,9 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
         if (!w.partij) {
             const datum = zyq.datumSQL(w.datum);
             const vanafVandaag = datum >= zyq.datumSQL();
-            if (vanafVandaag || zyq.interneCompetitie(w.teamCode)) {
+            if (vanafVandaag || db.isCompetitie(w)) {
                 const partij = vanafVandaag ? db.PLANNING : db.AFWEZIG;  // voor interne competities voor vandaag afwezig invullen
-                const competitie = zyq.interneCompetitie(w.teamCode) ? w.teamCode : db.INTERNE_COMPETITIE;
+                const competitie = db.isCompetitie(w) ? w.teamCode : db.INTERNE_COMPETITIE;
                 const mutaties = await zyq.serverFetch(
                     `/${zyq.uuidToken}/${db.key(w)}/${knsbNummer}/uitslag/toevoegen/${partij}/${datum}/${competitie}`);
                 if (mutaties) {
