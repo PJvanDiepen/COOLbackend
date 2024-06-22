@@ -2,6 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
+import {o_o_o, init} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -12,18 +13,18 @@ import * as zyq from "./zyq.js";
 const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, jaar]]
 
 (async function() {
-    await zyq.init();
-    const personen = await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/personen`);
+    await init();
+    const personen = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/personen`);
     await html.menu(zyq.gebruiker.mutatieRechten,
         [db.ONTWIKKElAAR, "speler conversie", async function() {
             let mutaties = 0;
-            const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0, 2));
+            const jaar = 2000 + Number(o_o_o.seizoen.substring(0, 2));
             for (const speler of personen) {
                 if (speler.knsbNummer > db.KNSB_NUMMER && speler.knsbRating && speler.interneRating) {
                     const rating = await zyq.serverFetch(`/rating/9/${speler.knsbNummer}`); // 1 september
                     if (rating) {
                         const uuid = zyq.uuidToken;
-                        const seizoen = zyq.o_o_o.seizoen;
+                        const seizoen = o_o_o.seizoen;
                         const knsbNummer = speler.knsbNummer;
                         const knsbRating = rating.knsbRating;
                         const interneRating = Math.max(speler.interneRating, knsbRating);
@@ -36,7 +37,7 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
             console.log({mutaties});
         }]);
     html.id("kop").textContent =
-        `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}overzicht voor bestuur`;
+        `${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}overzicht voor bestuur`;
     await ledenLijst(
         personen,
         Number(html.params.get("lid")),
@@ -60,7 +61,7 @@ async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
         "")); // functie
     let aantalGebruikers = 0;
     let aantalPerTeam = {};
-    const teams = await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`); // competities en teams
+    const teams = await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`); // competities en teams
     for (const team of teams) {
         if (db.isCompetitie(team) || db.isTeam(team)) {
             aantalPerTeam[team.teamCode] = 0;

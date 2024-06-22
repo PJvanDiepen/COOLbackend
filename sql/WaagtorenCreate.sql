@@ -45,6 +45,7 @@ add constraint fk_gebruiker_persoon
     ON UPDATE CASCADE;
         
 drop table if exists team; -- 0-0-0.nl versie 0.8.56
+-- TODO ranglijst toevoegen
 -- TODO bond, poule en teamleider verwijderen
 -- TODO verwijder fk_team_persoon
 create table team (

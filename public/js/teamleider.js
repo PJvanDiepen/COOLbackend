@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {vinkjeInvullen, perTeamRondenUitslagen} from "./o_o_o.js";
+import {o_o_o, init, vinkjeInvullen, perTeamRondenUitslagen} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -15,15 +15,15 @@ const teamleider = html.params.get("teamleider"); // teamCode
 const invaller = Number(html.params.get("invaller")); // knsbNummer
 
 (async function() {
-    await zyq.init();
+    await init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
-    const teams = (await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
+    const teams = (await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isTeam(team);
     });
     const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);
     await teamSelecteren(teams, teamCode);
     const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
-    const spelers = await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teamleider`);
+    const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleider`);
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const vast = html.id("vast");

@@ -9,7 +9,7 @@ In de huidige versie van indelen.js is alles wat met zwitsers indelen heeft te m
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {ranglijst} from "./o_o_o.js"
+import {init, o_o_o, ranglijst} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -100,20 +100,20 @@ const indelenFun = [
  */
 
 (async function() {
-    await zyq.init();
+    await init();
     zyq.competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.huidigeRonde;
-    const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
+    const rondeNummer = Number(html.params.get("ronde")) || o_o_o.huidigeRonde;
+    const totDatum = o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =
         `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
     const wit = [];
     const zwart = [];
     let oneven = 0; // eerste speler is nooit oneven
     const deelnemers = await deelnemersRonde(rondeNummer);
-    const r = zwitsers(zyq.o_o_o.competitie) // TODO weer 1 ranglijstSorteren
+    const r = zwitsers(o_o_o.competitie) // TODO weer 1 ranglijstSorteren
         ? await ranglijstOpPuntenWeerstandenRating(rondeNummer, deelnemers)
         : await ranglijstOpPuntenRating(rondeNummer, deelnemers);
-    if (zwitsers(zyq.o_o_o.competitie)) {
+    if (zwitsers(o_o_o.competitie)) {
         console.log("--- Zwitsers systeem ---");
         for (const speler of r) {
             console.log(`${speler.naam} ${speler.totaal()} sb: ${speler.sonnebornBerger()} wp: ${speler.weerstandsPunten()}`);
@@ -139,14 +139,14 @@ const indelenFun = [
         oneven = indelenRonde(r, wit, zwart, rondeNummer);
     }
     const rangnummers = rangnummersToggle(document.querySelector("details"), rondeNummer);
-    const uithuis = await zyq.serverFetch(`/${zyq.uuidToken}/uithuis/${zyq.o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
+    const uithuis = await zyq.serverFetch(`/${zyq.uuidToken}/uithuis/${o_o_o.seizoen}/${zyq.datumSQL(totDatum)}`); // actuele situatie
     partijenLijst(r, wit, zwart, oneven, rangnummers, html.id("partijen"), uithuis);
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"));
     }
     await html.menu(zyq.gebruiker.mutatieRechten,
         [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
-        const planning = {seizoen: zyq.o_o_o.seizoen, teamCode: zyq.o_o_o.competitie, rondeNummer: rondeNummer};
+        const planning = {seizoen: o_o_o.seizoen, teamCode: o_o_o.competitie, rondeNummer: rondeNummer};
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
                 if (await zyq.serverFetch(
@@ -183,7 +183,7 @@ function zwitsers(teamCode) {
 
 async function deelnemersRonde(rondeNummer) {
     if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
-        return await zyq.serverFetch(`/${zyq.uuidToken}/deelnemers/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}`); // actuele situatie
+        return await zyq.serverFetch(`/${zyq.uuidToken}/deelnemers/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`); // actuele situatie
     } else {
         return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd
     }
@@ -337,7 +337,7 @@ function indelenRonde(r, wit, zwart, rondeNummer) {
 function nietTegen(r, i, j, rondeNummer) {
     if (!r[i].tegen(r[j]) || !r[j].tegen(r[i])) {
         return true;
-    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
+    } else if (o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
     } else if (rondeNummer < 5) {
         return false;

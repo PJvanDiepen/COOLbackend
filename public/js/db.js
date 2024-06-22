@@ -16,6 +16,11 @@
 
 const apiLijst = []; // zie app.js
 
+const database = {
+    clubs: [], // per club: seizoenen, teams, ronden, uitslagen
+    personen: [], // per team: spelers
+}
+
 /**
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
  *
@@ -187,8 +192,9 @@ function gebruikerFunctie(speler) {
 // html
 const MENU = "menu";
 
-export { // ES6 voor browser
+export { // ES6 voor browser,
     apiLijst,
+    database,
 
     key,                   // (object)
 

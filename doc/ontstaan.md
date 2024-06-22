@@ -1,6 +1,7 @@
 # Ontstaansgeschiedenis 0-0-0
 
-0-0-0 is geleidelijk ontstaan. Dit is de geschiedenis van de belangrijkste ontwerpbeslissingen.
+0-0-0 is geleidelijk ontstaan. 
+Dit is de geschiedenis van de belangrijkste ontwerpbeslissingen en is geschreven door Peter van Diepen. 
 
 Ik heb het nog nooit gedaan dus ik denk dat ik het wel kan
 (Pipi Langkous)
@@ -10,7 +11,7 @@ Alles draait om de eenvoud
 
 ## Wat vooraf ging
 
-Ik (Peter van Diepen) schaak al sinds 1971 in interne competities van schaakverenigingen. 
+Ik schaak al sinds 1971 in interne competities van schaakverenigingen. 
 Eerst bij Lasker in Uitgeest, daarna bij Schaakvereniging Castricum, 0-0-0 in Alkmaar en tegenwoordig bij de Waagtoren in Alkmaar.
 Bij Lasker en Castricum gebruikten ze het Keizersysteem voor de interne competitie.
 Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het 
@@ -26,14 +27,14 @@ van Herman Nijhuis [(2)](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erel
 Met Rokade moest ik aanmeldingen en afzeggingen van leden verwerken, uitslagen invoeren en door middel van een upload naar de website
 indelingen, uitslagen en ranglijsten publiceren.
 Rokade gebruikte een [Microsoft Access](https://en.wikipedia.org/wiki/Microsoft_Access) database en draaide lokaal op mijn laptop.
-Dat wilde ik beter automatiseren. Daarom wilde ik in overleg met Herman Nijhuis Rokade aanpassen 
+Dat wilde ik beter automatiseren. Daarom wilde ik in overleg met Herman Nijhuis Rokade aanpassen.
 
 Rokade is gemaakt met [Delphi](https://en.wikipedia.org/wiki/Delphi_(software)) van [Embarcadero](https://www.embarcadero.com/products/delphi).
 Een prachtig product dat ik nog kende uit de jaren 80 als [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal). 
 Delphi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
 Maar bij mij draaide Rokade niet meer op mijn Windows laptop en uitsluitend op een oude laptop met Windows XP. 
 Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. Om Rokade aan te passen, 
-zou ik meer dan 1500 euro aan moeten Embarcadero betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
+zou ik meer dan 1500 euro aan Embarcadero moeten betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
 
 Zo ontstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, die dus op een website moest draaien.
 
@@ -52,7 +53,7 @@ Dat was een off-line toepassing, omdat ik toen nog niet wist hoe ik de backend v
 De Java toepassing was vooral bedoeld om informatie in te lezen uit andere systemen:
 - Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
 - de Microsoft Access database van Rokade en
-- een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
+- een web crawler die de uitslagen van externe wedstrijden inleest van de websites van NHSB en KNSB.
 
 Een web-app draait op minstens twee computers: de personal computer, mobiele telefoon of tablet van de gebruiker en
 de server computer ergens in de cloud op een website. De eerste noemen we frontend en de tweede backend.
@@ -100,7 +101,7 @@ Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in pla
 Toen vroegen spelers of hun externe partij van een andere dag kon meetellen in plaats van een interne partij.
 Daarvoor moesten we het reglement van de interne competitie aanpassen en moest de intern wedstrijdleider per externe partij administreren 
 of die wel of niet moest meetellen voor de interne competitie. 
-De interpretatie van het reglement bleek verwarrend, want toen waren er spelers die in een week een interne en een externe wedstrijd wilde spelen
+De interpretatie van het reglement bleek verwarrend, want toen waren er spelers die in een week een interne en een externe wedstrijd wilden spelen
 en die laten meetellen in een andere week, omdat ze in die andere week niet voor de interne competitie konden spelen. 
 De administratie werd zo heel ingewikkeld en ging daarom af en toe fout.
 
@@ -113,9 +114,10 @@ Maar ondanks de drastische vereenvoudiging bleef de administratie veel werk. Met
 namelijk de externe wedstrijden, die niet op de avonden van de interne competitie werden gespeeld, met de hand bijhouden 
 voor de kolom #XBP van de ranglijst. En Rokade gaf geen overzicht van de bijbehorende externe wedstrijden.
 
-Een belangrijke ontwerpbeslissing was daarom dat de web-app die bijbehorende externe wedstrijden wel moest laten zien, 
-zodat de leden van de Waagtoren de ranglijst helemaal zelf kunnen controleren en dat die administratie helemaal is geautomatiseerd
-voor de intern wedstrijdleider.
+Een belangrijke ontwerpbeslissing was om die administratie beter te automatiseren binnen de web-app, 
+zodat de intern wedstrijdleider minder werk zou krijgen. 
+Bovendien moest de web-app moest de bijbehorende externe wedstrijden laten zien, 
+zodat de leden van de Waagtoren de ranglijst helemaal zelf konden controleren.
 
 ## Rokade en 0-0-0
 

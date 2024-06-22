@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {teamSelecteren, rondeSelecteren, ranglijst} from "./o_o_o.js"
+import {o_o_o, init, teamSelecteren, rondeSelecteren, ranglijst} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -13,19 +13,19 @@ import * as zyq from "./zyq.js";
            &minimum=<minimumVoorkeur> minimum aantal externe wedstrijden
  */
 (async function() {
-    await zyq.init();
+    await init();
     zyq.competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
+    const rondeNummer = Number(html.params.get("ronde")) || o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "Rondenlijst", function () {
         html.anderePagina("rondenlijst.html");
     }]);
-    await teamSelecteren(zyq.o_o_o.competitie);
-    await rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
+    await teamSelecteren(o_o_o.competitie);
+    await rondeSelecteren(o_o_o.competitie, rondeNummer);
     const versies = [
         [0, "versie 0 volgens reglement interne competitie van het seizoen"],
         [2, "versie 2 met afzeggingenaftrek zoals in seizoen = 1819, 1920, 2021"],
         [3, "versie 3 zonder afzeggingenaftrek vanaf seizoen = 2122"]];
-    html.selectie(html.id("versies"), zyq.o_o_o.versie, versies, function (versie) {
+    html.selectie(html.id("versies"), o_o_o.versie, versies, function (versie) {
         html.zelfdePagina(`versie=${versie}`);
     });
     const alleLeden = Number(html.params.get("leden")); // 0 indien niet alleLeden
@@ -44,7 +44,7 @@ import * as zyq from "./zyq.js";
         html.zelfdePagina(`minimum=${minimum}`);
     });
     html.id("kop").textContent =
-        `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}ranglijst na ronde ${rondeNummer}`;
+        `${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}ranglijst na ronde ${rondeNummer}`;
     const lijst = html.id("tabel");
     const spelers = (await ranglijst(rondeNummer)).filter(function (speler) {
         return speler.intern() || speler.oneven() || speler.extern() || alleLeden;

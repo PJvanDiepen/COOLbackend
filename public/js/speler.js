@@ -3,22 +3,22 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {ranglijst} from "./o_o_o.js"
+import {o_o_o, init, ranglijst} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
 (async function() {
-    await zyq.init();
+    await init();
     zyq.competitieTitel();
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, `agenda van ${zyq.o_o_o.naam}`, function () {
-            html.anderePagina(`agenda.html?gebruiker=${zyq.o_o_o.speler}&naamGebruiker=${zyq.o_o_o.naam}`);
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, `agenda van ${o_o_o.naam}`, function () {
+            html.anderePagina(`agenda.html?gebruiker=${o_o_o.speler}&naamGebruiker=${o_o_o.naam}`);
         }],
-        [db.ONTWIKKElAAR, `backup uitslagen ${zyq.o_o_o.naam}` , async function () {
+        [db.ONTWIKKElAAR, `backup uitslagen ${o_o_o.naam}` , async function () {
             zyq.backupSQL("uitslag", await zyq.serverFetch(
-                `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/backup/speler/${zyq.o_o_o.speler}`));
+                `/${o_o_o.club}/${o_o_o.seizoen}/backup/speler/${o_o_o.speler}`));
         }]);
     uitslagenSpeler(html.id("kop"), html.id("tabel"));
-    await ratingPerMaandSpeler(html.id("ratings"), zyq.o_o_o.speler);
+    await ratingPerMaandSpeler(html.id("ratings"), o_o_o.speler);
 })();
 
 /*
@@ -45,14 +45,14 @@ import * as zyq from "./zyq.js";
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    const t = (await ranglijst(zyq.o_o_o.vorigeRonde, [zyq.o_o_o.speler]))[0];
-    kop.textContent = `${t.naam}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`;
+    const t = (await ranglijst(o_o_o.vorigeRonde, [o_o_o.speler]))[0];
+    kop.textContent = `${t.naam}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`;
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern() && t.eigenWaardeCijfer()) {
         lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
     }
     const uitslagen = await zyq.localFetch(
-        `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/uitslagen/${zyq.o_o_o.speler}/${zyq.o_o_o.versie}`);
+        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/uitslagen/${o_o_o.speler}/${o_o_o.versie}`);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
         if (samenvoegen < i && !db.planningInvullen.has(uitslagen[i].partij)) { // verwerken indien niet samengevoegd en geen planning
@@ -61,9 +61,9 @@ async function uitslagenSpeler(kop, lijst) {
                 if (t.intern()) {
                     totaal += uitslagen[i].punten + uitslagen[i + 1].punten;
                 }
-                if (uitslagen[i].teamCode === zyq.o_o_o.competitie) { // TODO verplaatsen naar externePartijTijdensInterneRonde
+                if (uitslagen[i].teamCode === o_o_o.competitie) { // TODO verplaatsen naar externePartijTijdensInterneRonde
                     lijst.append(externePartijTijdensInterneRonde(uitslagen[i + 1], totaal, uitslagen[i]));
-                } else if (uitslagen[i + 1].teamCode === zyq.o_o_o.competitie) {
+                } else if (uitslagen[i + 1].teamCode === o_o_o.competitie) {
                     lijst.append(externePartijTijdensInterneRonde(uitslagen[i], totaal, uitslagen[i + 1]));
                 } else {
                     console.log("--- fout met externePartijTijdensInterneRonde ---");

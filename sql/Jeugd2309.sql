@@ -1,10 +1,28 @@
 use waagtoren; -- ga naar TODO
 
+-- personen TODO 0-0-0.nl 0.8.61
+select * from persoon order by knsbNummer;
+
+update persoon set naam = "Adnan Basmaij" where knsbNummer = 153;
+
+insert into persoon (knsbNummer, naam) values
+(181, "Jack"),
+(182, "Hugo"),
+(183, "Semih Yavuz"),
+(184, "Tiju Badrinath"),
+(185, "Thomas"),
+(186, "Olivia Pieterse"),
+(187, "Rolando"),
+(188, "Liam van Kuijeren - Jansen");
+
 -- teams TODO 0-0-0.nl 0.8.61
 insert into team (clubCode, seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-(1, "2309", "ije", "i", "je", "jeugd competitie", 0, 0);
+(1, "2309", "ije", "i", "je", "jeugd competitie", 0, 0),
+(1, "2401", "ije", "i", "je", "jeugd competitie", 0, 0);
 
 -- ronden TODO 0-0-0.nl 0.8.61
+select * from ronde where clubCode = 1 order by seizoen, rondeNummer;
+
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (1, "2309", "ije", 1, "t", "", '2023-09-08'),
 (1, "2309", "ije", 2, "t", "", '2023-09-15'),

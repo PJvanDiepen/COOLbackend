@@ -2,8 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-
-import {ranglijst} from "./o_o_o.js"
+import {o_o_o, init, ranglijst} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -17,15 +16,15 @@ const indeling = html.id("indeling");
  */
 
 (async function() {
-    await zyq.init();
+    await init();
     zyq.competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.huidigeRonde;
-    const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
+    const rondeNummer = Number(html.params.get("ronde")) || o_o_o.huidigeRonde;
+    const totDatum = o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =
         `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
 
     let laatsteBord = 0;
-    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/paren`);
+    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(o_o_o.ronde[rondeNummer])}/paren`);
     for (const paar of paren) {
         laatsteBord = paar.bordNummer;
         indeling.append(html.rij(laatsteBord,
@@ -49,7 +48,7 @@ const indeling = html.id("indeling");
     }
 
     const uithuis = await zyq.serverFetch(
-        `/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/uithuis/${zyq.datumSQL(totDatum)}`); // actuele situatie
+        `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/uithuis/${zyq.datumSQL(totDatum)}`); // actuele situatie
     for (const speler of uithuis) {
         const bord = // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
             speler.partij === db.EXTERN_THUIS ? ++bordNummer : "";
@@ -66,9 +65,9 @@ const indeling = html.id("indeling");
         [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             const planning = {
-                clubCode: zyq.o_o_o.club,
-                seizoen: zyq.o_o_o.seizoen,
-                teamCode: zyq.o_o_o.competitie,
+                clubCode: o_o_o.club,
+                seizoen: o_o_o.seizoen,
+                teamCode: o_o_o.competitie,
                 rondeNummer: rondeNummer};
             for (const paar of paren) {
                 mutaties += await zyq.serverFetch(
@@ -103,7 +102,7 @@ const indeling = html.id("indeling");
 async function deelnemersRonde(rondeNummer) {
     if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
         return await zyq.serverFetch(
-            `/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/deelnemers`); // actuele situatie
+            `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/deelnemers`); // actuele situatie
     } else {
         return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd
     }
@@ -313,7 +312,7 @@ const indelenFun = [
 function nietTegen(r, i, j, rondeNummer) {
     if (!r[i].tegen(r[j])) {
         return true;
-    } else if (zyq.o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
+    } else if (o_o_o.competitie === db.RAPID_COMPETITIE || versieIndelen > 0) { // rapid en oudere versies zonder heuristieken
         return false;
     } else if (rondeNummer < 5) {
         return false;

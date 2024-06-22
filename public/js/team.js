@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {teamSelecteren, perTeamRondenUitslagen} from "./o_o_o.js"
+import {o_o_o, init, teamSelecteren, perTeamRondenUitslagen} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -11,26 +11,26 @@ import * as zyq from "./zyq.js";
 verwerk team=<teamCode>
  */
 (async function() {
-    await zyq.init();
+    await init();
     await html.menu(zyq.gebruiker.mutatieRechten,[db.ONTWIKKElAAR, "backup uitslagen van alle ronden" , async function () {
         zyq.backupSQL("uitslag", await zyq.serverFetch(
-            `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/1/backup/uitslagen/9`));
+            `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/1/backup/uitslagen/9`));
     }]);
-    await teamSelecteren(zyq.o_o_o.team);
+    await teamSelecteren(o_o_o.team);
     await uitslagenTeam(html.id("kop"), html.id("ronden"));
 })();
 
 async function uitslagenTeam(kop, rondenTabel) {
-    const teams = await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`);
+    const teams = await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`);
     for (const team of teams) {
-        if (team.teamCode === zyq.o_o_o.team) {
+        if (team.teamCode === o_o_o.team) {
             kop.textContent = db.isBekerCompetitie(team)
-                ? `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`
-                : `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}${team.omschrijving}`;
+                ? `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`
+                : `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}${team.omschrijving}`;
             break;
         }
     }
-    const rondeUitslagen = await perTeamRondenUitslagen(zyq.o_o_o.team);
+    const rondeUitslagen = await perTeamRondenUitslagen(o_o_o.team);
     for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
         uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
     }

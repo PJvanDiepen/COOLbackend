@@ -7,6 +7,8 @@ const JEUGD_COMPETITIE = "ije";
 const JEUGD_COMPETITIE_VOORJAAR = "ijv";
 const SNELSCHAKEN = "izs";
 
+// TODO teamVoluit(clubCode, teamCode)
+
 export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
@@ -67,14 +69,12 @@ export function eindeSeizoen(seizoen) {
     return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
 }
 
-// TODO verplaatsen naar o_o_o. en/of db.js
-
 export const o_o_o = {
     vereniging: "Waagtoren",
     club: 0, // clubCode is een getal
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
-    competitie: "", // zie competitieBepalen()
+    competitie: INTERNE_COMPETITIE, // zie competitieBepalen()
     team: INTERNE_COMPETITIE,
     speler: 0, // knsbNummer is een getal
     naam: ""
@@ -142,8 +142,6 @@ function uuidCorrect(uuid) {
 }
 
 function urlVerwerken() {
-    console.log("--- begin urlVerwerken ---");
-    console.log(o_o_o);
     for (let [key, value] of Object.entries(o_o_o)) {
         let parameter = params.get(key); // inlezen van url
         if (parameter) {
@@ -156,11 +154,9 @@ function urlVerwerken() {
         }
     }
     if (o_o_o.club === 1) {
-        o_o_o.seizoen = "2309";
+        o_o_o.seizoen = "2401";
         o_o_o.competitie = "ije";
     }
-    console.log(o_o_o);
-    console.log("--- einde urlVerwerken ---");
 }
 
 async function competitieBepalen() {
@@ -196,10 +192,12 @@ function versieBepalen() {
 }
 
 async function competitieRondenVerwerken() {
+    console.log("--- begin competitieRondenVerwerken() ---");
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;
     o_o_o.huidigeRonde = 0;
     const ronden = await localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
+    console.log(ronden);
     for (const ronde of ronden) {
         o_o_o.ronde[ronde.rondeNummer] = ronde;
         o_o_o.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan

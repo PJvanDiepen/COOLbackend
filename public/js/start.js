@@ -2,6 +2,7 @@
 
 import * as db from "./db.js";
 import * as html from "./html.js";
+import {o_o_o, init} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -12,20 +13,20 @@ import * as zyq from "./zyq.js";
  */
 
 (async function() {
-    await zyq.init();
+    await init();
     html.id("kop").textContent =
-        `${zyq.o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}${zyq.teamVoluit(zyq.o_o_o.competitie)}`;
+        `${o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}${zyq.teamVoluit(o_o_o.competitie)}`;
     const plaatje = html.id("plaatje");
-    if (zyq.o_o_o.vereniging === "Waagtoren") {
+    if (o_o_o.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
     const menuKeuzes = [
-        [db.IEDEREEN, `Ranglijst na ronde ${zyq.o_o_o.vorigeRonde}`,"ranglijst.html"], // menu0
-        [db.IEDEREEN, `Uitslagen ronde ${zyq.o_o_o.vorigeRonde}`,"ronde.html"]]; // menu1
-    if (zyq.o_o_o.huidigeRonde && zyq.o_o_o.ronde[zyq.o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
-        menuKeuzes.push([db.GEREGISTREERD, `Definitieve indeling ronde ${zyq.o_o_o.huidigeRonde}`, `ronde.html?ronde=${zyq.o_o_o.huidigeRonde}`]); // menu2
-    } else if (zyq.o_o_o.vorigeRonde < zyq.o_o_o.laatsteRonde) {
-        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${zyq.o_o_o.huidigeRonde}`, "indelen.html"]); // menu2
+        [db.IEDEREEN, `Ranglijst na ronde ${o_o_o.vorigeRonde}`,"ranglijst.html"], // menu0
+        [db.IEDEREEN, `Uitslagen ronde ${o_o_o.vorigeRonde}`,"ronde.html"]]; // menu1
+    if (o_o_o.huidigeRonde && o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
+        menuKeuzes.push([db.GEREGISTREERD, `Definitieve indeling ronde ${o_o_o.huidigeRonde}`, `ronde.html?ronde=${o_o_o.huidigeRonde}`]); // menu2
+    } else if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
+        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`, "indelen.html"]); // menu2
     }
     if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
         menuKeuzes.push([db.IEDEREEN, "Aanmelden voor 0-0-0", "aanmelden.html"]);
@@ -49,22 +50,22 @@ import * as zyq from "./zyq.js";
 })();
 
 async function seizoenSelecteren(teamCode) {
-    const seizoenen = (await zyq.localFetch(`/${zyq.o_o_o.club}/seizoenen/${teamCode}`)).map(function (seizoen) {
+    const seizoenen = (await zyq.localFetch(`/${o_o_o.club}/seizoenen/${teamCode}`)).map(function (seizoen) {
         return [seizoen, zyq.seizoenVoluit(seizoen)];
     });
-    html.selectie(html.id("seizoenSelecteren"), zyq.o_o_o.seizoen, seizoenen, function (seizoen) {
+    html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenen, function (seizoen) {
         html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
     });
 }
 
 // TODO zie o_o_o.js: teamSelecteren
 async function competitieSelecteren() {
-    const competities = (await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
+    const competities = (await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isCompetitie(team);
     }).map(function (team) {
         return [team.teamCode, team.omschrijving];
     });
-    html.selectie(html.id("competitieSelecteren"), zyq.o_o_o.competitie, competities, function (competitie) {
+    html.selectie(html.id("competitieSelecteren"), o_o_o.competitie, competities, function (competitie) {
         html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
     });
 }

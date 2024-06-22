@@ -2,6 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
+import {o_o_o, init} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -11,15 +12,15 @@ import * as zyq from "./zyq.js";
 
     terug naar agenda.html of bestuur.html
  */
-const jaar = 2000 + Number(zyq.o_o_o.seizoen.substring(0,2));
+const jaar = 2000 + Number(o_o_o.seizoen.substring(0,2));
 const lidNummer = Number(html.params.get("lid"));
 const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 
 (async function() {
-    await zyq.init();
+    await init();
     html.id("kop").textContent =
-        `${zyq.o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}`;
-    const persoon = await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/persoon/${lidNummer}`);
+        `${o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`;
+    const persoon = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/persoon/${lidNummer}`);
     const septemberRating = await ratingLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
@@ -100,7 +101,7 @@ async function lidFormulier(persoon, septemberRating) {
     const competities = html.id("competities");
     const competitie = [];
     let competitieNummer = 0;
-    const teams = await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`);
+    const teams = await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`);
     for (const team of teams) {
         if (!db.isCompetitie(team) && !db.isTeam(team)) { // TODO wat gebeurt hier?
             nhsbTeam.append(html.optie(team.teamCode, zyq.teamVoluit(team.teamCode)));
@@ -151,7 +152,7 @@ async function lidFormulier(persoon, septemberRating) {
         }
         vinkjes += " "; // minstens 1 vinkje voor blanko teamCode${
         const uuid = zyq.uuidToken;
-        const key = `${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/int`; // TODO voorlopig interne competitie
+        const key = `${o_o_o.club}/${o_o_o.seizoen}/int`; // TODO voorlopig interne competitie
         const muteren = persoon.datum === null ? "speler/toevoegen" : "speler/wijzigen";
         const rating = knsbRating.value;
         const ratingIntern = interneRating.value;

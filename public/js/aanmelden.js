@@ -2,6 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
+import {init} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -44,7 +45,7 @@ In het registratie formulier
 - kan een geregistreerde gebruiker e-mail wijzigen en gebruiker bijwerken
  */
 (async function() {
-    await zyq.init();
+    await init();
     await html.menu(zyq.gebruiker.mutatieRechten, []);
     await selecteerRatingMaand(maand);
     await zoekPersoon();

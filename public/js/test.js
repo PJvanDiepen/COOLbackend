@@ -1,11 +1,12 @@
 "use strict";
 
 import * as html from "./html.js";
+import {init} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
 (async function() {
-    await zyq.init();
+    await init();
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     const apiLijst = await zyq.serverFetch(`/api`);
     const lijst = html.id("lijst");

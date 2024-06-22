@@ -5,19 +5,19 @@ import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
-import {ranglijst} from "./o_o_o.js";
+import {o_o_o, init, ranglijst} from "./o_o_o.js";
 
 /*
     verwerk ronde=<rondeNummer>
  */
 
 (async function() {
-    await zyq.init();
+    await init();
     zyq.competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
+    const rondeNummer = Number(html.params.get("ronde")) || o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     html.id("kop").textContent =
-        `${zyq.seizoenVoluit(zyq.o_o_o.seizoen)}${html.SCHEIDING}rondenlijst na ronde ${rondeNummer}`;
+        `${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}rondenlijst na ronde ${rondeNummer}`;
     const lijst = html.id("lijst");
     lijst.append(html.bovenRij("", "naam", "on", ...(rondeNummers(rondeNummer))));
     const spelers = (await ranglijst(rondeNummer)).filter(function (speler) {

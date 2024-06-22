@@ -17,6 +17,45 @@ import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
+export const o_o_o = {
+    vereniging: "Waagtoren",
+    club: 0, // clubCode is een getal
+    seizoen: "",
+    versie: 0, // versie is een getal
+    competitie: "",
+    team: "",
+    speler: 0, // knsbNummer is een getal
+    naam: ""
+};
+
+/**
+ * init voor aanmelden.js
+ *           agenda.js
+ *           beheer.js
+ *           bestuur.js
+ *           email.js
+ *           indelen.js
+ *           lid.js
+ *           paren.js
+ *           ranglijst.js
+ *           ronde.js
+ *           rondenlijst.js
+ *           speler.js
+ *           start.js
+ *           team.js
+ *
+ * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
+ * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
+ */
+export async function init() {
+    console.log("--- start init ---");
+    console.log(o_o_o);
+    await zyq.init();
+    Object.assign(o_o_o, zyq.o_o_o);
+    console.log("--- einde init ---")
+    console.log(o_o_o);
+}
+
 /**
  * vinkjeInvullen voor agenda.js en teamleider.js
  *

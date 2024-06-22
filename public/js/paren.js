@@ -2,10 +2,9 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
+import {o_o_o, init, ranglijst} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
-
-import {ranglijst} from "./o_o_o.js";
 
 /*
     verwerk ronde=<rondeNummer>
@@ -19,14 +18,14 @@ const witSpeler   = Number(html.params.get("wit"));
 const zwartSpeler = Number(html.params.get("zwart"));
 
 (async function() {
-    await zyq.init();
+    await init();
     zyq.competitieTitel();
-    const totDatum = zyq.o_o_o.ronde[rondeNummer].datum;
+    const totDatum = o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =
         `Handmatig indelen ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
     const partijen = html.id("partijen");
     let bordNummer = 0;
-    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/paren`);
+    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(o_o_o.ronde[rondeNummer])}/paren`);
     if (paren.length) {
         for (const paar of paren) {
             bordNummer = paar.bordNummer;
@@ -58,7 +57,7 @@ async function eventueelVerwijderen(paar) {
     const knop = document.createElement("select");
     const opties = [[0, ""], [paar, "verwijder partij", async function (paar) {
         const mutaties = await zyq.serverFetch(
-            `/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${paar.knsbNummer}/los/${paar.bordNummer}/${paar.tegenstanderNummer}`);
+            `/${zyq.uuidToken}/${db.key(o_o_o.ronde[rondeNummer])}/${paar.knsbNummer}/los/${paar.bordNummer}/${paar.tegenstanderNummer}`);
         if (mutaties) {
             html.zelfdePagina(`ronde=${rondeNummer}`);
         } else {
@@ -91,9 +90,8 @@ async function spelerSelecteren(bordNummer, metWit, spelers) {
 }
 
 async function paarWitZwart(bordNummer, wit, zwart) {
-    console.log(zyq.o_o_o.ronde[rondeNummer]);
-    const mutaties = await zyq.serverFetch( // TODO PvD
-        `/${zyq.uuidToken}/${db.key(zyq.o_o_o.ronde[rondeNummer])}/${wit.knsbNummer}/paar/${bordNummer}/${zwart.knsbNummer}`);
+    const mutaties = await zyq.serverFetch(
+        `/${zyq.uuidToken}/${db.key(o_o_o.ronde[rondeNummer])}/${wit.knsbNummer}/paar/${bordNummer}/${zwart.knsbNummer}`);
     if (mutaties) {
         html.zelfdePagina(`ronde=${rondeNummer}`);
     } else {

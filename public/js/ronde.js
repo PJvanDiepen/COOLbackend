@@ -3,7 +3,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import {rondeSelecteren, perTeamRondenUitslagen} from "./o_o_o.js"
+import {o_o_o, init, rondeSelecteren, perTeamRondenUitslagen} from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -14,20 +14,21 @@ import * as zyq from "./zyq.js";
            &uitslag=<uitslag wit>
  */
 (async function() {
-    await zyq.init();
+    await init();
     zyq.competitieTitel();
-    zyq.o_o_o.team = zyq.o_o_o.competitie;
-    const rondeNummer = Number(html.params.get("ronde")) || zyq.o_o_o.vorigeRonde || 1;
+    zyq.o_o_o.team = o_o_o.competitie; // TODO verwijderen!!
+    o_o_o.team =o_o_o.competitie;
+    const rondeNummer = Number(html.params.get("ronde")) || o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
         [db.ONTWIKKElAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
             zyq.backupSQL("uitslag", await zyq.serverFetch(
-                `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/backup/uitslagen/${rondeNummer}`));
+                `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/backup/uitslagen/${rondeNummer}`));
         }],
         [db.WEDSTRIJDLEIDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await zyq.serverFetch(
-                `/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/verwijder/indeling`);
+                `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/verwijder/indeling`);
             if (mutaties) {
                 html.anderePagina(`indelen.html?ronde=${rondeNummer}`)
             } else {
@@ -36,17 +37,17 @@ import * as zyq from "./zyq.js";
         }],
         [db.BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
             const mutaties = await zyq.serverFetch(
-                `/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.team}/${rondeNummer}/verwijder/ronde`);
+                `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/verwijder/ronde`);
             if (!mutaties) {
                 console.log(`Verwijder ronde ${rondeNummer} is mislukt.`);
             }
         }]);
-    await rondeSelecteren(zyq.o_o_o.competitie, rondeNummer);
+    await rondeSelecteren(o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, html.id("uitslagen"));
     await wedstrijdenBijRonde(rondeNummer, html.id("wedstrijden"));
     html.id("kop").textContent =
-        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer])}`;
-    if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) {
+        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(o_o_o.ronde[rondeNummer])}`;
+    if (o_o_o.competitie === db.INTERNE_COMPETITIE) {
         html.id("subkop").textContent = "Andere ronden en wedstrijden";
     }
 })();
@@ -54,7 +55,7 @@ import * as zyq from "./zyq.js";
 async function uitslagenRonde(rondeNummer, lijst) {
     const gewijzigd = await uitslagMutatie(rondeNummer);
     const uitslagen = await zyq.serverFetch(
-        `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
+        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
             const resultaatKolom = resultaatSelecteren(rondeNummer, uitslag);
@@ -79,7 +80,7 @@ async function uitslagMutatie(rondeNummer) {
     const uitslag = html.params.get("uitslag");
     if (wit && zwart && uitslag) {
         const mutaties = await zyq.serverFetch(
-            `/${zyq.uuidToken}/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/${wit}/uitslag/${zwart}/${uitslag}`);
+            `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${wit}/uitslag/${zwart}/${uitslag}`);
     }
     return {wit: Number(wit), zwart: Number(zwart)};
 }
@@ -97,7 +98,7 @@ function resultaatSelecteren(rondeNummer, uitslag) {
 }
 
 function uitslagWijzigen(uitslag)  {
-    if (zyq.o_o_o.seizoen !== zyq.ditSeizoen) { // vorig seizoen nooit wijzigen
+    if (o_o_o.seizoen !== zyq.ditSeizoen) { // vorig seizoen nooit wijzigen
         return false;
     } else if (zyq.gebruiker.mutatieRechten >= db.WEDSTRIJDLEIDER) {
         return true;
@@ -113,10 +114,10 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
         lijst.append(rondeInterneCompetitie(rondeNummer - 1)); // vorige ronde
     }
     let dezeRonde = false;
-    if (zyq.o_o_o.competitie === db.INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
-        const wedstrijden = await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/wedstrijden`);
+    if (o_o_o.competitie === db.INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
+        const wedstrijden = await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/wedstrijden`);
         for (const wedstrijd of wedstrijden) {
-            if (!dezeRonde && zyq.o_o_o.ronde[rondeNummer].datum === wedstrijd.datum) {
+            if (!dezeRonde && o_o_o.ronde[rondeNummer].datum === wedstrijd.datum) {
                 lijst.append(rondeInterneCompetitie(rondeNummer));
                 dezeRonde = true; // deze ronde een keer in de lijst
             }
@@ -133,24 +134,24 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
     if (!dezeRonde) { // indien deze ronde nog niet in de lijst
         lijst.append(rondeInterneCompetitie(rondeNummer));
     }
-    if (zyq.o_o_o.laatsteRonde > rondeNummer) {
+    if (o_o_o.laatsteRonde > rondeNummer) {
         lijst.append(rondeInterneCompetitie(rondeNummer + 1)); // volgende ronde
         }
     }
 
 function rondeInterneCompetitie(rondeNummer) {
     return html.rij(rondeNummer,
-        html.naarPagina(`ronde.html?ronde=${rondeNummer}`, zyq.datumLeesbaar(zyq.o_o_o.ronde[rondeNummer])),
-        zyq.teamVoluit(zyq.o_o_o.competitie),
+        html.naarPagina(`ronde.html?ronde=${rondeNummer}`, zyq.datumLeesbaar(o_o_o.ronde[rondeNummer])),
+        zyq.teamVoluit(o_o_o.competitie),
         "");
 }
 
 function wedstrijdBijRonde(rondeNummer, datum) {
     if (rondeNummer === 1) {
-        return datum <= zyq.o_o_o.ronde[1].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
-    } else if (rondeNummer === zyq.o_o_o.laatsteRonde) {
-        return datum > zyq.o_o_o.ronde[rondeNummer - 1].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
+        return datum <= o_o_o.ronde[1].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
+    } else if (rondeNummer === o_o_o.laatsteRonde) {
+        return datum > o_o_o.ronde[rondeNummer - 1].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
     } else {
-        return datum > zyq.o_o_o.ronde[rondeNummer - 1].datum && datum <= zyq.o_o_o.ronde[rondeNummer].datum;
+        return datum > o_o_o.ronde[rondeNummer - 1].datum && datum <= o_o_o.ronde[rondeNummer].datum;
     }
 }

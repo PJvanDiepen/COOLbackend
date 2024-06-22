@@ -8,9 +8,7 @@ const config = require('config');
 
 const registerApi = require('./api');
 
-const { apiLijst } = require('./modules/db.cjs');
-
-const { Model, ForeignKeyViolationError, ValidationError } = require('objection');
+const { Model } = require('objection');
 
 const knex = Knex(JSON.parse(JSON.stringify(config.get('knex'))));
 
@@ -22,6 +20,8 @@ const app = new Koa();
 app.use(cors()); // Also worth mentioning that app.use(cors()) has to go before ANY routes (i.e. app.use(router.routes())).
 
 registerApi(router);
+
+const { apiLijst } = require('./modules/db.cjs');
 
 for (const route of router.stack) {
   apiLijst.push(route.path); // lijst van routes in db.cjs

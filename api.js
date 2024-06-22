@@ -1,11 +1,5 @@
 "use strict"
 
-const db = require("./modules/db.cjs");
-
-/*
-TODO standaard api calls: uuid, schaakvereniging (0 = Waagtoren), laatste mutatie tijdstippen, enz.
- */
-
 const Gebruiker = require("./models/gebruiker");
 const Mutatie = require("./models/mutatie");
 const Persoon = require("./models/persoon");
@@ -20,9 +14,26 @@ const { fn, ref } = require("objection");
 const package_json = require("./package.json");
 const tijdstip = new Date();
 
-const knex = require("knex");
-
 const os = require("os");
+const db = require("./modules/db.cjs");
+
+db.database.clubs.push({
+    clubCode: 0,
+    vereniging: "Waagtoren",
+    seizoenen: [
+        "1819",
+        "1920",
+        "2021",
+        "2122",
+        "2223",
+        "2324"]
+    }, {
+    clubCode: 1,
+    vereniging: "Jeugd Waagtoren",
+    seizoenen: [
+        "2309",
+        "2401"]
+    });
 
 const laatsteMutaties = [];
 let uniekeMutaties = 0;
