@@ -4,7 +4,6 @@
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETITIE = "ira";
 const JEUGD_COMPETITIE = "ije";
-const JEUGD_COMPETITIE_VOORJAAR = "ijv";
 const SNELSCHAKEN = "izs";
 
 // TODO teamVoluit(clubCode, teamCode)
@@ -16,8 +15,6 @@ export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst 
         return "rapid competitie";
     } else if (teamCode === JEUGD_COMPETITIE) {
         return "jeugd competitie";
-    } else if (teamCode === JEUGD_COMPETITIE_VOORJAAR) {
-        return "jeugd voorjaarscompetitie";
     } else if (teamCode === SNELSCHAKEN) {
         return "einde seizoen snelschaken";
     } else if (teamCode === "0") {
@@ -103,7 +100,6 @@ export const gebruiker = {}; // gebruikerVerwerken
 export async function init() {
     await gebruikerVerwerken();
     urlVerwerken();
-    await competitieBepalen();
     versieBepalen();
     await competitieRondenVerwerken();
 }
@@ -153,23 +149,6 @@ function urlVerwerken() {
             o_o_o[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
         }
     }
-    if (o_o_o.club === 1) {
-        o_o_o.seizoen = "2401";
-        o_o_o.competitie = "ije";
-    }
-}
-
-async function competitieBepalen() {
-    if (o_o_o.competitie.substring(0,1) !== "i") { // TODO vervangen door db.isCompetitie
-        const ronden = await localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/ronden/intern`);
-        const vandaag = datumSQL();
-        for (const ronde of ronden) {
-            if (datumSQL(ronde.datum) >= vandaag) {
-                o_o_o.competitie = ronde.teamCode;
-                return;
-            }
-        }
-    }
 }
 
 function versieBepalen() {
@@ -185,8 +164,6 @@ function versieBepalen() {
     } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
         o_o_o.versie = 5; // Zwitsers systeem
     } else if (o_o_o.competitie === JEUGD_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 6;
-    } else if (o_o_o.competitie === JEUGD_COMPETITIE_VOORJAAR && o_o_o.versie === 0) {
         o_o_o.versie = 6;
     }
 }

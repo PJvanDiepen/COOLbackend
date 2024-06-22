@@ -296,21 +296,6 @@ module.exports = function (url) {
     });
 
     /*
-    -- interne ronden per seizoen van verschillende competities
-    select teamCode, rondeNummer, datum from ronde where clubCode = @club and seizoen = @seizoen and substring(teamCode, 1, 1) = "i" order by datum, rondeNummer;
-
-    Frontend: start.js
-     */
-    url.get("/:club/:seizoen/ronden/intern", async function (ctx) {
-        ctx.body = await Ronde.query()
-            .select("teamCode", "rondeNummer", "datum")
-            .where("clubCode", ctx.params.club)
-            .where("seizoen", ctx.params.seizoen)
-            .where(fn("substring", ref("teamCode"), 1, 1), "i")
-            .orderBy(["datum", "rondeNummer"]);
-    });
-
-    /*
     -- ronden per seizoen en competitie met aantal uitslagen TODO wordt aantalResultaten ergens gebruikt?
     with u as
       (select seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten
