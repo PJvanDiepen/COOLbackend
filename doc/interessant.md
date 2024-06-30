@@ -66,6 +66,9 @@ Refresh Android cache
 - [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
 - [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
 
+# nginx
+- [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
+
 # node.js
 - [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
 - [CORS](https://jakearchibald.com/2021/cors/)

@@ -44,14 +44,14 @@ add constraint fk_gebruiker_persoon
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
         
-drop table if exists team; -- 0-0-0.nl versie 0.8.56
--- TODO ranglijst toevoegen
+drop table if exists team; -- 0-0-0.nl versie 0.8.60
 -- TODO bond, poule en teamleider verwijderen
 -- TODO verwijder fk_team_persoon
 create table team (
     clubCode int not null,
 	seizoen char(4) not null,
     teamCode char(3) not null,
+    reglement int not null,
     bond char(1),
     poule char(2),
     omschrijving varchar(45),
@@ -59,6 +59,9 @@ create table team (
     teamleider int not null,
     primary key (clubCode, seizoen, teamCode)
 );
+
+alter table team
+add column reglement int not null after teamCode;
 
 alter table team
 add constraint fk_team_persoon

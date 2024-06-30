@@ -17,6 +17,8 @@ const tijdstip = new Date();
 const os = require("os");
 const db = require("./modules/db.cjs");
 
+// TODO ronden per club / seizoen toevoegen voor backend en frontend
+
 db.database.clubs.push({
     clubCode: 0,
     vereniging: "Waagtoren",
@@ -87,12 +89,25 @@ function teamCodes(competities) {
  *
  *  indien vaste parameters ontbreken staat het commando op die plek
  *  maar niet waar :uuid ontbreekt
- *      /:club/seizoenen/:team
+ *      /:club/seizoenen
  *      enz.
  */
 module.exports = function (url) {
 
     console.log("--- endpoints ---"); // TODO haal tekst uit db.apiLijst en definieer function hier
+
+    // endpoints nieuwe stijl ------------------------------------------------------------------------------------------
+
+    url.get("/database", async function (ctx) {
+        ctx.body = JSON.stringify(db.database);
+    });
+
+    /*
+    Frontend: start.js
+     */
+    url.get("/:club/seizoenen", async function (ctx) {
+        ctx.body = JSON.stringify(db.database.clubs[ctx.params.club].seizoenen);
+    });
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
@@ -122,17 +137,6 @@ module.exports = function (url) {
      */
     url.get("/gewijzigd", async function (ctx) {
         ctx.body = laatsteMutaties;
-    });
-
-    /*
-    Frontend: start.js
-     */
-    url.get("/:club/seizoenen/:team", async function (ctx) {
-        const seizoenen = await Team.query()
-            .select("team.seizoen")
-            .where("team.clubCode", ctx.params.club)
-            .where("team.teamCode", ctx.params.team);
-        ctx.body = seizoenen.map(function(team) {return team.seizoen});
     });
 
     /*

@@ -22,21 +22,21 @@ export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst 
     } else if (teamCode === "n0") {
         return "NHSB bij andere schaakvereniging";
     } else if (teamCode === "kbe") {
-        return o_o_o.vereniging + " KNSB beker";
+        return "Waagtoren KNSB beker";
     } else if (teamCode === "nbe") {
-        return o_o_o.vereniging + " NHSB beker";
+        return "Waagtoren NHSB beker";
     } else if (teamCode === "nbz") {
-        return o_o_o.vereniging + " NHSB beker (zilver)";
+        return "Waagtoren NHSB beker (zilver)";
     } else if (teamCode === "nbb") {
-        return o_o_o.vereniging + " NHSB beker (brons)";
+        return "Waagtoren NHSB beker (brons)";
     } else if (teamCode === "" || teamCode.substring(0,1) === " ") {
         return "geen";
     } else if (teamCode.substring(0,2) === "nv") {
-        return o_o_o.vereniging + " v" + teamCode.substring(2);
+        return "Waagtoren v" + teamCode.substring(2);
     } else if (teamCode.substring(0,1) === "n") {
-        return o_o_o.vereniging + " n" + teamCode.substring(1);
+        return "Waagtoren n" + teamCode.substring(1);
     } else {
-        return o_o_o.vereniging + " " + teamCode;
+        return "Waagtoren " + teamCode;
     }
 }
 
@@ -77,32 +77,29 @@ export const o_o_o = {
     naam: ""
 };
 
-const SCHEIDING = " \u232A ";
-export function competitieTitel() {
-    document.getElementById("competitie").textContent = // TODO html.id()
-        `${o_o_o.vereniging}${SCHEIDING}${teamVoluit(o_o_o.competitie)}`;
-}
-
-export const uuidActiveren = params.get("uuid");
-if (uuidActiveren === "wissen") {
-    localStorage.clear();
-}
-export const vorigeSessie = localStorage.getItem(o_o_o.vereniging);
-export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
-export const gebruiker = {}; // gebruikerVerwerken
-
-/**
- * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
- * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
- *
- * @returns {Promise<void>}
- */
 export async function init() {
     await gebruikerVerwerken();
     urlVerwerken();
     versieBepalen();
     await competitieRondenVerwerken();
 }
+
+const SCHEIDING = " \u232A ";
+export function competitieTitel() {
+    document.getElementById("competitie").textContent = // TODO html.id()
+        `Waagtoren${SCHEIDING}${teamVoluit(o_o_o.competitie)}`; // TODO
+}
+
+export const uuidActiveren = params.get("uuid");
+if (uuidActiveren === "wissen") {
+    localStorage.clear();
+}
+
+// TODO localStorage.removeItem("Waagtoren");
+export const vorigeSessie =
+    localStorage.getItem("Waagtoren") || localStorage.getItem("o_o_o");
+export const uuidToken = uuidCorrect(uuidActiveren || vorigeSessie);
+export const gebruiker = {}; // gebruikerVerwerken
 
 /**
  * Bestuur vult e-mail in voor gebruiker. 0-0-0 genereert 0-0-0 een uuid om de gebruiker te herkennen.
@@ -117,7 +114,7 @@ export async function init() {
 async function gebruikerVerwerken() {
     if (uuidActiveren && uuidActiveren === uuidToken) {
         await serverFetch(`/${uuidToken}/activeer`);
-        localStorage.setItem(o_o_o.vereniging, uuidToken);
+        localStorage.setItem("o_o_o", uuidToken);
     }
     if (uuidToken) {
         const registratie = await localFetch(`/${uuidToken}/gebruiker`);
@@ -152,7 +149,7 @@ function urlVerwerken() {
 }
 
 function versieBepalen() {
-    // TODO lees tabel reglement: versie, omschrijving en tabel versie: seizoen / competitie -->
+    // TODO reglement in team i.p.v. versie
     if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
             o_o_o.versie = 2;
@@ -189,6 +186,8 @@ async function competitieRondenVerwerken() {
         }
     }
 }
+
+// Hierna geen o_o_o
 
 /**
  * localFetch optimaliseert de verbinding met de database op de server

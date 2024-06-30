@@ -7,7 +7,7 @@
  * Dit geldt voor alle vervolg pagina's. Bij agenda.html hoort agenda.js, bij bestuur.html hoort bestuur.js en zo voort.
  * Daarnaast zijn er modules:
  *
- * html.js bevat alle code voor voor interactie met HTML en CSS
+ * html.js bevat alle code voor interactie met HTML en CSS
  * db.js bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
  * en zo voort
  */
@@ -46,6 +46,8 @@ export const o_o_o = {
  *
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
+ *
+ * TODO
  */
 export async function init() {
     console.log("--- start init ---");

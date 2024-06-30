@@ -17,8 +17,10 @@
 const apiLijst = []; // zie app.js
 
 const database = {
-    clubs: [], // per club: seizoenen, teams, ronden, uitslagen
-    personen: [], // per team: spelers
+    personen: [],
+    clubs: [], // per club: seizoenen, ronden, uitslagen
+    teams: [], // per team: spelers
+    competities: [] // per competitie: ranglijst
 }
 
 /**

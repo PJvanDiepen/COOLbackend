@@ -50,7 +50,7 @@ import * as zyq from "./zyq.js";
 })();
 
 async function seizoenSelecteren(teamCode) {
-    const seizoenen = (await zyq.localFetch(`/${o_o_o.club}/seizoenen/${teamCode}`)).map(function (seizoen) {
+    const seizoenen = (await zyq.localFetch(`/${o_o_o.club}/seizoenen`)).map(function (seizoen) {
         return [seizoen, zyq.seizoenVoluit(seizoen)];
     });
     html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenen, function (seizoen) {
