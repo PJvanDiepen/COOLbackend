@@ -17,25 +17,36 @@ const tijdstip = new Date();
 const os = require("os");
 const db = require("./modules/db.cjs");
 
-// TODO ronden per club / seizoen toevoegen voor backend en frontend
+/*
+TODO seizoenen [{seizoen: en voluit: }, ...]
+TODO teams
+TODO competities
+TODO uitslagen
+TODO personen invullen
+ */
 
-db.database.clubs.push({
-    clubCode: 0,
-    vereniging: "Waagtoren",
-    seizoenen: [
-        "1819",
-        "1920",
-        "2021",
-        "2122",
-        "2223",
-        "2324"]
+const database = {
+    personen: [],
+    clubs: [{ // per club: seizoenen, ronden, uitslagen
+        clubCode: 0,
+        vereniging: "Waagtoren",
+        seizoenen: [
+            {seizoen: "1819"},
+            {seizoen: "1920"},
+            {seizoen: "2021"},
+            {seizoen: "2122"},
+            {seizoen: "2223"},
+            {seizoen: "2324"}]
     }, {
-    clubCode: 1,
-    vereniging: "Jeugd Waagtoren",
-    seizoenen: [
-        "2309",
-        "2401"]
-    });
+        clubCode: 1,
+        vereniging: "Jeugd Waagtoren",
+        seizoenen: [
+            {seizoen: "2309"},
+            {seizoen: "2401"}]
+    }],
+    teams: [], // per team: spelers
+    competities: [] // per competitie: ranglijst
+}
 
 const laatsteMutaties = [];
 let uniekeMutaties = 0;
@@ -94,20 +105,28 @@ function teamCodes(competities) {
  */
 module.exports = function (url) {
 
-    console.log("--- endpoints ---"); // TODO haal tekst uit db.apiLijst en definieer function hier
-
-    // endpoints nieuwe stijl ------------------------------------------------------------------------------------------
-
     url.get("/database", async function (ctx) {
-        ctx.body = JSON.stringify(db.database);
+        ctx.body = JSON.stringify(database);
     });
 
     /*
     Frontend: start.js
      */
     url.get("/:club/seizoenen", async function (ctx) {
-        ctx.body = JSON.stringify(db.database.clubs[ctx.params.club].seizoenen);
+        ctx.body = JSON.stringify(database.clubs[ctx.params.club].seizoenen);
     });
+
+    url.get("/:club/:seizoen/ronden", async function (ctx) {
+        // TODO inlezen indien nodig
+        const ronden = await Ronde.query()
+            .where("team.clubCode", ctx.params.club)
+            .where("team.seizoen", ctx.params.seizoen)
+            .orderBy(["datum","rondeNummer"]);
+        // TODO stap voor stap, niet in 1 regel
+        ctx.body = JSON.stringify(database.clubs[ctx.params.club].ronden[ctx.params.seizoen]);
+    });
+
+    console.log("--- endpoints ---");
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
@@ -282,21 +301,6 @@ module.exports = function (url) {
             .leftJoin("gebruiker", "persoon.knsbNummer", "gebruiker.knsbNummer")
             .where("persoon.knsbNummer", ctx.params.knsbNummer);
         ctx.body = persoon.length > 0 ? persoon[0] : {naam: "onbekend", knsbNummer: 0};
-    });
-
-    /*
-    Frontend: bestuur.js
-              lid.js
-              o_o_o.js
-              start.js
-              team.js
-     */
-    url.get("/:club/:seizoen/teams", async function (ctx) {
-        ctx.body = await Team.query()
-            .select("team.*", "persoon.naam")
-            .join("persoon", "team.teamleider", "persoon.knsbNummer")
-            .where("team.clubCode", ctx.params.club)
-            .where("team.seizoen", ctx.params.seizoen);
     });
 
     /*

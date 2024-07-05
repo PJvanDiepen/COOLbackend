@@ -10,6 +10,7 @@ const registerApi = require('./api');
 
 const { Model } = require('objection');
 
+// Tot mei 2023 was Knex(config.get('knex')) nog voldoende.
 const knex = Knex(JSON.parse(JSON.stringify(config.get('knex'))));
 
 Model.knex(knex);
