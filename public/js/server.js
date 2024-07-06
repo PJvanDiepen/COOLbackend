@@ -1,6 +1,6 @@
 // because this is a module, I'm strict by default
 
-const database = {};
+const data = {};
 
 
 /**

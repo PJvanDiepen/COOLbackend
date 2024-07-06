@@ -25,7 +25,7 @@ TODO uitslagen
 TODO personen invullen
  */
 
-const database = {
+const data = {
     personen: [],
     clubs: [{ // per club: seizoenen, ronden, uitslagen
         clubCode: 0,
@@ -47,6 +47,16 @@ const database = {
     teams: [], // per team: spelers
     competities: [] // per competitie: ranglijst
 }
+for (const club of data.clubs) {
+    for (const seizoen of club.seizoenen) {
+        if (club.clubCode === 1) {
+            seizoen.voluit = `${seizoen.seizoen.substring(2, 4) === "09" ? "na" : "voor"}jaar 20${seizoen.seizoen.substring(0, 2)}`;
+        } else {
+            seizoen.voluit = `20${seizoen.seizoen.substring(0, 2)}-20${seizoen.seizoen.substring(2, 4)}`;
+        }
+    }
+}
+
 
 const laatsteMutaties = [];
 let uniekeMutaties = 0;
@@ -106,14 +116,14 @@ function teamCodes(competities) {
 module.exports = function (url) {
 
     url.get("/database", async function (ctx) {
-        ctx.body = JSON.stringify(database);
+        ctx.body = JSON.stringify(data);
     });
 
     /*
     Frontend: start.js
      */
     url.get("/:club/seizoenen", async function (ctx) {
-        ctx.body = JSON.stringify(database.clubs[ctx.params.club].seizoenen);
+        ctx.body = JSON.stringify(data.clubs[ctx.params.club].seizoenen);
     });
 
     url.get("/:club/:seizoen/ronden", async function (ctx) {
@@ -123,7 +133,7 @@ module.exports = function (url) {
             .where("team.seizoen", ctx.params.seizoen)
             .orderBy(["datum","rondeNummer"]);
         // TODO stap voor stap, niet in 1 regel
-        ctx.body = JSON.stringify(database.clubs[ctx.params.club].ronden[ctx.params.seizoen]);
+        ctx.body = JSON.stringify(data.clubs[ctx.params.club].ronden[ctx.params.seizoen]);
     });
 
     console.log("--- endpoints ---");
