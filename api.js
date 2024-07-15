@@ -27,16 +27,26 @@ TODO personen invullen
 
 const data = {
     personen: [],
-    clubs: [{ // per club: seizoenen, ronden, uitslagen
-        clubCode: 0,
-        vereniging: "Waagtoren",
-        seizoenen: [
-            {seizoen: "1819"},
-            {seizoen: "1920"},
-            {seizoen: "2021"},
-            {seizoen: "2122"},
-            {seizoen: "2223"},
-            {seizoen: "2324"}]
+    clubs: []
+}
+
+// per club: clubCode, seizoenen, teams, ronden, uitslagen
+
+function clubData(clubCode, teamNaam = "") {
+    const club= {
+        clubCode: club,
+        teamNaam: teamNaam,
+        seizoenen: [],
+        competities: [], // per competitie: spelers, ranglijst
+        teams: [], // per team: spelers
+        ronden: [],
+        uitslagen: []};
+    return club;
+}
+
+clubData(WAAGTOREN, "Waagtoren")
+    .seizoenen: []
+        ronden[]
     }, {
         clubCode: 1,
         vereniging: "Jeugd Waagtoren",
@@ -44,19 +54,19 @@ const data = {
             {seizoen: "2309"},
             {seizoen: "2401"}]
     }],
-    teams: [], // per team: spelers
-    competities: [] // per competitie: ranglijst
-}
-for (const club of data.clubs) {
-    for (const seizoen of club.seizoenen) {
-        if (club.clubCode === 1) {
-            seizoen.voluit = `${seizoen.seizoen.substring(2, 4) === "09" ? "na" : "voor"}jaar 20${seizoen.seizoen.substring(0, 2)}`;
-        } else {
-            seizoen.voluit = `20${seizoen.seizoen.substring(0, 2)}-20${seizoen.seizoen.substring(2, 4)}`;
-        }
-    }
+    teams: [],
+    competities: []
 }
 
+for (const seizoen of ["1920","2021", "2122", "2223", "2324"]) {
+
+}
+
+for (const club of data.clubs) {
+    for (const seizoen of club.seizoenen) {
+        seizoen[1] = db.seizoenVoluit(seizoen[0], club);
+    }
+}
 
 const laatsteMutaties = [];
 let uniekeMutaties = 0;

@@ -40,7 +40,23 @@ const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
-// teamCode
+// clubCode int
+const WAAGTOREN = 0;
+const WAAGTOREN_JEUGD = 1;
+
+/* seizoen char(4)
+
+Seizoenen volgen elkaar standaard op: "1819", "1920", enz.
+
+Indien seizoenCode is ingevuld is een andere volgorde mogelijk: "2309", "2401", "2409", enz.
+ */
+function seizoenVoluit(seizoen, seizoenCode = 0) {
+    return seizoenCode === WAAGTOREN_JEUGD
+        ? `${seizoen.substring(2, 4) === "09" ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
+        : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
+}
+
+// teamCode char(3)
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETITIE= "ira";
 const JEUGD_COMPETITIE= "ije";
@@ -60,7 +76,7 @@ function isTeam(team) {
         : team.teamCode.substring(0,1) !== "i";
 }
 
-// knsbNummer
+// knsbNummer int
 const TIJDELIJK_LID_NUMMER = 100
 const KNSB_NUMMER          = 1000000;
 
@@ -77,7 +93,7 @@ function inCompetitie(speler, teamCode) { // volgens database
     }
 }
 
-// uitslag.partij
+// uitslag.partij char(1)
 const AFWEZIG              = "a";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
@@ -92,14 +108,14 @@ const REGLEMENTAIR_VERLIES = "v";
 const REGLEMENTAIRE_WINST  = "w";
 const TOCH_INGEDEELD       = "x"; // na handmatig indelen en niet aanmelden voor interne partij
 const INGEDEELD            = "y"; // na handmatig indelen en aanmelden voor interne partij
-// uitslag.witZwart
+// uitslag.witZwart char(1)
 const WIT = "w";
 const ZWART = "z";
-// uitslag.resultaat
+// uitslag.resultaat char(1)
 const REMISE = "½";
 const WINST = "1";
 const VERLIES = "0";
-// uitslag.uithuis
+// uitslag.uithuis char(1)
 const THUIS = "t";
 const UIT = "u";
 
@@ -156,7 +172,7 @@ const maandInvullen = new Map([
     [11, "november"],
     [12, "december"]]);
 
-// gebruiker.mutatieRechten
+// gebruiker.mutatieRechten int
 const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;
@@ -194,7 +210,14 @@ export { // ES6 voor browser,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
 
-    // teamCode
+    // clubCode int
+    WAAGTOREN,
+    WAAGTOREN_JEUGD,
+
+    // seizoen char(4)
+    seizoenVoluit,         // (seizoen, seizoensOvergang)
+
+    // teamCode char(3)
     INTERNE_COMPETITIE,
     RAPID_COMPETITIE,
     JEUGD_COMPETITIE,
@@ -205,13 +228,13 @@ export { // ES6 voor browser,
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
 
-    // knsbNummer
+    // knsbNummer int
     TIJDELIJK_LID_NUMMER,
     KNSB_NUMMER,
 
     inCompetitie,            // (speler, teamCode)
 
-    // uitslag.partij
+    // uitslag.partij char(1)
     AFWEZIG,
     EXTERNE_PARTIJ,
     INTERNE_PARTIJ,
@@ -227,14 +250,14 @@ export { // ES6 voor browser,
     TOCH_INGEDEELD,        // na handmatig indelen en niet aanmelden voor interne partij
     INGEDEELD,             // na handmatig indelen en aanmelden voor interne partij
 
-    // uitslag.witZwart
+    // uitslag.witZwart char(1)
     WIT,
     ZWART,
-    // uitslag.resultaat
+    // uitslag.resultaat char(1)
     REMISE,
     WINST,
     VERLIES,
-    // uitslag.uithuis
+    // uitslag.uithuis char(1)
     THUIS,
     UIT,
 
@@ -248,7 +271,7 @@ export { // ES6 voor browser,
     isMeedoen,             // (uitslag)
     maandInvullen,
 
-    // gebruiker.mutatieRechten
+    // gebruiker.mutatieRechten int
     IEDEREEN,
     GEREGISTREERD,
     TEAMLEIDER,

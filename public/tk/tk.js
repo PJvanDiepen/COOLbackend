@@ -73,7 +73,7 @@ const tk = [
         hoog: 2451,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Biesheuvel_II"
     },
-    {jaar: 1972.1,
+    {jaar: 1973,
         zetels: "PvdA=43&KVP=27&VVD=22&ARP=14&PPR=7&CHU=7&CPN=7&D’66=6&DS'70=6&SGP=3&BP=3&GPV=2&PSP=2&RKPN=1",
         kabinet: "Den Uyl",
         coalitie: "PvdA, KVP, ARP, PPR, D'66",
@@ -169,7 +169,7 @@ const tk = [
         hoog: 637,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Balkenende_III"
     },
-    {jaar: 2006.1,
+    {jaar: 2007,
         zetels: "CDA=41&PvdA=33&SP=25&VVD=22&PVV=9&GL=7&CU=6&D66=3&PvdD=2&SGP=2",
         kabinet: "Balkenende 4",
         coalitie: "CDA, PvdA, CU",
@@ -201,28 +201,36 @@ const tk = [
         hoog: 553,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
-    {jaar: 2021,
+    {jaar: 2022,
         zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
         kabinet: "Rutte 4",
         coalitie: "VVD, D66, CDA, CU",
         breed: 1566,
         hoog: 505,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
-    }, /*
+    },
+    {jaar: 2024,
+        zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
+        kabinet: "Schoof",
+        coalitie: "PVV, VVD, NSC, BBB",
+        breed: 829,
+        hoog: 553,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Schoof"
+    } /*
     {jaar: 2023,
         zetels: "VVD=28&PVV=27&GL/PvdA=25&NSC=21&D66=10&BBB=6&SP=5&PvdD=5&CU=4&CDA=4&FvD=4&Denk=4&Volt=3&SGP=3&JA21=1",
         kabinet: "Peilingwijzer op basis van peilingen I&O Research en Ipsos EenVandaag",
         breed: 640,
         hoog: 427,
         link: "https://peilingwijzer.tomlouwerse.nl"
-    } */
+    }
     {jaar: 2023,
         zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
         link: "https://www.verkiezingensite.nl"
-    }
+    } */
 ]
 
 function jarenVerwerken(jaren) {
