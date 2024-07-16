@@ -30,43 +30,11 @@ const data = {
     clubs: []
 }
 
-// per club: clubCode, seizoenen, teams, ronden, uitslagen
+data.clubs.push(db.clubData(db.WAAGTOREN, "Waagtoren", "Waagtoren"));
+// ["1920","2021", "2122", "2223", "2324"]
 
-function clubData(clubCode, teamNaam = "") {
-    const club= {
-        clubCode: club,
-        teamNaam: teamNaam,
-        seizoenen: [],
-        competities: [], // per competitie: spelers, ranglijst
-        teams: [], // per team: spelers
-        ronden: [],
-        uitslagen: []};
-    return club;
-}
-
-clubData(WAAGTOREN, "Waagtoren")
-    .seizoenen: []
-        ronden[]
-    }, {
-        clubCode: 1,
-        vereniging: "Jeugd Waagtoren",
-        seizoenen: [
-            {seizoen: "2309"},
-            {seizoen: "2401"}]
-    }],
-    teams: [],
-    competities: []
-}
-
-for (const seizoen of ["1920","2021", "2122", "2223", "2324"]) {
-
-}
-
-for (const club of data.clubs) {
-    for (const seizoen of club.seizoenen) {
-        seizoen[1] = db.seizoenVoluit(seizoen[0], club);
-    }
-}
+data.clubs.push(db.clubData(db.WAAGTOREN_JEUGD, "Waagtoren Jeugd"));
+// ["2309", "2401"]
 
 const laatsteMutaties = [];
 let uniekeMutaties = 0;

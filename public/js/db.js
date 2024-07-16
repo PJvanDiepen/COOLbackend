@@ -44,6 +44,27 @@ const NIEUWE_RANGLIJST = 2;
 const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
+function clubData(club, naam, extraNaam = "") {
+    const clubCode = Number(club);
+    const vereniging = naam;
+    const teamNaam = extraNaam;
+    const seizoenen = [];
+    const competities = []; // per competitie: spelers, ranglijst
+    const teams = []; // per team: spelers
+    const ronden = [];
+    const uitslagen = [];
+
+    return Object.freeze(
+        clubCode,
+        vereniging,
+        teamNaam,
+        seizoenen,
+        competities, // per competitie: spelers, ranglijst
+        teams, // per team: spelers
+        ronden,
+        uitslagen);
+}
+
 /* seizoen char(4)
 
 Seizoenen volgen elkaar standaard op: "1819", "1920", enz.
@@ -213,6 +234,8 @@ export { // ES6 voor browser,
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
+
+    clubData,              // (club, naam, extraNaam)
 
     // seizoen char(4)
     seizoenVoluit,         // (seizoen, seizoensOvergang)
