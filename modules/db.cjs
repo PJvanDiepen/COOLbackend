@@ -44,6 +44,12 @@ const NIEUWE_RANGLIJST = 2;
 const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
+/* seizoen char(4)
+Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
+De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
+met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
+ */
+
 function clubData(club, naam, extraNaam = "") {
     const clubCode = Number(club);
     const vereniging = naam;
@@ -54,7 +60,26 @@ function clubData(club, naam, extraNaam = "") {
     const ronden = [];
     const uitslagen = [];
 
-    return Object.freeze(
+    const seizoenVoluit = club === WAAGTOREN_JEUGD
+        ? function (teamCode) {
+            return `${Number(teamCode.substring(2, 4)) > 6 ? "na" : "voor"}jaar 20${teamCode.substring(0, 2)}`;
+        }
+        : function (teamCode) {
+            return `20${teamCode.substring(0, 2)}-20${teamCode.substring(2, 4)}`;
+        };
+
+    function seizoenToevoegen(...seizoenenLijst) {
+        for (const seizoen of seizoenenLijst) {
+            seizoenen.push([seizoen, seizoenVoluit(seizoen)]);
+        }
+    }
+
+    function afdrukken () {
+        console.log(`test() voor ${clubCode} ${vereniging}`);
+        return this;
+    }
+
+    return Object.freeze({
         clubCode,
         vereniging,
         teamNaam,
@@ -62,19 +87,11 @@ function clubData(club, naam, extraNaam = "") {
         competities, // per competitie: spelers, ranglijst
         teams, // per team: spelers
         ronden,
-        uitslagen);
-}
-
-/* seizoen char(4)
-
-Seizoenen volgen elkaar standaard op: "1819", "1920", enz.
-
-Indien seizoenCode is ingevuld is een andere volgorde mogelijk: "2309", "2401", "2409", enz.
- */
-function seizoenVoluit(seizoen, seizoenCode = 0) {
-    return seizoenCode === WAAGTOREN_JEUGD
-        ? `${seizoen.substring(2, 4) === "09" ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
-        : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
+        uitslagen,
+        seizoenVoluit,
+        seizoenToevoegen,
+        afdrukken
+    });
 }
 
 // teamCode char(3)
@@ -236,9 +253,6 @@ module.exports = { // CommonJS voor node.js
     WAAGTOREN_JEUGD,
 
     clubData,              // (club, naam, extraNaam)
-
-    // seizoen char(4)
-    seizoenVoluit,         // (seizoen, seizoensOvergang)
 
     // teamCode char(3)
     INTERNE_COMPETITIE,
