@@ -30,15 +30,18 @@ const data = {
     clubs: []
 }
 
-const wt = db.clubData(db.WAAGTOREN, "Waagtoren", "Waagtoren");
-wt.seizoenToevoegen("1920", "2021", "2122", "2223", "2324");
+data.clubs.push(
+    db.clubData(db.WAAGTOREN, "Waagtoren", "Waagtoren")
+        .seizoenToevoegen("1920", "2021", "2122", "2223", "2324"),
+    db.clubData(db.WAAGTOREN_JEUGD, "Waagtoren Jeugd")
+        .seizoenToevoegen("2309", "2401"));
 
-console.log(wt.afdrukken().seizoenen);
+console.log(data.clubs);
+console.log("--- WAAGTOREN ---");
+console.log(data.clubs[db.WAAGTOREN].afdrukken().seizoenen);
+console.log("--- WAAGTOREN_JEUGD ---");
+console.log(data.clubs[db.WAAGTOREN_JEUGD].seizoenen);
 
-const wtj = db.clubData(db.WAAGTOREN_JEUGD, "Waagtoren Jeugd");
-wtj.seizoenToevoegen("2309", "2401");
-
-console.log(wtj.afdrukken().seizoenen);
 
 const laatsteMutaties = [];
 let uniekeMutaties = 0;

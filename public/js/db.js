@@ -72,10 +72,11 @@ function clubData(club, naam, extraNaam = "") {
         for (const seizoen of seizoenenLijst) {
             seizoenen.push([seizoen, seizoenVoluit(seizoen)]);
         }
+        return this;
     }
 
     function afdrukken () {
-        console.log(`test() voor ${clubCode} ${vereniging}`);
+        console.log(`afdrukken: ${clubCode} ${vereniging}`);
         return this;
     }
 
