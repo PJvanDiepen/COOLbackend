@@ -2,7 +2,7 @@
 
 import * as db from "./db.js";
 import * as html from "./html.js";
-import {o_o_o, init} from "./o_o_o.js";
+import {data, o_o_o, init} from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -45,15 +45,16 @@ import * as zyq from "./zyq.js";
         [db.IEDEREEN, db.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
         [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
     sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
-    await seizoenSelecteren(o_o_o.competitie);
+    seizoenSelecteren(o_o_o.competitie);
     await competitieSelecteren();
 })();
 
-async function seizoenSelecteren(teamCode) {
-    const seizoenen = (await zyq.localFetch(`/${o_o_o.club}/seizoenen`)).map(function (seizoen) {
-        return [seizoen.seizoen, seizoen.voluit];
-    });
-    html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenen, function (seizoen) {
+function seizoenSelecteren(teamCode) {
+    const seizoenenSelectie = [];
+    for (const seizoen of data.club.seizoenen) {
+        seizoenenSelectie.push([seizoen, data.club.seizoenVoluit(seizoen)]);
+    }
+    html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenenSelectie, function (seizoen) {
         html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
     });
 }

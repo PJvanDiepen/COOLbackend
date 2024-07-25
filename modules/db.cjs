@@ -1,8 +1,11 @@
 /*
- * Deze module bevat alle code voor het valideren van de velden in de tabellen van de MySQL database.
+ * Deze module bevat code om data uit de MySQL database te manipuleren.
+ * De meest recente revisie van de data staat op de server voor doorgeven aan de browser.
+ * De browser synchroniseert de data met de server.
+ * Server en browser gebruiken dezelfde code voor valideren van de velden uit de MySQL tabellen.
  *
  * Van deze module bestaan twee versies:
- * - een Common.js versie voor node.js: db.cjs met module.exports = { .. };
+ * - een Common.js versie voor de server node.js: db.cjs met module.exports = { .. };
  * - een ES6 versie voor de browser: db.js met export { .. };
  *
  * Het enige verschil tussen de twee versies is de export-lijst.
@@ -50,17 +53,36 @@ De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar co
 met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
  */
 
-function clubData(club, naam, extraNaam = "") {
-    const clubCode = Number(club);
-    const vereniging = naam;
-    const teamNaam = extraNaam;
-    const seizoenen = [];
-    const competities = []; // per competitie: spelers, ranglijst
-    const teams = []; // per team: spelers
-    const ronden = [];
-    const uitslagen = [];
+function clubToevoegen(nummerNamen) {
+    const clubCode = Number(nummerNamen[0]);
+    const vereniging = nummerNamen[1];
+    const teamNaam = nummerNamen[2];
 
-    const seizoenVoluit = club === WAAGTOREN_JEUGD
+    function clubAfdrukken() {
+        console.log(`afdrukken: ${clubCode} ${vereniging} team: ${teamNaam === "" ? vereniging : teamNaam}`);
+        return this;
+    }
+
+    function clubData() {
+        return [clubCode, vereniging, teamNaam];
+    }
+
+    const seizoenen = [];
+    const seizoen = [];
+
+    function seizoenToevoegen(seizoenenLijst) {
+        for (const eenSeizoen of seizoenenLijst) {
+            seizoenen.push(eenSeizoen);
+            seizoen.push({
+                seizoen: eenSeizoen,
+                revisie: 1,
+                teams: [],
+                team: []});
+        }
+        return this;
+    }
+
+    const seizoenVoluit = clubCode === WAAGTOREN_JEUGD
         ? function (teamCode) {
             return `${Number(teamCode.substring(2, 4)) > 6 ? "na" : "voor"}jaar 20${teamCode.substring(0, 2)}`;
         }
@@ -68,30 +90,16 @@ function clubData(club, naam, extraNaam = "") {
             return `20${teamCode.substring(0, 2)}-20${teamCode.substring(2, 4)}`;
         };
 
-    function seizoenToevoegen(...seizoenenLijst) {
-        for (const seizoen of seizoenenLijst) {
-            seizoenen.push([seizoen, seizoenVoluit(seizoen)]);
-        }
-        return this;
-    }
-
-    function afdrukken () {
-        console.log(`afdrukken: ${clubCode} ${vereniging}`);
-        return this;
-    }
-
     return Object.freeze({
         clubCode,
         vereniging,
         teamNaam,
+        clubAfdrukken,    // ()
+        clubData,         // ()
         seizoenen,
-        competities, // per competitie: spelers, ranglijst
-        teams, // per team: spelers
-        ronden,
-        uitslagen,
-        seizoenVoluit,
-        seizoenToevoegen,
-        afdrukken
+        seizoen,
+        seizoenToevoegen, // (seizoenenLijst)
+        seizoenVoluit     // (SeizoenCode)
     });
 }
 
@@ -253,7 +261,7 @@ module.exports = { // CommonJS voor node.js
     WAAGTOREN,
     WAAGTOREN_JEUGD,
 
-    clubData,              // (club, naam, extraNaam)
+    clubToevoegen,              // (club, naam, extraNaam)
 
     // teamCode char(3)
     INTERNE_COMPETITIE,

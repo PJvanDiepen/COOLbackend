@@ -17,6 +17,10 @@ import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
+export const data = {
+    club: {}
+}
+
 export const o_o_o = {
     vereniging: "Waagtoren",
     club: 0, // clubCode is een getal
@@ -54,6 +58,8 @@ export async function init() {
     console.log(o_o_o);
     await zyq.init();
     Object.assign(o_o_o, zyq.o_o_o);
+    const clubGegevens = await zyq.localFetch(`/${o_o_o.club}/club`);
+    data.club = db.clubToevoegen(clubGegevens[0]).seizoenToevoegen(clubGegevens[1]);
     console.log("--- einde init ---")
     console.log(o_o_o);
 }

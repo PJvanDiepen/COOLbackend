@@ -11,39 +11,11 @@ const Uitslag = require("./models/uitslag");
 
 const { fn, ref } = require("objection");
 
-const package_json = require("./package.json");
-const tijdstip = new Date();
-
 const os = require("os");
-const db = require("./modules/db.cjs");
+const package_json = require("./package.json");
+const startTijdstip = new Date();
 
-/*
-TODO seizoenen [{seizoen: en voluit: }, ...]
-TODO teams
-TODO competities
-TODO uitslagen
-TODO personen invullen
- */
-
-const data = {
-    personen: [],
-    clubs: []
-}
-
-data.clubs.push(
-    db.clubData(db.WAAGTOREN, "Waagtoren", "Waagtoren")
-        .seizoenToevoegen("1920", "2021", "2122", "2223", "2324"),
-    db.clubData(db.WAAGTOREN_JEUGD, "Waagtoren Jeugd")
-        .seizoenToevoegen("2309", "2401"));
-
-console.log(data.clubs);
-console.log("--- WAAGTOREN ---");
-console.log(data.clubs[db.WAAGTOREN].afdrukken().seizoenen);
-console.log("--- WAAGTOREN_JEUGD ---");
-console.log(data.clubs[db.WAAGTOREN_JEUGD].seizoenen);
-
-
-const laatsteMutaties = [];
+const laatsteMutaties = []; // TODO laatsteRevisie
 let uniekeMutaties = 0;
 
 async function mutatie(gebruiker, ctx, aantal, invloed) {
@@ -70,6 +42,31 @@ function teamCodes(competities) {
     return teamCode;
 }
 
+const db = require("./modules/db.cjs");
+
+/*
+data met db.cjs voor server en met met db.js voor browser
+
+Op de server zo veel mogelijk compleet uit de MySQL database, zodat niet steeds opnieuw lezen.
+Op de browser niet compleet synchroniseren met server.
+
+TODO teams
+TODO competities
+TODO uitslagen
+TODO personen invullen
+ */
+
+const data = {
+    personen: [],
+    clubs: []
+}
+
+data.clubs.push(
+    db.clubToevoegen([db.WAAGTOREN, "Waagtoren", "Waagtoren"])
+        .seizoenToevoegen(["1920", "2021", "2122", "2223", "2324"]),
+    db.clubToevoegen([db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""])
+        .seizoenToevoegen(["2309", "2401"]));
+
 /**
  * de url van een endpoint bestaat uit een of meer commando's en parameters
  * de vaste parameters van een endpoint staan in een vaste volgorde
@@ -95,7 +92,7 @@ function teamCodes(competities) {
  *
  *  indien vaste parameters ontbreken staat het commando op die plek
  *  maar niet waar :uuid ontbreekt
- *      /:club/seizoenen
+ *      /:club/club
  *      enz.
  */
 module.exports = function (url) {
@@ -105,10 +102,12 @@ module.exports = function (url) {
     });
 
     /*
-    Frontend: start.js
-     */
-    url.get("/:club/seizoenen", async function (ctx) {
-        ctx.body = JSON.stringify(data.clubs[ctx.params.club].seizoenen);
+    Frontend: o_o_o.js
+    */
+
+    url.get("/:club/club", async function (ctx) {
+        const club = data.clubs[ctx.params.club];
+        ctx.body = JSON.stringify([club.clubData(), club.seizoenen]);
     });
 
     url.get("/:club/:seizoen/ronden", async function (ctx) {
@@ -136,7 +135,7 @@ module.exports = function (url) {
     Frontend: beheer.js
      */
     url.get("/versie", async function (ctx) {
-        ctx.body = JSON.stringify({versie: package_json.version, tijdstip: tijdstip});
+        ctx.body = JSON.stringify({versie: package_json.version, tijdstip: startTijdstip});
     });
 
     /*
