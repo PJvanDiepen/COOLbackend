@@ -13,42 +13,19 @@ const { fn, ref } = require("objection");
 
 const os = require("os");
 const package_json = require("./package.json");
-const startTijdstip = new Date();
-
-const laatsteMutaties = []; // TODO laatsteRevisie
-let uniekeMutaties = 0;
-
-async function mutatie(gebruiker, ctx, aantal, invloed) {
-    if (aantal) {
-        laatsteMutaties[invloed] = uniekeMutaties++;
-        await Mutatie.query().insert({
-            knsbNummer: gebruiker.dader.knsbNummer,
-            volgNummer: uniekeMutaties,
-            url: ctx.request.url.substring(38).replace("%C2%BD", db.REMISE), // zonder uuid en TODO "%20" vervangen door spatie?
-            aantal: aantal,
-            invloed: invloed});
-    }
-}
-
-function teamCodes(competities) {
-    const teamCode = [" ", " ", " ", " ", " "]; // voor intern1..5
-    let i = 0;
-    let j = 0;
-    while (i < competities.length && j < teamCode.length) {
-        teamCode[j] = competities.substring(i, i + 3);
-        i += 3;
-        j++;
-    }
-    return teamCode;
-}
+const serverStart = new Date();
+let revisieNummer = 0;
 
 const db = require("./modules/db.cjs");
 
 /*
-data met db.cjs voor server en met met db.js voor browser
+data met db.cjs voor de server en met met db.js voor de browser.
 
-Op de server zo veel mogelijk compleet uit de MySQL database, zodat niet steeds opnieuw lezen.
-Op de browser niet compleet synchroniseren met server.
+Op de server is data zo veel mogelijk compleet uit de MySQL database,
+zodat het niet nodig is om steeds opnieuw te lezen.
+De browser synchroniseert data met de server aan de hand van het revisieNummer.
+De data op de server krijgt een nieuw revisieNummer na het muteren van de MySQL database
+en opnieuw lezen uit de MySQL database.
 
 TODO teams
 TODO competities
@@ -63,13 +40,19 @@ const data = {
 
 data.clubs.push(
     db.clubToevoegen([db.WAAGTOREN, "Waagtoren", "Waagtoren"])
-        .seizoenToevoegen(["1920", "2021", "2122", "2223", "2324"]),
+        .seizoenenToevoegen(["1920", "2021", "2122", "2223", "2324"]),
     db.clubToevoegen([db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""])
-        .seizoenToevoegen(["2309", "2401"]));
+        .seizoenenToevoegen(["2309", "2401"]));
+
+console.log(data.clubs[db.WAAGTOREN_JEUGD].seizoenDaarna("2408"));
+console.log(data.clubs[db.WAAGTOREN].seizoenDaarna("2324"));
+console.log(data.clubs[db.WAAGTOREN].seizoenDaarna("0001"));
+
+
 
 /**
- * de url van een endpoint bestaat uit een of meer commando's en parameters
- * de vaste parameters van een endpoint staan in een vaste volgorde
+ * De url van een api-endpoint bestaat uit een of meer commando's en parameters
+ * de vaste parameters van een endpoint staan in een vaste volgorde.
  *
  *  :uuid
  *      uuidToken van een gebruiker
@@ -85,12 +68,12 @@ data.clubs.push(
  *  :speler
  *      knsbNummer van deelnemer
  *
- *  na de vaste parameters volgt het commando van het endpoint
+ *  Na de vaste parameters volgt het commando van het endpoint
  *  en daarna eventueel andere parameters
  *      /:uuid/:club/:seizoen/:competitie/:ronde/:speler:/uitslag/:tegenstander/:resultaat
  *      enz.
  *
- *  indien vaste parameters ontbreken staat het commando op die plek
+ *  Indien vaste parameters ontbreken staat het commando op die plek,
  *  maar niet waar :uuid ontbreekt
  *      /:club/club
  *      enz.
@@ -107,7 +90,20 @@ module.exports = function (url) {
 
     url.get("/:club/club", async function (ctx) {
         const club = data.clubs[ctx.params.club];
-        ctx.body = JSON.stringify([club.clubData(), club.seizoenen]);
+        ctx.body = JSON.stringify({revisie: revisieNummer,
+            club: club.clubData(),
+            seizoenen: club.seizoenen});
+    });
+
+    url.get("/:club/:seizoen/seizoen/toevoegen", async function (ctx) {
+        const club = data.clubs[ctx.params.club];
+        const seizoen = club.seizoenDaarna(ctx.params.seizoen);
+        club.seizoenenToevoegen([club.seizoenDaarna(ctx.params.seizoen)]);
+        // TODO log mutatie
+        revisieNummer++;
+        ctx.body = JSON.stringify({revisie: revisieNummer,
+            club: club.clubData(),
+            seizoenen: club.seizoenen});
     });
 
     url.get("/:club/:seizoen/ronden", async function (ctx) {
@@ -120,7 +116,7 @@ module.exports = function (url) {
         ctx.body = JSON.stringify(data.clubs[ctx.params.club].ronden[ctx.params.seizoen]);
     });
 
-    console.log("--- endpoints ---");
+    console.log("--- api-endpoints ---"); // versie 0.8.60 heeft 60 endpoints
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
@@ -135,7 +131,7 @@ module.exports = function (url) {
     Frontend: beheer.js
      */
     url.get("/versie", async function (ctx) {
-        ctx.body = JSON.stringify({versie: package_json.version, tijdstip: startTijdstip});
+        ctx.body = JSON.stringify({versie: package_json.version, tijdstip: serverStart});
     });
 
     /*
@@ -1552,6 +1548,33 @@ module.exports = function (url) {
         }
         ctx.body = aantal;
     });
+}
+
+const laatsteMutaties = [];
+let uniekeMutaties = 0;
+
+async function mutatie(gebruiker, ctx, aantal, invloed) {
+    if (aantal) {
+        laatsteMutaties[invloed] = uniekeMutaties++;
+        await Mutatie.query().insert({
+            knsbNummer: gebruiker.dader.knsbNummer,
+            volgNummer: uniekeMutaties,
+            url: ctx.request.url.substring(38).replace("%C2%BD", db.REMISE), // zonder uuid en TODO "%20" vervangen door spatie?
+            aantal: aantal,
+            invloed: invloed});
+    }
+}
+
+function teamCodes(competities) {
+    const teamCode = [" ", " ", " ", " ", " "]; // voor intern1..5
+    let i = 0;
+    let j = 0;
+    while (i < competities.length && j < teamCode.length) {
+        teamCode[j] = competities.substring(i, i + 3);
+        i += 3;
+        j++;
+    }
+    return teamCode;
 }
 
 async function paarMuteren(uitslag) {

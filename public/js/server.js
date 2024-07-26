@@ -1,8 +1,5 @@
 // because this is a module, I'm strict by default
 
-const data = {};
-
-
 /**
  * localFetch optimaliseert de verbinding met de database op de server
  * door het antwoord van de server ook lokaal op te slaan

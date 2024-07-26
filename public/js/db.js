@@ -58,11 +58,6 @@ function clubToevoegen(nummerNamen) {
     const vereniging = nummerNamen[1];
     const teamNaam = nummerNamen[2];
 
-    function clubAfdrukken() {
-        console.log(`afdrukken: ${clubCode} ${vereniging} team: ${teamNaam === "" ? vereniging : teamNaam}`);
-        return this;
-    }
-
     function clubData() {
         return [clubCode, vereniging, teamNaam];
     }
@@ -70,36 +65,49 @@ function clubToevoegen(nummerNamen) {
     const seizoenen = [];
     const seizoen = [];
 
-    function seizoenToevoegen(seizoenenLijst) {
+    function seizoenenToevoegen(seizoenenLijst) {
         for (const eenSeizoen of seizoenenLijst) {
             seizoenen.push(eenSeizoen);
             seizoen.push({
                 seizoen: eenSeizoen,
-                revisie: 1,
+                revisie: 0,
                 teams: [],
                 team: []});
         }
         return this;
     }
 
-    const seizoenVoluit = clubCode === WAAGTOREN_JEUGD
-        ? function (teamCode) {
-            return `${Number(teamCode.substring(2, 4)) > 6 ? "na" : "voor"}jaar 20${teamCode.substring(0, 2)}`;
+    const seizoenDaarna = clubCode === WAAGTOREN_JEUGD
+        ? function (seizoen) {
+            const jaar = Number(seizoen.substring(0, 2));
+            const maand = Number(seizoen.substring(2, 4));
+            return maand > 6
+                ? `${(jaar+1).toString().padStart(2,"0")}01` // voorjaar volgend jaar
+                : `${jaar.toString().padStart(2, "0")}09`; // najaar dit jaar
         }
-        : function (teamCode) {
-            return `20${teamCode.substring(0, 2)}-20${teamCode.substring(2, 4)}`;
+        : function (seizoen) {
+            const jaar = Number(seizoen.substring(2, 4));
+            return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
+        };
+
+    const seizoenVoluit = clubCode === WAAGTOREN_JEUGD
+        ? function (seizoen) {
+            return `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`;
+        }
+        : function (seizoen) {
+            return `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
         };
 
     return Object.freeze({
         clubCode,
         vereniging,
         teamNaam,
-        clubAfdrukken,    // ()
-        clubData,         // ()
+        clubData,           // ()
         seizoenen,
         seizoen,
-        seizoenToevoegen, // (seizoenenLijst)
-        seizoenVoluit     // (SeizoenCode)
+        seizoenenToevoegen, // (seizoenenLijst) ->
+        seizoenDaarna,      // (seizoen)
+        seizoenVoluit       // (seizoen)
     });
 }
 

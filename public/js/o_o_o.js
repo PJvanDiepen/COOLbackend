@@ -58,8 +58,8 @@ export async function init() {
     console.log(o_o_o);
     await zyq.init();
     Object.assign(o_o_o, zyq.o_o_o);
-    const clubGegevens = await zyq.localFetch(`/${o_o_o.club}/club`);
-    data.club = db.clubToevoegen(clubGegevens[0]).seizoenToevoegen(clubGegevens[1]);
+    const {revisie, club, seizoenen} = await zyq.localFetch(`/${o_o_o.club}/club`);
+    data.club = db.clubToevoegen(club).seizoenToevoegen(seizoenen);
     console.log("--- einde init ---")
     console.log(o_o_o);
 }
