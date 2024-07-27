@@ -22,10 +22,10 @@ app.use(cors()); // Also worth mentioning that app.use(cors()) has to go before 
 
 registerApi(router);
 
-const { apiLijst } = require('./modules/db.cjs');
+const { endpoints } = require('./modules/db.cjs');
 
 for (const route of router.stack) {
-  apiLijst.push(route.path); // lijst van routes in db.cjs
+  endpoints.push(route.path);
 }
 
 app.use(bodyParser());

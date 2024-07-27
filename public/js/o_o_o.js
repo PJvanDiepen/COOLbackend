@@ -14,6 +14,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
+import * as server from "./server.js";
 
 import * as zyq from "./zyq.js";
 
@@ -51,13 +52,17 @@ export const o_o_o = {
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  *
- * TODO
  */
 export async function init() {
     console.log("--- start init ---");
     console.log(o_o_o);
     await zyq.init();
     Object.assign(o_o_o, zyq.o_o_o);
+
+    const api = server.endpoint("/club");
+    api.afdrukken();
+
+    // TODO zyq.localFetch vervangen door iets wat revisie controleert
     const {revisie, club, seizoenen} = await zyq.localFetch(`/${o_o_o.club}/club`);
     data.club = db.clubToevoegen(club).seizoenToevoegen(seizoenen);
     console.log("--- einde init ---")

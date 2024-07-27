@@ -1,4 +1,27 @@
-// because this is a module, I'm strict by default
+/*
+DONE function endpoint (commando) {}
+TODO zoek specificatie op de server met commando
+TODO foutboodschap indien niet gevonden
+TODO variabelen: <parameter> voor alle mogelijke parameters
+TODO methods <parameter>Invullen om alle mogelijke parameters in te vullen
+TODO methode <parameter>Invullen doet niks en geeft fout indien niet in specificatie
+TODO url met commando en gespecificeerde parameters
+TODO sessionStorage.getItem(url)
+TODO indien niet gevonden of revisie niet actueel dan fetch( server + url )
+TODO indien gevonden sessionStorage.setItem(url)
+TODO foutboodschap indien niet gevonden
+ */
+
+export function endpoint (commando) {
+    function afdrukken() {
+        console.log(commando);
+        return this;
+    }
+
+    return Object.freeze({
+        afdrukken           // ()
+    });
+}
 
 /**
  * localFetch optimaliseert de verbinding met de database op de server

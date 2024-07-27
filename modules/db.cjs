@@ -14,7 +14,7 @@
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  */
 
-const apiLijst = []; // zie app.js
+const endpoints = []; // zie app.js
 
 /**
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
@@ -256,7 +256,7 @@ function gebruikerFunctie(speler) {
 const MENU = "menu";
 
 module.exports = { // CommonJS voor node.js
-    apiLijst,
+    endpoints,
 
     key,                   // (object)
 
