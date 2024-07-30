@@ -23,7 +23,7 @@ data met db.cjs voor de server en met met db.js voor de browser.
 
 Op de server is data zo veel mogelijk compleet uit de MySQL database,
 zodat het niet nodig is om steeds opnieuw te lezen.
-De browser synchroniseert data met de server aan de hand van het revisieNummer.
+De browser synchroniseert data met de server aan de hand van revisieNummer.
 De data op de server krijgt een nieuw revisieNummer na het muteren van de MySQL database
 en opnieuw lezen uit de MySQL database.
 
@@ -71,10 +71,12 @@ data.clubs.push(
  *  maar niet waar :uuid ontbreekt
  *      /:club/club
  *      enz.
+ *
+ *  Een api-endpoint geeft een of meer
  */
 module.exports = function (url) {
 
-    url.get("/database", async function (ctx) {
+    url.get("/data", async function (ctx) {
         ctx.body = JSON.stringify(data);
     });
 
@@ -84,7 +86,8 @@ module.exports = function (url) {
 
     url.get("/:club/club", async function (ctx) {
         const club = data.clubs[ctx.params.club];
-        ctx.body = JSON.stringify({revisie: revisieNummer,
+        ctx.body = JSON.stringify({
+            revisie: club.revisie,
             club: club.clubData(),
             seizoenen: club.seizoenen});
     });

@@ -1,8 +1,5 @@
 /*
  * Deze module bevat code om data uit de MySQL database te manipuleren.
- * De meest recente revisie van de data staat op de server voor doorgeven aan de browser.
- * De browser synchroniseert de data met de server.
- * Server en browser gebruiken dezelfde code voor valideren van de velden uit de MySQL tabellen.
  *
  * Van deze module bestaan twee versies:
  * - een Common.js versie voor de server node.js: db.cjs met module.exports = { .. };
@@ -53,10 +50,51 @@ De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar co
 met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
  */
 
-function clubToevoegen(nummerNamen) {
-    const clubCode = Number(nummerNamen[0]);
-    const vereniging = nummerNamen[1];
-    const teamNaam = nummerNamen[2];
+/**
+ * De data van 0-0-0 staat op 3 verschillende plaatsen:
+ * - de MySQL database,
+ * - op de server en
+ * - in de browser.
+ *
+ * De data heeft een hiërarchie er is samenhang tussen de tabellen van de database
+ * en de objecten en array's op de server en in de browser:
+ * - club    data[:club]
+ * - seizoen data[:club][:seizoen]
+ * - team    data[:club][:seizoen][:team]
+ * - ronde   data[:club][:seizoen][:team][:ronde]
+ * - uitslag data[:club][:seizoen][:team][:ronde][:speler]
+ *
+ * Server en browser gebruiken verschillende technieken om de data te synchroniseren in synchroon.
+ *
+ * De server leest data uit de database die gevraagd wordt en slaat die op in data,
+ * zodat die niet steeds opnieuw uit de database gelezen hoeft te worden.
+ * De server legt vast als de data van een seizoen compleet is of
+ * als alle ronden de van een team (of competitie) compleet zijn of
+ * als alle uitslagen van een ronde compleet zijn.
+ *
+ * Als niet alle uitslagen van een ronde compleet zijn legt de server de revisie vast.
+ * Na elke mutatie op de database verhoogt de server het revisieNummer in synchroon.
+ * Bovendien houdt de server in synchroon bij welke data compleet is en waarvan een revisie is.
+ * De data staat in data. In synchroon staan objecten met compleet: of revisie: met revisieNummer:
+ * - seizoen synchroon[:club][:seizoen]
+ * - team    synchroon[:club][:seizoen][:team]
+ * - ronde   synchroon[:club][:seizoen][:team][:ronde]
+ *
+ * Als de browser data van de server leest, slaat de server die data ook op in sessionStorage,
+ * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
+ * Behalve de gevraagde data stuurt de server ook steeds de actuele synchroon,
+ * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
+ *
+ * @param synchroon om de data tussen database, server en browser te synchroniseren
+ * @returns alle variabelen en methoden van data
+ */
+function data(synchroon) {
+
+    function clubToevoegen() {
+        const clubCode = Number(arguments[0]);
+        const vereniging = arguments[1];
+        const teamNaam = arguments[2];
+    }
 
     function clubData() {
         return [clubCode, vereniging, teamNaam];
@@ -269,7 +307,7 @@ export { // ES6 voor browser,
     WAAGTOREN,
     WAAGTOREN_JEUGD,
 
-    clubToevoegen,              // (club, naam, extraNaam)
+    data,                  // (synchroon)
 
     // teamCode char(3)
     INTERNE_COMPETITIE,
