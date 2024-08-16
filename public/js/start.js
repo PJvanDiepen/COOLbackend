@@ -15,7 +15,7 @@ import * as zyq from "./zyq.js";
 (async function() {
     await init();
     html.id("kop").textContent =
-        `${o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}${zyq.teamVoluit(o_o_o.competitie)}`;
+        `${o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}${db.teamVoluit(o_o_o.competitie)}`;
     const plaatje = html.id("plaatje");
     if (o_o_o.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));

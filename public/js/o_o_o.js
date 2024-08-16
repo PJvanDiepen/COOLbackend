@@ -33,6 +33,37 @@ export const o_o_o = {
     naam: ""
 };
 
+function urlVerwerken() {
+    for (let [key, value] of Object.entries(o_o_o)) {
+        let parameter = params.get(key); // inlezen van url
+        if (parameter) {
+            sessionStorage.setItem(key, parameter); // opslaan voor sessie
+        } else {
+            parameter = sessionStorage.getItem(key); // inlezen van sessie
+        }
+        if (parameter) {
+            o_o_o[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
+        }
+    }
+}
+
+function versieBepalen() {
+    // TODO reglement in team i.p.v. versie
+    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
+        if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
+            o_o_o.versie = 2;
+        } else {
+            o_o_o.versie = 3; // vanaf seizoen 2021-2022
+        }
+    } else if (o_o_o.competitie === RAPID_COMPETITIE && o_o_o.versie === 0) {
+        o_o_o.versie = 4;
+    } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
+        o_o_o.versie = 5; // Zwitsers systeem
+    } else if (o_o_o.competitie === JEUGD_COMPETITIE && o_o_o.versie === 0) {
+        o_o_o.versie = 6;
+    }
+}
+
 /**
  * init voor aanmelden.js
  *           agenda.js
@@ -51,15 +82,16 @@ export const o_o_o = {
  *
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
- *
  */
 export async function init() {
     console.log("--- start init ---");
-    console.log(o_o_o);
-    await zyq.init();
-    Object.assign(o_o_o, zyq.o_o_o);
+    await zyq.gebruikerVerwerken(); // TODO later?
+    urlVerwerken();
+    versieBepalen();
+    Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
+    await zyq.competitieRondenVerwerken();
 
-    const api = server.endpoint("/club");
+    const api = await server.endpoint("/club");
     api.afdrukken();
 
     // TODO zyq.localFetch vervangen door iets wat revisie controleert
@@ -95,7 +127,7 @@ export async function teamSelecteren(teamCode) {
     const teams = (await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isCompetitie(team) || db.isTeam(team);
     }).map(function (team) {
-        return [team.teamCode, zyq.teamVoluit(team.teamCode)];
+        return [team.teamCode, db.teamVoluit(team.teamCode)];
     });
     html.selectie(html.id("teamSelecteren"), teamCode, teams, function (teamCode) {
         if (teamCode === "" ? false : teamCode.substring(0,1) === "i") {

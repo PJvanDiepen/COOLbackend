@@ -25,8 +25,8 @@ async function uitslagenTeam(kop, rondenTabel) {
     for (const team of teams) {
         if (team.teamCode === o_o_o.team) {
             kop.textContent = db.isBekerCompetitie(team)
-                ? `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`
-                : `${zyq.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}${team.omschrijving}`;
+                ? `${db.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`
+                : `${db.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}${team.omschrijving}`;
             break;
         }
     }
@@ -46,7 +46,7 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
             div.appendChild(document.createElement("h2")).textContent =
                 `Ronde ${rondeNummer}${html.SCHEIDING}${datumKolom}`;
             const tabel = div.appendChild(document.createElement("table"));
-            tabel.append(html.rij("", zyq.wedstrijdVoluit(u.ronde), "", uitslagKolom));
+            tabel.append(html.rij("", db.westrijdVoluit(u.ronde), "", uitslagKolom));
             for (let uitslag of u.uitslagen) {
                 tabel.append(html.rij(uitslag.bordNummer, zyq.naarSpeler(uitslag), uitslag.witZwart, uitslag.resultaat));
             }

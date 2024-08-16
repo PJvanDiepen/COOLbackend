@@ -142,7 +142,7 @@ async function wedstrijdenBijRonde(rondeNummer, lijst) {
 function rondeInterneCompetitie(rondeNummer) {
     return html.rij(rondeNummer,
         html.naarPagina(`ronde.html?ronde=${rondeNummer}`, zyq.datumLeesbaar(o_o_o.ronde[rondeNummer])),
-        zyq.teamVoluit(o_o_o.competitie),
+        db.teamVoluit(o_o_o.competitie),
         "");
 }
 

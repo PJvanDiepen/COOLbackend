@@ -12,9 +12,15 @@ const Uitslag = require("./models/uitslag");
 const { fn, ref } = require("objection");
 
 const os = require("os");
+
 const package_json = require("./package.json");
-const serverStart = new Date();
-let revisieNummer = 0;
+
+const synchroonActueel = {
+    versie: package_json.versie,
+    serverStart: new Date(),
+    revisieNummer: 1,
+    revisie: []
+}
 
 const db = require("./modules/db.cjs");
 
@@ -33,16 +39,12 @@ TODO uitslagen
 TODO personen invullen
  */
 
-const data = {
-    personen: [],
-    clubs: []
-}
-
-data.clubs.push(
-    db.clubToevoegen([db.WAAGTOREN, "Waagtoren", "Waagtoren"])
-        .seizoenenToevoegen(["1920", "2021", "2122", "2223", "2324"]),
-    db.clubToevoegen([db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""])
-        .seizoenenToevoegen(["2309", "2401"]));
+const clubs = [];
+clubs.push(
+    db.clubToevoegen(synchroonActueel, [db.WAAGTOREN, "Waagtoren", "Waagtoren"])
+        .seizoenenToevoegen(synchroonActueel, ["1920", "2021", "2122", "2223", "2324"]),
+    db.clubToevoegen(synchroonActueel, [db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""])
+        .seizoenenToevoegen(synchroonActueel, ["2309", "2401"]));
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
@@ -76,24 +78,20 @@ data.clubs.push(
  */
 module.exports = function (url) {
 
-    url.get("/data", async function (ctx) {
-        ctx.body = JSON.stringify(data);
-    });
-
     /*
     Frontend: o_o_o.js
     */
-
     url.get("/:club/club", async function (ctx) {
-        const club = data.clubs[ctx.params.club];
-        ctx.body = JSON.stringify({
-            revisie: club.revisie,
-            club: club.clubData(),
-            seizoenen: club.seizoenen});
+        const club = clubs[ctx.params.club];
+        ctx.body = JSON.stringify(club
+            ? { synchroon: club.synchroon,
+                club: club.clubData(),
+                seizoenen: club.seizoenen }
+            : null);
     });
 
     url.get("/:club/:seizoen/seizoen/toevoegen", async function (ctx) {
-        const club = data.clubs[ctx.params.club];
+        const club = clubs[ctx.params.club];
         const seizoen = club.seizoenDaarna(ctx.params.seizoen);
         club.seizoenenToevoegen([club.seizoenDaarna(ctx.params.seizoen)]);
         // TODO log mutatie

@@ -85,7 +85,7 @@ function teamVoorkeur(teams, teamleider) {
 // TODO zie o_o_o.js: teamSelecteren
 function teamSelecteren(teams, teamCode) {
     const teamsSelectie = teams.map(function (team) {
-        return [team.teamCode, zyq.teamVoluit(team.teamCode)];
+        return [team.teamCode, db.teamVoluit(team.teamCode)];
     });
     html.selectie(html.id("teamSelecteren"), teamCode, teamsSelectie, function (team) {
         html.zelfdePagina(`teamleider=${team}`);
@@ -93,7 +93,7 @@ function teamSelecteren(teams, teamCode) {
 }
 
 async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
-    kop.textContent = `Overzicht voor teamleider ${html.SCHEIDING} ${zyq.teamVoluit(teamCode)}`;
+    kop.textContent = `Overzicht voor teamleider ${html.SCHEIDING} ${db.teamVoluit(teamCode)}`;
     const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
     for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
         uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);

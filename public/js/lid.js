@@ -104,21 +104,21 @@ async function lidFormulier(persoon, septemberRating) {
     const teams = await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`);
     for (const team of teams) {
         if (!db.isCompetitie(team) && !db.isTeam(team)) { // TODO wat gebeurt hier?
-            nhsbTeam.append(html.optie(team.teamCode, zyq.teamVoluit(team.teamCode)));
-            knsbTeam.append(html.optie(team.teamCode, zyq.teamVoluit(team.teamCode)));
+            nhsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
+            knsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
         } else if (team.bond === "n") {
-            nhsbTeam.append(html.optie(team.teamCode, zyq.teamVoluit(team.teamCode)));
+            nhsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
             if (persoon && persoon.nhsbTeam === team.teamCode) { // speelt persoon in dit nhsbTeam?
                 nhsbTeam.value = team.teamCode;
             }
         } else if (team.bond === "k") {
-            knsbTeam.append(html.optie(team.teamCode, zyq.teamVoluit(team.teamCode)));
+            knsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
             if (persoon && persoon.knsbTeam === team.teamCode) { // speelt persoon in dit knsbTeam?
                 knsbTeam.value = team.teamCode;
             }
         } else if (db.isCompetitie(team)) {
             const id = `intern${competitieNummer + 1}`;
-            competities.append(html.checkbox(id, team.teamCode, zyq.teamVoluit(team.teamCode)));
+            competities.append(html.checkbox(id, team.teamCode, db.teamVoluit(team.teamCode)));
             competitie[competitieNummer] = html.id(id);
             if (db.inCompetitie(persoon, team.teamCode)) {
                 competitie[competitieNummer].checked = true;

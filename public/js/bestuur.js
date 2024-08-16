@@ -124,7 +124,7 @@ async function ledenLijst(personen, lidNummer, competities, lijst, leden) {
         if (db.isCompetitie(team) || db.isTeam(team)) {
             const link = html.naarPagina(
                 `bestuur.html?leden=${team.teamCode === leden ? "alle": team.teamCode}`,
-                zyq.teamVoluit(team.teamCode));
+                db.teamVoluit(team.teamCode));
             html.verwerkt(link,team.teamCode === leden);
             competities.append(html.rij(link, team.teamCode, aantalPerTeam[team.teamCode]));
         }

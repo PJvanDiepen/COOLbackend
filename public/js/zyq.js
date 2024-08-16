@@ -1,55 +1,6 @@
 // because this is a module, I'm strict by default
 
-// teamCode
-const INTERNE_COMPETITIE = "int";
-const RAPID_COMPETITIE = "ira";
-const JEUGD_COMPETITIE = "ije";
-const SNELSCHAKEN = "izs";
-
-// TODO teamVoluit(clubCode, teamCode)
-
-export function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
-    if (teamCode === INTERNE_COMPETITIE) {
-        return "interne competitie";
-    } else if (teamCode === RAPID_COMPETITIE) {
-        return "rapid competitie";
-    } else if (teamCode === JEUGD_COMPETITIE) {
-        return "jeugd competitie";
-    } else if (teamCode === SNELSCHAKEN) {
-        return "einde seizoen snelschaken";
-    } else if (teamCode === "0") {
-        return "KNSB bij andere schaakvereniging";
-    } else if (teamCode === "n0") {
-        return "NHSB bij andere schaakvereniging";
-    } else if (teamCode === "kbe") {
-        return "Waagtoren KNSB beker";
-    } else if (teamCode === "nbe") {
-        return "Waagtoren NHSB beker";
-    } else if (teamCode === "nbz") {
-        return "Waagtoren NHSB beker (zilver)";
-    } else if (teamCode === "nbb") {
-        return "Waagtoren NHSB beker (brons)";
-    } else if (teamCode === "" || teamCode.substring(0,1) === " ") {
-        return "geen";
-    } else if (teamCode.substring(0,2) === "nv") {
-        return "Waagtoren v" + teamCode.substring(2);
-    } else if (teamCode.substring(0,1) === "n") {
-        return "Waagtoren n" + teamCode.substring(1);
-    } else {
-        return "Waagtoren " + teamCode;
-    }
-}
-
-export function wedstrijdVoluit(ronde) {
-    const eigenTeam = teamVoluit(ronde.teamCode);
-    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
-}
-
-// uitslag.resultaat
-const REMISE = "½";
-// uitslag.uithuis
-const THUIS = "t";
-
+// TODO verwijderen, staat nu in server.js
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
@@ -66,7 +17,7 @@ export function eindeSeizoen(seizoen) {
     return new Date(2000 + Number(seizoen.substring(2)), 6, 30);
 }
 
-export const o_o_o = {
+export const o_o_o = { // TODO verwijderen, staat nu in o_o_o.js
     vereniging: "Waagtoren",
     club: 0, // clubCode is een getal
     seizoen: ditSeizoen,
@@ -76,13 +27,6 @@ export const o_o_o = {
     speler: 0, // knsbNummer is een getal
     naam: ""
 };
-
-export async function init() {
-    await gebruikerVerwerken();
-    urlVerwerken();
-    versieBepalen();
-    await competitieRondenVerwerken();
-}
 
 const SCHEIDING = " \u232A ";
 export function competitieTitel() {
@@ -111,7 +55,7 @@ export const gebruiker = {}; // gebruikerVerwerken
  *
  * @returns {Promise<void>}
  */
-async function gebruikerVerwerken() {
+export async function gebruikerVerwerken() {
     if (uuidActiveren && uuidActiveren === uuidToken) {
         await serverFetch(`/${uuidToken}/activeer`);
         localStorage.setItem("o_o_o", uuidToken);
@@ -134,38 +78,7 @@ function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
-function urlVerwerken() {
-    for (let [key, value] of Object.entries(o_o_o)) {
-        let parameter = params.get(key); // inlezen van url
-        if (parameter) {
-            sessionStorage.setItem(key, parameter); // opslaan voor sessie
-        } else {
-            parameter = sessionStorage.getItem(key); // inlezen van sessie
-        }
-        if (parameter) {
-            o_o_o[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
-        }
-    }
-}
-
-function versieBepalen() {
-    // TODO reglement in team i.p.v. versie
-    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
-        if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
-            o_o_o.versie = 2;
-        } else {
-            o_o_o.versie = 3; // vanaf seizoen 2021-2022
-        }
-    } else if (o_o_o.competitie === RAPID_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 4;
-    } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
-        o_o_o.versie = 5; // Zwitsers systeem
-    } else if (o_o_o.competitie === JEUGD_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 6;
-    }
-}
-
-async function competitieRondenVerwerken() {
+export async function competitieRondenVerwerken() {
     console.log("--- begin competitieRondenVerwerken() ---");
     o_o_o.ronde = [];
     o_o_o.vorigeRonde = 0;

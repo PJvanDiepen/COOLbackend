@@ -59,7 +59,7 @@ async function agenda(knsbNummer, lijst, informeer) {
             lijst.append(html.rij(
                 zyq.datumLeesbaar(w),
                 db.isCompetitie(w) ? w.rondeNummer : "",
-                db.isCompetitie(w) ? zyq.teamVoluit(w.teamCode) : zyq.wedstrijdVoluit(w),
+                db.isCompetitie(w) ? db.teamVoluit(w.teamCode) : db.westrijdVoluit(w),
                 link));
             if (w.partij === db.PLANNING && db.isTeam(w) && !geenVraagteken.has(w.teamCode)) {
                 vraagteken = true; // speler heeft voor komende wedstrijd van dit team niet aangevinkt

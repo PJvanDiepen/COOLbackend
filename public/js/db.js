@@ -52,19 +52,15 @@ met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "240
 
 /**
  * De data van 0-0-0 staat op 3 verschillende plaatsen:
- * - de MySQL database,
+ * - in de MySQL database,
  * - op de server en
  * - in de browser.
  *
- * De data heeft een hiërarchie er is samenhang tussen de tabellen van de database
- * en de objecten en array's op de server en in de browser:
- * - club    data[:club]
- * - seizoen data[:club][:seizoen]
- * - team    data[:club][:seizoen][:team]
- * - ronde   data[:club][:seizoen][:team][:ronde]
- * - uitslag data[:club][:seizoen][:team][:ronde][:speler]
+ * Er is een hiërarchie en samenhang tussen de tabellen van de database
+ * en de data objecten op de server en in de browser:
+ * club[:club].seizoen[:seizoen].team[:team].ronde[:ronde].uitslag[:speler]
  *
- * Server en browser gebruiken verschillende technieken om de data te synchroniseren in synchroon.
+ * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
  * De server leest data uit de database die gevraagd wordt en slaat die op in data,
  * zodat die niet steeds opnieuw uit de database gelezen hoeft te worden.
@@ -73,79 +69,102 @@ met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "240
  * als alle uitslagen van een ronde compleet zijn.
  *
  * Als niet alle uitslagen van een ronde compleet zijn legt de server de revisie vast.
- * Na elke mutatie op de database verhoogt de server het revisieNummer in synchroon.
+ * Na elke mutatie op de database verhoogt de server het revisieNummer in een actueel synchroon object.
  * Bovendien houdt de server in synchroon bij welke data compleet is en waarvan een revisie is.
- * De data staat in data. In synchroon staan objecten met compleet: of revisie: met revisieNummer:
- * - seizoen synchroon[:club][:seizoen]
- * - team    synchroon[:club][:seizoen][:team]
- * - ronde   synchroon[:club][:seizoen][:team][:ronde]
+ * De data staat in data. In synchroon staan objecten met compleet: en revisie: en revisieNummer:
+ * synchroon[:club][:seizoen]
+ * synchroon[:club][:seizoen][:team]
+ * synchroon[:club][:seizoen][:team][:ronde]
  *
  * Als de browser data van de server leest, slaat de server die data ook op in sessionStorage,
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
  * Behalve de gevraagde data stuurt de server ook steeds de actuele synchroon,
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
- *
- * @param synchroon om de data tussen database, server en browser te synchroniseren
- * @returns alle variabelen en methoden van data
  */
-function data(synchroon) {
+function synchroonToevoegen(actueel) {
+    return {compleet: 0, revisie: actueel.revisieNummer};
+}
 
-    function clubToevoegen() {
-        const clubCode = Number(arguments[0]);
-        const vereniging = arguments[1];
-        const teamNaam = arguments[2];
-    }
+function clubToevoegen(actueel, data) {
+    const synchroon = synchroonToevoegen(actueel);
+    const clubCode = Number(data[0]);
+    const vereniging = data[1];
+    const teamNaam = data[2];
 
     function clubData() {
         return [clubCode, vereniging, teamNaam];
     }
 
+    function clubAfdrukken() {
+        console.log(`${clubCode}: ${vereniging} ${teamNaam}`);
+        return this;
+    }
+
     const seizoenen = [];
     const seizoen = [];
 
-    function seizoenenToevoegen(seizoenenLijst) {
+    function seizoenenToevoegen(actueel, seizoenenLijst) {
         for (const eenSeizoen of seizoenenLijst) {
             seizoenen.push(eenSeizoen);
-            seizoen.push({
-                seizoen: eenSeizoen,
-                revisie: 0,
-                teams: [],
-                team: []});
+            seizoen.push(seizoenToevoegen(actueel, this, eenSeizoen));
         }
         return this;
     }
 
-    const seizoenDaarna = clubCode === WAAGTOREN_JEUGD
-        ? function (seizoen) {
+    return Object.freeze({
+        synchroon,
+        clubCode,
+        vereniging,
+        teamNaam,
+        clubAfdrukken,      // () ->
+        clubData,           // ()
+        seizoenen,
+        seizoen,
+        seizoenenToevoegen, // (actueel, seizoenenLijst) ->
+    });
+}
+
+function seizoenToevoegen(actueel, club, seizoen) {
+    const synchroon = synchroonToevoegen(actueel);
+
+    function seizoenAfdrukken() {
+        console.log(`${club.clubCode}: ${club.vereniging} ${seizoenVoluit()}`);
+        return this;
+    }
+
+    const seizoenDaarna = club.clubCode === WAAGTOREN_JEUGD
+        ? function () {
             const jaar = Number(seizoen.substring(0, 2));
             const maand = Number(seizoen.substring(2, 4));
             return maand > 6
                 ? `${(jaar+1).toString().padStart(2,"0")}01` // voorjaar volgend jaar
                 : `${jaar.toString().padStart(2, "0")}09`; // najaar dit jaar
         }
-        : function (seizoen) {
+        : function () {
             const jaar = Number(seizoen.substring(2, 4));
             return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
         };
 
-    const seizoenVoluit = clubCode === WAAGTOREN_JEUGD
-        ? function (seizoen) {
+    const seizoenVoluit = club.seizoen === WAAGTOREN_JEUGD
+        ? function () {
             return `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`;
         }
-        : function (seizoen) {
+        : function () {
             return `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
         };
 
+    const teams = [];
+    const team = [];
+
     return Object.freeze({
-        clubCode,
-        vereniging,
-        teamNaam,
-        clubData,           // ()
-        seizoenen,
+        synchroon,
+        club,
         seizoen,
-        seizoenenToevoegen, // (seizoenenLijst) ->
-        seizoenDaarna,      // (seizoen)
-        seizoenVoluit       // (seizoen)
+        seizoenAfdrukken, // () ->
+        seizoenDaarna,    // (seizoen)
+        seizoenVoluit,    // (seizoen)
+        teams,
+        team
     });
 }
 
@@ -167,6 +186,38 @@ function isBekerCompetitie(team) {
 function isTeam(team) {
     return team.teamCode === "" || team.teamCode === "0" || team.teamCode === "n0" ? false
         : team.teamCode.substring(0,1) !== "i";
+}
+
+function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
+    if (teamCode === INTERNE_COMPETITIE) {
+        return "interne competitie";
+    } else if (teamCode === RAPID_COMPETITIE) {
+        return "rapid competitie";
+    } else if (teamCode === JEUGD_COMPETITIE) {
+        return "jeugd competitie";
+    } else if (teamCode === SNELSCHAKEN) {
+        return "einde seizoen snelschaken";
+    } else if (teamCode === "0") {
+        return "KNSB bij andere schaakvereniging";
+    } else if (teamCode === "n0") {
+        return "NHSB bij andere schaakvereniging";
+    } else if (teamCode === "kbe") {
+        return "Waagtoren KNSB beker";
+    } else if (teamCode === "nbe") {
+        return "Waagtoren NHSB beker";
+    } else if (teamCode === "nbz") {
+        return "Waagtoren NHSB beker (zilver)";
+    } else if (teamCode === "nbb") {
+        return "Waagtoren NHSB beker (brons)";
+    } else if (teamCode === "" || teamCode.substring(0,1) === " ") {
+        return "geen";
+    } else if (teamCode.substring(0,2) === "nv") {
+        return "Waagtoren v" + teamCode.substring(2);
+    } else if (teamCode.substring(0,1) === "n") {
+        return "Waagtoren n" + teamCode.substring(1);
+    } else {
+        return "Waagtoren " + teamCode;
+    }
 }
 
 // knsbNummer int
@@ -211,6 +262,11 @@ const VERLIES = "0";
 // uitslag.uithuis char(1)
 const THUIS = "t";
 const UIT = "u";
+
+function wedstrijdVoluit(ronde) {
+    const eigenTeam = teamVoluit(ronde.teamCode);
+    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
+}
 
 const resultaatInvullen = new Map([
     ["",""],
@@ -307,7 +363,8 @@ export { // ES6 voor browser,
     WAAGTOREN,
     WAAGTOREN_JEUGD,
 
-    data,                  // (synchroon)
+    clubToevoegen,         // (actueel, data)
+    seizoenToevoegen,      //(actueel, club, seizoen)
 
     // teamCode char(3)
     INTERNE_COMPETITIE,
@@ -319,6 +376,7 @@ export { // ES6 voor browser,
     isCompetitie,          // (team)
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
+    teamVoluit,            // (teamCode)
 
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,
@@ -353,6 +411,7 @@ export { // ES6 voor browser,
     THUIS,
     UIT,
 
+    wedstrijdVoluit,       // (ronde)
     resultaatInvullen,
     isResultaat,           // (uitslag)
     resultaatSelecteren,   // (uitslag)
