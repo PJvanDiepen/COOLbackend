@@ -5,8 +5,6 @@ const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
 
-// TODO deze is voor club = 0, andere versie voor club = 1
-
 export const ditSeizoen = (function () { // TODO verschillen tussen Waagtoren en Jeugd
     const datum = new Date();
     const i = datum.getFullYear() - (datum.getMonth() > 6 ? 2000 : 2001);
@@ -27,12 +25,6 @@ export const o_o_o = { // TODO verwijderen, staat nu in o_o_o.js
     speler: 0, // knsbNummer is een getal
     naam: ""
 };
-
-const SCHEIDING = " \u232A ";
-export function competitieTitel() {
-    document.getElementById("competitie").textContent = // TODO html.id()
-        `Waagtoren${SCHEIDING}${teamVoluit(o_o_o.competitie)}`; // TODO
-}
 
 export const uuidActiveren = params.get("uuid");
 if (uuidActiveren === "wissen") {

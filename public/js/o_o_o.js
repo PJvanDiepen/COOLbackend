@@ -47,19 +47,18 @@ function urlVerwerken() {
     }
 }
 
-function versieBepalen() {
-    // TODO reglement in team i.p.v. versie
-    if (o_o_o.competitie === INTERNE_COMPETITIE && o_o_o.versie === 0) {
+function versieBepalen() { // TODO reglement in team i.p.v. versie
+    if (o_o_o.competitie === db.INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
             o_o_o.versie = 2;
         } else {
             o_o_o.versie = 3; // vanaf seizoen 2021-2022
         }
-    } else if (o_o_o.competitie === RAPID_COMPETITIE && o_o_o.versie === 0) {
+    } else if (o_o_o.competitie === db.RAPID_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 4;
     } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
         o_o_o.versie = 5; // Zwitsers systeem
-    } else if (o_o_o.competitie === JEUGD_COMPETITIE && o_o_o.versie === 0) {
+    } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 6;
     }
 }
@@ -101,6 +100,11 @@ export async function init() {
     console.log(o_o_o);
 }
 
+export function competitieTitel() { // TODO met (clubCode)
+    html.id("competitie").textContent =
+        `Waagtoren${html.SCHEIDING}${db.teamVoluit(o_o_o.competitie)}`;
+}
+
 /**
  * vinkjeInvullen voor agenda.js en teamleider.js
  *
@@ -124,7 +128,7 @@ export const vinkjeInvullen = new Map([
  * @returns {Promise<void>}
  */
 export async function teamSelecteren(teamCode) {
-    const teams = (await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/teams`)).filter(function (team) {
+    const teams = (await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isCompetitie(team) || db.isTeam(team);
     }).map(function (team) {
         return [team.teamCode, db.teamVoluit(team.teamCode)];
@@ -146,8 +150,8 @@ export async function teamSelecteren(teamCode) {
  * @returns {Promise<void>}
  */
 export async function rondeSelecteren(teamCode, rondeNummer) {
-    zyq.o_o_o.team = zyq.o_o_o.competitie;
-    const ronden = (await zyq.localFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${teamCode}/ronden`)).map(function (ronde) {
+    o_o_o.team = o_o_o.competitie;
+    const ronden = (await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${teamCode}/ronden`)).map(function (ronde) {
         return [ronde.rondeNummer, `${zyq.datumLeesbaar(ronde)}${html.SCHEIDING}ronde ${ronde.rondeNummer}`];
     });
     html.selectie(html.id("rondeSelecteren"), rondeNummer, ronden, function (ronde) {
@@ -170,12 +174,12 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
  */
 export async function perTeamRondenUitslagen(teamCode) {
     const rondenUitslagen = [];
-    (await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${teamCode}/ronden`)).forEach(
+    (await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${teamCode}/ronden`)).forEach(
         function (ronde) {
             rondenUitslagen[ronde.rondeNummer]
                 = {ronde: ronde, winst: 0, remise: 0, verlies: 0, uitslagen: [], deelnemers: 0, geplandeUitslagen: []};
         });
-    (await zyq.serverFetch(`/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${teamCode}/team`)).forEach(
+    (await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${teamCode}/team`)).forEach(
         function (uitslag) {
             const rondeUitslag = rondenUitslagen[uitslag.rondeNummer];
             if (uitslag.partij === db.EXTERNE_PARTIJ) {
@@ -207,9 +211,9 @@ export async function perTeamRondenUitslagen(teamCode) {
  * @returns {Promise<*>}
  */
 export async function ranglijst(rondeNummer, selectie = null) {
-    const totDatum = rondeNummer === zyq.o_o_o.laatsteRonde ? zyq.eindeSeizoen(zyq.o_o_o.seizoen) : zyq.o_o_o.ronde[rondeNummer + 1].datum;
+    const totDatum = rondeNummer === o_o_o.laatsteRonde ? zyq.eindeSeizoen(o_o_o.seizoen) : o_o_o.ronde[rondeNummer + 1].datum;
     let spelers = await zyq.localFetch(
-        `/${zyq.o_o_o.club}/${zyq.o_o_o.seizoen}/${zyq.o_o_o.competitie}/${rondeNummer}/ranglijst/${zyq.datumSQL(totDatum)}/${zyq.o_o_o.versie}`);
+        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ranglijst/${zyq.datumSQL(totDatum)}/${o_o_o.versie}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }

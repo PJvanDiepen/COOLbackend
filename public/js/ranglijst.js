@@ -14,7 +14,7 @@ import * as zyq from "./zyq.js";
  */
 (async function() {
     await init();
-    zyq.competitieTitel();
+    db.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "Rondenlijst", function () {
         html.anderePagina("rondenlijst.html");

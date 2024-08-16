@@ -101,7 +101,7 @@ const indelenFun = [
 
 (async function() {
     await init();
-    zyq.competitieTitel();
+    db.competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || o_o_o.huidigeRonde;
     const totDatum = o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =

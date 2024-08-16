@@ -19,7 +19,7 @@ const zwartSpeler = Number(html.params.get("zwart"));
 
 (async function() {
     await init();
-    zyq.competitieTitel();
+    db.competitieTitel();
     const totDatum = o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =
         `Handmatig indelen ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;

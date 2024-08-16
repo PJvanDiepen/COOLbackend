@@ -9,7 +9,7 @@ import * as zyq from "./zyq.js";
 
 (async function() {
     await init();
-    zyq.competitieTitel();
+    db.competitieTitel();
     await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, `agenda van ${o_o_o.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${o_o_o.speler}&naamGebruiker=${o_o_o.naam}`);
         }],
