@@ -1,6 +1,8 @@
 // because this is a module, I'm strict by default
 
-// TODO verwijderen, staat nu in server.js
+import * as db from "./db.js";
+
+// TODO verwijderen, staat nu in html.js
 const pagina = new URL(location);
 const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 const params = pagina.searchParams;
@@ -20,8 +22,8 @@ export const o_o_o = { // TODO verwijderen, staat nu in o_o_o.js
     club: 0, // clubCode is een getal
     seizoen: ditSeizoen,
     versie: 0, // versie is een getal
-    competitie: INTERNE_COMPETITIE, // zie competitieBepalen()
-    team: INTERNE_COMPETITIE,
+    competitie: "", // zie competitieBepalen()
+    team: "",
     speler: 0, // knsbNummer is een getal
     naam: ""
 };
@@ -167,7 +169,7 @@ export function naarSpeler(speler) {
 }
 
 export function naarTeam(uitslag) {
-    return htmlLink(`team.html?team=${uitslag.teamCode}#ronde${uitslag.rondeNummer}`, wedstrijdVoluit(uitslag));
+    return htmlLink(`team.html?team=${uitslag.teamCode}#ronde${uitslag.rondeNummer}`, db.wedstrijdVoluit(uitslag));
 }
 
 export function seizoenVoluit(seizoen) {
@@ -244,9 +246,9 @@ export function score(winst, remise, verlies) {
         if (remise === 0) {
             return winst + PUNTEN_UIT + partijen;
         } else if (winst === 0) {
-            return REMISE + PUNTEN_UIT + partijen;
+            return db.REMISE + PUNTEN_UIT + partijen;
         } else {
-            return winst + REMISE + PUNTEN_UIT + partijen;
+            return winst + db.REMISE + PUNTEN_UIT + partijen;
         }
     } else {
         return "";
@@ -264,16 +266,16 @@ export function wedstrijdUitslag(winst, remise, verlies) {
     } else if (remise === 0) {
         return winst + " - " + verlies;
     } else if (winst === 0) {
-        return REMISE + " - " + verlies + REMISE;
+        return db.REMISE + " - " + verlies + db.REMISE;
     } else if (verlies === 0) {
-        return winst + REMISE + " - " + REMISE;
+        return winst + db.REMISE + " - " + db.REMISE;
     } else {
-        return winst + REMISE + " - " + verlies + REMISE;
+        return winst + db.REMISE + " - " + verlies + db.REMISE;
     }
 }
 
 export function uitslagTeam(uithuis, winst, verlies, remise) {
-    return uithuis === THUIS ? wedstrijdUitslag(winst, remise, verlies) : wedstrijdUitslag(verlies, remise, winst);
+    return uithuis === db.THUIS ? wedstrijdUitslag(winst, remise, verlies) : wedstrijdUitslag(verlies, remise, winst);
 }
 
 export function percentage(winst, remise, verlies) {

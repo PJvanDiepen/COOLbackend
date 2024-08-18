@@ -111,7 +111,7 @@ module.exports = function (url) {
         ctx.body = JSON.stringify(data.clubs[ctx.params.club].ronden[ctx.params.seizoen]);
     });
 
-    console.log("--- endpoints ---"); // versie 0.8.60 had 60 endpoints
+    console.log("--- vragen ---"); // versie 0.8.60 had 60 endpoints
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ module.exports = function (url) {
     Frontend: zyq.js
      */
     url.get("/api", async function (ctx) {
-        ctx.body = JSON.stringify(db.endpoints); // zie app.js
+        ctx.body = JSON.stringify(db.vragen); // zie app.js
     });
 
     /*

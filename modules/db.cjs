@@ -11,7 +11,7 @@
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  */
 
-const endpoints = []; // zie app.js
+const vragen = []; // zie app.js
 
 /**
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
@@ -80,6 +80,11 @@ met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "240
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
  * Behalve de gevraagde data stuurt de server ook steeds de actuele synchroon,
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
+ *
+ * Indien data compleet is, is de data in sessionStorage actueel.
+ * Indien data niet compleet is, moet de browser de data van de server lezen.
+ *
+ * Misschien is de niet complete data op de server wel actueel.
  */
 function synchroonToevoegen(actueel) {
     return {compleet: 0, revisie: actueel.revisieNummer};
@@ -350,7 +355,7 @@ function gebruikerFunctie(speler) {
 const MENU = "menu";
 
 module.exports = { // CommonJS voor node.js
-    endpoints,
+    vragen,
 
     key,                   // (object)
 

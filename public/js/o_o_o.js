@@ -14,16 +14,15 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import * as server from "./server.js";
 
-import * as zyq from "./zyq.js";
+import * as zyq from "./zyq.js"; // TODO verwijderen!
 
 export const data = {
     club: {}
 }
 
 export const o_o_o = {
-    vereniging: "Waagtoren",
+    vereniging: "",
     club: 0, // clubCode is een getal
     seizoen: "",
     versie: 0, // versie is een getal
@@ -35,7 +34,7 @@ export const o_o_o = {
 
 function urlVerwerken() {
     for (let [key, value] of Object.entries(o_o_o)) {
-        let parameter = params.get(key); // inlezen van url
+        let parameter = html.params.get(key); // inlezen van url
         if (parameter) {
             sessionStorage.setItem(key, parameter); // opslaan voor sessie
         } else {
@@ -90,7 +89,7 @@ export async function init() {
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
     await zyq.competitieRondenVerwerken();
 
-    const api = await server.endpoint("/club");
+    const api = await server.vraag("/club");
     api.afdrukken();
 
     // TODO zyq.localFetch vervangen door iets wat revisie controleert
