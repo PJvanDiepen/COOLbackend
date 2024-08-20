@@ -21,6 +21,46 @@ export const data = {
     club: {}
 }
 
+/**
+ * init voor aanmelden.js
+ *           agenda.js
+ *           beheer.js
+ *           bestuur.js
+ *           email.js
+ *           indelen.js
+ *           lid.js
+ *           paren.js
+ *           ranglijst.js
+ *           ronde.js
+ *           rondenlijst.js
+ *           speler.js
+ *           start.js
+ *           team.js
+ *
+ * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
+ * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
+ */
+export async function init() {
+    console.log("--- start init ---");
+    await synchroniseren();
+    urlVerwerken();
+    versieBepalen();
+    await zyq.gebruikerVerwerken();
+    console.log(o_o_o);
+
+    Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
+    // await zyq.competitieRondenVerwerken();
+
+    const api = await html.vraag("/club");
+    api.afdrukken();
+
+    // TODO zyq.localFetch vervangen door iets wat revisie controleert
+    const {revisie, club, seizoenen} = await zyq.localFetch(`/${o_o_o.club}/club`);
+    data.club = db.clubToevoegen(club).seizoenToevoegen(seizoenen);
+    console.log("--- einde init ---")
+    console.log(o_o_o);
+}
+
 export const o_o_o = {
     vereniging: "",
     club: 0, // clubCode is een getal
@@ -31,6 +71,20 @@ export const o_o_o = {
     speler: 0, // knsbNummer is een getal
     naam: ""
 };
+
+async function synchroniseren() {
+    console.log("--- synchroniseren() ---");
+    /**
+     * TODO /synchroon van sessionStorage lezen
+     * TODO synchroon van server lezen (en opslaan in sessionStorage, want compleet!)
+     * TODO niet controleren /synchroon in vragen
+     * TODO als nieuwe serverStart dan sessionStorage wissen (behalve synchroon!)
+     * TODO /vragen van sessionStorage
+     * TODO als niet gevonden dan /vragen van server (en opslaan in sessionStorage, want compleet!)
+     * TODO controleren /vragen in vragen
+     */
+
+}
 
 function urlVerwerken() {
     for (let [key, value] of Object.entries(o_o_o)) {
@@ -60,43 +114,6 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
     } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 6;
     }
-}
-
-/**
- * init voor aanmelden.js
- *           agenda.js
- *           beheer.js
- *           bestuur.js
- *           email.js
- *           indelen.js
- *           lid.js
- *           paren.js
- *           ranglijst.js
- *           ronde.js
- *           rondenlijst.js
- *           speler.js
- *           start.js
- *           team.js
- *
- * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
- * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
- */
-export async function init() {
-    console.log("--- start init ---");
-    await zyq.gebruikerVerwerken(); // TODO later?
-    urlVerwerken();
-    versieBepalen();
-    Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
-    await zyq.competitieRondenVerwerken();
-
-    const api = await server.vraag("/club");
-    api.afdrukken();
-
-    // TODO zyq.localFetch vervangen door iets wat revisie controleert
-    const {revisie, club, seizoenen} = await zyq.localFetch(`/${o_o_o.club}/club`);
-    data.club = db.clubToevoegen(club).seizoenToevoegen(seizoenen);
-    console.log("--- einde init ---")
-    console.log(o_o_o);
 }
 
 export function competitieTitel() { // TODO met (clubCode)

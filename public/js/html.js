@@ -1,5 +1,5 @@
 /*
- * Deze module bevat alle code voor interactie met HTML en CSS.
+ * Deze module bevat alle code voor url, HTML en CSS.
  */
 
 import * as db from "./db.js";
@@ -7,6 +7,8 @@ import * as db from "./db.js";
 export const pagina = new URL(location);
 export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 export const params = pagina.searchParams;
+console.log("--- html.js ---");
+console.log(params);
 
 /*
 DONE function vraag (commando) {}

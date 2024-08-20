@@ -54,7 +54,8 @@ Refresh Android cache
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [Copy to clipboard](https://www.freecodecamp.org/news/copy-text-to-clipboard-javascript/)
 - [DOM events](https://domevents.dev/)
-- [DOM manpipulation](https://phuoc.ng/collection/html-dom/)
+- [DOM manipulation](https://phuoc.ng/collection/html-dom/)
+- [memory efficient DOM manipulation](https://frontendmasters.com/blog/patterns-for-memory-efficient-dom-manipulation/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [promises training](https://github.com/henriqueinonhe/promises-training)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
@@ -68,8 +69,10 @@ Refresh Android cache
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
+- [nginx config](https://github.com/digitalocean/nginxconfig.io)
 
 # node.js
+- [memory](https://www.trevorlasn.com/blog/common-causes-of-memory-leaks-in-javascript)
 - [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
 - [CORS](https://jakearchibald.com/2021/cors/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
@@ -77,7 +80,6 @@ Refresh Android cache
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
 - [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
-- [nginx config](https://github.com/digitalocean/nginxconfig.io)
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
@@ -98,7 +100,9 @@ Refresh Android cache
 - [Best ORMs in 2024](https://www.sitepoint.com/javascript-typescript-orms/)
 
 # HTML / CSS
+
 - [eerste website](http://info.cern.ch/hypertext/WWW/TheProject.html)
+- [html, css, JavaScript, etc.](https://learn-wcs.com/)
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)

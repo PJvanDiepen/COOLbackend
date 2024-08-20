@@ -18,7 +18,7 @@ const package_json = require("./package.json");
 const synchroon = {
     versie: package_json.versie,
     serverStart: new Date(),
-    revisieNummer: 1,
+    compleet: 1,
     revisie: []
 }
 
@@ -29,8 +29,8 @@ data met db.cjs voor de server en met met db.js voor de browser.
 
 Op de server is data zo veel mogelijk compleet uit de MySQL database,
 zodat het niet nodig is om steeds opnieuw te lezen.
-De browser synchroniseert data met de server aan de hand van revisieNummer.
-De data op de server krijgt een nieuw revisieNummer na het muteren van de MySQL database
+De browser synchroniseert data met de server aan de hand van het volgnummer in compleet van synchroon.
+De data op de server krijgt een nieuw volgnummer na het muteren van de MySQL database
 en opnieuw lezen uit de MySQL database.
 
 TODO teams
@@ -39,12 +39,12 @@ TODO uitslagen
 TODO personen invullen
  */
 
-const data = db.dataToevoegen().clubsToevoegen(synchroon.revisieNummer, [
+const data = db.dataToevoegen().clubsToevoegen(synchroon.compleet, [
     [db.WAAGTOREN, "Waagtoren", "Waagtoren"],
     [db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""]]);
-data.clubIndex(db.WAAGTOREN).seizoenenToevoegen(synchroon.revisieNummer,
+data.clubIndex(db.WAAGTOREN).seizoenenToevoegen(synchroon.compleet,
     ["1920", "2021", "2122", "2223", "2324"]);
-data.clubIndex(db.WAAGTOREN_JEUGD).seizoenenToevoegen(synchroon.revisieNummer,
+data.clubIndex(db.WAAGTOREN_JEUGD).seizoenenToevoegen(synchroon.compleet,
     ["2309", "2401"]);
 
 for (const club of data.club) {
@@ -93,14 +93,28 @@ module.exports = function (url) {
 
     /*
     Frontend: o_o_o.js
-    */
+     */
+    url.get("/synchroon", async function (ctx) {
+        ctx.body = JSON.stringify(synchroon);
+    });
+
+    /*
+    Frontend: o_o_o.js
+     */
+    url.get("/vragen", async function (ctx) {
+        ctx.body = JSON.stringify({compleet: 1, data: db.vragen});
+    });
+
+    /*
+    Frontend: o_o_o.js
+     */
     url.get("/:club/club", async function (ctx) {
-        const club = clubs[ctx.params.club];
-        ctx.body = JSON.stringify(club
-            ? { compleet: club.compleet,
-                club: club.clubData(),
-                seizoenen: club.seizoenen }
-            : null);
+        const club = data.clubIndex(Number(ctx.params.club));
+        ctx.body = JSON.stringify( {
+            compleet: club.compleet,
+            club: club.clubData(),
+            seizoenen: club.seizoenen
+        });
     });
 
     url.get("/:club/:seizoen/seizoen/toevoegen", async function (ctx) {
@@ -108,7 +122,7 @@ module.exports = function (url) {
         const seizoen = club.seizoenDaarna(ctx.params.seizoen);
         club.seizoenenToevoegen([club.seizoenDaarna(ctx.params.seizoen)]);
         // TODO log mutatie
-        revisieNummer++;
+        compleet++;
         ctx.body = JSON.stringify({revisie: revisieNummer,
             club: club.clubData(),
             seizoenen: club.seizoenen});

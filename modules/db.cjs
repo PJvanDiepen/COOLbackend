@@ -9,9 +9,11 @@
  *
  * Alleen db.cjs en db.js hebben export-lijsten.
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
+ *
+ * Op de server vult app.js de lijst van mogelijke vragen aan de server.
+ * In de browser moet o_o_o.js die vragen van de server inlezen.
  */
-
-const vragen = []; // zie app.js
+const vragen = [];
 
 /**
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
@@ -40,16 +42,6 @@ const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
 const NIEUWE_RANGLIJST = 2;
 
-// clubCode int
-const WAAGTOREN = 0;
-const WAAGTOREN_JEUGD = 1;
-
-/* seizoen char(4)
-Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
-De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
-met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
- */
-
 /**
  * De data van 0-0-0 staat op 3 verschillende plaatsen:
  * - in de MySQL database,
@@ -58,7 +50,11 @@ met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "240
  *
  * Er is een hiërarchie en samenhang tussen de tabellen van de database
  * en de data objecten op de server en in de browser:
- * club[:club].seizoen[:seizoen].team[:team].ronde[:ronde].uitslag[:speler]
+ * data.club[index(:club)]
+ *     .seizoen[index(:seizoen)]
+ *     .team[index(:team)]
+ *     .ronde[index(:ronde)]
+ *     .uitslag[index(:speler)]
  *
  * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
@@ -68,13 +64,13 @@ met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "240
  * als alle ronden de van een team (of competitie) compleet zijn of
  * als alle uitslagen van een ronde compleet zijn.
  *
- * Als niet alle uitslagen van een ronde compleet zijn legt de server de revisie vast.
- * Na elke mutatie op de database verhoogt de server het revisieNummer in een actueel synchroon object.
- * Bovendien houdt de server in synchroon bij welke data compleet is en waarvan een revisie is.
- * De data staat in data. In synchroon staan objecten met compleet: en revisie: en revisieNummer:
- * synchroon[:club][:seizoen]
- * synchroon[:club][:seizoen][:team]
- * synchroon[:club][:seizoen][:team][:ronde]
+ * Na elke mutatie op de database krijgt compleet in synchroon een nieuw volgnummer.
+ * Bovendien houdt de server in synchroon bij welke data compleet is.
+ * De data staat in data. In synchroon staan objecten in revisie met compleet: en een volgnummer:
+ * synchroon.revisie[index(:club)][index(:seizoen)]
+ * synchroon.revisie[index(:club)][index(:seizoen)][index(:team)]
+ * synchroon.revisie[index(:club)][index(:seizoen)][index(:team)][index(:ronde)]
+ * TODO nog verder uitwerken
  *
  * Als de browser data van de server leest, slaat de server die data ook op in sessionStorage,
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
@@ -82,16 +78,42 @@ met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "240
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
  *
  * Indien data compleet is, is de data in sessionStorage actueel.
- * Indien data niet compleet is, moet de browser de data van de server lezen.
+ * Indien data niet compleet is, leest de browser de data van de server,
+ * want niet complete data kan nog veranderen en compleet worden op de server.
  *
- * Misschien is de niet complete data op de server wel actueel.
+ * De objecten voor data, club, seizoen, enz. hebben een Index naar een object lager in de hiërarchie.
+ * De objecten voor club, seizoen, enz. verwijzen naar een object hoger in de hiërarchie.
  */
-function synchroonToevoegen(actueel) {
-    return {compleet: 0, revisie: actueel.revisieNummer};
+function dataToevoegen() {
+    const clubs = [];
+    const club = [];
+
+    function clubIndex(clubCode) {
+        const index = clubs.indexOf(clubCode);
+        return club[index < 0 ? 0 : index]; // eerste of gevonden club
+    }
+
+    function clubsToevoegen(compleet, clubDataLijst) {
+        for (const clubData of clubDataLijst) {
+            clubs.push(clubData[0]); // clubCode
+            club.push(clubToevoegen(compleet, clubData));
+        }
+        return this;
+    }
+
+    return Object.freeze( {
+        clubs,
+        club,
+        clubIndex,     // (clubCode) ->
+        clubsToevoegen // (compleet, clubDataLijst) ->
+    });
 }
 
-function clubToevoegen(actueel, data) {
-    const synchroon = synchroonToevoegen(actueel);
+// clubCode int
+const WAAGTOREN = 0;
+const WAAGTOREN_JEUGD = 1;
+
+function clubToevoegen(compleet, data) {
     const clubCode = Number(data[0]);
     const vereniging = data[1];
     const teamNaam = data[2];
@@ -108,16 +130,21 @@ function clubToevoegen(actueel, data) {
     const seizoenen = [];
     const seizoen = [];
 
-    function seizoenenToevoegen(actueel, seizoenenLijst) {
+    function seizoenIndex(seizoenCode) {
+        const index = seizoenen.indexOf(seizoenCode);
+        return seizoen[index < 0 ? seizoenen.length - 1 : index]; // laatste of gevonden seizoen
+    }
+
+    function seizoenenToevoegen(compleet, seizoenenLijst) {
         for (const eenSeizoen of seizoenenLijst) {
             seizoenen.push(eenSeizoen);
-            seizoen.push(seizoenToevoegen(actueel, this, eenSeizoen));
+            seizoen.push(seizoenToevoegen(compleet, this, eenSeizoen));
         }
         return this;
     }
 
     return Object.freeze({
-        synchroon,
+        compleet,
         clubCode,
         vereniging,
         teamNaam,
@@ -125,12 +152,17 @@ function clubToevoegen(actueel, data) {
         clubData,           // ()
         seizoenen,
         seizoen,
-        seizoenenToevoegen, // (actueel, seizoenenLijst) ->
+        seizoenIndex,      // (seizoenCode) ->
+        seizoenenToevoegen // (compleet, seizoenenLijst) ->
     });
 }
 
-function seizoenToevoegen(actueel, club, seizoen) {
-    const synchroon = synchroonToevoegen(actueel);
+/* seizoen char(4)
+Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
+De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
+met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
+ */
+function seizoenToevoegen(compleet, club, seizoen) {
 
     function seizoenAfdrukken() {
         console.log(`${club.clubCode}: ${club.vereniging} ${seizoenVoluit()}`);
@@ -150,7 +182,7 @@ function seizoenToevoegen(actueel, club, seizoen) {
             return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
         };
 
-    const seizoenVoluit = club.seizoen === WAAGTOREN_JEUGD
+    const seizoenVoluit = club.clubCode === WAAGTOREN_JEUGD
         ? function () {
             return `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`;
         }
@@ -162,7 +194,7 @@ function seizoenToevoegen(actueel, club, seizoen) {
     const team = [];
 
     return Object.freeze({
-        synchroon,
+        compleet,
         club,
         seizoen,
         seizoenAfdrukken, // () ->
@@ -192,6 +224,8 @@ function isTeam(team) {
     return team.teamCode === "" || team.teamCode === "0" || team.teamCode === "n0" ? false
         : team.teamCode.substring(0,1) !== "i";
 }
+
+// TODO teamVoluit uitsluitend op server en voluit: in object naar browser
 
 function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
     if (teamCode === INTERNE_COMPETITIE) {
@@ -352,7 +386,7 @@ function gebruikerFunctie(speler) {
 }
 
 // html
-const MENU = "menu";
+const MENU = "menu"; // TODO verplaatsen naar html.js
 
 module.exports = { // CommonJS voor node.js
     vragen,
@@ -364,12 +398,14 @@ module.exports = { // CommonJS voor node.js
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
 
+    dataToevoegen,         // ()
+
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
 
-    clubToevoegen,         // (actueel, data)
-    seizoenToevoegen,      //(actueel, club, seizoen)
+    clubToevoegen,         // (synchroon, data)
+    seizoenToevoegen,      // (synchroon, club, seizoen)
 
     // teamCode char(3)
     INTERNE_COMPETITIE,
