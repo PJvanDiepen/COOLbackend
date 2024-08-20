@@ -15,7 +15,7 @@ const os = require("os");
 
 const package_json = require("./package.json");
 
-const synchroonActueel = {
+const synchroon = {
     versie: package_json.versie,
     serverStart: new Date(),
     revisieNummer: 1,
@@ -39,12 +39,25 @@ TODO uitslagen
 TODO personen invullen
  */
 
-const clubs = [];
-clubs.push(
-    db.clubToevoegen(synchroonActueel, [db.WAAGTOREN, "Waagtoren", "Waagtoren"])
-        .seizoenenToevoegen(synchroonActueel, ["1920", "2021", "2122", "2223", "2324"]),
-    db.clubToevoegen(synchroonActueel, [db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""])
-        .seizoenenToevoegen(synchroonActueel, ["2309", "2401"]));
+const data = db.dataToevoegen().clubsToevoegen(synchroon.revisieNummer, [
+    [db.WAAGTOREN, "Waagtoren", "Waagtoren"],
+    [db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""]]);
+data.clubIndex(db.WAAGTOREN).seizoenenToevoegen(synchroon.revisieNummer,
+    ["1920", "2021", "2122", "2223", "2324"]);
+data.clubIndex(db.WAAGTOREN_JEUGD).seizoenenToevoegen(synchroon.revisieNummer,
+    ["2309", "2401"]);
+
+for (const club of data.club) {
+    for (const seizoen of club.seizoen) {
+        seizoen.seizoenAfdrukken();
+    }
+    console.log("");
+}
+
+data.clubIndex().seizoenIndex().seizoenAfdrukken();
+data.clubIndex(db.WAAGTOREN_JEUGD).seizoenIndex("2309").seizoenAfdrukken();
+console.log("");
+
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
@@ -84,7 +97,7 @@ module.exports = function (url) {
     url.get("/:club/club", async function (ctx) {
         const club = clubs[ctx.params.club];
         ctx.body = JSON.stringify(club
-            ? { synchroon: club.synchroon,
+            ? { compleet: club.compleet,
                 club: club.clubData(),
                 seizoenen: club.seizoenen }
             : null);
