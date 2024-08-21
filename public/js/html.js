@@ -21,11 +21,11 @@ TODO methode <parameter>Invullen doet niks en geeft fout indien niet in specific
 TODO url met commando en gespecificeerde parameters
 TODO lees of wijzig?
 TODO indien wijzig naar serverFetch
-TODO localFetch met sessionStorage.getItem(url)
-TODO indien niet gevonden naar serverFetch
+DONE localFetch met sessionStorage.getItem(url)
+DONE indien niet gevonden naar serverFetch
 DONE indien wel gevonden en revisie niet compleet naar serverFetch (automatisch!)
-TODO indien gevonden en compleet sessionStorage.setItem(url)
-TODO foutboodschap indien niet gevonden
+DONE indien gevonden en compleet sessionStorage.setItem(url)
+DONE foutboodschap indien niet gevonden
 TODO wijzig
 
 NIET indien oude revisie altijd serverFetch
@@ -47,32 +47,27 @@ export async function vraag (commando) {
 }
 
 /**
- * localFetch optimaliseert de verbinding met de database op de server
+ * vraagLokaal optimaliseert de verbinding met de server
  * door het antwoord van de server ook lokaal op te slaan
  *
- * @param url de vraag aan de database op de server
- * @returns {Promise<any>} het antwoord van de server
+ * vraagLokaal krijgt object van vraagServer met compleet: <getal> data: [...]
+ *
+ * @param url de vraag aan de server
+ * @returns {Promise<any>} data uit het antwoord van de server
  */
-async function localFetch(url) {
+export async function vraagLokaal(url) {
     let object = JSON.parse(sessionStorage.getItem(url));
-    if (!object || nietActueel(object)) {
+    if (!object) {
         object = await vraagServer(url);
-        sessionStorage.setItem(url, JSON.stringify(object));
+        if (Number(object.compleet)) { // indien niet compleet > 0 steeds opnieuw vraagServer
+            sessionStorage.setItem(url, JSON.stringify(object));
+        }
     }
-    return object;
-}
-
-function nietActueel(object) {
-    if (object.revisie === undefined) { // object zonder revisie is actueel
-        return false;
-    } else {
-        const revisie = Number(object.revisie);
-        return revisie < 1; // object met revisie = 0 is voorlopig nietActueel
-    }
+    return object.data; // data zonder compleet
 }
 
 /**
- * vraagServer maakt verbinding met de database voor actuele situatie
+ * vraagServer maakt verbinding met de server
  *
  * @param url de vraag aan de database op de server
  * @returns {Promise<any>} het antwoord van de server

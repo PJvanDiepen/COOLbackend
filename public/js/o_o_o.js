@@ -65,35 +65,25 @@ async function synchroniseren() {
     console.log("--- synchroniseren() ---");
     const commandoSynchroon = "/synchroon";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(commandoSynchroon));
-    console.log(nietSynchroon);
     Object.assign(html.synchroon, await html.vraagServer(commandoSynchroon));
-    console.log(html.synchroon);
-    if (html.synchroon.serverStart > nietSynchroon.serverStart) {
+    if (!nietSynchroon || html.synchroon.serverStart > nietSynchroon.serverStart) {
         verwijderNietSynchroon();
     }
     sessionStorage.setItem(commandoSynchroon, JSON.stringify(html.synchroon));
-    /**
-     * DONE /synchroon van sessionStorage lezen
-     * DONE synchroon van server lezen (en opslaan in sessionStorage, want compleet!)
-     * DONE niet controleren of /synchroon in vragen staat
-     * DONE als nieuwe serverStart dan sessionStorage wissen (behalve synchroon!)
-     * TODO /vragen van sessionStorage
-     * TODO als niet gevonden dan /vragen van server (en opslaan in sessionStorage, want compleet!)
-     * TODO controleren of /vragen in vragen staat
-     */
+    const vragen = await html.vraagLokaal("/vragen");
+    db.vragen.push(...vragen);
+    console.log(db.vragen);
 }
 
 function verwijderNietSynchroon() {
-    const verwijder = [];
+    const verwijderen = [];
     for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
         if (key.startsWith("/")) { // indien url
-            verwijder.push(key);
+            verwijderen.push(key);
         }
     }
-    console.log("--- verwijderNietSynchroon() ---");
-    console.log(verwijder);
-    for (const key of verwijder) {
+    for (const key of verwijderen) {
         sessionStorage.removeItem(key);
     }
 }
