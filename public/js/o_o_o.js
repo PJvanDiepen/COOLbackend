@@ -61,6 +61,43 @@ export async function init() {
     console.log(o_o_o);
 }
 
+async function synchroniseren() {
+    console.log("--- synchroniseren() ---");
+    const commandoSynchroon = "/synchroon";
+    const nietSynchroon = JSON.parse(sessionStorage.getItem(commandoSynchroon));
+    console.log(nietSynchroon);
+    Object.assign(html.synchroon, await html.vraagServer(commandoSynchroon));
+    console.log(html.synchroon);
+    if (html.synchroon.serverStart > nietSynchroon.serverStart) {
+        verwijderNietSynchroon();
+    }
+    sessionStorage.setItem(commandoSynchroon, JSON.stringify(html.synchroon));
+    /**
+     * DONE /synchroon van sessionStorage lezen
+     * DONE synchroon van server lezen (en opslaan in sessionStorage, want compleet!)
+     * DONE niet controleren of /synchroon in vragen staat
+     * DONE als nieuwe serverStart dan sessionStorage wissen (behalve synchroon!)
+     * TODO /vragen van sessionStorage
+     * TODO als niet gevonden dan /vragen van server (en opslaan in sessionStorage, want compleet!)
+     * TODO controleren of /vragen in vragen staat
+     */
+}
+
+function verwijderNietSynchroon() {
+    const verwijder = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+        const key = sessionStorage.key(i);
+        if (key.startsWith("/")) { // indien url
+            verwijder.push(key);
+        }
+    }
+    console.log("--- verwijderNietSynchroon() ---");
+    console.log(verwijder);
+    for (const key of verwijder) {
+        sessionStorage.removeItem(key);
+    }
+}
+
 export const o_o_o = {
     vereniging: "",
     club: 0, // clubCode is een getal
@@ -72,22 +109,8 @@ export const o_o_o = {
     naam: ""
 };
 
-async function synchroniseren() {
-    console.log("--- synchroniseren() ---");
-    /**
-     * TODO /synchroon van sessionStorage lezen
-     * TODO synchroon van server lezen (en opslaan in sessionStorage, want compleet!)
-     * TODO niet controleren /synchroon in vragen
-     * TODO als nieuwe serverStart dan sessionStorage wissen (behalve synchroon!)
-     * TODO /vragen van sessionStorage
-     * TODO als niet gevonden dan /vragen van server (en opslaan in sessionStorage, want compleet!)
-     * TODO controleren /vragen in vragen
-     */
-
-}
-
 function urlVerwerken() {
-    for (let [key, value] of Object.entries(o_o_o)) {
+    for (const [key, value] of Object.entries(o_o_o)) {
         let parameter = html.params.get(key); // inlezen van url
         if (parameter) {
             sessionStorage.setItem(key, parameter); // opslaan voor sessie

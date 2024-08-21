@@ -16,7 +16,7 @@ const os = require("os");
 const package_json = require("./package.json");
 
 const synchroon = {
-    versie: package_json.versie,
+    versie: package_json.version,
     serverStart: new Date(),
     compleet: 1,
     revisie: []

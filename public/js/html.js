@@ -31,6 +31,8 @@ TODO wijzig
 NIET indien oude revisie altijd serverFetch
  */
 
+export const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: []
+
 export async function vraag (commando) {
     console.log(await localFetch("/api"));
 
@@ -54,7 +56,7 @@ export async function vraag (commando) {
 async function localFetch(url) {
     let object = JSON.parse(sessionStorage.getItem(url));
     if (!object || nietActueel(object)) {
-        object = await serverFetch(url);
+        object = await vraagServer(url);
         sessionStorage.setItem(url, JSON.stringify(object));
     }
     return object;
@@ -70,23 +72,23 @@ function nietActueel(object) {
 }
 
 /**
- * serverFetch maakt verbinding met de database voor actuele situatie
+ * vraagServer maakt verbinding met de database voor actuele situatie
  *
  * @param url de vraag aan de database op de server
  * @returns {Promise<any>} het antwoord van de server
  */
-async function serverFetch(url) {
+export async function vraagServer(url) {
     try {
-        const response = await fetch(server + url);
+        const response = await fetch(`${server}${url}`);
         if (response.ok) {
             return await response.json();
         } else {
-            console.log(`--- serverFetch ---`);
+            console.log(`--- vraagServer ---`);
             console.log(response);
-            return false;
+            return null;
         }
     } catch (error) {
-        console.log(`--- serverFetch error ---`);
+        console.log(`--- vraagServer error ---`);
         console.error(error);
     }
 }
