@@ -17,9 +17,7 @@ import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
-export const data = {
-    club: {}
-}
+export const data = db.dataToevoegen();
 
 /**
  * init voor aanmelden.js
@@ -46,35 +44,38 @@ export async function init() {
     urlVerwerken();
     versieBepalen();
     await zyq.gebruikerVerwerken();
+
+    let test = await html.vraagAanServer("/club");
+    test.afdrukken();
+    // test.parameters(o_o_o.club).vraag();
+
+    o_o_o.seizoen = "2324";
+    o_o_o.competitie = db.INTERNE_COMPETITIE;
+
     console.log(o_o_o);
+    console.log(zyq.gebruiker);
+    console.log("--- test init ---");
 
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
     // await zyq.competitieRondenVerwerken();
 
-    let test = await html.vraagAanServer("/club");
-    test.afdrukken();
 
-    test = await html.vraagAanServer("verwijder");
-    test.afdrukken();
-
-    test = await html.vraagAanServer("niet");
-    test.afdrukken();
-
-    // TODO zyq.localFetch vervangen door iets wat revisie controleert
+    /* TODO zyq.localFetch vervangen door iets wat revisie controleert
     const {revisie, club, seizoenen} = await zyq.localFetch(`/${o_o_o.club}/club`);
     data.club = db.clubToevoegen(club).seizoenToevoegen(seizoenen);
     console.log("--- einde init ---")
     console.log(o_o_o);
+     */
 }
 
 async function synchroniseren() {
-    const commandoSynchroon = "/synchroon";
-    const nietSynchroon = JSON.parse(sessionStorage.getItem(commandoSynchroon));
-    Object.assign(html.synchroon, await html.vraagServer(commandoSynchroon));
+    const urlSynchroon = "/synchroon";
+    const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
+    Object.assign(html.synchroon, await html.vraagServer(urlSynchroon));
     if (!nietSynchroon || html.synchroon.serverStart > nietSynchroon.serverStart) {
-        verwijderNietSynchroon();
+        verwijderNietSynchroon(); // na herstart server is niets actueel
     }
-    sessionStorage.setItem(commandoSynchroon, JSON.stringify(html.synchroon));
+    sessionStorage.setItem(urlSynchroon, JSON.stringify(html.synchroon));
     const vragen = await html.vraagLokaal("/vragen");
     db.vragen.push(...vragen);
 }

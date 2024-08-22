@@ -8,31 +8,19 @@ export const pagina = new URL(location);
 export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 export const params = pagina.searchParams;
 
+export const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
+
 /*
-DONE function vraag (commando) {}
-DONE zoek specificatie op de server met commando
-DONE foutboodschap indien niet gevonden
-DONE foutboodschappen indien meer dan 1 gevonden
 TODO variabelen: <parameter> voor alle mogelijke parameters
 TODO methods <parameter>Invullen om alle mogelijke parameters in te vullen
 TODO methode <parameter>Invullen doet niks en geeft fout indien niet in specificatie
 TODO url met commando en gespecificeerde parameters
 TODO lees of wijzig?
 TODO indien wijzig naar serverFetch
-DONE localFetch met sessionStorage.getItem(url)
-DONE indien niet gevonden naar serverFetch
-DONE indien wel gevonden en revisie niet compleet naar serverFetch (automatisch!)
-DONE indien gevonden en compleet sessionStorage.setItem(url)
-DONE foutboodschap indien niet gevonden
 TODO wijzig
-
-NIET indien oude revisie altijd serverFetch
  */
-
-export const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
-
 export async function vraagAanServer(commando) {
-    const vraag = vraagZoeken(commando);
+    const vraag = await vraagZoeken(commando);
     if (!vraag) {
         return Object.freeze({});
     }
@@ -51,7 +39,6 @@ async function vraagZoeken(commando) {
     const vragen = db.vragen.filter(function (vraag) {
         return vraag.includes(commando);
     });
-    console.log(vragen);
     if (vragen.length < 1) {
         console.log(`Server herkent geen commando met ${commando}`);
         return "";
@@ -60,7 +47,6 @@ async function vraagZoeken(commando) {
         console.log(vragen);
         return "";
     } else {
-        console.log(`Server herkent commando met ${commando}: ${vragen[0]}`);
         return vragen[0];
     }
 }
