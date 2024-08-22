@@ -2,8 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-
-import {o_o_o, init, teamSelecteren, perTeamRondenUitslagen} from "./o_o_o.js"
+import { o_o_o, init, teamSelecteren, perTeamRondenUitslagen } from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 

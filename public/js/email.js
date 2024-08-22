@@ -2,7 +2,7 @@
 
 import * as zyq from "./zyq.js";
 import * as html from "./html.js";
-import {o_o_o, init} from "./o_o_o.js";
+import { o_o_o, init } from "./o_o_o.js";
 
 /*
     verwerk email=[email] // zie beheer.js

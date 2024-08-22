@@ -11,8 +11,6 @@ const Uitslag = require("./models/uitslag");
 
 const { fn, ref } = require("objection");
 
-const os = require("os");
-
 const package_json = require("./package.json");
 
 const synchroon = {
@@ -21,6 +19,19 @@ const synchroon = {
     compleet: 1,
     revisie: []
 }
+
+const os = require("os");
+
+const geheugen = process.memoryUsage();
+
+function geheugenGebruik() {
+    console.log("--- geheugenGebruik ---");
+    console.log(`os.totalmem: ${os.totalmem()}`);
+    console.log(`os.freemem: ${os.freemem()}`);
+    console.log(geheugen); // https://www.trevorlasn.com/blog/common-causes-of-memory-leaks-in-javascript
+}
+
+geheugenGebruik();
 
 const db = require("./modules/db.cjs");
 
@@ -51,13 +62,12 @@ for (const club of data.club) {
     for (const seizoen of club.seizoen) {
         seizoen.seizoenAfdrukken();
     }
-    console.log("");
+    console.log();
 }
 
 data.clubIndex().seizoenIndex().seizoenAfdrukken();
 data.clubIndex(db.WAAGTOREN_JEUGD).seizoenIndex("2309").seizoenAfdrukken();
-console.log("");
-
+console.log();
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
@@ -1684,3 +1694,5 @@ async function gebruikerRechten(uuid) {
 
     return Object.freeze({dader, juisteRechten, eigenData});
 }
+
+geheugenGebruik();

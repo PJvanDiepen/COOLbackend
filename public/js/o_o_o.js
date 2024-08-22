@@ -51,8 +51,14 @@ export async function init() {
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
     // await zyq.competitieRondenVerwerken();
 
-    const api = await html.vraag("/club");
-    api.afdrukken();
+    let test = await html.vraag("/club");
+    test.afdrukken();
+
+    test = await html.vraag("verwijder");
+    test.afdrukken();
+
+    test = await html.vraag("niet");
+    test.afdrukken();
 
     // TODO zyq.localFetch vervangen door iets wat revisie controleert
     const {revisie, club, seizoenen} = await zyq.localFetch(`/${o_o_o.club}/club`);
@@ -62,7 +68,6 @@ export async function init() {
 }
 
 async function synchroniseren() {
-    console.log("--- synchroniseren() ---");
     const commandoSynchroon = "/synchroon";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(commandoSynchroon));
     Object.assign(html.synchroon, await html.vraagServer(commandoSynchroon));
@@ -72,7 +77,6 @@ async function synchroniseren() {
     sessionStorage.setItem(commandoSynchroon, JSON.stringify(html.synchroon));
     const vragen = await html.vraagLokaal("/vragen");
     db.vragen.push(...vragen);
-    console.log(db.vragen);
 }
 
 function verwijderNietSynchroon() {

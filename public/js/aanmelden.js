@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import {init} from "./o_o_o.js";
+import { init } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 

@@ -7,12 +7,10 @@ import * as db from "./db.js";
 export const pagina = new URL(location);
 export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 export const params = pagina.searchParams;
-console.log("--- html.js ---");
-console.log(params);
 
 /*
 DONE function vraag (commando) {}
-TODO zoek specificatie op de server met commando
+DONE zoek specificatie op de server met commando
 TODO foutboodschap indien niet gevonden
 TODO foutboodschappen indien meer dan 1 gevonden
 TODO variabelen: <parameter> voor alle mogelijke parameters
@@ -31,10 +29,13 @@ TODO wijzig
 NIET indien oude revisie altijd serverFetch
  */
 
-export const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: []
+export const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
 
-export async function vraag (commando) {
-    console.log(await localFetch("/api"));
+export async function vraag(commando) {
+    const vragen = db.vragen.filter(function (vraag) {
+        return vraag.includes(commando);
+    });
+    console.log(vragen);
 
     function afdrukken() {
         console.log(commando);
