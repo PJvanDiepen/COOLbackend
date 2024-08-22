@@ -15,7 +15,7 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-import * as zyq from "./zyq.js"; // TODO verwijderen!
+import * as zyq from "./zyq.js";
 
 export const data = {
     club: {}
@@ -51,13 +51,13 @@ export async function init() {
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
     // await zyq.competitieRondenVerwerken();
 
-    let test = await html.vraag("/club");
+    let test = await html.vraagAanServer("/club");
     test.afdrukken();
 
-    test = await html.vraag("verwijder");
+    test = await html.vraagAanServer("verwijder");
     test.afdrukken();
 
-    test = await html.vraag("niet");
+    test = await html.vraagAanServer("niet");
     test.afdrukken();
 
     // TODO zyq.localFetch vervangen door iets wat revisie controleert

@@ -11,8 +11,8 @@ export const params = pagina.searchParams;
 /*
 DONE function vraag (commando) {}
 DONE zoek specificatie op de server met commando
-TODO foutboodschap indien niet gevonden
-TODO foutboodschappen indien meer dan 1 gevonden
+DONE foutboodschap indien niet gevonden
+DONE foutboodschappen indien meer dan 1 gevonden
 TODO variabelen: <parameter> voor alle mogelijke parameters
 TODO methods <parameter>Invullen om alle mogelijke parameters in te vullen
 TODO methode <parameter>Invullen doet niks en geeft fout indien niet in specificatie
@@ -31,20 +31,38 @@ NIET indien oude revisie altijd serverFetch
 
 export const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
 
-export async function vraag(commando) {
-    const vragen = db.vragen.filter(function (vraag) {
-        return vraag.includes(commando);
-    });
-    console.log(vragen);
+export async function vraagAanServer(commando) {
+    const vraag = vraagZoeken(commando);
+    if (!vraag) {
+        return Object.freeze({});
+    }
 
     function afdrukken() {
-        console.log(commando);
+        console.log(vraag);
         return this;
     }
 
     return Object.freeze({
         afdrukken           // ()
     });
+}
+
+async function vraagZoeken(commando) {
+    const vragen = db.vragen.filter(function (vraag) {
+        return vraag.includes(commando);
+    });
+    console.log(vragen);
+    if (vragen.length < 1) {
+        console.log(`Server herkent geen commando met ${commando}`);
+        return "";
+    } else if (vragen.length > 1) {
+        console.log(`Server herkent meer commando's met ${commando}`);
+        console.log(vragen);
+        return "";
+    } else {
+        console.log(`Server herkent commando met ${commando}: ${vragen[0]}`);
+        return vragen[0];
+    }
 }
 
 /**
@@ -57,12 +75,12 @@ export async function vraag(commando) {
  * @returns {Promise<any>} data uit het antwoord van de server
  */
 export async function vraagLokaal(url) {
-    let object = JSON.parse(sessionStorage.getItem(url));
+    let object = JSON.parse(sessionStorage.getItem(url)); // indien lokaal dan niet vraagServer
     if (!object) {
         object = await vraagServer(url);
-        if (Number(object.compleet)) { // indien niet compleet > 0 steeds opnieuw vraagServer
+        if (Number(object.compleet)) {
             sessionStorage.setItem(url, JSON.stringify(object));
-        }
+        } // indien niet compleet > 0 niet opslaan en steeds opnieuw vraagServer
     }
     return object.data; // data zonder compleet
 }
