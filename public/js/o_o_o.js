@@ -47,7 +47,7 @@ export async function init() {
 
     let test = await html.vraagAanServer("/club");
     test.afdrukken();
-    // test.parameters(o_o_o.club).vraag();
+    // test.invullen({ club: o_o_o.club}).vraag();
 
     o_o_o.seizoen = "2324";
     o_o_o.competitie = db.INTERNE_COMPETITIE;

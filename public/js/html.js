@@ -11,13 +11,12 @@ export const params = pagina.searchParams;
 export const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
 
 /*
-TODO variabelen: <parameter> voor alle mogelijke parameters
-TODO methods <parameter>Invullen om alle mogelijke parameters in te vullen
-TODO methode <parameter>Invullen doet niks en geeft fout indien niet in specificatie
-TODO url met commando en gespecificeerde parameters
-TODO lees of wijzig?
-TODO indien wijzig naar serverFetch
-TODO wijzig
+TODO PvD, hier verder na Sittard!
+TODO invullen uit key-value van object -> this
+TODO defaults invullen: keys van o_o_o, uuid van gebruiker, enz.
+TODO url invullen met replace van ":<key>" met <value> in kopie van vraag
+TODO afdrukken met ingevulde url -> this
+TODO vragen met ingevulde url via vraagLokaal -> resultaat
  */
 export async function vraagAanServer(commando) {
     const vraag = await vraagZoeken(commando);
