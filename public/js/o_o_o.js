@@ -9,7 +9,7 @@
  *
  * html.js bevat alle code voor interactie met HTML en CSS
  * db.js bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
- * en zo voort
+ * enz.
  */
 
 import * as html from "./html.js";
@@ -45,9 +45,8 @@ export async function init() {
     versieBepalen();
     await zyq.gebruikerVerwerken();
 
-    let test = await html.vraagAanServer("/club");
-    test.afdrukken();
-    // test.invullen({ club: o_o_o.club}).vraag();
+    const clubSeizoenen = await vraag("/club");
+    clubSeizoenen.afdrukken().specificeren({speler: 14}).afdrukken("afdrukken");
 
     o_o_o.seizoen = "2324";
     o_o_o.competitie = db.INTERNE_COMPETITIE;
@@ -57,7 +56,15 @@ export async function init() {
     console.log("--- test init ---");
 
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
-    // await zyq.competitieRondenVerwerken();
+    /*
+    TODO voor de verwerking
+    o_o_o.ronde = [];
+    o_o_o.vorigeRonde = 0;
+    o_o_o.huidigeRonde = 0;
+    TODO localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
+    TODO update o_o_o.ronde met rondeNummer als index
+    TODO verwijder zyq.competitieRondenVerwerken();
+     */
 
 
     /* TODO zyq.localFetch vervangen door iets wat revisie controleert
@@ -68,15 +75,17 @@ export async function init() {
      */
 }
 
+const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
+
 async function synchroniseren() {
     const urlSynchroon = "/synchroon";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
-    Object.assign(html.synchroon, await html.vraagServer(urlSynchroon));
-    if (!nietSynchroon || html.synchroon.serverStart > nietSynchroon.serverStart) {
+    Object.assign(synchroon, await vraagServer(urlSynchroon));
+    if (!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart) {
         verwijderNietSynchroon(); // na herstart server is niets actueel
     }
-    sessionStorage.setItem(urlSynchroon, JSON.stringify(html.synchroon));
-    const vragen = await html.vraagLokaal("/vragen");
+    sessionStorage.setItem(urlSynchroon, JSON.stringify(synchroon));
+    const vragen = await vraagLokaal("/vragen");
     db.vragen.push(...vragen);
 }
 
@@ -131,6 +140,122 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
         o_o_o.versie = 5; // Zwitsers systeem
     } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 6;
+    }
+}
+
+/*
+TODO vragen met ingevulde url via vraagLokaal -> resultaat
+ */
+export async function vraag(commando) {
+    const vraagVanServer = await vraagZoeken(commando);
+    if (!vraagVanServer) {
+        return Object.freeze({});
+    }
+    const specificatie = {
+        uuid: zyq.uuidToken,
+        club: o_o_o.club,
+        seizoen: o_o_o.seizoen,
+        team: o_o_o.team,
+        competitie: o_o_o.competitie,
+        ronde: 1,
+        speler: 0
+    };
+
+    function invullen() {
+        return vraagVanServer
+            .replace(":uuid", specificatie.uuid)
+            .replace(":club", specificatie.club)
+            .replace(":seizoen", specificatie.seizoen)
+            .replace(":team", specificatie.team)
+            .replace(":competitie", specificatie.competitie)
+            .replace(":ronde", specificatie.ronde)
+            .replace(":speler", specificatie.speler);
+    }
+
+    function specificeren(object) {
+        for (const [key, value] of Object.entries(object)) {
+            specificatie[key] = value;
+        }
+        return this;
+    }
+
+    function afdrukken(tekst = "") {
+        if (tekst) {
+            console.log(`--- ${tekst} ---`);
+        }
+        console.log(vraagVanServer);
+        console.log(specificatie);
+        console.log(invullen());
+        return this;
+    }
+
+    function antwoord() {
+        // TODO antwoord de vraag
+    }
+
+    return Object.freeze({
+        specificeren, // (object) ->
+        afdrukken,    // () ->
+        antwoord      // ()
+    });
+}
+
+async function vraagZoeken(commando) {
+    const vragen = db.vragen.filter(function (vraag) {
+        return vraag.includes(commando);
+    });
+    if (vragen.length < 1) {
+        console.log(`Server herkent geen commando met ${commando}`);
+        return "";
+    } else if (vragen.length > 1) {
+        console.log(`Server herkent meer commando's met ${commando}`);
+        console.log(vragen);
+        return "";
+    } else {
+        return vragen[0];
+    }
+}
+
+/**
+ * vraagLokaal optimaliseert de verbinding met de server
+ * door het antwoord van de server ook lokaal op te slaan
+ *
+ * vraagLokaal krijgt object van vraagServer met compleet: <getal> data: [...]
+ *
+ * @param url de vraag aan de server
+ * @returns {Promise<any>} data uit het antwoord van de server
+ */
+async function vraagLokaal(url) {
+    let object = JSON.parse(sessionStorage.getItem(url)); // indien lokaal dan niet vraagServer
+    if (!object) {
+        object = await vraagServer(url);
+        if (Number(object.compleet)) {
+            sessionStorage.setItem(url, JSON.stringify(object));
+        } // indien niet compleet > 0 niet opslaan en steeds opnieuw vraagServer
+    }
+    return object.data; // data zonder compleet
+}
+
+const server = html.pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+/**
+ * vraagServer maakt verbinding met de server
+ *
+ * @param url de vraag aan de database op de server
+ * @returns {Promise<any>} het antwoord van de server
+ */
+async function vraagServer(url) {
+    try {
+        const response = await fetch(`${server}${url}`);
+        if (response.ok) {
+            return await response.json();
+        } else {
+            console.log(`--- vraagServer ---`);
+            console.log(response);
+            return null;
+        }
+    } catch (error) {
+        console.log(`--- vraagServer error ---`);
+        console.error(error);
     }
 }
 
@@ -285,6 +410,7 @@ einde indien rondeNummer = 0
 
 TODO spelerTotalen moeten compleet zijn tot een bepaalde datum en rondeNummer inclusief de tellingen, dat moet op server geregeld worden
 TODO nietTegen per clubCode
+TODO naar reglement.js
  */
 function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
