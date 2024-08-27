@@ -8,7 +8,9 @@ In de huidige versie van indelen.js is alles wat met zwitsers indelen heeft te m
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { init, o_o_o, ranglijst } from "./o_o_o.js"
+import { init, o_o_o } from "./o_o_o.js"
+import { ranglijst } from "./reglement.js";
+
 
 import * as zyq from "./zyq.js";
 

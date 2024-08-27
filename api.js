@@ -97,7 +97,7 @@ console.log();
  *      /:club/club
  *      enz.
  *
- *  Een api-endpoint geeft een of meer
+ *  Een api-endpoint geeft een antwoord (object) met compleet en andere properties.
  */
 module.exports = function (url) {
 
@@ -127,6 +127,9 @@ module.exports = function (url) {
         });
     });
 
+    /*
+    TODO nog geen toepassing
+     */
     url.get("/:club/:seizoen/seizoen/toevoegen", async function (ctx) {
         const club = clubs[ctx.params.club];
         const seizoen = club.seizoenDaarna(ctx.params.seizoen);
@@ -138,6 +141,9 @@ module.exports = function (url) {
             seizoenen: club.seizoenen});
     });
 
+    /*
+    TODO nog geen toepassing
+     */
     url.get("/:club/:seizoen/ronden", async function (ctx) {
         // TODO inlezen indien nodig
         const ronden = await Ronde.query()

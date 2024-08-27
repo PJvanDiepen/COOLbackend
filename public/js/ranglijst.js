@@ -2,7 +2,8 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init, teamSelecteren, rondeSelecteren, ranglijst } from "./o_o_o.js"
+import { o_o_o, init, teamSelecteren, rondeSelecteren } from "./o_o_o.js"
+import { ranglijst } from "./reglement.js";
 
 import * as zyq from "./zyq.js";
 
