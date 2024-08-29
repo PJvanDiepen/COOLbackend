@@ -28,9 +28,9 @@
   "homepage": "https://0-0-0.nl/",
   "dependencies": {
     "@koa/cors": "^5.0.0",
-    "config": "^3.3.11",
+    "config": "^3.3.12",
     "knex": "^3.0.1",
-    "koa": "^2.15.2",
+    "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^12.0.1",
     "mysql": "^2.18.1",

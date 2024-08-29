@@ -2,7 +2,7 @@
 
 import * as db from "./db.js";
 import * as html from "./html.js";
-import { data, o_o_o, init } from "./o_o_o.js";
+import { o_o_o, init } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -51,8 +51,8 @@ import * as zyq from "./zyq.js";
 
 function seizoenSelecteren(teamCode) {
     const seizoenenSelectie = [];
-    for (const seizoen of data.club.seizoenen) {
-        seizoenenSelectie.push([seizoen, data.club.seizoenVoluit(seizoen)]);
+    for (const seizoen of db.data.clubIndex(o_o_o.club).seizoen) {
+        seizoenenSelectie.push([seizoen.seizoen, seizoen.seizoenTekst]);
     }
     html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenenSelectie, function (seizoen) {
         html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);

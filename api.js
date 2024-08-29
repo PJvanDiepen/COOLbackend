@@ -64,10 +64,8 @@ db.clubToevoegen(synchroon.compleet,
         {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
 });
 
-console.log("--- tot hier");
-console.log(db.data.club);
 for (const club of db.data.club) {
-    console.log("--- club", club);
+    club.clubAfdrukken();
     for (const seizoen of club.seizoen) {
         seizoen.seizoenAfdrukken();
     }
@@ -128,11 +126,15 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        const club = data.clubIndex(Number(ctx.params.club));
-        ctx.body = JSON.stringify( {
-            compleet: club.compleet,
-            club: club.clubData(),
-            seizoenen: club.seizoenen
+        ctx.body = db.data.clubIndex(Number(ctx.params.club)).zonderSeizoen();
+    });
+
+    /*
+    Frontend: o_o_o.js
+     */
+    url.get("/:club/seizoenen", async function (ctx) {
+        ctx.body = db.data.clubIndex(Number(ctx.params.club)).seizoen.map(function (seizoen) {
+            return seizoen.zonderTeam();
         });
     });
 

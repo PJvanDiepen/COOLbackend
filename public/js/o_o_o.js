@@ -17,8 +17,6 @@ import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
-export const data = db.dataMaken();
-
 /**
  * init voor aanmelden.js
  *           agenda.js
@@ -45,18 +43,23 @@ export async function init() {
     versieBepalen();
     await zyq.gebruikerVerwerken();
 
-    const clubSeizoenen = await vraag("/club");
-    clubSeizoenen.afdrukken().specificeren({speler: 14}).afdrukken("afdrukken");
-    const eenClub = await clubSeizoenen.antwoord();
-    console.log("eenClub", eenClub);
-    data.clubsToevoegen(synchroon.club, [eenClub]);
-    console.log("--- data.clubIndex(eenClub.clubCode) ---");
-    console.log(data.clubIndex(eenClub.clubCode));
-    console.log(data);
+    // club
+    const clubVraag = await vraag("/club");
+    const club = await clubVraag.antwoord();
+    db.clubToevoegen(club.compleet, club);
+    console.log("--- club ---");
+    console.log(db.data.clubIndex(o_o_o.club));
 
-    console.log(eenClub);
+    // seizoenen
+    const seizoenenVraag = await vraag("/seizoenen");
+    const seizoenen = await seizoenenVraag.antwoord();
+    for (const seizoen of seizoenen) {
+        db.seizoenToevoegen(seizoen.compleet, seizoen);
+    }
+    console.log("--- seizoenen ---");
+    console.log(db.data.clubIndex(o_o_o.club));
 
-    o_o_o.seizoen = "2324";
+    o_o_o.seizoen = db.data.clubIndex(o_o_o.club).seizoenIndex().seizoen;
     o_o_o.competitie = db.INTERNE_COMPETITIE;
 
     console.log(o_o_o);

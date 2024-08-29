@@ -126,7 +126,7 @@ function clubMaken(compleet, object) {
     if (typeof clubCode !== 'number') {
         return null;
     }
-    const clubTekst = `${clubCode}: ${vereniging} ${teamNaam}`;
+    const clubTekst = `${clubCode}: ${vereniging} teamNaam: ${teamNaam}`;
 
     function clubAfdrukken() {
         console.log(clubTekst);
@@ -141,16 +141,21 @@ function clubMaken(compleet, object) {
         return seizoen[index < 0 ? seizoenen.length - 1 : index]; // laatste of gevonden seizoen
     }
 
+    function zonderSeizoen() {
+        return { compleet: compleet, clubCode: clubCode, vereniging: vereniging, teamNaam: teamNaam };
+    }
+
     return Object.freeze({
         compleet,
         clubCode,
         vereniging,
         teamNaam,
         clubTekst,
-        clubAfdrukken, // () ->
+        clubAfdrukken,  // () ->
         seizoenen,
         seizoen,
-        seizoenIndex   // (seizoenCode) ->
+        seizoenIndex,   // (seizoenCode) ->
+        zonderSeizoen // ()
     });
 }
 
@@ -203,6 +208,10 @@ function seizoenMaken(compleet, object) {
     const teams = [];
     const team = [];
 
+    function zonderTeam() {
+        return { compleet: compleet, clubCode: clubCode, seizoen: seizoen };
+    }
+
     return Object.freeze({
         compleet,
         clubCode,
@@ -211,7 +220,8 @@ function seizoenMaken(compleet, object) {
         seizoenAfdrukken, // () ->
         seizoenDaarna,    // (seizoen)
         teams,
-        team
+        team,
+        zonderTeam
     });
 }
 
