@@ -50,11 +50,11 @@ const NIEUWE_RANGLIJST = 2;
  *
  * Er is een hiërarchie en samenhang tussen de tabellen van de database
  * en de data objecten op de server en in de browser:
- * data.club[index(:club)]
- *     .seizoen[index(:seizoen)]
- *     .team[index(:team)]
- *     .ronde[index(:ronde)]
- *     .uitslag[index(:speler)]
+ * data.clubIndex(:club)
+ *     .seizoenIndex(:seizoen)
+ *     .team[index(:team)
+ *     .ronde[index(:ronde)
+ *     .uitslag[index(:speler)
  *
  * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
@@ -84,7 +84,9 @@ const NIEUWE_RANGLIJST = 2;
  * De objecten voor data, club, seizoen, enz. hebben een Index naar een object lager in de hiërarchie.
  * De objecten voor club, seizoen, enz. verwijzen naar een object hoger in de hiërarchie.
  */
-function dataToevoegen() {
+const data = dataMaken();
+
+function dataMaken() {
     const clubs = [];
     const club = [];
 
@@ -93,37 +95,41 @@ function dataToevoegen() {
         return club[index < 0 ? 0 : index]; // eerste of gevonden club
     }
 
-    function clubsToevoegen(compleet, clubDataLijst) {
-        for (const clubData of clubDataLijst) {
-            clubs.push(clubData[0]); // clubCode
-            club.push(clubToevoegen(compleet, clubData));
-        }
-        return this;
-    }
-
     return Object.freeze( {
         clubs,
         club,
-        clubIndex,     // (clubCode) ->
-        clubsToevoegen // (compleet, clubDataLijst) ->
+        clubIndex // (clubCode) ->
     });
+}
+
+function clubToevoegen(compleet, object) {
+    const club = clubMaken(compleet, object);
+    if (club) {
+        const clubIndex = data.clubs.indexOf(club.clubCode);
+        if (clubIndex >= 0) {
+            console.log(`${club.clubCode}: ${data.club[clubIndex].vereniging} overschrijft ${club.vereniging}`);
+            data.club[clubIndex] = club;
+        } else {
+            data.clubs.push(club.clubCode); // voor clubIndex() in data
+            data.club.push(club);
+        }
+    }
+    return club;
 }
 
 // clubCode int
 const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
-function clubToevoegen(compleet, data) {
-    const clubCode = Number(data[0]);
-    const vereniging = data[1];
-    const teamNaam = data[2];
-
-    function clubData() {
-        return [clubCode, vereniging, teamNaam];
+function clubMaken(compleet, object) {
+    const { clubCode, vereniging, teamNaam } = object;
+    if (typeof clubCode !== 'number') {
+        return null;
     }
+    const clubTekst = `${clubCode}: ${vereniging} ${teamNaam}`;
 
     function clubAfdrukken() {
-        console.log(`${clubCode}: ${vereniging} ${teamNaam}`);
+        console.log(clubTekst);
         return this;
     }
 
@@ -135,26 +141,31 @@ function clubToevoegen(compleet, data) {
         return seizoen[index < 0 ? seizoenen.length - 1 : index]; // laatste of gevonden seizoen
     }
 
-    function seizoenenToevoegen(compleet, seizoenenLijst) {
-        for (const eenSeizoen of seizoenenLijst) {
-            seizoenen.push(eenSeizoen);
-            seizoen.push(seizoenToevoegen(compleet, this, eenSeizoen));
-        }
-        return this;
-    }
-
     return Object.freeze({
         compleet,
         clubCode,
         vereniging,
         teamNaam,
-        clubAfdrukken,      // () ->
-        clubData,           // ()
+        clubTekst,
+        clubAfdrukken, // () ->
         seizoenen,
         seizoen,
-        seizoenIndex,      // (seizoenCode) ->
-        seizoenenToevoegen // (compleet, seizoenenLijst) ->
+        seizoenIndex   // (seizoenCode) ->
     });
+}
+
+function seizoenToevoegen(compleet, object) {
+    const index = data.clubs.indexOf(object.clubCode);
+    if (index < 0) {
+        return null;
+    }
+    const club = data.club[index];
+    const seizoen = seizoenMaken(compleet, object);
+    if (seizoen) {
+        club.seizoenen.push(seizoen.seizoen); // voor seizoenIndex() in club
+        club.seizoen.push(seizoen);
+    }
+    return seizoen;
 }
 
 /* seizoen char(4)
@@ -162,14 +173,21 @@ Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
 De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
 met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
  */
-function seizoenToevoegen(compleet, club, seizoen) {
+function seizoenMaken(compleet, object) {
+    const { clubCode, seizoen } = object;
+    if (seizoen.length > 4) {
+        return null;
+    }
+    const seizoenTekst = clubCode === WAAGTOREN_JEUGD
+        ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
+        : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
 
     function seizoenAfdrukken() {
-        console.log(`${club.clubCode}: ${club.vereniging} ${seizoenVoluit()}`);
+        console.log(`${clubCode}: ${seizoenTekst}`);
         return this;
     }
 
-    const seizoenDaarna = club.clubCode === WAAGTOREN_JEUGD
+    const seizoenDaarna = clubCode === WAAGTOREN_JEUGD
         ? function () {
             const jaar = Number(seizoen.substring(0, 2));
             const maand = Number(seizoen.substring(2, 4));
@@ -182,24 +200,16 @@ function seizoenToevoegen(compleet, club, seizoen) {
             return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
         };
 
-    const seizoenVoluit = club.clubCode === WAAGTOREN_JEUGD
-        ? function () {
-            return `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`;
-        }
-        : function () {
-            return `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
-        };
-
     const teams = [];
     const team = [];
 
     return Object.freeze({
         compleet,
-        club,
+        clubCode,
         seizoen,
+        seizoenTekst,
         seizoenAfdrukken, // () ->
         seizoenDaarna,    // (seizoen)
-        seizoenVoluit,    // (seizoen)
         teams,
         team
     });
@@ -398,14 +408,17 @@ export { // ES6 voor browser,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
 
-    dataToevoegen,         // ()
+    data,
+    dataMaken,
+    clubToevoegen,         // (compleet, object)
 
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
 
-    clubToevoegen,         // (synchroon, data)
-    seizoenToevoegen,      // (synchroon, club, seizoen)
+    clubMaken,             // (synchroon, object)
+    seizoenToevoegen,      // (synchroon, object)
+    seizoenMaken,          // (synchroon, object)
 
     // teamCode char(3)
     INTERNE_COMPETITIE,
@@ -423,7 +436,7 @@ export { // ES6 voor browser,
     TIJDELIJK_LID_NUMMER,
     KNSB_NUMMER,
 
-    inCompetitie,            // (speler, teamCode)
+    inCompetitie,          // (speler, teamCode)
 
     // uitslag.partij char(1)
     AFWEZIG,

@@ -50,23 +50,32 @@ TODO uitslagen
 TODO personen invullen
  */
 
-const data = db.dataToevoegen().clubsToevoegen(synchroon.compleet, [
-    [db.WAAGTOREN, "Waagtoren", "Waagtoren"],
-    [db.WAAGTOREN_JEUGD, "Waagtoren Jeugd",""]]);
-data.clubIndex(db.WAAGTOREN).seizoenenToevoegen(synchroon.compleet,
-    ["1920", "2021", "2122", "2223", "2324"]);
-data.clubIndex(db.WAAGTOREN_JEUGD).seizoenenToevoegen(synchroon.compleet,
-    ["2309", "2401"]);
+db.clubToevoegen(synchroon.compleet,
+    {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"});
+["1920", "2021", "2122", "2223", "2324"].forEach(function (seizoen) {
+    db.seizoenToevoegen(synchroon.compleet,
+        {clubCode: db.WAAGTOREN, seizoen: seizoen});
+});
 
-for (const club of data.club) {
+db.clubToevoegen(synchroon.compleet,
+    { clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren" });
+["2309", "2401"].forEach(function (seizoen) {
+    db.seizoenToevoegen(synchroon.compleet,
+        {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
+});
+
+console.log("--- tot hier");
+console.log(db.data.club);
+for (const club of db.data.club) {
+    console.log("--- club", club);
     for (const seizoen of club.seizoen) {
         seizoen.seizoenAfdrukken();
     }
     console.log();
 }
 
-data.clubIndex().seizoenIndex().seizoenAfdrukken();
-data.clubIndex(db.WAAGTOREN_JEUGD).seizoenIndex("2309").seizoenAfdrukken();
+db.data.clubIndex().seizoenIndex().seizoenAfdrukken();
+db.data.clubIndex(db.WAAGTOREN_JEUGD).seizoenIndex("2309").seizoenAfdrukken();
 console.log();
 
 /**

@@ -17,7 +17,7 @@ import * as db from "./db.js";
 
 import * as zyq from "./zyq.js";
 
-export const data = db.dataToevoegen();
+export const data = db.dataMaken();
 
 /**
  * init voor aanmelden.js
@@ -47,6 +47,14 @@ export async function init() {
 
     const clubSeizoenen = await vraag("/club");
     clubSeizoenen.afdrukken().specificeren({speler: 14}).afdrukken("afdrukken");
+    const eenClub = await clubSeizoenen.antwoord();
+    console.log("eenClub", eenClub);
+    data.clubsToevoegen(synchroon.club, [eenClub]);
+    console.log("--- data.clubIndex(eenClub.clubCode) ---");
+    console.log(data.clubIndex(eenClub.clubCode));
+    console.log(data);
+
+    console.log(eenClub);
 
     o_o_o.seizoen = "2324";
     o_o_o.competitie = db.INTERNE_COMPETITIE;
@@ -145,9 +153,6 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
     }
 }
 
-/*
-TODO vragen met ingevulde url via vraagLokaal -> resultaat
- */
 export async function vraag(commando) {
     const vraagVanServer = await vraagZoeken(commando);
     if (!vraagVanServer) {
@@ -191,8 +196,8 @@ export async function vraag(commando) {
         return this;
     }
 
-    function antwoord() {
-        // TODO antwoord de vraag
+    async function antwoord() {
+        return await vraagLokaal(invullen());
     }
 
     return Object.freeze({
