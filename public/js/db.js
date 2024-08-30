@@ -50,6 +50,7 @@ const NIEUWE_RANGLIJST = 2;
  *
  * Er is een hiërarchie en samenhang tussen de tabellen van de database
  * en de data objecten op de server en in de browser:
+ *
  * data.eenClub(:club)
  *     .eenSeizoen(:seizoen)
  *     .eenTeam(:team)
@@ -137,12 +138,17 @@ function clubMaken(compleet, object) {
         return this;
     }
 
-    const seizoenen = [];
     const seizoen = [];
 
     function seizoenIndex(seizoenCode) {
-        const index = seizoenen.indexOf(seizoenCode);
-        return seizoen[index < 0 ? seizoenen.length - 1 : index]; // laatste of gevonden seizoen
+        return seizoen.findIndex(function(eenSeizoen) {
+            return eenSeizoen.seizoen === seizoenCode;
+        })
+    }
+
+    function eenSeizoen(seizoenCode) {
+        const index = seizoenIndex(seizoenCode);
+        return seizoen[index < 0 ? seizoen.length - 1 : index]; // laatste of gevonden seizoen
     }
 
     function zonderSeizoen() {
@@ -156,9 +162,9 @@ function clubMaken(compleet, object) {
         teamNaam,
         clubTekst,
         clubAfdrukken,  // () ->
-        seizoenen,
         seizoen,
-        seizoenIndex,   // (seizoenCode) ->
+        seizoenIndex, // (seizoenCode)
+        eenSeizoen,   // (seizoenCode)
         zonderSeizoen // ()
     });
 }
@@ -171,8 +177,13 @@ function seizoenToevoegen(compleet, object) {
     const club = data.club[clubIndex];
     const seizoen = seizoenMaken(compleet, object);
     if (seizoen) {
-        club.seizoenen.push(seizoen.seizoen); // voor seizoenIndex() in club
-        club.seizoen.push(seizoen);
+        const seizoenIndex = club.seizoenIndex(seizoen.seizoen);
+        if (seizoenIndex >= 0) {
+            console.log(`${seizoen.seizoen} overschrijft ${seizoen.seizoenTekst}`);
+            club.seizoen[seizoenIndex] = seizoen;
+        } else {
+            club.seizoen.push(seizoen);
+        }
     }
     return seizoen;
 }
@@ -209,7 +220,6 @@ function seizoenMaken(compleet, object) {
             return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
         };
 
-    const teams = [];
     const team = [];
 
     function zonderTeam() {
@@ -223,7 +233,6 @@ function seizoenMaken(compleet, object) {
         seizoenTekst,
         seizoenAfdrukken, // () ->
         seizoenDaarna,    // (seizoen)
-        teams,
         team,
         zonderTeam
     });

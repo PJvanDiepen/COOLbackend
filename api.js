@@ -72,8 +72,8 @@ for (const club of db.data.club) {
     console.log();
 }
 
-db.data.eenClub().seizoenIndex().seizoenAfdrukken();
-db.data.eenClub(db.WAAGTOREN_JEUGD).seizoenIndex("2309").seizoenAfdrukken();
+db.data.eenClub().eenSeizoen().seizoenAfdrukken();
+db.data.eenClub(db.WAAGTOREN_JEUGD).eenSeizoen("2309").seizoenAfdrukken();
 console.log();
 
 /**

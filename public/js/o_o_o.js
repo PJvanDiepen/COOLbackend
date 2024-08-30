@@ -59,7 +59,7 @@ export async function init() {
     console.log("--- seizoenen ---");
     console.log(db.data.eenClub(o_o_o.club));
 
-    o_o_o.seizoen = db.data.eenClub(o_o_o.club).seizoenIndex().seizoen;
+    o_o_o.seizoen = db.data.eenClub(o_o_o.club).eenSeizoen().seizoen;
     o_o_o.competitie = db.INTERNE_COMPETITIE;
 
     console.log(o_o_o);
