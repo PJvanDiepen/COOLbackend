@@ -42,14 +42,13 @@ export async function init() {
     urlVerwerken();
     versieBepalen();
     await zyq.gebruikerVerwerken();
-    await seizoenVerwerken();
 
     console.log(o_o_o);
     console.log(zyq.gebruiker);
-    console.log("--- test init ---");
+
+    await seizoenVerwerken();
 
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
-
 
     /*
     TODO voor de verwerking
@@ -139,24 +138,33 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
 }
 
 async function seizoenVerwerken() {
-    // club
+    console.log("--- club ---");
     const clubVraag = await vraag("/club");
     const club = await clubVraag.antwoord();
     db.clubToevoegen(club.compleet, club);
-    console.log("--- club ---");
     console.log(db.data.eenClub(o_o_o.club));
 
-    // seizoenen
+    console.log("--- seizoenen ---");
     const seizoenenVraag = await vraag("/seizoenen");
     const seizoenen = await seizoenenVraag.antwoord();
     for (const seizoen of seizoenen) {
         db.seizoenToevoegen(seizoen.compleet, seizoen);
     }
-    console.log("--- seizoenen ---");
+    const eenSeizoen = db.data.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen);
+    o_o_o.seizoen = eenSeizoen.seizoen;
     console.log(db.data.eenClub(o_o_o.club));
 
-    o_o_o.seizoen = db.data.eenClub(o_o_o.club).eenSeizoen().seizoen;
-    o_o_o.competitie = db.INTERNE_COMPETITIE;
+    console.log("--- teams van 1 seizoen ---");
+    const teamsVraag = await vraag("/teams");
+    teamsVraag.afdrukken("juiste /teams?");
+    const teams = await teamsVraag.antwoord();
+    for (const team of teams) {
+        db.teamToevoegen(team.compleet, team);
+    }
+    console.log(db.data.eenClub(o_o_o.club));
+    for (const team of db.data.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen).team) {
+        console.log(team);
+    }
 }
 
 export async function vraag(commando) {
@@ -223,10 +231,9 @@ async function vraagZoeken(commando) {
     } else if (vragen.length > 1) {
         console.log(`Server herkent meer commando's met ${commando}`);
         console.log(vragen);
-        return "";
-    } else {
         return vragen[0];
     }
+    return vragen[0]; // eerste of enige vraag
 }
 
 /**
