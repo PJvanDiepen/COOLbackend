@@ -132,40 +132,32 @@ module.exports = function (url) {
     /*
     Frontend: o_o_o.js
      */
-    url.get("/:club/seizoenen", async function (ctx) {
+    url.get("/:club/seizoenen", function (ctx) {
         ctx.body = db.data.eenClub(Number(ctx.params.club)).seizoen.map(function (seizoen) {
             return seizoen.zonderTeam();
         });
     });
 
     /*
-    TODO nog geen toepassing
+    Frontend: o_o_o.js
      */
-    url.get("/:club/:seizoen/seizoen/toevoegen", async function (ctx) {
-        const club = clubs[ctx.params.club];
-        const seizoen = club.seizoenDaarna(ctx.params.seizoen);
-        club.seizoenenToevoegen([club.seizoenDaarna(ctx.params.seizoen)]);
-        // TODO log mutatie
-        compleet++;
-        ctx.body = JSON.stringify({revisie: revisieNummer,
-            club: club.clubData(),
-            seizoenen: club.seizoenen});
+    url.get("/:club/:seizoen/teams", async function (ctx) {
+        const teams = db.data.eenClub(Number(ctx.params.club)).eenSeizoen(ctx.params.seizoen).team;
+        if (teams.length === 0) {
+            const tabel = await Team.query()
+                .where("team.clubCode", ctx.params.club)
+                .where("team.seizoen", ctx.params.seizoen);
+            tabel.forEach(function (eenTeam) {
+                return db.teamToevoegen(synchroon.compleet, eenTeam);
+            });
+        }
+        ctx.body = teams.map(function (team) {
+            return team.zonderRonde();
+        });
     });
 
-    /*
-    TODO nog geen toepassing
-     */
-    url.get("/:club/:seizoen/ronden", async function (ctx) {
-        // TODO inlezen indien nodig
-        const ronden = await Ronde.query()
-            .where("team.clubCode", ctx.params.club)
-            .where("team.seizoen", ctx.params.seizoen)
-            .orderBy(["datum","rondeNummer"]);
-        // TODO stap voor stap, niet in 1 regel
-        ctx.body = JSON.stringify(data.clubs[ctx.params.club].ronden[ctx.params.seizoen]);
-    });
-
-    console.log("--- vragen ---"); // versie 0.8.60 had 60 endpoints
+    console.log("--- vragen ---");
+    // versie 0.8.60 had 60 endpoints
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
 

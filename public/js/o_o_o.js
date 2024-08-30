@@ -42,25 +42,7 @@ export async function init() {
     urlVerwerken();
     versieBepalen();
     await zyq.gebruikerVerwerken();
-
-    // club
-    const clubVraag = await vraag("/club");
-    const club = await clubVraag.antwoord();
-    db.clubToevoegen(club.compleet, club);
-    console.log("--- club ---");
-    console.log(db.data.eenClub(o_o_o.club));
-
-    // seizoenen
-    const seizoenenVraag = await vraag("/seizoenen");
-    const seizoenen = await seizoenenVraag.antwoord();
-    for (const seizoen of seizoenen) {
-        db.seizoenToevoegen(seizoen.compleet, seizoen);
-    }
-    console.log("--- seizoenen ---");
-    console.log(db.data.eenClub(o_o_o.club));
-
-    o_o_o.seizoen = db.data.eenClub(o_o_o.club).eenSeizoen().seizoen;
-    o_o_o.competitie = db.INTERNE_COMPETITIE;
+    await seizoenVerwerken();
 
     console.log(o_o_o);
     console.log(zyq.gebruiker);
@@ -154,6 +136,27 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
     } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
         o_o_o.versie = 6;
     }
+}
+
+async function seizoenVerwerken() {
+    // club
+    const clubVraag = await vraag("/club");
+    const club = await clubVraag.antwoord();
+    db.clubToevoegen(club.compleet, club);
+    console.log("--- club ---");
+    console.log(db.data.eenClub(o_o_o.club));
+
+    // seizoenen
+    const seizoenenVraag = await vraag("/seizoenen");
+    const seizoenen = await seizoenenVraag.antwoord();
+    for (const seizoen of seizoenen) {
+        db.seizoenToevoegen(seizoen.compleet, seizoen);
+    }
+    console.log("--- seizoenen ---");
+    console.log(db.data.eenClub(o_o_o.club));
+
+    o_o_o.seizoen = db.data.eenClub(o_o_o.club).eenSeizoen().seizoen;
+    o_o_o.competitie = db.INTERNE_COMPETITIE;
 }
 
 export async function vraag(commando) {

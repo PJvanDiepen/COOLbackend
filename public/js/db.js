@@ -127,7 +127,11 @@ const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
 function clubMaken(compleet, object) {
-    const { clubCode, vereniging, teamNaam } = object;
+    const {
+        clubCode,
+        vereniging,
+        teamNaam
+    } = object;
     if (typeof clubCode !== 'number') {
         return null;
     }
@@ -152,7 +156,12 @@ function clubMaken(compleet, object) {
     }
 
     function zonderSeizoen() {
-        return { compleet: compleet, clubCode: clubCode, vereniging: vereniging, teamNaam: teamNaam };
+        return {
+            compleet: compleet,
+            clubCode: clubCode,
+            vereniging: vereniging,
+            teamNaam: teamNaam
+        };
     }
 
     return Object.freeze({
@@ -194,7 +203,10 @@ De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar co
 met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
  */
 function seizoenMaken(compleet, object) {
-    const { clubCode, seizoen } = object;
+    const {
+        clubCode,
+        seizoen
+    } = object;
     if (seizoen.length > 4) {
         return null;
     }
@@ -222,8 +234,23 @@ function seizoenMaken(compleet, object) {
 
     const team = [];
 
+    function teamIndex(teamCode) {
+        return team.findIndex(function(eenTeam) {
+            return eenTeam.teamCode === teamCode;
+        })
+    }
+
+    function eenTeam(teamCode) {
+        const index = teamIndex(teamCode);
+        return team[index < 0 ? 0 : index]; // eerste of gevonden team
+    }
+
     function zonderTeam() {
-        return { compleet: compleet, clubCode: clubCode, seizoen: seizoen };
+        return {
+            compleet: compleet,
+            clubCode: clubCode,
+            seizoen: seizoen
+        };
     }
 
     return Object.freeze({
@@ -232,10 +259,36 @@ function seizoenMaken(compleet, object) {
         seizoen,
         seizoenTekst,
         seizoenAfdrukken, // () ->
-        seizoenDaarna,    // (seizoen)
+        seizoenDaarna,    // (seizoenCode)
         team,
+        teamIndex,        // (teamCode)
+        eenTeam,          // (teamCode)
         zonderTeam
     });
+}
+
+function teamToevoegen(compleet, object) {
+    const clubIndex = data.clubIndex(object.clubCode);
+    if (clubIndex < 0) {
+        return null;
+    }
+    const club = data.club[clubIndex];
+    const seizoenIndex = club.seizoenIndex(object.seizoen);
+    if (seizoenIndex < 0) {
+        return null;
+    }
+    const seizoen = club.seizoen[seizoenIndex];
+    const team = teamMaken(compleet, object);
+    if (team) {
+        const teamIndex = seizoen.teamIndex(seizoen.teamCode);
+        if (teamIndex >= 0) {
+            console.log(`${team.teamCode} overschrijft ${team.teamTekst}`);
+            seizoen.team[teamIndex] = team;
+        } else {
+            seizoen.team.push(team);
+        }
+    }
+    return team;
 }
 
 // teamCode char(3)
@@ -244,6 +297,76 @@ const RAPID_COMPETITIE= "ira";
 const JEUGD_COMPETITIE= "ije";
 const SNELSCHAKEN= "izs";
 const ZWITSERS_TEST= "izt";
+
+function teamMaken(compleet, object) {
+    const {
+        clubCode,
+        seizoen,
+        teamCode,
+        reglement,
+        bond, // TODO verwijderen
+        poule, // TODO verwijderen
+        omschrijving,
+        borden,
+        teamleider // TODO verwijderen
+    } = object;
+    if (teamCode.length > 3) {
+        return null;
+    }
+    const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
+
+    function teamAfdrukken() {
+        console.log(`${teamCode}: ${teamTekst}`);
+        return this;
+    }
+
+    const ronde = [];
+
+    function rondeIndex(rondeNummer) {
+        return ronde.findIndex(function(eenRonde) {
+            return eenRonde.rondeNummer === rondeNummer;
+        })
+    }
+
+    function eenRonde(rondeNummer) {
+        const index = rondeIndex(rondeNummer);
+        return ronde[index < 0 ? ronde.length - 1 : index]; // laatste of gevonden ronde
+    }
+
+    function zonderRonde() {
+        return {
+            compleet: compleet,
+            clubCode: clubCode,
+            seizoen: seizoen,
+            teamCode: teamCode,
+            reglement: reglement,
+            bond: bond, // TODO verwijderen
+            poule: poule, // TODO verwijderen
+            omschrijving: omschrijving,
+            borden: borden,
+            teamleider: teamleider // TODO verwijderen
+        };
+    }
+
+    return Object.freeze({
+        compleet,
+        clubCode,
+        seizoen,
+        teamCode,
+        reglement,
+        bond,
+        poule,
+        omschrijving,
+        borden,
+        teamleider,
+        teamTekst,
+        teamAfdrukken, // () ->
+        ronde,
+        rondeIndex,        // (rondeNummer)
+        eenRonde,          // (rondeNummer)
+        zonderRonde
+    });
+}
 
 function isCompetitie(team) {
     return team.teamCode === "" ? false : team.teamCode.substring(0,1) === "i";
@@ -257,8 +380,6 @@ function isTeam(team) {
     return team.teamCode === "" || team.teamCode === "0" || team.teamCode === "n0" ? false
         : team.teamCode.substring(0,1) !== "i";
 }
-
-// TODO teamVoluit uitsluitend op server en voluit: in object naar browser
 
 function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
     if (teamCode === INTERNE_COMPETITIE) {
@@ -423,44 +544,36 @@ const MENU = "menu"; // TODO verplaatsen naar html.js
 
 export { // ES6 voor browser,
     vragen,
-
     key,                   // (object)
-
     // mutatie.invloed
     GEEN_INVLOED,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
-
     data,
     dataMaken,
     clubToevoegen,         // (compleet, object)
-
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
-
-    clubMaken,             // (synchroon, object)
-    seizoenToevoegen,      // (synchroon, object)
-    seizoenMaken,          // (synchroon, object)
-
+    clubMaken,             // (compleet, object)
+    seizoenToevoegen,      // (compleet, object)
+    seizoenMaken,          // (compleet, object)
+    teamToevoegen,         // (compleet, object)
     // teamCode char(3)
     INTERNE_COMPETITIE,
     RAPID_COMPETITIE,
     JEUGD_COMPETITIE,
     SNELSCHAKEN,
     ZWITSERS_TEST,
-
+    teamMaken,             // (compleet, object)
     isCompetitie,          // (team)
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
     teamVoluit,            // (teamCode)
-
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,
     KNSB_NUMMER,
-
     inCompetitie,          // (speler, teamCode)
-
     // uitslag.partij char(1)
     AFWEZIG,
     EXTERNE_PARTIJ,
@@ -476,7 +589,6 @@ export { // ES6 voor browser,
     REGLEMENTAIRE_WINST,
     TOCH_INGEDEELD,        // na handmatig indelen en niet aanmelden voor interne partij
     INGEDEELD,             // na handmatig indelen en aanmelden voor interne partij
-
     // uitslag.witZwart char(1)
     WIT,
     ZWART,
@@ -487,7 +599,6 @@ export { // ES6 voor browser,
     // uitslag.uithuis char(1)
     THUIS,
     UIT,
-
     wedstrijdVoluit,       // (ronde)
     resultaatInvullen,
     isResultaat,           // (uitslag)
@@ -498,7 +609,6 @@ export { // ES6 voor browser,
     isGeenPaar,            // (uitslag)
     isMeedoen,             // (uitslag)
     maandInvullen,
-
     // gebruiker.mutatieRechten int
     IEDEREEN,
     GEREGISTREERD,
@@ -507,10 +617,8 @@ export { // ES6 voor browser,
     WEDSTRIJDLEIDER,
     BEHEERDER,
     ONTWIKKElAAR,
-
     functieInvullen,
     gebruikerFunctie,      // (speler)
-
     // html
     MENU
 }
