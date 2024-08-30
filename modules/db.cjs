@@ -50,11 +50,11 @@ const NIEUWE_RANGLIJST = 2;
  *
  * Er is een hiërarchie en samenhang tussen de tabellen van de database
  * en de data objecten op de server en in de browser:
- * data.clubIndex(:club)
- *     .seizoenIndex(:seizoen)
- *     .team[index(:team)
- *     .ronde[index(:ronde)
- *     .uitslag[index(:speler)
+ * data.eenClub(:club)
+ *     .eenSeizoen(:seizoen)
+ *     .eenTeam(:team)
+ *     .eenRonde(:ronde)
+ *     .eenUitslag(:speler)
  *
  * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
@@ -87,30 +87,34 @@ const NIEUWE_RANGLIJST = 2;
 const data = dataMaken();
 
 function dataMaken() {
-    const clubs = [];
     const club = [];
 
     function clubIndex(clubCode) {
-        const index = clubs.indexOf(clubCode);
+        return club.findIndex(function(eenClub) {
+            return eenClub.clubCode === clubCode;
+        })
+    }
+
+    function eenClub(clubCode) {
+        const index = clubIndex(clubCode);
         return club[index < 0 ? 0 : index]; // eerste of gevonden club
     }
 
     return Object.freeze( {
-        clubs,
         club,
-        clubIndex // (clubCode) ->
+        clubIndex, // (clubCode)
+        eenClub    // (clubCode)
     });
 }
 
 function clubToevoegen(compleet, object) {
     const club = clubMaken(compleet, object);
     if (club) {
-        const clubIndex = data.clubs.indexOf(club.clubCode);
+        const clubIndex = data.clubIndex(club.clubCode);
         if (clubIndex >= 0) {
             console.log(`${club.clubCode}: ${data.club[clubIndex].vereniging} overschrijft ${club.vereniging}`);
             data.club[clubIndex] = club;
         } else {
-            data.clubs.push(club.clubCode); // voor clubIndex() in data
             data.club.push(club);
         }
     }
@@ -160,11 +164,11 @@ function clubMaken(compleet, object) {
 }
 
 function seizoenToevoegen(compleet, object) {
-    const index = data.clubs.indexOf(object.clubCode);
-    if (index < 0) {
+    const clubIndex = data.clubIndex(object.clubCode);
+    if (clubIndex < 0) {
         return null;
     }
-    const club = data.club[index];
+    const club = data.club[clubIndex];
     const seizoen = seizoenMaken(compleet, object);
     if (seizoen) {
         club.seizoenen.push(seizoen.seizoen); // voor seizoenIndex() in club

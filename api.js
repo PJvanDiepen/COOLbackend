@@ -72,8 +72,8 @@ for (const club of db.data.club) {
     console.log();
 }
 
-db.data.clubIndex().seizoenIndex().seizoenAfdrukken();
-db.data.clubIndex(db.WAAGTOREN_JEUGD).seizoenIndex("2309").seizoenAfdrukken();
+db.data.eenClub().seizoenIndex().seizoenAfdrukken();
+db.data.eenClub(db.WAAGTOREN_JEUGD).seizoenIndex("2309").seizoenAfdrukken();
 console.log();
 
 /**
@@ -126,14 +126,14 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.data.clubIndex(Number(ctx.params.club)).zonderSeizoen();
+        ctx.body = db.data.eenClub(Number(ctx.params.club)).zonderSeizoen();
     });
 
     /*
     Frontend: o_o_o.js
      */
     url.get("/:club/seizoenen", async function (ctx) {
-        ctx.body = db.data.clubIndex(Number(ctx.params.club)).seizoen.map(function (seizoen) {
+        ctx.body = db.data.eenClub(Number(ctx.params.club)).seizoen.map(function (seizoen) {
             return seizoen.zonderTeam();
         });
     });

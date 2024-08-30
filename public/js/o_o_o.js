@@ -48,7 +48,7 @@ export async function init() {
     const club = await clubVraag.antwoord();
     db.clubToevoegen(club.compleet, club);
     console.log("--- club ---");
-    console.log(db.data.clubIndex(o_o_o.club));
+    console.log(db.data.eenClub(o_o_o.club));
 
     // seizoenen
     const seizoenenVraag = await vraag("/seizoenen");
@@ -57,9 +57,9 @@ export async function init() {
         db.seizoenToevoegen(seizoen.compleet, seizoen);
     }
     console.log("--- seizoenen ---");
-    console.log(db.data.clubIndex(o_o_o.club));
+    console.log(db.data.eenClub(o_o_o.club));
 
-    o_o_o.seizoen = db.data.clubIndex(o_o_o.club).seizoenIndex().seizoen;
+    o_o_o.seizoen = db.data.eenClub(o_o_o.club).seizoenIndex().seizoen;
     o_o_o.competitie = db.INTERNE_COMPETITIE;
 
     console.log(o_o_o);
