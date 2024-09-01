@@ -61,25 +61,25 @@ db.clubToevoegen(synchroon.compleet,
 async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
     const eenSeizoen = db.data.eenClub(clubCode).eenSeizoen(seizoen);
     if (eenSeizoen.team.length === 0) {
-        const tabel = await Team.query()
+        const teams = await Team.query()
             .where("team.clubCode", clubCode)
             .where("team.seizoen", seizoen);
-        tabel.forEach(function (eenTeam) {
-            return db.teamToevoegen(synchroon.compleet, eenTeam);
-        });
+        for (const team of teams) {
+            db.teamToevoegen(synchroon.compleet, team);
+        }
     }
     if (!teamCode) {
         return eenSeizoen.team; // alle teams
     }
     const eenTeam = eenSeizoen.eenTeam(teamCode);
     if (eenTeam.ronde.length === 0) {
-        const tabel = await Ronde.query()
+        const ronden = await Ronde.query()
             .where("ronde.clubCode", clubCode)
             .where("ronde.seizoen", seizoen)
             .where("ronde.teamCode", teamCode);
-        tabel.forEach(function (eenRonde) {
-            return db.rondeToevoegen(synchroon.compleet, eenRonde);
-        });
+        for (const ronde of ronden) {
+            db.rondeToevoegen(synchroon.compleet, ronde);
+        }
     }
     return eenTeam.ronde; // alle ronden
 }

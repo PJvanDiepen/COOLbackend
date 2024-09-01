@@ -458,13 +458,15 @@ function rondeMaken(compleet, object) {
     if (typeof clubCode !== "number") {
         return null;
     }
-    const rondeTekst = uithuis === THUIS
-        ? `${teamVoluit(teamCode)} - ${tegenstander}`
-        : `$${tegenstander} - {teamVoluit(teamCode)}`;
+    const rondeTekst = isCompetitie(object)
+        ? `ronde ${rondeNummer} ${teamVoluit(teamCode)}` // competitieronde
+        : uithuis === THUIS
+        ? `${teamVoluit(teamCode)} - ${tegenstander}`    // thuiswedstrijd
+        : `${tegenstander} - ${teamVoluit(teamCode)}`;   // uitwedstrijd
     console.log(`rondeMaken -> ${rondeTekst}`);
 
     function rondeAfdrukken() {
-        console.log(`ronde ${rondeNummer}: ${rondeTekst}`);
+        console.log(rondeTekst);
         return this;
     }
 
