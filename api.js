@@ -43,13 +43,7 @@ zodat het niet nodig is om steeds opnieuw te lezen.
 De browser synchroniseert data met de server aan de hand van het volgnummer in compleet van synchroon.
 De data op de server krijgt een nieuw volgnummer na het muteren van de MySQL database
 en opnieuw lezen uit de MySQL database.
-
-TODO teams
-TODO competities
-TODO uitslagen
-TODO personen invullen
  */
-
 db.clubToevoegen(synchroon.compleet,
     {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"});
 ["1920", "2021", "2122", "2223", "2324"].forEach(function (seizoen) {
@@ -64,17 +58,31 @@ db.clubToevoegen(synchroon.compleet,
         {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
 });
 
-for (const club of db.data.club) {
-    club.clubAfdrukken();
-    for (const seizoen of club.seizoen) {
-        seizoen.seizoenAfdrukken();
+async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
+    const eenSeizoen = db.data.eenClub(clubCode).eenSeizoen(seizoen);
+    if (eenSeizoen.team.length === 0) {
+        const tabel = await Team.query()
+            .where("team.clubCode", clubCode)
+            .where("team.seizoen", seizoen);
+        tabel.forEach(function (eenTeam) {
+            return db.teamToevoegen(synchroon.compleet, eenTeam);
+        });
     }
-    console.log();
+    if (!teamCode) {
+        return eenSeizoen.team; // alle teams
+    }
+    const eenTeam = eenSeizoen.eenTeam(teamCode);
+    if (eenTeam.ronde.length === 0) {
+        const tabel = await Ronde.query()
+            .where("ronde.clubCode", clubCode)
+            .where("ronde.seizoen", seizoen)
+            .where("ronde.teamCode", teamCode);
+        tabel.forEach(function (eenRonde) {
+            return db.rondeToevoegen(synchroon.compleet, eenRonde);
+        });
+    }
+    return eenTeam.ronde; // alle ronden
 }
-
-db.data.eenClub().eenSeizoen().seizoenAfdrukken();
-db.data.eenClub(db.WAAGTOREN_JEUGD).eenSeizoen("2309").seizoenAfdrukken();
-console.log();
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
@@ -144,16 +152,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/teams", async function (ctx) {
-        console.log("teams");
-        const teams = db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen).team;
-        if (teams.length === 0) {
-            const tabel = await Team.query()
-                .where("team.clubCode", ctx.params.club)
-                .where("team.seizoen", ctx.params.seizoen);
-            tabel.forEach(function (eenTeam) {
-                return db.teamToevoegen(synchroon.compleet, eenTeam);
-            });
-        }
+        const teams = await databaseLezen(ctx.params.club, ctx.params.seizoen);
         ctx.body = teams.map(function (team) {
             return team.zonderRonde();
         });
@@ -162,21 +161,8 @@ module.exports = function (url) {
     /*
 Frontend: o_o_o.js
  */
-    url.get("/:club/:seizoen/:team/rondjes", async function (ctx) {
-        console.log("ronden");
-        console.log(db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen));
-        console.log(db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen).eenTeam(ctx.params.team));
-        const ronden =
-            db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen).eenTeam(ctx.params.team).ronde;
-        if (ronden.length === 0) {
-            const tabel = await Ronde.query()
-                .where("ronde.clubCode", ctx.params.club)
-                .where("ronde.seizoen", ctx.params.seizoen)
-                .where("ronde.teamCode", ctx.params.team);
-            tabel.forEach(function (eenRonde) {
-                return db.rondeToevoegen(synchroon.compleet, eenRonde);
-            });
-        }
+    url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
+        const ronden = await databaseLezen(ctx.params.club, ctx.params.seizoen, ctx.params.team);
         ctx.body = ronden.map(function (ronde) {
             return ronde.zonderUitslag();
         });

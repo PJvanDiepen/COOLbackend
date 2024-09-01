@@ -136,6 +136,7 @@ function clubMaken(compleet, object) {
         return null;
     }
     const clubTekst = `${clubCode}: ${vereniging} teamNaam: ${teamNaam}`;
+    console.log(`clubMaken -> ${clubTekst}`);
 
     function clubAfdrukken() {
         console.log(clubTekst);
@@ -213,6 +214,7 @@ function seizoenMaken(compleet, object) {
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
         ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
         : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
+    console.log(`seizoenMaken -> ${seizoenTekst}`);
 
     function seizoenAfdrukken() {
         console.log(`${clubCode}: ${seizoenTekst}`);
@@ -314,6 +316,7 @@ function teamMaken(compleet, object) {
         return null;
     }
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
+    console.log(`teamMaken -> ${teamTekst}`);
 
     function teamAfdrukken() {
         console.log(`${teamCode}: ${teamTekst}`);
@@ -458,6 +461,7 @@ function rondeMaken(compleet, object) {
     const rondeTekst = uithuis === THUIS
         ? `${teamVoluit(teamCode)} - ${tegenstander}`
         : `$${tegenstander} - {teamVoluit(teamCode)}`;
+    console.log(`rondeMaken -> ${rondeTekst}`);
 
     function rondeAfdrukken() {
         console.log(`ronde ${rondeNummer}: ${rondeTekst}`);
