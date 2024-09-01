@@ -72,28 +72,6 @@ function uuidCorrect(uuid) {
     return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
-export async function competitieRondenVerwerken() {
-    console.log("--- begin competitieRondenVerwerken() ---");
-    o_o_o.ronde = [];
-    o_o_o.vorigeRonde = 0;
-    o_o_o.huidigeRonde = 0;
-    const ronden = await localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
-    console.log(ronden);
-    for (const ronde of ronden) {
-        o_o_o.ronde[ronde.rondeNummer] = ronde;
-        o_o_o.laatsteRonde = ronde.rondeNummer; // eventueel rondeNummer overslaan
-        if (ronde.resultaten > 0) {
-            o_o_o.vorigeRonde = ronde.rondeNummer;
-        } else if (o_o_o.huidigeRonde === 0) {
-            o_o_o.huidigeRonde = ronde.rondeNummer;
-            if (await serverFetch( // actuele situatie
-                `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${o_o_o.laatsteRonde}/indeling`)) {
-                o_o_o.ronde[o_o_o.huidigeRonde].resultaten = 0; // indeling zonder resultaten
-            }
-        }
-    }
-}
-
 // Hierna geen o_o_o
 
 /**

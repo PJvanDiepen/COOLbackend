@@ -162,8 +162,12 @@ async function seizoenVerwerken() {
         db.teamToevoegen(team.compleet, team);
     }
     console.log(db.data.eenClub(o_o_o.club));
+
+    const rondenVraag = await vraag("/ronden");
     for (const team of db.data.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen).team) {
+        console.log(`--- ${team.teamTekst} ---`);
         console.log(team);
+        rondenVraag.afdrukken("ronden?");
     }
 }
 
@@ -330,7 +334,7 @@ export async function teamSelecteren(teamCode) {
  */
 export async function rondeSelecteren(teamCode, rondeNummer) {
     o_o_o.team = o_o_o.competitie;
-    const ronden = (await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${teamCode}/ronden`)).map(function (ronde) {
+    const ronden = (await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${teamCode}/ronde/selecteren`)).map(function (ronde) {
         return [ronde.rondeNummer, `${zyq.datumLeesbaar(ronde)}${html.SCHEIDING}ronde ${ronde.rondeNummer}`];
     });
     html.selectie(html.id("rondeSelecteren"), rondeNummer, ronden, function (ronde) {

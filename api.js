@@ -126,14 +126,16 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.data.eenClub(Number(ctx.params.club)).zonderSeizoen();
+        console.log("club");
+        ctx.body = db.data.eenClub(ctx.params.club).zonderSeizoen();
     });
 
     /*
     Frontend: o_o_o.js
      */
     url.get("/:club/seizoenen", function (ctx) {
-        ctx.body = db.data.eenClub(Number(ctx.params.club)).seizoen.map(function (seizoen) {
+        console.log("seizoenen");
+        ctx.body = db.data.eenClub(ctx.params.club).seizoen.map(function (seizoen) {
             return seizoen.zonderTeam();
         });
     });
@@ -142,7 +144,8 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/teams", async function (ctx) {
-        const teams = db.data.eenClub(Number(ctx.params.club)).eenSeizoen(ctx.params.seizoen).team;
+        console.log("teams");
+        const teams = db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen).team;
         if (teams.length === 0) {
             const tabel = await Team.query()
                 .where("team.clubCode", ctx.params.club)
@@ -153,6 +156,29 @@ module.exports = function (url) {
         }
         ctx.body = teams.map(function (team) {
             return team.zonderRonde();
+        });
+    });
+
+    /*
+Frontend: o_o_o.js
+ */
+    url.get("/:club/:seizoen/:team/rondjes", async function (ctx) {
+        console.log("ronden");
+        console.log(db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen));
+        console.log(db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen).eenTeam(ctx.params.team));
+        const ronden =
+            db.data.eenClub(ctx.params.club).eenSeizoen(ctx.params.seizoen).eenTeam(ctx.params.team).ronde;
+        if (ronden.length === 0) {
+            const tabel = await Ronde.query()
+                .where("ronde.clubCode", ctx.params.club)
+                .where("ronde.seizoen", ctx.params.seizoen)
+                .where("ronde.teamCode", ctx.params.team);
+            tabel.forEach(function (eenRonde) {
+                return db.rondeToevoegen(synchroon.compleet, eenRonde);
+            });
+        }
+        ctx.body = ronden.map(function (ronde) {
+            return ronde.zonderUitslag();
         });
     });
 
@@ -346,7 +372,7 @@ module.exports = function (url) {
 
     Frontend: zyq.js
      */
-    url.get("/:club/:seizoen/:competitie/ronden", async function (ctx) {
+    url.get("/:club/:seizoen/:competitie/ronde/selecteren", async function (ctx) {
         ctx.body = await Ronde.query()
             .with("u",function (qb) {
                 qb.from("uitslag")

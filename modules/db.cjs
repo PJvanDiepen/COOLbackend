@@ -132,7 +132,7 @@ function clubMaken(compleet, object) {
         vereniging,
         teamNaam
     } = object;
-    if (typeof clubCode !== 'number') {
+    if (typeof clubCode !== "number") {
         return null;
     }
     const clubTekst = `${clubCode}: ${vereniging} teamNaam: ${teamNaam}`;
@@ -413,6 +413,101 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en
     }
 }
 
+function rondeToevoegen(compleet, object) {
+    const clubIndex = data.clubIndex(object.clubCode);
+    if (clubIndex < 0) {
+        return null;
+    }
+    const club = data.club[clubIndex];
+    const seizoenIndex = club.seizoenIndex(object.seizoen);
+    if (seizoenIndex < 0) {
+        return null;
+    }
+    const seizoen = club.seizoen[seizoenIndex];
+    const teamIndex = seizoen.teamIndex(object.teamCode);
+    if (teamIndex < 0) {
+        return null;
+    }
+    const team = seizoen.team[teamIndex];
+    const ronde = rondeMaken(compleet, object);
+    if (ronde) {
+        const rondeIndex = team.rondeIndex(ronde.rondeNummer);
+        if (rondeIndex >= 0) {
+            console.log(`${ronde.rondeNummer} overschrijft ${ronde.rondeNummer}`); // TODO rondeTekst
+            team.ronde[rondeIndex] = ronde;
+        } else {
+            team.ronde.push(ronde);
+        }
+    }
+    return ronde;
+}
+
+function rondeMaken(compleet, object) {
+    const {
+        clubCode,
+        seizoen,
+        teamCode,
+        rondeNummer,
+        uithuis,
+        tegenstander,
+        datum
+    } = object;
+    if (typeof clubCode !== "number") {
+        return null;
+    }
+    const rondeTekst = uithuis === THUIS
+        ? `${teamVoluit(teamCode)} - ${tegenstander}`
+        : `$${tegenstander} - {teamVoluit(teamCode)}`;
+
+    function rondeAfdrukken() {
+        console.log(`ronde ${rondeNummer}: ${rondeTekst}`);
+        return this;
+    }
+
+    const uitslag = [];
+
+    function uitslagIndex(knsbNummer) {
+        return uitslag.findIndex(function(eenUitslag) {
+            return eenUitslag.knsbNummer === knsbNummer;
+        })
+    }
+
+    function eenUitslag(knsbNummer) {
+        const index = uitslagIndex(knsbNummer);
+        return uitslag[index < 0 ? 0 : index]; // eerste of gevonden uitslag
+    }
+
+    function zonderUitslag() {
+        return {
+            compleet: compleet,
+            clubCode: clubCode,
+            seizoen: seizoen,
+            teamCode: teamCode,
+            rondeNummer: rondeNummer,
+            uithuis: uithuis,
+            tegenstander: tegenstander,
+            datum: datum
+        };
+    }
+
+    return Object.freeze({
+        compleet,
+        clubCode,
+        seizoen,
+        teamCode,
+        rondeNummer,
+        uithuis,
+        tegenstander,
+        datum,
+        rondeTekst,
+        rondeAfdrukken, // () ->
+        uitslag,
+        uitslagIndex,        // (rondeNummer)
+        eenUitslag,          // (rondeNummer)
+        zonderUitslag
+    });
+}
+
 // knsbNummer int
 const TIJDELIJK_LID_NUMMER = 100
 const KNSB_NUMMER          = 1000000;
@@ -570,6 +665,9 @@ module.exports = { // CommonJS voor node.js
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
     teamVoluit,            // (teamCode)
+    rondeToevoegen,        // (compleet, object)
+    rondeMaken,            // (compleet, object)
+
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,
     KNSB_NUMMER,
