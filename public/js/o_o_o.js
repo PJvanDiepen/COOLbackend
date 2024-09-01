@@ -48,25 +48,7 @@ export async function init() {
 
     await seizoenVerwerken();
 
-    Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m.
-
-    /*
-    TODO voor de verwerking
-    o_o_o.ronde = [];
-    o_o_o.vorigeRonde = 0;
-    o_o_o.huidigeRonde = 0;
-    TODO localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/ronden`);
-    TODO update o_o_o.ronde met rondeNummer als index
-    TODO verwijder zyq.competitieRondenVerwerken();
-     */
-
-
-    /* TODO zyq.localFetch vervangen door iets wat revisie controleert
-    const {revisie, club, seizoenen} = await zyq.localFetch(`/${o_o_o.club}/club`);
-    data.club = db.clubToevoegen(club).seizoenToevoegen(seizoenen);
-    console.log("--- einde init ---")
-    console.log(o_o_o);
-     */
+    Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
 const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
@@ -101,8 +83,8 @@ export const o_o_o = {
     club: 0, // clubCode is een getal
     seizoen: "",
     versie: 0, // versie is een getal
-    competitie: "",
-    team: "",
+    competitie: db.INTERNE_COMPETITIE,
+    team: db.INTERNE_COMPETITIE,
     speler: 0, // knsbNummer is een getal
     naam: ""
 };
@@ -138,13 +120,10 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
 }
 
 async function seizoenVerwerken() {
-    console.log("--- club ---");
     const clubVraag = await vraag("/club");
     const club = await clubVraag.antwoord();
     db.clubToevoegen(club.compleet, club);
-    console.log(db.data.eenClub(o_o_o.club));
 
-    console.log("--- seizoenen ---");
     const seizoenenVraag = await vraag("/seizoenen");
     const seizoenen = await seizoenenVraag.antwoord();
     for (const seizoen of seizoenen) {
@@ -152,22 +131,26 @@ async function seizoenVerwerken() {
     }
     const eenSeizoen = db.data.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen);
     o_o_o.seizoen = eenSeizoen.seizoen;
-    console.log(db.data.eenClub(o_o_o.club));
 
-    console.log("--- teams van 1 seizoen ---");
     const teamsVraag = await vraag("/teams");
-    teamsVraag.afdrukken("juiste /teams?");
     const teams = await teamsVraag.antwoord();
     for (const team of teams) {
         db.teamToevoegen(team.compleet, team);
     }
-    console.log(db.data.eenClub(o_o_o.club));
 
     const rondenVraag = await vraag("/ronden");
+    for (const team of eenSeizoen.team) {
+        console.log(`--- ${team.teamCode} ---`);
+        const ronden = await rondenVraag.specificeren({teamCode: team.teamCode}).antwoord();
+        for (const ronde of ronden) {
+            console.log(`--- ${ronde.rondeNummer} ---`);
+        }
+    }
+
     for (const team of db.data.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen).team) {
-        console.log(`--- ${team.teamTekst} ---`);
-        console.log(team);
-        rondenVraag.afdrukken("ronden?");
+        // console.log(`--- ${team.teamTekst} ---`);
+        // console.log(team);
+        // rondenVraag.afdrukken("ronden?");
     }
 }
 

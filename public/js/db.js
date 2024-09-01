@@ -135,8 +135,8 @@ function clubMaken(compleet, object) {
     if (typeof clubCode !== "number") {
         return null;
     }
-    const clubTekst = `${clubCode}: ${vereniging} teamNaam: ${teamNaam}`;
-    console.log(`clubMaken -> ${clubTekst}`);
+    const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
+    console.log(`clubMaken(${clubCode}) -> ${clubTekst}`);
 
     function clubAfdrukken() {
         console.log(clubTekst);
@@ -214,7 +214,7 @@ function seizoenMaken(compleet, object) {
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
         ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
         : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
-    console.log(`seizoenMaken -> ${seizoenTekst}`);
+    console.log(`seizoenMaken(${clubCode}, ${seizoen}) -> ${seizoenTekst}`);
 
     function seizoenAfdrukken() {
         console.log(`${clubCode}: ${seizoenTekst}`);
@@ -316,7 +316,7 @@ function teamMaken(compleet, object) {
         return null;
     }
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
-    console.log(`teamMaken -> ${teamTekst}`);
+    console.log(`teamMaken(${clubCode}, ${seizoen}, ${teamCode}) -> ${teamTekst}`);
 
     function teamAfdrukken() {
         console.log(`${teamCode}: ${teamTekst}`);
@@ -459,11 +459,11 @@ function rondeMaken(compleet, object) {
         return null;
     }
     const rondeTekst = isCompetitie(object)
-        ? `ronde ${rondeNummer} ${teamVoluit(teamCode)}` // competitieronde
+        ? `ronde ${teamVoluit(teamCode)}`              // competitieronde
         : uithuis === THUIS
-        ? `${teamVoluit(teamCode)} - ${tegenstander}`    // thuiswedstrijd
-        : `${tegenstander} - ${teamVoluit(teamCode)}`;   // uitwedstrijd
-    console.log(`rondeMaken -> ${rondeTekst}`);
+        ? `${teamVoluit(teamCode)} - ${tegenstander}`  // thuiswedstrijd
+        : `${tegenstander} - ${teamVoluit(teamCode)}`; // uitwedstrijd
+    console.log(`rondeMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}) -> ${rondeTekst}`);
 
     function rondeAfdrukken() {
         console.log(rondeTekst);

@@ -45,17 +45,15 @@ De data op de server krijgt een nieuw volgnummer na het muteren van de MySQL dat
 en opnieuw lezen uit de MySQL database.
  */
 db.clubToevoegen(synchroon.compleet,
-    {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"});
+    { clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren" });
 ["1920", "2021", "2122", "2223", "2324"].forEach(function (seizoen) {
-    db.seizoenToevoegen(synchroon.compleet,
-        {clubCode: db.WAAGTOREN, seizoen: seizoen});
+    db.seizoenToevoegen(synchroon.compleet, {clubCode: db.WAAGTOREN, seizoen: seizoen});
 });
 
 db.clubToevoegen(synchroon.compleet,
-    { clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren" });
+    { clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd" });
 ["2309", "2401"].forEach(function (seizoen) {
-    db.seizoenToevoegen(synchroon.compleet,
-        {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
+    db.seizoenToevoegen(synchroon.compleet, {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
 });
 
 async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
@@ -134,7 +132,6 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        console.log("club");
         ctx.body = db.data.eenClub(ctx.params.club).zonderSeizoen();
     });
 
@@ -142,7 +139,6 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/seizoenen", function (ctx) {
-        console.log("seizoenen");
         ctx.body = db.data.eenClub(ctx.params.club).seizoen.map(function (seizoen) {
             return seizoen.zonderTeam();
         });
