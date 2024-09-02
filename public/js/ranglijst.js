@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init, teamSelecteren, rondeSelecteren } from "./o_o_o.js"
+import { o_o_o, init, competitieTitel, teamSelecteren, rondeSelecteren } from "./o_o_o.js"
 import { ranglijst } from "./reglement.js";
 
 import * as zyq from "./zyq.js";
@@ -14,7 +14,7 @@ import * as zyq from "./zyq.js";
  */
 (async function() {
     await init();
-    db.competitieTitel();
+    competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "Rondenlijst", function () {
         html.anderePagina("rondenlijst.html");

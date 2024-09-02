@@ -2,14 +2,14 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init } from "./o_o_o.js"
+import { o_o_o, init, competitieTitel } from "./o_o_o.js"
 import { ranglijst } from "./reglement.js";
 
 import * as zyq from "./zyq.js";
 
 (async function() {
     await init();
-    db.competitieTitel();
+    competitieTitel();
     await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, `agenda van ${o_o_o.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${o_o_o.speler}&naamGebruiker=${o_o_o.naam}`);
         }],

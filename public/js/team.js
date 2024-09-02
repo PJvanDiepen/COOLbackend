@@ -45,7 +45,7 @@ function uitslagenTeamPerRonde(u, rondeNummer, rondenTabel) {
             div.appendChild(document.createElement("h2")).textContent =
                 `Ronde ${rondeNummer}${html.SCHEIDING}${datumKolom}`;
             const tabel = div.appendChild(document.createElement("table"));
-            tabel.append(html.rij("", db.westrijdVoluit(u.ronde), "", uitslagKolom));
+            tabel.append(html.rij("", db.wedstrijdVoluit(u.ronde), "", uitslagKolom));
             for (let uitslag of u.uitslagen) {
                 tabel.append(html.rij(uitslag.bordNummer, zyq.naarSpeler(uitslag), uitslag.witZwart, uitslag.resultaat));
             }

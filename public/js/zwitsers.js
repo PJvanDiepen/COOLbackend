@@ -8,7 +8,7 @@ In de huidige versie van indelen.js is alles wat met zwitsers indelen heeft te m
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { init, o_o_o } from "./o_o_o.js"
+import { init, o_o_o, competitieTitel } from "./o_o_o.js"
 import { ranglijst } from "./reglement.js";
 
 
@@ -102,7 +102,7 @@ const indelenFun = [
 
 (async function() {
     await init();
-    db.competitieTitel();
+    competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || o_o_o.huidigeRonde;
     const totDatum = o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =

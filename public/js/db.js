@@ -208,7 +208,7 @@ function seizoenMaken(compleet, object) {
         clubCode,
         seizoen
     } = object;
-    if (seizoen.length > 4) {
+    if (seizoen.length === 0 || seizoen.length > 4) {
         return null;
     }
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
@@ -312,7 +312,7 @@ function teamMaken(compleet, object) {
         borden,
         teamleider // TODO verwijderen
     } = object;
-    if (teamCode.length > 3) {
+    if (teamCode.length === 0 || teamCode.length > 3) {
         return null;
     }
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
@@ -558,8 +558,10 @@ const THUIS = "t";
 const UIT = "u";
 
 function wedstrijdVoluit(ronde) {
-    const eigenTeam = teamVoluit(ronde.teamCode);
-    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
+    return data.eenClub(ronde.clubCode)
+        .eenSeizoen(ronde.seizoen)
+        .eenTeam(ronde.teamCode)
+        .eenRonde(ronde.rondeNummer).rondeTekst;
 }
 
 const resultaatInvullen = new Map([

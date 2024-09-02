@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o,  init } from "./o_o_o.js";
+import { o_o_o,  init, competitieTitel } from "./o_o_o.js";
 import { ranglijst } from "./reglement.js";
 
 
@@ -21,7 +21,7 @@ const zwartSpeler = Number(html.params.get("zwart"));
 
 (async function() {
     await init();
-    db.competitieTitel();
+    competitieTitel();
     const totDatum = o_o_o.ronde[rondeNummer].datum;
     html.id("subkop").textContent =
         `Handmatig indelen ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;

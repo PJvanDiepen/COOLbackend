@@ -18,21 +18,6 @@ import * as db from "./db.js";
 import * as zyq from "./zyq.js";
 
 /**
- * init voor aanmelden.js
- *           agenda.js
- *           beheer.js
- *           bestuur.js
- *           email.js
- *           indelen.js
- *           lid.js
- *           paren.js
- *           ranglijst.js
- *           ronde.js
- *           rondenlijst.js
- *           speler.js
- *           start.js
- *           team.js
- *
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  */
@@ -47,6 +32,11 @@ export async function init() {
     console.log(zyq.gebruiker);
 
     await seizoenVerwerken();
+
+    o_o_o.vorigeRonde = 33;
+    o_o_o.huidigeRonde = 33;
+    o_o_o.laatsteRonde = 33;
+
 
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
@@ -140,17 +130,11 @@ async function seizoenVerwerken() {
 
     const rondenVraag = await vraag("/ronden");
     for (const team of eenSeizoen.team) {
-        console.log(`--- ${team.teamCode} ---`);
-        const ronden = await rondenVraag.specificeren({teamCode: team.teamCode}).antwoord();
+        const ronden = await rondenVraag
+            .specificeren({team: team.teamCode}).antwoord();
         for (const ronde of ronden) {
-            console.log(`--- ${ronde.rondeNummer} ---`);
+            db.rondeToevoegen(ronde.compleet, ronde);
         }
-    }
-
-    for (const team of db.data.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen).team) {
-        // console.log(`--- ${team.teamTekst} ---`);
-        // console.log(team);
-        // rondenVraag.afdrukken("ronden?");
     }
 }
 
