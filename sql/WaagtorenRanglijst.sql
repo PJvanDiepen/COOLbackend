@@ -481,9 +481,9 @@ select p.*, g.* from persoon p left join gebruiker g on g.knsbNummer = p.knsbNUm
 where p.naam regexp 'jan';
 
 -- aantal uitslagen per seizoen per partij
-select clubCode, seizoen, partij, count(partij) aantal from uitslag 
-group by clubCode, seizoen, partij
-order by aantal desc;  --  seizoen, partij;
+select clubCode, seizoen, teamCode, partij, count(partij) aantal from uitslag 
+group by clubCode, seizoen, teamCode, partij
+order by clubCode, seizoen, teamCode, partij;
 
 -- aantal mutaties per gebruiker
 select naam, m.knsbNummer, count(*) mutaties

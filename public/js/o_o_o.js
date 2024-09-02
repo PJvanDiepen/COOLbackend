@@ -69,7 +69,7 @@ function verwijderNietSynchroon() {
 }
 
 export const o_o_o = {
-    vereniging: "",
+    vereniging: "Waagtoren", // TODO van server en start.html?vereniging=Waagtoren -> club=0 vertalen
     club: 0, // clubCode is een getal
     seizoen: "",
     versie: 0, // versie is een getal
@@ -119,7 +119,7 @@ async function seizoenVerwerken() {
     for (const seizoen of seizoenen) {
         db.seizoenToevoegen(seizoen.compleet, seizoen);
     }
-    const eenSeizoen = db.data.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen);
+    const eenSeizoen = db.boom.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen);
     o_o_o.seizoen = eenSeizoen.seizoen;
 
     const teamsVraag = await vraag("/teams");

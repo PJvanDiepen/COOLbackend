@@ -46,7 +46,7 @@ en opnieuw lezen uit de MySQL database.
  */
 db.clubToevoegen(synchroon.compleet,
     { clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren" });
-["1920", "2021", "2122", "2223", "2324"].forEach(function (seizoen) {
+["1819", "1920", "2021", "2122", "2223", "2324"].forEach(function (seizoen) {
     db.seizoenToevoegen(synchroon.compleet, {clubCode: db.WAAGTOREN, seizoen: seizoen});
 });
 
@@ -57,7 +57,7 @@ db.clubToevoegen(synchroon.compleet,
 });
 
 async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
-    const eenSeizoen = db.data.eenClub(clubCode).eenSeizoen(seizoen);
+    const eenSeizoen = db.boom.eenClub(clubCode).eenSeizoen(seizoen);
     if (eenSeizoen.team.length === 0) {
         const teams = await Team.query()
             .where("team.clubCode", clubCode)
@@ -132,14 +132,14 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.data.eenClub(ctx.params.club).zonderSeizoen();
+        ctx.body = db.boom.eenClub(ctx.params.club).zonderSeizoen();
     });
 
     /*
     Frontend: o_o_o.js
      */
     url.get("/:club/seizoenen", function (ctx) {
-        ctx.body = db.data.eenClub(ctx.params.club).seizoen.map(function (seizoen) {
+        ctx.body = db.boom.eenClub(ctx.params.club).seizoen.map(function (seizoen) {
             return seizoen.zonderTeam();
         });
     });

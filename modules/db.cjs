@@ -48,10 +48,10 @@ const NIEUWE_RANGLIJST = 2;
  * - op de server en
  * - in de browser.
  *
- * Er is een hiërarchie en samenhang tussen de tabellen van de database
- * en de data objecten op de server en in de browser:
+ * De hiërarchie en samenhang tussen de tabellen van de database
+ * is een boom-structuur van objecten op de server en in de browser:
  *
- * data.eenClub(:club)
+ * boom.eenClub(:club)
  *     .eenSeizoen(:seizoen)
  *     .eenTeam(:team)
  *     .eenRonde(:ronde)
@@ -59,7 +59,7 @@ const NIEUWE_RANGLIJST = 2;
  *
  * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
- * De server leest data uit de database die gevraagd wordt en slaat die op in data,
+ * De server leest data uit de database die gevraagd wordt en slaat die op in boom,
  * zodat die niet steeds opnieuw uit de database gelezen hoeft te worden.
  * De server legt vast als de data van een seizoen compleet is of
  * als alle ronden de van een team (of competitie) compleet zijn of
@@ -82,12 +82,27 @@ const NIEUWE_RANGLIJST = 2;
  * Indien data niet compleet is, leest de browser de data van de server,
  * want niet complete data kan nog veranderen en compleet worden op de server.
  *
- * De objecten voor data, club, seizoen, enz. hebben een Index naar een object lager in de hiërarchie.
- * De objecten voor club, seizoen, enz. verwijzen naar een object hoger in de hiërarchie.
+ * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
  */
-const data = dataMaken();
+const boom = boomMaken();
 
-function dataMaken() {
+function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
+    if (!clubCode) {
+        console.log(`data(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
+        return null;
+    } else if (!seizoen) {
+        return boom.eenClub(clubCode);
+    } else if (!teamCode) {
+        return boom.eenClub(clubCode).eenSeizoen(seizoen);
+    } else if (!rondeNummer) {
+        return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode);
+    } else if (!knsbNummer) {
+        return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode).eenRonde(rondeNummer);
+    }
+    return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode).eenRonde(rondeNummer).eenUitslag(knsbNummer);
+}
+
+function boomMaken() {
     const club = [];
 
     function clubIndex(clubCode) {
@@ -111,12 +126,12 @@ function dataMaken() {
 function clubToevoegen(compleet, object) {
     const club = clubMaken(compleet, object);
     if (club) {
-        const clubIndex = data.clubIndex(club.clubCode);
+        const clubIndex = boom.clubIndex(club.clubCode);
         if (clubIndex >= 0) {
-            console.log(`${club.clubCode}: ${data.club[clubIndex].vereniging} overschrijft ${club.vereniging}`);
-            data.club[clubIndex] = club;
+            console.log(`${club.clubCode}: ${boom.club[clubIndex].vereniging} overschrijft ${club.vereniging}`);
+            boom.club[clubIndex] = club;
         } else {
-            data.club.push(club);
+            boom.club.push(club);
         }
     }
     return club;
@@ -180,11 +195,11 @@ function clubMaken(compleet, object) {
 }
 
 function seizoenToevoegen(compleet, object) {
-    const clubIndex = data.clubIndex(object.clubCode);
+    const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
     }
-    const club = data.club[clubIndex];
+    const club = boom.club[clubIndex];
     const seizoen = seizoenMaken(compleet, object);
     if (seizoen) {
         const seizoenIndex = club.seizoenIndex(seizoen.seizoen);
@@ -270,11 +285,11 @@ function seizoenMaken(compleet, object) {
 }
 
 function teamToevoegen(compleet, object) {
-    const clubIndex = data.clubIndex(object.clubCode);
+    const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
     }
-    const club = data.club[clubIndex];
+    const club = boom.club[clubIndex];
     const seizoenIndex = club.seizoenIndex(object.seizoen);
     if (seizoenIndex < 0) {
         return null;
@@ -417,11 +432,11 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en
 }
 
 function rondeToevoegen(compleet, object) {
-    const clubIndex = data.clubIndex(object.clubCode);
+    const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
     }
-    const club = data.club[clubIndex];
+    const club = boom.club[clubIndex];
     const seizoenIndex = club.seizoenIndex(object.seizoen);
     if (seizoenIndex < 0) {
         return null;
@@ -557,9 +572,17 @@ const VERLIES = "0";
 const THUIS = "t";
 const UIT = "u";
 
+/*
+origineel: function wedstrijdVoluit(ronde)
+    const eigenTeam = teamVoluit(ronde.teamCode);
+    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
+
+TODO return data(ronde.clubCode, ronde.seizoen, ronde.teamCode, ronde.rondeNummer).rondeTekst;
+ */
+
 function wedstrijdVoluit(ronde) {
-    return data.eenClub(ronde.clubCode)
-        .eenSeizoen(ronde.seizoen)
+    return boom.eenClub(ronde.clubCode) // TODO dit werkt, omdat ie de eerste club kiest
+        .eenSeizoen(ronde.seizoen) // TODO dit werkt, omdat ie het laatste seizoen kiest
         .eenTeam(ronde.teamCode)
         .eenRonde(ronde.rondeNummer).rondeTekst;
 }
@@ -652,8 +675,9 @@ module.exports = { // CommonJS voor node.js
     GEEN_INVLOED,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
-    data,
-    dataMaken,
+    boom,
+    tak,                  // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
+    boomMaken,
     clubToevoegen,         // (compleet, object)
     // clubCode int
     WAAGTOREN,
