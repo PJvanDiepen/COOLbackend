@@ -32,7 +32,7 @@ TODO mutaties met verwijderen
         }],
         [db.ONTWIKKElAAR, `backup spelers ${zyq.seizoenVoluit(o_o_o.seizoen)}` , async function () {
             zyq.backupSQL("speler", await zyq.serverFetch(
-                `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/schakers`));
+                `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/spelers`));
         }],
         [db.ONTWIKKElAAR, "test API", function () {
             html.anderePagina("test.html");

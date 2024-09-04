@@ -46,15 +46,15 @@ en opnieuw lezen uit de MySQL database.
  */
 db.clubToevoegen(synchroon.compleet,
     { clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren" });
-["1819", "1920", "2021", "2122", "2223", "2324"].forEach(function (seizoen) {
+for (const seizoen of ["1819", "1920", "2021", "2122", "2223", "2324", "2425"]) {
     db.seizoenToevoegen(synchroon.compleet, {clubCode: db.WAAGTOREN, seizoen: seizoen});
-});
+}
 
 db.clubToevoegen(synchroon.compleet,
     { clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd" });
-["2309", "2401"].forEach(function (seizoen) {
+for (const seizoen of ["2309", "2401"]) {
     db.seizoenToevoegen(synchroon.compleet, {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
-});
+}
 
 async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
     const eenSeizoen = db.boom.eenClub(clubCode).eenSeizoen(seizoen);
@@ -180,7 +180,8 @@ Frontend: o_o_o.js
     Frontend: beheer.js
      */
     url.get("/versie", async function (ctx) {
-        ctx.body = JSON.stringify({versie: package_json.version, tijdstip: serverStart});
+        ctx.body = JSON.stringify(
+            {versie: package_json.version, tijdstip: synchroon.serverStart});
     });
 
     /*

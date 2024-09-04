@@ -227,7 +227,7 @@ async function vraagLokaal(url) {
     return antwoord;
 }
 
-const server = html.pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+const server = html.paginaServer;
 /**
  * vraagServer maakt verbinding met de server
  *
