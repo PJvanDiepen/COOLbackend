@@ -15,9 +15,10 @@ import * as zyq from "./zyq.js";
  * @returns {Promise<*>}
  */
 export async function ranglijst(rondeNummer, selectie = null) {
-    const totDatum = rondeNummer === o_o_o.laatsteRonde ? zyq.eindeSeizoen(o_o_o.seizoen) : o_o_o.ronde[rondeNummer + 1].datum;
+    // const totDatum = rondeNummer === o_o_o.laatsteRonde ? zyq.eindeSeizoen(o_o_o.seizoen) : o_o_o.ronde[rondeNummer + 1].datum;
+    // TODO is totDatum overbodig?
     let spelers = await zyq.localFetch(
-        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ranglijst/${zyq.datumSQL(totDatum)}/${o_o_o.versie}`);
+        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ranglijst/${zyq.datumSQL()}/${o_o_o.versie}`);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
     }

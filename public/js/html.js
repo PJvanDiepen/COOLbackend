@@ -6,7 +6,7 @@ import * as db from "./db.js";
 
 export const pagina = new URL(location);
 export const params = pagina.searchParams;
-export const paginaServer = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
+export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 
 
 export const SCHEIDING = " \u232A ";
@@ -205,7 +205,7 @@ export function plaatje(bestand, percentage, breed, hoog) {
 export function tabblad(link) {
     const a = document.createElement("a");
     a.append(link);
-    a.href = paginaServer + link;
+    a.href = `${html.server}${link}`;
     a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
     a.rel = "noopener noreferrer"
     return a;

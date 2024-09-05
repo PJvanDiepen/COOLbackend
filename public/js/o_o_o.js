@@ -15,6 +15,8 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
+const boom = db.boom;
+
 import * as zyq from "./zyq.js";
 
 /**
@@ -27,17 +29,8 @@ export async function init() {
     urlVerwerken();
     versieBepalen();
     await zyq.gebruikerVerwerken();
-
-    console.log(o_o_o);
-    console.log(zyq.gebruiker);
-
     await seizoenVerwerken();
-
-    o_o_o.vorigeRonde = 33;
-    o_o_o.huidigeRonde = 33;
-    o_o_o.laatsteRonde = 33;
-
-
+    rondenBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
@@ -138,6 +131,23 @@ async function seizoenVerwerken() {
     }
 }
 
+function rondenBepalen() {
+    console.log("--- rondenBepalen() ---");
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
+    let i = ronde.length - 1;
+    o_o_o.vorigeRonde = o_o_o.huidigeRonde = o_o_o.laatsteRonde = ronde[i].rondeNummer;
+    console.log(o_o_o);
+    const morgen = new Date(); // vandaag
+    morgen.setDate(morgen.getDate() + 1); // morgen
+    console.log(morgen);
+    console.log(new Date(ronde[i].datum));
+    console.log(new Date(ronde[i].datum) > morgen);
+    while (i > 0 && new Date(ronde[i].datum) > morgen) {
+        o_o_o.huidigeRonde = ronde[i].rondeNummer;
+        o_o_o.vorigeRonde = ronde[--i].rondeNummer;
+    }
+}
+
 export async function vraag(commando) {
     const vraagVanServer = await vraagZoeken(commando);
     if (!vraagVanServer) {
@@ -227,7 +237,6 @@ async function vraagLokaal(url) {
     return antwoord;
 }
 
-const server = html.paginaServer;
 /**
  * vraagServer maakt verbinding met de server
  *
@@ -236,7 +245,7 @@ const server = html.paginaServer;
  */
 async function vraagServer(url) {
     try {
-        const response = await fetch(`${server}${url}`);
+        const response = await fetch(`${html.server}${url}`);
         if (response.ok) {
             return await response.json();
         } else {

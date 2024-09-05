@@ -87,16 +87,13 @@ const NIEUWE_RANGLIJST = 2;
 const boom = boomMaken();
 
 function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    if (!clubCode) {
-        console.log(`data(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
-        return null;
-    } else if (!seizoen) {
+    if (seizoen === undefined) { // ook indien clubCode === undefined
         return boom.eenClub(clubCode);
-    } else if (!teamCode) {
+    } else if (teamCode === undefined) {
         return boom.eenClub(clubCode).eenSeizoen(seizoen);
-    } else if (!rondeNummer) {
+    } else if (rondeNummer === undefined) {
         return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode);
-    } else if (!knsbNummer) {
+    } else if (knsbNummer === undefined) {
         return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode).eenRonde(rondeNummer);
     }
     return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode).eenRonde(rondeNummer).eenUitslag(knsbNummer);
