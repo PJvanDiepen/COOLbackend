@@ -137,15 +137,31 @@ function rondenBepalen() {
     let i = ronde.length - 1;
     o_o_o.vorigeRonde = o_o_o.huidigeRonde = o_o_o.laatsteRonde = ronde[i].rondeNummer;
     console.log(o_o_o);
-    const morgen = new Date(); // vandaag
-    morgen.setDate(morgen.getDate() + 1); // morgen
-    console.log(morgen);
+    const peilDatum = new Date(); // vandaag
+    peilDatum.setDate(peilDatum.getDate() + 1); // morgen
+    console.log(peilDatum);
     console.log(new Date(ronde[i].datum));
-    console.log(new Date(ronde[i].datum) > morgen);
-    while (i > 0 && new Date(ronde[i].datum) > morgen) {
+    console.log(new Date(ronde[i].datum) > peilDatum);
+    while (i > 0 && new Date(ronde[i].datum) > peilDatum) {
         o_o_o.huidigeRonde = ronde[i].rondeNummer;
         o_o_o.vorigeRonde = ronde[--i].rondeNummer;
     }
+    console.log("--- indexRondeNaDatum() ---");
+    console.log(ronde);
+    ronde[indexRondeTotDatum(ronde, "2024-11-15")].rondeAfdrukken();
+}
+
+function indexRondeTotDatum(ronde, jsonDatum = null) {
+    const peilDatum = new Date(jsonDatum);
+    const laatste = ronde.length - 1;
+    if (peilDatum >= new Date(ronde[laatste].datum)) { // alle ronden zijn na peilDatum
+        return laatste;
+    }
+    let index = 0;
+    while (new Date(ronde[index].datum) < peilDatum) { // zoek eerste ronde na peildatum
+        index++;
+    }
+    return index;
 }
 
 export async function vraag(commando) {

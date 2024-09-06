@@ -471,9 +471,9 @@ function rondeMaken(compleet, object) {
         return null;
     }
     const rondeTekst = isCompetitie(object)
-        ? `ronde ${teamVoluit(teamCode)}`              // competitieronde
+        ? `ronde ${rondeNummer} ${teamVoluit(teamCode)}` // competitieronde
         : uithuis === THUIS
-        ? `${teamVoluit(teamCode)} - ${tegenstander}`  // thuiswedstrijd
+        ? `${teamVoluit(teamCode)} - ${tegenstander}` // thuiswedstrijd
         : `${tegenstander} - ${teamVoluit(teamCode)}`; // uitwedstrijd
     console.log(`rondeMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}) -> ${rondeTekst}`);
 
