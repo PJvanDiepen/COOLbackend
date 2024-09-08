@@ -87,16 +87,82 @@ const NIEUWE_RANGLIJST = 2;
 const boom = boomMaken();
 
 function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    if (seizoen === undefined) { // ook indien clubCode === undefined
-        return boom.eenClub(clubCode);
-    } else if (teamCode === undefined) {
-        return boom.eenClub(clubCode).eenSeizoen(seizoen);
-    } else if (rondeNummer === undefined) {
-        return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode);
-    } else if (knsbNummer === undefined) {
-        return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode).eenRonde(rondeNummer);
+    if (boom.club.length === 0) {
+        fout("geen clubs");
+    } else if (clubCode === undefined && boom.club.length > 1) {
+        fout("specificeer clubCode");
     }
-    return boom.eenClub(clubCode).eenSeizoen(seizoen).eenTeam(teamCode).eenRonde(rondeNummer).eenUitslag(knsbNummer);
+    const clubIndex =
+        clubCode === undefined && boom.club.length === 1 ? 0 : boom.clubIndex(clubCode);
+    if (clubIndex < 0) {
+        fout("clubCode niet gevonden");
+    }
+    const eenClub = boom.club[clubIndex];
+    if (seizoen === undefined && teamCode === undefined && rondeNummer === undefined && knsbNummer === undefined) {
+        return eenClub;
+    }
+
+    if (eenClub.seizoen.length === 0) {
+        fout("geen seizoenen");
+    } else if (seizoen === undefined && eenClub.seizoen.length > 1) {
+        fout("specificeer seizoen");
+    }
+    const seizoenIndex =
+        seizoen === undefined && eenClub.seizoen.length === 1 ? 0 : eenClub.seizoenIndex(seizoen);
+    if (seizoenIndex < 0) {
+        fout("seizoen niet gevonden");
+    }
+    const eenSeizoen = eenClub.seizoen[seizoenIndex];
+    if (teamCode === undefined && rondeNummer === undefined && knsbNummer === undefined) {
+        return eenSeizoen;
+    }
+
+    if (eenSeizoen.team.length === 0) {
+        fout("geen teams");
+    } else if (teamCode === undefined && eenSeizoen.team.length > 1) {
+        fout("specificeer teamCode");
+    }
+    const teamIndex =
+        teamCode === undefined && eenSeizoen.team.length === 1 ? 0 : eenSeizoen.teamIndex(teamCode);
+    if (teamIndex < 0) {
+        fout("team niet gevonden");
+    }
+    const eenTeam = eenSeizoen.team[teamIndex];
+    if (rondeNummer === undefined && knsbNummer === undefined) {
+        return eenTeam;
+    }
+
+    if (eenTeam.ronde.length === 0) {
+        fout("geen ronden");
+    } else if (rondeNummer === undefined && eenTeam.ronde.length > 1) {
+        fout("specificeer rondeNummer");
+    }
+    const rondeIndex =
+        rondeNummer === undefined && eenTeam.ronde.length === 1 ? 0 : eenTeam.rondeIndex(rondeNummer);
+    if (rondeIndex < 0) {
+        fout("ronde niet gevonden");
+    }
+    const eenRonde = eenTeam.ronde[rondeIndex];
+    if (knsbNummer === undefined) {
+        return eenRonde;
+    }
+
+    if (eenRonde.uitslag.length === 0) {
+        fout("geen uitslagen");
+    } else if (knsbNummer === undefined && eenRonde.uitslag.length > 1) {
+        fout("specificeer knsbNummer");
+    }
+    const uitslagIndex =
+        knsbNummer === undefined && eenRonde.uitslag.length === 1 ? 0 : eenRonde.uitslagIndex(knsbNummer);
+    if (uitslagIndex < 0) {
+        fout("uitslag niet gevonden");
+    }
+    return eenRonde.ronde[uitslagIndex];
+
+    function fout(tekst) {
+        console.log(`${tekst} tak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
+        return null;
+    }
 }
 
 function boomMaken() {
@@ -569,19 +635,8 @@ const VERLIES = "0";
 const THUIS = "t";
 const UIT = "u";
 
-/*
-origineel: function wedstrijdVoluit(ronde)
-    const eigenTeam = teamVoluit(ronde.teamCode);
-    return ronde.uithuis === THUIS ? eigenTeam + " - " + ronde.tegenstander : ronde.tegenstander + " - " + eigenTeam;
-
-TODO return data(ronde.clubCode, ronde.seizoen, ronde.teamCode, ronde.rondeNummer).rondeTekst;
- */
-
 function wedstrijdVoluit(ronde) {
-    return boom.eenClub(ronde.clubCode) // TODO dit werkt, omdat ie de eerste club kiest
-        .eenSeizoen(ronde.seizoen) // TODO dit werkt, omdat ie het laatste seizoen kiest
-        .eenTeam(ronde.teamCode)
-        .eenRonde(ronde.rondeNummer).rondeTekst;
+    return tak(ronde.clubCode, ronde.seizoen, ronde.teamCode, ronde.rondeNummer).rondeTekst;
 }
 
 const resultaatInvullen = new Map([
