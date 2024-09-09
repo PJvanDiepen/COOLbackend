@@ -174,15 +174,9 @@ function boomMaken() {
         })
     }
 
-    function eenClub(clubCode) {
-        const index = clubIndex(clubCode);
-        return club[index < 0 ? 0 : index]; // eerste of gevonden club
-    }
-
     return Object.freeze( {
         club,
-        clubIndex, // (clubCode)
-        eenClub    // (clubCode)
+        clubIndex // (clubCode)
     });
 }
 
@@ -229,11 +223,6 @@ function clubMaken(compleet, object) {
         })
     }
 
-    function eenSeizoen(seizoenCode) {
-        const index = seizoenIndex(seizoenCode);
-        return seizoen[index < 0 ? seizoen.length - 1 : index]; // laatste of gevonden seizoen
-    }
-
     function zonderSeizoen() {
         return {
             compleet: compleet,
@@ -249,11 +238,10 @@ function clubMaken(compleet, object) {
         vereniging,
         teamNaam,
         clubTekst,
-        clubAfdrukken,  // () ->
+        clubAfdrukken, // () ->
         seizoen,
-        seizoenIndex, // (seizoenCode)
-        eenSeizoen,   // (seizoenCode)
-        zonderSeizoen // ()
+        seizoenIndex,  // (seizoenCode)
+        zonderSeizoen  // ()
     });
 }
 
@@ -320,11 +308,6 @@ function seizoenMaken(compleet, object) {
         })
     }
 
-    function eenTeam(teamCode) {
-        const index = teamIndex(teamCode);
-        return team[index < 0 ? 0 : index]; // eerste of gevonden team
-    }
-
     function zonderTeam() {
         return {
             compleet: compleet,
@@ -342,7 +325,6 @@ function seizoenMaken(compleet, object) {
         seizoenDaarna,    // (seizoenCode)
         team,
         teamIndex,        // (teamCode)
-        eenTeam,          // (teamCode)
         zonderTeam
     });
 }
@@ -409,11 +391,6 @@ function teamMaken(compleet, object) {
         })
     }
 
-    function eenRonde(rondeNummer) {
-        const index = rondeIndex(rondeNummer);
-        return ronde[index < 0 ? ronde.length - 1 : index]; // laatste of gevonden ronde
-    }
-
     function zonderRonde() {
         return {
             compleet: compleet,
@@ -443,8 +420,7 @@ function teamMaken(compleet, object) {
         teamTekst,
         teamAfdrukken, // () ->
         ronde,
-        rondeIndex,        // (rondeNummer)
-        eenRonde,          // (rondeNummer)
+        rondeIndex,    // (rondeNummer)
         zonderRonde
     });
 }
@@ -556,11 +532,6 @@ function rondeMaken(compleet, object) {
         })
     }
 
-    function eenUitslag(knsbNummer) {
-        const index = uitslagIndex(knsbNummer);
-        return uitslag[index < 0 ? 0 : index]; // eerste of gevonden uitslag
-    }
-
     function zonderUitslag() {
         return {
             compleet: compleet,
@@ -586,8 +557,7 @@ function rondeMaken(compleet, object) {
         rondeTekst,
         rondeAfdrukken, // () ->
         uitslag,
-        uitslagIndex,        // (rondeNummer)
-        eenUitslag,          // (rondeNummer)
+        uitslagIndex,   // (rondeNummer)
         zonderUitslag
     });
 }
