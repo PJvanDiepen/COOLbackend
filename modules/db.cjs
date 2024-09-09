@@ -93,7 +93,7 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
         fout("specificeer clubCode");
     }
     const clubIndex =
-        clubCode === undefined && boom.club.length === 1 ? 0 : boom.clubIndex(clubCode);
+        clubCode === undefined && boom.club.length === 1 ? 0 : boom.clubIndex(Number(clubCode));
     if (clubIndex < 0) {
         fout("clubCode niet gevonden");
     }
@@ -138,7 +138,7 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
         fout("specificeer rondeNummer");
     }
     const rondeIndex =
-        rondeNummer === undefined && eenTeam.ronde.length === 1 ? 0 : eenTeam.rondeIndex(rondeNummer);
+        rondeNummer === undefined && eenTeam.ronde.length === 1 ? 0 : eenTeam.rondeIndex(Number(rondeNummer));
     if (rondeIndex < 0) {
         fout("ronde niet gevonden");
     }
@@ -153,7 +153,7 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
         fout("specificeer knsbNummer");
     }
     const uitslagIndex =
-        knsbNummer === undefined && eenRonde.uitslag.length === 1 ? 0 : eenRonde.uitslagIndex(knsbNummer);
+        knsbNummer === undefined && eenRonde.uitslag.length === 1 ? 0 : eenRonde.uitslagIndex(Number(knsbNummer));
     if (uitslagIndex < 0) {
         fout("uitslag niet gevonden");
     }

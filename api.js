@@ -57,7 +57,7 @@ for (const seizoen of ["2309", "2401"]) {
 }
 
 async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
-    const eenSeizoen = db.boom.eenClub(clubCode).eenSeizoen(seizoen);
+    const eenSeizoen = db.tak(clubCode, seizoen);
     if (eenSeizoen.team.length === 0) {
         const teams = await Team.query()
             .where("team.clubCode", clubCode)
@@ -66,10 +66,10 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
             db.teamToevoegen(synchroon.compleet, team);
         }
     }
-    if (!teamCode) {
+    if (teamCode === undefined) {
         return eenSeizoen.team; // alle teams
     }
-    const eenTeam = eenSeizoen.eenTeam(teamCode);
+    const eenTeam = db.tak(clubCode, seizoen, teamCode);
     if (eenTeam.ronde.length === 0) {
         const ronden = await Ronde.query()
             .where("ronde.clubCode", clubCode)
@@ -79,7 +79,9 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
             db.rondeToevoegen(synchroon.compleet, ronde);
         }
     }
+    // if (rondeNummer === undefined) {
     return eenTeam.ronde; // alle ronden
+    // } TODO const eenRonde, eventueel uitslagen inlezen en toevoegen en return alle uitslagen
 }
 
 /**
@@ -132,14 +134,14 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.boom.eenClub(ctx.params.club).zonderSeizoen();
+        ctx.body = db.tak(ctx.params.club).zonderSeizoen();
     });
 
     /*
     Frontend: o_o_o.js
      */
     url.get("/:club/seizoenen", function (ctx) {
-        ctx.body = db.boom.eenClub(ctx.params.club).seizoen.map(function (seizoen) {
+        ctx.body = db.tak(ctx.params.club).seizoen.map(function (seizoen) {
             return seizoen.zonderTeam();
         });
     });

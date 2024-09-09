@@ -53,7 +53,7 @@ import * as zyq from "./zyq.js";
 
 function seizoenSelecteren(teamCode) {
     const seizoenenSelectie = [];
-    for (const seizoen of db.boom.eenClub(o_o_o.club).seizoen) {
+    for (const seizoen of db.tak(o_o_o.club).seizoen) {
         seizoenenSelectie.push([seizoen.seizoen, seizoen.seizoenTekst]);
     }
     html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenenSelectie, function (seizoen) {

@@ -15,8 +15,6 @@
 import * as html from "./html.js";
 import * as db from "./db.js";
 
-const boom = db.boom;
-
 import * as zyq from "./zyq.js";
 
 /**
@@ -24,7 +22,6 @@ import * as zyq from "./zyq.js";
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  */
 export async function init() {
-    console.log("--- start init ---");
     await synchroniseren();
     urlVerwerken();
     versieBepalen();
@@ -106,21 +103,21 @@ async function seizoenVerwerken() {
     const clubVraag = await vraag("/club");
     const club = await clubVraag.antwoord();
     db.clubToevoegen(club.compleet, club);
-
     const seizoenenVraag = await vraag("/seizoenen");
     const seizoenen = await seizoenenVraag.antwoord();
     for (const seizoen of seizoenen) {
         db.seizoenToevoegen(seizoen.compleet, seizoen);
     }
-    const eenSeizoen = db.boom.eenClub(o_o_o.club).eenSeizoen(o_o_o.seizoen);
-    o_o_o.seizoen = eenSeizoen.seizoen;
-
+    if (!o_o_o.seizoen) {
+        const eenClub = db.tak(o_o_o.club);
+        o_o_o.seizoen = eenClub.seizoen[eenClub.seizoen.length - 1].seizoen; // laatste seizoen
+    }
+    const eenSeizoen = db.tak(o_o_o.club, o_o_o.seizoen);
     const teamsVraag = await vraag("/teams");
     const teams = await teamsVraag.antwoord();
     for (const team of teams) {
         db.teamToevoegen(team.compleet, team);
     }
-
     const rondenVraag = await vraag("/ronden");
     for (const team of eenSeizoen.team) {
         const ronden = await rondenVraag
