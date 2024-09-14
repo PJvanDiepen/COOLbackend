@@ -36,6 +36,8 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
             }
             console.log({mutaties});
         }]);
+    console.log("--- tot hier! ---");
+    console.log(db.tak(o_o_o.club, o_o_o.seizoen).seizoenTekst); // TODO zyq.seizoenVoluit vervangen
     html.id("kop").textContent =
         `${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}overzicht voor bestuur`;
     await ledenLijst(

@@ -2,7 +2,7 @@
 
 import * as db from "./db.js";
 import * as html from "./html.js";
-import { o_o_o, init } from "./o_o_o.js";
+import { o_o_o, init, vorigeRonde, volgendeRonde, laatsteRonde } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -21,15 +21,13 @@ import * as zyq from "./zyq.js";
         plaatje.append(html.plaatje("images/Waagtoren.gif",60, 150, 123));
     }
     const menuKeuzes = [
-        [db.IEDEREEN, `Ranglijst na ronde ${o_o_o.vorigeRonde}`,"ranglijst.html"], // menu0
-        [db.IEDEREEN, `Uitslagen ronde ${o_o_o.vorigeRonde}`,"ronde.html"]]; // menu1
-    /* TODO tijdelijk niet
-    if (o_o_o.huidigeRonde && o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten
-        menuKeuzes.push([db.GEREGISTREERD, `Definitieve indeling ronde ${o_o_o.huidigeRonde}`, `ronde.html?ronde=${o_o_o.huidigeRonde}`]); // menu2
-    } else if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
-        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`, "indelen.html"]); // menu2
+        [db.IEDEREEN, `Ranglijst na ronde ${vorigeRonde()}`,"ranglijst.html"], // menu0
+        [db.IEDEREEN, `Uitslagen ronde ${vorigeRonde()}`,"ronde.html"]]; // menu1
+    if (volgendeRonde() && false) { // indeling zonder resultaten TODO o_o_o.ronde[volgendeRonde()].resultaten === 0)
+        menuKeuzes.push([db.GEREGISTREERD, `Definitieve indeling ronde ${volgendeRonde()}`, `ronde.html?ronde=${volgendeRonde()}`]); // menu2
+    } else if (vorigeRonde() < laatsteRonde()) {
+        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
     }
-     */
     if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
         menuKeuzes.push([db.IEDEREEN, "Aanmelden voor 0-0-0", "aanmelden.html"]);
     }

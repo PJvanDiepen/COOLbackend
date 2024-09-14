@@ -27,7 +27,6 @@ export async function init() {
     versieBepalen();
     await zyq.gebruikerVerwerken();
     await seizoenVerwerken();
-    rondenBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
@@ -126,28 +125,38 @@ async function seizoenVerwerken() {
             db.rondeToevoegen(ronde.compleet, ronde);
         }
     }
+    // TODO return seizoensgegevens en function's
 }
 
-function rondenBepalen() {
-    console.log("--- rondenBepalen() ---");
+export function laatsteRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-    let i = ronde.length - 1;
-    o_o_o.vorigeRonde = o_o_o.huidigeRonde = o_o_o.laatsteRonde = ronde[i].rondeNummer;
-    console.log(o_o_o);
-    const peilDatum = new Date(); // vandaag
-    peilDatum.setDate(peilDatum.getDate() + 1); // morgen
-    console.log(peilDatum);
-    console.log(new Date(ronde[i].datum));
-    console.log(new Date(ronde[i].datum) > peilDatum);
-    while (i > 0 && new Date(ronde[i].datum) > peilDatum) {
-        o_o_o.huidigeRonde = ronde[i].rondeNummer;
-        o_o_o.vorigeRonde = ronde[--i].rondeNummer;
-    }
-    console.log("--- indexRondeNaDatum() ---");
-    console.log(ronde);
-    ronde[indexRondeTotDatum(ronde, "2024-11-15")].rondeAfdrukken();
+    return ronde[ronde.length - 1].rondeNummer;
 }
 
+export function vorigeRonde() {
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
+    return ronde[indexRondeTotDatum(ronde)].rondeNummer;
+}
+
+export function volgendeRonde() {
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
+    const i = indexRondeTotDatum(ronde);
+    return ronde[i === ronde.length - 1 ? i : i + 1].rondeNummer; // laatste of volgende ronde
+}
+
+/**
+ * Bepaal index in rondenlijst tot een gegeven datum.
+ *
+ * In de rondenlijst kunnen alle ronden staan van een competitie of een team
+ * of alle ronden van alle competities en teams van een club / seizoen.
+ * De rondenlijst is gesorteerd op datum en rondeNummer.
+ *
+ * Indien de gegeven datum ontbreekt, is het de datum van vandaag.
+ *
+ * @param ronde rondenlijst
+ * @param jsonDatum gegeven datum
+ * @returns {number} index
+ */
 function indexRondeTotDatum(ronde, jsonDatum = null) {
     const peilDatum = new Date(jsonDatum);
     const laatste = ronde.length - 1;
@@ -159,6 +168,11 @@ function indexRondeTotDatum(ronde, jsonDatum = null) {
         index++;
     }
     return index;
+}
+
+export function rondeGegevens(teamCode, rondeNummer) {
+    const team = db.tak(o_o_o.club, o_o_o.seizoen, teamCode);
+    return team.ronde[team.rondeIndex(rondeNummer)];
 }
 
 export async function vraag(commando) {
@@ -335,7 +349,6 @@ export async function rondeSelecteren(teamCode, rondeNummer) {
  * perTeamRondenUitslagen voor ronde.js, team.js en teamleider.js
  *
  * TODO ook voor start.js
- * TODO verplaatsen naar server
  *
  * @param teamCode team
  * @returns {Promise<*[]>} rondenUitslagen

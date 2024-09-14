@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init, competitieTitel, rondeSelecteren, perTeamRondenUitslagen } from "./o_o_o.js"
+import { o_o_o, init, competitieTitel, vorigeRonde, rondeGegevens, rondeSelecteren } from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -15,8 +15,8 @@ import * as zyq from "./zyq.js";
 (async function() {
     await init();
     competitieTitel();
-    o_o_o.team =o_o_o.competitie;
-    const rondeNummer = Number(html.params.get("ronde")) || o_o_o.vorigeRonde || 1;
+    o_o_o.team = o_o_o.competitie;
+    const rondeNummer = Number(html.params.get("ronde")) || vorigeRonde() || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
@@ -42,12 +42,8 @@ import * as zyq from "./zyq.js";
         }]);
     await rondeSelecteren(o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, html.id("uitslagen"));
-    await wedstrijdenBijRonde(rondeNummer, html.id("wedstrijden"));
     html.id("kop").textContent =
-        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(o_o_o.ronde[rondeNummer])}`;
-    if (o_o_o.competitie === db.INTERNE_COMPETITIE) {
-        html.id("subkop").textContent = "Andere ronden en wedstrijden";
-    }
+        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeGegevens(o_o_o.team, rondeNummer))}`;
 })();
 
 async function uitslagenRonde(rondeNummer, lijst) {
@@ -104,52 +100,5 @@ function uitslagWijzigen(uitslag)  {
         return uitslag.knsbNummer === zyq.gebruiker.knsbNummer || uitslag.tegenstanderNummer === zyq.gebruiker.knsbNummer;
     } else {
         return false;
-    }
-}
-
-async function wedstrijdenBijRonde(rondeNummer, lijst) {
-    if (rondeNummer > 1) {
-        lijst.append(rondeInterneCompetitie(rondeNummer - 1)); // vorige ronde
-    }
-    let dezeRonde = false;
-    if (o_o_o.competitie === db.INTERNE_COMPETITIE) { // wedstrijden die meetellen voor de interne competitie
-        const wedstrijden = await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/wedstrijden`);
-        for (const wedstrijd of wedstrijden) {
-            if (!dezeRonde && o_o_o.ronde[rondeNummer].datum === wedstrijd.datum) {
-                lijst.append(rondeInterneCompetitie(rondeNummer));
-                dezeRonde = true; // deze ronde een keer in de lijst
-            }
-            if (wedstrijdBijRonde(rondeNummer, wedstrijd.datum)) {
-                const datumKolom = zyq.datumLeesbaar(wedstrijd);
-                const wedstrijdKolom = zyq.naarTeam(wedstrijd);
-                const rondeUitslagen = await perTeamRondenUitslagen(wedstrijd.teamCode);
-                const u = rondeUitslagen[wedstrijd.rondeNummer];
-                const uitslagKolom = zyq.uitslagTeam(u.ronde.uithuis, u.winst, u.verlies, u.remise);
-                lijst.append(html.rij("", datumKolom, wedstrijdKolom, uitslagKolom));
-            }
-        }
-    }
-    if (!dezeRonde) { // indien deze ronde nog niet in de lijst
-        lijst.append(rondeInterneCompetitie(rondeNummer));
-    }
-    if (o_o_o.laatsteRonde > rondeNummer) {
-        lijst.append(rondeInterneCompetitie(rondeNummer + 1)); // volgende ronde
-        }
-    }
-
-function rondeInterneCompetitie(rondeNummer) {
-    return html.rij(rondeNummer,
-        html.naarPagina(`ronde.html?ronde=${rondeNummer}`, zyq.datumLeesbaar(o_o_o.ronde[rondeNummer])),
-        db.teamVoluit(o_o_o.competitie),
-        "");
-}
-
-function wedstrijdBijRonde(rondeNummer, datum) {
-    if (rondeNummer === 1) {
-        return datum <= o_o_o.ronde[1].datum; // bij ronde 1 uitsluitend wedstrijden tot en met datum ronde 1
-    } else if (rondeNummer === o_o_o.laatsteRonde) {
-        return datum > o_o_o.ronde[rondeNummer - 1].datum; // bij laatste ronde alle wedstrijden vanaf voorlaatste ronde
-    } else {
-        return datum > o_o_o.ronde[rondeNummer - 1].datum && datum <= o_o_o.ronde[rondeNummer].datum;
     }
 }
