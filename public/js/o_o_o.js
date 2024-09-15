@@ -24,9 +24,9 @@ import * as zyq from "./zyq.js";
 export async function init() {
     await synchroniseren();
     urlVerwerken();
-    versieBepalen();
     await zyq.gebruikerVerwerken();
     await seizoenVerwerken();
+    versieBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
@@ -62,8 +62,8 @@ export const o_o_o = {
     club: 0, // clubCode is een getal
     seizoen: "",
     versie: 0, // versie is een getal
-    competitie: db.INTERNE_COMPETITIE,
-    team: db.INTERNE_COMPETITIE,
+    competitie: "",
+    team: "",
     speler: 0, // knsbNummer is een getal
     naam: ""
 };
@@ -125,7 +125,27 @@ async function seizoenVerwerken() {
             db.rondeToevoegen(ronde.compleet, ronde);
         }
     }
-    // TODO return seizoensgegevens en function's
+    console.log("--- tot hier ---");
+    if (!o_o_o.competitie) {
+        o_o_o.competitie =
+            eenSeizoen.clubCode === db.WAAGTOREN ? db.INTERNE_COMPETITIE : db.JEUGD_COMPETITIE;
+    }
+    if (!o_o_o.team) {
+        o_o_o.team = o_o_o.competitie;
+    }
+    console.log("--- en hier ---");
+    // alle ronden van alle teams en competities van het seizoen sorteren op datum
+    o_o_o.ronde = [];
+    for (const eenTeam of eenSeizoen.team) {
+        let i = 0;
+        for (const eenRonde of eenTeam.ronde) {
+            while (i < o_o_o.ronde.length && o_o_o.ronde[i].datum <= eenRonde.datum) {
+                i++;
+            }
+            o_o_o.ronde.splice(i, 0, eenRonde); // op datum tussenvoegen
+        }
+    }
+    // TODO volgende competitie ronde
 }
 
 export function laatsteRonde() {

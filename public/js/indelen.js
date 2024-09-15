@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init, competitieTitel } from "./o_o_o.js";
+import {o_o_o, init, competitieTitel, volgendeRonde, rondeGegevens} from "./o_o_o.js";
 import { ranglijst } from "./reglement.js";
 
 import * as zyq from "./zyq.js";
@@ -19,13 +19,13 @@ const indeling = html.id("indeling");
 (async function() {
     await init();
     competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde")) || o_o_o.huidigeRonde;
-    const totDatum = o_o_o.ronde[rondeNummer].datum;
+    const rondeNummer = Number(html.params.get("ronde")) || volgendeRonde();
+    const rondeInfo = rondeGegevens(o_o_o.team, rondeNummer);
     html.id("subkop").textContent =
-        `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar({datum: totDatum})}`;
+        `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeInfo)}`;
 
     let laatsteBord = 0;
-    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(o_o_o.ronde[rondeNummer])}/paren`);
+    const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(rondeInfo)}/paren`);
     for (const paar of paren) {
         laatsteBord = paar.bordNummer;
         indeling.append(html.rij(laatsteBord,
@@ -49,7 +49,7 @@ const indeling = html.id("indeling");
     }
 
     const uithuis = await zyq.serverFetch(
-        `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/uithuis/${zyq.datumSQL(totDatum)}`); // actuele situatie
+        `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/uithuis/${zyq.datumSQL(rondeInfo.dtum)}`); // actuele situatie
     for (const speler of uithuis) {
         const bord = // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
             speler.partij === db.EXTERN_THUIS ? ++bordNummer : "";

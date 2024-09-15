@@ -316,6 +316,12 @@ function seizoenMaken(compleet, object) {
         };
     }
 
+    const wedstrijd = []; // alle ronden van alle teams op volgorde van datum
+
+    function wedstrijdenToevoegen() {
+        return this;
+    }
+
     return Object.freeze({
         compleet,
         clubCode,
