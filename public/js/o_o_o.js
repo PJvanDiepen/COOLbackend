@@ -124,16 +124,13 @@ async function seizoenVerwerken() {
 }
 
 function competitieBepalen() {
-    console.log("--- competitieBepalen() ---");
-    const vorigeRonde = indexRondeTotDatum(o_o_o.ronde, "2024-10-23");
-    let i = vorigeRonde < 0 ? 0 : vorigeRonde;
-    while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) {
-        i++;
-    }
-    console.log(o_o_o.ronde[i]);
     if (!o_o_o.competitie) {
-        o_o_o.competitie =
-            o_o_o.ronde[i].clubCode === db.WAAGTOREN ? db.INTERNE_COMPETITIE : db.JEUGD_COMPETITIE;
+        const vorigeRonde = indexRondeTotDatum(o_o_o.ronde);
+        let i = vorigeRonde < 0 ? 0 : vorigeRonde;
+        while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) {
+            i++;
+        }
+        o_o_o.competitie = o_o_o.ronde[i].teamCode;
     }
     if (!o_o_o.team) {
         o_o_o.team = o_o_o.competitie;
