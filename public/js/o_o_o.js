@@ -26,6 +26,7 @@ export async function init() {
     urlVerwerken();
     await zyq.gebruikerVerwerken();
     await seizoenVerwerken();
+    competitieBepalen();
     versieBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
@@ -82,22 +83,6 @@ function urlVerwerken() {
     }
 }
 
-function versieBepalen() { // TODO reglement in team i.p.v. versie
-    if (o_o_o.competitie === db.INTERNE_COMPETITIE && o_o_o.versie === 0) {
-        if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
-            o_o_o.versie = 2;
-        } else {
-            o_o_o.versie = 3; // vanaf seizoen 2021-2022
-        }
-    } else if (o_o_o.competitie === db.RAPID_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 4;
-    } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
-        o_o_o.versie = 5; // Zwitsers systeem
-    } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 6;
-    }
-}
-
 async function seizoenVerwerken() {
     const clubVraag = await vraag("/club");
     const club = await clubVraag.antwoord();
@@ -125,15 +110,6 @@ async function seizoenVerwerken() {
             db.rondeToevoegen(ronde.compleet, ronde);
         }
     }
-    console.log("--- tot hier ---");
-    if (!o_o_o.competitie) {
-        o_o_o.competitie =
-            eenSeizoen.clubCode === db.WAAGTOREN ? db.INTERNE_COMPETITIE : db.JEUGD_COMPETITIE;
-    }
-    if (!o_o_o.team) {
-        o_o_o.team = o_o_o.competitie;
-    }
-    console.log("--- en hier ---");
     // alle ronden van alle teams en competities van het seizoen sorteren op datum
     o_o_o.ronde = [];
     for (const eenTeam of eenSeizoen.team) {
@@ -145,7 +121,39 @@ async function seizoenVerwerken() {
             o_o_o.ronde.splice(i, 0, eenRonde); // op datum tussenvoegen
         }
     }
-    // TODO volgende competitie ronde
+}
+
+function competitieBepalen() {
+    console.log("--- competitieBepalen() ---");
+    const vorigeRonde = indexRondeTotDatum(o_o_o.ronde, "2024-10-23");
+    let i = vorigeRonde < 0 ? 0 : vorigeRonde;
+    while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) {
+        i++;
+    }
+    console.log(o_o_o.ronde[i]);
+    if (!o_o_o.competitie) {
+        o_o_o.competitie =
+            o_o_o.ronde[i].clubCode === db.WAAGTOREN ? db.INTERNE_COMPETITIE : db.JEUGD_COMPETITIE;
+    }
+    if (!o_o_o.team) {
+        o_o_o.team = o_o_o.competitie;
+    }
+}
+
+function versieBepalen() { // TODO reglement in team i.p.v. versie
+    if (o_o_o.competitie === db.INTERNE_COMPETITIE && o_o_o.versie === 0) {
+        if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
+            o_o_o.versie = 2;
+        } else {
+            o_o_o.versie = 3; // vanaf seizoen 2021-2022
+        }
+    } else if (o_o_o.competitie === db.RAPID_COMPETITIE && o_o_o.versie === 0) {
+        o_o_o.versie = 4;
+    } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
+        o_o_o.versie = 5; // Zwitsers systeem
+    } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
+        o_o_o.versie = 6;
+    }
 }
 
 export function laatsteRonde() {

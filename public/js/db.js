@@ -157,7 +157,7 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
     if (uitslagIndex < 0) {
         fout("uitslag niet gevonden");
     }
-    return eenRonde.ronde[uitslagIndex];
+    return eenRonde.uitslag[uitslagIndex];
 
     function fout(tekst) {
         console.log(`${tekst} tak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
@@ -314,12 +314,6 @@ function seizoenMaken(compleet, object) {
             clubCode: clubCode,
             seizoen: seizoen
         };
-    }
-
-    const wedstrijd = []; // alle ronden van alle teams op volgorde van datum
-
-    function wedstrijdenToevoegen() {
-        return this;
     }
 
     return Object.freeze({

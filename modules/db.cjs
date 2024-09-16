@@ -157,7 +157,7 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
     if (uitslagIndex < 0) {
         fout("uitslag niet gevonden");
     }
-    return eenRonde.ronde[uitslagIndex];
+    return eenRonde.uitslag[uitslagIndex];
 
     function fout(tekst) {
         console.log(`${tekst} tak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
