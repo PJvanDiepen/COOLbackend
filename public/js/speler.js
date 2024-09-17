@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init, competitieTitel } from "./o_o_o.js"
+import { o_o_o, init, competitieTitel, vorigeRonde } from "./o_o_o.js"
 import { ranglijst } from "./reglement.js";
 
 import * as zyq from "./zyq.js";
@@ -45,7 +45,7 @@ import * as zyq from "./zyq.js";
   */
 
 async function uitslagenSpeler(kop, lijst) {
-    const t = (await ranglijst(o_o_o.vorigeRonde, [o_o_o.speler]))[0];
+    const t = (await ranglijst(vorigeRonde(), [o_o_o.speler]))[0];
     kop.textContent = `${t.naam}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`;
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern() && t.eigenWaardeCijfer()) {

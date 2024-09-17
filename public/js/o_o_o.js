@@ -183,13 +183,13 @@ export function volgendeRonde() {
  * @returns {number} index
  */
 function indexRondeTotDatum(ronde, jsonDatum = null) {
-    const peilDatum = new Date(jsonDatum);
+    const peilDatum = jsonDatum ? new Date(jsonDatum) : new Date();
     const laatste = ronde.length - 1;
     if (peilDatum >= new Date(ronde[laatste].datum)) { // alle ronden zijn na peilDatum
         return laatste;
     }
     let index = 0;
-    while (new Date(ronde[index].datum) < peilDatum) { // zoek eerste ronde na peildatum
+    while (new Date(ronde[index].datum) > peilDatum) { // zoek eerste ronde na peildatum
         index++;
     }
     return index;

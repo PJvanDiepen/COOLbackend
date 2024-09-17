@@ -147,8 +147,6 @@ export function naarSpeler(speler) {
 }
 
 export function naarTeam(uitslag) {
-    console.log("naarTeam(uitslag)");
-    console.log(uitslag);
     const u = {
         clubCode: o_o_o.club, // TODO ontbreekt in uitslag!
         seizoen: o_o_o.seizoen, // TODO ontbreekt in uitslag!

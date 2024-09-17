@@ -205,7 +205,7 @@ export function plaatje(bestand, percentage, breed, hoog) {
 export function tabblad(link) {
     const a = document.createElement("a");
     a.append(link);
-    a.href = `${html.server}${link}`;
+    a.href = `${server}${link}`;
     a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
     a.rel = "noopener noreferrer"
     return a;

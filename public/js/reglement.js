@@ -64,12 +64,10 @@ function spelerTotalen(speler) {
     const subgroep = speler.subgroep;
     const totalen = speler.totalen.split(" ").map(Number);
     const nietTegen =
-        knsbNummer === 7640798 ? [8388105] : // vader Johan niet tegen zoon Marijn Wester
-            knsbNummer === 8388105 ? [7640798] : // zoon Marijn niet tegen vader Johan Wester
-                knsbNummer === 7771665 ? [7777715] : // Yvonne Schol wegens geluid niet tegen Richard Gooijers
-                    knsbNummer === 8350738 ? [7777715] : // Ramon Witte zegt niets tegen Richard Gooijers
-                        knsbNummer === 9001586 ? [7777715] : // Abdul Rashid Ayobi spreekt geen Nederlands tegen Richard Gooijers
-                            knsbNummer === 7777715 ? [7771665, 8350738, 9001586] : []; // Richard Gooijers niet tegen bovenstaande spelers
+        knsbNummer === 7771665 ? [7777715] : // Yvonne Schol wegens geluid niet tegen Richard Gooijers
+        knsbNummer === 8350738 ? [7777715] : // Ramon Witte zegt niets tegen Richard Gooijers
+        knsbNummer === 9001586 ? [7777715] : // Abdul Rashid Ayobi spreekt geen Nederlands tegen Richard Gooijers
+        knsbNummer === 7777715 ? [7771665, 8350738, 9001586] : []; // Richard Gooijers niet tegen bovenstaande spelers
 
     let wp = 0;
 
