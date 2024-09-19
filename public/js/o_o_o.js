@@ -161,7 +161,7 @@ export function laatsteRonde() {
 export function vorigeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeTotDatum(ronde);
-    return ronde[i > 0 ? i - 1 : 0].rondeNummer; // vorige of eerste ronde
+    return ronde[i < 0 ? ronde.length - 1 : i > 0 ? i - 1 : 1].rondeNummer; // laatste, vorige of eerste ronde
 }
 
 export function volgendeRonde() {
