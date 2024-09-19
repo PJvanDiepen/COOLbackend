@@ -23,9 +23,7 @@ import * as zyq from "./zyq.js";
     const menuKeuzes = [
         [db.IEDEREEN, `Ranglijst na ronde ${vorigeRonde()}`,"ranglijst.html"], // menu0
         [db.IEDEREEN, `Uitslagen ronde ${vorigeRonde()}`,"ronde.html"]]; // menu1
-    if (volgendeRonde() && false) { // indeling zonder resultaten TODO o_o_o.ronde[volgendeRonde()].resultaten === 0)
-        menuKeuzes.push([db.GEREGISTREERD, `Definitieve indeling ronde ${volgendeRonde()}`, `ronde.html?ronde=${volgendeRonde()}`]); // menu2
-    } else if (vorigeRonde() < laatsteRonde()) {
+    if (volgendeRonde()) { // menu2 TODO Definitieve indeling
         menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
     }
     if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd

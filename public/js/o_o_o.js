@@ -160,13 +160,14 @@ export function laatsteRonde() {
 
 export function vorigeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-    return ronde[indexRondeTotDatum(ronde)].rondeNummer;
+    const i = indexRondeTotDatum(ronde);
+    return ronde[i > 0 ? i - 1 : 0].rondeNummer; // vorige of eerste ronde
 }
 
 export function volgendeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeTotDatum(ronde);
-    return ronde[i === ronde.length - 1 ? i : i + 1].rondeNummer; // laatste of volgende ronde
+    return i < 0 ? 0 : ronde[i].rondeNummer; // geen of volgende ronde
 }
 
 /**
@@ -180,16 +181,15 @@ export function volgendeRonde() {
  *
  * @param ronde rondenlijst
  * @param jsonDatum gegeven datum
- * @returns {number} index
+ * @returns {number} index of -1
  */
 function indexRondeTotDatum(ronde, jsonDatum = null) {
     const peilDatum = jsonDatum ? new Date(jsonDatum) : new Date();
-    const laatste = ronde.length - 1;
-    if (peilDatum >= new Date(ronde[laatste].datum)) { // alle ronden zijn na peilDatum
-        return laatste;
+    if (peilDatum >= new Date(ronde[ronde.length - 1].datum)) { // alle ronden zijn na peilDatum
+        return -1;
     }
     let index = 0;
-    while (new Date(ronde[index].datum) > peilDatum) { // zoek eerste ronde na peildatum
+    while (new Date(ronde[index].datum) < peilDatum) { // eerste ronde voor peildatum
         index++;
     }
     return index;
