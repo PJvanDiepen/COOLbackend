@@ -22,11 +22,15 @@ import * as zyq from "./zyq.js";
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  */
 export async function init() {
+    console.log("Initializing...");
     await synchroniseren();
     urlVerwerken();
     await zyq.gebruikerVerwerken();
+    console.log(o_o_o);
     await seizoenVerwerken();
+    console.log(o_o_o);
     competitieBepalen();
+    console.log(o_o_o);
     versieBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
@@ -92,10 +96,7 @@ async function seizoenVerwerken() {
     for (const seizoen of seizoenen) {
         db.seizoenToevoegen(seizoen.compleet, seizoen);
     }
-    if (!o_o_o.seizoen) {
-        const eenClub = db.tak(o_o_o.club);
-        o_o_o.seizoen = eenClub.seizoen[eenClub.seizoen.length - 1].seizoen; // laatste seizoen
-    }
+    o_o_o.seizoen = seizoenBepalen();
     const eenSeizoen = db.tak(o_o_o.club, o_o_o.seizoen);
     const teamsVraag = await vraag("/teams");
     const teams = await teamsVraag.antwoord();
@@ -123,18 +124,19 @@ async function seizoenVerwerken() {
     }
 }
 
+function seizoenBepalen() {
+    const eenClub = db.tak(o_o_o.club);
+    const i = eenClub.seizoenIndex(o_o_o.seizoen);
+    return eenClub.seizoen[i < 0 ? eenClub.seizoen.length - 1 : i].seizoen; // anders laatste seizoen
+}
+
 function competitieBepalen() {
-    if (!o_o_o.competitie) {
-        const vorigeRonde = indexRondeTotDatum(o_o_o.ronde);
-        let i = vorigeRonde < 0 ? 0 : vorigeRonde;
-        while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) {
-            i++;
-        }
-        o_o_o.competitie = o_o_o.ronde[i].teamCode;
+    const vorigeRonde = indexRondeTotDatum(o_o_o.ronde);
+    let i = vorigeRonde < 0 ? 0 : vorigeRonde;
+    while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) { // volgende competitie ronde
+        i++;
     }
-    if (!o_o_o.team) {
-        o_o_o.team = o_o_o.competitie;
-    }
+    o_o_o.competitie = o_o_o.team = o_o_o.ronde[i].teamCode;
 }
 
 function versieBepalen() { // TODO reglement in team i.p.v. versie
@@ -259,10 +261,10 @@ async function vraagZoeken(commando) {
         return vraag.includes(commando);
     });
     if (vragen.length < 1) {
-        console.log(`Server herkent geen commando met ${commando}`);
+        console.log(`Server herkent geen vraag met ${commando}`);
         return "";
     } else if (vragen.length > 1) {
-        console.log(`Server herkent meer commando's met ${commando}`);
+        console.log(`Server herkent meer vragen met ${commando}`);
         console.log(vragen);
         return vragen[0];
     }
