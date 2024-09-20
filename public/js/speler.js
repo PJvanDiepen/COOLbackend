@@ -46,7 +46,7 @@ import * as zyq from "./zyq.js";
 
 async function uitslagenSpeler(kop, lijst) {
     const t = (await ranglijst(vorigeRonde(), [o_o_o.speler]))[0];
-    kop.textContent = `${t.naam}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`;
+    kop.textContent = `${t.naam}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}`;
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern() && t.eigenWaardeCijfer()) {
         lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));

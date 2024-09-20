@@ -22,15 +22,15 @@ TODO mutaties met verwijderen
         [db.ONTWIKKElAAR, `backup personen` , async function () {
             zyq.backupSQL("persoon", await zyq.serverFetch(`/backup/personen`));
         }],
-        [db.ONTWIKKElAAR, `backup teams ${zyq.seizoenVoluit(o_o_o.seizoen)}`, async function () {
+        [db.ONTWIKKElAAR, `backup teams ${db.seizoenVoluit(o_o_o)}`, async function () {
             zyq.backupSQL("team", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/backup/teams`));
         }],
-        [db.ONTWIKKElAAR, `backup ronden ${zyq.seizoenVoluit(o_o_o.seizoen)}` , async function () {
+        [db.ONTWIKKElAAR, `backup ronden ${db.seizoenVoluit(o_o_o)}` , async function () {
             zyq.backupSQL("ronde", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/backup/ronde`)); // TODO /ronden werkt niet!
         }],
-        [db.ONTWIKKElAAR, `backup spelers ${zyq.seizoenVoluit(o_o_o.seizoen)}` , async function () {
+        [db.ONTWIKKElAAR, `backup spelers ${db.seizoenVoluit(o_o_o)}` , async function () {
             zyq.backupSQL("speler", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/spelers`));
         }],

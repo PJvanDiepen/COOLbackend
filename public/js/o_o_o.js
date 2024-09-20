@@ -22,16 +22,12 @@ import * as zyq from "./zyq.js";
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  */
 export async function init() {
-    console.log("Initializing...");
     await synchroniseren();
     urlVerwerken();
     await zyq.gebruikerVerwerken();
-    console.log(o_o_o);
     await seizoenVerwerken();
-    console.log(o_o_o);
-    competitieBepalen();
-    console.log(o_o_o);
-    versieBepalen();
+    o_o_o.competitie = o_o_o.team = competitieBepalen();
+    o_o_o.versie = versieBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
@@ -136,22 +132,22 @@ function competitieBepalen() {
     while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) { // volgende competitie ronde
         i++;
     }
-    o_o_o.competitie = o_o_o.team = o_o_o.ronde[i].teamCode;
+    return o_o_o.ronde[i].teamCode;
 }
 
 function versieBepalen() { // TODO reglement in team i.p.v. versie
     if (o_o_o.competitie === db.INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
-            o_o_o.versie = 2;
+            return 2;
         } else {
-            o_o_o.versie = 3; // vanaf seizoen 2021-2022
+            return 3; // vanaf seizoen 2021-2022
         }
     } else if (o_o_o.competitie === db.RAPID_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 4;
+        return 4;
     } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
-        o_o_o.versie = 5; // Zwitsers systeem
+        return 5; // Zwitsers systeem
     } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
-        o_o_o.versie = 6;
+        return 6;
     }
 }
 

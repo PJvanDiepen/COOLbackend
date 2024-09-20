@@ -44,7 +44,7 @@ import * as zyq from "./zyq.js";
         html.zelfdePagina(`minimum=${minimum}`);
     });
     html.id("kop").textContent =
-        `${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}ranglijst na ronde ${rondeNummer}`;
+        `${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}ranglijst na ronde ${rondeNummer}`;
     const lijst = html.id("tabel");
     const spelers = (await ranglijst(rondeNummer)).filter(function (speler) {
         return speler.intern() || speler.oneven() || speler.extern() || alleLeden;

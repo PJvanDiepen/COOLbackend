@@ -1,6 +1,6 @@
 use waagtoren; -- ga naar TODO
 
--- personen TODO 0-0-0.nl 0.8.61
+-- personen
 select * from persoon order by knsbNummer;
 
 update persoon set naam = "Adnan Basmaij" where knsbNummer = 153;
@@ -15,14 +15,12 @@ insert into persoon (knsbNummer, naam) values
 (187, "Rolando"),
 (188, "Liam van Kuijeren - Jansen");
 
--- teams TODO 0-0-0.nl 0.8.61
-insert into team (clubCode, seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-(1, "2309", "ije", "i", "je", "jeugd competitie", 0, 0),
-(1, "2401", "ije", "i", "je", "jeugd competitie", 0, 0);
+-- teams
+insert into team (clubCode, seizoen, teamCode, reglement, bond, poule, omschrijving, borden, teamleider) values
+(1, "2309", "ije", 0, "i", "je", "jeugd competitie", 0, 0),
+(1, "2401", "ije", 0, "i", "je", "jeugd competitie", 0, 0);
 
--- ronden TODO 0-0-0.nl 0.8.61
-select * from ronde where clubCode = 1 order by seizoen, rondeNummer;
-
+-- ronden
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (1, "2309", "ije", 1, "t", "", '2023-09-08'),
 (1, "2309", "ije", 2, "t", "", '2023-09-15'),
@@ -38,7 +36,7 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (1, "2309", "ije", 12, "t", "", '2023-12-08');
 
 -- spelers TODO conversie 0-0-0.nl 0.8.61
-select* from speler where clubCode = 0 and seizoen = "2324" and intern1 = "ije" and intern2 <> "int"; 
+select * from speler where clubCode = 0 and seizoen = "2324" and intern1 = "ije" and intern2 <> "int"; 
 
 select naam, s.* from speler s join persoon p on s.knsbNummer = p.knsbNummer
 where clubCode = 0 and seizoen = "2324" and intern1 = "ije" and intern2 = "int"; 
@@ -49,7 +47,7 @@ where clubCode = 0 and seizoen = "2324" and intern1 = "ije" and (intern2 = "ira"
 select naam, s.* from speler s join persoon p on s.knsbNummer = p.knsbNummer
 where clubCode = 1 and seizoen = "2309";
 
--- uitslagen TODO 0-0-0.nl 0.8.61
+-- uitslagen
 select * from uitslag where clubCode = 0 and seizoen = "2324" and teamCode = "ije"
 order by rondeNummer, bordNummer; 
 

@@ -19,7 +19,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
 (async function() {
     await init();
     html.id("kop").textContent =
-        `${o_o_o.vereniging}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`;
+        `${o_o_o.vereniging}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}`;
     const persoon = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/persoon/${lidNummer}`);
     const septemberRating = await ratingLezen();
     await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {

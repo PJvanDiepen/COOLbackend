@@ -155,14 +155,6 @@ export function naarTeam(uitslag) {
     return htmlLink(`team.html?team=${uitslag.teamCode}#ronde${uitslag.rondeNummer}`, db.wedstrijdVoluit(u));
 }
 
-export function seizoenVoluit(seizoen) {
-    if (seizoen.substring(2,4) === "ra") { // TODO verwijderen?
-        return `rapid 20${seizoen.substring(0,2)}-20${voorloopNul(Number(seizoen.substring(0,2)))}`;
-    } else {
-        return `20${seizoen.substring(0,2)}-20${seizoen.substring(2,4)}`;
-    }
-}
-
 export function tijdGeleden(jsonDatum) {
     const seconden = (new Date() - new Date(jsonDatum)) / 1000;
     if (seconden < 60) {

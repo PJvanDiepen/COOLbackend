@@ -18,7 +18,7 @@ import * as zyq from "./zyq.js";
     const rondeNummer = Number(html.params.get("ronde")) || o_o_o.vorigeRonde || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[]);
     html.id("kop").textContent =
-        `${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}rondenlijst na ronde ${rondeNummer}`;
+        `${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}rondenlijst na ronde ${rondeNummer}`;
     const lijst = html.id("lijst");
     lijst.append(html.bovenRij("", "naam", "on", ...(rondeNummers(rondeNummer))));
     const spelers = (await ranglijst(rondeNummer)).filter(function (speler) {

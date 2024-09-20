@@ -329,6 +329,10 @@ function seizoenMaken(compleet, object) {
     });
 }
 
+function seizoenVoluit(object) {
+    return tak(object.clubCode, object.seizoen).seizoenTekst;
+}
+
 function teamToevoegen(compleet, object) {
     const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
@@ -438,7 +442,7 @@ function isTeam(team) {
         : team.teamCode.substring(0,1) !== "i";
 }
 
-function teamVoluit(teamCode) { // TODO omschrijving uit database (eerst team en competitie uitsplitsen?)
+function teamVoluit(teamCode) { // TODO omschrijving uit database
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
     } else if (teamCode === RAPID_COMPETITIE) {
@@ -707,6 +711,7 @@ export { // ES6 voor browser,
     clubMaken,             // (compleet, object)
     seizoenToevoegen,      // (compleet, object)
     seizoenMaken,          // (compleet, object)
+    seizoenVoluit,         // (object)
     teamToevoegen,         // (compleet, object)
     // teamCode char(3)
     INTERNE_COMPETITIE,

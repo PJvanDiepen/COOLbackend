@@ -24,8 +24,8 @@ async function uitslagenTeam(kop, rondenTabel) {
     for (const team of teams) {
         if (team.teamCode === o_o_o.team) {
             kop.textContent = db.isBekerCompetitie(team)
-                ? `${db.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}`
-                : `${db.teamVoluit(team.teamCode)}${html.SCHEIDING}${zyq.seizoenVoluit(o_o_o.seizoen)}${html.SCHEIDING}${team.omschrijving}`;
+                ? `${db.teamVoluit(team.teamCode)}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}`
+                : `${db.teamVoluit(team.teamCode)}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}${team.omschrijving}`;
             break;
         }
     }
