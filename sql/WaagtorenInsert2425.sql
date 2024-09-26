@@ -5,7 +5,7 @@ use waagtoren; -- ga naar TODO
 -- aantal interne uitslagen per speler per seizoen
 select naam, u.knsbNummer, count(*) uitslagen
 from uitslag u join persoon p on u.knsbNummer = p.knsbNummer 
-where seizoen = @seizoen and teamCode = "int"
+where clubCode = 0 and seizoen = @seizoen and teamCode = "int"
 group by u.knsbNummer
 order by uitslagen desc;
 set @seizoen = '1819'; -- TODO Han Rauws en Bob de Mon 26
@@ -16,24 +16,23 @@ set @seizoen = '2324';
 set @seizoen = '2324';
 set @seizoen = '2425';
 
-
 with 
-  e as (select * from uitslag where anderTeam = "int" and partij = "e")
+  e as (select * from uitslag where competitie = "int" and partij = "e")
 select p.naam, u.teamCode, u.rondeNummer, u.partij, e.* from uitslag u
 join persoon p on u.knsbNummer = p.knsbNummer
-join e on u.seizoen = e.seizoen and u.knsbNummer = e.knsbNummer and u.datum = e.datum
-where u.seizoen = @seizoen and u.teamCode = "int" and u.partij = "a";
+join e on u.clubCode = e.clubCode and u.seizoen = e.seizoen and u.knsbNummer = e.knsbNummer and u.datum = e.datum
+where u.clubCode = 0 and u.seizoen = @seizoen and u.teamCode = "int" and u.partij = "a";
 
 with
-  e as (select * from uitslag where anderTeam = "int" and partij = "e")
+  e as (select * from uitslag where competitie = "int" and partij = "e")
 update uitslag u
-join e on u.seizoen = e.seizoen and u.knsbNummer = e.knsbNummer and u.datum = e.datum
+join e on u.clubCode = e.clubCode and u.seizoen = e.seizoen and u.knsbNummer = e.knsbNummer and u.datum = e.datum
 set u.partij = "e"
-where u.seizoen = @seizoen and u.teamCode = "int" and u.partij = "a";
+where u.clubCode = 0 and u.seizoen = @seizoen and u.teamCode = "int" and u.partij = "a";
 
 -- externe partijen op andere datums dan de wedstrijd
 select p.naam, r.uithuis, r.tegenstander, r.datum, u.* from uitslag u
-join ronde r on r.seizoen = u.seizoen and r.teamCode = u.teamCode and u.rondeNummer = r.rondeNummer
+join ronde r on r.clubCode = u.clubCode and r.seizoen = u.seizoen and r.teamCode = u.teamCode and u.rondeNummer = r.rondeNummer
 join persoon p on p.knsbNummer = u.knsbNummer
 where u.teamCode <> u.anderTeam and u.datum <> r.datum; 
 
@@ -44,10 +43,10 @@ update uitslag set datum = '2022-04-26' where seizoen = "2122" and teamCode = "n
 -- externe partijen zonder uitslag
 select p.naam, u.* from uitslag u
 join persoon p on u.knsbNummer = p.knsbNummer
-where seizoen = @seizoen and partij = "e" and resultaat not in ("1", "½", "0") order by seizoen, datum;
+where clubCode = 0 and seizoen = @seizoen and partij = "e" and resultaat not in ("1", "½", "0") order by seizoen, datum;
 
 delete from uitslag
-where seizoen = @seizoen and partij = "e" and resultaat not in ("1", "½", "0") order by seizoen, datum;
+where clubCode = 0 and seizoen = @seizoen and partij = "e" and resultaat not in ("1", "½", "0") order by seizoen, datum;
 
 -- issue #46 hack
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
@@ -64,11 +63,13 @@ set @team = 'int';
 set @ronde = 32;
 set @datum = '2024-02-20';
 
-select * from ronde where seizoen = @seizoen and teamCode = @team;
-select * from uitslag where seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+select * from ronde where clubCode = 0 and seizoen = @seizoen and teamCode = @team;
+select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
-update ronde set datum = @datum where seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
-update uitslag set partij = "p", datum = @datum where seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde; 
+update ronde set datum = @datum 
+where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+update uitslag set partij = "p", datum = @datum 
+where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde; 
 
 -- TODO partij wijzigen
 set @seizoen = '2425';
@@ -78,13 +79,13 @@ set @ronde = 2;
 set @bord = 22;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
 set @wit = 189; -- Jan
 set @zwart = 7691728; -- Karel
@@ -94,80 +95,68 @@ set @afwezig = 9001586; -- Abdul Rashid
 set @extern = 7758014; -- Alex
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = @club and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = @club and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @oneven, @afwezig);
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @oneven, @afwezig);
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = @club and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @afwezig);
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @afwezig);
 
 -- TODO afwezig maken
 
 update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
-where clubCode = @club and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
 
 -- TODO oneven maken
 
 update uitslag set bordNummer = 0, partij = 'o', witZwart = '', tegenstanderNummer = 0, resultaat = ''
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @oneven;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @oneven;
 
 -- TODO extern maken
 
 update uitslag set bordNummer = 0, partij = 'e', witZwart = '', tegenstanderNummer = 0, resultaat = ''
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @extern;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @extern;
 
 -- TODO partij wijzigen
 
 update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
 update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 -- TODO wit / zwart wijzigen
 
 update uitslag set witZwart = 'w'
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
 update uitslag set witZwart = 'z'
-where seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
-
--- TODO teams offline
-select * from team where clubCode = 0 and seizoen = "2425";
-delete from team where clubCode = 0 and seizoen = "2425";
-
-insert into team (clubCode, seizoen, teamCode, reglement, bond, poule, omschrijving, borden, teamleider) values
-(0, "2425", "",    0,  "",  "",   "geen",               0, 0),
-(0, "2425", "int", 3,  "i", "nt", "interne competitie", 0, 0),
-(0, "2425", "ira", 4,  "i", "ra", "rapid competitie", 0, 0);
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 -- teams
-insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-("2425", "ije", "i", "je", "jeugd competitie", 0, 0),
-("2425", "ijv", "i", "jv", "jeugd voorjaarscompetitie", 0, 0); 
+insert into team (clubCode, seizoen, teamCode, reglement, bond, poule, omschrijving, borden, teamleider) values
+(0, "2425", "", 0, "", "", "geen", 0, 0),
+(0, "2425", "0", 0, "k", "", "KNSB bij andere schaakvereniging", 0, 0),
+(0, "2425", "1", 0, "k", "1a", "KNSB 1a", 10, 0),
+(0, "2425", "2", 0, "k", "3c", "KNSB 3c", 8, 0),
+(0, "2425", "3", 0, "k", "4d", "KNSB 4d", 8, 0),
+(0, "2425", "4", 0, "k", "5g", "KNSB 5g", 8, 0),
+(0, "2425", "5", 0, "k", "6f", "KNSB 6f", 8, 0),
+(0, "2425", "6", 0, "k", "6f", "KNSB 6f", 8, 0),
+(0, "2425", "int", 3, "i", "nt", "interne competitie", 0, 0),
+(0, "2425", "ira", 4, "i", "ra", "rapid competitie", 0, 0),
+(0, "2425", "n0", 0, "n", "", "NHSB bij andere schaakvereniging", 0, 0),
+(0, "2425", "n1", 0, "n", "t", "NHSB top", 8, 0),
+(0, "2425", "n2", 0, "n", "1a", "NHSB 1a", 6, 0),
+(0, "2425", "n3", 0, "n", "2b", "NHSB 2b", 6, 0),
+(0, "2425", "n4", 0, "n", "2a", "NHSB 2a", 6, 0),
+(0, "2425", "n5", 0, "n", "3a", "NHSB 3a", 6, 0);
 
-insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-("2425", "", "", "", "geen", 0, 0),
-("2425", "0", "k", "", "KNSB bij andere schaakvereniging", 0, 0),
-("2425", "n0", "n", "", "NHSB bij andere schaakvereniging", 0, 0),
-("2425", "1", "k", "m", "KNSB meester", 10, 0),
-("2425", "2", "k", "3c", "KNSB 3c", 8, 0),
-("2425", "3", "k", "4c", "KNSB 4c", 8, 0),
-("2425", "4", "k", "6e", "KNSB 6e", 8, 0),
-("2425", "5", "k", "6e", "KNSB 6e", 8, 0),
-("2425", "kbe", "k", "be", "KNSB beker", 4, 0),
-("2425", "int", "i", "nt", "interne competitie", 0, 0),
-("2425", "ira", "i", "ra", "rapid competitie", 0, 0),
-("2425", "n1", "n", "t", "NHSB top", 8, 0),
-("2425", "n2", "n", "1a", "NHSB 1a", 8, 0),
-("2425", "n3", "n", "2a", "NHSB 2a", 6, 0),
-("2425", "n4", "n", "3a", "NHSB 3a", 8, 0),
-("2425", "nv1", "n", "vc", "NHSB vc", 4, 0),
-("2425", "nv2", "n", "vb", "NHSB vb", 4, 0);
-
-insert into team (seizoen, teamCode, bond, poule, omschrijving, borden, teamleider) values
-("2425", "nbe", "n", "be", "NHSB beker", 4, 0),
-("2425", "nbz", "n", "bz", "NHSB beker (zilver)", 4, 0),
-("2425", "nbb", "n", "bb", "NHSB beker (brons)", 4, 0);
+-- TODO on line
+-- TODO off line
+insert into team (clubCode, seizoen, teamCode, reglement, bond, poule, omschrijving, borden, teamleider) values
+(0, "2425", "nbe", 0, "n", "be", "NHSB beker", 4, 0),
+(0, "2425", "nbz", 0, "n", "bz", "NHSB beker (zilver)", 4, 0),
+(0, "2425", "nbb", 0, "n", "bb", "NHSB beker (brons)", 4, 0);
 
 -- teamleiders 2023-2024
 select naam, team.* from team join persoon on knsbNummer = teamleider where seizoen = "2425";
@@ -237,6 +226,92 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0, "2425", "ira", 10, "t", "", '2025-04-29'),
 (0, "2425", "ira", 11, "t", "", '2025-04-29'),
 (0, "2425", "ira", 12, "t", "", '2025-04-29');
+
+-- TODO off line
+update ronde set datum = '2025-01-11' where clubCode = 0 and seizoen = "2425" and teamCode in ("1", "2", "3") and rondeNummer = 1;
+
+insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+(0, "2425", "1", 1, "t", "Caissa 1", '2025-01-11'),
+(0, "2425", "1", 2, "u", "Assen 1", '2024-10-12'),
+(0, "2425", "1", 3, "t", "LSG 2", '2024-11-09'),
+(0, "2425", "1", 4, "u", "Groninger Combinatie 2", '2024-11-23'),
+(0, "2425", "1", 5, "t", "Caissa-Eenhoorn 1", '2024-12-14'),
+(0, "2425", "1", 6, "u", "HWP Haarlem 1", '2025-02-08'),
+(0, "2425", "1", 7, "t", "VAS 1", '2025-03-08'),
+(0, "2425", "1", 8, "u", "Paul Keres 2", '2025-04-05'),
+(0, "2425", "1", 9, "t", "Wokke Vastg.-Autovakm. Schaap 1", '2025-05-10'),
+(0, "2425", "2", 1, "t", "Caissa 2", '2025-01-11'),
+(0, "2425", "2", 2, "u", "Kennemer Combinatie 3", '2024-10-12'),
+(0, "2425", "2", 3, "t", "De Wijker Toren 2", '2024-11-09'),
+(0, "2425", "2", 4, "u", "Botwinnik 1", '2024-11-23'),
+(0, "2425", "2", 5, "t", "’t Saense Paard 1", '2024-12-14'),
+(0, "2425", "2", 6, "u", "Santpoort 1", '2025-02-08'),
+(0, "2425", "2", 7, "t", "VAS 2", '2025-03-08'),
+(0, "2425", "2", 8, "u", "Zukertort Amstelveen 2", '2025-04-05'),
+(0, "2425", "2", 9, "t", "Fischer Z 1", '2025-05-10'),
+(0, "2425", "3", 1, "t", "Caissa 3", '2025-01-11'),
+(0, "2425", "3", 2, "u", "Heerhugowaard 1", '2024-10-12'),
+(0, "2425", "3", 3, "t", "Het Spaarne 1", '2024-11-09'),
+(0, "2425", "3", 4, "u", "Aartswoud 1", '2024-11-23'),
+(0, "2425", "3", 5, "t", "’t Saense Paard 2", '2024-12-14'),
+(0, "2425", "3", 6, "u", "HWP Haarlem 3", '2025-02-08'),
+(0, "2425", "3", 7, "t", "Purmerend 2", '2025-03-08'),
+(0, "2425", "3", 8, "u", "Opening '64 1", '2025-04-05'),
+(0, "2425", "4", 1, "u", "Volendam 1", '2024-10-12'),
+(0, "2425", "4", 2, "t", "Boven IJ / de Volewijckers 1", '2024-11-09'),
+(0, "2425", "4", 3, "u", "Caissa-Eenhoorn 3", '2024-11-23'),
+(0, "2425", "4", 4, "t", "Santpoort 2", '2024-12-14'),
+(0, "2425", "4", 5, "u", "VAS 4", '2025-02-08'),
+(0, "2425", "4", 7, "t", "Bergen 1", '2025-04-05'),
+(0, "2425", "5", 1, "u", "Magnus 2", '2024-10-12'),
+(0, "2425", "5", 2, "t", "’t Saense Paard 3", '2024-11-09'),
+(0, "2425", "5", 3, "u", "Heerhugowaard 2", '2024-11-23'),
+(0, "2425", "5", 4, "t", "Purmerend 3", '2024-12-14'),
+(0, "2425", "5", 5, "u", "Assendelft 1", '2025-02-08'),
+(0, "2425", "5", 6, "t", "De Waagtoren 6", '2025-03-08'),
+(0, "2425", "5", 7, "u", "Aartswoud 2", '2025-04-05'),
+(0, "2425", "6", 1, "u", "Heerhugowaard 2", '2024-10-12'),
+(0, "2425", "6", 2, "t", "Assendelft 1", '2024-11-09'),
+(0, "2425", "6", 3, "u", "Aartswoud 2", '2024-11-23'),
+(0, "2425", "6", 4, "t", "’t Saense Paard 3", '2024-12-14'),
+(0, "2425", "6", 5, "u", "Purmerend 3", '2025-02-08'),
+(0, "2425", "6", 6, "u", "De Waagtoren 5", '2025-03-08'),
+(0, "2425", "6", 7, "t", "Magnus 2", '2025-04-05'),
+(0, "2425", "n1", 1, "u", "'t Saense Paard N1", '2024-09-27'),
+(0, "2425", "n1", 2, "t", "De Uil N1", '2024-10-15'),
+(0, "2425", "n1", 3, "t", "HWP Haarlem N1", '2024-11-12'),
+(0, "2425", "n1", 4, "u", "Krommenie N1", '2024-12-03'),
+(0, "2425", "n1", 5, "t", "Wijker Toren N1", '2025-01-07'),
+(0, "2425", "n1", 6, "u", "Caïssa-Eenhoorn N1", '2025-02-11'),
+(0, "2425", "n1", 7, "t", "Santpoort N1", '2025-03-11'),
+(0, "2425", "n1", 8, "u", "Purmerend N1", '2025-03-27'),
+(0, "2425", "n1", 9, "t", "Bloemendaal N1", '2025-04-22'),
+(0, "2425", "n2", 1, "t", "KTV N1", '2024-09-24'),
+(0, "2425", "n2", 2, "u", "Aris de Heer N1", '2024-10-14'),
+(0, "2425", "n2", 3, "t", "Noordkopcomb. Magnus N1", '2024-11-12'),
+(0, "2425", "n2", 4, "u", "Schaakmat N1", '2024-12-03'),
+(0, "2425", "n2", 5, "u", "Aartswoud N1", '2025-02-14'),
+(0, "2425", "n2", 6, "t", "Opening 64 N1", '2025-03-18'),
+(0, "2425", "n2", 7, "u", "En Passant N1", '2025-03-29'),
+(0, "2425", "n3", 1, "t", "Volendam N", '2024-10-01'),
+(0, "2425", "n3", 2, "u", "Purmerend N2", '2024-10-24'),
+(0, "2425", "n3", 3, "t", "'t Saense Paard N2", '2024-12-10'),
+(0, "2425", "n3", 4, "u", "Krommenie N2", '2025-02-25'),
+(0, "2425", "n3", 5, "t", "Aartswoud N2", '2025-03-18'),
+(0, "2425", "n3", 6, "u", "Caïssa-Eenhoorn N2", '2025-04-08'),
+(0, "2425", "n4", 1, "u", "Koedijk N1", '2024-10-01'),
+(0, "2425", "n4", 2, "t", "Oppositie N1", '2024-11-19'),
+(0, "2425", "n4", 3, "u", "Opening 64 N2", '2025-01-10'),
+(0, "2425", "n4", 4, "t", "Heerhugowaard N1", '2025-03-04'),
+(0, "2425", "n4", 5, "u", "Bergen N1", '2025-03-20'),
+(0, "2425", "n4", 6, "t", "Noordkopcomb. MSC N2", '2025-04-08'),
+(0, "2425", "n5", 1, "t", "Warmenhuizen'76 N", '2024-10-15'),
+(0, "2425", "n5", 2, "u", "Bergen N2", '2024-11-07'),
+(0, "2425", "n5", 3, "u", "Koedijk N2", '2024-11-26'),
+(0, "2425", "n5", 4, "t", "Noordkopcomb. Magnus N3", '2024-12-17'),
+(0, "2425", "n5", 5, "u", "Vredeburg N2", '2025-02-28'),
+(0, "2425", "n5", 6, "t", "Oppositie N2", '2025-03-25'),
+(0, "2425", "n5", 7, "u", "Noordkopcomb. MSC N4", '2025-04-15');
 
 -- speler
 
@@ -428,63 +503,152 @@ select * from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "in
 delete from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "int" and rondeNUmmer = @ronde;
 
 insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
-(0, "2425", "int", 3, 0, 103, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 189, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 6192098, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 6207520, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 6212404, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 6565801, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 6572511, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 6951362, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7099950, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7101193, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7282033, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7321534, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7399469, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7518203, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7519930, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7529522, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7544438, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7546506, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7649213, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7691728, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7699010, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7731812, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7758014, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7771665, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7777715, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7824674, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8073978, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8224502, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8243312, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8350738, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8372881, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8611922, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 9023234, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 9056674, "m", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7535396, "n", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 9065100, "n", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 6930957, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7129991, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7210137, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7386060, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7419621, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7441346, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7582102, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 7613166, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8112654, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8276752, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8335415, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8358966, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8485059, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8617367, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8750093, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8795941, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8886625, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 8950876, "p", "", 0, "", '2024-09-24', "int"),
-(0, "2425", "int", 3, 0, 9077651, "p", "", 0, "", '2024-09-24', "int");
+(0, "2425", "int", 3, 0, 189, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 6207520, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 6212404, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 6214153, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 6930957, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7101193, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7129991, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7210137, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7269900, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7529522, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7535396, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7544438, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7546506, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7649213, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7699010, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7757409, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 8112654, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 8335415, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 8358966, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 8611922, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 8851073, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 8886625, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 8950876, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 9023234, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 9065100, "a", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 0, 7428960, "p", "", 0, "", '2024-09-24', "int"),
+(0, "2425", "int", 3, 1, 7758014, "i", "w", 7099950, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 1, 7099950, "i", "z", 7758014, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 2, 7282033, "i", "w", 7399469, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 2, 7399469, "i", "z", 7282033, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 3, 7691728, "i", "w", 6192098, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 3, 6192098, "i", "z", 7691728, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 4, 7613166, "i", "w", 7731812, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 4, 7731812, "i", "z", 7613166, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 5, 6951362, "i", "w", 7386060, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 5, 7386060, "i", "z", 6951362, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 6, 6572511, "i", "w", 8485059, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 6, 8485059, "i", "z", 6572511, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 7, 8372881, "i", "w", 7771665, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 7, 7771665, "i", "z", 8372881, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 8, 8073978, "i", "w", 9056674, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 8, 9056674, "i", "z", 8073978, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 9, 8224502, "i", "w", 5968611, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 9, 5968611, "i", "z", 8224502, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 10, 7904589, "i", "w", 7321534, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 10, 7321534, "i", "z", 7904589, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 11, 8350738, "i", "w", 7518203, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 11, 7518203, "i", "z", 8350738, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 12, 8243312, "i", "w", 7519930, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 12, 7519930, "i", "z", 8243312, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 13, 7824674, "i", "w", 8795941, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 13, 8795941, "i", "z", 7824674, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 14, 6565801, "i", "w", 8617367, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 14, 8617367, "i", "z", 6565801, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 15, 7441346, "i", "w", 7582102, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 15, 7582102, "i", "z", 7441346, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 16, 8276752, "i", "w", 7419621, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 16, 7419621, "i", "z", 8276752, "½", '2024-09-24', "int"),
+(0, "2425", "int", 3, 17, 8750093, "i", "w", 103, "1", '2024-09-24', "int"),
+(0, "2425", "int", 3, 17, 103, "i", "z", 8750093, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 18, 7777715, "i", "w", 9077651, "0", '2024-09-24', "int"),
+(0, "2425", "int", 3, 18, 9077651, "i", "z", 7777715, "1", '2024-09-24', "int");
 
--- ronde 4 TODO
-set @ronde = 4;
+-- ronde 4
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0, "2425", "int", 4, 0, 103, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 189, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 5968611, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6192098, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6207520, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6212404, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6572511, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7099950, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7321534, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7419621, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7518203, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7529522, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7535396, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7544438, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7582102, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7691728, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7699010, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7731812, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7758014, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7771665, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7777715, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7824674, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8073978, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8112654, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8224502, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8350738, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8372881, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8950876, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 9023234, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 9065100, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 9077651, "m", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6214153, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6565801, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7269900, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7282033, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7399469, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7519930, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7546506, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7649213, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7757409, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8276752, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 9056674, "n", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6930957, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 6951362, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7101193, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7129991, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7210137, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7386060, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7428960, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7441346, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7613166, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 7904589, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8243312, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8335415, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8358966, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8485059, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8611922, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8617367, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8750093, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8795941, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8851073, "p", "", 0, "", '2024-10-01', "int"),
+(0, "2425", "int", 4, 0, 8886625, "p", "", 0, "", '2024-10-01', "int");
+
+
+-- ronde 5 TODO
+set @ronde = 5;
 select * from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "int" and rondeNUmmer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "int" and rondeNUmmer = @ronde;
+
+-- nhsb
+set @ronde= 3;
+select * from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "int" and rondeNUmmer = @ronde
+and knsbNummer in (8611922, 6930957, 6207520, 8112654, 7529522, 6225934);
+
+update uitslag set partij = "e" where clubCode = 0 and seizoen = "2425" and teamCode = "int" and rondeNUmmer = @ronde
+and knsbNummer in (8611922, 6930957, 6207520, 8112654, 7529522, 6225934);
+
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0, "2425", "n2", 1, 1, 8611922, "e", "z", 0, "½", '2024-09-24', "int"),
+(0, "2425", "n2", 1, 2, 6930957, "e", "w", 0, "0", '2024-09-24', "int"),
+(0, "2425", "n2", 1, 3, 6207520, "e", "z", 0, "1", '2024-09-24', "int"),
+(0, "2425", "n2", 1, 4, 8112654, "e", "w", 0, "1", '2024-09-24', "int"),
+(0, "2425", "n2", 1, 5, 7529522, "e", "z", 0, "½", '2024-09-24', "int"),
+(0, "2425", "n2", 1, 6, 6225934, "e", "w", 0, "1", '2024-09-24', "int");

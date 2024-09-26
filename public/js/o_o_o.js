@@ -24,10 +24,22 @@ import * as zyq from "./zyq.js";
 export async function init() {
     await synchroniseren();
     urlVerwerken();
+    // console.log("--- na urlVerwerken() ---");
+    // console.log(o_o_o);
     await zyq.gebruikerVerwerken();
     await seizoenVerwerken();
-    o_o_o.competitie = o_o_o.team = competitieBepalen();
+    // console.log("--- na seizoenVerwerken() ---");
+    // console.log(o_o_o);
+    // console.log(db.isCompetitie({teamCode: o_o_o.team }));
+    o_o_o.competitie = db.isCompetitie({teamCode: o_o_o.team })
+        ? o_o_o.team
+        : competitieBepalen();
+    if (!o_o_o.team) {
+        o_o_o.team = o_o_o.competitie;
+    }
     o_o_o.versie = versieBepalen();
+    // console.log("--- na versieBepalen() ---");
+    // console.log(o_o_o);
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
@@ -180,6 +192,8 @@ export function volgendeRonde() {
  * @param ronde rondenlijst
  * @param jsonDatum gegeven datum
  * @returns {number} index of -1
+ *
+ * "20240913"
  */
 function indexRondeTotDatum(ronde, jsonDatum = null) {
     const peilDatum = jsonDatum ? new Date(jsonDatum) : new Date();

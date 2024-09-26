@@ -1,5 +1,11 @@
 use waagtoren;
 
+-- planning:
+-- speler wijzigen
+-- team wijzigen
+-- gebruiker wijzigen
+-- mutatie vervangen door log
+
 drop table if exists rating; -- 0-0-0.nl versie 0.8.27
 create table rating (
 	knsbNummer int not null,
@@ -127,8 +133,6 @@ add CONSTRAINT fk_ronde_team
     ON UPDATE CASCADE;
     
 alter table uitslag drop column anderTeam;  
-
-describe uitslag;  
     
 DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.59
 CREATE TABLE uitslag (
