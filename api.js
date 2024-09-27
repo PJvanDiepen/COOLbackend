@@ -36,7 +36,7 @@ geheugenGebruik();
 const db = require("./modules/db.cjs");
 
 /*
-data met db.cjs voor de server en met met db.js voor de browser.
+data met db.cjs voor de server en met db.js voor de browser.
 
 Op de server is data zo veel mogelijk compleet uit de MySQL database,
 zodat het niet nodig is om steeds opnieuw te lezen.
@@ -79,9 +79,21 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
             db.rondeToevoegen(synchroon.compleet, ronde);
         }
     }
-    // if (rondeNummer === undefined) {
-    return eenTeam.ronde; // alle ronden
-    // } TODO const eenRonde, eventueel uitslagen inlezen en toevoegen en return alle uitslagen
+    if (rondeNummer === undefined) {
+        return eenTeam.ronde; // alle ronden
+    }
+    const eenRonde = db.tak(clubCode, seizoen, teamCode, rondeNummer);
+    if (eenRonde.ronde.length === 0) {
+        const uitslagen = await Uitslag.query()
+            .where("uitslag.clubCode", clubCode)
+            .where("uitslag.seizoen", seizoen)
+            .where("uitslag.teamCode", teamCode)
+            .where("uitslag.rondeNummer", rondeNummer);
+        for (const uitslag of uitslagen) {
+            db.uitslagToevoegen(synchroon.compleet, uitslag);
+        }
+    }
+    return eenRonde.uitslag;
 }
 
 /**

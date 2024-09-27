@@ -494,7 +494,7 @@ function rondeToevoegen(compleet, object) {
     if (ronde) {
         const rondeIndex = team.rondeIndex(ronde.rondeNummer);
         if (rondeIndex >= 0) {
-            console.log(`${ronde.rondeNummer} overschrijft ${ronde.rondeNummer}`); // TODO rondeTekst
+            console.log(`${ronde.rondeNummer} overschrijft ${ronde.rondeTekst}`);
             team.ronde[rondeIndex] = ronde;
         } else {
             team.ronde.push(ronde);
@@ -513,7 +513,7 @@ function rondeMaken(compleet, object) {
         tegenstander,
         datum
     } = object;
-    if (typeof clubCode !== "number") {
+    if (typeof rondeNummer !== "number") {
         return null;
     }
     const rondeTekst = isCompetitie(object)
@@ -563,6 +563,105 @@ function rondeMaken(compleet, object) {
         uitslag,
         uitslagIndex,   // (rondeNummer)
         zonderUitslag
+    });
+}
+
+function uitslagToevoegen(compleet, object) {
+    const clubIndex = boom.clubIndex(object.clubCode);
+    if (clubIndex < 0) {
+        return null;
+    }
+    const club = boom.club[clubIndex];
+    const seizoenIndex = club.seizoenIndex(object.seizoen);
+    if (seizoenIndex < 0) {
+        return null;
+    }
+    const seizoen = club.seizoen[seizoenIndex];
+    const teamIndex = seizoen.teamIndex(object.teamCode);
+    if (teamIndex < 0) {
+        return null;
+    }
+    const team = seizoen.team[teamIndex];
+    const rondeIndex = team.rondeIndex(object.rondeNummer);
+    if (rondeIndex < 0) {
+        return null;
+    }
+    const ronde = team.ronde[rondeIndex];
+    const uitslag = uitslagMaken(compleet, object);
+    if (uitslag) {
+        const uitslagIndex = ronde.uitslag(uitslag.knsbNummer);
+        if (uitslagIndex >= 0) {
+            console.log(`${uitslag.knsbNummer} overschrijft ${uitslag.knsbNummer}`); // TODO naam
+            ronde.uitslag[uitslagIndex] = uitslag;
+        } else {
+            ronde.uitslag.push(uitslag);
+        }
+    }
+    return uitslag;
+}
+
+function uitslagMaken(compleet, object) {
+    const {
+        clubCode,
+        seizoen,
+        teamCode,
+        rondeNummer,
+        bordNummer,
+        knsbNummer,
+        partij,
+        witZwart,
+        tegenstanderNummer,
+        resultaat,
+        datum,
+        competitie
+    } = object;
+    if (typeof knsbNummer !== "number") {
+        return null;
+    }
+    const uitslagTekst = // TODO uitwerken
+        `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
+    console.log(`uitslagMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer}) -> ${uitslagTekst}`);
+
+    function uitslagAfdrukken() {
+        console.log(uitslagTekst);
+        return this;
+    }
+
+    function kaleUitslag() {
+        return {
+            compleet: compleet,
+            clubCode: clubCode,
+            seizoen: seizoen,
+            teamCode: teamCode,
+            rondeNummer: rondeNummer,
+            bordNummer: bordNummer,
+            knsbNummer: knsbNummer,
+            partij: partij,
+            witZwart: witZwart,
+            tegenstanderNummer: tegenstanderNummer,
+            resultaat: resultaat,
+            datum: datum,
+            competitie: competitie
+        };
+    }
+
+    return Object.freeze({
+        compleet,
+        clubCode,
+        seizoen,
+        teamCode,
+        rondeNummer,
+        bordNummer,
+        knsbNummer,
+        partij,
+        witZwart,
+        tegenstanderNummer,
+        resultaat,
+        datum,
+        competitie,
+        uitslagTekst,
+        uitslagAfdrukken, // () ->
+        kaleUitslag
     });
 }
 
@@ -726,6 +825,8 @@ module.exports = { // CommonJS voor node.js
     teamVoluit,            // (teamCode)
     rondeToevoegen,        // (compleet, object)
     rondeMaken,            // (compleet, object)
+    uitslagToevoegen,      // (compleet, object)
+    uitslagMaken,          // (compleet, object)
 
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,
