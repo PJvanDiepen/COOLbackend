@@ -204,7 +204,7 @@ function indexRondeTotDatum(ronde, jsonDatum = null) {
     while (new Date(ronde[index].datum) < peilDatum) { // eerste ronde voor peildatum
         index++;
     }
-    return index;
+    return index; // TODO alleen op dinsdag met - 1
 }
 
 export function rondeGegevens(teamCode, rondeNummer) {
@@ -224,7 +224,10 @@ export async function vraag(commando) {
         team: o_o_o.team,
         competitie: o_o_o.competitie,
         ronde: 1,
-        speler: 0
+        speler: 0,
+        maand: 1,
+        jaar: 2024,
+        csv: ""
     };
 
     function invullen() {
@@ -235,7 +238,10 @@ export async function vraag(commando) {
             .replace(":team", specificatie.team)
             .replace(":competitie", specificatie.competitie)
             .replace(":ronde", specificatie.ronde)
-            .replace(":speler", specificatie.speler);
+            .replace(":speler", specificatie.speler)
+            .replace(":maand", specificatie.maand)
+            .replace(":jaar", specificatie.jaar)
+            .replace(":csv", specificatie.csv);
     }
 
     function specificeren(object) {
@@ -255,6 +261,10 @@ export async function vraag(commando) {
         return this;
     }
 
+    async function muteren() {
+        return await vraagServer(invullen());
+    }
+
     async function antwoord() {
         return await vraagLokaal(invullen());
     }
@@ -262,6 +272,7 @@ export async function vraag(commando) {
     return Object.freeze({
         specificeren, // (object) ->
         afdrukken,    // () ->
+        muteren,      // ()
         antwoord      // ()
     });
 }

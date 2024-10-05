@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init } from "./o_o_o.js";
+import { o_o_o, init, vraag } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -36,10 +36,8 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
             }
             console.log({mutaties});
         }]);
-    console.log("--- tot hier! ---");
-    console.log(db.tak(o_o_o.club, o_o_o.seizoen).seizoenTekst); // TODO zyq.seizoenVoluit vervangen
     html.id("kop").textContent =
-        `${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}overzicht voor bestuur`;
+        `${db.tak(o_o_o.club, o_o_o.seizoen).seizoenTekst}${html.SCHEIDING}overzicht voor bestuur`;
     await ledenLijst(
         personen,
         Number(html.params.get("lid")),
@@ -147,7 +145,7 @@ async function alleRatinglijsten(lijst) {
         const maand = (i + dezeMaand) > 12 ? (i + dezeMaand) - 12: (i + dezeMaand);
         const jaar = (i + dezeMaand) > 12 ? ditJaar : ditJaar - 1;
         const juisteJaar = ratingJaar[maand] === jaar;
-        const naam = `${jaar}-${zyq.voorloopNul(maand)}-KNSB`;
+        const naam = `${jaar}-${zyq.voorloopNul(maand)}-KLASSIEK`;
         lijst.append(html.rij(html.naarPaginaEnTerug(
             `https://schaakbond.nl/wp-content/uploads/${jaar}/${zyq.voorloopNul(maand)}/${naam}.zip`,
             `Ratinglijst 1 ${db.maandInvullen.get(maand)} ${jaar}`),
@@ -162,13 +160,15 @@ async function alleRatinglijsten(lijst) {
 Zie Matt Frisbie: Professional JavaScript for Web Developers blz. 760
  */
 async function leesRatinglijst(filesList, output) {
-    filesList.addEventListener("change", function (event) {
+    filesList.addEventListener("change", async function (event) {
         const files = event.target.files;
         if (!ratinglijstMaandJaarInvullen.has(files[0].name)) {
             html.tekstToevoegen(output, `\n${files[0].name} is geen ratinglijst.`);
         } else {
             const [maand, jaar] = ratinglijstMaandJaarInvullen.get(files[0].name);
             html.tekstToevoegen(output, `\n${files[0].name} verwerken met maand = ${maand} en jaar = ${jaar}.`);
+            const ratingMuteren = await vraag("/rating/muteren");
+            ratingMuteren.specificeren({maand: maand, jaar: jaar});
             const reader = new FileReader();
             reader.readAsText(files[0]);
             reader.onerror = function() {
@@ -176,14 +176,20 @@ async function leesRatinglijst(filesList, output) {
             };
             reader.onload = async function() {
                 const regels = reader.result.split('\r\n');
+                let gewijzigd = 0;
+                let toegevoegd = 0;
                 if (regels.shift() === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S" && regels.pop() === "") { // zonder eerste en laatste regel
-                    const verwijderd = await zyq.serverFetch(`/${zyq.uuidToken}/rating/verwijderen/${maand}`);
-                    const toevoegen = regels.length;
-                    html.tekstToevoegen(output, `\nDe ratinglijst van ${db.maandInvullen.get(maand)} had ${verwijderd} en krijgt ${toevoegen} KNSB leden.`);
+                    html.tekstToevoegen(output, `\nIn de ratinglijst van ${db.maandInvullen.get(maand)} staan ${regels.length - 1} KNSB leden.`);
                     for (const regel of regels) {
-                        await zyq.serverFetch(`/${zyq.uuidToken}/rating/toevoegen/${maand}/${jaar}/${regel}`);
+                        const mutatie = Number(ratingMuteren.specificeren({csv: regel}).muteren());
+                        if (mutatie === db.GEWIJZIGD) {
+                            gewijzigd++;
+                        } else if (mutatie === db.TOEGEVOEGD) {
+                            toegevoegd++;
+                        }
                     }
-                    html.zelfdePagina();
+                    console.log(`wijzigingen: ${gewijzigd} toevoegingen: ${toegevoegd}`);
+                    // html.zelfdePagina();
                 } else {
                     html.tekstToevoegen(output, `\n${files[0].name} heeft niet de juiste naam of bevat geen ratinglijst.`);
                 }

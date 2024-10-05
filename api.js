@@ -143,6 +143,56 @@ module.exports = function (url) {
     });
 
     /*
+    KNSB ratinglijst is CSV bestand met 8 velden
+
+    0 Relatienummer > knsbNummer
+    1 Naam achternaam, voornaam > knsbNaam
+    2 Titel IM, GM of ... > titel
+    3 FED NED of ... > federatie
+    4 Rating > knsbRating
+    5 Nv > partijen
+    6 Geboren > geboorteJaar
+    7 S F of . > sekse
+
+    Database: rating update of insert
+
+    Frontend: bestuur.js
+     */
+    url.get("/:uuid/rating/muteren/:maand/:jaar/:csv", async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuid);
+        let mutatie = db.NIET_GEWIJZIGD;
+        if (gebruiker.juisteRechten(db.BESTUUR)) {
+            const csv = ctx.params.csv.split(";"); // 8 velden
+            if (await Rating.query().findById([ctx.params.maand, csv[0]])
+                .patch({
+                    knsbNaam: csv[1],
+                    titel: csv[2],
+                    federatie: csv[3],
+                    knsbRating: Number(csv[4]),
+                    partijen: Number(csv[5]),
+                    geboorteJaar: Number(csv[6]),
+                    sekse: csv[7],
+                    jaar: ctx.params.jaar})) {
+                mutatie = db.GEWIJZIGD;
+            } else if (await Rating.query()
+                .insert({
+                    knsbNummer: Number(csv[0]),
+                    knsbNaam: csv[1],
+                    titel: csv[2],
+                    federatie: csv[3],
+                    knsbRating: Number(csv[4]),
+                    partijen: Number(csv[5]),
+                    geboorteJaar: Number(csv[6]),
+                    sekse: csv[7],
+                    maand: ctx.params.maand,
+                    jaar: ctx.params.jaar})) {
+                mutatie = db.TOEGEVOEGD;
+            }
+        }
+        ctx.body = mutatie;
+    });
+
+    /*
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
@@ -169,8 +219,8 @@ module.exports = function (url) {
     });
 
     /*
-Frontend: o_o_o.js
- */
+    Frontend: o_o_o.js
+     */
     url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
         const ronden = await databaseLezen(ctx.params.club, ctx.params.seizoen, ctx.params.team);
         ctx.body = ronden.map(function (ronde) {

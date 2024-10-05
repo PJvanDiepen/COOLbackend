@@ -13,7 +13,6 @@ set @seizoen = '1920'; -- TODO 19, 18, 17, 16, 15, 13, 10, 8, 1
 set @seizoen = '2122'; -- TODO 24, 23, 22, 21, 20
 set @seizoen = '2223'; -- TODO 32, 31, 30, 29
 set @seizoen = '2324';
-set @seizoen = '2324';
 set @seizoen = '2425';
 
 with 
@@ -75,8 +74,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2425';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 2;
-set @bord = 22;
+set @ronde = 4;
+set @bord = 18;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -87,11 +86,11 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit = 189; -- Jan
-set @zwart = 7691728; -- Karel
+set @wit = 6212404; -- PvD
+set @zwart = 8350738; -- Ramon
 
-set @oneven = 6212404; -- Peter
-set @afwezig = 9001586; -- Abdul Rashid
+set @oneven = 7777715; -- Richard
+set @afwezig = 189; -- Jan Woestijn
 set @extern = 7758014; -- Alex
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
@@ -645,6 +644,18 @@ and knsbNummer in (8611922, 6930957, 6207520, 8112654, 7529522, 6225934);
 update uitslag set partij = "e" where clubCode = 0 and seizoen = "2425" and teamCode = "int" and rondeNUmmer = @ronde
 and knsbNummer in (8611922, 6930957, 6207520, 8112654, 7529522, 6225934);
 
+-- Waagtoren n1
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0, "2425", "n1", 1, 1, 8096242, "e", "w", 0, "0", '2024-09-27', "int"),
+(0, "2425", "n1", 1, 2, 7099950, "e", "z", 0, "½", '2024-09-27', "int"),
+(0, "2425", "n1", 1, 3, 8587337, "e", "w", 0, "1", '2024-09-27', "int"),
+(0, "2425", "n1", 1, 4, 5968611, "e", "z", 0, "1", '2024-09-27', "int"),
+(0, "2425", "n1", 1, 5, 7613166, "e", "w", 0, "0", '2024-09-27', "int"),
+(0, "2425", "n1", 1, 6, 8611922, "e", "z", 0, "½", '2024-09-27', "int"),
+(0, "2425", "n1", 1, 7, 7129991, "e", "w", 0, "1", '2024-09-27', "int"),
+(0, "2425", "n1", 1, 8, 8484443, "e", "z", 0, "0", '2024-09-27', "int");
+
+-- Waagtoren n2
 insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
 (0, "2425", "n2", 1, 1, 8611922, "e", "z", 0, "½", '2024-09-24', "int"),
 (0, "2425", "n2", 1, 2, 6930957, "e", "w", 0, "0", '2024-09-24', "int"),
@@ -652,3 +663,23 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0, "2425", "n2", 1, 4, 8112654, "e", "w", 0, "1", '2024-09-24', "int"),
 (0, "2425", "n2", 1, 5, 7529522, "e", "z", 0, "½", '2024-09-24', "int"),
 (0, "2425", "n2", 1, 6, 6225934, "e", "w", 0, "1", '2024-09-24', "int");
+
+-- Waagtoren n3
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0, "2425", "n3", 1, 1, 9056674, "e", "z", 0, "1", '2024-10-01', "int"),
+(0, "2425", "n3", 1, 2, 7824674, "e", "w", 0, "1", '2024-10-01', "int"),
+(0, "2425", "n3", 1, 3, 7758014, "e", "z", 0, "0", '2024-10-01', "int"),
+(0, "2425", "n3", 1, 4, 7535385, "e", "w", 0, "1", '2024-10-01', "int"),
+(0, "2425", "n3", 1, 5, 6565801, "e", "z", 0, "½", '2024-10-01', "int"),
+(0, "2425", "n3", 1, 6, 7468362, "e", "w", 0, "½", '2024-10-01', "int");
+
+-- Waagtoren n4
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0, "2425", "n4", 1, 1, 6214153, "e", "w", 0, "0", '2024-10-01', "int"),
+(0, "2425", "n4", 1, 2, 7282033, "e", "z", 0, "1", '2024-10-01', "int"),
+(0, "2425", "n4", 1, 3, 7441346, "e", "w", 0, "1", '2024-10-01', "int"),
+(0, "2425", "n4", 1, 4, 7731812, "e", "z", 0, "1", '2024-10-01', "int"),
+(0, "2425", "n4", 1, 5, 7546506, "e", "w", 0, "1", '2024-10-01', "int"),
+(0, "2425", "n4", 1, 6, 7210137, "e", "z", 0, "1", '2024-10-01', "int");
+
+-- Waagtoren n5

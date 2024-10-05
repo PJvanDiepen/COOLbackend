@@ -37,6 +37,12 @@ function key(o) {
     }
 }
 
+// database mutatie
+const VERWIJDERD = -1
+const NIET_GEWIJZIGD = 0
+const GEWIJZIGD = 1;
+const TOEGEVOEGD = 2;
+
 // mutatie.invloed
 const GEEN_INVLOED = 0;
 const OPNIEUW_INDELEN = 1;
@@ -796,6 +802,11 @@ const MENU = "menu"; // TODO verplaatsen naar html.js
 module.exports = { // CommonJS voor node.js
     vragen,
     key,                   // (object)
+    // database mutatie
+    VERWIJDERD,
+    NIET_GEWIJZIGD,
+    GEWIJZIGD,
+    TOEGEVOEGD,
     // mutatie.invloed
     GEEN_INVLOED,
     OPNIEUW_INDELEN,
