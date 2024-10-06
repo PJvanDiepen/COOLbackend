@@ -163,35 +163,33 @@ async function leesRatinglijst(filesList, output) {
     filesList.addEventListener("change", async function (event) {
         const files = event.target.files;
         if (!ratinglijstMaandJaarInvullen.has(files[0].name)) {
-            html.tekstToevoegen(output, `\n${files[0].name} is geen ratinglijst.`);
+            html.tekstToevoegen(output, `${files[0].name} is geen ratinglijst.`);
         } else {
             const [maand, jaar] = ratinglijstMaandJaarInvullen.get(files[0].name);
-            html.tekstToevoegen(output, `\n${files[0].name} verwerken met maand = ${maand} en jaar = ${jaar}.`);
+            html.tekstToevoegen(output, `${files[0].name} verwerken met maand = ${maand} en jaar = ${jaar}.`);
             const ratingMuteren = await vraag("/rating/muteren");
             ratingMuteren.specificeren({maand: maand, jaar: jaar});
             const reader = new FileReader();
             reader.readAsText(files[0]);
             reader.onerror = function() {
-                html.tekstToevoegen(output, `\n${files[0].name} lezen gaat fout met code: ${reader.error.code}.`);
+                html.tekstToevoegen(output, `${files[0].name} lezen gaat fout met code: ${reader.error.code}.`);
             };
             reader.onload = async function() {
                 const regels = reader.result.split('\r\n');
                 let gewijzigd = 0;
                 let toegevoegd = 0;
                 if (regels.shift() === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S" && regels.pop() === "") { // zonder eerste en laatste regel
-                    html.tekstToevoegen(output, `\nIn de ratinglijst van ${db.maandInvullen.get(maand)} staan ${regels.length - 1} KNSB leden.`);
                     for (const regel of regels) {
-                        const mutatie = Number(ratingMuteren.specificeren({csv: regel}).muteren());
+                        const mutatie = Number(await ratingMuteren.specificeren({csv: regel}).muteren());
                         if (mutatie === db.GEWIJZIGD) {
                             gewijzigd++;
                         } else if (mutatie === db.TOEGEVOEGD) {
                             toegevoegd++;
                         }
                     }
-                    console.log(`wijzigingen: ${gewijzigd} toevoegingen: ${toegevoegd}`);
-                    // html.zelfdePagina();
+                    html.zelfdePagina(`wijzigingen=${gewijzigd}&toevoegingen=${toegevoegd}`);
                 } else {
-                    html.tekstToevoegen(output, `\n${files[0].name} heeft niet de juiste naam of bevat geen ratinglijst.`);
+                    html.tekstToevoegen(output, `${files[0].name} is geen ratinglijst.`);
                 }
             };
         }

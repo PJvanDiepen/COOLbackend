@@ -193,6 +193,22 @@ module.exports = function (url) {
     });
 
     /*
+    Database: rating delete
+
+    Frontend: TODO bestuur.js
+     */
+    url.get("/:uuid/rating/verwijderen/:maand/:jaar", async function (ctx) {
+        let mutaties = 0;
+        const gebruiker = await gebruikerRechten(ctx.params.uuid);
+        if (gebruiker.juisteRechten(db.BESTUUR)) {
+            mutaties = await Rating.query().delete()
+                .where("rating.maand", ctx.params.maand)
+                .whereNot("rating.jaar", ctx.params.jaar);
+        }
+        ctx.body = mutaties;
+    });
+
+    /*
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
@@ -1021,60 +1037,6 @@ module.exports = function (url) {
                 {knsbNummer: ctx.params.knsbNummer, naam: ctx.params.naam})) {
                 aantal = 1;
                 await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
-            }
-        }
-        ctx.body = aantal;
-    });
-
-    /*
-    Database: rating delete
-
-    Frontend: bestuur.js
-     */
-    url.get("/:uuid/rating/verwijderen/:maand", async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuid);
-        let aantal = 0;
-        if (gebruiker.juisteRechten(db.BESTUUR)) {
-            aantal = await Rating.query().delete().where("rating.maand", ctx.params.maand);
-            await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
-        }
-        ctx.body = aantal;
-    });
-
-    /*
-    KNSB ratinglijst is CSV bestand met 8 velden
-
-    0 Relatienummer > knsbNummer
-    1 Naam achternaam, voornaam > knsbNaam
-    2 Titel IM, GM of ... > titel
-    3 FED NED of ... > federatie
-    4 Rating > knsbRating
-    5 Nv > partijen
-    6 Geboren > geboorteJaar
-    7 S F of . > sekse
-
-    Database: rating insert
-
-    Frontend: bestuur.js
-     */
-    url.get("/:uuid/rating/toevoegen/:maand/:jaar/:csv", async function (ctx) {
-        const gebruiker = await gebruikerRechten(ctx.params.uuid);
-        let aantal = 0;
-        if (gebruiker.juisteRechten(db.BESTUUR)) {
-            const csv = ctx.params.csv.split(";");
-            if (await Rating.query().insert({
-                knsbNummer: Number(csv[0]),
-                knsbNaam: csv[1],
-                titel: csv[2],
-                federatie: csv[3],
-                knsbRating: Number(csv[4]),
-                partijen: Number(csv[5]),
-                geboorteJaar: Number(csv[6]),
-                sekse: csv[7],
-                maand: ctx.params.maand,
-                jaar: ctx.params.jaar} )) {
-                aantal = 1;
-                // await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
             }
         }
         ctx.body = aantal;
