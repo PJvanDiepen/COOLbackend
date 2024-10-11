@@ -130,6 +130,16 @@ async function seizoenVerwerken() {
             o_o_o.ronde.splice(i, 0, eenRonde); // op datum tussenvoegen
         }
     }
+    /*
+    TODO uitslagen inlezen
+    TODO uitslagen inlezen tot en met eerste niet complete ronde
+    TODO uitslagen van ronden die niet compleet zijn steeds opnieuw inlezen
+    TODO bepaal ronde voor uitslagenInvullen
+    TODO bepaal ronde voor indelingMaken
+     */
+    const uitslagenVraag = await vraag("/uitslagen");
+    uitslagenVraag.afdrukken();
+
 }
 
 function seizoenBepalen() {

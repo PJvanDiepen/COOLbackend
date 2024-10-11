@@ -229,7 +229,7 @@ function clubMaken(compleet, object) {
         })
     }
 
-    function zonderSeizoen() {
+    function kaleClub() {
         return {
             compleet: compleet,
             clubCode: clubCode,
@@ -247,7 +247,7 @@ function clubMaken(compleet, object) {
         clubAfdrukken, // () ->
         seizoen,
         seizoenIndex,  // (seizoenCode)
-        zonderSeizoen  // ()
+        kaleClub       // ()
     });
 }
 
@@ -314,7 +314,7 @@ function seizoenMaken(compleet, object) {
         })
     }
 
-    function zonderTeam() {
+    function kaleSeizoen() {
         return {
             compleet: compleet,
             clubCode: clubCode,
@@ -331,7 +331,7 @@ function seizoenMaken(compleet, object) {
         seizoenDaarna,    // (seizoenCode)
         team,
         teamIndex,        // (teamCode)
-        zonderTeam
+        kaleSeizoen       // ()
     });
 }
 
@@ -401,7 +401,7 @@ function teamMaken(compleet, object) {
         })
     }
 
-    function zonderRonde() {
+    function kaleTeam() {
         return {
             compleet: compleet,
             clubCode: clubCode,
@@ -431,7 +431,7 @@ function teamMaken(compleet, object) {
         teamAfdrukken, // () ->
         ronde,
         rondeIndex,    // (rondeNummer)
-        zonderRonde
+        kaleTeam       // ()
     });
 }
 
@@ -542,7 +542,7 @@ function rondeMaken(compleet, object) {
         })
     }
 
-    function zonderUitslag() {
+    function kaleRonde() {
         return {
             compleet: compleet,
             clubCode: clubCode,
@@ -568,7 +568,7 @@ function rondeMaken(compleet, object) {
         rondeAfdrukken, // () ->
         uitslag,
         uitslagIndex,   // (rondeNummer)
-        zonderUitslag
+        kaleRonde       // ()
     });
 }
 
@@ -667,7 +667,7 @@ function uitslagMaken(compleet, object) {
         competitie,
         uitslagTekst,
         uitslagAfdrukken, // () ->
-        kaleUitslag
+        kaleUitslag       // ()
     });
 }
 

@@ -36,9 +36,9 @@ geheugenGebruik();
 const db = require("./modules/db.cjs");
 
 /*
-data met db.cjs voor de server en met db.js voor de browser.
+db.boom met db.cjs voor de server en met db.js voor de browser.
 
-Op de server is data zo veel mogelijk compleet uit de MySQL database,
+Op de server is db.boom zo veel mogelijk compleet uit de MySQL database,
 zodat het niet nodig is om steeds opnieuw te lezen.
 De browser synchroniseert data met de server aan de hand van het volgnummer in compleet van synchroon.
 De data op de server krijgt een nieuw volgnummer na het muteren van de MySQL database
@@ -212,7 +212,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.tak(ctx.params.club).zonderSeizoen();
+        ctx.body = db.tak(ctx.params.club).kaleClub();
     });
 
     /*
@@ -220,7 +220,7 @@ module.exports = function (url) {
      */
     url.get("/:club/seizoenen", function (ctx) {
         ctx.body = db.tak(ctx.params.club).seizoen.map(function (seizoen) {
-            return seizoen.zonderTeam();
+            return seizoen.kaleSeizoen();
         });
     });
 
@@ -230,7 +230,7 @@ module.exports = function (url) {
     url.get("/:club/:seizoen/teams", async function (ctx) {
         const teams = await databaseLezen(ctx.params.club, ctx.params.seizoen);
         ctx.body = teams.map(function (team) {
-            return team.zonderRonde();
+            return team.kaleTeam();
         });
     });
 
@@ -240,7 +240,17 @@ module.exports = function (url) {
     url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
         const ronden = await databaseLezen(ctx.params.club, ctx.params.seizoen, ctx.params.team);
         ctx.body = ronden.map(function (ronde) {
-            return ronde.zonderUitslag();
+            return ronde.kaleRonde();
+        });
+    });
+
+    /*
+    Frontend: o_o_o.js
+     */
+    url.get("/:club/:seizoen/:team/:ronde/uitslagen", async function (ctx) {
+        const uitslagen = await databaseLezen(ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde);
+        ctx.body = uitslagen.map(function (uitslag) {
+            return uitslag.kaleUitslag();
         });
     });
 
