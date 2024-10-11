@@ -131,15 +131,23 @@ async function seizoenVerwerken() {
         }
     }
     /*
-    TODO uitslagen inlezen
     TODO uitslagen inlezen tot en met eerste niet complete ronde
     TODO uitslagen van ronden die niet compleet zijn steeds opnieuw inlezen
     TODO bepaal ronde voor uitslagenInvullen
     TODO bepaal ronde voor indelingMaken
      */
     const uitslagenVraag = await vraag("/uitslagen");
-    uitslagenVraag.afdrukken();
-
+    for (const eenTeam of eenSeizoen.team) {
+        for (const eenRonde of eenTeam.ronde) {
+            const uitslagen = await uitslagenVraag
+                .specificeren({team: eenRonde.teamCode, ronde: eenRonde.rondeNummer})
+                .afdrukken()
+                .antwoord();
+            for (const uitslag of uitslagen) {
+                db.uitslagToevoegen(uitslag.compleet, uitslag);
+            }
+        }
+    }
 }
 
 function seizoenBepalen() {

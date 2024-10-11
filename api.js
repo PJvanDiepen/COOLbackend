@@ -83,7 +83,7 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
         return eenTeam.ronde; // alle ronden
     }
     const eenRonde = db.tak(clubCode, seizoen, teamCode, rondeNummer);
-    if (eenRonde.ronde.length === 0) {
+    if (eenRonde.uitslag.length === 0) {
         const uitslagen = await Uitslag.query()
             .where("uitslag.clubCode", clubCode)
             .where("uitslag.seizoen", seizoen)

@@ -595,7 +595,7 @@ function uitslagToevoegen(compleet, object) {
     const ronde = team.ronde[rondeIndex];
     const uitslag = uitslagMaken(compleet, object);
     if (uitslag) {
-        const uitslagIndex = ronde.uitslag(uitslag.knsbNummer);
+        const uitslagIndex = ronde.uitslagIndex(uitslag.knsbNummer);
         if (uitslagIndex >= 0) {
             console.log(`${uitslag.knsbNummer} overschrijft ${uitslag.knsbNummer}`); // TODO naam
             ronde.uitslag[uitslagIndex] = uitslag;
