@@ -167,8 +167,6 @@ async function leesRatinglijst(filesList, output) {
         } else {
             const [maand, jaar] = ratinglijstMaandJaarInvullen.get(files[0].name);
             html.tekstToevoegen(output, `${files[0].name} verwerken met maand = ${maand} en jaar = ${jaar}.`);
-            const ratingMuteren = await vraag("/rating/muteren");
-            ratingMuteren.specificeren({maand: maand, jaar: jaar});
             const reader = new FileReader();
             reader.readAsText(files[0]);
             reader.onerror = function() {
@@ -176,22 +174,31 @@ async function leesRatinglijst(filesList, output) {
             };
             reader.onload = async function() {
                 const regels = reader.result.split('\r\n');
-                let gewijzigd = 0;
-                let toegevoegd = 0;
                 if (regels.shift() === "Relatienummer;Naam;Titel;FED;Rating;Nv;Geboren;S" && regels.pop() === "") { // zonder eerste en laatste regel
-                    for (const regel of regels) {
-                        const mutatie = Number(await ratingMuteren.specificeren({csv: regel}).muteren());
-                        if (mutatie === db.GEWIJZIGD) {
-                            gewijzigd++;
-                        } else if (mutatie === db.TOEGEVOEGD) {
-                            toegevoegd++;
-                        }
-                    }
-                    html.zelfdePagina(`wijzigingen=${gewijzigd}&toevoegingen=${toegevoegd}`);
+                    await verwerkRatinglijst(maand, jaar, regels);
                 } else {
                     html.tekstToevoegen(output, `${files[0].name} is geen ratinglijst.`);
                 }
             };
         }
     });
+}
+
+async function verwerkRatinglijst(maand, jaar, regels) {
+    const ratingMuteren = await vraag("/rating/muteren");
+    ratingMuteren.specificeren({maand: maand, jaar: jaar});
+    let gewijzigd = 0;
+    let toegevoegd = 0;
+    for (const regel of regels) {
+        const mutatie = Number(await ratingMuteren.specificeren({csv: regel}).muteren());
+        if (mutatie === db.GEWIJZIGD) {
+            gewijzigd++;
+        } else if (mutatie === db.TOEGEVOEGD) {
+            toegevoegd++;
+        }
+    }
+    const ratingVerwijderen = await vraag("/rating/verwijderen");
+    ratingVerwijderen.specificeren({maand: maand, jaar: jaar});
+    const verwijderd = await ratingVerwijderen.muteren();
+    html.zelfdePagina(`wijzig=${gewijzigd}&voegtoe=${toegevoegd}&verwijder${verwijderd}`);
 }

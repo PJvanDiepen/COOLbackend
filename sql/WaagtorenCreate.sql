@@ -131,8 +131,8 @@ add CONSTRAINT fk_ronde_team
     REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-    
-alter table uitslag drop column anderTeam;  
+
+alter table uitslag drop column anderTeam;
     
 DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.59
 CREATE TABLE uitslag (
@@ -157,7 +157,7 @@ add CONSTRAINT fk_uitslag_team
     REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-     
+
 alter table uitslag
 add CONSTRAINT fk_uitslag_competitie
     FOREIGN KEY (clubCode, seizoen, competitie)

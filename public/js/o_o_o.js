@@ -24,13 +24,8 @@ import * as zyq from "./zyq.js";
 export async function init() {
     await synchroniseren();
     urlVerwerken();
-    // console.log("--- na urlVerwerken() ---");
-    // console.log(o_o_o);
     await zyq.gebruikerVerwerken();
     await seizoenVerwerken();
-    // console.log("--- na seizoenVerwerken() ---");
-    // console.log(o_o_o);
-    // console.log(db.isCompetitie({teamCode: o_o_o.team }));
     o_o_o.competitie = db.isCompetitie({teamCode: o_o_o.team })
         ? o_o_o.team
         : competitieBepalen();
@@ -38,8 +33,6 @@ export async function init() {
         o_o_o.team = o_o_o.competitie;
     }
     o_o_o.versie = versieBepalen();
-    // console.log("--- na versieBepalen() ---");
-    // console.log(o_o_o);
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
@@ -134,14 +127,13 @@ async function seizoenVerwerken() {
     TODO uitslagen inlezen tot en met eerste niet complete ronde
     TODO uitslagen van ronden die niet compleet zijn steeds opnieuw inlezen
     TODO bepaal ronde voor uitslagenInvullen
-    TODO bepaal ronde voor indelingMaken
+    TODO bepaal ronde voor indelingMaken i.p.v. volgendeRonde
      */
     const uitslagenVraag = await vraag("/uitslagen");
     for (const eenTeam of eenSeizoen.team) {
         for (const eenRonde of eenTeam.ronde) {
             const uitslagen = await uitslagenVraag
                 .specificeren({team: eenRonde.teamCode, ronde: eenRonde.rondeNummer})
-                .afdrukken()
                 .antwoord();
             for (const uitslag of uitslagen) {
                 db.uitslagToevoegen(uitslag.compleet, uitslag);
@@ -181,11 +173,22 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
     }
 }
 
+/**
+ * laatsteRonde van team of competitie in seizoen
+ *
+ * @returns {number|*} rondeNummer
+ */
 export function laatsteRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     return ronde[ronde.length - 1].rondeNummer;
 }
 
+/**
+ * vorigeRonde is laatste ronde van team of competitie in seizoen
+ * waarvan alle uitslagen zijn ingevuld
+ *
+ * @returns {number|*} rondeNummer
+ */
 export function vorigeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeTotDatum(ronde);
@@ -196,6 +199,37 @@ export function volgendeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeTotDatum(ronde);
     return i < 0 ? 0 : ronde[i].rondeNummer; // geen of volgende ronde
+}
+
+/**
+ * indexRondeCompleet bepaalt index in rondenlijst tot waar alle uitslagen zijn ingevuld
+ *
+ * @param ronde rondenlijst
+ * @param vanaf begin index of 0
+ * @returns {number} index of -1
+ */
+function indexRondeCompleet(ronde, vanaf = 0) {
+    let index = vanaf;
+    while (uitslagenCompleet(ronde[index].uitslag)) { // alle uitsl
+        index++;
+    }
+    return index;
+}
+
+/**
+ * TODO test uitslagen compleet
+ *
+ * @param uitslagen
+ * @returns {boolean}
+ */
+
+function uitslagenCompleet(uitslagen) {
+    for (const uitslag of uitslagen) {
+        if (!db.isResultaat(uitslag)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**

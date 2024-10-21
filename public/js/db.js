@@ -725,7 +725,7 @@ const resultaatInvullen = new Map([
     [VERLIES, "0-1"]]);
 
 function isResultaat(uitslag) {
-    return resultaatInvullen.has(uitslag.resultaat);
+    return uitslag.resultaat ? resultaatInvullen.has(uitslag.resultaat) : false; // blanko is geen resultaat
 }
 
 function resultaatSelecteren(uitslag) {

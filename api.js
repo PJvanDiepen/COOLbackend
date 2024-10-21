@@ -253,8 +253,7 @@ module.exports = function (url) {
             return uitslag.kaleUitslag();
         });
     });
-
-    console.log("--- vragen ---");
+    
     // versie 0.8.60 had 60 endpoints
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
