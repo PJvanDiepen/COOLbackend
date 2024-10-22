@@ -232,7 +232,8 @@ function testUitslagenCompleet(ronden) {
 
 function uitslagenCompleet(uitslagen) {
     for (const uitslag of uitslagen) {
-        if (!(uitslag.partij === db.AFWEZIG) && !db.isResultaat(uitslag)) {
+        if (db.isPlanning(uitslag) || !db.isResultaat(uitslag)) {
+            console.log(uitslag);
             return false;
         }
     }

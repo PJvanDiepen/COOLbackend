@@ -134,21 +134,13 @@ function externePartij(uitslag, totaal) {
 
 function geenPartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
-    const omschrijving = geenPartijInvullen.get(uitslag.partij);
+    const omschrijving = db.geenPartijInvullen.get(uitslag.partij);
     return html.rij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", "", uitslag.punten, totaal);
 }
 
 function naarRonde(uitslag) {
     return html.naarPagina(`ronde.html?ronde=${uitslag.rondeNummer}`, zyq.datumLeesbaar(uitslag));
 }
-
-const geenPartijInvullen = new Map([
-    [db.AFWEZIG, "afgezegd"],
-    [db.ONEVEN, "oneven"],
-    [db.REGLEMENTAIRE_REMISE, "reglementair remise"],
-    [db.REGLEMENTAIR_VERLIES, "reglementair verlies"],
-    [db.REGLEMENTAIRE_WINST, "reglementaire winst"],
-    ["j", "niet gespeeld"]]);
 
 async function ratingPerMaandSpeler(lijst, speler) {
     const ratings = await zyq.localFetch(`/rating/${speler}`);

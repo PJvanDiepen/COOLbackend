@@ -718,6 +718,14 @@ function wedstrijdVoluit(ronde) {
     return tak(ronde.clubCode, ronde.seizoen, ronde.teamCode, ronde.rondeNummer).rondeTekst;
 }
 
+const geenPartijInvullen = new Map([
+    [AFWEZIG, "afgezegd"],
+    [ONEVEN, "oneven"],
+    [REGLEMENTAIRE_REMISE, "reglementair remise"],
+    [REGLEMENTAIR_VERLIES, "reglementair verlies"],
+    [REGLEMENTAIRE_WINST, "reglementaire winst"],
+    ["j", "niet gespeeld"]]);
+
 const resultaatInvullen = new Map([
     ["",""],
     [WINST, "1-0"],
@@ -725,7 +733,15 @@ const resultaatInvullen = new Map([
     [VERLIES, "0-1"]]);
 
 function isResultaat(uitslag) {
-    return uitslag.resultaat ? resultaatInvullen.has(uitslag.resultaat) : false; // blanko is geen resultaat
+    if (isPlanning(uitslag)) {
+        return false;
+    } else if (geenPartijInvullen.has(uitslag.partij)) {
+        return true;
+    } else if (isCompetitie(uitslag) && uitslag.partij === EXTERNE_PARTIJ) { // externe partij tijdens interne ronde
+        return true;
+    } else {
+        return uitslag.resultaat ? resultaatInvullen.has(uitslag.resultaat) : false; // blanko is geen resultaat
+    }
 }
 
 function resultaatSelecteren(uitslag) {
@@ -869,6 +885,7 @@ export { // ES6 voor browser,
     THUIS,
     UIT,
     wedstrijdVoluit,       // (ronde)
+    geenPartijInvullen,
     resultaatInvullen,
     isResultaat,           // (uitslag)
     resultaatSelecteren,   // (uitslag)
