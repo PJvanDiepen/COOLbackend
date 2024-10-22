@@ -191,12 +191,14 @@ export function laatsteRonde() {
  */
 export function vorigeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
+
     const i = indexRondeTotDatum(ronde);
     return ronde[i < 0 ? ronde.length - 1 : i > 0 ? i - 1 : 1].rondeNummer; // laatste, vorige of eerste ronde
 }
 
 export function volgendeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
+    testUitslagenCompleet(ronde); // TODO verwijder
     const i = indexRondeTotDatum(ronde);
     return i < 0 ? 0 : ronde[i].rondeNummer; // geen of volgende ronde
 }
@@ -222,10 +224,15 @@ function indexRondeCompleet(ronde, vanaf = 0) {
  * @param uitslagen
  * @returns {boolean}
  */
+function testUitslagenCompleet(ronden) {
+    for (const ronde of ronden) {
+        console.log(`${ronde.rondeTekst} is ${uitslagenCompleet(ronde.uitslag) ? "" : "niet "}compleet`);
+    }
+}
 
 function uitslagenCompleet(uitslagen) {
     for (const uitslag of uitslagen) {
-        if (!db.isResultaat(uitslag)) {
+        if (!(uitslag.partij === db.AFWEZIG) && !db.isResultaat(uitslag)) {
             return false;
         }
     }
