@@ -5,6 +5,7 @@
 import { o_o_o } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
+
 /**
  * ranglijst voor ranglijst.js, speler.js en indelen.js
  *
@@ -17,10 +18,19 @@ import * as zyq from "./zyq.js";
 export async function ranglijst(rondeNummer, selectie = null) {
     // const totDatum = rondeNummer === o_o_o.laatsteRonde ? zyq.eindeSeizoen(o_o_o.seizoen) : o_o_o.ronde[rondeNummer + 1].datum;
     // TODO is totDatum overbodig?
+    console.log("--- ranglijst ---");
+    console.log(selectie);
     let spelers = await zyq.localFetch(
         `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ranglijst/${zyq.datumSQL()}/${o_o_o.versie}`);
+    console.log(spelers);
     if (selectie) {
         spelers = spelers.filter(function (speler) {return selectie.includes(speler.knsbNummer)})
+    }
+    for (const speler of spelers) {
+        if (!speler.totalen) {
+            console.log(`geen totalen voor ${speler.knsbNummer} ${speler.naam} ${speler.subgroep}`);
+            speler.totalen = geenTotalen(rondeNummer, speler.knsbNummer, speler.subgroep);
+        }
     }
     return spelers.map(spelerTotalen);
 }
@@ -58,6 +68,36 @@ TODO spelerTotalen moeten compleet zijn tot een bepaalde datum en rondeNummer in
 TODO nietTegen per clubCode
 TODO naar reglement.js
  */
+const ratingInvullen = new Map([
+    ["A", 2000],
+    ["B", 1900],
+    ["C", 1800],
+    ["D", 1700],
+    ["E", 1600],
+    ["F", 1500],
+    ["G", 1400],
+    ["H", 1300]]);
+
+const eigenWaardeCijferInvullen = new Map([
+    ["A", 12],
+    ["B", 11],
+    ["C", 10],
+    ["D", 9],
+    ["E", 8],
+    ["F", 7],
+    ["G", 6],
+    ["H", 5]]);
+
+function geenTotalen(rondeNummer, knsbNummer, subgroep) {
+    const eigenWaardeCijfer = eigenWaardeCijferInvullen.get(subgroep);
+    const rating = ratingInvullen.get(subgroep);
+    const afzeggingen = (rondeNummer - 1);
+    const totaal = afzeggingen * (eigenWaardeCijfer - 4);
+    const sorteer = 300 + totaal;
+    return `${sorteer} 0 00 00 ${rating} 0 0 0 0 0 ${afzeggingen} 0 ${totaal} 300 ${eigenWaardeCijfer} 0 0 0 0 0 0`;
+    //      0          1 2  3  4         5 6 7 8 9 10            11 12        13  14                  15-20
+}
+
 function spelerTotalen(speler) {
     const knsbNummer = Number(speler.knsbNummer);
     const naam = speler.naam;

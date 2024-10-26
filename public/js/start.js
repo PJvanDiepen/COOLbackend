@@ -2,7 +2,7 @@
 
 import * as db from "./db.js";
 import * as html from "./html.js";
-import { o_o_o, init, vorigeRonde, volgendeRonde, laatsteRonde } from "./o_o_o.js";
+import { o_o_o, init, laatsteUitslagenRonde, invullenUitslagenRonde, volgendeRonde } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -21,9 +21,13 @@ import * as zyq from "./zyq.js";
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
     const menuKeuzes = [
-        [db.IEDEREEN, `Ranglijst na ronde ${vorigeRonde()}`,"ranglijst.html"], // menu0
-        [db.IEDEREEN, `Uitslagen ronde ${vorigeRonde()}`,"ronde.html"]]; // menu1
-    if (volgendeRonde()) { // menu2 TODO Definitieve indeling
+        [db.IEDEREEN, `Ranglijst na ronde ${laatsteUitslagenRonde()}`,"ranglijst.html"], // menu0
+        [db.IEDEREEN, `Uitslagen ronde ${laatsteUitslagenRonde()}`,"ronde.html"]]; // menu1
+    const uitslagenInvullen = invullenUitslagenRonde();
+    const voorlopigeIndeling = volgendeRonde();
+    if (uitslagenInvullen) {
+        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
+    } else if (voorlopigeIndeling) {
         menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
     }
     if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd

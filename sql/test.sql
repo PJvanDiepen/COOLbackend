@@ -1,6 +1,8 @@
 use waagtoren;
+
+select * from ronde where tegenstander regexp "attaqueer"; 
  
-describe gebruiker; 
+describe ronde; 
 
 select * from gebruiker where mutatieRechten > 1;
  
@@ -40,9 +42,6 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
 (0, "2425", "int", "", "", 7778100, 2153, '2024-09-01', 2153, "int", "ira", "", "", "", 0, 0, 0); -- Arlette van Weersel
-
-insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
-(0, "2425", "int", "", "", 190, 1000, '2024-09-01', 1000, "int", "ira", "", "", "", 0, 0, 0); -- Joss Broere
 
 select * from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "n1";
 delete from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "n1";

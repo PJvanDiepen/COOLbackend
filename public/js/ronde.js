@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init, competitieTitel, vorigeRonde, rondeGegevens, rondeSelecteren } from "./o_o_o.js"
+import { o_o_o, init, competitieTitel, laatsteUitslagenRonde, rondeGegevens, rondeSelecteren } from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
 
@@ -16,7 +16,7 @@ import * as zyq from "./zyq.js";
     await init();
     competitieTitel();
     o_o_o.team = o_o_o.competitie;
-    const rondeNummer = Number(html.params.get("ronde")) || vorigeRonde() || 1;
+    const rondeNummer = Number(html.params.get("ronde")) || laatsteUitslagenRonde() || 1;
     await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],

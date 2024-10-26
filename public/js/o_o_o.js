@@ -184,60 +184,82 @@ export function laatsteRonde() {
 }
 
 /**
- * vorigeRonde is laatste ronde van team of competitie in seizoen
+ * laatsteUitslagenRonde van team of competitie in seizoen
  * waarvan alle uitslagen zijn ingevuld
  *
- * @returns {number|*} rondeNummer
+ * @returns {number|*} geen of rondeNummer
  */
-export function vorigeRonde() {
+export function laatsteUitslagenRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-
-    const i = indexRondeTotDatum(ronde);
-    return ronde[i < 0 ? ronde.length - 1 : i > 0 ? i - 1 : 1].rondeNummer; // laatste, vorige of eerste ronde
-}
-
-export function volgendeRonde() {
-    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-    testUitslagenCompleet(ronde); // TODO verwijder
-    const i = indexRondeTotDatum(ronde);
-    return i < 0 ? 0 : ronde[i].rondeNummer; // geen of volgende ronde
+    const i = indexRondeCompleet(ronde);
+    return ronde[i < 0 ? 0 : i].rondeNummer;
 }
 
 /**
  * indexRondeCompleet bepaalt index in rondenlijst tot waar alle uitslagen zijn ingevuld
+ *
+ * alle ronden niet compleet indien index = -1 (voor vanaf)
+ * alle ronden compleet indien index = laatste
  *
  * @param ronde rondenlijst
  * @param vanaf begin index of 0
  * @returns {number} index of -1
  */
 function indexRondeCompleet(ronde, vanaf = 0) {
-    let index = vanaf;
-    while (uitslagenCompleet(ronde[index].uitslag)) { // alle uitsl
-        index++;
-    }
-    return index;
-}
-
-/**
- * TODO test uitslagen compleet
- *
- * @param uitslagen
- * @returns {boolean}
- */
-function testUitslagenCompleet(ronden) {
-    for (const ronde of ronden) {
-        console.log(`${ronde.rondeTekst} is ${uitslagenCompleet(ronde.uitslag) ? "" : "niet "}compleet`);
+    if (uitslagenCompleet(ronde[vanaf].uitslag)) {
+        let index = vanaf + 1;
+        while (index < ronde.length && uitslagenCompleet(ronde[index].uitslag)) {
+            index++;
+        }
+        for (let i = index; i < ronde.length; i++) {
+            if (uitslagenCompleet(ronde[i].uitslag)) {
+                console.log(`${ronde[i].rondeTekst} is wel compleet`);
+            }
+        }
+        return index -1; // voorlaatste ronde was compleet
+    } else {
+        return -1; // eerste of vanaf ronde was niet compleet
     }
 }
 
 function uitslagenCompleet(uitslagen) {
     for (const uitslag of uitslagen) {
         if (db.isPlanning(uitslag) || !db.isResultaat(uitslag)) {
-            console.log(uitslag);
             return false;
         }
     }
     return true;
+}
+
+/**
+ * invullenUitslagenRonde van team of competitie in seizoen
+ * waarvan nog niet alle uitslagen zijn ingevuld
+ *
+ * @returns {number|*} geen of rondeNummer
+ */
+export function invullenUitslagenRonde() {
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
+    const i = indexRondeCompleet(ronde);
+    return uitslagenInvullen(ronde[i].uitslag) ? ronde[i].rondeNummer : 0;
+}
+
+function uitslagenInvullen(uitslagen) {
+    let ingevuld = 0;
+    for (const uitslag of uitslagen) {
+        if (db.isPlanning(uitslag)) {
+            console.log(`${uitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
+            ingevuld++;
+        } else if (db.isResultaat(uitslag)) {
+            ingevuld++;
+        }
+    }
+    return uitslagen.length > ingevuld;
+}
+
+export function volgendeRonde() {
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
+    const i = indexRondeCompleet(ronde);
+    return ronde[i < 0 ? 0 : i + 1 < ronde.length ? i + 1 : i].rondeNummer; // eerste of volgende of laatste ronde
 }
 
 /**
@@ -254,6 +276,7 @@ function uitslagenCompleet(uitslagen) {
  * @returns {number} index of -1
  *
  * "20240913"
+ * TODO verwijderen
  */
 function indexRondeTotDatum(ronde, jsonDatum = null) {
     const peilDatum = jsonDatum ? new Date(jsonDatum) : new Date();

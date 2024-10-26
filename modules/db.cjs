@@ -214,13 +214,6 @@ function clubMaken(compleet, object) {
         return null;
     }
     const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
-    console.log(`clubMaken(${clubCode}) -> ${clubTekst}`);
-
-    function clubAfdrukken() {
-        console.log(clubTekst);
-        return this;
-    }
-
     const seizoen = [];
 
     function seizoenIndex(seizoenCode) {
@@ -244,7 +237,6 @@ function clubMaken(compleet, object) {
         vereniging,
         teamNaam,
         clubTekst,
-        clubAfdrukken, // () ->
         seizoen,
         seizoenIndex,  // (seizoenCode)
         kaleClub       // ()
@@ -286,12 +278,6 @@ function seizoenMaken(compleet, object) {
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
         ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
         : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
-    console.log(`seizoenMaken(${clubCode}, ${seizoen}) -> ${seizoenTekst}`);
-
-    function seizoenAfdrukken() {
-        console.log(`${clubCode}: ${seizoenTekst}`);
-        return this;
-    }
 
     const seizoenDaarna = clubCode === WAAGTOREN_JEUGD
         ? function () {
@@ -327,7 +313,6 @@ function seizoenMaken(compleet, object) {
         clubCode,
         seizoen,
         seizoenTekst,
-        seizoenAfdrukken, // () ->
         seizoenDaarna,    // (seizoenCode)
         team,
         teamIndex,        // (teamCode)
@@ -386,13 +371,6 @@ function teamMaken(compleet, object) {
         return null;
     }
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
-    console.log(`teamMaken(${clubCode}, ${seizoen}, ${teamCode}) -> ${teamTekst}`);
-
-    function teamAfdrukken() {
-        console.log(`${teamCode}: ${teamTekst}`);
-        return this;
-    }
-
     const ronde = [];
 
     function rondeIndex(rondeNummer) {
@@ -428,7 +406,6 @@ function teamMaken(compleet, object) {
         borden,
         teamleider,
         teamTekst,
-        teamAfdrukken, // () ->
         ronde,
         rondeIndex,    // (rondeNummer)
         kaleTeam       // ()
@@ -527,12 +504,6 @@ function rondeMaken(compleet, object) {
         : uithuis === THUIS
         ? `${teamVoluit(teamCode)} - ${tegenstander}` // thuiswedstrijd
         : `${tegenstander} - ${teamVoluit(teamCode)}`; // uitwedstrijd
-    console.log(`rondeMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}) -> ${rondeTekst}`);
-
-    function rondeAfdrukken() {
-        console.log(rondeTekst);
-        return this;
-    }
 
     const uitslag = [];
 
@@ -565,7 +536,6 @@ function rondeMaken(compleet, object) {
         tegenstander,
         datum,
         rondeTekst,
-        rondeAfdrukken, // () ->
         uitslag,
         uitslagIndex,   // (rondeNummer)
         kaleRonde       // ()
@@ -626,12 +596,6 @@ function uitslagMaken(compleet, object) {
     }
     const uitslagTekst = // TODO uitwerken
         `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
-    console.log(`uitslagMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer}) -> ${uitslagTekst}`);
-
-    function uitslagAfdrukken() {
-        console.log(uitslagTekst);
-        return this;
-    }
 
     function kaleUitslag() {
         return {
@@ -666,7 +630,6 @@ function uitslagMaken(compleet, object) {
         datum,
         competitie,
         uitslagTekst,
-        uitslagAfdrukken, // () ->
         kaleUitslag       // ()
     });
 }
@@ -718,6 +681,14 @@ function wedstrijdVoluit(ronde) {
     return tak(ronde.clubCode, ronde.seizoen, ronde.teamCode, ronde.rondeNummer).rondeTekst;
 }
 
+const geenPartijInvullen = new Map([
+    [AFWEZIG, "afgezegd"],
+    [ONEVEN, "oneven"],
+    [REGLEMENTAIRE_REMISE, "reglementair remise"],
+    [REGLEMENTAIR_VERLIES, "reglementair verlies"],
+    [REGLEMENTAIRE_WINST, "reglementaire winst"],
+    ["j", "niet gespeeld"]]);
+
 const resultaatInvullen = new Map([
     ["",""],
     [WINST, "1-0"],
@@ -725,7 +696,15 @@ const resultaatInvullen = new Map([
     [VERLIES, "0-1"]]);
 
 function isResultaat(uitslag) {
-    return resultaatInvullen.has(uitslag.resultaat);
+    if (isPlanning(uitslag)) {
+        return false;
+    } else if (geenPartijInvullen.has(uitslag.partij)) {
+        return true;
+    } else if (isCompetitie(uitslag) && uitslag.partij === EXTERNE_PARTIJ) { // externe partij tijdens interne ronde
+        return true;
+    } else {
+        return uitslag.resultaat ? resultaatInvullen.has(uitslag.resultaat) : false; // blanko is geen resultaat
+    }
 }
 
 function resultaatSelecteren(uitslag) {
@@ -869,6 +848,7 @@ module.exports = { // CommonJS voor node.js
     THUIS,
     UIT,
     wedstrijdVoluit,       // (ronde)
+    geenPartijInvullen,
     resultaatInvullen,
     isResultaat,           // (uitslag)
     resultaatSelecteren,   // (uitslag)

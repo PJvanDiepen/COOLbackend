@@ -81,6 +81,8 @@ Refresh Android cache
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
 - [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
+- [node audit](https://www.niraj.life/blog/understanding-npm-audit-fixing-vulnerabilities-nodejs/)
+- [node streams](https://pavel-romanov.com/building-a-mental-model-of-nodejs-streams)
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
@@ -168,7 +170,7 @@ Refresh Android cache
 - [SEO for beginners](https://moz.com/beginners-guide-to-seo)
 
 # Interessant 
-
+- [AI van Microsoft](https://microsoft.github.io/genaiscript/)
 - [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [Svelte by Example](https://sveltebyexample.com/)
