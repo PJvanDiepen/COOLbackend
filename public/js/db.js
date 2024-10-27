@@ -361,6 +361,8 @@ function teamMaken(compleet, object) {
         seizoen,
         teamCode,
         reglement,
+        maand,
+        jaar,
         bond, // TODO verwijderen
         poule, // TODO verwijderen
         omschrijving,
@@ -386,6 +388,8 @@ function teamMaken(compleet, object) {
             seizoen: seizoen,
             teamCode: teamCode,
             reglement: reglement,
+            maand: maand,
+            jaar: jaar,
             bond: bond, // TODO verwijderen
             poule: poule, // TODO verwijderen
             omschrijving: omschrijving,
@@ -400,6 +404,8 @@ function teamMaken(compleet, object) {
         seizoen,
         teamCode,
         reglement,
+        maand,
+        jaar,
         bond,
         poule,
         omschrijving,
