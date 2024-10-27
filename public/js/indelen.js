@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import {o_o_o, init, competitieTitel, volgendeRonde, rondeGegevens} from "./o_o_o.js";
+import {o_o_o, init, competitieTitel, rondeGegevens} from "./o_o_o.js";
 import { ranglijst } from "./reglement.js";
 
 import * as zyq from "./zyq.js";
@@ -19,7 +19,7 @@ const indeling = html.id("indeling");
 (async function() {
     await init();
     competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde")) || volgendeRonde();
+    const rondeNummer = Number(html.params.get("ronde"));
     const rondeInfo = rondeGegevens(o_o_o.team, rondeNummer);
     html.id("subkop").textContent =
         `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeInfo)}`;

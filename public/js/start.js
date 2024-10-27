@@ -2,7 +2,7 @@
 
 import * as db from "./db.js";
 import * as html from "./html.js";
-import { o_o_o, init, laatsteUitslagenRonde, invullenUitslagenRonde, volgendeRonde } from "./o_o_o.js";
+import { o_o_o, init, laatsteUitslagenRonde, invullenUitslagenRonde, indelenRonde } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -20,15 +20,17 @@ import * as zyq from "./zyq.js";
     if (true) { // TODO (o_o_o.vereniging === "Waagtoren")
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
+    const laatsteUitslagen = laatsteUitslagenRonde();
+    const invullenUitslagen = invullenUitslagenRonde();
+    const voorlopigeIndeling = indelenRonde();
+    console.log(`laatste r${laatsteUitslagen} invullen r${invullenUitslagen} indelen r${voorlopigeIndeling}`);
     const menuKeuzes = [
-        [db.IEDEREEN, `Ranglijst na ronde ${laatsteUitslagenRonde()}`,"ranglijst.html"], // menu0
-        [db.IEDEREEN, `Uitslagen ronde ${laatsteUitslagenRonde()}`,"ronde.html"]]; // menu1
-    const uitslagenInvullen = invullenUitslagenRonde();
-    const voorlopigeIndeling = volgendeRonde();
-    if (uitslagenInvullen) {
-        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
+        [db.IEDEREEN, `Ranglijst na ronde ${laatsteUitslagen}`,`ranglijst.html?${laatsteUitslagen}`], // menu0
+        [db.IEDEREEN, `Uitslagen ronde ${laatsteUitslagen}`,`ronde.html?ronde=${laatsteUitslagen}`]]; // menu1
+    if (invullenUitslagen) {
+        menuKeuzes.push([db.GEREGISTREERD, `Uitslagen invullen ronde ${invullenUitslagen}`, `ronde.html?ronde=${invullenUitslagen}`]); // menu2
     } else if (voorlopigeIndeling) {
-        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
+        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${voorlopigeIndeling}`, `indelen.html?ronde=${voorlopigeIndeling}`]); // menu2
     }
     if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
         menuKeuzes.push([db.IEDEREEN, "Aanmelden voor 0-0-0", "aanmelden.html"]);

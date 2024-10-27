@@ -88,6 +88,17 @@ const eigenWaardeCijferInvullen = new Map([
     ["G", 6],
     ["H", 5]]);
 
+/**
+ * geenTotalen doet hetzelfde als de MySQL function totalen voor een speler, die nog geen totalen heeft
+ *
+ * @param rondeNummer om aantal afzeggingen te berekeningen
+ * @param knsbNummer speler
+ * @param subgroep om rating en eigenWaardeCijfer te berekenen
+ * @returns {string}
+ *
+ * TODO vervangen door betere oplossing zonder totalen
+ */
+
 function geenTotalen(rondeNummer, knsbNummer, subgroep) {
     const eigenWaardeCijfer = eigenWaardeCijferInvullen.get(subgroep);
     const rating = ratingInvullen.get(subgroep);

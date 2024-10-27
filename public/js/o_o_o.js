@@ -174,16 +174,6 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
 }
 
 /**
- * laatsteRonde van team of competitie in seizoen
- *
- * @returns {number|*} rondeNummer
- */
-export function laatsteRonde() {
-    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-    return ronde[ronde.length - 1].rondeNummer;
-}
-
-/**
  * laatsteUitslagenRonde van team of competitie in seizoen
  * waarvan alle uitslagen zijn ingevuld
  *
@@ -192,7 +182,7 @@ export function laatsteRonde() {
 export function laatsteUitslagenRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeCompleet(ronde);
-    return ronde[i < 0 ? 0 : i].rondeNummer;
+    return i < 0 ? 0 : ronde[i].rondeNummer;
 }
 
 /**
@@ -256,10 +246,16 @@ function uitslagenInvullen(uitslagen) {
     return uitslagen.length > ingevuld;
 }
 
-export function volgendeRonde() {
+/**
+ * indelenRonde van competitie in seizoen
+ * is volgende ronde na ronde waarvan alle uitslagen zijn ingevuld
+ *
+ * @returns {number|*} geen of rondeNummer
+ */
+export function indelenRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeCompleet(ronde);
-    return ronde[i < 0 ? 0 : i + 1 < ronde.length ? i + 1 : i].rondeNummer; // eerste of volgende of laatste ronde
+    return i > 0 &&  i + 1 < ronde.length ? ronde[i + 1].rondeNummer : 0;
 }
 
 /**
