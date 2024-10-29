@@ -381,6 +381,18 @@ function teamMaken(compleet, object) {
         })
     }
 
+    let indexUitslagenCompleet = -1;
+    let indexUitslagenInvullen = -1;
+    let indexIndelen = -1;
+
+    function rondeTest() {
+        if (indexUitslagenCompleet < 0) {
+            indexUitslagenCompleet = 0;
+        }
+        return ronde[indexUitslagenCompleet];
+    }
+
+
     function kaleTeam() {
         return {
             compleet: compleet,
@@ -414,6 +426,7 @@ function teamMaken(compleet, object) {
         teamTekst,
         ronde,
         rondeIndex,    // (rondeNummer)
+        rondeTest,     // ()
         kaleTeam       // ()
     });
 }

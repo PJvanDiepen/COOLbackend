@@ -32,6 +32,11 @@ export async function init() {
     if (!o_o_o.team) {
         o_o_o.team = o_o_o.competitie;
     }
+    console.log("--- hier ---");
+    const takje = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team);
+    console.log(takje);
+
+    console.log(takje.rondeTest().rondeTekst);
     o_o_o.versie = versieBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
@@ -230,12 +235,16 @@ function uitslagenCompleet(uitslagen) {
 export function invullenUitslagenRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeCompleet(ronde);
-    return uitslagenInvullen(ronde[i].uitslag) ? ronde[i].rondeNummer : 0;
+    return i > 0 &&  i + 1 < ronde.length && uitslagenInvullen(ronde[i + 1].uitslag)
+        ? ronde[i + 1].rondeNummer : 0;
 }
 
 function uitslagenInvullen(uitslagen) {
+    console.log("--- uitslagenInvullen() ---");
     let ingevuld = 0;
     for (const uitslag of uitslagen) {
+        console.log(`r${uitslag.rondeNummer} ${uitslag.uitslagTekst} ${uitslag.resultaat}`);
+
         if (db.isPlanning(uitslag)) {
             console.log(`${uitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
             ingevuld++;
