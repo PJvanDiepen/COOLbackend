@@ -32,11 +32,6 @@ export async function init() {
     if (!o_o_o.team) {
         o_o_o.team = o_o_o.competitie;
     }
-    console.log("--- hier ---");
-    const takje = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team);
-    console.log(takje);
-
-    console.log(takje.rondeTest().rondeTekst);
     o_o_o.versie = versieBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
@@ -145,7 +140,22 @@ async function seizoenVerwerken() {
             }
         }
     }
-}
+    console.log("--- test ---");
+    for (const eenTeam of eenSeizoen.team) {
+        console.log(`--- ${eenTeam.teamTekst} ---`);
+        if (eenTeam.rondeCompleet()) {
+            console.log(`rondeCompleet() ${eenTeam.rondeCompleet().rondeTekst}`);
+        }
+        if (eenTeam.rondeInvullen()) {
+            console.log(`rondeInvullen() ${eenTeam.rondeInvullen().rondeTekst}`);
+        }
+        if (eenTeam.rondeIndelen()) {
+            console.log(`rondeIndelen() ${eenTeam.rondeIndelen().rondeTekst}`);
+        }
+    }
+
+
+    }
 
 function seizoenBepalen() {
     const eenClub = db.tak(o_o_o.club);

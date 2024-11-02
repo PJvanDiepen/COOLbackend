@@ -381,17 +381,53 @@ function teamMaken(compleet, object) {
         })
     }
 
+    function rondeCompleet() {
+        indexenInvullen();
+        return indexUitslagenCompleet >= 0 ? ronde[indexUitslagenCompleet] : null;
+    }
+
+    function rondeInvullen() {
+        indexenInvullen();
+        return indexUitslagenInvullen >= 0 ? ronde[indexUitslagenInvullen] : null;
+    }
+
+    function rondeIndelen() {
+        indexenInvullen();
+        return indexIndelen >= 0 ? ronde[indexIndelen] : null;
+    }
+
     let indexUitslagenCompleet = -1;
     let indexUitslagenInvullen = -1;
     let indexIndelen = -1;
 
-    function rondeTest() {
-        if (indexUitslagenCompleet < 0) {
-            indexUitslagenCompleet = 0;
+    function indexenInvullen() { // TODO aanroep na groei function
+        if (ronde.length < 1) {
+            console.log(`indexenInvullen() gaat fout met ${teamTekst}`);
+        } else if (indexUitslagenCompleet === -1 && indexUitslagenInvullen === -1 && indexIndelen === -1) {
+            let index = 0;
+            while (index < ronde.length && ronde[index].uitslagenCompleet()) {
+                index++;
+            }
+            if (index + 1 > ronde.length) {
+                indexUitslagenCompleet = ronde.length - 1; // ronden compleet tot en met laatste ronde
+                indexUitslagenInvullen = -1;
+                indexIndelen = -1;
+            } else if (ronde[index].uitslagenInvullen()) {
+                indexUitslagenCompleet = index - 1;
+                indexUitslagenInvullen = index;
+                indexIndelen = index + 1;
+            } else {
+                indexUitslagenCompleet = index - 1;
+                indexUitslagenInvullen = - 1;
+                indexIndelen = index;
+            }
+            for (let i = index + 1; i < ronde.length; i++) {
+                if (ronde[i].uitslagenCompleet()) {
+                    console.log(`${ronde[i].rondeTekst} is wel compleet`);
+                }
+            }
         }
-        return ronde[indexUitslagenCompleet];
     }
-
 
     function kaleTeam() {
         return {
@@ -425,9 +461,11 @@ function teamMaken(compleet, object) {
         teamleider,
         teamTekst,
         ronde,
-        rondeIndex,    // (rondeNummer)
-        rondeTest,     // ()
-        kaleTeam       // ()
+        rondeIndex,      // (rondeNummer)
+        rondeCompleet,   // ()
+        rondeInvullen,   // ()
+        rondeIndelen,    // ()
+        kaleTeam         // ()
     });
 }
 
@@ -532,6 +570,31 @@ function rondeMaken(compleet, object) {
         })
     }
 
+    function uitslagenCompleet() {
+        for (const eenUitslag of uitslag) {
+            if (isPlanning(eenUitslag) || !isResultaat(eenUitslag)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    function uitslagenInvullen() {
+        console.log("--- uitslagenInvullen() ---");
+        let ingevuld = 0;
+        for (const eenUitslag of uitslag) {
+            console.log(`r${eenUitslag.rondeNummer} ${eenUitslag.uitslagTekst} ${eenUitslag.resultaat}`);
+
+            if (isPlanning(eenUitslag)) {
+                console.log(`${eenUitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
+                ingevuld++;
+            } else if (isResultaat(eenUitslag)) {
+                ingevuld++;
+            }
+        }
+        return uitslag.length > ingevuld;
+    }
+
     function kaleRonde() {
         return {
             compleet: compleet,
@@ -556,8 +619,10 @@ function rondeMaken(compleet, object) {
         datum,
         rondeTekst,
         uitslag,
-        uitslagIndex,   // (rondeNummer)
-        kaleRonde       // ()
+        uitslagIndex,      // (rondeNummer)
+        uitslagenCompleet, // ()
+        uitslagenInvullen, // ()
+        kaleRonde          // ()
     });
 }
 

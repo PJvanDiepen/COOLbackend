@@ -106,6 +106,7 @@ Refresh Android cache
 
 - [eerste website](http://info.cern.ch/hypertext/WWW/TheProject.html)
 - [html, css, JavaScript, etc.](https://learn-wcs.com/)
+- [Form validation](https://expressionstatement.com/html-form-validation-is-heavily-underused)
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
