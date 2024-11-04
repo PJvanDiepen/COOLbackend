@@ -140,22 +140,7 @@ async function seizoenVerwerken() {
             }
         }
     }
-    console.log("--- test ---");
-    for (const eenTeam of eenSeizoen.team) {
-        console.log(`--- ${eenTeam.teamTekst} ---`);
-        if (eenTeam.rondeCompleet()) {
-            console.log(`rondeCompleet() ${eenTeam.rondeCompleet().rondeTekst}`);
-        }
-        if (eenTeam.rondeInvullen()) {
-            console.log(`rondeInvullen() ${eenTeam.rondeInvullen().rondeTekst}`);
-        }
-        if (eenTeam.rondeIndelen()) {
-            console.log(`rondeIndelen() ${eenTeam.rondeIndelen().rondeTekst}`);
-        }
-    }
-
-
-    }
+}
 
 function seizoenBepalen() {
     const eenClub = db.tak(o_o_o.club);
@@ -164,12 +149,20 @@ function seizoenBepalen() {
 }
 
 function competitieBepalen() {
-    const vorigeRonde = indexRondeTotDatum(o_o_o.ronde);
-    let i = vorigeRonde < 0 ? 0 : vorigeRonde;
-    while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) { // volgende competitie ronde
-        i++;
+    console.log("CompetitieBepalen");
+    let competitieRonde = null;
+    for (const eenTeam of db.tak(o_o_o.club, o_o_o.seizoen).team) {
+        if (db.isCompetitie(eenTeam)) {
+            console.log(`${eenTeam.teamTekst} voldoet`);
+            const ronde = eenTeam.rondeIndelen();
+            console.log(ronde);
+            if (ronde !== null && (competitieRonde === null || competitieRonde.datum > ronde.datum)) {
+                console.log(`${eenTeam.teamTekst} is eerder`);
+                competitieRonde = ronde;
+            }
+        }
     }
-    return o_o_o.ronde[i].teamCode;
+    return competitieRonde.teamCode;
 }
 
 function versieBepalen() { // TODO reglement in team i.p.v. versie
@@ -195,45 +188,8 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
  * @returns {number|*} geen of rondeNummer
  */
 export function laatsteUitslagenRonde() {
-    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-    const i = indexRondeCompleet(ronde);
-    return i < 0 ? 0 : ronde[i].rondeNummer;
-}
-
-/**
- * indexRondeCompleet bepaalt index in rondenlijst tot waar alle uitslagen zijn ingevuld
- *
- * alle ronden niet compleet indien index = -1 (voor vanaf)
- * alle ronden compleet indien index = laatste
- *
- * @param ronde rondenlijst
- * @param vanaf begin index of 0
- * @returns {number} index of -1
- */
-function indexRondeCompleet(ronde, vanaf = 0) {
-    if (uitslagenCompleet(ronde[vanaf].uitslag)) {
-        let index = vanaf + 1;
-        while (index < ronde.length && uitslagenCompleet(ronde[index].uitslag)) {
-            index++;
-        }
-        for (let i = index; i < ronde.length; i++) {
-            if (uitslagenCompleet(ronde[i].uitslag)) {
-                console.log(`${ronde[i].rondeTekst} is wel compleet`);
-            }
-        }
-        return index -1; // voorlaatste ronde was compleet
-    } else {
-        return -1; // eerste of vanaf ronde was niet compleet
-    }
-}
-
-function uitslagenCompleet(uitslagen) {
-    for (const uitslag of uitslagen) {
-        if (db.isPlanning(uitslag) || !db.isResultaat(uitslag)) {
-            return false;
-        }
-    }
-    return true;
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).rondeCompleet();
+    return ronde ? ronde.rondeNummer : 0;
 }
 
 /**
@@ -243,26 +199,8 @@ function uitslagenCompleet(uitslagen) {
  * @returns {number|*} geen of rondeNummer
  */
 export function invullenUitslagenRonde() {
-    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-    const i = indexRondeCompleet(ronde);
-    return i > 0 &&  i + 1 < ronde.length && uitslagenInvullen(ronde[i + 1].uitslag)
-        ? ronde[i + 1].rondeNummer : 0;
-}
-
-function uitslagenInvullen(uitslagen) {
-    console.log("--- uitslagenInvullen() ---");
-    let ingevuld = 0;
-    for (const uitslag of uitslagen) {
-        console.log(`r${uitslag.rondeNummer} ${uitslag.uitslagTekst} ${uitslag.resultaat}`);
-
-        if (db.isPlanning(uitslag)) {
-            console.log(`${uitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
-            ingevuld++;
-        } else if (db.isResultaat(uitslag)) {
-            ingevuld++;
-        }
-    }
-    return uitslagen.length > ingevuld;
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).rondeInvullen();
+    return ronde ? ronde.rondeNummer : 0;
 }
 
 /**
@@ -272,9 +210,8 @@ function uitslagenInvullen(uitslagen) {
  * @returns {number|*} geen of rondeNummer
  */
 export function indelenRonde() {
-    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
-    const i = indexRondeCompleet(ronde);
-    return i > 0 &&  i + 1 < ronde.length ? ronde[i + 1].rondeNummer : 0;
+    const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).rondeIndelen();
+    return ronde ? ronde.rondeNummer : 0;
 }
 
 /**

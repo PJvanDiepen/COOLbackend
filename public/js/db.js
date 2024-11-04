@@ -580,10 +580,10 @@ function rondeMaken(compleet, object) {
     }
 
     function uitslagenInvullen() {
-        console.log("--- uitslagenInvullen() ---");
+        // console.log("--- uitslagenInvullen() ---");
         let ingevuld = 0;
         for (const eenUitslag of uitslag) {
-            console.log(`r${eenUitslag.rondeNummer} ${eenUitslag.uitslagTekst} ${eenUitslag.resultaat}`);
+            // console.log(`r${eenUitslag.rondeNummer} ${eenUitslag.uitslagTekst} ${eenUitslag.resultaat}`);
 
             if (isPlanning(eenUitslag)) {
                 console.log(`${eenUitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
