@@ -123,12 +123,7 @@ async function seizoenVerwerken() {
             o_o_o.ronde.splice(i, 0, eenRonde); // op datum tussenvoegen
         }
     }
-    /*
-    TODO uitslagen inlezen tot en met eerste niet complete ronde
-    TODO uitslagen van ronden die niet compleet zijn steeds opnieuw inlezen
-    TODO bepaal ronde voor uitslagenInvullen
-    TODO bepaal ronde voor indelingMaken i.p.v. volgendeRonde
-     */
+
     const uitslagenVraag = await vraag("/uitslagen");
     for (const eenTeam of eenSeizoen.team) {
         for (const eenRonde of eenTeam.ronde) {
@@ -149,15 +144,11 @@ function seizoenBepalen() {
 }
 
 function competitieBepalen() {
-    console.log("CompetitieBepalen");
     let competitieRonde = null;
     for (const eenTeam of db.tak(o_o_o.club, o_o_o.seizoen).team) {
         if (db.isCompetitie(eenTeam)) {
-            console.log(`${eenTeam.teamTekst} voldoet`);
             const ronde = eenTeam.rondeIndelen();
-            console.log(ronde);
             if (ronde !== null && (competitieRonde === null || competitieRonde.datum > ronde.datum)) {
-                console.log(`${eenTeam.teamTekst} is eerder`);
                 competitieRonde = ronde;
             }
         }
@@ -212,34 +203,6 @@ export function invullenUitslagenRonde() {
 export function indelenRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).rondeIndelen();
     return ronde ? ronde.rondeNummer : 0;
-}
-
-/**
- * Bepaal index in rondenlijst tot een gegeven datum.
- *
- * In de rondenlijst kunnen alle ronden staan van een competitie of een team
- * of alle ronden van alle competities en teams van een club / seizoen.
- * De rondenlijst is gesorteerd op datum en rondeNummer.
- *
- * Indien de gegeven datum ontbreekt, is het de datum van vandaag.
- *
- * @param ronde rondenlijst
- * @param jsonDatum gegeven datum
- * @returns {number} index of -1
- *
- * "20240913"
- * TODO verwijderen
- */
-function indexRondeTotDatum(ronde, jsonDatum = null) {
-    const peilDatum = jsonDatum ? new Date(jsonDatum) : new Date();
-    if (peilDatum >= new Date(ronde[ronde.length - 1].datum)) { // alle ronden zijn na peilDatum
-        return -1;
-    }
-    let index = 0;
-    while (new Date(ronde[index].datum) < peilDatum) { // eerste ronde voor peildatum
-        index++;
-    }
-    return index; // TODO alleen op dinsdag met - 1
 }
 
 export function rondeGegevens(teamCode, rondeNummer) {
@@ -460,7 +423,7 @@ export async function perTeamRondenUitslagen(teamCode) {
                 }
                 rondeUitslag.uitslagen.push(uitslag);
             } else {
-                if (db.isMeedoen(uitslag)) {
+                if (db.planningInvullen.get(uitslag.partij) === db.NIET_MEEDOEN) {
                     rondeUitslag.deelnemers += 1;
                 }
                 rondeUitslag.geplandeUitslagen.push(uitslag);

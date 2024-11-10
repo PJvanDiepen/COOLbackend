@@ -1207,9 +1207,9 @@ module.exports = function (url) {
                 return ronde.teamCode === ctx.params.team && ronde.rondeNummer === Number(ctx.params.ronde);
             });
             if (rondeWijzigen >= 0 && ronden[rondeWijzigen].partij === ctx.params.partij) { // partij niet gewijzigd?
-                if (db.isPaar(ronden[rondeWijzigen])) {
+                if (isPaar(ronden[rondeWijzigen])) {
                     aantal += await paarMuteren(ronden[rondeWijzigen]); // speler en tegenstander
-                } else if (db.isMeedoen(ronden[rondeWijzigen])) {
+                } else if (isMeedoen(ronden[rondeWijzigen])) {
                     aantal += await planningMuteren(ronden[rondeWijzigen], db.NIET_MEEDOEN);
                 } else {
                     for (let i = 0; i < ronden.length; i++) {
@@ -1272,7 +1272,7 @@ module.exports = function (url) {
             const zwartSpeler = await Uitslag.query()
                 .select("uitslag.partij")
                 .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander]);
-            if (db.isGeenPaar(witSpeler) && db.isGeenPaar(zwartSpeler)
+            if (isGeenPaar(witSpeler) && isGeenPaar(zwartSpeler)
                 && await Uitslag.query().findById(
                     [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                 .patch({bordNummer: ctx.params.bord,
@@ -1312,7 +1312,7 @@ module.exports = function (url) {
             const zwartSpeler = await Uitslag.query()
                 .select("uitslag.partij")
                 .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander]);
-            if (db.isPaar(witSpeler) && db.isPaar(zwartSpeler)
+            if (isPaar(witSpeler) && isPaar(zwartSpeler)
                 && await Uitslag.query().findById(
                     [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                 .patch({bordNummer: 0,
@@ -1665,7 +1665,7 @@ function teamCodes(competities) {
 async function paarMuteren(uitslag) {
     const tegenstander = await Uitslag.query().findById(
         [uitslag.clubCode, uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.tegenstanderNummer]);
-    if (!db.isPaar(tegenstander)) { // uitsluitend indien paar
+    if (!isPaar(tegenstander)) { // uitsluitend indien paar
         return 0;
     }
     let aantal = 0;
@@ -1689,7 +1689,7 @@ async function paarMuteren(uitslag) {
 }
 
 async function planningMuteren(uitslag, partij) {
-    if (!db.isPlanning(uitslag)) { // uitsluitend indien planning
+    if (!db.planningInvullen.has(uitslag.partij)) { // uitsluitend indien planning
         return 0;
     } else if (await Uitslag.query().findById(
         [uitslag.clubCode, uitslag.seizoen, uitslag.teamCode, uitslag.rondeNummer, uitslag.knsbNummer])
@@ -1699,6 +1699,18 @@ async function planningMuteren(uitslag, partij) {
     } else {
         return 0;
     }
+}
+
+function isPaar(uitslag) { // TODO TODO zie db.uitslagMaken
+    return uitslag.partij === db.INGEDEELD || uitslag.partij === db.TOCH_INGEDEELD;
+}
+
+function isGeenPaar(uitslag) { // TODO TODO zie db.uitslagMaken
+    return uitslag.partij === db.PLANNING || uitslag.partij === db.MEEDOEN || uitslag.partij === db.NIET_MEEDOEN;
+}
+
+function isMeedoen(uitslag) { // TODO TODO zie db.uitslagMaken
+    return db.planningInvullen.get(uitslag.partij) === db.NIET_MEEDOEN;
 }
 
 function resultaatCorrect(resultaat) { // TODO naar db.cjs

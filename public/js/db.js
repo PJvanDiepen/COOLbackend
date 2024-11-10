@@ -320,7 +320,7 @@ function seizoenMaken(compleet, object) {
     });
 }
 
-function seizoenVoluit(object) {
+function seizoenVoluit(object) { // TODO naar seizoenMaken
     return tak(object.clubCode, object.seizoen).seizoenTekst;
 }
 
@@ -408,15 +408,19 @@ function teamMaken(compleet, object) {
             while (index < ronde.length && ronde[index].uitslagenCompleet()) {
                 index++;
             }
+            console.log(`indexenInvullen() index = ${index}`);
             if (index + 1 > ronde.length) {
+                console.log(`indexenInvullen() if index + 1 > ronde.length`);
                 indexUitslagenCompleet = ronde.length - 1; // ronden compleet tot en met laatste ronde
                 indexUitslagenInvullen = -1;
                 indexIndelen = -1;
             } else if (ronde[index].uitslagenInvullen()) {
+                console.log(`indexenInvullen() if ronde[index].uitslagenInvullen()`);
                 indexUitslagenCompleet = index - 1;
                 indexUitslagenInvullen = index;
                 indexIndelen = index + 1;
             } else {
+                console.log(`indexenInvullen() else`);
                 indexUitslagenCompleet = index - 1;
                 indexUitslagenInvullen = - 1;
                 indexIndelen = index;
@@ -426,6 +430,7 @@ function teamMaken(compleet, object) {
                     console.log(`${ronde[i].rondeTekst} is wel compleet`);
                 }
             }
+            console.log(`compleet: ${indexUitslagenCompleet} invullen: ${indexUitslagenInvullen} indelen: ${indexIndelen}`);
         }
     }
 
@@ -482,7 +487,7 @@ function isTeam(team) {
         : team.teamCode.substring(0,1) !== "i";
 }
 
-function teamVoluit(teamCode) { // TODO omschrijving uit database
+function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
     } else if (teamCode === RAPID_COMPETITIE) {
@@ -572,7 +577,7 @@ function rondeMaken(compleet, object) {
 
     function uitslagenCompleet() {
         for (const eenUitslag of uitslag) {
-            if (isPlanning(eenUitslag) || !isResultaat(eenUitslag)) {
+            if (eenUitslag.isPlanning() || !eenUitslag.isResultaat()) {
                 return false;
             }
         }
@@ -580,18 +585,20 @@ function rondeMaken(compleet, object) {
     }
 
     function uitslagenInvullen() {
-        // console.log("--- uitslagenInvullen() ---");
+        console.log("--- uitslagenInvullen() --- ?");
+
         let ingevuld = 0;
         for (const eenUitslag of uitslag) {
-            // console.log(`r${eenUitslag.rondeNummer} ${eenUitslag.uitslagTekst} ${eenUitslag.resultaat}`);
+            console.log(`r${eenUitslag.rondeNummer} ${eenUitslag.uitslagTekst} ${eenUitslag.resultaat} x = ${ingevuld}`);
 
-            if (isPlanning(eenUitslag)) {
+            if (eenUitslag.isPlanning()) {
                 console.log(`${eenUitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
-                ingevuld++;
-            } else if (isResultaat(eenUitslag)) {
+                return false;
+            } else if (eenUitslag.isResultaat()) {
                 ingevuld++;
             }
         }
+        console.log(`--- uitslagenInvullen() --- ${uitslag.length} > ${ingevuld}`);
         return uitslag.length > ingevuld;
     }
 
@@ -681,6 +688,34 @@ function uitslagMaken(compleet, object) {
     const uitslagTekst = // TODO uitwerken
         `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
 
+    function isResultaat() {
+        if (isPlanning()) {
+            return false;
+        } else if (geenPartijInvullen.has(partij)) {
+            return true;
+        } else if (isCompetitie(this) && partij === EXTERNE_PARTIJ) { // externe partij tijdens interne ronde
+            return true;
+        } else {
+            return resultaat ? resultaatInvullen.has(resultaat) : false; // blanko is geen resultaat
+        }
+    }
+
+    function isPlanning() {
+        return planningInvullen.has(partij);
+    }
+
+    function isPaar() {
+        return partij === INGEDEELD || partij === TOCH_INGEDEELD;
+    }
+
+    function isGeenPaar() {
+        return partij === PLANNING || partij === MEEDOEN || partij === NIET_MEEDOEN;
+    }
+
+    function isMeedoen() {
+        return planningInvullen.get(partij) === NIET_MEEDOEN;
+    }
+
     function kaleUitslag() {
         return {
             compleet: compleet,
@@ -714,7 +749,12 @@ function uitslagMaken(compleet, object) {
         datum,
         competitie,
         uitslagTekst,
-        kaleUitslag       // ()
+        isResultaat, // ()
+        isPlanning,  // ()
+        isPaar,      // ()
+        isGeenPaar,  // ()
+        isMeedoen,   // ()
+        kaleUitslag  // ()
     });
 }
 
@@ -723,7 +763,7 @@ const TIJDELIJK_LID_NUMMER = 100
 const KNSB_NUMMER          = 1000000;
 
 // speler.intern
-function inCompetitie(speler, teamCode) { // volgens database
+function inCompetitie(speler, teamCode) { // TODO overbodig?
     if (speler) {
         return speler.intern1 === teamCode
             || speler.intern2 === teamCode
@@ -761,7 +801,7 @@ const VERLIES = "0";
 const THUIS = "t";
 const UIT = "u";
 
-function wedstrijdVoluit(ronde) {
+function wedstrijdVoluit(ronde) { // TODO naar rondeMaken
     return tak(ronde.clubCode, ronde.seizoen, ronde.teamCode, ronde.rondeNummer).rondeTekst;
 }
 
@@ -779,18 +819,6 @@ const resultaatInvullen = new Map([
     [REMISE, "½-½"],
     [VERLIES, "0-1"]]);
 
-function isResultaat(uitslag) {
-    if (isPlanning(uitslag)) {
-        return false;
-    } else if (geenPartijInvullen.has(uitslag.partij)) {
-        return true;
-    } else if (isCompetitie(uitslag) && uitslag.partij === EXTERNE_PARTIJ) { // externe partij tijdens interne ronde
-        return true;
-    } else {
-        return uitslag.resultaat ? resultaatInvullen.has(uitslag.resultaat) : false; // blanko is geen resultaat
-    }
-}
-
 function resultaatSelecteren(uitslag) {
     return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].slice(1); // met of zonder blanko resultaat
 }
@@ -803,22 +831,6 @@ const planningInvullen = new Map([
     [EXTERN_UIT, NIET_MEEDOEN],
     [INGEDEELD, NIET_MEEDOEN],
     [TOCH_INGEDEELD, NIET_MEEDOEN]]);
-
-function isPlanning(uitslag) {
-    return planningInvullen.has(uitslag.partij);
-}
-
-function isPaar(uitslag) {
-    return uitslag.partij === INGEDEELD || uitslag.partij === TOCH_INGEDEELD;
-}
-
-function isGeenPaar(uitslag) {
-    return uitslag.partij === PLANNING || uitslag.partij === MEEDOEN || uitslag.partij === NIET_MEEDOEN;
-}
-
-function isMeedoen(uitslag) {
-    return planningInvullen.get(uitslag.partij) === NIET_MEEDOEN;
-}
 
 const maandInvullen = new Map([
     [ 1, "januari"],
@@ -934,13 +946,8 @@ export { // ES6 voor browser,
     wedstrijdVoluit,       // (ronde)
     geenPartijInvullen,
     resultaatInvullen,
-    isResultaat,           // (uitslag)
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
-    isPlanning,            // (uitslag)
-    isPaar,                // (uitslag)
-    isGeenPaar,            // (uitslag)
-    isMeedoen,             // (uitslag)
     maandInvullen,
     // gebruiker.mutatieRechten int
     IEDEREEN,

@@ -29,7 +29,10 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
 (0, "2425", "int", "", "", 8744494, 1660, '2024-09-01', 1660, "int", "ira", "", "", "", 0, 0, 0); -- Joris Hartog
 
-select * from persoon where knsbNummer = 169;
+insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
+(0, "2425", "int", "", "", 7504310, 1660, '2024-09-01', 1660, "int", "ira", "", "", "", 0, 0, 0); -- Leonard Haakman
+
+select * from persoon where knsbNummer = 8182416;
 update persoon set knsbNummer = 9045388 where knsbNummer = 169;
 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
@@ -50,7 +53,15 @@ delete from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = "n1";
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
 (0, "2425", "int", "", "", 8484443, 1895, '2024-09-01', 1895, "int", "ira", "", "", "", 0, 0, 0); -- Chaim Bookelman
 
-select * from gebruiker where knsbNummer = 8851073;
+insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
+(0, "2425", "int", "", "", 7504310, 1812, '2024-09-01', 1812, "int", "ira", "", "", "", 0, 0, 0); -- Leonard Haakman
+
+select * from gebruiker where knsbNummer = 8485059;
+
+update gebruiker set mutatieRechten = 2 where knsbNummer = 7399469;
+
+
+
 
 describe speler;
 
