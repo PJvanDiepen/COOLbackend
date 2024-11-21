@@ -44,7 +44,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const teamGegevens = teams.find(function (team) {
         return team.teamCode === teamCode;
     });
-    html.id("vragen").textContent = `Invallers vragen door ${teamGegevens.naam}`;
+    html.id("vragen").textContent = `Invallers vragen door teamleider`; // TODO ${teamGegevens.naam}
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
         return speler.knsbNummer > db.KNSB_NUMMER
@@ -127,9 +127,9 @@ function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
         }
     }
     if (teamCode === "nbb") { // NHSB beker (brons)
-        return 1600;
+        return 1750;
     } else if (teamCode === "nbz") { // NHSB beker (zilver)
-        return 1900;
+        return 1950;
     } else {
         return 3000;
     }

@@ -401,6 +401,7 @@ function teamMaken(compleet, object) {
     let indexIndelen = -1;
 
     function indexenInvullen() { // TODO aanroep na groei function
+        console.log("--- indexenInvullen() ---");
         if (ronde.length < 1) {
             console.log(`indexenInvullen() gaat fout met ${teamTekst}`);
         } else if (indexUitslagenCompleet === -1 && indexUitslagenInvullen === -1 && indexIndelen === -1) {
@@ -577,7 +578,7 @@ function rondeMaken(compleet, object) {
 
     function uitslagenCompleet() {
         for (const eenUitslag of uitslag) {
-            if (eenUitslag.isPlanning() || !eenUitslag.isResultaat()) {
+            if (!eenUitslag.isCompleet()) {
                 return false;
             }
         }
@@ -688,15 +689,23 @@ function uitslagMaken(compleet, object) {
     const uitslagTekst = // TODO uitwerken
         `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
 
-    function isResultaat() {
+    function isCompleet() {
+        return isUitslag(true);
+    }
+
+    function isIngedeeld() {
+        return isUitslag(false);
+    }
+
+    function isUitslag(metResultaat) {
         if (isPlanning()) {
             return false;
-        } else if (geenPartijInvullen.has(partij)) {
-            return true;
-        } else if (isCompetitie(this) && partij === EXTERNE_PARTIJ) { // externe partij tijdens interne ronde
-            return true;
+        } else if (partij === EXTERNE_PARTIJ || geenPartijInvullen.has(partij)) {
+            return true; // externe partij of geen partij tijdens interne competitie
+        } else if (!resultaatInvullen.has(resultaat)) {
+            return false;
         } else {
-            return resultaat ? resultaatInvullen.has(resultaat) : false; // blanko is geen resultaat
+            return metResultaat ? resultaat !== "" : true; // blanko is geen resultaat
         }
     }
 
@@ -749,7 +758,8 @@ function uitslagMaken(compleet, object) {
         datum,
         competitie,
         uitslagTekst,
-        isResultaat, // ()
+        isCompleet, // ()
+        isIngedeeld, // ()
         isPlanning,  // ()
         isPaar,      // ()
         isGeenPaar,  // ()

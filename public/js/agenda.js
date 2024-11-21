@@ -107,7 +107,8 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
             const datum = zyq.datumSQL(w.datum);
             const vanafVandaag = datum >= zyq.datumSQL();
             if (vanafVandaag || db.isCompetitie(w)) {
-                const partij = vanafVandaag ? db.PLANNING : db.AFWEZIG;  // voor interne competities voor vandaag afwezig invullen
+                // TODO voor team vragen voor team aanmelden
+                const partij = vanafVandaag ? db.NIET_MEEDOEN : db.AFWEZIG;  // voor interne competities voor vandaag afwezig invullen
                 const competitie = db.isCompetitie(w) ? w.teamCode : db.INTERNE_COMPETITIE;
                 const mutaties = await zyq.serverFetch(
                     `/${zyq.uuidToken}/${db.key(w)}/${knsbNummer}/uitslag/toevoegen/${partij}/${datum}/${competitie}`);
