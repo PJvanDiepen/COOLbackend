@@ -73,7 +73,7 @@ Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen.
 
 ## Verdere ontwikkeling
 
-Het is de bedoeling om 0-0-0 in 2022-2023 eerst helemaal functioneel te maken voor de Waagtoren. 
+Het is de bedoeling om 0-0-0 eerst helemaal functioneel te maken voor de Waagtoren. 
 Daarna gaan we 0-0-0 geschikt maken 
 - voor andere schaakverenigingen, 
 - voor andere systemen dan alleen het Alkmaar systeem en 
@@ -87,3 +87,5 @@ De source code met documentatie is als open source beschikbaar stellen op GitHub
 
 Voorlopig is 0-0-0 gebaseerd op MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
 is het ontwerp van de database zodanig dat we MySQL kunnen vervangen.
+
+[Planning](doc/planning.md)
