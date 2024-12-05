@@ -11,7 +11,6 @@ of als [issue](https://github.com/PJvanDiepen/COOLbackend/issues) op GitHub.
 Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zijn opgelost:
 
 - 0-0-0 laat de correcte ronde zien voor de Voorlopige indeling en Uitslagen invullen
-- geen undefined in overzichten van de spelers in Schaakmat N1 - Waagtoren n2
 
 # 0-0-0 versie 1.0.0
 
