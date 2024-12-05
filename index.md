@@ -1,6 +1,27 @@
+# 0-0-0 versie 0.8.66
+
+Dit is de actuele versie van 0-0-0, die voorlopig uitsluitend de [interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/) 
+van schaakvereniging de Waagtoren verwerkt.
+
+Problemen of vragen kan je melden in een e-mail naar pvdiepen@gmail.com 
+of als [issue](https://github.com/PJvanDiepen/COOLbackend/issues) op GitHub.
+
+# 0-0-0 versie 0.8.67
+
+Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zijn opgelost:
+
+- 0-0-0 laat de correcte ronde zien voor de Voorlopige indeling en Uitslagen invullen
+- geen undefined in overzichten van de spelers in Schaakmat N1 - Waagtoren n2
+
+# 0-0-0 versie 1.0.0
+
+Bij de Waagtoren draait 0-0-0 al een aantal seizoenen mee, maar is nooit helemaal compleet geweest.
+Tussen versie 0.8.0 en 0.9.0 wordt 0-0-0 helemaal opnieuw ontworpen en geschikt gemaakt voor andere schaakverenigingen.
+Daarna wordt 0-0-0 zo compleet mogelijk gemaakt, zodat versie 1.0.0 ook bij andere schaakverenigingen kan draaien.
+
 # Rokade wordt 0-0-0
 
-Tot voor kort gebruikte schaakvereniging de Waagtoren [Rokade van Herman Nijhuis](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) 
+Vroeger gebruikte schaakvereniging de Waagtoren [Rokade](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/) van Herman Nijhuis 
 voor het maken van indelingen en ranglijsten voor de interne competitie volgens het [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/). 
 Sinds het schaakseizoen 2021-2022 wordt Rokade vervangen door 0-0-0.
 
@@ -22,8 +43,8 @@ Voor de Waagtoren staat de logica van het Alkmaar systeem in reglement-data, maa
 bijvoorbeeld het Keizer systeem, halve competitie of het Zwitsers systeem.
 Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data. 
 
-Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data 
-en vervolgens nieuwe ranglijsten te genereren. 
+Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen 
+door het wijzigen van de reglement-data en vervolgens nieuwe ranglijsten te genereren. 
 Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan. 
 
 Externe wedstrijden in het Alkmaar systeem tellen mee voor de interne competitie.
@@ -41,7 +62,7 @@ die uitsluitend zichtbaar is voor leden. De intern wedstrijdleider hoeft de voor
 
 ## Overzicht voor teamleiders
 
-In seizoen 2022-2023 krijgen de teamleiders (en het bestuur) een overzicht van vaste spelers en mogelijke invallers.
+Sinds 2022-2023 krijgen de teamleiders (en het bestuur) een overzicht van vaste spelers en mogelijke invallers.
 In dat overzicht houdt 0-0-0 bij hoe vaak spelers meespelen per team en 
 laat zien wat de mogelijkheden voor invallers zijn volgens de reglementen van de KNSB en NHSB. 
 
@@ -51,7 +72,7 @@ Vervolgens kan de eventuele invaller in zijn of haar persoonlijke agenda zich aa
 Het overzicht is zichtbaar voor alle teamleiders en bovendien uitsluitend voor teamleiders (en het bestuur),
 zodat alle teamleiders een overzicht hebben van alle teams.
 
-## Database ontwerpen en vullen
+## Ontwerpbeslissingen
 
 Het ontwerp van de 0-0-0 database is afgerond voor wat betreft de ranglijst, uitslagen, indelen en de kalender. 
 Voor de reglement-data zijn prototypes gemaakt voor het Alkmaar systeem, de Rapid competitie en snelschaaktoernooien. 
@@ -59,10 +80,9 @@ De algemene opzet voor reglement-data zal ongetwijfeld nog veranderen als we het
 
 Maar 0-0-0 berekent geen ratings en is geen leden administratie. 
 In de database van 0-0-0 gebruiken we uitsluitend gegevens die noodzakelijk zijn voor de uitslagen en ranglijsten 
-zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit OLA, de Online Leden Administratie van de KNSB. 
+zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit ratinglijsten van de KNSB. 
 
 Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die informatie inleest uit andere systemen:
-- Excel-bestand uit OLA met de gegevens van de Waagtoren leden, 
 - de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
 - een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
 
@@ -80,12 +100,9 @@ Daarna gaan we 0-0-0 geschikt maken
 - voor andere (onder)bonden dan alleen KNSB en NHSB.
 
 Voorlopig zorgen we dat het uitwisselen van gegevens met Rokade blijft functioneren, zodat verenigingen die Rokade gebruiken eenvoudig kunnen overstappen.
+Andere schaakverenigingen kunnen ook op 0-0-0.nl draaien.
 
-Eventueel kunnen andere schaakverenigingen ook op 0-0-0.nl draaien.
-
-De source code met documentatie is als open source beschikbaar stellen op GitHub, zodat andere programmeurs ook aan 0-0-0 kunnen werken.
+De source code met documentatie is als open source beschikbaar op GitHub, zodat andere programmeurs ook aan 0-0-0 kunnen werken.
 
 Voorlopig is 0-0-0 gebaseerd op MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
 is het ontwerp van de database zodanig dat we MySQL kunnen vervangen.
-
-[Planning](doc/planning.md)

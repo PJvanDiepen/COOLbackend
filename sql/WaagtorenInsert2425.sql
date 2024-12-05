@@ -75,8 +75,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2425';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 9;
-set @bord = 14;
+set @ronde = 11;
+set @bord = 3;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -87,10 +87,10 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit = 9023234; -- Albert Boekema
-set @zwart = 7777715; -- Richard
+set @wit = 6212404; -- Peter van Diepen
+set @zwart = 8350738; -- Ramon Witte
 
-set @oneven = 190; -- Joss Broere
+set @oneven = 7282033; -- Gerrit Lemmen
 set @afwezig = 7771665; -- Yvonne Schol
 set @extern = 7758014; -- Alex
 
@@ -1493,7 +1493,7 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 
 -- Waagtoren n1
 set @team = "n1";
-set @ronde = 3;
+set @ronde = 4;
 select * from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = @team and rondeNummer = @ronde;
 
@@ -1521,11 +1521,19 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0, "2425", "n1", 3, 5, 7129991, "e", "z", 0, "1", '2024-11-12', "int"),
 (0, "2425", "n1", 3, 6, 8484443, "e", "w", 0, "1", '2024-11-12', "int"),
 (0, "2425", "n1", 3, 7, 8096242, "e", "z", 0, "1", '2024-11-12', "int"),
-(0, "2425", "n1", 3, 8, 8587337, "e", "w", 0, "1", '2024-11-12', "int");
+(0, "2425", "n1", 3, 8, 8587337, "e", "w", 0, "1", '2024-11-12', "int"),
+(0, "2425", "n1", 4, 1, 7613166, "e", "w", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n1", 4, 2, 7428960, "e", "z", 0, "½", '2024-12-03', "int"),
+(0, "2425", "n1", 4, 3, 7099950, "e", "w", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n1", 4, 4, 5968611, "e", "z", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n1", 4, 5, 8096242, "e", "w", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n1", 4, 6, 7129991, "e", "z", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n1", 4, 7, 8587337, "e", "w", 0, "½", '2024-12-03', "int"),
+(0, "2425", "n1", 4, 8, 7292043, "e", "z", 0, "½", '2024-12-03', "int");
 
 -- Waagtoren n2
 set @team = "n2";
-set @ronde = 2;
+set @ronde = 3;
 select * from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = @team and rondeNummer = @ronde;
 
@@ -1541,7 +1549,13 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0, "2425", "n2", 2, 3, 6207520, "e", "w", 0, "1", '2024-10-14', "int"),
 (0, "2425", "n2", 2, 4, 9065100, "e", "z", 0, "1", '2024-10-14', "int"),
 (0, "2425", "n2", 2, 5, 7529522, "e", "w", 0, "½", '2024-10-14', "int"),
-(0, "2425", "n2", 2, 6, 6225934, "e", "z", 0, "1", '2024-10-14', "int");
+(0, "2425", "n2", 2, 6, 6225934, "e", "z", 0, "1", '2024-10-14', "int"),
+(0, "2425", "n2", 3, 1, 8112654, "e", "w", 0, "0", '2024-12-03', "int"),
+(0, "2425", "n2", 3, 2, 8611922, "e", "z", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n2", 3, 3, 6930957, "e", "w", 0, "0", '2024-12-03', "int"),
+(0, "2425", "n2", 3, 4, 9065100, "e", "z", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n2", 3, 5, 7529522, "e", "w", 0, "1", '2024-12-03', "int"),
+(0, "2425", "n2", 3, 6, 6225934, "e", "z", 0, "½", '2024-12-03', "int");
 
 -- Waagtoren n3
 set @team = "n3";
