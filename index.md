@@ -5,6 +5,7 @@ van schaakvereniging de Waagtoren verwerkt.
 
 Problemen of vragen kan je melden in een e-mail naar pvdiepen@gmail.com 
 of als [issue](https://github.com/PJvanDiepen/COOLbackend/issues) op GitHub.
+Een meer uitgebreide [planning](https://github.com/users/PJvanDiepen/projects/1/views/1) staat op GitHub.
 
 # 0-0-0 versie 0.8.67
 
