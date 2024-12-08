@@ -153,7 +153,7 @@ function competitieBepalen() {
             }
         }
     }
-    return competitieRonde.teamCode;
+    return competitieRonde ? competitieRonde.teamCode : db.INTERNE_COMPETITIE;
 }
 
 function versieBepalen() { // TODO reglement in team i.p.v. versie

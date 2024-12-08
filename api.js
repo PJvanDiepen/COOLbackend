@@ -16,8 +16,7 @@ const package_json = require("./package.json");
 const synchroon = {
     versie: package_json.version,
     serverStart: new Date(),
-    compleet: 1,
-    revisie: []
+    revisie: 0 // aantal mutaties van de database sinds de serverStart
 }
 
 const os = require("os");
@@ -37,23 +36,18 @@ const db = require("./modules/db.cjs");
 
 /*
 db.boom met db.cjs voor de server en met db.js voor de browser.
-
-Op de server is db.boom zo veel mogelijk compleet uit de MySQL database,
-zodat het niet nodig is om steeds opnieuw te lezen.
-De browser synchroniseert data met de server aan de hand van het volgnummer in compleet van synchroon.
-De data op de server krijgt een nieuw volgnummer na het muteren van de MySQL database
-en opnieuw lezen uit de MySQL database.
  */
-db.clubToevoegen(synchroon.compleet,
+
+db.clubToevoegen(synchroon.revisie,
     { clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren" });
 for (const seizoen of ["1819", "1920", "2021", "2122", "2223", "2324", "2425"]) {
-    db.seizoenToevoegen(synchroon.compleet, {clubCode: db.WAAGTOREN, seizoen: seizoen});
+    db.seizoenToevoegen(synchroon.revisie, {clubCode: db.WAAGTOREN, seizoen: seizoen});
 }
 
-db.clubToevoegen(synchroon.compleet,
+db.clubToevoegen(synchroon.revisie,
     { clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd" });
 for (const seizoen of ["2309", "2401"]) {
-    db.seizoenToevoegen(synchroon.compleet, {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
+    db.seizoenToevoegen(synchroon.revisie, {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
 }
 
 async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
@@ -63,7 +57,7 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
             .where("team.clubCode", clubCode)
             .where("team.seizoen", seizoen);
         for (const team of teams) {
-            db.teamToevoegen(synchroon.compleet, team);
+            db.teamToevoegen(synchroon.revisie, team);
         }
     }
     if (teamCode === undefined) {
@@ -76,7 +70,7 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
             .where("ronde.seizoen", seizoen)
             .where("ronde.teamCode", teamCode);
         for (const ronde of ronden) {
-            db.rondeToevoegen(synchroon.compleet, ronde);
+            db.rondeToevoegen(synchroon.revisie, ronde);
         }
     }
     if (rondeNummer === undefined) {
@@ -90,7 +84,7 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
             .where("uitslag.teamCode", teamCode)
             .where("uitslag.rondeNummer", rondeNummer);
         for (const uitslag of uitslagen) {
-            db.uitslagToevoegen(synchroon.compleet, uitslag);
+            db.uitslagToevoegen(synchroon.revisie, uitslag);
         }
     }
     return eenRonde.uitslag;
@@ -124,7 +118,7 @@ async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
  *      /:club/club
  *      enz.
  *
- *  Een api-endpoint geeft een antwoord (object) met compleet en andere properties.
+ *  Een api-endpoint geeft een antwoord (object) met revisie en andere properties.
  */
 module.exports = function (url) {
 
@@ -139,7 +133,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/vragen", async function (ctx) {
-        ctx.body = JSON.stringify({compleet: 1, data: db.vragen});
+        ctx.body = JSON.stringify({revisie: 0, data: db.vragen}); // TODO zonder revisie?
     });
 
     /*

@@ -63,30 +63,19 @@ const NIEUWE_RANGLIJST = 2;
  *     .eenRonde(:ronde)
  *     .eenUitslag(:speler)
  *
+ * De objecten in de boom hebben een revisie nummer. Zie synchroon in api.js
+ * Na serverStart begint de server met revisie = 0 en daarna +1 na elke mutatie van de database.
+ *
  * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
- * De server leest data uit de database die gevraagd wordt en slaat die op in boom,
+ * De server leest data uit de database naar aanleiding van een vraag van de browser en
+ * slaat die op als objecten op in de boom,
  * zodat die niet steeds opnieuw uit de database gelezen hoeft te worden.
- * De server legt vast als de data van een seizoen compleet is of
- * als alle ronden de van een team (of competitie) compleet zijn of
- * als alle uitslagen van een ronde compleet zijn.
- *
- * Na elke mutatie op de database krijgt compleet in synchroon een nieuw volgnummer.
- * Bovendien houdt de server in synchroon bij welke data compleet is.
- * De data staat in data. In synchroon staan objecten in revisie met compleet: en een volgnummer:
- * synchroon.revisie[index(:club)][index(:seizoen)]
- * synchroon.revisie[index(:club)][index(:seizoen)][index(:team)]
- * synchroon.revisie[index(:club)][index(:seizoen)][index(:team)][index(:ronde)]
- * TODO nog verder uitwerken
  *
  * Als de browser data van de server leest, slaat de server die data ook op in sessionStorage,
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
- * Behalve de gevraagde data stuurt de server ook steeds de actuele synchroon,
+ * Behalve de gevraagde data stuurt de server ook steeds het revisie nummer,
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
- *
- * Indien data compleet is, is de data in sessionStorage actueel.
- * Indien data niet compleet is, leest de browser de data van de server,
- * want niet complete data kan nog veranderen en compleet worden op de server.
  *
  * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
  */
@@ -186,8 +175,8 @@ function boomMaken() {
     });
 }
 
-function clubToevoegen(compleet, object) {
-    const club = clubMaken(compleet, object);
+function clubToevoegen(revisie, object) {
+    const club = clubMaken(revisie, object);
     if (club) {
         const clubIndex = boom.clubIndex(club.clubCode);
         if (clubIndex >= 0) {
@@ -204,7 +193,7 @@ function clubToevoegen(compleet, object) {
 const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
-function clubMaken(compleet, object) {
+function clubMaken(revisie, object) {
     const {
         clubCode,
         vereniging,
@@ -224,7 +213,7 @@ function clubMaken(compleet, object) {
 
     function kaleClub() {
         return {
-            compleet: compleet,
+            revisie: revisie,
             clubCode: clubCode,
             vereniging: vereniging,
             teamNaam: teamNaam
@@ -232,7 +221,7 @@ function clubMaken(compleet, object) {
     }
 
     return Object.freeze({
-        compleet,
+        revisie,
         clubCode,
         vereniging,
         teamNaam,
@@ -243,13 +232,13 @@ function clubMaken(compleet, object) {
     });
 }
 
-function seizoenToevoegen(compleet, object) {
+function seizoenToevoegen(revisie, object) {
     const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
     }
     const club = boom.club[clubIndex];
-    const seizoen = seizoenMaken(compleet, object);
+    const seizoen = seizoenMaken(revisie, object);
     if (seizoen) {
         const seizoenIndex = club.seizoenIndex(seizoen.seizoen);
         if (seizoenIndex >= 0) {
@@ -267,7 +256,7 @@ Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
 De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
 met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
  */
-function seizoenMaken(compleet, object) {
+function seizoenMaken(revisie, object) {
     const {
         clubCode,
         seizoen
@@ -302,14 +291,14 @@ function seizoenMaken(compleet, object) {
 
     function kaleSeizoen() {
         return {
-            compleet: compleet,
+            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen
         };
     }
 
     return Object.freeze({
-        compleet,
+        revisie,
         clubCode,
         seizoen,
         seizoenTekst,
@@ -324,7 +313,7 @@ function seizoenVoluit(object) { // TODO naar seizoenMaken
     return tak(object.clubCode, object.seizoen).seizoenTekst;
 }
 
-function teamToevoegen(compleet, object) {
+function teamToevoegen(revisie, object) {
     const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
@@ -335,7 +324,7 @@ function teamToevoegen(compleet, object) {
         return null;
     }
     const seizoen = club.seizoen[seizoenIndex];
-    const team = teamMaken(compleet, object);
+    const team = teamMaken(revisie, object);
     if (team) {
         const teamIndex = seizoen.teamIndex(seizoen.teamCode);
         if (teamIndex >= 0) {
@@ -355,7 +344,7 @@ const JEUGD_COMPETITIE= "ije";
 const SNELSCHAKEN= "izs";
 const ZWITSERS_TEST= "izt";
 
-function teamMaken(compleet, object) {
+function teamMaken(revisie, object) {
     const {
         clubCode,
         seizoen,
@@ -437,7 +426,7 @@ function teamMaken(compleet, object) {
 
     function kaleTeam() {
         return {
-            compleet: compleet,
+            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen,
             teamCode: teamCode,
@@ -453,7 +442,7 @@ function teamMaken(compleet, object) {
     }
 
     return Object.freeze({
-        compleet,
+        revisie,
         clubCode,
         seizoen,
         teamCode,
@@ -520,7 +509,7 @@ function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
     }
 }
 
-function rondeToevoegen(compleet, object) {
+function rondeToevoegen(revisie, object) {
     const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
@@ -536,7 +525,7 @@ function rondeToevoegen(compleet, object) {
         return null;
     }
     const team = seizoen.team[teamIndex];
-    const ronde = rondeMaken(compleet, object);
+    const ronde = rondeMaken(revisie, object);
     if (ronde) {
         const rondeIndex = team.rondeIndex(ronde.rondeNummer);
         if (rondeIndex >= 0) {
@@ -549,7 +538,7 @@ function rondeToevoegen(compleet, object) {
     return ronde;
 }
 
-function rondeMaken(compleet, object) {
+function rondeMaken(revisie, object) {
     const {
         clubCode,
         seizoen,
@@ -595,7 +584,7 @@ function rondeMaken(compleet, object) {
             if (eenUitslag.isPlanning()) {
                 console.log(`${eenUitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
                 return false;
-            } else if (eenUitslag.isResultaat()) {
+            } else if (eenUitslag.isCompleet()) {
                 ingevuld++;
             }
         }
@@ -605,7 +594,7 @@ function rondeMaken(compleet, object) {
 
     function kaleRonde() {
         return {
-            compleet: compleet,
+            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen,
             teamCode: teamCode,
@@ -617,7 +606,7 @@ function rondeMaken(compleet, object) {
     }
 
     return Object.freeze({
-        compleet,
+        revisie,
         clubCode,
         seizoen,
         teamCode,
@@ -634,7 +623,7 @@ function rondeMaken(compleet, object) {
     });
 }
 
-function uitslagToevoegen(compleet, object) {
+function uitslagToevoegen(revisie, object) {
     const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
@@ -655,7 +644,7 @@ function uitslagToevoegen(compleet, object) {
         return null;
     }
     const ronde = team.ronde[rondeIndex];
-    const uitslag = uitslagMaken(compleet, object);
+    const uitslag = uitslagMaken(revisie, object);
     if (uitslag) {
         const uitslagIndex = ronde.uitslagIndex(uitslag.knsbNummer);
         if (uitslagIndex >= 0) {
@@ -668,7 +657,7 @@ function uitslagToevoegen(compleet, object) {
     return uitslag;
 }
 
-function uitslagMaken(compleet, object) {
+function uitslagMaken(revisie, object) {
     const {
         clubCode,
         seizoen,
@@ -727,7 +716,7 @@ function uitslagMaken(compleet, object) {
 
     function kaleUitslag() {
         return {
-            compleet: compleet,
+            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen,
             teamCode: teamCode,
@@ -744,7 +733,7 @@ function uitslagMaken(compleet, object) {
     }
 
     return Object.freeze({
-        compleet,
+        revisie,
         clubCode,
         seizoen,
         teamCode,
@@ -899,30 +888,30 @@ export { // ES6 voor browser,
     boom,
     tak,                  // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
     boomMaken,
-    clubToevoegen,         // (compleet, object)
+    clubToevoegen,         // (revisie, object)
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
-    clubMaken,             // (compleet, object)
-    seizoenToevoegen,      // (compleet, object)
-    seizoenMaken,          // (compleet, object)
+    clubMaken,             // (revisie, object)
+    seizoenToevoegen,      // (revisie, object)
+    seizoenMaken,          // (revisie, object)
     seizoenVoluit,         // (object)
-    teamToevoegen,         // (compleet, object)
+    teamToevoegen,         // (revisie, object)
     // teamCode char(3)
     INTERNE_COMPETITIE,
     RAPID_COMPETITIE,
     JEUGD_COMPETITIE,
     SNELSCHAKEN,
     ZWITSERS_TEST,
-    teamMaken,             // (compleet, object)
+    teamMaken,             // (revisie, object)
     isCompetitie,          // (team)
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
     teamVoluit,            // (teamCode)
-    rondeToevoegen,        // (compleet, object)
-    rondeMaken,            // (compleet, object)
-    uitslagToevoegen,      // (compleet, object)
-    uitslagMaken,          // (compleet, object)
+    rondeToevoegen,        // (revisie, object)
+    rondeMaken,            // (revisie, object)
+    uitslagToevoegen,      // (revisie, object)
+    uitslagMaken,          // (revisie, object)
 
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,

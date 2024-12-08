@@ -49,7 +49,7 @@ async function uitslagenSpeler(kop, lijst) {
     kop.textContent = `${t.naam}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}`;
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern() && t.eigenWaardeCijfer()) {
-        lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
+        lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}`, "", "", "", totaal, totaal, t.rating()));
     }
     const uitslagen = await zyq.localFetch(
         `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/uitslagen/${o_o_o.speler}/${o_o_o.versie}`);

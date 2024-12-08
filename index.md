@@ -5,13 +5,18 @@ van schaakvereniging de Waagtoren verwerkt.
 
 Problemen of vragen kan je melden in een e-mail naar pvdiepen@gmail.com 
 of als [issue](https://github.com/PJvanDiepen/COOLbackend/issues) op GitHub.
-Een meer uitgebreide [planning](https://github.com/users/PJvanDiepen/projects/1/views/1) staat op GitHub.
 
 # 0-0-0 versie 0.8.67
 
 Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zijn opgelost:
 
+- kolom rating in plaats van lijst met ratings
+- geen KNSB rating grafiek issue #44
 - 0-0-0 laat de correcte ronde zien voor de Voorlopige indeling en Uitslagen invullen
+- na definitief maken uitslagen van ronde synchroniseren
+- objecten boom synchroniseren met server issue #49
+
+Een meer uitgebreide [planning](https://github.com/users/PJvanDiepen/projects/1/views/1) staat op GitHub.
 
 # 0-0-0 versie 1.0.0
 
@@ -36,7 +41,7 @@ Met 0-0-0 is het mogelijk om vanaf allerlei computers, tablets of smartphones de
 ## Uitslagen en ranglijsten
 
 Het is de bedoeling dat 0-0-0 een universeel bruikbaar uitslagen en ranglijsten systeem voor schaakverenigingen wordt. 
-De [database](doc/database.md) en de [api](doc/ontwikkelen.md) van 0-0-0 zijn daarom zodanig ontworpen 
+De [database](doc/database.md) is daarom zodanig ontworpen 
 dat de regels van het interne competitie reglement in de database zijn vastgelegd en niet in de software van 0-0-0.
 
 Voor de Waagtoren staat de logica van het Alkmaar systeem in reglement-data, maar die kunnen we vervangen door 
@@ -74,7 +79,6 @@ zodat alle teamleiders een overzicht hebben van alle teams.
 
 ## Ontwerpbeslissingen
 
-Het ontwerp van de 0-0-0 database is afgerond voor wat betreft de ranglijst, uitslagen, indelen en de kalender. 
 Voor de reglement-data zijn prototypes gemaakt voor het Alkmaar systeem, de Rapid competitie en snelschaaktoernooien. 
 De algemene opzet voor reglement-data zal ongetwijfeld nog veranderen als we het Keizer systeem of Zwitsers systeem gaan implementeren.
 
@@ -86,23 +90,8 @@ Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die info
 - de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
 - een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
 
-Voor de online 0-0-0 gaan we meer geavanceerde koppelingen maken met andere systemen, 
-want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen. 
-Spelers kunnen zelf hun eigen uitslagen invoeren, maar alleen de intern wedstrijdleider kan uitslagen wijzigen. 
-Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen.
+De online 0-0-0 kan de maandelijkse ratinglijst van de KNSB inlezen. 
+Daarnaast gaan we ook zorgen dat 0-0-0 informatie kan uitwisselen met SwissMaster. 
 
-## Verdere ontwikkeling
-
-Het is de bedoeling om 0-0-0 eerst helemaal functioneel te maken voor de Waagtoren. 
-Daarna gaan we 0-0-0 geschikt maken 
-- voor andere schaakverenigingen, 
-- voor andere systemen dan alleen het Alkmaar systeem en 
-- voor andere (onder)bonden dan alleen KNSB en NHSB.
-
-Voorlopig zorgen we dat het uitwisselen van gegevens met Rokade blijft functioneren, zodat verenigingen die Rokade gebruiken eenvoudig kunnen overstappen.
-Andere schaakverenigingen kunnen ook op 0-0-0.nl draaien.
-
-De source code met documentatie is als open source beschikbaar op GitHub, zodat andere programmeurs ook aan 0-0-0 kunnen werken.
-
-Voorlopig is 0-0-0 gebaseerd op MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
-is het ontwerp van de database zodanig dat we MySQL kunnen vervangen.
+Hoofddoel is wedstrijdleiders zo min mogelijk hoeven in te toetsen. 
+Spelers kunnen zelf hun eigen uitslagen invoeren, maar alleen de intern wedstrijdleider kan uitslagen wijzigen.
