@@ -36,30 +36,39 @@ export async function init() {
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 
-const synchroon = { }; // versie, serverStart, compleet: 1 en revisie: [] zie api.js
+const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
 
 async function synchroniseren() {
     const urlSynchroon = "/synchroon";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
     Object.assign(synchroon, await vraagServer(urlSynchroon));
-    if (!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart) {
-        verwijderNietSynchroon(); // na herstart server is niets actueel
-    }
+    verwijderNietSynchroon(!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart
+        ? -1 // na herstart server is niets actueel
+        : Number(synchroon.revisie));
     sessionStorage.setItem(urlSynchroon, JSON.stringify(synchroon));
-    const vragen = await vraagLokaal("/vragen");
-    db.vragen.push(...vragen.data); // data zonder compleet
+    db.vragen.push(...await vraagLokaal("/vragen"));
 }
 
-function verwijderNietSynchroon() {
+function verwijderNietSynchroon(revisie) {
+    console.log("--- verwijderNietSynchroon(revisie) ---");
     const verwijderen = [];
     for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
         if (key.startsWith("/")) { // indien url
-            verwijderen.push(key);
+            const value = JSON.parse(sessionStorage.getItem(key));
+            console.log("--- key value met object ---");
+            console.log(key);
+            console.log(value);
+            console.log(typeof value);
+
+            // verwijderen.push(key);
         }
     }
-    for (const key of verwijderen) {
-        sessionStorage.removeItem(key);
+    if (verwijderen.length > 0) {
+        console.log(`verwijderNietSynchroon(${revisie}): ${verwijderen.length} sessionStorage items`);
+        for (const key of verwijderen) {
+            sessionStorage.removeItem(key);
+        }
     }
 }
 
@@ -91,25 +100,25 @@ function urlVerwerken() {
 async function seizoenVerwerken() {
     const clubVraag = await vraag("/club");
     const club = await clubVraag.antwoord();
-    db.clubToevoegen(club.compleet, club);
+    db.clubToevoegen(club.revisie, club);
     const seizoenenVraag = await vraag("/seizoenen");
     const seizoenen = await seizoenenVraag.antwoord();
     for (const seizoen of seizoenen) {
-        db.seizoenToevoegen(seizoen.compleet, seizoen);
+        db.seizoenToevoegen(seizoen.revisie, seizoen);
     }
     o_o_o.seizoen = seizoenBepalen();
     const eenSeizoen = db.tak(o_o_o.club, o_o_o.seizoen);
     const teamsVraag = await vraag("/teams");
     const teams = await teamsVraag.antwoord();
     for (const team of teams) {
-        db.teamToevoegen(team.compleet, team);
+        db.teamToevoegen(team.revisie, team);
     }
     const rondenVraag = await vraag("/ronden");
     for (const team of eenSeizoen.team) {
         const ronden = await rondenVraag
             .specificeren({team: team.teamCode}).antwoord();
         for (const ronde of ronden) {
-            db.rondeToevoegen(ronde.compleet, ronde);
+            db.rondeToevoegen(ronde.revisie, ronde);
         }
     }
     // alle ronden van alle teams en competities van het seizoen sorteren op datum
@@ -131,7 +140,7 @@ async function seizoenVerwerken() {
                 .specificeren({team: eenRonde.teamCode, ronde: eenRonde.rondeNummer})
                 .antwoord();
             for (const uitslag of uitslagen) {
-                db.uitslagToevoegen(uitslag.compleet, uitslag);
+                db.uitslagToevoegen(uitslag.revisie, uitslag);
             }
         }
     }
@@ -228,6 +237,13 @@ export async function vraag(commando) {
         csv: ""
     };
 
+    function specificeren(object) {
+        for (const [key, value] of Object.entries(object)) {
+            specificatie[key] = value;
+        }
+        return this;
+    }
+
     function invullen() {
         return vraagVanServer
             .replace(":uuid", specificatie.uuid)
@@ -240,13 +256,6 @@ export async function vraag(commando) {
             .replace(":maand", specificatie.maand)
             .replace(":jaar", specificatie.jaar)
             .replace(":csv", specificatie.csv);
-    }
-
-    function specificeren(object) {
-        for (const [key, value] of Object.entries(object)) {
-            specificatie[key] = value;
-        }
-        return this;
     }
 
     function afdrukken(tekst = "") {
@@ -294,18 +303,16 @@ async function vraagZoeken(commando) {
  * vraagLokaal optimaliseert de verbinding met de server
  * door het antwoord van de server ook lokaal op te slaan
  *
- * vraagLokaal krijgt object van vraagServer met compleet: <getal> data: [...]
+ * vraagLokaal krijgt object van vraagServer met revisie: <getal> data: [...]
  *
  * @param url de vraag aan de server
- * @returns {Promise<any>} compleet en data uit het antwoord van de server
+ * @returns {Promise<any>} revisie en data uit het antwoord van de server
  */
 async function vraagLokaal(url) {
     let antwoord = JSON.parse(sessionStorage.getItem(url)); // indien lokaal dan niet vraagServer
     if (!antwoord) {
         antwoord = await vraagServer(url);
-        if (Number(antwoord.compleet)) {
-            sessionStorage.setItem(url, JSON.stringify(antwoord));
-        } // indien niet compleet > 0 niet opslaan en steeds opnieuw vraagServer
+        sessionStorage.setItem(url, JSON.stringify(antwoord));
     }
     return antwoord;
 }

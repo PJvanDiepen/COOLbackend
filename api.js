@@ -133,7 +133,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/vragen", async function (ctx) {
-        ctx.body = JSON.stringify({revisie: 0, data: db.vragen}); // TODO zonder revisie?
+        ctx.body = JSON.stringify(db.vragen);
     });
 
     /*
