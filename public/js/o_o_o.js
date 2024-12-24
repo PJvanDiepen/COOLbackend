@@ -14,6 +14,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
+import * as s from "./server.js";
 
 import * as zyq from "./zyq.js";
 
@@ -22,7 +23,7 @@ import * as zyq from "./zyq.js";
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  */
 export async function init() {
-    await synchroniseren();
+    await s.synchroniseren();
     urlVerwerken();
     await zyq.gebruikerVerwerken();
     await seizoenVerwerken();
@@ -34,42 +35,6 @@ export async function init() {
     }
     o_o_o.versie = versieBepalen();
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
-}
-
-const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
-
-async function synchroniseren() {
-    const urlSynchroon = "/synchroon";
-    const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
-    Object.assign(synchroon, await vraagServer(urlSynchroon));
-    verwijderNietSynchroon(!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart
-        ? -1 // na herstart server is niets actueel
-        : Number(synchroon.revisie));
-    sessionStorage.setItem(urlSynchroon, JSON.stringify(synchroon));
-    db.vragen.push(...await vraagLokaal("/vragen"));
-}
-
-function verwijderNietSynchroon(revisie) {
-    console.log("--- verwijderNietSynchroon(revisie) ---");
-    const verwijderen = [];
-    for (let i = 0; i < sessionStorage.length; i++) {
-        const key = sessionStorage.key(i);
-        if (key.startsWith("/")) { // indien url
-            const value = JSON.parse(sessionStorage.getItem(key));
-            console.log("--- key value met object ---");
-            console.log(key);
-            console.log(value);
-            console.log(typeof value);
-
-            // verwijderen.push(key);
-        }
-    }
-    if (verwijderen.length > 0) {
-        console.log(`verwijderNietSynchroon(${revisie}): ${verwijderen.length} sessionStorage items`);
-        for (const key of verwijderen) {
-            sessionStorage.removeItem(key);
-        }
-    }
 }
 
 export const o_o_o = {
@@ -98,25 +63,27 @@ function urlVerwerken() {
 }
 
 async function seizoenVerwerken() {
-    const clubVraag = await vraag("/club");
+    const clubVraag = await s.vraag("/club");
     const club = await clubVraag.antwoord();
     db.clubToevoegen(club.revisie, club);
-    const seizoenenVraag = await vraag("/seizoenen");
+    const seizoenenVraag = await s.vraag("/seizoenen");
     const seizoenen = await seizoenenVraag.antwoord();
     for (const seizoen of seizoenen) {
         db.seizoenToevoegen(seizoen.revisie, seizoen);
     }
     o_o_o.seizoen = seizoenBepalen();
     const eenSeizoen = db.tak(o_o_o.club, o_o_o.seizoen);
-    const teamsVraag = await vraag("/teams");
-    const teams = await teamsVraag.antwoord();
+    const teamsVraag = await s.vraag("/teams");
+    const teams = await teamsVraag.specificeren(o_o_o).antwoord();
     for (const team of teams) {
         db.teamToevoegen(team.revisie, team);
     }
-    const rondenVraag = await vraag("/ronden");
+    const rondenVraag = await s.vraag("/ronden");
     for (const team of eenSeizoen.team) {
         const ronden = await rondenVraag
-            .specificeren({team: team.teamCode}).antwoord();
+            .specificeren(o_o_o)
+            .specificeren({team: team.teamCode})
+            .antwoord();
         for (const ronde of ronden) {
             db.rondeToevoegen(ronde.revisie, ronde);
         }
@@ -133,10 +100,11 @@ async function seizoenVerwerken() {
         }
     }
 
-    const uitslagenVraag = await vraag("/uitslagen");
+    const uitslagenVraag = await s.vraag("/uitslagen");
     for (const eenTeam of eenSeizoen.team) {
         for (const eenRonde of eenTeam.ronde) {
             const uitslagen = await uitslagenVraag
+                .specificeren(o_o_o)
                 .specificeren({team: eenRonde.teamCode, ronde: eenRonde.rondeNummer})
                 .antwoord();
             for (const uitslag of uitslagen) {
@@ -217,126 +185,6 @@ export function indelenRonde() {
 export function rondeGegevens(teamCode, rondeNummer) {
     const team = db.tak(o_o_o.club, o_o_o.seizoen, teamCode);
     return team.ronde[team.rondeIndex(rondeNummer)];
-}
-
-export async function vraag(commando) {
-    const vraagVanServer = await vraagZoeken(commando);
-    if (!vraagVanServer) {
-        return Object.freeze({});
-    }
-    const specificatie = {
-        uuid: zyq.uuidToken,
-        club: o_o_o.club,
-        seizoen: o_o_o.seizoen,
-        team: o_o_o.team,
-        competitie: o_o_o.competitie,
-        ronde: 1,
-        speler: 0,
-        maand: 1,
-        jaar: 2024,
-        csv: ""
-    };
-
-    function specificeren(object) {
-        for (const [key, value] of Object.entries(object)) {
-            specificatie[key] = value;
-        }
-        return this;
-    }
-
-    function invullen() {
-        return vraagVanServer
-            .replace(":uuid", specificatie.uuid)
-            .replace(":club", specificatie.club)
-            .replace(":seizoen", specificatie.seizoen)
-            .replace(":team", specificatie.team)
-            .replace(":competitie", specificatie.competitie)
-            .replace(":ronde", specificatie.ronde)
-            .replace(":speler", specificatie.speler)
-            .replace(":maand", specificatie.maand)
-            .replace(":jaar", specificatie.jaar)
-            .replace(":csv", specificatie.csv);
-    }
-
-    function afdrukken(tekst = "") {
-        if (tekst) {
-            console.log(`--- ${tekst} ---`);
-        }
-        console.log(vraagVanServer);
-        console.log(specificatie);
-        console.log(invullen());
-        return this;
-    }
-
-    async function muteren() {
-        return await vraagServer(invullen());
-    }
-
-    async function antwoord() {
-        return await vraagLokaal(invullen());
-    }
-
-    return Object.freeze({
-        specificeren, // (object) ->
-        afdrukken,    // () ->
-        muteren,      // ()
-        antwoord      // ()
-    });
-}
-
-async function vraagZoeken(commando) {
-    const vragen = db.vragen.filter(function (vraag) {
-        return vraag.includes(commando);
-    });
-    if (vragen.length < 1) {
-        console.log(`Server herkent geen vraag met ${commando}`);
-        return "";
-    } else if (vragen.length > 1) {
-        console.log(`Server herkent meer vragen met ${commando}`);
-        console.log(vragen);
-        return vragen[0];
-    }
-    return vragen[0]; // eerste of enige vraag
-}
-
-/**
- * vraagLokaal optimaliseert de verbinding met de server
- * door het antwoord van de server ook lokaal op te slaan
- *
- * vraagLokaal krijgt object van vraagServer met revisie: <getal> data: [...]
- *
- * @param url de vraag aan de server
- * @returns {Promise<any>} revisie en data uit het antwoord van de server
- */
-async function vraagLokaal(url) {
-    let antwoord = JSON.parse(sessionStorage.getItem(url)); // indien lokaal dan niet vraagServer
-    if (!antwoord) {
-        antwoord = await vraagServer(url);
-        sessionStorage.setItem(url, JSON.stringify(antwoord));
-    }
-    return antwoord;
-}
-
-/**
- * vraagServer maakt verbinding met de server
- *
- * @param url de vraag aan de database op de server
- * @returns {Promise<any>} het antwoord van de server
- */
-async function vraagServer(url) {
-    try {
-        const response = await fetch(`${html.server}${url}`);
-        if (response.ok) {
-            return await response.json();
-        } else {
-            console.log(`--- vraagServer ---`);
-            console.log(response);
-            return null;
-        }
-    } catch (error) {
-        console.log(`--- vraagServer error ---`);
-        console.error(error);
-    }
 }
 
 export function competitieTitel() { // TODO met (clubCode)

@@ -40,7 +40,7 @@ Refresh Android cache
 # JavaScript
 
 - [ECMA JavaScript](https://262.ecma-international.org/)
-- [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [JavaScript tutorial](https://javascript.info/)
 - [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
 - [undefined](https://dmitripavlutin.com/7-tips-to-handle-undefined-in-javascript/)
 - [Type support with plain JavaScript](https://www.pausly.app/blog/full-type-support-with-plain-javascript)
@@ -208,6 +208,7 @@ Refresh Android cache
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 # Later
+- [form verwerken](https://css-tricks.com/how-to-create-multi-step-forms-with-vanilla-javascript-and-css/)
 - [clickable area on image](https://www.imagemaps.net/)
 - [interactieve kaarten](https://agafonkin.com/)
 - [3D in JavaScript](https://discoverthreejs.com/)
