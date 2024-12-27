@@ -15,6 +15,7 @@ Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zi
 - 0-0-0 laat de correcte ronde zien voor de Voorlopige indeling en Uitslagen invullen
 - na definitief maken uitslagen van ronde synchroniseren
 - objecten boom synchroniseren met server issue #49
+- ontstaan.md is compleet
 
 Een meer uitgebreide [planning](https://github.com/users/PJvanDiepen/projects/1/views/1) staat op GitHub.
 

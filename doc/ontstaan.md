@@ -1,7 +1,7 @@
 # Ontstaansgeschiedenis 0-0-0
 
-0-0-0 is geleidelijk ontstaan. 
-Dit is de geschiedenis van de belangrijkste ontwerpbeslissingen en is geschreven door Peter van Diepen. 
+0-0-0 is geleidelijk ontstaan en bovendien via allerlei omwegen. 
+Dit is de geschiedenis van de belangrijkste ontwerpbeslissingen beschreven door Peter van Diepen. 
 
 Ik heb het nog nooit gedaan dus ik denk dat ik het wel kan
 (Pipi Langkous)
@@ -41,7 +41,7 @@ Zo ontstond het idee om helemaal opnieuw te beginnen en een web-app te maken met
 ## Eerste opzet
 
 Mijn eerste idee was om het een en ander te integreren op de [WordPress](https://en.wikipedia.org/wiki/WordPress) website van de Waagtoren.
-WordPress gebruikt [MySQL](https://en.wikipedia.org/wiki/MySQL) als on line database voor de artikelen en gebruikers. 
+WordPress gebruikt [MySQL](https://en.wikipedia.org/wiki/MySQL) als on-line database voor de artikelen en gebruikers. 
 Met alle leden in de database en paar extra tabellen voor uitslagen en wat [PHP](https://en.wikipedia.org/wiki/PHP) code 
 om ranglijsten te berekenen zou ik een begin kunnen maken met een web-app. Al snel vond ik WordPress niet geschikt voor deze toepassing
 en PHP te lelijk om zoiets als het algoritme voor indelen mee te programmeren.
@@ -51,7 +51,7 @@ Daarom begon ik in 2019 met het ontwerpen van de database met MySQL en schreef i
 Dat was een off-line toepassing, omdat ik toen nog niet wist hoe ik de backend voor de on-line database zou gaan maken.
 
 De Java toepassing was vooral bedoeld om informatie in te lezen uit andere systemen:
-- Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
+- Excel-bestand uit OLA (On-line Leden Administratie van de KNSB) met de gegevens van de Waagtoren leden,
 - de Microsoft Access database van Rokade en
 - een web crawler die de uitslagen van externe wedstrijden inleest van de websites van NHSB en KNSB.
 
@@ -78,15 +78,13 @@ In theorie kan je op de backend de HTML en CSS compleet maken en doorsturen naar
 maar je kunt ook JavaScript toevoegen die dynamisch webpagina's genereert in de frontend.
 
 Mijn eerste ontwerpbeslissing was om in de backend geen HTML en CSS te genereren, maar uitsluitend JSON.
-En omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in MySQL.
 De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
 
 Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/),
 en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen en me een van die frontend frameworks eigen te maken.
-Ik beperkte mij daarom tot zo standaard mogelijke HTML, CSS en JavaScript.
-Dit was niet echt een ontwerpbeslissing, maar een manier om alles voor mijzelf zo eenvoudig mogelijk te maken.
+Mijn tweede ontwerpbeslissing was daarom om in de frontend zo standaard mogelijke HTML, CSS en JavaScript te gebruiken.
 
-Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application), maar verschillende webpagina's in public: 
+Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application), maar verschillende webpagina's in public:
 ranglijst.html, speler.html, team.html, enz. Ieder met eigen JavaScript: ranglijst.js, speler.js, team.js, enz.
 Een simpele manier om de webapp te splitsen in onderdelen, die ik los van elkaar kon testen.
 
@@ -119,6 +117,33 @@ zodat de intern wedstrijdleider minder werk zou krijgen.
 Bovendien moest de web-app moest de bijbehorende externe wedstrijden laten zien, 
 zodat de leden van de Waagtoren de ranglijst helemaal zelf konden controleren.
 
+## Ranglijst
+
+Een andere belangrijke ontwerpbeslissing was om een universeel bruikbaar uitslagen en ranglijsten systeem te maken.
+Ik wilde daarom de regels van het interne competitie reglement niet in software vastleggen, maar in reglement-data. 
+
+En omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in MySQL.
+De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
+
+Dit betekent dat de logica van het Alkmaar systeem in de database wordt vastgelegd en
+dat we die kunnen vervangen door bijvoorbeeld het Keizer systeem.
+De regels van het interne competitie reglement worden dus niet in software vastgelegd, maar in reglement-data.
+Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data.
+
+Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data
+en vervolgens nieuwe ranglijsten te genereren. Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan.
+
+
+Ranglijst elke keer uitrekenen i.p.v. vastleggen
+MySQL stored procedure
+sorteren in MySQL
+
+## Agenda
+
+## Teamleider
+
+## GitHub project
+
 ## Rokade en 0-0-0
 
 In begintijd Rokade en 0-0-0 samen
@@ -133,7 +158,11 @@ en als herinnering aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren 
 
 Invoering van CommonJS module voor node.js en ES6 modules voor frontend.
 
-OLA helemaal uit 0-0-0 gehaald en inlezen ratinglijsten van de KNSB.
+Het inlezen van KNSB gegevens uit OLA (Online Leden Administratie van de KNSB) was gerealiseerd in de Java toepassing.
+Maar elk seizoen bleek het uit OLA afgetapte CSV-bestand anders te zijn. Dan maakte ik weer een paar aanpassingen
+en werkte het weer. In de zomer van 2023 deed ik mee aan een aantal kroeglopertoernooien en daar gebruikten ze
+[StickChess](https://stickchess.com/)steeds. een, 
+maar bleek OLA helemaal uit 0-0-0 gehaald en inlezen ratinglijsten van de KNSB.
 
 ## 2024
 
@@ -143,7 +172,7 @@ met een eigen manier om de ranglijst te berekenen.
 De spelers in de interne en rapid competitie houden het hele seizoen de KNSB rating van 1 september (en subgroep),
 maar de jeugd heeft een najaar en voorjaar competitie met een andere rating / subgroep.
 Toen was het noodzakelijk om in 0-0-0 verschillende schaakverenigingen te onderscheiden met een clubCode
-en de jeugd met clubCode = 2 af te splitsen van de Waagtoren met clubCode = 3.
+en de jeugd met clubCode = 1 af te splitsen van de Waagtoren met clubCode = 0.
 
 Verschuiving van frontend naar backend en van MySQL naar backend
 Synchroniseren frontend met backend. Geen doorgeefluik meer.
@@ -186,22 +215,6 @@ Rokade is
 
 De backend wil ik zo veel mogelijk met MySQL realiseren met zo min mogelijk extra backend software op een Node.js server. 
 De frontend verwerkt JSON en gebruikt zo standaard mogelijke HTML, CSS en JavaScript.
-
-Het belangrijkste verschil tussen Rokade en het nieuwe systeem is dat alles online komt en dat de databases en api zodanig worden ontworpen 
-dat het een universeel bruikbaar uitslagen en ranglijsten systeem wordt.
-
-Dit betekent dat de logica van het Alkmaar systeem in de database wordt vastgelegd en 
-dat we die kunnen vervangen door bijvoorbeeld het Keizer systeem. 
-De regels van het interne competitie reglement worden dus niet in software vastgelegd, maar in reglement-data. 
-Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data.
-
-Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data 
-en vervolgens nieuwe ranglijsten te genereren. Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan.
-
-Omdat externe wedstrijden soms meetellen voor de interne competitie moet het nieuwe systeem overzichten van scores in de externe competitie kunnen maken. 
-Met Rokade moest de intern wedstrijdleider deze administratie met de hand bijhouden. 
-Daarnaast administreerde de extern wedstrijdleider overzichten van de scores in de externe competitie. 
-Dubbel werk dus. Het nieuwe systeem moet beide administraties vervangen.
 
 Op dit moment verkeert het nieuwe systeem in fase 1: database ontwerpen en offline de database vullen. 
 Ik probeer zo veel mogelijk informatie af te tappen van andere systemen zoals het OLA systeem van de KNSB, de ratinglijsten, 
