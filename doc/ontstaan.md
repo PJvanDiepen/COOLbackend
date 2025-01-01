@@ -18,32 +18,36 @@ Bij 0-0-0 waren er andere wedstrijdsystemen, maar daarna kwam het
 Alkmaarse Systeem [(1)](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/) 
 en dat gebruiken we bij de Waagtoren nog steeds.
 
-Sinds 1974 programmeer ik computers. In het begin waren dat CDC-, Univac-, DEC- en IBM-computers later microcomputers en de IBM PC. 
+Sinds 1974 programmeer ik computers. In het begin waren dat computers die in zalen stonden van CDC, Univac, DEC en IBM.
+Later ging microcomputers en de IBM PC programmeren. 
 In 2003 werd ik docent wiskunde en in 2004 werd daarnaast ook docent informatica in het voortgezet onderwijs.
 In 2017 werd ik docent software engineering aan de Hogeschool van Amsterdam.
 
 Vanaf 2016 werd ik intern wedstrijdleider van de Waagtoren en gebruikte ik Rokade 
 van Herman Nijhuis [(2)](https://www.waagtoren.nl/2020/08/29/herman-nijhuis-erelid-van-de-waagtoren/).
-Met Rokade moest ik aanmeldingen en afzeggingen van leden verwerken, uitslagen invoeren en door middel van een upload naar de website
-indelingen, uitslagen en ranglijsten publiceren.
+Met Rokade moest ik aanmeldingen en afzeggingen van leden verwerken, uitslagen invoeren en door middel van 
+een upload naar de website indelingen, uitslagen en ranglijsten publiceren.
 Rokade gebruikte een [Microsoft Access](https://en.wikipedia.org/wiki/Microsoft_Access) database en draaide lokaal op mijn laptop.
 Dat wilde ik beter automatiseren. Daarom wilde ik in overleg met Herman Nijhuis Rokade aanpassen.
 
 Rokade is gemaakt met [Delphi](https://en.wikipedia.org/wiki/Delphi_(software)) van [Embarcadero](https://www.embarcadero.com/products/delphi).
 Een prachtig product dat ik nog kende uit de jaren 80 als [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal). 
 Delphi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
-Maar bij mij draaide Rokade niet meer op mijn Windows laptop en uitsluitend op een oude laptop met Windows XP. 
-Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. Om Rokade aan te passen, 
-zou ik meer dan 1500 euro aan Embarcadero moeten betalen voor Delphi en mij verdiepen in 20 jaar werk van Herman Nijhuis.
+Maar bij mij draaide Rokade uitsluitend op een oude laptop met Windows XP en niet meer op mijn eigen Windows laptop. 
+Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. 
+Om Rokade te kunnen aanpassen, zou ik meer dan 1500 euro aan Embarcadero moeten betalen voor Delphi en 
+mij verdiepen in 20 jaar werk van Herman Nijhuis.
 
-Zo ontstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, die dus op een website moest draaien.
+Zo ontstond het idee om helemaal opnieuw te beginnen en een web-app te maken met een on-line database, 
+die dus op een website moest draaien.
 
 ## Eerste opzet
 
 Mijn eerste idee was om het een en ander te integreren op de [WordPress](https://en.wikipedia.org/wiki/WordPress) website van de Waagtoren.
 WordPress gebruikt [MySQL](https://en.wikipedia.org/wiki/MySQL) als on-line database voor de artikelen en gebruikers. 
 Met alle leden in de database en paar extra tabellen voor uitslagen en wat [PHP](https://en.wikipedia.org/wiki/PHP) code 
-om ranglijsten te berekenen zou ik een begin kunnen maken met een web-app. Al snel vond ik WordPress niet geschikt voor deze toepassing
+om ranglijsten te berekenen zou ik een begin kunnen maken met een web-app. 
+Al snel vond ik WordPress niet geschikt voor deze toepassing
 en PHP te lelijk om zoiets als het algoritme voor indelen mee te programmeren.
 
 Als docent software engineering gebruikte ik vooral [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) en MySQL.
@@ -61,8 +65,9 @@ Daarnaast zijn frontend en backend via allerlei computers op het internet met el
 
 Op de frontend draait in ieder geval een browser die [HTML](https://en.wikipedia.org/wiki/HTML), 
 [CSS](https://en.wikipedia.org/wiki/CSS) en de programmeertaal [JavaScript](https://en.wikipedia.org/wiki/JavaScript) kan verwerken.
-De software van de backend daarentegen is ontzettend ingewikkeld. Bovendien bestaan in de praktijk veel verschillende oplossingen 
-in combinatie met allerlei programmeertalen. Ik heb uiteindelijk gekozen voor de combinatie [Node.js](https://nodejs.org/en/about) 
+De software van de backend daarentegen is ontzettend ingewikkeld. 
+Bovendien bestaan in de praktijk veel verschillende oplossingen in combinatie met allerlei programmeertalen. 
+Ik heb uiteindelijk gekozen voor de combinatie [Node.js](https://nodejs.org/en/about) 
 en JavaScript, zodat ik alleen JavaScript hoefde te leren voor zowel de frontend als de backend.
 
 In 2020 maakte Matheus de Boer van [Charper Bonaroo](https://www.bonaroo.nl/) de eerste opzet voor de web-app 
@@ -86,7 +91,7 @@ Mijn tweede ontwerpbeslissing was daarom om in de frontend zo standaard mogelijk
 
 Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application), maar verschillende webpagina's in public:
 ranglijst.html, speler.html, team.html, enz. Ieder met eigen JavaScript: ranglijst.js, speler.js, team.js, enz.
-Een simpele manier om de webapp te splitsen in onderdelen, die ik los van elkaar kon testen.
+Een simpele manier om de web-app te splitsen in onderdelen, die ik los van elkaar kon testen.
 
 Toen functies ontstonden die ik op verschillende pagina's kon gebruiken, specificeerde ik in ranglijst.html behalve ranglijst.js ook const.js, 
 op speler.html behalve speler.js ook const.js, enz. Dus geen modules, maar gewoon twee JavaScript bestanden per webpagina.
@@ -99,7 +104,8 @@ Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in pla
 Toen vroegen spelers of hun externe partij van een andere dag kon meetellen in plaats van een interne partij.
 Daarvoor moesten we het reglement van de interne competitie aanpassen en moest de intern wedstrijdleider per externe partij administreren 
 of die wel of niet moest meetellen voor de interne competitie. 
-De interpretatie van het reglement bleek verwarrend, want toen waren er spelers die in een week een interne en een externe wedstrijd wilden spelen
+De interpretatie van het reglement bleek verwarrend, 
+want toen waren er spelers die in een week een interne en een externe wedstrijd wilden spelen
 en die laten meetellen in een andere week, omdat ze in die andere week niet voor de interne competitie konden spelen. 
 De administratie werd zo heel ingewikkeld en ging daarom af en toe fout.
 
@@ -112,31 +118,60 @@ Maar ondanks de drastische vereenvoudiging bleef de administratie veel werk. Met
 namelijk de externe wedstrijden, die niet op de avonden van de interne competitie werden gespeeld, met de hand bijhouden 
 voor de kolom #XBP van de ranglijst. En Rokade gaf geen overzicht van de bijbehorende externe wedstrijden.
 
-Een belangrijke ontwerpbeslissing was om die administratie beter te automatiseren binnen de web-app, 
+Een belangrijke ontwerpbeslissing was daarom om die administratie beter te automatiseren binnen de web-app, 
 zodat de intern wedstrijdleider minder werk zou krijgen. 
 Bovendien moest de web-app moest de bijbehorende externe wedstrijden laten zien, 
-zodat de leden van de Waagtoren de ranglijst helemaal zelf konden controleren.
+zodat de leden van de Waagtoren de ranglijst zelf konden controleren.
 
 ## Ranglijst
 
 Een andere belangrijke ontwerpbeslissing was om een universeel bruikbaar uitslagen en ranglijsten systeem te maken.
-Ik wilde daarom de regels van het interne competitie reglement niet in software vastleggen, maar in reglement-data. 
+Ik wilde daarom de regels van het interne competitie reglement niet in JavaScript programmeren, maar als reglement-data
+opslaan in de MySQL database. Het systeem genereert ranglijsten vanuit de uitslagen aan de hand van reglement-data. 
+Door deze opzet is het mogelijk om wijzigingen van het reglement te testen door het wijzigen van reglement-data en
+vervolgens nieuwe ranglijsten te genereren. Zo kunnen we het Alkmaar systeem vervangen door bijvoorbeeld het Keizer systeem. 
+Per schaakvereniging en per seizoen staat er andere reglement-data in de database.
 
-En omdat ik meer ervaring had met MySQL programmeerde ik de verwerking van uitslagen tot een ranglijst inclusief sorteren in MySQL.
-De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
+Mijn ideaal is om het aanpassen van reglement-data zodanig te maken dat iedere intern wedstrijdleider zelf het reglement
+van de interne competitie van de eigen schaakvereniging kan implementeren en zelf kan wijzigen. 
+Dit ideaal is nog niet gerealiseerd, maar er zijn inmiddels wel werkende prototypes voor de interne, rapid en jeugd 
+competities van de Waagtoren. 
 
-Dit betekent dat de logica van het Alkmaar systeem in de database wordt vastgelegd en
-dat we die kunnen vervangen door bijvoorbeeld het Keizer systeem.
-De regels van het interne competitie reglement worden dus niet in software vastgelegd, maar in reglement-data.
-Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data.
+De reglement-data van deze prototypes staat vooralsnog in vier MySQL stored functions: 
+`subgroep`, `waardeCijfer`, `punten` en `totalen`, die in de backend worden aangeroepen met `versie`.
 
-Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data
-en vervolgens nieuwe ranglijsten te genereren. Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan.
+- versie 1 is de oorspronkelijke versie van Alkmaar systeem
+- versie 2 met `afzeggingenAftrek` in de seizoenen 2018-2019, 2019-2020 en 2020-2021
+- versie 3 zonder `afzeggingenAftrek` vanaf seizoen 2021-2022
+- versie 4 `rapidPunten` voor rapid competitie
+- versie 5 `zwitsersPunten` voor Zwitsers systeem (wordt niet gebruikt)
+- versie 6 jeugd competitie met barrière punten en drie keer afzeggen (najaars competitie 2023)
+- versie 7 jeugd competitie vanaf voorjaars competitie 2024
+- versie 8 Alkmaar systeem waarbij externe wedstrijden op andere dagen dan dinsdag niet meetellen
 
+In de web-app verschijnt de ranglijst van een geselecteerde competitie, seizoen en schaakvereniging, 
+maar je kunt ook testen hoe de ranglijst eruit ziet als je een andere `versie` kiest.  
+Alle uitslagen worden opnieuw verwerkt en de ranglijst opnieuw berekend volgens de gekozen reglement-data. 
 
-Ranglijst elke keer uitrekenen i.p.v. vastleggen
-MySQL stored procedure
-sorteren in MySQL
+De MySQL stored function `totalen` verwerkt alle uitslagen en berekent allerlei totalen per speler.
+Een MySQL query sorteert ze tot een ranglijst op volgorde van 
+- `punten` (volgens Alkmaar systeem, rapid competitie of ander punten systeem)
+- wel of geen prijs (afhankelijk van aantal gespeelde partijen)
+- aantal winstpartijen in de interne competitie
+- aantal winstpartijen in de externe competitie
+- `interneRating'
+- en nog veel meer getallen (onder andere tegenstanders, kleur en resultaten)
+De backend verwerkt de gesorteerde ranglijst tot JSON en geeft die door naar de frontend.
+
+De logica van de ranglijst is dus niet geprogrammeerd in JavaScript van backend of frontend.
+Vooralsnog is dit de manier hoe de reglement-data is vastgelegd.
+
+## Indelen
+
+indelen met Rokade en zie gesorteerde ranglijst 
+
+Rokade wordt 0-0-0 
+
 
 ## Agenda
 
