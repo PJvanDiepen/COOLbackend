@@ -15,13 +15,13 @@ Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zi
 - 0-0-0 laat de correcte ronde zien voor de Voorlopige indeling en Uitslagen invullen
 - na definitief maken uitslagen van ronde synchroniseren
 - objecten boom synchroniseren met server issue #49
-- ontstaan.md is compleet
+- ontstaan.md compleet maken
 
 Een meer uitgebreide [planning](https://github.com/users/PJvanDiepen/projects/1/views/1) staat op GitHub.
 
 # 0-0-0 versie 1.0.0
 
-Bij de Waagtoren draait 0-0-0 al een aantal seizoenen mee, maar is nooit helemaal compleet geweest.
+Bij de Waagtoren draait 0-0-0 al een aantal seizoenen mee, maar is nog steeds niet helemaal compleet.
 Tussen versie 0.8.0 en 0.9.0 wordt 0-0-0 helemaal opnieuw ontworpen en geschikt gemaakt voor andere schaakverenigingen.
 Daarna wordt 0-0-0 zo compleet mogelijk gemaakt, zodat versie 1.0.0 ook bij andere schaakverenigingen kan draaien.
 

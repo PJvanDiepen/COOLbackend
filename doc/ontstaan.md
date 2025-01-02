@@ -140,14 +140,14 @@ competities van de Waagtoren.
 De reglement-data van deze prototypes staat vooralsnog in vier MySQL stored functions: 
 `subgroep`, `waardeCijfer`, `punten` en `totalen`, die in de backend worden aangeroepen met `versie`.
 
-- versie 1 is de oorspronkelijke versie van Alkmaar systeem
+- versie 1 is de oorspronkelijke versie van Alkmaar systeem (niet in gebruik)
 - versie 2 met `afzeggingenAftrek` in de seizoenen 2018-2019, 2019-2020 en 2020-2021
 - versie 3 zonder `afzeggingenAftrek` vanaf seizoen 2021-2022
 - versie 4 `rapidPunten` voor rapid competitie
-- versie 5 `zwitsersPunten` voor Zwitsers systeem (wordt niet gebruikt)
+- versie 5 `zwitsersPunten` voor Zwitsers systeem (niet in gebruik)
 - versie 6 jeugd competitie met barrière punten en drie keer afzeggen (najaars competitie 2023)
 - versie 7 jeugd competitie vanaf voorjaars competitie 2024
-- versie 8 Alkmaar systeem waarbij externe wedstrijden op andere dagen dan dinsdag niet meetellen
+- versie 8 Alkmaar systeem waarbij externe wedstrijden op andere dagen dan dinsdag niet meetellen (2025)
 
 In de web-app verschijnt de ranglijst van een geselecteerde competitie, seizoen en schaakvereniging, 
 maar je kunt ook testen hoe de ranglijst eruit ziet als je een andere `versie` kiest.  
@@ -166,6 +166,20 @@ De backend verwerkt de gesorteerde ranglijst tot JSON en geeft die door naar de 
 De logica van de ranglijst is dus niet geprogrammeerd in JavaScript van backend of frontend.
 Vooralsnog is dit de manier hoe de reglement-data is vastgelegd.
 
+## Agenda
+
+Tijdens het seizoen 2020-2021 gebruikte ik Rokade nog voor het indelen en uitslagen invoeren van de interne competitie.
+De Java toepassing las de uitslagen van Rokade in en de aanvullende uitslagen van de websites van KNSB en NHSB.
+De web-app als vervanger van de uploads van uitslagen en ranglijsten van Rokade gaf daarom meteen al betere informatie 
+over de ranglijst, maar moest natuurlijk ook interactief worden.
+
+Aanmelden / afzeggen 
+
+Tijdens het seizoen 2020-2021 gebruikte ik nog Rokade voor het indelen. 
+De uitslagen las ik vanuit Rokade in en van de websites van de KNSB en NHSB met de Java toepassing.
+De web-app
+en gebruikte ik om de ranglijst te berekenen.
+
 ## Indelen
 
 indelen met Rokade en zie gesorteerde ranglijst 
@@ -173,7 +187,7 @@ indelen met Rokade en zie gesorteerde ranglijst
 Rokade wordt 0-0-0 
 
 
-## Agenda
+
 
 ## Teamleider
 
@@ -222,17 +236,6 @@ Synchroniseren frontend met backend. Geen doorgeefluik meer.
 - (7) [Informatie interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/)
 - (8) [0-0-0 en de externe competitie](https://www.waagtoren.nl/2024/02/03/0-0-0-en-de-externe-competitie/)
 
-
-Niet duidelijk zichtbaar was in de ranglijst van Rokade.
-Daarom moest het nieuwe systeem overzichten van scores in de externe competitie kunnen maken.
-Met Rokade moest de intern wedstrijdleider deze administratie met de hand bijhouden.
-Daarnaast administreerde de extern wedstrijdleider overzichten van de scores in de externe competitie.
-Dubbel werk dus. Het nieuwe systeem moet beide administraties vervangen.
-
-In het seizoen 2020-2021 gebruikte ik nog Rokade voor het indelen. De uitslagen las ik vanuit Rokade in (met de Java toepassing)
-en gebruikte ik om de ranglijst te berekenen. Mijn eerste doel was
-
-Alle uitslagen inlezen. Elke keer weer!
 
 Op dit moment verkeert het nieuwe systeem in fase 1: database ontwerpen en offline de database vullen.
 Ik probeer zo veel mogelijk informatie af te tappen van andere systemen zoals het OLA systeem van de KNSB, de ratinglijsten,
