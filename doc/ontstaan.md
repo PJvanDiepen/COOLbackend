@@ -173,12 +173,37 @@ De Java toepassing las de uitslagen van Rokade in en de aanvullende uitslagen va
 De web-app als vervanger van de uploads van uitslagen en ranglijsten van Rokade gaf daarom meteen al betere informatie 
 over de ranglijst, maar moest natuurlijk ook interactief worden.
 
-Aanmelden / afzeggen 
+Leden van de Waagtoren konden sindsdien zelf controleren hoe de ranglijst tot stand komt. 
+De volgende stap was aanmelden en afzeggen met de web-app. 
+Daarvoor was het noodzakelijk dat de web-app de gebruiker herkent die zich gaat aanmelden of afzeggen.
+Leden van de Waagtoren konden zich registreren en kregen per e-mail een link om hun registratie te activeren.
 
-Tijdens het seizoen 2020-2021 gebruikte ik nog Rokade voor het indelen. 
-De uitslagen las ik vanuit Rokade in en van de websites van de KNSB en NHSB met de Java toepassing.
-De web-app
-en gebruikte ik om de ranglijst te berekenen.
+## 2021-2022
+
+Bij de Waagtoren spelen we de interne competitie sinds 2010 volgens het Alkmaarse Systeem en daarbij gebruikten we het computerprogramma Rokade tot en met het seizoen 2020-2021. In dat laatste seizoen werd de website 0-0-0.nl in gebruik genomen voor de uitslagen en ranglijsten. Met ingang van seizoen 2021-2022 is 0-0-0 ook een web-app voor aanmelden / afzeggen en indelen.
+
+Met Rokade moest de interne wedstrijdleider nog aanmeldingen en afzeggingen verwerken, de indeling maken, uitslagen invullen en dit alles uploaden naar de website. Voor elke dinsdagavond kreeg de interne wedstrijdleider vele telefoontjes, e-mail, SMS en WhatsApp van de leden. Met 0-0-0 hoeft dat allemaal niet meer. In het seizoen 2021-2022 gebruikten 64 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. Per aanmelding of afzegging maakt 0-0-0 automatisch een nieuwe voorlopige indeling. De intern wedstrijdleider maakt op dinsdagavond 19:00 de indeling definitief. Daarna kunnen de leden hun partijen spelen en de uitslagen invoeren.
+
+0-0-0 is nog in ontwikkeling. Voor het rapidtoernooi gebruikten we 0-0-0 alleen voor ronde 7, 8 en 9 en 0-0-0 is niet gebruikt voor het snelschaaktoernooi.
+
+## 2022-2023
+
+Sinds het seizoen 2021-2022 gebruiken we 0-0-0 voor aanmelden / afzeggen en automatisch indelen van de interne competitie en het rapidtoernooi.
+In 2021-2022 moest ik als ontwikkelaar nog een aantal keren ingrijpen, omdat 0-0-0 vastliep of geen goede indeling maakte. In 2022-2023 was dat niet nodig. Ik heb wel wat aangepast voor de wit-zwart verdeling en voor het indelen tegen dezelfde speler na 7 partijen in plaats van na 7 ronden.
+In het seizoen 2022-2023 gebruikten 81 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
+
+## 2023-2024
+
+In het seizoen 2023-2024 gebruikten 76 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
+
+In 2022-2023 hoefde ik als intern wedstrijdleider niet in te grijpen, omdat 0-0-0 toen het hele seizoen niet vastliep met automatisch indelen. In 2023-2024 daarentegen ging het 8 keer fout. Deze fout is nog niet verholpen, maar er is wel een handmatige oplossing.
+
+0-0-0 heeft namelijk de functionaliteit gekregen om handmatig in te delen en er is een nieuwe rondenlijst, waarop een wedstrijdleider duidelijk kan zien wie tegen wie heeft gespeeld. Dit alles op verzoek van de jeugdleiding, want vanaf 2024-2025 gaat de jeugdleiding 0-0-0 gebruiken voor de najaars en voorjaars competities van de jeugd.
+
+0-0-0 is nog in ontwikkeling. 0-0-0 kan nog geen indelingen maken volgens het FIDE Dutch system (Zwitsers). Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
+
+
+
 
 ## Indelen
 
@@ -250,17 +275,6 @@ Rokade is
 - Competities en toernooien
 - Bondscompetitie
 - Financiële administratie
-
-De backend wil ik zo veel mogelijk met MySQL realiseren met zo min mogelijk extra backend software op een Node.js server. 
-De frontend verwerkt JSON en gebruikt zo standaard mogelijke HTML, CSS en JavaScript.
-
-Op dit moment verkeert het nieuwe systeem in fase 1: database ontwerpen en offline de database vullen. 
-Ik probeer zo veel mogelijk informatie af te tappen van andere systemen zoals het OLA systeem van de KNSB, de ratinglijsten, 
-de websites van de NHSB en KNSB voor de externe competities en bekercompetities en (voorlopig) van Rokade voor de interne competitie.
-
-Import en export van andere systemen blijven belangrijk voor het nieuwe systeem, 
-want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen. 
-In de toekomst is het misschien ook handig om informatie uit te wisselen met SwissMaster, Sevilla, enz.
 
 Het is de bedoeling dat er web-apps en apps voor mobiele telefoons komen om uitslagen in te voeren. 
 Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers (of de intern wedstrijdleider) de uitslag bevestigen. 
