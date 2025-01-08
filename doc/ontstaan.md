@@ -123,7 +123,7 @@ zodat de intern wedstrijdleider minder werk zou krijgen.
 Bovendien moest de web-app moest de bijbehorende externe wedstrijden laten zien, 
 zodat de leden van de Waagtoren de ranglijst zelf konden controleren.
 
-## Ranglijst
+## Ranglijst en reglement
 
 Een andere belangrijke ontwerpbeslissing was om een universeel bruikbaar uitslagen en ranglijsten systeem te maken.
 Ik wilde daarom de regels van het interne competitie reglement niet in JavaScript programmeren, maar als reglement-data
@@ -132,8 +132,8 @@ Door deze opzet is het mogelijk om wijzigingen van het reglement te testen door 
 vervolgens nieuwe ranglijsten te genereren. Zo kunnen we het Alkmaar systeem vervangen door bijvoorbeeld het Keizer systeem. 
 Per schaakvereniging en per seizoen staat er andere reglement-data in de database.
 
-Mijn ideaal is om het aanpassen van reglement-data zodanig te maken dat iedere intern wedstrijdleider zelf het reglement
-van de interne competitie van de eigen schaakvereniging kan implementeren en zelf kan wijzigen. 
+Mijn ideaal is om het aanpassen van reglement-data zodanig te maken dat iedere intern wedstrijdleider 
+zelf het reglement van de interne competitie van de eigen schaakvereniging kan implementeren en zelf kan wijzigen. 
 Dit ideaal is nog niet gerealiseerd, maar er zijn inmiddels wel werkende prototypes voor de interne, rapid en jeugd 
 competities van de Waagtoren. 
 
@@ -159,51 +159,85 @@ Een MySQL query sorteert ze tot een ranglijst op volgorde van
 - wel of geen prijs (afhankelijk van aantal gespeelde partijen)
 - aantal winstpartijen in de interne competitie
 - aantal winstpartijen in de externe competitie
-- `interneRating'
+- `interneRating`
 - en nog veel meer getallen (onder andere tegenstanders, kleur en resultaten)
 De backend verwerkt de gesorteerde ranglijst tot JSON en geeft die door naar de frontend.
 
-De logica van de ranglijst is dus niet geprogrammeerd in JavaScript van backend of frontend.
-Vooralsnog is dit de manier hoe de reglement-data is vastgelegd.
+De logica van de ranglijst is dus niet geprogrammeerd in JavaScript van backend of frontend,
+maar is op deze manier als reglement-data in de database vastgelegd.
+Vooralsnog is toch een programmeur nodig om de reglement-data aan te passen. 
+We moeten nog een meer gebruikersvriendelijke manier bedenken om de reglement-data te wijzigen en te testen. 
 
-## Agenda
+Tijdens het seizoen 2020-2021 gebruikten we Rokade nog voor het indelen en uitslagen invoeren van de interne competitie.
+En de Java toepassing las de uitslagen van Rokade in en de aanvullende uitslagen van de websites van KNSB en NHSB.
+De web-app als vervanger van de uploads van uitslagen en ranglijsten van Rokade gaf daarom al betere informatie.
+Leden van de Waagtoren konden sindsdien zelf controleren hoe de ranglijst tot stand komt.
 
-Tijdens het seizoen 2020-2021 gebruikte ik Rokade nog voor het indelen en uitslagen invoeren van de interne competitie.
-De Java toepassing las de uitslagen van Rokade in en de aanvullende uitslagen van de websites van KNSB en NHSB.
-De web-app als vervanger van de uploads van uitslagen en ranglijsten van Rokade gaf daarom meteen al betere informatie 
-over de ranglijst, maar moest natuurlijk ook interactief worden.
+Na afloop van seizoen 2020-2021 is het reglement voor de interne competitie van de Waagtoren enigszins aangepast. 
+Ten eerste voor het afzeggen. In versie 2 was er nog `afzeggingenAftrek` na 7 keer afzeggen. 
+Vanaf versie 3 is die afgeschaft in de reglement-data en het reglement.
+Ten tweede kende Rokade ingebouwde regels voor reglementaire winst, verlies en remise.
+Die zijn overgenomen in `punten` van de reglement-data en in het reglement.
 
-Leden van de Waagtoren konden sindsdien zelf controleren hoe de ranglijst tot stand komt. 
+## Agenda en indelen
+
+In de loop 
+
 De volgende stap was aanmelden en afzeggen met de web-app. 
 Daarvoor was het noodzakelijk dat de web-app de gebruiker herkent die zich gaat aanmelden of afzeggen.
 Leden van de Waagtoren konden zich registreren en kregen per e-mail een link om hun registratie te activeren.
 
+## Rokade wordt 0-0-0
+
+In 2021 kreeg de web-app een nieuwe naam: 0-0-0 als opvolger van Rokade van Herman Nijhuis
+en als herinnering aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren heet.
+0-0-0 draait op 0-0-0.nl
+
 ## 2021-2022
 
-Bij de Waagtoren spelen we de interne competitie sinds 2010 volgens het Alkmaarse Systeem en daarbij gebruikten we het computerprogramma Rokade tot en met het seizoen 2020-2021. In dat laatste seizoen werd de website 0-0-0.nl in gebruik genomen voor de uitslagen en ranglijsten. Met ingang van seizoen 2021-2022 is 0-0-0 ook een web-app voor aanmelden / afzeggen en indelen.
+Bij de Waagtoren spelen we de interne competitie sinds 2010 volgens het Alkmaarse Systeem en 
+daarbij gebruikten we het computerprogramma Rokade tot en met het seizoen 2020-2021. 
+In dat laatste seizoen werd de website 0-0-0.nl in gebruik genomen voor de uitslagen en ranglijsten. 
+Met ingang van seizoen 2021-2022 is 0-0-0 ook een web-app voor aanmelden / afzeggen en indelen.
 
-Met Rokade moest de interne wedstrijdleider nog aanmeldingen en afzeggingen verwerken, de indeling maken, uitslagen invullen en dit alles uploaden naar de website. Voor elke dinsdagavond kreeg de interne wedstrijdleider vele telefoontjes, e-mail, SMS en WhatsApp van de leden. Met 0-0-0 hoeft dat allemaal niet meer. In het seizoen 2021-2022 gebruikten 64 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. Per aanmelding of afzegging maakt 0-0-0 automatisch een nieuwe voorlopige indeling. De intern wedstrijdleider maakt op dinsdagavond 19:00 de indeling definitief. Daarna kunnen de leden hun partijen spelen en de uitslagen invoeren.
+Met Rokade moest de interne wedstrijdleider nog aanmeldingen en afzeggingen verwerken, 
+de indeling maken, uitslagen invullen en dit alles uploaden naar de website. 
+Voor elke dinsdagavond kreeg de interne wedstrijdleider vele telefoontjes, e-mail, SMS en WhatsApp van de leden. 
+Met 0-0-0 hoeft dat allemaal niet meer. 
+In het seizoen 2021-2022 gebruikten 64 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. 
+Per aanmelding of afzegging maakt 0-0-0 automatisch een nieuwe voorlopige indeling. 
+De intern wedstrijdleider maakt op dinsdagavond 19:00 de indeling definitief. 
+Daarna kunnen de leden hun partijen spelen en de uitslagen invoeren.
 
-0-0-0 is nog in ontwikkeling. Voor het rapidtoernooi gebruikten we 0-0-0 alleen voor ronde 7, 8 en 9 en 0-0-0 is niet gebruikt voor het snelschaaktoernooi.
+0-0-0 is nog in ontwikkeling. Voor het rapidtoernooi gebruikten we 0-0-0 alleen voor ronde 7, 8 en 9 en 
+0-0-0 is niet gebruikt voor het snelschaaktoernooi.
 
 ## 2022-2023
 
-Sinds het seizoen 2021-2022 gebruiken we 0-0-0 voor aanmelden / afzeggen en automatisch indelen van de interne competitie en het rapidtoernooi.
-In 2021-2022 moest ik als ontwikkelaar nog een aantal keren ingrijpen, omdat 0-0-0 vastliep of geen goede indeling maakte. In 2022-2023 was dat niet nodig. Ik heb wel wat aangepast voor de wit-zwart verdeling en voor het indelen tegen dezelfde speler na 7 partijen in plaats van na 7 ronden.
-In het seizoen 2022-2023 gebruikten 81 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
+Sinds het seizoen 2021-2022 gebruiken we 0-0-0 voor aanmelden / afzeggen en automatisch indelen van de interne competitie 
+en het rapidtoernooi.
+In 2021-2022 moest ik als ontwikkelaar nog een aantal keren ingrijpen, omdat 0-0-0 vastliep of geen goede indeling maakte. 
+In 2022-2023 was dat niet nodig. 
+Ik heb wel wat aangepast voor de wit-zwart verdeling en voor het indelen tegen dezelfde speler na 7 partijen in plaats van na 7 ronden.
+In het seizoen 2022-2023 gebruikten 81 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. 
+Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
 
 ## 2023-2024
 
-In het seizoen 2023-2024 gebruikten 76 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
+In het seizoen 2023-2024 gebruikten 76 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. 
+Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
 
-In 2022-2023 hoefde ik als intern wedstrijdleider niet in te grijpen, omdat 0-0-0 toen het hele seizoen niet vastliep met automatisch indelen. In 2023-2024 daarentegen ging het 8 keer fout. Deze fout is nog niet verholpen, maar er is wel een handmatige oplossing.
+In 2022-2023 hoefde ik als intern wedstrijdleider niet in te grijpen, omdat 0-0-0 toen het hele seizoen niet vastliep 
+met automatisch indelen. 
+In 2023-2024 daarentegen ging het 8 keer fout. Deze fout is nog niet verholpen, maar er is wel een handmatige oplossing.
 
-0-0-0 heeft namelijk de functionaliteit gekregen om handmatig in te delen en er is een nieuwe rondenlijst, waarop een wedstrijdleider duidelijk kan zien wie tegen wie heeft gespeeld. Dit alles op verzoek van de jeugdleiding, want vanaf 2024-2025 gaat de jeugdleiding 0-0-0 gebruiken voor de najaars en voorjaars competities van de jeugd.
+0-0-0 heeft namelijk de functionaliteit gekregen om handmatig in te delen en er is een nieuwe rondenlijst, 
+waarop een wedstrijdleider duidelijk kan zien wie tegen wie heeft gespeeld. 
+Dit alles op verzoek van de jeugdleiding, want vanaf 2024-2025 gaat de jeugdleiding 0-0-0 gebruiken 
+voor de najaars en voorjaars competities van de jeugd.
 
-0-0-0 is nog in ontwikkeling. 0-0-0 kan nog geen indelingen maken volgens het FIDE Dutch system (Zwitsers). Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
-
-
-
+0-0-0 is nog in ontwikkeling. 0-0-0 kan nog geen indelingen maken volgens het FIDE Dutch system (Zwitsers). 
+Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
 
 ## Indelen
 
@@ -222,11 +256,7 @@ Rokade wordt 0-0-0
 
 In begintijd Rokade en 0-0-0 samen
 
-## Rokade wordt 0-0-0
 
-In 2021 kreeg de web-app een nieuwe naam: 0-0-0 als opvolger van Rokade van Herman Nijhuis
-en als herinnering aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren heet.
-0-0-0 draait op 0-0-0.nl
 
 ## 2023
 

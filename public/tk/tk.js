@@ -73,8 +73,9 @@ const tk = [
         hoog: 2451,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Biesheuvel_II"
     },
-    {jaar: 1973,
+    {jaar: 1972.1,
         zetels: "PvdA=43&KVP=27&VVD=22&ARP=14&PPR=7&CHU=7&CPN=7&D’66=6&DS'70=6&SGP=3&BP=3&GPV=2&PSP=2&RKPN=1",
+        formatie: 1,
         kabinet: "Den Uyl",
         coalitie: "PvdA, KVP, ARP, PPR, D'66",
         breed: 2656,
@@ -169,7 +170,7 @@ const tk = [
         hoog: 637,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Balkenende_III"
     },
-    {jaar: 2007,
+    {jaar: 2006.1,
         zetels: "CDA=41&PvdA=33&SP=25&VVD=22&PVV=9&GL=7&CU=6&D66=3&PvdD=2&SGP=2",
         kabinet: "Balkenende 4",
         coalitie: "CDA, PvdA, CU",
@@ -201,16 +202,18 @@ const tk = [
         hoog: 553,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
-    {jaar: 2022,
+    {jaar: 2021,
         zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
+        formatie: 1,
         kabinet: "Rutte 4",
         coalitie: "VVD, D66, CDA, CU",
         breed: 1566,
         hoog: 505,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
     },
-    {jaar: 2024,
+    {jaar: 2023,
         zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
+        formatie: 1,
         kabinet: "Schoof",
         coalitie: "PVV, VVD, NSC, BBB",
         breed: 829,
@@ -264,7 +267,7 @@ function parametersVerwerken() {
 
 function kabinetVerwerken(kader, kop) {
     const i = jaarIndex(jaar);
-    kop.textContent = "Kabinet in " + Math.round(jaar);
+    kop.textContent = "Kabinet in " + (Math.round(jaar) + (tk[i].formatie ? Number(tk[i].formatie) : 0));
     kader.append(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
     kader.append(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
 }
@@ -277,10 +280,12 @@ const kabinetten = [];
 
 // TODO kolom winst/verlies door vergelijken met vorige verkiezingen
 
-function uitslagenVerwerken(kop, deLijsten) {
-    const i = jaarIndex(jaar);
-    kop.textContent = "Zetels per partij in " + Math.round(jaar);
-    const uitslagen = new URLSearchParams(tk[tk[i].verkiezing ? jaarIndex(tk[i].verkiezing) : i].zetels);
+function uitslagenVerwerken(kop1, kop2, deLijsten) {
+    const kabinet = tk[jaarIndex(jaar)];
+    const verkiezing = kabinet.verkiezing ? tk[jaarIndex(kabinet.verkiezing)] : kabinet;
+    kop1.textContent = "Zetels per partij in " + Math.round(verkiezing.jaar);
+    kop2.textContent = "Meerderheidskabinetten in " + Math.round(verkiezing.jaar);
+    const uitslagen = new URLSearchParams(verkiezing.zetels);
     for (const [partij, zetels] of uitslagen) {
         const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
         lijsten.push({partij: partij, zetels: Number(zetels), wel: wel, coalitie: false});
@@ -310,8 +315,7 @@ function jaarIndex(jaar) {
     return index;
 }
 
-function kabinetFormeren(kop, deKabinetten) {
-    kop.textContent = "Meerderheidskabinetten in " + Math.round(jaar);
+function kabinetFormeren(deKabinetten) {
     kabinet(0, 0);
     let nummer = 0;
     while (kabinetten.length > 0) {

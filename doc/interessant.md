@@ -121,6 +121,9 @@ Refresh Android cache
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
 - [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
 
+# unix
+-[Linux and Unix](https://www.quora.com/How-can-the-Linux-Kernel-be-free-and-open-source-while-Unix-is-not-Isnt-Linux-built-on-Unix)
+
 # design patterns
 - [dependency injection to test functions](https://betterprogramming.pub/optional-di-in-javascript-2cb7f5bc68a)
 - [dependency injection and unittest](https://blog.appsignal.com/2022/02/16/dependency-injection-in-javascript-write-testable-code-easily.html)
