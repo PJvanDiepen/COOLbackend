@@ -172,6 +172,8 @@ Refresh Android cache
 - [Monte Carlo simulatie schaken](https://medium.com/@ishaan.gupta0401/monte-carlo-tree-search-application-on-chess-5573fc0efb75)
 - [Monte Carlo simulatie investeren](https://www.investopedia.com/terms/m/montecarlosimulation.asp)
 - [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
+- [Fischer random](https://en.wikipedia.org/wiki/Chess960)
+- [Fischer random setup](http://www.chessvariants.org/diffsetup.dir/fischer-random-setup.html)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
@@ -253,6 +255,7 @@ Refresh Android cache
 - [vloeistof projecties](https://tympanus.net/codrops/2021/01/19/drawing-2d-metaballs-with-webgl2/)
 - [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/)
 - [Spaceinvaders](https://github.com/kubowania/space-invaders) 
+- [Spelletjes](https://gist.github.com/straker/)
 - [pipe](https://www.obvibase.com/dev-blog/i-ve-used-the-pipe-function-2-560-times-and-i-can-tell-you-it-s-good)
 - [Kaart met legenda](https://codepen.io/haakseth/pen/KQbjdO)
 - [TypeScript](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/)

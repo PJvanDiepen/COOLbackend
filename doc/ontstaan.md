@@ -54,7 +54,7 @@ Als docent software engineering gebruikte ik vooral [Java](https://en.wikipedia.
 Daarom begon ik in 2019 met het ontwerpen van de database met MySQL en schreef ik een Java-programma om de database te vullen.
 Dat was een off-line toepassing, omdat ik toen nog niet wist hoe ik de backend voor de on-line database zou gaan maken.
 
-De Java toepassing was vooral bedoeld om informatie in te lezen uit andere systemen:
+De Java-toepassing was vooral bedoeld om informatie in te lezen uit andere systemen:
 - Excel-bestand uit OLA (On-line Leden Administratie van de KNSB) met de gegevens van de Waagtoren leden,
 - de Microsoft Access database van Rokade en
 - een web crawler die de uitslagen van externe wedstrijden inleest van de websites van NHSB en KNSB.
@@ -73,8 +73,8 @@ en JavaScript, zodat ik alleen JavaScript hoefde te leren voor zowel de frontend
 In 2020 maakte Matheus de Boer van [Charper Bonaroo](https://www.bonaroo.nl/) de eerste opzet voor de web-app 
 met MySQL voor de on-line database, Node.js voor de backend en nog een heleboel ondersteunende software:
 [koa](https://koajs.com/), [knex](https://knexjs.org/) en [objection](http://vincit.github.io/objection.js/).
-De web-app draaide toen op chessopenings.online (COOL). Daarom heet het project sindsdien COOLbackend.
-En de Java toepassing heet COOLoffline. COOLfrontend is er nooit gekomen, maar staat in public van COOLbackend.
+De web-app zou op chessopenings.online (COOL) gaan draaien. Daarom heet het project sindsdien COOLbackend.
+En de Java-toepassing heet COOLoffline. COOLfrontend is er nooit gekomen, maar staat in public van COOLbackend.
 
 ## Eerste ontwerpbeslissingen
 
@@ -85,16 +85,17 @@ maar je kunt ook JavaScript toevoegen die dynamisch webpagina's genereert in de 
 Mijn eerste ontwerpbeslissing was om in de backend geen HTML en CSS te genereren, maar uitsluitend JSON.
 De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
 
-Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/),
-en [Angular](https://angular.io/), maar ik kon het niet opbrengen om te kiezen en me een van die frontend frameworks eigen te maken.
+Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/) en [Angular](https://angular.io/), 
+maar ik kon het niet opbrengen om te kiezen en me een van die frontend frameworks eigen te maken.
 Mijn tweede ontwerpbeslissing was daarom om in de frontend zo standaard mogelijke HTML, CSS en JavaScript te gebruiken.
 
 Bovendien maakte ik geen [SPA](https://en.wikipedia.org/wiki/Single-page_application), maar verschillende webpagina's in public:
-ranglijst.html, speler.html, team.html, enz. Ieder met eigen JavaScript: ranglijst.js, speler.js, team.js, enz.
-Een simpele manier om de web-app te splitsen in onderdelen, die ik los van elkaar kon testen.
+ranglijst.html, speler.html, agenda.html, enz. Ieder met eigen JavaScript: ranglijst.js, speler.js, agenda.js, enz.
+Dit was een simpele manier om de web-app te splitsen in onderdelen, die ik los van elkaar kon testen.
 
-Toen functies ontstonden die ik op verschillende pagina's kon gebruiken, specificeerde ik in ranglijst.html behalve ranglijst.js ook const.js, 
-op speler.html behalve speler.js ook const.js, enz. Dus geen modules, maar gewoon twee JavaScript bestanden per webpagina.
+Toen functies ontstonden die ik op verschillende pagina's kon gebruiken, specificeerde ik in ranglijst.html 
+behalve ranglijst.js ook const.js, op speler.html behalve speler.js ook const.js, enz. 
+Dus geen modules, maar gewoon twee JavaScript bestanden per webpagina.
 Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJS modules voor Node.js en ES6 modules voor de frontend gaan toepassen.
 
 ## Externe wedstrijden meetellen voor de interne competitie
@@ -129,7 +130,8 @@ Een andere belangrijke ontwerpbeslissing was om een universeel bruikbaar uitslag
 Ik wilde daarom de regels van het interne competitie reglement niet in JavaScript programmeren, maar als reglement-data
 opslaan in de MySQL database. Het systeem genereert ranglijsten vanuit de uitslagen aan de hand van reglement-data. 
 Door deze opzet is het mogelijk om wijzigingen van het reglement te testen door het wijzigen van reglement-data en
-vervolgens nieuwe ranglijsten te genereren. Zo kunnen we het Alkmaar systeem vervangen door bijvoorbeeld het Keizer systeem. 
+vervolgens nieuwe ranglijsten te genereren. 
+Zo kunnen we het Alkmaar systeem vervangen door bijvoorbeeld het Keizer systeem. 
 Per schaakvereniging en per seizoen staat er andere reglement-data in de database.
 
 Mijn ideaal is om het aanpassen van reglement-data zodanig te maken dat iedere intern wedstrijdleider 
@@ -166,12 +168,7 @@ De backend verwerkt de gesorteerde ranglijst tot JSON en geeft die door naar de 
 De logica van de ranglijst is dus niet geprogrammeerd in JavaScript van backend of frontend,
 maar is op deze manier als reglement-data in de database vastgelegd.
 Vooralsnog is toch een programmeur nodig om de reglement-data aan te passen. 
-We moeten nog een meer gebruikersvriendelijke manier bedenken om de reglement-data te wijzigen en te testen. 
-
-Tijdens het seizoen 2020-2021 gebruikten we Rokade nog voor het indelen en uitslagen invoeren van de interne competitie.
-En de Java toepassing las de uitslagen van Rokade in en de aanvullende uitslagen van de websites van KNSB en NHSB.
-De web-app als vervanger van de uploads van uitslagen en ranglijsten van Rokade gaf daarom al betere informatie.
-Leden van de Waagtoren konden sindsdien zelf controleren hoe de ranglijst tot stand komt.
+We moeten nog een meer gebruikersvriendelijke manier bedenken om de reglement-data te wijzigen en te testen.
 
 Na afloop van seizoen 2020-2021 is het reglement voor de interne competitie van de Waagtoren enigszins aangepast. 
 Ten eerste voor het afzeggen. In versie 2 was er nog `afzeggingenAftrek` na 7 keer afzeggen. 
@@ -179,19 +176,48 @@ Vanaf versie 3 is die afgeschaft in de reglement-data en het reglement.
 Ten tweede kende Rokade ingebouwde regels voor reglementaire winst, verlies en remise.
 Die zijn overgenomen in `punten` van de reglement-data en in het reglement.
 
-## Agenda en indelen
-
-In de loop 
-
-De volgende stap was aanmelden en afzeggen met de web-app. 
-Daarvoor was het noodzakelijk dat de web-app de gebruiker herkent die zich gaat aanmelden of afzeggen.
-Leden van de Waagtoren konden zich registreren en kregen per e-mail een link om hun registratie te activeren.
-
 ## Rokade wordt 0-0-0
 
-In 2021 kreeg de web-app een nieuwe naam: 0-0-0 als opvolger van Rokade van Herman Nijhuis
-en als herinnering aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren heet.
-0-0-0 draait op 0-0-0.nl
+Tijdens het seizoen 2020-2021 gebruikten we Rokade nog voor het indelen en uitslagen invoeren van de interne competitie.
+Met COOLoffline kon ik de uitslagen van Rokade naar de MySQL database inlezen en de web-app testen als vervanger 
+van de uploads van uitslagen en ranglijsten van Rokade.
+
+Het was ooit de bedoeling om de web-app op chessopenings.online (COOL) te laten draaien.
+Maar in oktober 2020 kocht ik 0-0-0.nl en daarom ging de web-app in november 2020 on-line op 0-0-0.nl.
+Sindsdien heet de web-app: 0-0-0 als opvolger van Rokade van Herman Nijhuis en als herinnering 
+aan de schaakvereniging 0-0-0, die tegenwoordig de Waagtoren heet. 
+
+Overigens had de interne competitie van de Waagtoren in 2020-2021 slechts 17 ronden en er was geen externe competitie,
+behalve twee wedstrijden van Waagtoren 1 helemaal op het einde van het seizoen. 
+Dat was prima voor het ontwikkelen van 0-0-0. 
+
+Met 0-0-0 kunnen de leden van de Waagtoren zelf controleren hoe de ranglijst tot stand komt door op een naam te klikken,
+want dan verschijnt een lijst van alle uitslagen van de competitie en van externe wedstrijden die meetellen
+en alle punten per uitslag en alle andere gegevens die van belang zijn voor de totalen in de ranglijst.
+Alle seizoenen van de Waagtoren vanaf 2018-2019 staan op 0-0-0.nl.
+COOLoffline wordt nog steeds gebruikt om uitslagen van externe wedstrijden van de websites van KNSB en NHSB in te lezen.
+
+## Agenda
+
+De belangrijkste ontwerpbeslissing (eigenlijk het hoofddoel) van 0-0-0 was interactief aanmelden en afzeggen 
+en automatisch opnieuw indelen na elke aanmelding of afzegging.
+
+Hieruit ontstond het idee om per gebruiker een persoonlijke agenda te maken: een lijst op datum 
+van alle interne en rapid competitie ronden, NHSB- en KNSB-wedstrijden en snelschaakavonden.
+In de kolom Aanwezig kan de gebruiker aanvinken of hij of zij meedoet in die ronde of wedstrijd. 
+Niet alleen voor de komende ronde, maar eventueel voor het hele seizoen.
+ 
+Om de agenda persoonlijk te maken was het noodzakelijk dat 0-0-0 de gebruiker herkent.
+Leden van de Waagtoren kunnen zich registreren en krijgen per e-mail een link om hun registratie te activeren.
+Op 0-0-0.nl staan geen wachtwoorden en gebruikt geen [cookie](https://en.wikipedia.org/wiki/HTTP_cookie)s, maar 
+[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)'s, die 0-0-0 opslaat in 
+de [localStorage](https://en.wikipedia.org/wiki/Web_storage) van de browser op het apparaat van de gebruiker.
+Een volgende keer stuurt 0-0-0 deze uuid naar de server en weet de server wie de gebruiker is.
+In de praktijk blijkt dat bijvoorbeeld iPhone's de localStorage van de browser af en toe wissen en 
+dan moet de gebruiker nogmaals de link uit de e-mail gebruiken om zijn of haar registratie opnieuw te activeren.
+
+## Indelen
+<!--- PvD: eerste versie indelen vanaf begin van seizoen 2021-2022 --->
 
 ## 2021-2022
 
