@@ -191,7 +191,7 @@ Overigens had de interne competitie van de Waagtoren in 2020-2021 slechts 17 ron
 behalve twee wedstrijden van Waagtoren 1 helemaal op het einde van het seizoen. 
 Dat was prima voor het ontwikkelen van 0-0-0. 
 
-Met 0-0-0 kunnen de leden van de Waagtoren zelf controleren hoe de ranglijst tot stand komt door op een naam te klikken,
+Met 0-0-0 konden de leden van de Waagtoren zelf controleren hoe de ranglijst tot stand komt door op een naam te klikken,
 want dan verschijnt een lijst van alle uitslagen van de competitie en van externe wedstrijden die meetellen
 en alle punten per uitslag en alle andere gegevens die van belang zijn voor de totalen in de ranglijst.
 Alle seizoenen van de Waagtoren vanaf 2018-2019 staan op 0-0-0.nl.
@@ -209,15 +209,54 @@ Niet alleen voor de komende ronde, maar eventueel voor het hele seizoen.
  
 Om de agenda persoonlijk te maken was het noodzakelijk dat 0-0-0 de gebruiker herkent.
 Leden van de Waagtoren kunnen zich registreren en krijgen per e-mail een link om hun registratie te activeren.
-Op 0-0-0.nl staan geen wachtwoorden en gebruikt geen [cookie](https://en.wikipedia.org/wiki/HTTP_cookie)s, maar 
-[uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)'s, die 0-0-0 opslaat in 
+Op 0-0-0.nl staan geen wachtwoorden en 0-0-0 gebruikt geen [cookie](https://en.wikipedia.org/wiki/HTTP_cookie)s, 
+maar [uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)'s, die 0-0-0 opslaat in 
 de [localStorage](https://en.wikipedia.org/wiki/Web_storage) van de browser op het apparaat van de gebruiker.
 Een volgende keer stuurt 0-0-0 deze uuid naar de server en weet de server wie de gebruiker is.
 In de praktijk blijkt dat bijvoorbeeld iPhone's de localStorage van de browser af en toe wissen en 
 dan moet de gebruiker nogmaals de link uit de e-mail gebruiken om zijn of haar registratie opnieuw te activeren.
 
+De interne competitie van de Waagtoren in 2020-2021 had stil gelegen tussen oktober en mei.
+Daarom gingen we door tot juli 2021. 
+Aan het einde van het seizoen konden we 0-0-0 gebruiken voor aanmelden en afzeggen 
+[(3)](https://www.waagtoren.nl/2021/07/10/0-0-0-nl-voor-aanmelden-afzeggen/). 
+
 ## Indelen
-<!--- PvD: eerste versie indelen vanaf begin van seizoen 2021-2022 --->
+
+Vanaf seizoen 2021-2022 kan 0-0-0 automatisch indelen en uitslagen verwerken.
+De uitslagen legt 0-0-0 vast in de MySQL-tabel `uitslag`. Dezelfde tabel wordt ook gebruikt
+om vast te leggen of een gebruiker aanwezig of afwezig is in een bepaalde ronde. 
+Bij het indelen vult 0-0-0 de tegenstander en de kleur in.
+Bij het verwerken van de uitslagen vult 0-0-0 het resultaat in en is `uitslag` compleet.
+
+Op 0-0-0.nl verschijnt uitsluitend voor gebruikers van 0-0-0 een Voorlopige indeling,
+die 0-0-0 genereert naar aanleiding van de aanwezige spelers voor de komende ronde.
+Gewone bezoekers zien geen Voorlopige indeling, maar kunnen wel uitslagen en ranglijsten zien.
+
+De intern wedstrijdleider maakt op dinsdagavond 19:00 de indeling definitief.
+Daarna kunnen de gebruikers hun partijen spelen en de uitslagen invoeren.
+Gewone gebruikers kunnen uitsluitend hun uitslag invullen. Als een uitslag is ingevuld,
+kunnen ze die niet meer veranderen. Alleen wedstrijdleiders kunnen uitslagen veranderen.
+
+Binnen 0-0-0 hebben gebruikers dus verschillende rollen. Gewone bezoekers kunnen niets.
+Geregistreerde gebruikers kunnen de Voorlopige indeling zien en hun eigen uitslag invullen.
+Wedstrijdleiders kunnen de indeling definitief maken en uitslagen wijzigen.
+
+Het algoritme voor indelen was in het begin van seizoen 2021-2022 nog redelijk primitief: 
+0-0-0 verwerkt de ranglijst en probeert elke aanwezige speler gewoon in te delen 
+tegen de volgende speler, die nog niet is ingedeeld en niet tegen die speler heeft gespeeld.
+
+Uiteraard loopt dit algoritme na een aantal ronden vast. 
+Ik had als ontwikkelaar en intern wedstrijdleider echter het vertrouwen, dat ik het indelen
+van 0-0-0 voortdurend kon verbeteren. Dat is inderdaad gelukt.
+
+In 2021-2022 moest ik als ontwikkelaar nog een aantal keren ingrijpen, omdat 0-0-0 vastliep of geen goede indeling maakte.
+In 2022-2023 was dat niet nodig.
+
+
+
+Als een gebruiker zich aanmeldt of afmeldt, legt 0-0-0 in de database v Vanaf dat moment 
+
 
 ## 2021-2022
 
@@ -265,24 +304,10 @@ voor de najaars en voorjaars competities van de jeugd.
 0-0-0 is nog in ontwikkeling. 0-0-0 kan nog geen indelingen maken volgens het FIDE Dutch system (Zwitsers). 
 Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
 
-## Indelen
-
-indelen met Rokade en zie gesorteerde ranglijst 
-
-Rokade wordt 0-0-0 
-
-
-
 
 ## Teamleider
 
 ## GitHub project
-
-## Rokade en 0-0-0
-
-In begintijd Rokade en 0-0-0 samen
-
-
 
 ## 2023
 
