@@ -15,7 +15,6 @@ const DAME = "\u2655";
 const TOREN = "\u2656";
 const LOPER = "\u2657";
 const PAARD = "\u2658";
-const ZWARTE_LOPER = "\u265D";
 
 const velden = [];
 for (const veld of ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]) {
@@ -27,7 +26,7 @@ function kiesEen(uitAantal) {
 }
 
 const zwarteVelden = [A1, C1, E1, G1];
-velden[kiesEen(zwarteVelden)].textContent = ZWARTE_LOPER;
+velden[kiesEen(zwarteVelden)].textContent = LOPER;
 
 const witteVelden = [B1, D1, F1, H1];
 velden[kiesEen(witteVelden)].textContent = LOPER;
