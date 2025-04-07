@@ -32,7 +32,7 @@ Dat wilde ik beter automatiseren. Daarom wilde ik in overleg met Herman Nijhuis 
 
 Rokade is gemaakt met [Delphi](https://en.wikipedia.org/wiki/Delphi_(software)) van [Embarcadero](https://www.embarcadero.com/products/delphi).
 Een prachtig product dat ik nog kende uit de jaren 80 als [Turbo Pascal](https://en.wikipedia.org/wiki/Turbo_Pascal). 
-Delphi is backward compatible met veel oude versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android and Linux.
+Delphi is backward compatible met veel versies en is geschikt voor zowel Microsoft Windows, macOS, iOS, Android en Linux.
 Maar bij mij draaide Rokade uitsluitend op een oude laptop met Windows XP en niet meer op mijn eigen Windows laptop. 
 Waarschijnlijk was een update van Delphi noodzakelijk en vervolgens een update van Rokade. 
 Om Rokade te kunnen aanpassen, zou ik meer dan 1500 euro aan Embarcadero moeten betalen voor Delphi en 
@@ -50,7 +50,8 @@ om ranglijsten te berekenen zou ik een begin kunnen maken met een web-app.
 Al snel vond ik WordPress niet geschikt voor deze toepassing
 en PHP te lelijk om zoiets als het algoritme voor indelen mee te programmeren.
 
-Als docent software engineering gebruikte ik vooral [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) en MySQL.
+Als docent software engineering gebruikte ik vooral [Java](https://en.wikipedia.org/wiki/Java_(programming_language)) 
+en [MySQL](https://en.wikipedia.org/wiki/MySQL).
 Daarom begon ik in 2019 met het ontwerpen van de database met MySQL en schreef ik een Java-programma om de database te vullen.
 Dat was een off-line toepassing, omdat ik toen nog niet wist hoe ik de backend voor de on-line database zou gaan maken.
 
@@ -83,7 +84,8 @@ In theorie kan je op de backend de HTML en CSS compleet maken en doorsturen naar
 maar je kunt ook JavaScript toevoegen die dynamisch webpagina's genereert in de frontend.
 
 Mijn eerste ontwerpbeslissing was om in de backend geen HTML en CSS te genereren, maar uitsluitend JSON.
-De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en die stuurde ik door naar de frontend.
+De backend was toen vooral een doorgeefluik: resultaten uit MySQL verwerkte ik tot JSON en 
+die stuurde ik door naar de frontend.
 
 Voor de frontend bestaan in de praktijk ook veel oplossingen zoals: [Vue](https://vuejs.org/), [React](https://react.dev/) en [Angular](https://angular.io/), 
 maar ik kon het niet opbrengen om te kiezen en me een van die frontend frameworks eigen te maken.
@@ -103,11 +105,11 @@ Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJS modules voor Node.js en ES6 
 In het Alkmaar systeem tellen externe wedstrijden mee voor de interne competitie. 
 Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in plaats van een interne partij op dezelfde dag.
 Toen vroegen spelers of hun externe partij van een andere dag kon meetellen in plaats van een interne partij.
-Daarvoor moesten we het reglement van de interne competitie aanpassen en moest de intern wedstrijdleider per externe partij administreren 
-of die wel of niet moest meetellen voor de interne competitie. 
-De interpretatie van het reglement bleek verwarrend, 
-want toen waren er spelers die in een week een interne en een externe wedstrijd wilden spelen
-en die laten meetellen in een andere week, omdat ze in die andere week niet voor de interne competitie konden spelen. 
+Daarvoor moesten we het reglement van de interne competitie aanpassen en moest de intern wedstrijdleider 
+per externe partij administreren of die wel of niet moest meetellen voor de interne competitie. 
+De interpretatie van het reglement bleek verwarrend, want toen waren er spelers 
+die in een week een interne en een externe wedstrijd wilden spelen en die laten meetellen in een andere week, 
+omdat ze in die andere week niet voor de interne competitie konden spelen. 
 De administratie werd zo heel ingewikkeld en ging daarom af en toe fout.
 
 In 2017 is het reglement drastisch vereenvoudigd: alle externe partijen tellen mee voor de interne competitie.
@@ -191,7 +193,7 @@ Overigens had de interne competitie van de Waagtoren in 2020-2021 slechts 17 ron
 behalve twee wedstrijden van Waagtoren 1 helemaal op het einde van het seizoen. 
 Dat was prima voor het ontwikkelen van 0-0-0. 
 
-Met 0-0-0 konden de leden van de Waagtoren zelf controleren hoe de ranglijst tot stand komt door op een naam te klikken,
+Met 0-0-0 kunnen de leden van de Waagtoren zelf controleren hoe de ranglijst tot stand komt door op een naam te klikken,
 want dan verschijnt een lijst van alle uitslagen van de competitie en van externe wedstrijden die meetellen
 en alle punten per uitslag en alle andere gegevens die van belang zijn voor de totalen in de ranglijst.
 Alle seizoenen van de Waagtoren vanaf 2018-2019 staan op 0-0-0.nl.
@@ -213,6 +215,7 @@ Op 0-0-0.nl staan geen wachtwoorden en 0-0-0 gebruikt geen [cookie](https://en.w
 maar [uuid](https://en.wikipedia.org/wiki/Universally_unique_identifier)'s, die 0-0-0 opslaat in 
 de [localStorage](https://en.wikipedia.org/wiki/Web_storage) van de browser op het apparaat van de gebruiker.
 Een volgende keer stuurt 0-0-0 deze uuid naar de server en weet de server wie de gebruiker is.
+
 In de praktijk blijkt dat bijvoorbeeld iPhone's de localStorage van de browser af en toe wissen en 
 dan moet de gebruiker nogmaals de link uit de e-mail gebruiken om zijn of haar registratie opnieuw te activeren.
 
@@ -235,8 +238,9 @@ Gewone bezoekers zien geen Voorlopige indeling, maar kunnen wel uitslagen en ran
 
 De intern wedstrijdleider maakt op dinsdagavond 19:00 de indeling definitief.
 Daarna kunnen de gebruikers hun partijen spelen en de uitslagen invoeren.
-Gewone gebruikers kunnen uitsluitend hun uitslag invullen. Als een uitslag is ingevuld,
-kunnen ze die niet meer veranderen. Alleen wedstrijdleiders kunnen uitslagen veranderen.
+Geregistreerde gebruikers kunnen uitsluitend hun eigen uitslag invullen. 
+Als een uitslag is ingevuld, kunnen ze die niet meer veranderen. 
+Alleen wedstrijdleiders kunnen uitslagen veranderen.
 
 Binnen 0-0-0 hebben gebruikers dus verschillende rollen. Gewone bezoekers kunnen niets.
 Geregistreerde gebruikers kunnen de Voorlopige indeling zien en hun eigen uitslag invullen.
@@ -246,16 +250,36 @@ Het algoritme voor indelen was in het begin van seizoen 2021-2022 nog redelijk p
 0-0-0 verwerkt de ranglijst en probeert elke aanwezige speler gewoon in te delen 
 tegen de volgende speler, die nog niet is ingedeeld en niet tegen die speler heeft gespeeld.
 
-Uiteraard loopt dit algoritme na een aantal ronden vast. 
+Uiteraard loopt dit algoritme na een aantal ronden vast.
 Ik had als ontwikkelaar en intern wedstrijdleider echter het vertrouwen, dat ik het indelen
 van 0-0-0 voortdurend kon verbeteren. Dat is inderdaad gelukt.
 
-In 2021-2022 moest ik als ontwikkelaar nog een aantal keren ingrijpen, omdat 0-0-0 vastliep of geen goede indeling maakte.
-In 2022-2023 was dat niet nodig.
+In 2021-2022 moest ik als ontwikkelaar nog een aantal keren ingrijpen, omdat 0-0-0 vastliep 
+of geen goede indeling maakte. In 2022-2023 was dat niet meer nodig.
 
+## Heuristieken
 
+Experimenteren met indelen was een belangrijke reden om 0-0-0 te maken. 
+Tijdens het ontwikkelen besloot ik om oudere versies van de functie voor indelen te bewaren in een tabel.
+Op deze manier kan ik als ontwikkelaar de indeling van verschillende versies vergelijken voor elke ronde.
 
-Als een gebruiker zich aanmeldt of afmeldt, legt 0-0-0 in de database v Vanaf dat moment 
+Aan het [algoritme](https://en.wikipedia.org/wiki/Algorithm) voor indelen zijn in de loop van de seizoenen 
+een aantal [heuristieken](https://en.wikipedia.org/wiki/Heuristic) toegevoegd. 
+In principe moet het algoritme voor indelen altijd in staat zijn om een indeling te maken.
+Het algoritme voor indelen moet zich altijd houden aan de beperkingen van het reglement.
+Spelers kunnen elkaar per seizoen meer dan 1 keer ontmoeten. 
+Tussen twee partijen met dezelfde spelers moeten minstens 7 partijen liggen. 
+Bij elke volgende partij met dezelfde spelers wisselen de spelers van kleur.
+In heuristieken zijn regels vastgelegd om te zorgen dat spelers niet tegen elkaar spelen,
+omdat een speler die de speelsterkte te veel verschilt en een van de tworgen dat 
+
+## Overzicht voor teamleiders
+
+## Overzicht voor bestuur
+
+## Jeugd
+
+## Wat nog ontbreekt
 
 
 ## 2021-2022
@@ -303,6 +327,12 @@ voor de najaars en voorjaars competities van de jeugd.
 
 0-0-0 is nog in ontwikkeling. 0-0-0 kan nog geen indelingen maken volgens het FIDE Dutch system (Zwitsers). 
 Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
+
+## Jeugd
+
+In 2023-2024 zou ik werken aan de jeugd. Ik haalde veel overhoop en in 2024-2025 was veel in feite stuk.
+
+
 
 
 ## Teamleider

@@ -21,20 +21,26 @@ for (const veld of ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]) {
     velden.push(document.getElementById(veld));
 }
 
+let stellingNummer = 0 ; // TODO bereken stellingNummer in zetStuk
+
+function zetStuk(keuzeVelden, stuk) {
+    velden[kiesEen(keuzeVelden)].textContent = stuk;
+}
+
 function kiesEen(uitAantal) {
     return uitAantal.splice(Math.floor(Math.random() * uitAantal.length), 1);
 }
 
 const zwarteVelden = [A1, C1, E1, G1];
-velden[kiesEen(zwarteVelden)].textContent = LOPER;
+zetStuk(zwarteVelden, LOPER);
 
 const witteVelden = [B1, D1, F1, H1];
-velden[kiesEen(witteVelden)].textContent = LOPER;
+zetStuk(witteVelden, LOPER);
 
 const restVelden = [...zwarteVelden, ...witteVelden];
-velden[kiesEen(restVelden)].textContent = DAME;
-velden[kiesEen(restVelden)].textContent = PAARD;
-velden[kiesEen(restVelden)].textContent = PAARD;
+zetStuk(restVelden, DAME);
+zetStuk(restVelden, PAARD);
+zetStuk(restVelden, PAARD);
 
 restVelden.sort();
 velden[restVelden[0]].textContent = TOREN;

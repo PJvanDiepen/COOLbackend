@@ -493,11 +493,11 @@ function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
     } else if (teamCode === "kbe") {
         return "Waagtoren KNSB beker";
     } else if (teamCode === "nbe") {
-        return "Waagtoren NHSB beker";
+        return "Waagtoren G"; // NHSB beker Goud
     } else if (teamCode === "nbz") {
-        return "Waagtoren NHSB beker (zilver)";
+        return "Waagtoren Z"; // NHSB beker Zilver
     } else if (teamCode === "nbb") {
-        return "Waagtoren NHSB beker (brons)";
+        return "Waagtoren B"; // NHSB beker Brons
     } else if (teamCode === "" || teamCode.substring(0,1) === " ") {
         return "geen";
     } else if (teamCode.substring(0,2) === "nv") {

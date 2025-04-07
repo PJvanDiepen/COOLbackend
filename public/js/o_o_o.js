@@ -14,7 +14,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import * as s from "./server.js";
+import * as server from "./server.js";
 
 import * as zyq from "./zyq.js";
 
@@ -23,7 +23,7 @@ import * as zyq from "./zyq.js";
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  */
 export async function init() {
-    await s.synchroniseren();
+    await server.synchroniseren();
     urlVerwerken();
     await zyq.gebruikerVerwerken();
     await seizoenVerwerken();
@@ -63,22 +63,22 @@ function urlVerwerken() {
 }
 
 async function seizoenVerwerken() {
-    const clubVraag = await s.vraag("/club");
+    const clubVraag = await server.vraag("/club");
     const club = await clubVraag.antwoord();
     db.clubToevoegen(club.revisie, club);
-    const seizoenenVraag = await s.vraag("/seizoenen");
+    const seizoenenVraag = await server.vraag("/seizoenen");
     const seizoenen = await seizoenenVraag.antwoord();
     for (const seizoen of seizoenen) {
         db.seizoenToevoegen(seizoen.revisie, seizoen);
     }
     o_o_o.seizoen = seizoenBepalen();
     const eenSeizoen = db.tak(o_o_o.club, o_o_o.seizoen);
-    const teamsVraag = await s.vraag("/teams");
+    const teamsVraag = await server.vraag("/teams");
     const teams = await teamsVraag.specificeren(o_o_o).antwoord();
     for (const team of teams) {
         db.teamToevoegen(team.revisie, team);
     }
-    const rondenVraag = await s.vraag("/ronden");
+    const rondenVraag = await server.vraag("/ronden");
     for (const team of eenSeizoen.team) {
         const ronden = await rondenVraag
             .specificeren(o_o_o)
@@ -100,7 +100,7 @@ async function seizoenVerwerken() {
         }
     }
 
-    const uitslagenVraag = await s.vraag("/uitslagen");
+    const uitslagenVraag = await server.vraag("/uitslagen");
     for (const eenTeam of eenSeizoen.team) {
         for (const eenRonde of eenTeam.ronde) {
             const uitslagen = await uitslagenVraag

@@ -2,7 +2,8 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init, vraag } from "./o_o_o.js";
+import * as server from "./server.js";
+import { o_o_o, init } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
@@ -185,7 +186,7 @@ async function leesRatinglijst(filesList, output) {
 }
 
 async function verwerkRatinglijst(maand, jaar, regels) {
-    const ratingMuteren = await vraag("/rating/muteren");
+    const ratingMuteren = await server.vraag("/rating/muteren");
     ratingMuteren.specificeren({maand: maand, jaar: jaar});
     let gewijzigd = 0;
     let toegevoegd = 0;
@@ -197,7 +198,7 @@ async function verwerkRatinglijst(maand, jaar, regels) {
             toegevoegd++;
         }
     }
-    const ratingVerwijderen = await vraag("/rating/verwijderen");
+    const ratingVerwijderen = await server.vraag("/rating/verwijderen");
     ratingVerwijderen.specificeren({maand: maand, jaar: jaar});
     const verwijderd = await ratingVerwijderen.muteren();
     html.zelfdePagina(`wijzig=${gewijzigd}&voegtoe=${toegevoegd}&verwijder${verwijderd}`);

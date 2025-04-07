@@ -68,6 +68,9 @@ Refresh Android cache
 - [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
 - [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
 - [default values made easy](https://www.trevorlasn.com/blog/javascript-nullish-coalescing-assignment-operator)
+- [video](https://medium.com/@stwebdesigner/insert-an-mp4-video-into-a-webpage-9e0ac6845103)
+- [video + audio](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/HTML_video_and_audio)
+- [mp4 on webpage](https://www.youtube.com/watch?v=sRd2rVUA7uc)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
@@ -146,6 +149,7 @@ Refresh Android cache
 - [Regular Expressions diagrammen](https://regexper.com/)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [Git uitleg](https://github.com/readme/guides/configure-git-environment)
+- [Beej over git](https://beej.us/guide/bggit/)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
 - [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
 - [Contributing to open source software: Creating a pull request](https://www.youtube.com/watch?v=xPOPjGbv_TY)
