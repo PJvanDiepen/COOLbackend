@@ -10,12 +10,12 @@ of als [issue](https://github.com/PJvanDiepen/COOLbackend/issues) op GitHub.
 
 Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zijn opgelost:
 
-- kolom rating in plaats van lijst met ratings
-- geen KNSB rating grafiek issue #44
 - 0-0-0 laat de correcte ronde zien voor de Voorlopige indeling en Uitslagen invullen
 - na definitief maken uitslagen van ronde synchroniseren
 - objecten boom synchroniseren met server issue #49
 - ontstaan.md compleet maken
+- kolom rating in plaats van lijst met ratings
+- geen KNSB rating grafiek issue #44
 
 Een meer uitgebreide [planning](https://github.com/users/PJvanDiepen/projects/1/views/1) staat op GitHub.
 

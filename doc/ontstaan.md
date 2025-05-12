@@ -270,8 +270,11 @@ Het algoritme voor indelen moet zich altijd houden aan de beperkingen van het re
 Spelers kunnen elkaar per seizoen meer dan 1 keer ontmoeten. 
 Tussen twee partijen met dezelfde spelers moeten minstens 7 partijen liggen. 
 Bij elke volgende partij met dezelfde spelers wisselen de spelers van kleur.
-In heuristieken zijn regels vastgelegd om te zorgen dat spelers niet tegen elkaar spelen,
-omdat een speler die de speelsterkte te veel verschilt en een van de tworgen dat 
+Daarnaast zorgen heuristieken dat spelers liever niet tegen bepaalde spelers worden ingedeeld.
+Een sterke speler die niet zo vaak komt bijvoorbeeld, moet niet tegen een te zwakke speler spelen.
+Indien het indelen niet lukt door heuristieken, moet het algoritme indelen zonder heuristieken.
+
+## Aanmelden zoals met Stickchess
 
 ## Overzicht voor teamleiders
 
