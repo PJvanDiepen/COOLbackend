@@ -75,8 +75,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2425';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 27;
-set @bord = 10;
+set @ronde = 30;
+set @bord = 16;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -87,8 +87,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit   = 7518203; -- Theo de Bruijn
-set @zwart = 8226317; -- Joachim van der Vlies
+set @wit   = 7771665; -- Yvonne Schol
+set @zwart = 8950876; -- Jos Albers
 
 select * from persoon where knsbNummer = @wit;
 
@@ -225,6 +225,10 @@ update ronde set datum = '2025-01-14' where clubCode = 0 and seizoen = "2425" an
 update ronde set datum = '2025-03-18' where clubCode = 0 and seizoen = "2425" and teamCode = "nbb"  and rondeNummer = 2;
 update uitslag set datum = '2025-03-18' where clubCode = 0 and seizoen = "2425" and teamCode = "nbb"  and rondeNummer = 2;
 
+-- TODO local
+insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+(0, "2425", "nbb", 4, "t", "Schaakmat B1", '2025-06-22');
+
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (0, "2425", "1", 1, "t", "Caissa 1", '2025-01-11'),
 (0, "2425", "1", 2, "u", "Assen 1", '2024-10-12'),
@@ -356,6 +360,7 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0, "2425", "nbb", 1, "u", "Schaakmat B2", '2025-01-14'),
 (0, "2425", "nbb", 2, "t", "De Uil B", '2025-03-18'),
 (0, "2425", "nbb", 3, "u", "Bergen B", '2025-05-08'),
+(0, "2425", "nbb", 4, "t", "Schaakmat B1", '2025-06-22'),
 (0, "2425", "nbe", 1, "t", "Santpoort G", '2025-02-18'),
 (0, "2425", "nbz", 1, "t", "Vredeburg Z", '2025-03-11'),
 (0, "2425", "nv1", 1, "u", "Heerhugowaard V2", '2024-11-28'),

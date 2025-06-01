@@ -19,7 +19,7 @@ Alkmaarse Systeem [(1)](https://www.waagtoren.nl/timeline/2009-september-het-alk
 en dat gebruiken we bij de Waagtoren nog steeds.
 
 Sinds 1974 programmeer ik computers. In het begin waren dat computers die in zalen stonden van CDC, Univac, DEC en IBM.
-Later ging microcomputers en de IBM PC programmeren. 
+Later ging ik microcomputers en de IBM PC programmeren. 
 In 2003 werd ik docent wiskunde en in 2004 werd daarnaast ook docent informatica in het voortgezet onderwijs.
 In 2017 werd ik docent software engineering aan de Hogeschool van Amsterdam.
 
@@ -105,7 +105,7 @@ Zo deed ik dat in 2021. Pas in 2023 zou ik CommonJS modules voor Node.js en ES6 
 In het Alkmaar systeem tellen externe wedstrijden mee voor de interne competitie. 
 Oorspronkelijk telde zo'n externe partij alleen mee als die werd gespeeld in plaats van een interne partij op dezelfde dag.
 Toen vroegen spelers of hun externe partij van een andere dag kon meetellen in plaats van een interne partij.
-Daarvoor moesten we het reglement van de interne competitie aanpassen en moest de intern wedstrijdleider 
+Daarvoor moesten we het reglement voor de interne competitie aanpassen en moest de intern wedstrijdleider 
 per externe partij administreren of die wel of niet moest meetellen voor de interne competitie. 
 De interpretatie van het reglement bleek verwarrend, want toen waren er spelers 
 die in een week een interne en een externe wedstrijd wilden spelen en die laten meetellen in een andere week, 
@@ -123,7 +123,7 @@ voor de kolom #XBP van de ranglijst. En Rokade gaf geen overzicht van de bijbeho
 
 Een belangrijke ontwerpbeslissing was daarom om die administratie beter te automatiseren binnen de web-app, 
 zodat de intern wedstrijdleider minder werk zou krijgen. 
-Bovendien moest de web-app moest de bijbehorende externe wedstrijden laten zien, 
+Bovendien moest de web-app de bijbehorende externe wedstrijden laten zien, 
 zodat de leden van de Waagtoren de ranglijst zelf konden controleren.
 
 ## Ranglijst en reglement
@@ -137,7 +137,7 @@ Zo kunnen we het Alkmaar systeem vervangen door bijvoorbeeld het Keizer systeem.
 Per schaakvereniging en per seizoen staat er andere reglement-data in de database.
 
 Mijn ideaal is om het aanpassen van reglement-data zodanig te maken dat iedere intern wedstrijdleider 
-zelf het reglement van de interne competitie van de eigen schaakvereniging kan implementeren en zelf kan wijzigen. 
+zelf het reglement voor de interne competitie van de eigen schaakvereniging kan implementeren en zelf kan wijzigen. 
 Dit ideaal is nog niet gerealiseerd, maar er zijn inmiddels wel werkende prototypes voor de interne, rapid en jeugd 
 competities van de Waagtoren. 
 
@@ -151,11 +151,11 @@ De reglement-data van deze prototypes staat vooralsnog in vier MySQL stored func
 - versie 5 `zwitsersPunten` voor Zwitsers systeem (niet in gebruik)
 - versie 6 jeugd competitie met barrière punten en drie keer afzeggen (najaars competitie 2023)
 - versie 7 jeugd competitie vanaf voorjaars competitie 2024
-- versie 8 Alkmaar systeem waarbij externe wedstrijden op andere dagen dan dinsdag niet meetellen (2025)
+- versie 8 Alkmaar systeem waarbij externe wedstrijden op andere dagen dan dinsdag niet meetellen (2025-2026)
 
 In de web-app verschijnt de ranglijst van een geselecteerde competitie, seizoen en schaakvereniging, 
 maar je kunt ook testen hoe de ranglijst eruit ziet als je een andere `versie` kiest.  
-Alle uitslagen worden opnieuw verwerkt en de ranglijst opnieuw berekend volgens de gekozen reglement-data. 
+Alle uitslagen worden opnieuw verwerkt en de ranglijst wordt opnieuw berekend volgens de gekozen reglement-data. 
 
 De MySQL stored function `totalen` verwerkt alle uitslagen en berekent allerlei totalen per speler.
 Een MySQL query sorteert ze tot een ranglijst op volgorde van 
@@ -261,22 +261,47 @@ of geen goede indeling maakte. In 2022-2023 was dat niet meer nodig.
 
 Experimenteren met indelen was een belangrijke reden om 0-0-0 te maken. 
 Tijdens het ontwikkelen besloot ik om oudere versies van de functie voor indelen te bewaren in een tabel.
-Op deze manier kan ik als ontwikkelaar de indeling van verschillende versies vergelijken voor elke ronde.
+Als ontwikkelaar kan ik het indelen met die verschillende versies voor elke ronde vergelijken.
 
 Aan het [algoritme](https://en.wikipedia.org/wiki/Algorithm) voor indelen zijn in de loop van de seizoenen 
 een aantal [heuristieken](https://en.wikipedia.org/wiki/Heuristic) toegevoegd. 
 In principe moet het algoritme voor indelen altijd in staat zijn om een indeling te maken.
 Het algoritme voor indelen moet zich altijd houden aan de beperkingen van het reglement.
-Spelers kunnen elkaar per seizoen meer dan 1 keer ontmoeten. 
-Tussen twee partijen met dezelfde spelers moeten minstens 7 partijen liggen. 
-Bij elke volgende partij met dezelfde spelers wisselen de spelers van kleur.
+Spelers kunnen elkaar per seizoen meer dan 1 keer ontmoeten, maar tussen twee partijen met dezelfde spelers 
+moeten minstens 7 partijen liggen. Bij elke volgende partij met dezelfde spelers wisselen de spelers van kleur.
 Daarnaast zorgen heuristieken dat spelers liever niet tegen bepaalde spelers worden ingedeeld.
 Een sterke speler die niet zo vaak komt bijvoorbeeld, moet niet tegen een te zwakke speler spelen.
 Indien het indelen niet lukt door heuristieken, moet het algoritme indelen zonder heuristieken.
 
+Sinds het seizoen 2023-2024 loopt 0-0-0 bij het indelen af en toe weer vast en moet ik als ontwikkelaar weer ingrijpen.
+Dit probleem hoop ik in 2025-2026 te verhelpen.
+
+## Oneven
+Indien er bij de indeling een oneven aantal spelers is, kan een speler niet spelen. 
+Bij de meeste wedstrijdsystemen is dat de speler, die het laagst op de ranglijst staat.
+Daarnaast geldt dat een speler slechts een keer per seizoen oneven mag zijn.
+
+Spelers die niet zo vaak komen staan vaak niet hoog op de ranglijst met als gevolg dat juist zo'n speler oneven is.
+Als intern wedstrijdleider wilde ik vermijden dat spelers die niet zo vaak komen oneven zijn.
+Daarom is in seizoen 2021-2022 geëxperimenteerd met een heuristiek om juist spelers die vaak komen oneven te maken. 
+Dat kan dus ook een speler zijn die wat hoger op de ranglijst staat.
+
+Theoretisch zou zelfs een speler, die om het clubkampioenschap speelt en vaak komt ook oneven kunnen zijn. 
+Toen dat wel gebeurde, is de heuristiek verfijnd door spelers die te hoog op de ranglijst staan toch niet oneven te maken.
+
+Vanaf seizoen 2022-2023 is dit experiment geformaliseerd in artikel 6 van het reglement voor de interne competitie.
+
+## Zwitsers systeem
+poging om een zwitsers systeem te maken.
+
+## Ladder systeem
+verschil Zwitsers systeem en ladder systeem.
+
 ## Aanmelden zoals met Stickchess
+in plaats van inlezen van CSV-bestanden uit OLA met offline software.
 
 ## Overzicht voor teamleiders
+volgend seizoen
 
 ## Overzicht voor bestuur
 
@@ -284,35 +309,7 @@ Indien het indelen niet lukt door heuristieken, moet het algoritme indelen zonde
 
 ## Wat nog ontbreekt
 
-
-## 2021-2022
-
-Bij de Waagtoren spelen we de interne competitie sinds 2010 volgens het Alkmaarse Systeem en 
-daarbij gebruikten we het computerprogramma Rokade tot en met het seizoen 2020-2021. 
-In dat laatste seizoen werd de website 0-0-0.nl in gebruik genomen voor de uitslagen en ranglijsten. 
-Met ingang van seizoen 2021-2022 is 0-0-0 ook een web-app voor aanmelden / afzeggen en indelen.
-
-Met Rokade moest de interne wedstrijdleider nog aanmeldingen en afzeggingen verwerken, 
-de indeling maken, uitslagen invullen en dit alles uploaden naar de website. 
-Voor elke dinsdagavond kreeg de interne wedstrijdleider vele telefoontjes, e-mail, SMS en WhatsApp van de leden. 
-Met 0-0-0 hoeft dat allemaal niet meer. 
-In het seizoen 2021-2022 gebruikten 64 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. 
-Per aanmelding of afzegging maakt 0-0-0 automatisch een nieuwe voorlopige indeling. 
-De intern wedstrijdleider maakt op dinsdagavond 19:00 de indeling definitief. 
-Daarna kunnen de leden hun partijen spelen en de uitslagen invoeren.
-
-0-0-0 is nog in ontwikkeling. Voor het rapidtoernooi gebruikten we 0-0-0 alleen voor ronde 7, 8 en 9 en 
-0-0-0 is niet gebruikt voor het snelschaaktoernooi.
-
-## 2022-2023
-
-Sinds het seizoen 2021-2022 gebruiken we 0-0-0 voor aanmelden / afzeggen en automatisch indelen van de interne competitie 
-en het rapidtoernooi.
-In 2021-2022 moest ik als ontwikkelaar nog een aantal keren ingrijpen, omdat 0-0-0 vastliep of geen goede indeling maakte. 
-In 2022-2023 was dat niet nodig. 
-Ik heb wel wat aangepast voor de wit-zwart verdeling en voor het indelen tegen dezelfde speler na 7 partijen in plaats van na 7 ronden.
-In het seizoen 2022-2023 gebruikten 81 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. 
-Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
+# vanaf hier geheugensteun
 
 ## 2023-2024
 
@@ -334,13 +331,6 @@ Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
 ## Jeugd
 
 In 2023-2024 zou ik werken aan de jeugd. Ik haalde veel overhoop en in 2024-2025 was veel in feite stuk.
-
-
-
-
-## Teamleider
-
-## GitHub project
 
 ## 2023
 
@@ -375,11 +365,6 @@ Synchroniseren frontend met backend. Geen doorgeefluik meer.
 - (7) [Informatie interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/)
 - (8) [0-0-0 en de externe competitie](https://www.waagtoren.nl/2024/02/03/0-0-0-en-de-externe-competitie/)
 
-
-Op dit moment verkeert het nieuwe systeem in fase 1: database ontwerpen en offline de database vullen.
-Ik probeer zo veel mogelijk informatie af te tappen van andere systemen zoals het OLA systeem van de KNSB, de ratinglijsten,
-de websites van de NHSB en KNSB voor de externe competities en bekercompetities en (voorlopig) van Rokade voor de interne competitie.
-
 Import en export van andere systemen blijven belangrijk voor het nieuwe systeem,
 want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen.
 In de toekomst is het misschien ook handig om informatie uit te wisselen met SwissMaster, Sevilla, enz.
@@ -389,10 +374,6 @@ Rokade is
 - Competities en toernooien
 - Bondscompetitie
 - Financiële administratie
-
-Het is de bedoeling dat er web-apps en apps voor mobiele telefoons komen om uitslagen in te voeren. 
-Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers (of de intern wedstrijdleider) de uitslag bevestigen. 
-Het een en ander moet op een moderne manier beveiligd worden.
 
 Beveiliging en backup van de database met uitslagen moet uiteraard goed geregeld worden met mogelijkheden om log-bestanden te bekijken 
 en fouten te herstellen.
@@ -416,31 +397,6 @@ want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen.
 Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers de uitslag bevestigen.
 Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen. Het een en ander moet op een moderne manier beveiligd worden.
 
-### Afzeggen en aanmelden
-Na fase 1 is er een online database en een website die vanuit de database uitslagen en ranglijsten laat zien die voor iedereen zichtbaar zijn. 
-Voor het bijwerken van de database zijn dan vooral offline tools gemaakt.
-
-In fase 2 wordt het nieuwe systeem interactief. 
-Spelers moeten zich aanmelden, want sommige lijsten zijn alleen zichtbaar voor de spelers zelf, teamleiders of competitieleiders.
-
--	Lijsten per speler met interne en externe resultaten.
--	Lijsten per speler met tegenstanders en kleuren in volgorde van voorkeur voor de indeling in de interne competitie.
--	Lijsten per speler met vermeldingen wanneer ze afwezig zijn.
-
-In fase 3 kunnen spelers en competitieleiders de database bijwerken via de website.
-
--	Spelers kunnen zich aanmelden en afzeggen voor de interne en externe competitie.
--	Spelers kunnen partijen vastleggen om tegen elkaar te spelen.
--	Spelers kunnen zelf uitslagen doorgeven.
-
-Deze lijst van specificaties moet nog verder uitgewerkt worden.
-
-### Indelen
-Voorlopig kan de interne competitieleider Rokade blijven gebruiken om in te delen. 
-Indelen is sowieso iets wat zo veel mogelijk onafhankelijk van de rest van het nieuwe systeem moet functioneren.
-
-In fase 4 zal een web-app of een app op een mobiele telefoon volledig automatisch een lijst van dinsdag te spelen partijen genereren.
-
 ### Open source
 In fase 5 wil ik actief proberen of andere schaakverenigingen dit systeem willen gebruiken. 
 Ik zal zorgen dat het uitwisselen van gegevens met Rokade blijft functioneren, zodat verenigingen die Rokade al gebruiken eenvoudig kunnen overstappen.
@@ -449,241 +405,3 @@ Eventueel kunnen andere schaakverenigingen hun databases ook op www.ChessOpening
 
 Het nieuwe systeem wordt ontwikkeld in duidelijk afgebakende delen, die je onafhankelijk van elkaar kunt vervangen of verbeteren. 
 De source code met documentatie zal ik open source beschikbaar stellen op GitHub, zodat andere programmeurs ook aan het nieuwe systeem kunnen werken.
-
-## Rokade wordt 0-0-0
-
-
-Schaakvereniging de Waagtoren gebruikt Rokade van Herman Nijhuis voor het maken van indelingen en ranglijsten voor de interne competitie volgens het Alkmaarse systeem van Bert Buitink en Wim Andriessen.
-Rokade wil ik geleidelijk vervangen door een systeem op 0-0-0.nl.
-
-### Uitslagen en ranglijsten
-Rokade gebruikt een Microsoft Access database, die lokaal op de computer van de intern wedstrijdleider van de Waagtoren draait. 
-Vanuit Rokade maken we HTML en doen we uploads naar de Waagtoren-website.
-
-0-0-0 is een online database met een web-app die uitslagen en ranglijsten laat zien. 
-De backend bestaat uit MySQL en Node.js. De frontend verwerkt JSON en gebruikt zo standaard mogelijke HTML, CSS en JavaScript.
-
-Het belangrijkste verschil tussen 0-0-0 en Rokade is dus dat bij 0-0-0 alles online staat en niet lokaal en offline zoals bij Rokade. 
-Met 0-0-0 wordt het mogelijk om vanaf allerlei computers, tablets of smartphones de database te raadplegen en eventueel te muteren.
-
-Het is de bedoeling dat 0-0-0 een universeel bruikbaar uitslagen en ranglijsten systeem voor schaakverenigingen wordt. 
-De database en de api van 0-0-0 worden zodanig ontworpen dat de logica van het Alkmaar systeem in de database wordt vastgelegd, 
-zodat we die kunnen vervangen door bijvoorbeeld het Keizer systeem of het Zwitsers systeem. 
-De regels van het interne competitie reglement worden dus niet in software vastgelegd, maar in reglement-data. 
-Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data.
-
-Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data 
-en vervolgens nieuwe ranglijsten te genereren. Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan.
-
-Omdat externe wedstrijden in het Alkmaar systeem meetellen voor de interne competitie 
-maakt 0-0-0 overzichten van scores in de interne en externe competitie. 
-Met Rokade moest de intern wedstrijdleider de externe wedstijden, die niet op de avonden van de interne competitie werden gespeeld, 
-met de hand bijhouden in de kolom #XBP. Rokade geeft echter geen overzicht van de bijbehorende externe wedstrijden. 
-Met 0-0-0 kunnen de leden van de Waagtoren de ranglijst helemaal zelf controleren.
-
-### Kalender, voorlopige indeling en invallers
-Op 0-0-0.nl kan iedereen de uitslagen en ranglijsten zien van de laatste 3 seizoenen van de Waagtoren. 
-Als lid van de Waagtoren zie je bovendien een persoonlijke kalender met de ronden van de interne competitie 
-en jouw externe wedstrijden voor de rest van het seizoen.
-Op deze kalender-pagina kan je je per datum aanmelden of afzeggen.
-
-Op basis van de leden die zijn aangemeld voor de komende ronde van de interne competitie maakt 0-0-0 automatisch een voorlopige indeling, 
-die uitsluitend zichtbaar is voor leden. De intern wedstrijdleider hoeft de voorlopige indeling alleen maar definitief te maken.
-
-Voor de externe competitie houdt 0-0-0 overzichten bij voor de teamleiders met vaste spelers en mogelijke invallers. 
-De afmeldingen verschijnen automatisch in dat overzicht.
-
-Hoe de interactie tussen leden en 0-0-0 precies gaat werken, moeten we nog verder uitwerken.
-
-### Database ontwerpen en vullen
-Het ontwerp van de 0-0-0 database is afgerond voor wat betreft de ranglijst, uitslagen, indelen en de kalender. 
-Voor de reglement-data is een prototype gemaakt met een werkende versie van het Alkmaar systeem. 
-De algemene opzet voor reglement-data zal ongetwijfeld nog veranderen als we het Keizer systeem of Zwitsers systeem gaan implementeren.
-
-Maar 0-0-0 berekent geen ratings en is geen leden administratie. 
-In de database van 0-0-0 gebruiken we uitsluitend gegevens die noodzakelijk zijn voor de uitslagen en ranglijsten 
-zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit OLA, de Online Leden Administratie van de KNSB.
-
-Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die informatie inleest uit andere systemen:
--	Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
--	de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
--	een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
-
-Voor de online 0-0-0 gaan we meer geavanceerde koppelingen maken met andere systemen, 
-want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen. 
-Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers de uitslag bevestigen. 
-Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen. Het een en ander moet op een moderne manier beveiligd worden.
-
-### Verdere ontwikkeling
-Op dit moment heeft 0-0-0 nog geen gebruikers die de database kunnen muteren. 
-0-0-0 kan nog niet functioneren zonder de offline toepassing. Bovendien is 0-0-0 voorlopig alleen beschikbaar voor de Waagtoren.
-
-Beveiliging en backup van de 0-0-0 database moeten we uiteraard goed regelen met mogelijkheden om log-bestanden te bekijken 
-en eventueel fouten te herstellen.
-
-Het is mijn bedoeling om 0-0-0 eerst helemaal functioneel te maken voor de Waagtoren. Daarna wil ik 0-0-0 geschikt maken
--	voor andere schaakverenigingen,
--	voor andere systemen dan alleen het Alkmaar systeem en
--	voor andere (onder)bonden dan alleen KNSB en NHSB.
-
-Ik zal zorgen dat het uitwisselen van gegevens met Rokade blijft functioneren, 
-zodat verenigingen die Rokade al gebruiken eenvoudig kunnen overstappen.
-
-Eventueel kunnen andere schaakverenigingen ook op 0-0-0.nl draaien.
-
-De source code met documentatie zal ik open source beschikbaar stellen op GitHub, zodat andere programmeurs ook aan 0-0-0 kunnen werken.
-
-Voorlopig is 0-0-0 gebaseerd op MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
-is het ontwerp van de database zodanig zijn we MySQL kunnen vervangen.
-
-## Schaakseizoen 2021-2022
- 
-0-0-0 was nog lang niet compleet, maar ik meende dat ik 0-0-0 tijdens dit seizoen wel compleet kon maken.
-Het algoritme voor het indelen van de eerste ronde had ik al met het offline Java-programma in de praktijk getest
-en ik had wat ideeën voor het indelen van de andere ronden. Ik wist dat indelen later in het seizoen moeilijker zou worden,
-maar ik dacht dat ik die problemen snel genoeg kon oplossen tussen de ronden. 
-Kortom ik meende dat ik Rokade niet meer nodig zou hebben. 
-
-Zo is het inderdaad gegaan. 2021-2022 was het eerste seizoen dat de interne competitie van de Waagtoren volledig draaide met 0-0-0.
-En ook de rapid competitie, maar dat ging niet helemaal goed.
-
-## Schaakseizoen 2022-2023
-
-## Planning voor schaakseizoen 2023-2024
-
-We hebben je e-mailadres nodig om je een link met een unieke code op te sturen waarmee 0-0-0.nl je herkent.
-Indien 0-0-0.nl je niet meer herkent, kan je opnieuw een registratie aanvragen.
-
-Je aanvraag wordt gecontroleerd
-
-Je aanvraag wordt niet onmiddellijk verwerkt, want we controleren eerst je e-mailadres.
-Een wedstrijdleider stuurt je per e-mail een link met een unieke code.
-0-0-0.nl stuurt dus nooit automatisch een unieke code.
-
-Klik op de link, die je per e-mail hebt gekregen
-
-0-0-0.nl genereert voor elk lid van de schaakvereniging een unieke code.
-Die unieke code krijg je per e-mail met een link.
-Pas als je op die link hebt geklikt, wordt de unieke code geactiveerd en
-kan 0-0-0.nl je herkennen als geregistreerd gebruiker.
-Indien je 0-0-0.nl gebruikt op verschillende apparaten (computer, tablet of smartphone),
-moet je op elk apparaat dezelfde unieke code activeren.
-
-0-0-0.nl herkent je als geregistreerd gebruiker
-
-Als je een geregistreerd gebruiker bent, staat een unieke code op elk apparaat waarop je de registratie hebt geactiveerd.
-Indien je met dat apparaat 0-0-0.nl gebruikt, stuur je automatisch die unieke code naar 0-0-0.nl.
-Met de unieke code zoekt 0-0-0.nl je naam en KNSB nummer en
-heb je een persoonlijke agenda, kan je je per ronde aanmelden of afzeggen
-en kan je de voorlopige indeling van de komende ronde zien.
-
-Technische uitleg
-
-0-0-0.nl gebruikt [localStorage en sessionStorage](https://developer.mozilla.org/en-US/docs/Web/API/Web_Storage_API)
-(DOM storage), een moderne en veilige techniek om gegevens van de server op je lokale computer, smartphone of tablet op te slaan.
-0-0-0.nl gebruikt [geen ouderwetse, onveilige cookie's](https://blog.google/products/chrome/updated-timeline-privacy-sandbox-milestones/)!
-
-0-0-0.nl gebruikt sessionStorage om ranglijsten en uitslagen tijdelijk op te slaan,
-zodat het oproepen van verschillende ranglijsten en uitslagen van meer spelers sneller gaat,
-omdat je browser niet steeds opnieuw een verbinding hoeft te maken met de server.
-Na het sluiten van je sessie met je browser staan die ranglijsten en uitslagen niet meer in het geheugen van je apparaat.
-0-0-0.nl gebruikt localStorage alleen voor de unieke code om jou te herkennen als geregistreerd gebruiker.
-Deze unieke code blijft daarom wel in het geheugen van je apparaat staan,
-maar is uitsluitend zichtbaar voor 0-0-0.nl en niet voor andere websites dankzij je browser.
-
-# Rokade wordt 0-0-0
-
-Sinds het schaakseizoen 2021-2022 wordt Rokade vervangen door 0-0-0.
-
-## Uitslagen en ranglijsten
-
-TODO offline toepassing in Java voor OLA en KNSB en NHSB uitslagen, eerste opzet in seizoen 2019-2020
-
-TODO eerste concrete toepassing in seizoen 2020-2021 naast Rokade
-
-Omdat externe wedstrijden in het Alkmaar systeem meetellen voor de interne competitie maakt 0-0-0 overzichten van scores in de interne en externe competitie. 
-Met Rokade moest de intern wedstrijdleider de externe wedstijden, die niet op de avonden van de interne competitie werden gespeeld, 
-met de hand bijhouden in de kolom #XBP. 
-Rokade geeft echter geen overzicht van de bijbehorende externe wedstrijden. 
-Met 0-0-0 kunnen de leden van de Waagtoren de ranglijst helemaal zelf controleren.
-
-TODO muteren, eerste opzet indelen, uitwerking competitie versus team in seizoen 2021-2022 zonder Rokade
-
-TODO teamleider, competitie aanmaken, inlezen uit OLA, enz. in seizoen 2022-2023
-
-Rokade gebruikte een Microsoft Access database, die lokaal op de computer van de intern wedstrijdleider van de Waagtoren draaide. 
-Vanuit Rokade konden we HTML maken en uploads doen naar de Waagtoren-website.
-0-0-0 is een online database met een web-app die uitslagen en ranglijsten laat zien. 
-De backend bestaat uit MySQL en Node.js. De frontend verwerkt JSON en gebruikt zo standaard mogelijke HTML, CSS en JavaScript.
-
-Het belangrijkste verschil tussen 0-0-0 en Rokade is dus dat bij 0-0-0 alles online staat en niet lokaal en offline zoals bij Rokade. 
-Met 0-0-0 is het mogelijk om vanaf allerlei computers, tablets of smartphones de database te raadplegen en te muteren.
-
-Het is de bedoeling dat 0-0-0 een universeel bruikbaar uitslagen en ranglijsten systeem voor schaakverenigingen wordt. 
-De [database](doc/database.md) en de [api](doc/ontwikkelen.md) van 0-0-0 zijn daarom zodanig ontworpen 
-dat de regels van het interne competitie reglement in de database zijn vastgelegd en niet in de software van 0-0-0.
-
-Voor de Waagtoren staat de logica van het Alkmaar systeem in reglement-data, maar die kunnen we vervangen door 
-bijvoorbeeld de het Keizer systeem, halve competitie of het Zwitsers systeem.
-Ranglijsten worden gegenereerd vanuit de uitslagen aan de hand van reglement-data. 
-
-Door deze opzet is het mogelijk om wijzigingen van het reglement eenvoudig te testen door het wijzigen van de reglement-data 
-en vervolgens nieuwe ranglijsten te genereren. 
-Per seizoen (en per schaakvereniging) zal er dus andere reglement-data in de database staan. 
-
-Externe wedstrijden in het Alkmaar systeem tellen mee voor de interne competitie.
-Daarom maakt 0-0-0 overzichten van scores in de interne en externe competitie.
- 
-## Kalender, voorlopige indeling en invallers
-
-Op 0-0-0 kan iedereen de uitslagen en ranglijsten zien van een aantal seizoenen van de Waagtoren. 
-Als lid van de Waagtoren zie je bovendien een persoonlijke kalender met de ronden van de interne competitie 
-en jouw externe wedstrijden. 
-Op deze kalender-pagina kan je je per datum aanmelden of afzeggen.
-
-Op basis van de leden die zijn aangemeld voor de komende ronde van de interne competitie maakt 0-0-0 automatisch een voorlopige indeling, 
-die uitsluitend zichtbaar is voor leden. De intern wedstrijdleider maakt de voorlopige indeling alleen maar definitief te maken.
-
-Voor de externe competitie houdt 0-0-0 overzichten bij voor de teamleiders met vaste spelers en mogelijke invallers. 
-De afmeldingen verschijnen automatisch in dat overzicht.
-
-Hoe de interactie tussen leden en 0-0-0 precies gaat werken, moeten we nog verder uitwerken.
-
-## Database ontwerpen en vullen
-
-Het ontwerp van de 0-0-0 database is afgerond voor wat betreft de ranglijst, uitslagen, indelen en de kalender. 
-Voor de reglement-data zijn prototypes gemaakt voor het Alkmaar systeem, de Rapid competitie en snelschaaktoernooien. 
-De algemene opzet voor reglement-data zal ongetwijfeld nog veranderen als we het Keizer systeem of Zwitsers systeem gaan implementeren.
-
-Maar 0-0-0 berekent geen ratings en is geen leden administratie. 
-In de database van 0-0-0 gebruiken we uitsluitend gegevens die noodzakelijk zijn voor de uitslagen en ranglijsten 
-zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit OLA, de Online Leden Administratie van de KNSB. 
-
-Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die informatie inleest uit andere systemen:
-- Excel-bestand uit OLA met de gegevens van de Waagtoren leden, 
-- de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
-- een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
-
-Voor de online 0-0-0 gaan we meer geavanceerde koppelingen maken met andere systemen, 
-want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen. 
-Spelers kunnen zelf hun eigen uitslagen invoeren, maar alleen de intern wedstrijdleider kan uitslagen wijzigen. 
-Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen.
-
-## Verdere ontwikkeling
-Bovendien is 0-0-0 voorlopig alleen beschikbaar voor de Waagtoren.
-
-Beveiliging en backup van de 0-0-0 database moeten we uiteraard goed regelen met mogelijkheden om log-bestanden te bekijken en eventueel fouten te herstellen.
-
-Het is de bedoeling om 0-0-0 eerst helemaal functioneel te maken voor de Waagtoren. Daarna gaan we 0-0-0 geschikt maken 
-- voor andere schaakverenigingen, 
-- voor andere systemen dan alleen het Alkmaar systeem en 
-- voor andere (onder)bonden dan alleen KNSB en NHSB.
-
-Voorlopig zorgen we dat het uitwisselen van gegevens met Rokade blijft functioneren, zodat verenigingen die Rokade gebruiken eenvoudig kunnen overstappen.
-
-Eventueel kunnen andere schaakverenigingen ook op 0-0-0.nl draaien.
-
-De source code met documentatie is als open source beschikbaar stellen op GitHub, zodat andere programmeurs ook aan 0-0-0 kunnen werken.
-
-Voorlopig is 0-0-0 gebaseerd op MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
-is het ontwerp van de database zodanig dat we MySQL kunnen vervangen.
