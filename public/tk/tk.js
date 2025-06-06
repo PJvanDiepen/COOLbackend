@@ -219,14 +219,14 @@ const tk = [
         breed: 829,
         hoog: 553,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Schoof"
-    } /*
-    {jaar: 2023,
-        zetels: "VVD=28&PVV=27&GL/PvdA=25&NSC=21&D66=10&BBB=6&SP=5&PvdD=5&CU=4&CDA=4&FvD=4&Denk=4&Volt=3&SGP=3&JA21=1",
-        kabinet: "Peilingwijzer op basis van peilingen I&O Research en Ipsos EenVandaag",
+    },
+    {jaar: 2025,
+        zetels: "PVV=31&GL/PvdA=27&VVD=25&CDA=20&D66=11&PvdD=6&SP=6&Denk=4&FvD=3&CU=3&BBB=3&SGP=3&Volt=3&JA21=3&NSC=2",
+        kabinet: "Peilingwijzer Tom Louwerse",
         breed: 640,
         hoog: 427,
         link: "https://peilingwijzer.tomlouwerse.nl"
-    }
+    } /*
     {jaar: 2023,
         zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
         kabinet: "Nog geen kabinet",

@@ -267,41 +267,70 @@ Aan het [algoritme](https://en.wikipedia.org/wiki/Algorithm) voor indelen zijn i
 een aantal [heuristieken](https://en.wikipedia.org/wiki/Heuristic) toegevoegd. 
 In principe moet het algoritme voor indelen altijd in staat zijn om een indeling te maken.
 Het algoritme voor indelen moet zich altijd houden aan de beperkingen van het reglement.
-Spelers kunnen elkaar per seizoen meer dan 1 keer ontmoeten, maar tussen twee partijen met dezelfde spelers 
+Spelers kunnen elkaar per seizoen meer dan 1 keer ontmoeten, maar tussen 2 partijen met dezelfde spelers 
 moeten minstens 7 partijen liggen. Bij elke volgende partij met dezelfde spelers wisselen de spelers van kleur.
 Daarnaast zorgen heuristieken dat spelers liever niet tegen bepaalde spelers worden ingedeeld.
 Een sterke speler die niet zo vaak komt bijvoorbeeld, moet niet tegen een te zwakke speler spelen.
 Indien het indelen niet lukt door heuristieken, moet het algoritme indelen zonder heuristieken.
 
-Sinds het seizoen 2023-2024 loopt 0-0-0 bij het indelen af en toe weer vast en moet ik als ontwikkelaar weer ingrijpen.
-Dit probleem hoop ik in 2025-2026 te verhelpen.
+Sinds het seizoen 2023-2024 loopt 0-0-0 bij het indelen af en toe weer vast mede door die heuristieken
+en moet ik als ontwikkelaar weer ingrijpen. Dit probleem hoop ik in het seizoen 2025-2026 te verhelpen.
 
 ## Oneven
+
 Indien er bij de indeling een oneven aantal spelers is, kan een speler niet spelen. 
 Bij de meeste wedstrijdsystemen is dat de speler, die het laagst op de ranglijst staat.
 Daarnaast geldt dat een speler slechts een keer per seizoen oneven mag zijn.
 
 Spelers die niet zo vaak komen staan vaak niet hoog op de ranglijst met als gevolg dat juist zo'n speler oneven is.
 Als intern wedstrijdleider wilde ik vermijden dat spelers die niet zo vaak komen oneven zijn.
-Daarom is in seizoen 2021-2022 geëxperimenteerd met een heuristiek om juist spelers die vaak komen oneven te maken. 
+Daarom is in seizoen 2021-2022 geëxperimenteerd met een heuristiek om spelers die vaak komen oneven te maken. 
 Dat kan dus ook een speler zijn die wat hoger op de ranglijst staat.
 
 Theoretisch zou zelfs een speler, die om het clubkampioenschap speelt en vaak komt ook oneven kunnen zijn. 
-Toen dat wel gebeurde, is de heuristiek verfijnd door spelers die te hoog op de ranglijst staan toch niet oneven te maken.
+Toen dat toch gebeurde, is de heuristiek verfijnd door spelers die te hoog op de ranglijst staan toch niet oneven te maken.
 
 Vanaf seizoen 2022-2023 is dit experiment geformaliseerd in artikel 6 van het reglement voor de interne competitie.
 
-## Zwitsers systeem
-poging om een zwitsers systeem te maken.
+Indien er bij de indeling een oneven aantal spelers is, kan een persoon niet spelen.
+Dat is de laagste speler van de ranglijst met het grootste aantal gespeelde partijen, 
+die niet eerder in het seizoen al oneven was en die niet bij de eerste 8 aanwezige spelers van de ranglijst staat.
+
+Inmiddels vind ik artikel 6 te specifiek. Het zou mogelijk moeten zijn om een andere speler oneven te maken
+(die natuurlijk niet eerder in het seizoen al oneven was) indien dat voor het indelen beter uitkomt.
 
 ## Ladder systeem
-verschil Zwitsers systeem en ladder systeem.
+
+Het hoofddoel van 0-0-0 is: de interne competitie elke week zo leuk mogelijk maken.
+Daarbij horen de boven beschreven manier van boven naar beneden indelen en 
+de heuristieken voor sterke spelers die niet vaak komen en voor het bepalen van de oneven speler.
+
+In het ideale wedstrijdsysteem spelen alle spelers precies een of twee keer (wit en zwart) tegen elkaar
+in een halve of hele competitie. Het resultaat is een ranglijst van de spelers in volgorde van speelsterkte.
+Nadelen van zo'n competitie zijn: er zijn veel ronden nodig en alle spelers moeten elke ronde aanwezig zijn.
+
+Met een ladder systeem zoals het Alkmaar systeem gaan we uit van een ranglijst, speelt iedereen elke ronde
+tegen iemand die ongeveer even hoog op de ranglijst staat, is er na elke ronde een nieuwe ranglijst en 
+kunnen we na een willekeurig aantal ronden stoppen. Bovendien hoeven niet alle spelers elke ronde aanwezig te zijn.
+
+## Zwitsers systeem
+
+Het meeste eenvoudige wedstrijdsysteem voor toernooien is het afvalsysteem. De spelers spelen tegen elkaar.
+De winnaar gaat door naar de volgende ronde tot er een speler overblijft. Dat is de winnaar van het toernooi.
+Nadeel is dat verliezers afvallen en minder ronden spelen.
+
+Het Zwitsers systeem is in principe een afvalsysteem waarbij verliezers gewoon blijven meedoen.
+
+
+poging om een zwitsers systeem te maken in juni 2022
+
 
 ## Aanmelden zoals met Stickchess
+juli, augustus en september 2023
 in plaats van inlezen van CSV-bestanden uit OLA met offline software.
 
 ## Overzicht voor teamleiders
-volgend seizoen
+volgend seizoen, niet vermelden?
 
 ## Overzicht voor bestuur
 
