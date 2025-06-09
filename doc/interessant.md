@@ -67,10 +67,7 @@ Refresh Android cache
 - [Wat een JavaScript programmeur moet begrijpen in 2024](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-in-2024-c1044bcb0dfb)
 - [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
 - [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
-- [default values made easy](https://www.trevorlasn.com/blog/javascript-nullish-coalescing-assignment-operator)
-- [video](https://medium.com/@stwebdesigner/insert-an-mp4-video-into-a-webpage-9e0ac6845103)
-- [video + audio](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/HTML_video_and_audio)
-- [mp4 on webpage](https://www.youtube.com/watch?v=sRd2rVUA7uc)
+- [optional chaining and default](https://allthingssmitty.com/2025/06/02/write-more-reliable-javascript-with-optional-chaining/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
@@ -157,10 +154,6 @@ Refresh Android cache
 - [Issues, milestones and projects in GitHub](https://heardlibrary.github.io/digital-scholarship/manage/control/github/projects/)
 
 # schaken
-- [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
-- [FIDE Dutch System](https://estima.com/chess/wintdhelp/index.html?pairingsystemfidedutchsystem.html)
-- [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
-- [Uitleg door ChessManager](https://www.chessmanager.com/en/blog/swiss-system)
 - [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
 - [Sevilla](https://www.jbfsoftware.com/)
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)

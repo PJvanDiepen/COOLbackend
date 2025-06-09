@@ -315,15 +315,24 @@ kunnen we na een willekeurig aantal ronden stoppen. Bovendien hoeven niet alle s
 
 ## Zwitsers systeem
 
-Het meeste eenvoudige wedstrijdsysteem voor toernooien is het afvalsysteem. De spelers spelen tegen elkaar.
-De winnaar gaat door naar de volgende ronde tot er een speler overblijft. Dat is de winnaar van het toernooi.
-Nadeel is dat verliezers afvallen en minder ronden spelen.
+Het meeste eenvoudige wedstrijdsysteem voor toernooien is het afvalsysteem. Per ronde spelen spelers tegen elkaar.
+De verliezers vallen af. De winnaars gaan door naar de volgende ronde. Dit gaat door tot 1 speler overblijft. 
+Dat is de winnaar van het toernooi. Nadeel is dat verliezers dus minder ronden spelen.
 
-Het Zwitsers systeem is in principe een afvalsysteem waarbij verliezers gewoon blijven meedoen.
+Het Zwitsers systeem is een afvalsysteem waarbij verliezers gewoon blijven meedoen. 
+Daarnaast gebruikt het Zwitsers systeem een ranglijst om in te delen, maar in tegenstelling tot een ladder systeem
+gaat het indelen binnen een puntengroep in omgekeerde volgorde. Spelers uit de bovenste helft van een puntengroep 
+spelen tegen spelers uit de onderste helft.
 
+De details van het Zwitsers systeem staan beschreven in [FIDE Swiss Rules](https://handbook.fide.com/chapter/C0403202507).
 
-poging om een zwitsers systeem te maken in juni 2022
+In juni 2022 heb ik een poging gedaan om het Zwitsers systeem te implementeren in 0-0-0. Dat bleek niet zo eenvoudig.
 
+In de [lijst](https://handbook.fide.com/files/handbook/C04Annex3_FEP19.pdf) van door de FIDE goedgekeurde software voor
+het Zwitsers systeem staat dat ze vooral de pairing engine [JaVaFo](https://www.rrweb.org/javafo/JaVaFo.htm) gebruiken.
+Helaas is JaVaFo geen open source en kan ik JaVaFo daarom niet zo eenvoudig gebruiken in 0-0-0.
+Voorlopig is het plan om in 0-0-0 gegevens uit te wisselen met 
+[SwissMaster](https://schaakbond.nl/kenniscentrum/schaaktoernooi-organiseren/swissmaster/).
 
 ## Aanmelden zoals met Stickchess
 juli, augustus en september 2023
