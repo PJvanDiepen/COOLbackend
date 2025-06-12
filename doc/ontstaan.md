@@ -1,7 +1,7 @@
 # Ontstaansgeschiedenis 0-0-0
 
-0-0-0 is geleidelijk ontstaan en bovendien via allerlei omwegen. 
-Dit is de geschiedenis van de belangrijkste ontwerpbeslissingen beschreven door Peter van Diepen. 
+Inmiddels heb ik, Peter van Diepen al jaren aan 0-0-0 gewerkt en is het nuttig om de geschiedenis 
+van de belangrijkste ontwerpbeslissingen vast te leggen, zodat anderen weten hoe dit alles is ontstaan. 
 
 Ik heb het nog nooit gedaan dus ik denk dat ik het wel kan
 (Pipi Langkous)
@@ -331,19 +331,21 @@ In juni 2022 heb ik een poging gedaan om het Zwitsers systeem te implementeren i
 In de [lijst](https://handbook.fide.com/files/handbook/C04Annex3_FEP19.pdf) van door de FIDE goedgekeurde software voor
 het Zwitsers systeem staat dat ze vooral de pairing engine [JaVaFo](https://www.rrweb.org/javafo/JaVaFo.htm) gebruiken.
 Helaas is JaVaFo geen open source en kan ik JaVaFo daarom niet zo eenvoudig gebruiken in 0-0-0.
-Voorlopig is het plan om in 0-0-0 gegevens uit te wisselen met 
-[SwissMaster](https://schaakbond.nl/kenniscentrum/schaaktoernooi-organiseren/swissmaster/).
+Voorlopig is het plan om in 0-0-0 gegevens uit te wisselen met [SwissMaster](https://schaakbond.nl/kenniscentrum/schaaktoernooi-organiseren/swissmaster/).
 
-## Aanmelden zoals met Stickchess
-juli, augustus en september 2023
-in plaats van inlezen van CSV-bestanden uit OLA met offline software.
+## Aanmelden
+Een ontwerpbeslissing voor 0-0-0 was zo min mogelijk persoonsgegevens on line.
+Daarom staan in de database van 0-0-0 per speler uitsluitend `naam`, `knsbNummer` en `knsbRating`.
+Maar vanaf het begin in 2019 vroeg ik elk seizoen een nieuwe aftap uit OLA om in te lezen met COOLoffline.
 
-## Overzicht voor teamleiders
-volgend seizoen, niet vermelden?
+In 2022 verplaatste ik het inlezen met COOLoffline naar 0-0-0. Daarna ontdekte ik dat 
+[StickChess](https://stickchess.com/aboutSwissMaster) en [SwissMaster](https://schaakbond.nl/kenniscentrum/schaaktoernooi-organiseren/swissmaster/) 
+gebruik maken van de maandelijks ratinglijsten van de KNSB waarin veel minder persoonsgegevens staan dan in de OLA aftap.
+Toen realiseerde ik mij dat de aftap van OLA overbodig was en dat inlezen uit de KNSB ratinglijsten een soort standaard was
+en bovendien veel eenvoudiger dan inlezen uit OLA.
 
-## Overzicht voor bestuur
-
-## Jeugd
+Sinds 2023 kan een gebruiker van 0-0-0 zich aanmelden voor een competitie van een schaakvereniging (of een toernooi) met
+de meest actuele `knsbRating` en `knsbNummer` uit de maandelijkse KNSB ratinglijsten. 
 
 ## Wat nog ontbreekt
 
@@ -369,18 +371,6 @@ Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
 ## Jeugd
 
 In 2023-2024 zou ik werken aan de jeugd. Ik haalde veel overhoop en in 2024-2025 was veel in feite stuk.
-
-## 2023
-
-Invoering van CommonJS module voor node.js en ES6 modules voor frontend.
-
-Het inlezen van KNSB gegevens uit OLA (Online Leden Administratie van de KNSB) was gerealiseerd in de Java toepassing.
-Maar elk seizoen bleek het uit OLA afgetapte CSV-bestand anders te zijn. Dan maakte ik weer een paar aanpassingen
-en werkte het weer. In de zomer van 2023 deed ik mee aan een aantal kroeglopertoernooien en daar gebruikten ze
-[StickChess](https://stickchess.com/)steeds. een, 
-maar bleek OLA helemaal uit 0-0-0 gehaald en inlezen ratinglijsten van de KNSB.
-
-## 2024
 
 In het seizoen 2023-2024 werd besloten om voor de jeugd van de Waagtoren ook 0-0-0 te gebruiken. 
 In eerste instantie was de jeugd competitie een andere competitie naast de interne en rapid competitie
