@@ -870,9 +870,6 @@ function gebruikerFunctie(speler) {
     }
 }
 
-// html
-const MENU = "menu"; // TODO verplaatsen naar html.js
-
 module.exports = { // CommonJS voor node.js
     vragen,
     key,                   // (object)
@@ -957,7 +954,5 @@ module.exports = { // CommonJS voor node.js
     BEHEERDER,
     ONTWIKKElAAR,
     functieInvullen,
-    gebruikerFunctie,      // (speler)
-    // html
-    MENU
+    gebruikerFunctie      // (speler)
 }

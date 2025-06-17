@@ -338,50 +338,46 @@ Een ontwerpbeslissing voor 0-0-0 was zo min mogelijk persoonsgegevens on line.
 Daarom staan in de database van 0-0-0 per speler uitsluitend `naam`, `knsbNummer` en `knsbRating`.
 Maar vanaf het begin in 2019 vroeg ik elk seizoen een nieuwe aftap uit OLA om in te lezen met COOLoffline.
 
-In 2022 verplaatste ik het inlezen met COOLoffline naar 0-0-0. Daarna ontdekte ik dat 
+In 2022 is het inlezen met COOLoffline verplaatst naar 0-0-0. Daarna ontdekte ik dat 
 [StickChess](https://stickchess.com/aboutSwissMaster) en [SwissMaster](https://schaakbond.nl/kenniscentrum/schaaktoernooi-organiseren/swissmaster/) 
 gebruik maken van de maandelijks ratinglijsten van de KNSB waarin veel minder persoonsgegevens staan dan in de OLA aftap.
-Toen realiseerde ik mij dat de aftap van OLA overbodig was en dat inlezen uit de KNSB ratinglijsten een soort standaard was
-en bovendien veel eenvoudiger dan inlezen uit OLA.
+Toen realiseerde ik mij dat de aftap van OLA overbodig was en dat inlezen uit de KNSB-ratinglijst een soort standaard 
+is en bovendien veel eenvoudiger dan inlezen uit OLA.
 
 Sinds 2023 kan een gebruiker van 0-0-0 zich aanmelden voor een competitie van een schaakvereniging (of een toernooi) met
-de meest actuele `knsbRating` en `knsbNummer` uit de maandelijkse KNSB ratinglijsten. 
+het correcte `knsbNummer` en `knsbRating` uit de KNSB-ratinglijst.
 
-## Wat nog ontbreekt
-
-# vanaf hier geheugensteun
-
-## 2023-2024
-
-In het seizoen 2023-2024 gebruikten 76 leden 0-0-0 om zich aan te melden, af te zeggen en zelfs om uitslagen in te voeren. 
-Er zijn letterlijk nog maar een paar leden die meedoen aan de interne competitie en 0-0-0 niet gebruiken.
-
-In 2022-2023 hoefde ik als intern wedstrijdleider niet in te grijpen, omdat 0-0-0 toen het hele seizoen niet vastliep 
-met automatisch indelen. 
-In 2023-2024 daarentegen ging het 8 keer fout. Deze fout is nog niet verholpen, maar er is wel een handmatige oplossing.
-
-0-0-0 heeft namelijk de functionaliteit gekregen om handmatig in te delen en er is een nieuwe rondenlijst, 
-waarop een wedstrijdleider duidelijk kan zien wie tegen wie heeft gespeeld. 
-Dit alles op verzoek van de jeugdleiding, want vanaf 2024-2025 gaat de jeugdleiding 0-0-0 gebruiken 
-voor de najaars en voorjaars competities van de jeugd.
-
-0-0-0 is nog in ontwikkeling. 0-0-0 kan nog geen indelingen maken volgens het FIDE Dutch system (Zwitsers). 
-Daarom gebruikten we SwissMaster voor onze snelschaaktoernooien op dinsdagavond.
+Voor de interne competities van de Waagtoren en de externe competities van de KNSB en NHSB geldt het hele seizoen 
+de `knsbRating` van 1 september.
 
 ## Jeugd
 
-In 2023-2024 zou ik werken aan de jeugd. Ik haalde veel overhoop en in 2024-2025 was veel in feite stuk.
+In het seizoen 2023-2024 werd besloten om voor de jeugd van de Waagtoren ook 0-0-0 te gebruiken.
+Speciaal voor de jeugd kreeg 0-0-0 de mogelijkheid om met de hand in te delen en een nieuwe rondenlijst,
+waarop een wedstrijdleider duidelijk kan zien wie al tegen wie heeft gespeeld.
 
-In het seizoen 2023-2024 werd besloten om voor de jeugd van de Waagtoren ook 0-0-0 te gebruiken. 
 In eerste instantie was de jeugd competitie een andere competitie naast de interne en rapid competitie
 met een eigen manier om de ranglijst te berekenen.
-De spelers in de interne en rapid competitie houden het hele seizoen de KNSB rating van 1 september (en subgroep),
-maar de jeugd heeft een najaar en voorjaar competitie met een andere rating / subgroep.
-Toen was het noodzakelijk om in 0-0-0 verschillende schaakverenigingen te onderscheiden met een clubCode
-en de jeugd met clubCode = 1 af te splitsen van de Waagtoren met clubCode = 0.
+Maar de spelers in de interne en rapid competitie houden het hele seizoen de `knsbRating` van 1 september (en subgroep),
+terwijl de jeugd een najaar en voorjaar competitie heeft met een andere rating / subgroep. 
 
-Verschuiving van frontend naar backend en van MySQL naar backend
-Synchroniseren frontend met backend. Geen doorgeefluik meer.
+Toen werd het duidelijk dat het eenvoudiger is om in 0-0-0 verschillende schaakverenigingen te onderscheiden
+met verschillende frequenties voor de seizoenen. De Waagtoren heeft 1 seizoen per jaar van september tot juni en 
+de jeugd heeft 2 seizoenen per jaar: van september tot december en van januari tot juni.
+Daarom moest we de jeugd met `clubCode = 1` afgesplitsen van de Waagtoren met `clubCode = 0`.
+
+## Tijdelijke stilstand
+
+Kortom de database moest veranderen en als ontwikkelaar had ik meer ideeën om de database te verbeteren,
+de software beter te organiseren met ES6 modules, functies van MySQL en de frontend te verplaatsen naar de backend, 
+en zo voort. Het werd een grote verbouwing waarbij steeds meer zogenaamde kleine klusjes opdoken.
+
+Helaas had ik ook wat andere problemen die niets met 0-0-0 hadden te maken met als resultaat dat ik in 2023-2024 
+0-0-0 wel flink overhoop had gehaald en dat 0-0-0 in 2024-2025 eigenlijk stuk was. 
+De interne competitie van de Waagtoren draaide nog wel, maar de rapid competitie deed ik met SwissMaster 
+en de jeugdleider gebruikte Rokade voor de jeugd competitie.
+
+Uiteraard is het de bedoeling om het een en ander weer op te pakken!
 
 ## Links
 - (1) [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/)
@@ -392,44 +388,3 @@ Synchroniseren frontend met backend. Geen doorgeefluik meer.
 - (6) [Alberto Alvarez Alonso scoort 4 uit 4](https://www.waagtoren.nl/2023/10/27/alberto-alvarez-alonso-scoort-4-uit-4/)
 - (7) [Informatie interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/)
 - (8) [0-0-0 en de externe competitie](https://www.waagtoren.nl/2024/02/03/0-0-0-en-de-externe-competitie/)
-
-Import en export van andere systemen blijven belangrijk voor het nieuwe systeem,
-want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen.
-In de toekomst is het misschien ook handig om informatie uit te wisselen met SwissMaster, Sevilla, enz.
-
-Rokade is 
-- Ledenadministratie
-- Competities en toernooien
-- Bondscompetitie
-- Financiële administratie
-
-Beveiliging en backup van de database met uitslagen moet uiteraard goed geregeld worden met mogelijkheden om log-bestanden te bekijken 
-en fouten te herstellen.
-
-Voorlopig gebruik ik MySQL, maar indien een ander database management system in de toekomst een betere keuze blijkt te zijn, 
-moet het ontwerp van het systeem zodanig zijn we MySQL kunnen vervangen.
-
-### Database ontwerpen en vullen
-
-Maar 0-0-0 berekent geen ratings en is geen leden administratie.
-In de database van 0-0-0 gebruiken we uitsluitend gegevens die noodzakelijk zijn voor de uitslagen en ranglijsten
-zoals naam, KNSB nummer en KNSB rating (met een bijbehorende datum), die worden overgenomen uit OLA, de Online Leden Administratie van de KNSB.
-
-Voor het vullen van de 0-0-0 database is een offline toepassing gemaakt die informatie inleest uit andere systemen:
--	Excel-bestand uit OLA met de gegevens van de Waagtoren leden,
--	de offline database van Rokade voor de uitslagen van de interne competities van verschillende seizoenen en
--	een web crawler die de websites van NHSB en KNSB raadpleegt voor de uitslagen van externe wedstrijden.
-
-Voor de online 0-0-0 gaan we meer geavanceerde koppelingen maken met andere systemen,
-want het is de bedoeling dat gebruikers zo min mogelijk hoeven in te toetsen.
-Eventueel kunnen spelers zelf hun uitslagen invoeren, maar dan moeten beide spelers de uitslag bevestigen.
-Het doel is dat de intern wedstrijdleider steeds minder hoeft te doen. Het een en ander moet op een moderne manier beveiligd worden.
-
-### Open source
-In fase 5 wil ik actief proberen of andere schaakverenigingen dit systeem willen gebruiken. 
-Ik zal zorgen dat het uitwisselen van gegevens met Rokade blijft functioneren, zodat verenigingen die Rokade al gebruiken eenvoudig kunnen overstappen.
-
-Eventueel kunnen andere schaakverenigingen hun databases ook op www.ChessOpenings.OnLine draaien.
-
-Het nieuwe systeem wordt ontwikkeld in duidelijk afgebakende delen, die je onafhankelijk van elkaar kunt vervangen of verbeteren. 
-De source code met documentatie zal ik open source beschikbaar stellen op GitHub, zodat andere programmeurs ook aan het nieuwe systeem kunnen werken.

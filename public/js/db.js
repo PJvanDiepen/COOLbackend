@@ -870,9 +870,6 @@ function gebruikerFunctie(speler) {
     }
 }
 
-// html
-const MENU = "menu"; // TODO verplaatsen naar html.js
-
 export { // ES6 voor browser,
     vragen,
     key,                   // (object)
@@ -957,7 +954,5 @@ export { // ES6 voor browser,
     BEHEERDER,
     ONTWIKKElAAR,
     functieInvullen,
-    gebruikerFunctie,      // (speler)
-    // html
-    MENU
+    gebruikerFunctie      // (speler)
 }

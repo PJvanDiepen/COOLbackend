@@ -15,6 +15,7 @@ export const STREEP = "___";
 export const KRUISJE = "\u00a0\u00a0✖\u00a0"; // met no break spaces
 export const VRAAGTEKEN = "\u00a0\u00a0?\u00a0"; // met no break spaces
 export const ZELFDE = "\u00a0\=\u00a0"; // met no break spaces
+export const MENU = "menu";
 
 /*
 TODO const html = {id1: , id2: } alle DOM elementen met id
@@ -36,11 +37,11 @@ https://stackoverflow.com/questions/59068548/how-to-get-all-of-the-element-ids-o
  * menu() maakt opties voor select() met uitsluitend de menuKeuzes waarvoor de gebruiker voldoende menuRechten heeft.
  */
 export function menu(menuRechten, ...menuKeuzes) {
-    const startKeuzes = sessionStorage.getItem(db.MENU) ? JSON.parse(sessionStorage.getItem(db.MENU)) : []; // algemeen menu van start pagina
+    const startKeuzes = sessionStorage.getItem(MENU) ? JSON.parse(sessionStorage.getItem(MENU)) : []; // algemeen menu van start pagina
     const HAMBURGER = "\u2630";
     const opties = [[HAMBURGER, HAMBURGER]];  // geen functie
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
-        if (minimumRechten === db.IEDEREEN && tekst === db.MENU) { // de menuKeuzes van een specifieke pagina tussenvoegen
+        if (minimumRechten === db.IEDEREEN && tekst === MENU) { // de menuKeuzes van een specifieke pagina tussenvoegen
             for (const [minimumRechten, tekst, functie] of menuKeuzes) {
                 if (minimumRechten <= menuRechten) {
                     opties.push(["", tekst, functie]);
@@ -52,7 +53,7 @@ export function menu(menuRechten, ...menuKeuzes) {
             }]);
         }
     }
-    selectie(id(db.MENU), HAMBURGER, opties);
+    selectie(id(MENU), HAMBURGER, opties);
 }
 
 /**

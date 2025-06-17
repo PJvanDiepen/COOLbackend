@@ -46,9 +46,9 @@ import * as zyq from "./zyq.js";
         }
     }
     menuKeuzes.push(
-        [db.IEDEREEN, db.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
+        [db.IEDEREEN, html.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
         [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
-    sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
+    sessionStorage.setItem(html.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
     seizoenSelecteren(o_o_o.competitie);
     await competitieSelecteren();
 })();
