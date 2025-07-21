@@ -3764,7 +3764,7 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 
 -- Waagtoren NHSB beker (brons)
 set @team = "nbb";
-set @ronde = 3;
+set @ronde = 4;
 select * from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = "2425" and teamCode = @team and rondeNummer = @ronde;
 
@@ -3780,7 +3780,11 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0, "2425", "nbb", 3, 1, 8182416, "e", "w", 0, "1", '2025-05-08', "int"),
 (0, "2425", "nbb", 3, 2, 7321534, "e", "z", 0, "0", '2025-05-08', "int"),
 (0, "2425", "nbb", 3, 3, 7519930, "e", "w", 0, "1", '2025-05-08', "int"),
-(0, "2425", "nbb", 3, 4, 8073978, "e", "z", 0, "1", '2025-05-08', "int");
+(0, "2425", "nbb", 3, 4, 8073978, "e", "z", 0, "1", '2025-05-08', "int"),
+(0, "2425", "nbb", 4, 1, 8182416, "e", "z", 0, "½", '2025-06-22', "int"),
+(0, "2425", "nbb", 4, 2, 7321534, "e", "w", 0, "0", '2025-06-22', "int"),
+(0, "2425", "nbb", 4, 3, 8073978, "e", "z", 0, "½", '2025-06-22', "int"),
+(0, "2425", "nbb", 4, 4, 7519930, "e", "w", 0, "1", '2025-06-22', "int");
 
 -- Waagtoren n1
 set @seizoen = "2425";

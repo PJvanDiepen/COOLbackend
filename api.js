@@ -16,7 +16,7 @@ const package_json = require("./package.json");
 const synchroon = {
     versie: package_json.version,
     serverStart: new Date(),
-    revisie: 0 // aantal mutaties van de database sinds de serverStart
+    revisie: 1 // 1 + aantal mutaties van de database sinds de serverStart
 }
 
 const os = require("os");
@@ -36,7 +36,10 @@ const db = require("./modules/db.cjs");
 
 /*
 db.boom met db.cjs voor de server en met db.js voor de browser.
+
+TODO PvD db.initialiseren van boom groeien met clubs en seizoenen inlezen
  */
+
 
 db.clubToevoegen(synchroon.revisie,
     { clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren" });

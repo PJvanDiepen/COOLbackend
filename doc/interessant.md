@@ -57,7 +57,9 @@ Refresh Android cache
 - [DOM events](https://domevents.dev/)
 - [DOM manipulation](https://phuoc.ng/collection/html-dom/)
 - [memory efficient DOM manipulation](https://frontendmasters.com/blog/patterns-for-memory-efficient-dom-manipulation/)
+- [GrowField](https://growfield.js.org/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
+- [async to array](https://allthingssmitty.com/2025/07/14/modern-async-iteration-in-javascript-with-array-fromasync/)
 - [promises training](https://github.com/henriqueinonhe/promises-training)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
@@ -68,6 +70,7 @@ Refresh Android cache
 - [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
 - [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
 - [optional chaining and default](https://allthingssmitty.com/2025/06/02/write-more-reliable-javascript-with-optional-chaining/)
+- [web scraping](https://blog.apify.com/best-javascript-web-scraping-libraries/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
@@ -84,12 +87,14 @@ Refresh Android cache
 - [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
 - [node audit](https://www.niraj.life/blog/understanding-npm-audit-fixing-vulnerabilities-nodejs/)
 - [node streams](https://pavel-romanov.com/building-a-mental-model-of-nodejs-streams)
+- [node in 2025](https://kashw1n.com/blog/nodejs-2025/)
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
 - [verschillen node en deno](https://cult.honeypot.io/reads/deno-vs-node-main-differences/)
 - [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
 - [JSR i.p.v. npm](https://deno.com/blog/jsr_open_beta)
+- [History of JavaScript](https://deno.com/blog/history-of-javascript)
 
 # Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
@@ -154,9 +159,12 @@ Refresh Android cache
 - [Issues, milestones and projects in GitHub](https://heardlibrary.github.io/digital-scholarship/manage/control/github/projects/)
 
 # schaken
+- [Simpel schaken in JavaScript](https://sam-koblenski.blogspot.com/2017/06/a-barely-adequate-guide-to-displaying.html)
+- [Schaken in JavaScript](https://shaack.com/projekte/cm-chessboard/)
 - [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
 - [Sevilla](https://www.jbfsoftware.com/)
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
+- [Olga chessviewer](https://www.chessgames.com/olgahelp.html)
 - [Schaken in HTML en JavaScript](https://www.chessengines.org/)
 - [betafish](https://github.com/Strryke/betafish)
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
