@@ -1,15 +1,17 @@
 "use strict";
 
 /*
+handmatig inlezen van StickChess naar bestand
+
 https://portal.stickchess.com/api/tournaments
  */
 import tournaments from "./tournaments.json" with { type: "json" };
-
 const toernooi = tournaments.finished.filter(function (alkmaar) {
     return alkmaar.name.includes("Alkmaar");
 }).map(function (toernooi) {
     return {
         naam: "",
+        datum: "",
         ranglijst: [],
         ronden: [],
         endDate: toernooi.endDate,
@@ -17,17 +19,29 @@ const toernooi = tournaments.finished.filter(function (alkmaar) {
         urlKey: toernooi.urlKey
     }
 });
+
+// TODO welk toernooi inlezen?
+
 /*
-https://portal.stickchess.com/api/tournaments/[urlKey]/standings/7
-https://portal.stickchess.com/api/tournaments/[urlKey]/rounds/[j]
+handmatig inlezen van StickChess naar bestanden
+
+https://portal.stickchess.com/api/tournaments/[bestand]/standings/7
+https://portal.stickchess.com/api/tournaments/[bestand]/rounds/[j]
+
+ranglijst van StickChess staat in [bestand]_[i].json
+ronde van StickChess staat in [bestand]_[i]_[j].json
  */
 let code = "// begin gegenereerde code\n";
 for (let i = 0; i < toernooi.length; i++) {
-    toernooi[i].naam = `${toernooi.length - i}e Alkmaars Kroegloperstoernooi ${toernooi[i].endDate.substring(0,4)}`;
-    code += `import standings_${i} from "./${toernooi[i].urlKey}.json" with { type: "json" };\n`;
+    toernooi[i].naam = `${toernooi.length - i}e Alkmaars Kroegloperstoernooi`;
+    toernooi[i].datum = datumLeesbaar(toernooi[i].endDate);
+    const bestand = toernooi[i].urlKey;
+    code += `import standings_${i} from "./${bestand}.json" with { type: "json" };\n`;
     code += `toernooi[${i}].ranglijst = standings_${i}.standing;\n`;
     for (let j = 1; j <= 7 ; j++) {
-        // code += `import rounds_${i}_${j} from "./${toernooi[i].urlKey}_${j}.json" with { type: "json" };\n`;
+        code += `import rounds_${i}_${j} from "./${bestand}_${j}.json" with { type: "json" };\n`;
+        // TODO uitslagen per ronde van toernooi
+        // TODO legacyPairing in 2019 en eerder?
     }
 }
 code += "// einde gegenereerde code\n";
@@ -50,6 +64,17 @@ toernooi[6].ranglijst = standings_6.standing;
 // einde gegenereerde code
 
 console.log(toernooi);
+
+function datumLeesbaar(jsonDatum) {
+    const datum = new Date(jsonDatum);
+    return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
+}
+
+function voorloopNul(getal) {
+    return getal < 10 ? "0" + getal : getal;
+}
+
+// TODO verwijderen vanaf hier
 
 const A1 = 0;
 const B1 = 1;
