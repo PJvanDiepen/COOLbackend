@@ -19,15 +19,12 @@ const toernooi = tournaments.finished.filter(function (toernooi) {
         naam: "",
         datum: "",
         ranglijst: [],
-        ronden: [],
+        ronde: [],
         endDate: toernooi.endDate,
         name: toernooi.name,
         urlKey: toernooi.urlKey
     }
 });
-
-// TODO welk toernooi inlezen?
-const toernooiNummer = 0;
 
 /*
 De selectie van toernooien in [plaats] is gesorteerd van laatste tot eerste toernooi.
@@ -65,85 +62,131 @@ for (let i = 0; i < toernooi.length; i++) {
     toernooi[i].datum = datumLeesbaar(toernooi[i].endDate);
     const urlKey = toernooi[i].urlKey;
     code += `import standings_${i} from "./${plaats}/${urlKey}.json" with { type: "json" };\n`;
+    code += `toernooi[${i}].ranglijst = standings_${i}.standing;\n`;
     for (let j = 1; j <= 7 ; j++) {
         code += `import rounds_${i}_${j} from "./${plaats}/${urlKey}_${j}.json" with { type: "json" };\n`;
+        code += `toernooi[${i}].ronde[${j}] = rounds_${i}_${j};\n`;
     }
-}
-code += `toernooi[${toernooiNummer}].ranglijst = standings_${toernooiNummer}.standing;\n`;
-for (let j = 1; j <= 7 ; j++) {
-    // code += `import rounds_${i}_${j} from "/${plaats}/${urlKey}_${j}.json" with { type: "json" };\n`;
-    // TODO legacyPairing in 2019 en eerder?
 }
 code += `// einde gegenereerde code voor ${plaats}\n`;
 console.log(code);
 
 // begin gegenereerde code voor Alkmaar
 import standings_0 from "./Alkmaar/Alkmaar25.json" with { type: "json" };
-import rounds_0_1 from "./Alkmaar/Alkmaar25_1.json" with { type: "json" };
-import rounds_0_2 from "./Alkmaar/Alkmaar25_2.json" with { type: "json" };
-import rounds_0_3 from "./Alkmaar/Alkmaar25_3.json" with { type: "json" };
-import rounds_0_4 from "./Alkmaar/Alkmaar25_4.json" with { type: "json" };
-import rounds_0_5 from "./Alkmaar/Alkmaar25_5.json" with { type: "json" };
-import rounds_0_6 from "./Alkmaar/Alkmaar25_6.json" with { type: "json" };
-import rounds_0_7 from "./Alkmaar/Alkmaar25_7.json" with { type: "json" };
-import standings_1 from "./Alkmaar/Alkmaar2024.json" with { type: "json" };
-import rounds_1_1 from "./Alkmaar/Alkmaar2024_1.json" with { type: "json" };
-import rounds_1_2 from "./Alkmaar/Alkmaar2024_2.json" with { type: "json" };
-import rounds_1_3 from "./Alkmaar/Alkmaar2024_3.json" with { type: "json" };
-import rounds_1_4 from "./Alkmaar/Alkmaar2024_4.json" with { type: "json" };
-import rounds_1_5 from "./Alkmaar/Alkmaar2024_5.json" with { type: "json" };
-import rounds_1_6 from "./Alkmaar/Alkmaar2024_6.json" with { type: "json" };
-import rounds_1_7 from "./Alkmaar/Alkmaar2024_7.json" with { type: "json" };
-import standings_2 from "./Alkmaar/Alkmaar.json" with { type: "json" };
-import rounds_2_1 from "./Alkmaar/Alkmaar_1.json" with { type: "json" };
-import rounds_2_2 from "./Alkmaar/Alkmaar_2.json" with { type: "json" };
-import rounds_2_3 from "./Alkmaar/Alkmaar_3.json" with { type: "json" };
-import rounds_2_4 from "./Alkmaar/Alkmaar_4.json" with { type: "json" };
-import rounds_2_5 from "./Alkmaar/Alkmaar_5.json" with { type: "json" };
-import rounds_2_6 from "./Alkmaar/Alkmaar_6.json" with { type: "json" };
-import rounds_2_7 from "./Alkmaar/Alkmaar_7.json" with { type: "json" };
-import standings_3 from "./Alkmaar/AlkmaarsKLT22.json" with { type: "json" };
-import rounds_3_1 from "./Alkmaar/AlkmaarsKLT22_1.json" with { type: "json" };
-import rounds_3_2 from "./Alkmaar/AlkmaarsKLT22_2.json" with { type: "json" };
-import rounds_3_3 from "./Alkmaar/AlkmaarsKLT22_3.json" with { type: "json" };
-import rounds_3_4 from "./Alkmaar/AlkmaarsKLT22_4.json" with { type: "json" };
-import rounds_3_5 from "./Alkmaar/AlkmaarsKLT22_5.json" with { type: "json" };
-import rounds_3_6 from "./Alkmaar/AlkmaarsKLT22_6.json" with { type: "json" };
-import rounds_3_7 from "./Alkmaar/AlkmaarsKLT22_7.json" with { type: "json" };
-import standings_4 from "./Alkmaar/waagtoren.json" with { type: "json" };
-import rounds_4_1 from "./Alkmaar/waagtoren_1.json" with { type: "json" };
-import rounds_4_2 from "./Alkmaar/waagtoren_2.json" with { type: "json" };
-import rounds_4_3 from "./Alkmaar/waagtoren_3.json" with { type: "json" };
-import rounds_4_4 from "./Alkmaar/waagtoren_4.json" with { type: "json" };
-import rounds_4_5 from "./Alkmaar/waagtoren_5.json" with { type: "json" };
-import rounds_4_6 from "./Alkmaar/waagtoren_6.json" with { type: "json" };
-import rounds_4_7 from "./Alkmaar/waagtoren_7.json" with { type: "json" };
-import standings_5 from "./Alkmaar/alkmaar18.json" with { type: "json" };
-import rounds_5_1 from "./Alkmaar/alkmaar18_1.json" with { type: "json" };
-import rounds_5_2 from "./Alkmaar/alkmaar18_2.json" with { type: "json" };
-import rounds_5_3 from "./Alkmaar/alkmaar18_3.json" with { type: "json" };
-import rounds_5_4 from "./Alkmaar/alkmaar18_4.json" with { type: "json" };
-import rounds_5_5 from "./Alkmaar/alkmaar18_5.json" with { type: "json" };
-import rounds_5_6 from "./Alkmaar/alkmaar18_6.json" with { type: "json" };
-import rounds_5_7 from "./Alkmaar/alkmaar18_7.json" with { type: "json" };
-import standings_6 from "./Alkmaar/alkmaar2017.json" with { type: "json" };
-import rounds_6_1 from "./Alkmaar/alkmaar2017_1.json" with { type: "json" };
-import rounds_6_2 from "./Alkmaar/alkmaar2017_2.json" with { type: "json" };
-import rounds_6_3 from "./Alkmaar/alkmaar2017_3.json" with { type: "json" };
-import rounds_6_4 from "./Alkmaar/alkmaar2017_4.json" with { type: "json" };
-import rounds_6_5 from "./Alkmaar/alkmaar2017_5.json" with { type: "json" };
-import rounds_6_6 from "./Alkmaar/alkmaar2017_6.json" with { type: "json" };
-import rounds_6_7 from "./Alkmaar/alkmaar2017_7.json" with { type: "json" };
 toernooi[0].ranglijst = standings_0.standing;
+import rounds_0_1 from "./Alkmaar/Alkmaar25_1.json" with { type: "json" };
+toernooi[0].ronde[1] = rounds_0_1;
+import rounds_0_2 from "./Alkmaar/Alkmaar25_2.json" with { type: "json" };
+toernooi[0].ronde[2] = rounds_0_2;
+import rounds_0_3 from "./Alkmaar/Alkmaar25_3.json" with { type: "json" };
+toernooi[0].ronde[3] = rounds_0_3;
+import rounds_0_4 from "./Alkmaar/Alkmaar25_4.json" with { type: "json" };
+toernooi[0].ronde[4] = rounds_0_4;
+import rounds_0_5 from "./Alkmaar/Alkmaar25_5.json" with { type: "json" };
+toernooi[0].ronde[5] = rounds_0_5;
+import rounds_0_6 from "./Alkmaar/Alkmaar25_6.json" with { type: "json" };
+toernooi[0].ronde[6] = rounds_0_6;
+import rounds_0_7 from "./Alkmaar/Alkmaar25_7.json" with { type: "json" };
+toernooi[0].ronde[7] = rounds_0_7;
+import standings_1 from "./Alkmaar/Alkmaar2024.json" with { type: "json" };
+toernooi[1].ranglijst = standings_1.standing;
+import rounds_1_1 from "./Alkmaar/Alkmaar2024_1.json" with { type: "json" };
+toernooi[1].ronde[1] = rounds_1_1;
+import rounds_1_2 from "./Alkmaar/Alkmaar2024_2.json" with { type: "json" };
+toernooi[1].ronde[2] = rounds_1_2;
+import rounds_1_3 from "./Alkmaar/Alkmaar2024_3.json" with { type: "json" };
+toernooi[1].ronde[3] = rounds_1_3;
+import rounds_1_4 from "./Alkmaar/Alkmaar2024_4.json" with { type: "json" };
+toernooi[1].ronde[4] = rounds_1_4;
+import rounds_1_5 from "./Alkmaar/Alkmaar2024_5.json" with { type: "json" };
+toernooi[1].ronde[5] = rounds_1_5;
+import rounds_1_6 from "./Alkmaar/Alkmaar2024_6.json" with { type: "json" };
+toernooi[1].ronde[6] = rounds_1_6;
+import rounds_1_7 from "./Alkmaar/Alkmaar2024_7.json" with { type: "json" };
+toernooi[1].ronde[7] = rounds_1_7;
+import standings_2 from "./Alkmaar/Alkmaar.json" with { type: "json" };
+toernooi[2].ranglijst = standings_2.standing;
+import rounds_2_1 from "./Alkmaar/Alkmaar_1.json" with { type: "json" };
+toernooi[2].ronde[1] = rounds_2_1;
+import rounds_2_2 from "./Alkmaar/Alkmaar_2.json" with { type: "json" };
+toernooi[2].ronde[2] = rounds_2_2;
+import rounds_2_3 from "./Alkmaar/Alkmaar_3.json" with { type: "json" };
+toernooi[2].ronde[3] = rounds_2_3;
+import rounds_2_4 from "./Alkmaar/Alkmaar_4.json" with { type: "json" };
+toernooi[2].ronde[4] = rounds_2_4;
+import rounds_2_5 from "./Alkmaar/Alkmaar_5.json" with { type: "json" };
+toernooi[2].ronde[5] = rounds_2_5;
+import rounds_2_6 from "./Alkmaar/Alkmaar_6.json" with { type: "json" };
+toernooi[2].ronde[6] = rounds_2_6;
+import rounds_2_7 from "./Alkmaar/Alkmaar_7.json" with { type: "json" };
+toernooi[2].ronde[7] = rounds_2_7;
+import standings_3 from "./Alkmaar/AlkmaarsKLT22.json" with { type: "json" };
+toernooi[3].ranglijst = standings_3.standing;
+import rounds_3_1 from "./Alkmaar/AlkmaarsKLT22_1.json" with { type: "json" };
+toernooi[3].ronde[1] = rounds_3_1;
+import rounds_3_2 from "./Alkmaar/AlkmaarsKLT22_2.json" with { type: "json" };
+toernooi[3].ronde[2] = rounds_3_2;
+import rounds_3_3 from "./Alkmaar/AlkmaarsKLT22_3.json" with { type: "json" };
+toernooi[3].ronde[3] = rounds_3_3;
+import rounds_3_4 from "./Alkmaar/AlkmaarsKLT22_4.json" with { type: "json" };
+toernooi[3].ronde[4] = rounds_3_4;
+import rounds_3_5 from "./Alkmaar/AlkmaarsKLT22_5.json" with { type: "json" };
+toernooi[3].ronde[5] = rounds_3_5;
+import rounds_3_6 from "./Alkmaar/AlkmaarsKLT22_6.json" with { type: "json" };
+toernooi[3].ronde[6] = rounds_3_6;
+import rounds_3_7 from "./Alkmaar/AlkmaarsKLT22_7.json" with { type: "json" };
+toernooi[3].ronde[7] = rounds_3_7;
+import standings_4 from "./Alkmaar/waagtoren.json" with { type: "json" };
+toernooi[4].ranglijst = standings_4.standing;
+import rounds_4_1 from "./Alkmaar/waagtoren_1.json" with { type: "json" };
+toernooi[4].ronde[1] = rounds_4_1;
+import rounds_4_2 from "./Alkmaar/waagtoren_2.json" with { type: "json" };
+toernooi[4].ronde[2] = rounds_4_2;
+import rounds_4_3 from "./Alkmaar/waagtoren_3.json" with { type: "json" };
+toernooi[4].ronde[3] = rounds_4_3;
+import rounds_4_4 from "./Alkmaar/waagtoren_4.json" with { type: "json" };
+toernooi[4].ronde[4] = rounds_4_4;
+import rounds_4_5 from "./Alkmaar/waagtoren_5.json" with { type: "json" };
+toernooi[4].ronde[5] = rounds_4_5;
+import rounds_4_6 from "./Alkmaar/waagtoren_6.json" with { type: "json" };
+toernooi[4].ronde[6] = rounds_4_6;
+import rounds_4_7 from "./Alkmaar/waagtoren_7.json" with { type: "json" };
+toernooi[4].ronde[7] = rounds_4_7;
+import standings_5 from "./Alkmaar/alkmaar18.json" with { type: "json" };
+toernooi[5].ranglijst = standings_5.standing;
+import rounds_5_1 from "./Alkmaar/alkmaar18_1.json" with { type: "json" };
+toernooi[5].ronde[1] = rounds_5_1;
+import rounds_5_2 from "./Alkmaar/alkmaar18_2.json" with { type: "json" };
+toernooi[5].ronde[2] = rounds_5_2;
+import rounds_5_3 from "./Alkmaar/alkmaar18_3.json" with { type: "json" };
+toernooi[5].ronde[3] = rounds_5_3;
+import rounds_5_4 from "./Alkmaar/alkmaar18_4.json" with { type: "json" };
+toernooi[5].ronde[4] = rounds_5_4;
+import rounds_5_5 from "./Alkmaar/alkmaar18_5.json" with { type: "json" };
+toernooi[5].ronde[5] = rounds_5_5;
+import rounds_5_6 from "./Alkmaar/alkmaar18_6.json" with { type: "json" };
+toernooi[5].ronde[6] = rounds_5_6;
+import rounds_5_7 from "./Alkmaar/alkmaar18_7.json" with { type: "json" };
+toernooi[5].ronde[7] = rounds_5_7;
+import standings_6 from "./Alkmaar/alkmaar2017.json" with { type: "json" };
+toernooi[6].ranglijst = standings_6.standing;
+import rounds_6_1 from "./Alkmaar/alkmaar2017_1.json" with { type: "json" };
+toernooi[6].ronde[1] = rounds_6_1;
+import rounds_6_2 from "./Alkmaar/alkmaar2017_2.json" with { type: "json" };
+toernooi[6].ronde[2] = rounds_6_2;
+import rounds_6_3 from "./Alkmaar/alkmaar2017_3.json" with { type: "json" };
+toernooi[6].ronde[3] = rounds_6_3;
+import rounds_6_4 from "./Alkmaar/alkmaar2017_4.json" with { type: "json" };
+toernooi[6].ronde[4] = rounds_6_4;
+import rounds_6_5 from "./Alkmaar/alkmaar2017_5.json" with { type: "json" };
+toernooi[6].ronde[5] = rounds_6_5;
+import rounds_6_6 from "./Alkmaar/alkmaar2017_6.json" with { type: "json" };
+toernooi[6].ronde[6] = rounds_6_6;
+import rounds_6_7 from "./Alkmaar/alkmaar2017_7.json" with { type: "json" };
+toernooi[6].ronde[7] = rounds_6_7;
 // einde gegenereerde code voor Alkmaar
 
 console.log(toernooi);
-/*
-TODO kop met datum
-TODO ranglijst tabel
-TODO 7 x ronde div
-TODO uitslagen
- */
 
 function datumLeesbaar(jsonDatum) {
     const datum = new Date(jsonDatum);
@@ -154,7 +197,16 @@ function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
 
-// TODO verwijderen vanaf hier
+const toernooiNummer = 0;
+/*
+TODO welk toernooi laten zien?
+TODO kop met datum
+TODO ranglijst tabel
+TODO 7 x ronde div
+TODO uitslagen
+TODO legacyPairing in 2019 en eerder?
+TODO verwijderen vanaf hier
+ */
 
 function parametersVerwerken() {
     const pagina = new URL(location);
