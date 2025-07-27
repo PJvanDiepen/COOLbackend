@@ -29,9 +29,6 @@ const toernooi = tournaments.finished.filter(function (toernooi) {
 /*
 De selectie van toernooien in [plaats] is gesorteerd van laatste tot eerste toernooi.
 
-De code van stickchess.js laat 1 toernooi zien uit de selectie van toernooien met toernooiNummer = 0
-voor het laatste toernooi en toernooiNummer = aantal toernooi - 1 voor het eerste toernooi.
-
 De ranglijsten en uitslagen van die toernooien moet je van de StickChess server inlezen.
 Per toernooi heeft StickChess een unieke [urlKey]. Elk toernooi heeft (voorlopig) 7 ronden.
 
@@ -40,12 +37,12 @@ https://portal.stickchess.com/api/tournaments/[urlKey]/rounds/[j]
 
 Ranglijsten kopieer je naar [urlKey].json en uitslagen naar [urlKey]_[j].json
 in de [plaats] directory.
-Bestanden met dezelfde [urlKey] horen bij 1 toernooi met [j] als het rondeNummer.
+Bestanden met dezelfde [urlKey] horen bij 1 toernooi met [j] als het rondeNr.
 De [plaats] directory is een selectie van toernooien.
 Op deze manier kan je ook nieuwe StickChess toernooien gestructureerd opslaan.
 
-In de code van stickchess.js heeft elk toernooi een toernooiNummer: [i]
-en elke ronde heeft een toernooiNummer: [i] en een rondeNummer: [j],
+In de code van stickchess.js heeft elk toernooi een toernooiNr: [i]
+en elke ronde heeft een toernooiNr: [i] en een rondeNr: [j],
 zodat deze code geschikt is voor verschillende selecties van toernooien.
 
 De code voor selecties per [plaats] is slechts voor een deel verschillend.
@@ -197,78 +194,99 @@ function voorloopNul(getal) {
     return getal < 10 ? "0" + getal : getal;
 }
 
-const toernooiNummer = 0;
 /*
-TODO welk toernooi laten zien?
-TODO kop met datum
-TODO ranglijst tabel
-TODO 7 x ronde div
-TODO uitslagen
+De code van stickchess.js laat 1 toernooi zien uit de selectie van toernooien met toernooiNr = 0
+voor het laatste toernooi en toernooiNr = aantal toernooi - 1 voor het eerste toernooi.
+Een toernooi bestaat uit de ranglijst en een gefilterde lijst met uitslagen.
+
+Verwerk toernooi=[toernooiNr]
+       &ronde=[rondeNr]
+       &speler=[spelerNr]
+       &locatie=[locatieNr]
+ */
+const parameter = new URLSearchParams(new URL(location).search);
+const toernooiNr = Number(parameter.get("toernooi"));
+const rondeNr = Number(parameter.get("ronde"));
+const spelerNr = Number(parameter.get("speler"));
+const locatieNr = Number(parameter.get("locatie"));
+document.getElementById("kop").textContent = toernooi[toernooiNr].naam;
+document.getElementById("toernooi").append(` toernooi op ${toernooi[toernooiNr].datum}`);
+const ranglijst = document.getElementById("ranglijst");
+for (let i = 0; i < toernooi[toernooiNr].ranglijst.length; i++) {
+    ranglijst.append(koppelTotalen(toernooi[toernooiNr].ranglijst[i]));
+}
+const uitslagen = document.getElementById("uitslagen");
+
+function koppelTotalen(koppel) {
+    return htmlRij(
+        punten(koppel.rank),
+        koppel.team.players[0].name,
+        koppel.team.players[1].name,
+        punten(koppel.boardPoints),
+        punten(koppel.matchPoints),
+        koppel.rating);
+}
+
+function punten(getal) {
+    const heelGetal = Math.trunc(getal);
+    const SPATIE = "\u00A0\u00A0"
+    return `${getal < 10 ? SPATIE : ""}${heelGetal}${getal > heelGetal ? "½" : SPATIE}`;
+}
+
+/*
+TODO speler array met htmLink
+TODO zoek spelerNr in spelerNummer Map
+TODO locatie array met htmLink
+TODO zoek locatieNr in locatieNummer Map
+TODO uitslagen tabellen
 TODO legacyPairing in 2019 en eerder?
-TODO verwijderen vanaf hier
+TODO verwijder htmlParagraaf
+TODO verwijder htmlTabblad
+TODO verwijder htmlPlaatje
  */
 
-function parametersVerwerken() {
-    const pagina = new URL(location);
-    const parameters = new URLSearchParams(pagina.search);
-    const anderJaar = Number(parameters.get("jaar"));
-    if (anderJaar) {
-        sessionStorage.setItem("jaar", anderJaar);
-        jaar = anderJaar;
+function htmlParagraaf(tekst) {
+    const p = document.createElement("p");
+    p.append(tekst);
+    return p;
+}
+
+function htmlRij(...kolommen) {
+    const tr = document.createElement("tr");
+    for (const kolom of kolommen) {
+        const td = document.createElement("td");
+        td.append(kolom);
+        tr.append(td);
     }
-    const welPartij = parameters.get("wel");
-    if (welPartij) {
-        sessionStorage.removeItem(welPartij);
+    return tr;
+}
+
+function htmlTabblad(link, tekst) {
+    const a = document.createElement("a");
+    a.append(tekst);
+    a.href = link;
+    a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
+    a.rel = "noopener noreferrer"
+    return a;
+}
+
+function htmlLink(link, tekst) {
+    const a = document.createElement("a");
+    a.append(tekst);
+    a.href = link;
+    return a;
+}
+
+function htmlPlaatje(plaatje, percentage, breed, hoog) {
+    const img = document.createElement("img");
+    img.src = plaatje;
+    const factor = (window.innerWidth * percentage / 100) / breed; // percentage maximale breedte
+    if (factor > 1.0) {
+        img.width = breed;
+        img.height = hoog;
+    } else {
+        img.width = Math.round(breed * factor);
+        img.height = Math.round(hoog * factor);
     }
-    const nietPartij = parameters.get("niet");
-    if (nietPartij) {
-        sessionStorage.setItem(nietPartij,"niet");
-    }
+    return img;
 }
-
-const A1 = 0;
-const B1 = 1;
-const C1 = 2;
-const D1 = 3;
-const E1 = 4;
-const F1 = 5;
-const G1 = 6;
-const H1 = 7;
-
-// https://www.chessprogramming.org/Pieces
-const KONING = "\u2654";
-const DAME = "\u2655";
-const TOREN = "\u2656";
-const LOPER = "\u2657";
-const PAARD = "\u2658";
-
-const velden = [];
-for (const veld of ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]) {
-    velden.push(document.getElementById(veld));
-}
-
-let stellingNummer = 0; // TODO bereken stellingNummer in zetStuk
-
-function zetStuk(keuzeVelden, stuk) {
-    velden[kiesEen(keuzeVelden)].textContent = stuk;
-}
-
-function kiesEen(uitAantal) {
-    return uitAantal.splice(Math.floor(Math.random() * uitAantal.length), 1);
-}
-
-const zwarteVelden = [A1, C1, E1, G1];
-zetStuk(zwarteVelden, LOPER);
-
-const witteVelden = [B1, D1, F1, H1];
-zetStuk(witteVelden, LOPER);
-
-const restVelden = [...zwarteVelden, ...witteVelden];
-zetStuk(restVelden, DAME);
-zetStuk(restVelden, PAARD);
-zetStuk(restVelden, PAARD);
-
-restVelden.sort();
-velden[restVelden[0]].textContent = TOREN;
-velden[restVelden[1]].textContent = KONING;
-velden[restVelden[2]].textContent = TOREN;

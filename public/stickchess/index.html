@@ -13,17 +13,26 @@
     </style>
 </head>
 <body>
-    <h1>StickChess</h1>
-    <p>
-        Uitslagen van
+    <h1 id="kop"></h1>
+    <p id="toernooi">
+        <a href="https://stickchess.com/about">StickChess</a>
     </p>
-
-    <h2>Beginstelling</h2>
+    <h2>Ranglijst na ronde 7</h2>
+    <table id="ranglijst">
+        <tr>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th>bp</th>
+            <th>mp</th>
+            <th>rating</th>
+        </tr>
+    </table>
     <p>
-        Deze webpagina genereert een beginstelling voor
-        <a href="https://stickchess.com/about">StickChess.com</a>.
+        Klik op naam, ronde of locatie om uitslagen te filteren.
     </p>
-    <table id="stellingen">
+    <h2 id="filter"></h2>
+    <table id="uitslagen">
         <tr>
             <th>a</th>
             <th>b</th>
@@ -33,16 +42,6 @@
             <th>f</th>
             <th>g</th>
             <th>h</th>
-        </tr>
-        <tr>
-            <td><h1 id="a1"></h1></td>
-            <td><h1 id="b1"></h1></td>
-            <td><h1 id="c1"></h1></td>
-            <td><h1 id="d1"></h1></td>
-            <td><h1 id="e1"></h1></td>
-            <td><h1 id="f1"></h1></td>
-            <td><h1 id="g1"></h1></td>
-            <td><h1 id="h1"></h1></td>
         </tr>
     </table>
     <script type="module" src="stickchess.js"></script>
