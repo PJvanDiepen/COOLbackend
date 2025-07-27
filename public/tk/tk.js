@@ -301,8 +301,8 @@ function uitslagenVerwerken(kop1, kop2, deLijsten) {
             lijst.partij,
             lijst.zetels,
             lijst.wel
-                ? htmlLink("index.html?niet=" + lijst.partij +"#h2lijsten", VINKJE)
-                : htmlLink("index.html?wel=" + lijst.partij +"#h2lijsten", STREEP)));
+                ? htmlLink("index.html?niet=" + lijst.partij + "#h2lijsten", VINKJE)
+                : htmlLink("index.html?wel=" + lijst.partij + "#h2lijsten", STREEP)));
     }
     if (kamer < 150 || kamer > 150) {
         deLijsten.append(htmlRij("", "", kamer, "?"));

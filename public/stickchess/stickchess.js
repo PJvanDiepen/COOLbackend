@@ -201,42 +201,29 @@ Een toernooi bestaat uit de ranglijst en een gefilterde lijst met uitslagen.
 
 Verwerk toernooi=[toernooiNr]
        &ronde=[rondeNr]
-       &speler=[spelerNr]
+       &koppel=[koppelNr]
        &locatie=[locatieNr]
  */
 const parameter = new URLSearchParams(new URL(location).search);
 const toernooiNr = Number(parameter.get("toernooi"));
 const rondeNr = Number(parameter.get("ronde"));
-const spelerNr = Number(parameter.get("speler"));
+const koppelNr = Number(parameter.get("koppel")) || 1;
 const locatieNr = Number(parameter.get("locatie"));
 document.getElementById("kop").textContent = toernooi[toernooiNr].naam;
 document.getElementById("toernooi").append(` toernooi op ${toernooi[toernooiNr].datum}`);
 const ranglijst = document.getElementById("ranglijst");
+const spelerNummer = new Map();
 for (let i = 0; i < toernooi[toernooiNr].ranglijst.length; i++) {
-    ranglijst.append(koppelTotalen(toernooi[toernooiNr].ranglijst[i]));
+    ranglijst.append(koppelVerwerken(toernooi[toernooiNr].ranglijst[i]));
 }
+document.getElementById("filter").textContent =
+    `Uitslagen ${koppelNr ? koppel() :
+        locatieNr ? "locatie" :
+        rondeNr ? "ronde" : "???" }`;
+
 const uitslagen = document.getElementById("uitslagen");
 
-function koppelTotalen(koppel) {
-    return htmlRij(
-        punten(koppel.rank),
-        koppel.team.players[0].name,
-        koppel.team.players[1].name,
-        punten(koppel.boardPoints),
-        punten(koppel.matchPoints),
-        koppel.rating);
-}
-
-function punten(getal) {
-    const heelGetal = Math.trunc(getal);
-    const SPATIE = "\u00A0\u00A0"
-    return `${getal < 10 ? SPATIE : ""}${heelGetal}${getal > heelGetal ? "½" : SPATIE}`;
-}
-
 /*
-TODO speler array met htmLink
-TODO zoek spelerNr in spelerNummer Map
-TODO locatie array met htmLink
 TODO zoek locatieNr in locatieNummer Map
 TODO uitslagen tabellen
 TODO legacyPairing in 2019 en eerder?
@@ -244,6 +231,32 @@ TODO verwijder htmlParagraaf
 TODO verwijder htmlTabblad
 TODO verwijder htmlPlaatje
  */
+
+function koppelVerwerken(koppel) {
+    const koppelNummer = koppel.rank;
+    const eersteSpeler = koppel.team.players[0].name;
+    const tweedeSpeler = koppel.team.players[1].name;
+    spelerNummer.set(eersteSpeler, koppelNummer);
+    spelerNummer.set(tweedeSpeler, koppelNummer);
+    return htmlRij(
+        punten(koppelNummer),
+        htmlLink(`index.html?toernooi=${toernooiNr}&koppel=${koppelNummer}#filter`, eersteSpeler),
+        htmlLink(`index.html?toernooi=${toernooiNr}&koppel=${koppelNummer}#filter`, tweedeSpeler),
+        punten(koppel.boardPoints),
+        punten(koppel.matchPoints),
+        koppel.rating);
+}
+
+function koppel() {
+    const team = toernooi[toernooiNr].ranglijst[koppelNr - 1].team;
+    return `${team.players[0].name} &  ${team.players[1].name}`;
+}
+
+function punten(getal) {
+    const heelGetal = Math.trunc(getal);
+    const SPATIE = "\u00A0\u00A0"
+    return `${getal < 10 ? SPATIE : ""}${heelGetal}${getal > heelGetal ? "½" : SPATIE}`;
+}
 
 function htmlParagraaf(tekst) {
     const p = document.createElement("p");
