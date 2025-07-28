@@ -215,10 +215,7 @@ for (let i = 0; i < toernooi[toernooiNr].ranglijst.length; i++) {
     }
 }
 document.getElementById("filter").textContent =
-    `Uitslagen ${koppelNr ? koppel() :
-        locatieNr ? "locatie" :
-        rondeNr ? "ronde" : "???" }`;
-
+    `Uitslagen ${koppelNr ? koppel(koppelNr) : locatieNr ? locatie(locatieNr) : rondeNr}`;
 const uitslagen = document.getElementById("uitslagen");
 
 /*
@@ -257,15 +254,20 @@ function rondeLocatieVerwerken(uitslagen) {
     for (const uitslag of uitslagen) {
         if (!locatieNummer.get(uitslag.location.name)) {
             locatieNummer.set(uitslag.location.name, locatieNummer.size + 1);
-            console.log(locatieNummer.size);
             console.log(uitslag.location.name);
         }
     }
 }
 
-function koppel() {
-    const team = toernooi[toernooiNr].ranglijst[koppelNr - 1].team;
+function koppel(nummer) {
+    const team = toernooi[toernooiNr].ranglijst[nummer - 1].team;
     return `${team.players[0].name} &  ${team.players[1].name}`;
+}
+
+function locatie(nummer) {
+    return [...locatieNummer.entries()].find(function ([key, value]) {
+        return value === nummer;
+    })?.[0];
 }
 
 function punten(getal) {
