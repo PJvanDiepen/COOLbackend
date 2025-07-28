@@ -9,8 +9,11 @@ https://portal.stickchess.com/api/tournaments
 
 Het resultaat kopieer je naar tournaments.json
 en die wordt vervolgens hieronder ingelezen en gefilterd op [plaats].
+
+TODO alkmaar.js, hoorn.js enz. afsplitsen van stickchess.js
  */
 const plaats = "Alkmaar";
+const aantalRonden = 7;
 import tournaments from "./tournaments.json" with { type: "json" };
 const toernooi = tournaments.finished.filter(function (toernooi) {
     return toernooi.name.includes(plaats);
@@ -30,9 +33,9 @@ const toernooi = tournaments.finished.filter(function (toernooi) {
 De selectie van toernooien in [plaats] is gesorteerd van laatste tot eerste toernooi.
 
 De ranglijsten en uitslagen van die toernooien moet je van de StickChess server inlezen.
-Per toernooi heeft StickChess een unieke [urlKey]. Elk toernooi heeft (voorlopig) 7 ronden.
+Per toernooi heeft StickChess een unieke [urlKey].
 
-https://portal.stickchess.com/api/tournaments/[urlKey]/standings/7
+https://portal.stickchess.com/api/tournaments/[urlKey]/standings/[aantalRonden]
 https://portal.stickchess.com/api/tournaments/[urlKey]/rounds/[j]
 
 Ranglijsten kopieer je naar [urlKey].json en uitslagen naar [urlKey]_[j].json
@@ -60,7 +63,7 @@ for (let i = 0; i < toernooi.length; i++) {
     const urlKey = toernooi[i].urlKey;
     code += `import standings_${i} from "./${plaats}/${urlKey}.json" with { type: "json" };\n`;
     code += `toernooi[${i}].ranglijst = standings_${i}.standing;\n`;
-    for (let j = 1; j <= 7 ; j++) {
+    for (let j = 1; j <= aantalRonden ; j++) {
         code += `import rounds_${i}_${j} from "./${plaats}/${urlKey}_${j}.json" with { type: "json" };\n`;
         code += `toernooi[${i}].ronde[${j}] = rounds_${i}_${j};\n`;
     }
@@ -183,17 +186,6 @@ import rounds_6_7 from "./Alkmaar/alkmaar2017_7.json" with { type: "json" };
 toernooi[6].ronde[7] = rounds_6_7;
 // einde gegenereerde code voor Alkmaar
 
-console.log(toernooi);
-
-function datumLeesbaar(jsonDatum) {
-    const datum = new Date(jsonDatum);
-    return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
-}
-
-function voorloopNul(getal) {
-    return getal < 10 ? "0" + getal : getal;
-}
-
 /*
 De code van stickchess.js laat 1 toernooi zien uit de selectie van toernooien met toernooiNr = 0
 voor het laatste toernooi en toernooiNr = aantal toernooi - 1 voor het eerste toernooi.
@@ -204,17 +196,23 @@ Verwerk toernooi=[toernooiNr]
        &koppel=[koppelNr]
        &locatie=[locatieNr]
  */
-const parameter = new URLSearchParams(new URL(location).search);
-const toernooiNr = Number(parameter.get("toernooi"));
-const rondeNr = Number(parameter.get("ronde"));
-const koppelNr = Number(parameter.get("koppel")) || 1;
-const locatieNr = Number(parameter.get("locatie"));
+const urlParams = new URLSearchParams(new URL(location).search);
+const toernooiNr = Number(urlParams.get("toernooi"));
+const rondeNr = Number(urlParams.get("ronde"));
+const koppelNr = Number(urlParams.get("koppel")) || 1;
+const locatieNr = Number(urlParams.get("locatie"));
 document.getElementById("kop").textContent = toernooi[toernooiNr].naam;
 document.getElementById("toernooi").append(` toernooi op ${toernooi[toernooiNr].datum}`);
+// TODO toernooien van voor 2020 hebben geen individuele uitslagen
 const ranglijst = document.getElementById("ranglijst");
 const spelerNummer = new Map();
+const locatieNummer = new Map();
 for (let i = 0; i < toernooi[toernooiNr].ranglijst.length; i++) {
     ranglijst.append(koppelVerwerken(toernooi[toernooiNr].ranglijst[i]));
+    // Verwerk alle ronden te verwerken, want sommige locaties doen niet alle ronden mee.
+    for (let j = 1; j <= aantalRonden ; j++) {
+        rondeLocatieVerwerken(toernooi[toernooiNr].ronde[j].pairing);
+    }
 }
 document.getElementById("filter").textContent =
     `Uitslagen ${koppelNr ? koppel() :
@@ -224,13 +222,21 @@ document.getElementById("filter").textContent =
 const uitslagen = document.getElementById("uitslagen");
 
 /*
-TODO zoek locatieNr in locatieNummer Map
 TODO uitslagen tabellen
-TODO legacyPairing in 2019 en eerder?
+TODO legacyPairing in 2019 en eerder? geen sortedGames!
 TODO verwijder htmlParagraaf
 TODO verwijder htmlTabblad
 TODO verwijder htmlPlaatje
  */
+
+function datumLeesbaar(jsonDatum) {
+    const datum = new Date(jsonDatum);
+    return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
+}
+
+function voorloopNul(getal) {
+    return getal < 10 ? "0" + getal : getal;
+}
 
 function koppelVerwerken(koppel) {
     const koppelNummer = koppel.rank;
@@ -245,6 +251,16 @@ function koppelVerwerken(koppel) {
         punten(koppel.boardPoints),
         punten(koppel.matchPoints),
         koppel.rating);
+}
+
+function rondeLocatieVerwerken(uitslagen) {
+    for (const uitslag of uitslagen) {
+        if (!locatieNummer.get(uitslag.location.name)) {
+            locatieNummer.set(uitslag.location.name, locatieNummer.size + 1);
+            console.log(locatieNummer.size);
+            console.log(uitslag.location.name);
+        }
+    }
 }
 
 function koppel() {
