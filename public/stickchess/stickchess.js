@@ -2,7 +2,8 @@
 
 /*
 StickChess.js laat de uitslagen van een StickChess toernooi zien.
-De informatie moet je van de StickChess server inlezen door middel van commando's in de browser.
+
+Voorlopig moet je de informatie van de StickChess server inlezen door middel van commando's in de browser.
 Om te beginnen heb je een overzicht van alle toernooien nodig:
 
 https://portal.stickchess.com/api/tournaments
@@ -10,7 +11,9 @@ https://portal.stickchess.com/api/tournaments
 Het resultaat kopieer je naar tournaments.json
 en die wordt vervolgens hieronder ingelezen en gefilterd op [plaats].
 
+TODO spelfouten verbeteren in alkmaar/*.json (eerst kopie maken)
 TODO alkmaar.js, hoorn.js enz. afsplitsen van stickchess.js
+TODO informatie via server op 0-0-0.nl rechtstreeks inlezen van de StickChess server
  */
 const plaats = "Alkmaar";
 const aantalRonden = 7;
@@ -40,12 +43,12 @@ https://portal.stickchess.com/api/tournaments/[urlKey]/rounds/[j]
 
 Ranglijsten kopieer je naar [urlKey].json en uitslagen naar [urlKey]_[j].json
 in de [plaats] directory.
-Bestanden met dezelfde [urlKey] horen bij 1 toernooi met [j] als het rondeNr.
+Bestanden met dezelfde [urlKey] horen bij 1 toernooi met [j] als het url.ronde.
 De [plaats] directory is een selectie van toernooien.
 Op deze manier kan je ook nieuwe StickChess toernooien gestructureerd opslaan.
 
-In de code van stickchess.js heeft elk toernooi een toernooiNr: [i]
-en elke ronde heeft een toernooiNr: [i] en een rondeNr: [j],
+In de code van stickchess.js heeft elk toernooi een url.toernooi: [i]
+en elke ronde heeft een url.toernooi: [i] en een url.ronde: [j],
 zodat deze code geschikt is voor verschillende selecties van toernooien.
 
 De code voor selecties per [plaats] is slechts voor een deel verschillend.
@@ -56,7 +59,7 @@ Als je [plaats] wijzigt of nieuwe StickChess toernooien toevoegt,
 moet je eerst de gegeneerde code verwijderen, daarna opnieuw genereren
 en die tenslotte weer toevoegen. Zie hieronder.
  */
-let code = `// begin gegenereerde code voor ${plaats}\n`;
+let code = `///// begin gegenereerde code voor ${plaats}\n`;
 for (let i = 0; i < toernooi.length; i++) {
     toernooi[i].naam = `${toernooi.length - i}e ${plaats}s Kroegloperstoernooi`;
     toernooi[i].datum = datumLeesbaar(toernooi[i].endDate);
@@ -68,10 +71,10 @@ for (let i = 0; i < toernooi.length; i++) {
         code += `toernooi[${i}].ronde[${j}] = rounds_${i}_${j};\n`;
     }
 }
-code += `// einde gegenereerde code voor ${plaats}\n`;
+code += `///// einde gegenereerde code voor ${plaats}\n`;
 console.log(code);
 
-// begin gegenereerde code voor Alkmaar
+///// begin gegenereerde code voor Alkmaar
 import standings_0 from "./Alkmaar/Alkmaar25.json" with { type: "json" };
 toernooi[0].ranglijst = standings_0.standing;
 import rounds_0_1 from "./Alkmaar/Alkmaar25_1.json" with { type: "json" };
@@ -184,56 +187,50 @@ import rounds_6_6 from "./Alkmaar/alkmaar2017_6.json" with { type: "json" };
 toernooi[6].ronde[6] = rounds_6_6;
 import rounds_6_7 from "./Alkmaar/alkmaar2017_7.json" with { type: "json" };
 toernooi[6].ronde[7] = rounds_6_7;
-// einde gegenereerde code voor Alkmaar
+///// einde gegenereerde code voor Alkmaar
 
 /*
-De code van stickchess.js laat 1 toernooi zien uit de selectie van toernooien met toernooiNr = 0
-voor het laatste toernooi en toernooiNr = aantal toernooi - 1 voor het eerste toernooi.
+De code van stickchess.js laat 1 toernooi zien uit de selectie van toernooien met url.toernooi = 0
+voor het laatste toernooi en url.toernooi = aantal toernooi - 1 voor het eerste toernooi.
 Een toernooi bestaat uit de ranglijst en een gefilterde lijst met uitslagen.
 
-Verwerk toernooi=[toernooiNr]
-       &ronde=[rondeNr]
-       &koppel=[koppelNr]
-       &locatie=[locatieNr]
+Verwerk toernooi=[url.toernooi]
+       &ronde=[url.ronde]
+       &koppel=[url.koppel]
+       &locatie=[url.locatie]
  */
-const urlParams = new URLSearchParams(new URL(location).search);
-const toernooiNr = Number(urlParams.get("toernooi"));
-const rondeNr = Number(urlParams.get("ronde"));
-const koppelNr = Number(urlParams.get("koppel"));
-const locatieNr = Number(urlParams.get("locatie"));
-document.getElementById("kop").textContent = toernooi[toernooiNr].naam;
-document.getElementById("toernooi").append(` toernooi op ${toernooi[toernooiNr].datum}`);
+const url = function (parameters) {
+    return {
+        toernooi: Number(parameters.get("toernooi")),
+        ronde: Number(parameters.get("ronde")),
+        koppel: Number(parameters.get("koppel")),
+        locatie: Number(parameters.get("locatie"))
+    }
+}(new URLSearchParams(new URL(location).search));
+
+document.getElementById("kop").textContent = toernooi[url.toernooi].naam;
+document.getElementById("toernooi").append(` toernooi op ${toernooi[url.toernooi].datum}`);
 const ranglijst = document.getElementById("ranglijst");
 const spelerNummer = new Map();
 const locatieNummer = new Map();
-for (let i = 0; i < toernooi[toernooiNr].ranglijst.length; i++) {
-    koppelVerwerken(toernooi[toernooiNr].ranglijst[i]);
+for (let i = 0; i < toernooi[url.toernooi].ranglijst.length; i++) {
+    koppelVerwerken(toernooi[url.toernooi].ranglijst[i]);
 }
 // Alle ronden verwerken, want sommige locaties doen niet alle ronden mee.
 for (let i = 1; i <= aantalRonden ; i++) {
-    rondeLocatieVerwerken(toernooi[toernooiNr].ronde[i]);
+    rondeLocatieVerwerken(toernooi[url.toernooi].ronde[i]);
 }
-console.log(koppelNr ? `${koppelNr}: ${spelers(koppelNr)}` : koppelNr);
-console.log(koppelNr ? spelers(koppelNr) : locatieNr ? locatie(locatieNr) : rondeNr);
 document.getElementById("filter").textContent =
-    `Uitslagen ${koppelNr ? spelers(koppelNr) : locatieNr ? locatie(locatieNr) : "ronde " + rondeNr}`;
-if (!toernooi[toernooiNr].ronde[1].legacyPairing) { // geen individuele uitslagen
+    `Uitslagen ${url.koppel ? spelers(url.koppel) : url.locatie ? locatie(url.locatie) : "ronde " + url.ronde}`;
+if (!toernooi[url.toernooi].ronde[1].legacyPairing) { // geen individuele uitslagen
     document.getElementById("wit").textContent = "wit";
     document.getElementById("zwart").textContent = "zwart";
 }
 const uitslagenLijst = document.getElementById("uitslagen");
-for (let i = 1; i <= aantalRonden ; i++) {
-    uitslagenVerwerken(toernooi[toernooiNr].ronde[i]);
-}
 
-/*
-TODO uitslagen tabellen
-TODO verwerk uitslagen per ronde op volgorde van locatie
-TODO legacyPairing in 2019 en eerder? geen sortedGames!
-TODO verwijder htmlParagraaf
-TODO verwijder htmlTabblad
-TODO verwijder htmlPlaatje
- */
+for (let i = 1; i <= aantalRonden ; i++) {
+    uitslagenVerwerken(toernooi[url.toernooi].ronde[i]);
+}
 
 function datumLeesbaar(jsonDatum) {
     const datum = new Date(jsonDatum);
@@ -250,7 +247,7 @@ function koppelVerwerken(koppel) {
     spelerNummer.set(koppel.team.players[1].name, koppelNummer);
     ranglijst.append(htmlRij(
         punten(koppelNummer),
-        htmlLink(`index.html?toernooi=${toernooiNr}&koppel=${koppelNummer}#filter`, spelers(koppelNummer)),
+        htmlLink(`index.html?toernooi=${url.toernooi}&koppel=${koppelNummer}#filter`, spelers(koppelNummer)),
         punten(koppel.boardPoints),
         punten(koppel.matchPoints),
         koppel.rating));
@@ -268,41 +265,68 @@ function rondeLocatieVerwerken(ronde) {
 }
 
 function uitslagenVerwerken(ronde) {
-    if (rondeNr === 0 || rondeNr === ronde.number) {
-        const rondeNummer = ronde.number;
-        const individueleUitslagen = !ronde.legacyPairing;
-        const uitslagen = ronde.legacyPairing || ronde.pairing;
-        for (let i = 1; i <= locatieNummer.size; i++) {
-            if (locatieNr === 0 || locatieNr === i) {
-                uitslagenLijst.append(htmlRij(
-                    htmlLink(`index.html?toernooi=${toernooiNr}&ronde=${rondeNummer}#filter`, rondeNummer),
-                    htmlLink(`index.html?toernooi=${toernooiNr}&locatie=${i}#filter`, locatie(i)),
-                    "",
-                    "",
-                    "",
-                    "",));
+    const rondeNummer = ronde.number;
+    if (url.ronde === 0 || url.ronde === rondeNummer) {
+        const uitslagen = (ronde.legacyPairing || ronde.pairing).filter(function (uitslag) {
+            if (url.koppel) {
+                return url.koppel === spelerNummer.get(uitslag.firstTeam.players[0].name)
+                    || url.koppel === spelerNummer.get(uitslag.firstTeam.players[1].name)
+                    || url.koppel === spelerNummer.get(uitslag.secondTeam.players[0].name)
+                    || url.koppel === spelerNummer.get(uitslag.secondTeam.players[1].name);
+            } else if (url.locatie) {
+                return url.locatie === locatieNummer.get(uitslag.location.name);
+            } else {
+                return true; // alle uitslagen van deze ronde
             }
-            for (const uitslag of uitslagen) {
-                if (koppelNr === 0 || inUitslag(uitslag)) {
-                    if (individueleUitslagen) {
-                        // TODO individuele uitslagen
-                    }
-                    // TODO team uitslag
-                }
+        }).sort(function(uitslag1, uitslag2) { // elke ronde dezelfde volgorde van de locaties
+            return locatieNummer.get(uitslag1.location.name) - locatieNummer.get(uitslag2.location.name);
+        });
+        console.log(uitslagen); // TODO verwijderen
+        let vorigeLocatie = url.locatie ? locatie(url.locatie) : "";
+        for (const uitslag of uitslagen) {
+            vorigeLocatie = rondeLocatie(rondeNummer, vorigeLocatie, uitslag.location.name);
+
+        }
+
+        /*
+        TODO locatie 1 x laten zien
+        TODO uitslagen op deze locatie
+        TODO legacyPairing in 2019 en eerder? geen sortedGames!
+         */
+
+
+
+
+        const individueleUitslagen = !ronde.legacyPairing; // TODO is dit nodig?
+
+
+
+
+        for (let i = 1; i <= locatieNummer.size; i++) {
+            if (url.locatie === 0 || url.locatie === i) {
+
             }
         }
     }
 }
 
-function inUitslag(uitslag) {
-    return spelerNummer.get(uitslag.firstTeam.players[0].name) === koppelNr
-        || spelerNummer.get(uitslag.firstTeam.players[1].name) === koppelNr
-        || spelerNummer.get(uitslag.secondTeam.players[0].name) === koppelNr
-        || spelerNummer.get(uitslag.secondTeam.players[1].name) === koppelNr;
+function rondeLocatie(rondeNummer, vorigeLocatie, dezeLocatie) {
+    if (vorigeLocatie !== dezeLocatie) {
+        uitslagenLijst.append(htmlRij(
+            htmlLink(`index.html?toernooi=${url.toernooi}&ronde=${rondeNummer}#filter`,
+                rondeNummer),
+            htmlLink(`index.html?toernooi=${url.toernooi}&locatie=${locatieNummer.get(dezeLocatie)}#filter`,
+                dezeLocatie),
+            "",
+            "",
+            "",
+            ""));
+    }
+    return dezeLocatie;
 }
 
 function spelers(nummer) {
-    const team = toernooi[toernooiNr].ranglijst[nummer - 1].team;
+    const team = toernooi[url.toernooi].ranglijst[nummer - 1].team;
     return `${team.players[0].name} &  ${team.players[1].name}`;
 }
 
@@ -335,32 +359,9 @@ function htmlRij(...kolommen) {
     return tr;
 }
 
-function htmlTabblad(link, tekst) {
-    const a = document.createElement("a");
-    a.append(tekst);
-    a.href = link;
-    a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
-    a.rel = "noopener noreferrer"
-    return a;
-}
-
 function htmlLink(link, tekst) {
     const a = document.createElement("a");
     a.append(tekst);
     a.href = link;
     return a;
-}
-
-function htmlPlaatje(plaatje, percentage, breed, hoog) {
-    const img = document.createElement("img");
-    img.src = plaatje;
-    const factor = (window.innerWidth * percentage / 100) / breed; // percentage maximale breedte
-    if (factor > 1.0) {
-        img.width = breed;
-        img.height = hoog;
-    } else {
-        img.width = Math.round(breed * factor);
-        img.height = Math.round(hoog * factor);
-    }
-    return img;
 }
