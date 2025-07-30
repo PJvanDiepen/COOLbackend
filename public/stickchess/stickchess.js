@@ -208,6 +208,19 @@ const url = function (parameters) {
     }
 }(new URLSearchParams(new URL(location).search));
 
+const uitslagPartij = new Map([
+    [0, "0-1"],
+    [0.5, "½-½"],
+    [1, "1-0"]
+]);
+const uitslagKoppel = new Map([
+    [0, "0-2"],
+    [0.5, "½-1½"],
+    [1, "1-1"],
+    [1.5, "1½-½"],
+    [2, "0-2"]
+]);
+
 document.getElementById("kop").textContent = toernooi[url.toernooi].naam;
 document.getElementById("toernooi").append(` toernooi op ${toernooi[url.toernooi].datum}`);
 const ranglijst = document.getElementById("ranglijst");
@@ -222,12 +235,7 @@ for (let i = 1; i <= aantalRonden ; i++) {
 }
 document.getElementById("filter").textContent =
     `Uitslagen ${url.koppel ? spelers(url.koppel) : url.locatie ? locatie(url.locatie) : "ronde " + url.ronde}`;
-if (!toernooi[url.toernooi].ronde[1].legacyPairing) { // geen individuele uitslagen
-    document.getElementById("wit").textContent = "wit";
-    document.getElementById("zwart").textContent = "zwart";
-}
 const uitslagenLijst = document.getElementById("uitslagen");
-
 for (let i = 1; i <= aantalRonden ; i++) {
     uitslagenVerwerken(toernooi[url.toernooi].ronde[i]);
 }
@@ -281,31 +289,10 @@ function uitslagenVerwerken(ronde) {
         }).sort(function(uitslag1, uitslag2) { // elke ronde dezelfde volgorde van de locaties
             return locatieNummer.get(uitslag1.location.name) - locatieNummer.get(uitslag2.location.name);
         });
-        console.log(uitslagen); // TODO verwijderen
         let vorigeLocatie = url.locatie ? locatie(url.locatie) : "";
         for (const uitslag of uitslagen) {
             vorigeLocatie = rondeLocatie(rondeNummer, vorigeLocatie, uitslag.location.name);
-
-        }
-
-        /*
-        TODO locatie 1 x laten zien
-        TODO uitslagen op deze locatie
-        TODO legacyPairing in 2019 en eerder? geen sortedGames!
-         */
-
-
-
-
-        const individueleUitslagen = !ronde.legacyPairing; // TODO is dit nodig?
-
-
-
-
-        for (let i = 1; i <= locatieNummer.size; i++) {
-            if (url.locatie === 0 || url.locatie === i) {
-
-            }
+            koppelUitslagen(rondeNummer, uitslag);
         }
     }
 }
@@ -313,16 +300,60 @@ function uitslagenVerwerken(ronde) {
 function rondeLocatie(rondeNummer, vorigeLocatie, dezeLocatie) {
     if (vorigeLocatie !== dezeLocatie) {
         uitslagenLijst.append(htmlRij(
-            htmlLink(`index.html?toernooi=${url.toernooi}&ronde=${rondeNummer}#filter`,
-                rondeNummer),
-            htmlLink(`index.html?toernooi=${url.toernooi}&locatie=${locatieNummer.get(dezeLocatie)}#filter`,
-                dezeLocatie),
-            "",
-            "",
+            htmlVet(rondeLink(rondeNummer)),
+            htmlVet(htmlLink(`index.html?toernooi=${url.toernooi}&locatie=${locatieNummer.get(dezeLocatie)}#filter`,
+                dezeLocatie)),
             "",
             ""));
     }
     return dezeLocatie;
+}
+
+function koppelUitslagen(rondeNummer, uitslag) {
+    const individueleUitslagen = uitslag.sortedGames;
+    if (individueleUitslagen) { // TODO of toch koppel uitslagen indien url.uitslag="nee"
+        uitslagenLijst.append(htmlRij(
+            rondeLink(rondeNummer),
+            spelerLink(individueleUitslagen[0].secondPlayer.name),
+            spelerLink(individueleUitslagen[0].firstPlayer.name),
+            uitslagPartij.get(individueleUitslagen[0].result.secondPlayer)));
+        uitslagenLijst.append(htmlRij(
+            "",
+            spelerLink(individueleUitslagen[1].firstPlayer.name),
+            spelerLink(individueleUitslagen[1].secondPlayer.name),
+            uitslagPartij.get(individueleUitslagen[1].result.firstPlayer)));
+    } else {
+        console.log("geen individueleUitslagen"); // TODO verwijderen
+        console.log(uitslag); // TODO verwijderen
+        uitslagenLijst.append(htmlRij(
+            rondeLink(rondeNummer),
+            spelerLink(uitslag.sortedGames[1].firstPlayer.name),
+            spelerLink(uitslag.sortedGames[1].secondPlayer.name),
+            uitslagPartij.get(uitslag.sortedGames[1].result.firstPlayer),
+            bordPunten(uitslag.result),
+            matchPunten(uitslag.result)));
+
+
+        // TODO koppel uitslagen
+        // TODO bye
+    }
+}
+
+function bordPunten(uitslag) {
+    return uitslagKoppel.get(uitslag.firstTeam);
+}
+
+function matchPunten(uitslag) {
+    return uitslag.firstTeam > uitslag.secondTeam ? "2-0"
+        : uitslag.firstTeam < uitslag.secondTeam ? "0-2" : "1-1";
+}
+
+function rondeLink(nummer) {
+    return htmlLink(`index.html?toernooi=${url.toernooi}&ronde=${nummer}#filter`, nummer);
+}
+
+function spelerLink(naam) {
+    return htmlLink(`index.html?toernooi=${url.toernooi}&koppel=${spelerNummer.get(naam)}#filter`, naam);
 }
 
 function spelers(nummer) {
@@ -333,20 +364,16 @@ function spelers(nummer) {
 function locatie(nummer) {
     return [...locatieNummer.entries()].find(function ([key, value]) {
         return value === nummer;
-    })?.[0];
+    })?.[0]; // TODO is ? nodig?
 }
 
+// TODO geen voorloopnul indien < 1 dus niet 0½ wel ½
+// TODO aantal voorloop spaties afhankelijk van maximale getal
 function punten(getal) {
-    const heelGetal = Math.trunc(getal);
     const HALF = "½";
     const SPATIE = "\u00A0\u00A0"
+    const heelGetal = Math.trunc(getal);
     return `${getal < 10 ? SPATIE : ""}${heelGetal}${getal > heelGetal ? HALF : SPATIE}`;
-}
-
-function htmlParagraaf(tekst) {
-    const p = document.createElement("p");
-    p.append(tekst);
-    return p;
 }
 
 function htmlRij(...kolommen) {
@@ -364,4 +391,9 @@ function htmlLink(link, tekst) {
     a.append(tekst);
     a.href = link;
     return a;
+}
+
+function htmlVet(htmlNode) {
+    htmlNode.classList.add("vet");
+    return htmlNode;
 }

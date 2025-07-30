@@ -6,9 +6,8 @@
     <title>StickChess</title>
     <link rel="stylesheet" type="text/css" href="../css/o_o_o.css">
     <style>
-        td h1 {
-            text-align: center;
-            color: black;
+        #uitslagen td:nth-child(4) {
+            text-align: center; /* uitslag */
         }
     </style>
 </head>
@@ -31,16 +30,7 @@
         Klik op een naam, ronde of locatie om uitslagen te filteren.
     </p>
     <h3 id="filter"></h3>
-    <table id="uitslagen">
-        <tr>
-            <th></th>
-            <th id="wit"></th>
-            <th id="zwart"></th>
-            <th></th>
-            <th>bp</th>
-            <th>mp</th>
-        </tr>
-    </table>
+    <table id="uitslagen"></table>
     <script type="module" src="stickchess.js"></script>
 </body>
 </html>
