@@ -255,7 +255,7 @@ function koppelVerwerken(koppel) {
     spelerNummer.set(koppel.team.players[1].name, koppelNummer);
     ranglijst.append(htmlRij(
         punten(koppelNummer),
-        htmlLink(`index.html?toernooi=${url.toernooi}&koppel=${koppelNummer}#filter`, spelers(koppelNummer)),
+        koppelLink(koppelNummer),
         punten(koppel.boardPoints),
         punten(koppel.matchPoints),
         koppel.rating));
@@ -303,7 +303,6 @@ function rondeLocatie(rondeNummer, vorigeLocatie, dezeLocatie) {
             htmlVet(rondeLink(rondeNummer)),
             htmlVet(htmlLink(`index.html?toernooi=${url.toernooi}&locatie=${locatieNummer.get(dezeLocatie)}#filter`,
                 dezeLocatie)),
-            "",
             ""));
     }
     return dezeLocatie;
@@ -323,29 +322,23 @@ function koppelUitslagen(rondeNummer, uitslag) {
             spelerLink(individueleUitslagen[1].secondPlayer.name),
             uitslagPartij.get(individueleUitslagen[1].result.firstPlayer)));
     } else {
-        console.log("geen individueleUitslagen"); // TODO verwijderen
-        console.log(uitslag); // TODO verwijderen
         uitslagenLijst.append(htmlRij(
             rondeLink(rondeNummer),
-            spelerLink(uitslag.sortedGames[1].firstPlayer.name),
-            spelerLink(uitslag.sortedGames[1].secondPlayer.name),
-            uitslagPartij.get(uitslag.sortedGames[1].result.firstPlayer),
-            bordPunten(uitslag.result),
-            matchPunten(uitslag.result)));
+            koppelLink(spelerNummer.get(uitslag.firstTeam.players[0].name)),
+            punten(uitslag.result.firstTeam),
+            matchPunten(uitslag.result.firstTeam)));
+        uitslagenLijst.append(htmlRij(
+            "",
+            koppelLink(spelerNummer.get(uitslag.secondTeam.players[0].name)),
+            punten(uitslag.result.secondTeam),
+            matchPunten(uitslag.result.secondTeam)));
 
-
-        // TODO koppel uitslagen
         // TODO bye
     }
 }
 
-function bordPunten(uitslag) {
-    return uitslagKoppel.get(uitslag.firstTeam);
-}
-
-function matchPunten(uitslag) {
-    return uitslag.firstTeam > uitslag.secondTeam ? "2-0"
-        : uitslag.firstTeam < uitslag.secondTeam ? "0-2" : "1-1";
+function matchPunten(punten) {
+    return punten > 1 ? 2 : punten < 1 ? 0 : 1;
 }
 
 function rondeLink(nummer) {
@@ -354,6 +347,10 @@ function rondeLink(nummer) {
 
 function spelerLink(naam) {
     return htmlLink(`index.html?toernooi=${url.toernooi}&koppel=${spelerNummer.get(naam)}#filter`, naam);
+}
+
+function koppelLink(nummer) {
+    return htmlLink(`index.html?toernooi=${url.toernooi}&koppel=${nummer}#filter`, spelers(nummer));
 }
 
 function spelers(nummer) {
