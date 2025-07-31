@@ -294,6 +294,19 @@ function uitslagenVerwerken(ronde) {
             vorigeLocatie = rondeLocatie(rondeNummer, vorigeLocatie, uitslag.location.name);
             koppelUitslagen(rondeNummer, uitslag);
         }
+        if (onevenVerwerken(ronde)) {
+            onevenUitslagen(rondeNummer, ronde);
+        }
+    }
+}
+
+function onevenVerwerken(ronde) {
+    if (url.locatie || !ronde.bye) {
+        return false;
+    } else if (url.koppel) {
+        return (url.koppel === spelerNummer.get(ronde.bye.players[0].name))
+    } else {
+        return true;
     }
 }
 
@@ -332,8 +345,32 @@ function koppelUitslagen(rondeNummer, uitslag) {
             koppelLink(spelerNummer.get(uitslag.secondTeam.players[0].name)),
             punten(uitslag.result.secondTeam),
             matchPunten(uitslag.result.secondTeam)));
+    }
+}
 
-        // TODO bye
+function onevenUitslagen(rondeNummer, ronde) {
+    if (ronde.legacyPairing) {
+        uitslagenLijst.append(htmlRij(
+            htmlVet(rondeLink(rondeNummer)),
+            koppelLink(spelerNummer.get(ronde.bye.players[0].name)),
+            punten(2),
+            matchPunten(2)));
+        uitslagenLijst.append(htmlRij(
+            "",
+            "geen tegenstanders",
+            "",
+            ""));
+    } else {
+        uitslagenLijst.append(htmlRij(
+            htmlVet(rondeLink(rondeNummer)),
+            spelerLink(ronde.bye.players[0].name),
+            "oneven",
+            uitslagPartij.get(1)));
+        uitslagenLijst.append(htmlRij(
+            "",
+            spelerLink(ronde.bye.players[1].name),
+            "oneven",
+            uitslagPartij.get(1)));
     }
 }
 
@@ -364,13 +401,15 @@ function locatie(nummer) {
     })?.[0]; // TODO is ? nodig?
 }
 
-// TODO geen voorloopnul indien < 1 dus niet 0½ wel ½
-// TODO aantal voorloop spaties afhankelijk van maximale getal
 function punten(getal) {
     const HALF = "½";
     const SPATIE = "\u00A0\u00A0"
     const heelGetal = Math.trunc(getal);
-    return `${getal < 10 ? SPATIE : ""}${heelGetal}${getal > heelGetal ? HALF : SPATIE}`;
+    if (getal > 0 && getal < 1) {
+        return `${SPATIE}${SPATIE}${HALF}`; // niet 0½ wel ½
+    } else {
+        return `${getal < 10 ? SPATIE : ""}${heelGetal}${getal > heelGetal ? HALF : SPATIE}`;
+    }
 }
 
 function htmlRij(...kolommen) {
