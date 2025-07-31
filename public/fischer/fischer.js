@@ -46,3 +46,5 @@ restVelden.sort();
 velden[restVelden[0]].textContent = TOREN;
 velden[restVelden[1]].textContent = KONING;
 velden[restVelden[2]].textContent = TOREN;
+
+// TODO een bord met 64 velden Anton Schermer?

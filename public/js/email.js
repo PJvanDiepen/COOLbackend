@@ -28,3 +28,11 @@ async function gebruikerTekst(emailAan, naamAan, activeer) {
     // TODO vereniging verwijderen?
     activeer.append(`https://0-0-0.nl/start.html?vereniging=${o_o_o.vereniging}&uuid=${lid.uuidToken}`);
 }
+
+/*
+TODO gebruiker voorkeur voor WhatApp, Signal of email in gebruiker
+TODO met Signal versturen
+TODO met WhatApp versturen
+
+<a class="button whatsapp" href="https://api.whatsapp.com/send?text=Ga+jij+met+me+mee+naar%3A+https%3A%2F%2Ffilmhuisalkmaar.nl%2Ffilm%2F10-giorni-con-i-suoi-2%2F%3F" target="_blank">Vraag iemand mee</a>
+ */

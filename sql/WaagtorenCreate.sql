@@ -30,6 +30,7 @@ create table persoon (
 
 drop table if exists gebruiker; -- 0-0-0.nl versie 0.8.58
 -- TODO mutatieRechten en datumEmail verwijderen
+-- TODO voorkeur voor WhatApp, Signal of email
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,
