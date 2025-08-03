@@ -274,6 +274,9 @@ function kabinetVerwerken(kader, kop) {
     kader.append(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
 }
 
+const TWEEDE_KAMER = 150;
+const MEERDERHEID = 76;
+const AANTAL_PARTIJEN = 5;
 const DEEL = 55; // plaatje als percentage van window
 const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
 const STREEP = "___";
@@ -289,8 +292,7 @@ function uitslagenVerwerken(kop1, kop2, deLijsten) {
     kop2.textContent = "Meerderheidskabinetten in " + Math.round(verkiezing.jaar);
     const uitslagen = new URLSearchParams(verkiezing.zetels);
     for (const [partij, zetels] of uitslagen) {
-        const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
-        lijsten.push({partij: partij, zetels: Number(zetels), wel: wel, coalitie: false});
+        lijsten.push({partij: partij, zetels: Number(zetels), wel: !sessionStorage.getItem(partij), coalitie: false});
     }
     let nummer = 0;
     let kamer = 0;
@@ -304,7 +306,7 @@ function uitslagenVerwerken(kop1, kop2, deLijsten) {
                 ? htmlLink("index.html?niet=" + lijst.partij + "#h2lijsten", VINKJE)
                 : htmlLink("index.html?wel=" + lijst.partij + "#h2lijsten", STREEP)));
     }
-    if (kamer < 150 || kamer > 150) {
+    if (kamer < TWEEDE_KAMER || kamer > TWEEDE_KAMER) {
         deLijsten.append(htmlRij("", "", kamer, "?"));
     }
 }
@@ -316,6 +318,8 @@ function jaarIndex(jaar) {
     }
     return index;
 }
+
+// TODO maximum aantal partijen per kabinet
 
 function kabinetFormeren(deKabinetten) {
     kabinet(0, 0);
@@ -331,13 +335,15 @@ function kabinetFormeren(deKabinetten) {
             }
             j++;
         }
-        deKabinetten.append(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
+        if (kabinetten[i].aantalPartijen <= AANTAL_PARTIJEN) { // TODO verwijderen
+            deKabinetten.append(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
+        }
         kabinetten.splice(i,1);
     }
 }
 
 function kabinet(vanaf, coalitieZetels) {
-    if (coalitieZetels < 76) {
+    if (coalitieZetels < MEERDERHEID) {
         while (vanaf < lijsten.length) {
             if (lijsten[vanaf].wel) {
                 lijsten[vanaf].coalitie = true;

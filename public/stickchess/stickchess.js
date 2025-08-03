@@ -11,8 +11,9 @@ https://portal.stickchess.com/api/tournaments
 Het resultaat kopieer je naar tournaments.json
 en die wordt vervolgens hieronder ingelezen en gefilterd op [plaats].
 
-TODO spelfouten verbeteren in alkmaar/*.json (eerst kopie maken)
-TODO alkmaar.js, hoorn.js enz. afsplitsen van stickchess.js
+TODO spelfouten.md verbeteren in alkmaar/*.json (eerst kopie maken: alkmaar/*.stickchess)
+TODO alkmaar.html, hoorn.html enz. afsplitsen van stickchess.html
+TODO stick.js genereert de code voor alkmaar.js, hoorn.js enz. en stuurt naar juiste pagina
 TODO informatie via server op 0-0-0.nl rechtstreeks inlezen van de StickChess server
  */
 const plaats = "Alkmaar";
@@ -201,7 +202,7 @@ Verwerk toernooi=[url.toernooi]
  */
 const url = function (parameters) {
     return {
-        toernooi: Number(parameters.get("toernooi")),
+        toernooi: Number(parameters.get("toernooi")), // TODO jaartal i.p.v. nummer
         ronde: Number(parameters.get("ronde")),
         koppel: Number(parameters.get("koppel")),
         locatie: Number(parameters.get("locatie"))

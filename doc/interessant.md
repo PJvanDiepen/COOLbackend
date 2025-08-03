@@ -62,6 +62,7 @@ Refresh Android cache
 - [async to array](https://allthingssmitty.com/2025/07/14/modern-async-iteration-in-javascript-with-array-fromasync/)
 - [promises training](https://github.com/henriqueinonhe/promises-training)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
+- [Logical assigments](https://allthingssmitty.com/2025/07/28/logical-assignment-operators-in-javascript-small-syntax-big-wins/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
 - [JavaScipt date & time](https://blog.openreplay.com/is-it-time-for-the-javascript-temporal-api/)
 - [Uitleg over modern frameworks](https://nolanlawson.com/2023/12/02/lets-learn-how-modern-javascript-frameworks-work-by-building-one/)
@@ -96,6 +97,9 @@ Refresh Android cache
 - [JSR i.p.v. npm](https://deno.com/blog/jsr_open_beta)
 - [History of JavaScript](https://deno.com/blog/history-of-javascript)
 
+# Node-RED
+-[Low-code programming](https://nodered.org/)
+
 # Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
 - [objection + knexx = painless](https://dev.to/aspittel/objection--knex--painless-postgresql-in-your-node-app--6n6)
@@ -125,6 +129,7 @@ Refresh Android cache
 - [Unicode](https://tonsky.me/blog/unicode/)
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
 - [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
+- [website load faster!](https://www.docuseal.com/blog/make-any-website-load-faster-with-6-lines-html)
 
 # unix
 -[Linux and Unix](https://www.quora.com/How-can-the-Linux-Kernel-be-free-and-open-source-while-Unix-is-not-Isnt-Linux-built-on-Unix)
