@@ -283,8 +283,6 @@ const STREEP = "___";
 const lijsten = [];
 const kabinetten = [];
 
-// TODO kolom winst/verlies door vergelijken met vorige verkiezingen
-
 function uitslagenVerwerken(kop1, kop2, deLijsten) {
     const kabinet = tk[jaarIndex(jaar)];
     const verkiezing = kabinet.verkiezing ? tk[jaarIndex(kabinet.verkiezing)] : kabinet;
@@ -319,10 +317,8 @@ function jaarIndex(jaar) {
     return index;
 }
 
-// TODO maximum aantal partijen per kabinet
-
 function kabinetFormeren(deKabinetten) {
-    kabinet(0, 0);
+    kabinet(0, 0, 0);
     let nummer = 0;
     while (kabinetten.length > 0) {
         let i = 0;
@@ -335,19 +331,20 @@ function kabinetFormeren(deKabinetten) {
             }
             j++;
         }
-        if (kabinetten[i].aantalPartijen <= AANTAL_PARTIJEN) { // TODO verwijderen
-            deKabinetten.append(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
-        }
+        deKabinetten.append(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
         kabinetten.splice(i,1);
     }
 }
 
-function kabinet(vanaf, coalitieZetels) {
+function kabinet(vanaf, coalitieZetels, coalitiePartijen) {
+    if (coalitiePartijen > AANTAL_PARTIJEN) {
+        return;
+    }
     if (coalitieZetels < MEERDERHEID) {
         while (vanaf < lijsten.length) {
             if (lijsten[vanaf].wel) {
                 lijsten[vanaf].coalitie = true;
-                kabinet(vanaf + 1, coalitieZetels + lijsten[vanaf].zetels);
+                kabinet(vanaf + 1, coalitieZetels + lijsten[vanaf].zetels, coalitiePartijen + 1);
                 lijsten[vanaf].coalitie = false;
             }
             vanaf++;
