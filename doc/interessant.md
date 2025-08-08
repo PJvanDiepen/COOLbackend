@@ -130,6 +130,7 @@ Refresh Android cache
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
 - [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
 - [website load faster!](https://www.docuseal.com/blog/make-any-website-load-faster-with-6-lines-html)
+- [introduction to svg](https://www.joshwcomeau.com/svg/friendly-introduction-to-svg/)
 
 # unix
 -[Linux and Unix](https://www.quora.com/How-can-the-Linux-Kernel-be-free-and-open-source-while-Unix-is-not-Isnt-Linux-built-on-Unix)

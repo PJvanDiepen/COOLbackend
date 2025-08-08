@@ -201,8 +201,12 @@ Verwerk toernooi=[url.toernooi]
        &locatie=[url.locatie]
  */
 const url = function (parameters) {
+    const jaar = parameters.get("jaar");
+    const toernooiNummer = toernooi.indexOf(toernooi.find(function (eenToernooi) {
+        return jaar === eenToernooi.datum.substring(6); // dd-mm-jjjj
+    }));
     return {
-        toernooi: Number(parameters.get("toernooi")), // TODO jaartal i.p.v. nummer
+        toernooi: toernooiNummer >= 0 ? toernooiNummer : Number(parameters.get("toernooi")),
         ronde: Number(parameters.get("ronde")),
         koppel: Number(parameters.get("koppel")),
         locatie: Number(parameters.get("locatie"))
