@@ -15,9 +15,10 @@
 <body>
     <h1>Fischer Random Chess</h1>
     <p>
-        Fischer Random Chess is een variant van schaken met andere beginstellingen voor de stukken dan het gewone schaken.
-        De pionnen staan wel op rij 2/7 en de stukken van wit op rij 1 staan tegenover dezelfde stukken van zwart op rij 8:
-        koning tegenover koning, dame tegenover dame, torens tegenover torens, en zo voort.
+        <a href="https://en.wikipedia.org/wiki/Chess960">Fischer Random Chess</a> is een variant van schaken met
+        andere beginstellingen voor de stukken dan het gewone schaken. De pionnen staan wel op rij 2/7 en
+        de stukken van wit op rij 1 staan tegenover dezelfde stukken van zwart op rij 8: koning tegenover koning,
+        dame tegenover dame, torens tegenover torens, en zo voort.
     </p>
     <p>
         De spelregels zijn hetzelfde als bij het gewone schaken, behalve voor rokeren.
@@ -41,11 +42,6 @@
         Het totaal aantal beginstellingen is daarom 4 x 4 x 6 x 10 x 1 = 960.
     </p>
     <h2>Beginstelling</h2>
-    <p>
-        Deze webpagina genereert een beginstelling voor
-        <a href="https://en.wikipedia.org/wiki/Chess960">Fischer Random Chess</a>.
-        Druk op F5 voor een andere beginstelling.
-    </p>
     <table id="stellingen">
         <tr>
             <th>a</th>
@@ -68,6 +64,11 @@
             <td><h1 id="h1"></h1></td>
         </tr>
     </table>
+    <p></p>
+    <button onclick="location.reload()">
+        genereer een andere beginstelling
+    </button>
     <script src="fischer.js"></script>
+
 </body>
 </html>
