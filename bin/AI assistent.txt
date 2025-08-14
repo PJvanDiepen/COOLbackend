@@ -1,0 +1,71 @@
+Uitleg jouw deploy_prod van mijn AI assistent in IntelliJ IDEA 2025.2 (Ultimate Edition)
+
+
+Hier is wat deploy_prod doet, stap voor stap, en waar je op moet letten bij gebruik.
+Wat het script doet
+- Op afstand inloggen: Het opent via SSH een shell op de server en voert daar de rest uit.
+- Veilige modus: set -ex zorgt dat het script stopt bij fouten en elke stap logt.
+- Versie-tag: Maakt een VERSION op basis van de huidige tijd (YYYY-MM-DD-HHMMSS). Dit wordt gebruikt als unieke release-map.
+- Omgevingsvariabelen: NODE_ENV=production. De git-branch en configuratie zijn hierop gebaseerd.
+- Release-map: Maakt ~/cool/versions// aan en gaat daarheen.
+- Code ophalen: Clonet de repository met een shallow clone, single-branch, en pakt de branch met dezelfde naam als NODE_ENV (production). Dit is snel en beperkt tot de laatste commit.
+- Config plaatsen: Verwijdert het bestaande config/production.json in de release en kopieert het server-side configuratiebestand vanuit ~/cool/config/production.json. Zo blijven secrets buiten git.
+- Dependencies: Voert npm install uit in de release-map.
+- Symlink switch: Vervangt de symlink ~/cool/current door een nieuwe die naar de zojuist gemaakte release-map wijst. Dit is de “atomic” switch naar de nieuwe versie.
+- Service herstarten: Restart de systemd-service cool zodat de nieuwe code actief wordt.
+
+Benodigdheden en aannames
+- Toegang:
+    - De deployer heeft SSH-toegang tot de server als user cool.
+    - De server kan via SSH de git-repo clonen (deploy key/SSH key is geconfigureerd).
+    - sudo rechten voor systemctl restart cool zonder wachtwoord prompt (of passende sudoers-regel).
+
+- Bestandsstructuur:
+    - ~/cool/versions/ bestaat of is aan te maken.
+    - ~/cool/config/production.json bestaat en is geldig.
+    - De systemd-unit heet cool en is correct geconfigureerd (WorkingDirectory, Environment, enz.).
+
+- Node/npm aanwezig op de server en compatibel met het project.
+
+Gedrag en gevolgen
+- Downtime: Er is doorgaans een korte onderbreking tijdens systemctl restart. Geen zero-downtime tenzij de service zelf graceful restarts ondersteunt of je een procesmanager met reload gebruikt.
+- Reproduceerbaarheid: Elke release is geïsoleerd in een eigen versie-map, waardoor terugrollen eenvoudiger is.
+- Snelheid: Shallow clone (--depth 1) maakt het sneller en zuiniger.
+
+Mogelijke valkuilen
+- Config ontbreekt of heeft verkeerde naam/pad: De copy-stap faalt of de app start met verkeerde instellingen.
+- Branch bestaat niet: Als er geen production-branch is, faalt de clone.
+- Build-stap ontbreekt: Als je een transpile/bundling nodig hebt (bijv. TypeScript, React build), dan mis je npm run build.
+- Database migraties: Er is geen migratiestap; schema-updates worden niet uitgevoerd.
+- Rechten/umask: Onjuiste permissies kunnen de service verhinderen te starten.
+- Cache/native modules: npm install zonder --production of zonder rebuild kan issues geven op server-architectuur; overweeg npm ci voor deterministische installs.
+
+Aanbevolen verbeteringen
+- Deterministische installs: Gebruik npm ci i.p.v. npm install voor reproductieve builds.
+- Build- en test-stappen: Voeg npm run build en eventuele tests/linters toe voor de symlink switch.
+- Migrations: Integreer een migratiestap (bijv. knex migrate:latest) vóór de restart, en overweeg een preflight health check.
+- Zero-downtime: Gebruik een graceful reload of een procesmanager (bijv. systemd socket activation, of clustering) om downtime te minimaliseren.
+- Retentie/opschonen: Verwijder oude versies (behoud bijv. de laatste 5 releases) om schijfruimte te besparen.
+- Health check/rollback:
+    - Health check na deploy, en rollback bij falen.
+    - Symlink terugzetten naar vorige versie en service herstarten.
+
+Snelle rollback (conceptueel voorbeeld)
+``` bash
+# 1) Vind de vorige release in ~/cool/versions
+ls -1dt ~/cool/versions/* | sed -n '2p'  # dit is de vorige map
+
+# 2) Verwijs current terug
+ln -sfn <pad-naar-vorige-release> ~/cool/current
+
+# 3) Herstart service
+sudo systemctl restart cool
+
+# 4) (Optioneel) markeer mislukte release of verwijder die later
+```
+Hoe je het draait
+- Voer het script lokaal uit; het maakt zelf de SSH-verbinding. Zorg dat je lokale shell de SSH key kan gebruiken voor zowel de server als de GitHub-repo.
+
+Samenvatting
+- Dit is een eenvoudige, tijdgestempelde release-deploy: clone → config kopiëren → dependencies installeren → symlink omzetten → service herstarten.
+- Voeg build/migratiestappen en health checks toe voor betrouwbaardere en veiligere productie-deploys, en implementeer retentie en rollback-procedures.

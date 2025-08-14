@@ -16,26 +16,21 @@ const package_json = require("./package.json");
 const synchroon = {
     versie: package_json.version,
     serverStart: new Date(),
-    revisie: 1 // 1 + aantal mutaties van de database sinds de serverStart
+    revisie: 1, // 1 + aantal mutaties van de database sinds de serverStart
+    mutaties: []
 }
-
-const os = require("os");
-
-const geheugen = process.memoryUsage();
-
-function geheugenGebruik() {
-    console.log("--- geheugenGebruik ---");
-    console.log(`os.totalmem: ${os.totalmem()}`);
-    console.log(`os.freemem: ${os.freemem()}`);
-    console.log(geheugen); // https://www.trevorlasn.com/blog/common-causes-of-memory-leaks-in-javascript
-}
-
-geheugenGebruik();
 
 const db = require("./modules/db.cjs");
 
 /*
 db.boom met db.cjs voor de server en met db.js voor de browser.
+
+TODO PvD
+TODO synchroon integreren in db.boom
+TODO db.boom met mutaties, groei functies, enz.
+TODO leesClubs, leesSeizoenen,
+TODO leesTeams en leesRonden en leesUitslagen
+
 
 TODO PvD db.initialiseren van boom groeien met clubs en seizoenen inlezen
  */
@@ -127,6 +122,8 @@ module.exports = function (url) {
 
     /*
     Frontend: o_o_o.js
+
+    TODO ctx.params.revisie voor selectie van mutaties
      */
     url.get("/synchroon", async function (ctx) {
         ctx.body = JSON.stringify(synchroon);
@@ -1756,5 +1753,3 @@ async function gebruikerRechten(uuid) {
 
     return Object.freeze({dader, juisteRechten, eigenData});
 }
-
-geheugenGebruik();

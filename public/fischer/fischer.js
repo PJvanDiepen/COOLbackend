@@ -47,4 +47,8 @@ velden[restVelden[0]].textContent = TOREN;
 velden[restVelden[1]].textContent = KONING;
 velden[restVelden[2]].textContent = TOREN;
 
-// TODO diagram met 64 velden
+/*
+TODO diagram met 64 velden
+
+https://sam-koblenski.blogspot.com/2017/06/a-barely-adequate-guide-to-displaying.html
+ */

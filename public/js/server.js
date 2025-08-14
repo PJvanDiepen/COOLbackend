@@ -11,15 +11,23 @@ export async function synchroniseren() {
     const urlSynchroon = "/synchroon";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
     Object.assign(synchroon, await vraagServer(urlSynchroon));
-    verwijderNietSynchroon(!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart
-        ? -1 // na herstart server is niets actueel
+    /*
+    TODO PvD
+    TODO revisie volgens sessionStorage
+    TODO /synchroon met revisie doorgeven, zodat server revisie kan vergelijken met sessionStorage
+    TODO indien server herstart dan alles verwijderen uit sessionStorage
+    TODO vergelijk mutaties sinds start van server met sessionStorage
+    TODO indien niet actueel verwijderen uit sessionStorage (voorlopig dus niets)
+     */
+    verwijderNietActueel(!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart
+        ? 0 // na herstart server is niets actueel
         : Number(synchroon.revisie));
     sessionStorage.setItem(urlSynchroon, JSON.stringify(synchroon));
     db.vragen.push(...await vraagLokaal("/vragen"));
 }
 
-function verwijderNietSynchroon(revisie) {
-    console.log("--- verwijderNietSynchroon(revisie) ---");
+function verwijderNietActueel(revisie) {
+    console.log("--- verwijderNietActueel(revisie) ---");
     const verwijderen = [];
     for (let i = 0; i < sessionStorage.length; i++) {
         const key = sessionStorage.key(i);
@@ -29,12 +37,13 @@ function verwijderNietSynchroon(revisie) {
             console.log(key);
             console.log(value);
             console.log(typeof value);
-
             // verwijderen.push(key);
         }
     }
     if (verwijderen.length > 0) {
-        console.log(`verwijderNietSynchroon(${revisie}): ${verwijderen.length} sessionStorage items`);
+        /*
+        console.log(`verwijderNietActueel(${revisie}): ${verwijderen.length} sessionStorage items`);
+         */
         for (const key of verwijderen) {
             sessionStorage.removeItem(key);
         }
@@ -55,7 +64,7 @@ export async function vraag(commando) {
         ronde: 1,
         speler: 0,
         maand: 1,
-        jaar: 2024,
+        jaar: 2025,
         csv: ""
     };
 

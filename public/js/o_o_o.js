@@ -48,6 +48,10 @@ export const o_o_o = {
     naam: ""
 };
 
+/*
+TODO url voor de duidelijkheid afsplitsen van o_o_o
+TODO url als geheel opslaan in sessionStorage (geen losse parameters)
+ */
 function urlVerwerken() {
     for (const [key, value] of Object.entries(o_o_o)) {
         let parameter = html.params.get(key); // inlezen van url
@@ -63,6 +67,7 @@ function urlVerwerken() {
 }
 
 async function seizoenVerwerken() {
+    console.log("seizoenVerwerken");
     const clubVraag = await server.vraag("/club");
     const club = await clubVraag.antwoord();
     db.clubToevoegen(club.revisie, club);

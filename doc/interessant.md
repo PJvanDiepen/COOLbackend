@@ -92,13 +92,15 @@ Refresh Android cache
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
-- [verschillen node en deno](https://cult.honeypot.io/reads/deno-vs-node-main-differences/)
 - [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
 - [JSR i.p.v. npm](https://deno.com/blog/jsr_open_beta)
 - [History of JavaScript](https://deno.com/blog/history-of-javascript)
 
 # Node-RED
 -[Low-code programming](https://nodered.org/)
+
+# Nvidia
+- [Workbench](https://docs.nvidia.com/ai-workbench/user-guide/latest/overview/introduction.html)
 
 # Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
@@ -113,7 +115,6 @@ Refresh Android cache
 - [Best ORMs in 2024](https://www.sitepoint.com/javascript-typescript-orms/)
 
 # HTML / CSS
-
 - [eerste website](http://info.cern.ch/hypertext/WWW/TheProject.html)
 - [html, css, JavaScript, etc.](https://learn-wcs.com/)
 - [Form validation](https://expressionstatement.com/html-form-validation-is-heavily-underused)
@@ -176,15 +177,13 @@ Refresh Android cache
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [nnue in Stockfish](https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md)
 - [blog over nnue in Stockfish](https://stockfishchess.org/blog/2020/introducing-nnue-evaluation/)
-- [nnue](https://github.com/asdfjkl/nnue/blob/main/nnue_en.pdf)
+- [nnue paper](https://github.com/asdfjkl/nnue/blob/main/nnue_en.pdf)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
 - [CalvinBot](https://lichess.org/@/Calvin_Bot)
 - [Monte Carlo simulatie](https://en.wikipedia.org/wiki/Monte_Carlo_method)
 - [Monte Carlo simulatie schaken](https://medium.com/@ishaan.gupta0401/monte-carlo-tree-search-application-on-chess-5573fc0efb75)
 - [Monte Carlo simulatie investeren](https://www.investopedia.com/terms/m/montecarlosimulation.asp)
 - [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
-- [Fischer random](https://en.wikipedia.org/wiki/Chess960)
-- [Fischer random setup](http://www.chessvariants.org/diffsetup.dir/fischer-random-setup.html)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)

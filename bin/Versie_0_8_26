@@ -1,3 +1,0 @@
-rm -rf ~/cool/current
-ln -s ~/cool/versions/2023-06-03-143007/ ~/cool/current
-sudo systemctl restart cool

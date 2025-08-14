@@ -79,6 +79,8 @@ const NIEUWE_RANGLIJST = 2;
  *
  * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
  */
+const b00m = {revisie: 0, club: []};
+
 const boom = boomMaken();
 
 function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
