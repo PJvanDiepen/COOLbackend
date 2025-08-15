@@ -86,16 +86,8 @@ const boom = {
     leesTeams: function() {},
     leesRonden: function() {},
     leesUitslagen: function() {},
-
     revisie: 0,
     club: [],
-
-    clubIndex: function(clubCode) {
-        return this.club.findIndex(function(eenClub) {
-            return eenClub.clubCode === clubCode;
-        })
-    },
-
     groeien: [], // TODO console.log wanneer de boom groeit: { revisie, url }
     laatsteRevisie: 1 // 1 + aantal keer snoeien (mutaties)
 };
@@ -108,47 +100,23 @@ function clubTak(clubCode) {
     if (boom.club.length === 0) {
         boom.club = boom.leesClubs().map(clubMaken);
     }
-    const i = boom.club.findIndex(function(eenClub) {
+    const index = boom.club.findIndex(function(eenClub) {
         return eenClub.clubCode === clubCode;
     });
-    if (i < 0) {
-        console.log (`clubTak(${clubCode}) niet gevonden`);
+    if (index < 0) {
+        console.log(`clubTak(${clubCode}) niet gevonden`);
         return undefined;
     } else {
-        return boom.club[i];
+        return boom.club[index];
     }
 }
 
 function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    if (boom.club.length === 0) {
-        fout("geen clubs");
-    } else if (clubCode === undefined && boom.club.length > 1) {
-        fout("specificeer clubCode");
-    }
-    const clubIndex =
-        clubCode === undefined && boom.club.length === 1 ? 0 : boom.clubIndex(Number(clubCode));
-    if (clubIndex < 0) {
-        fout("clubCode niet gevonden");
-    }
-    const eenClub = boom.club[clubIndex];
-    if (seizoen === undefined && teamCode === undefined && rondeNummer === undefined && knsbNummer === undefined) {
+    const eenClub = clubTak(clubCode);
+    if (seizoen === undefined) {
         return eenClub;
     }
-
-    if (eenClub.seizoen.length === 0) {
-        fout("geen seizoenen");
-    } else if (seizoen === undefined && eenClub.seizoen.length > 1) {
-        fout("specificeer seizoen");
-    }
-    const seizoenIndex =
-        seizoen === undefined && eenClub.seizoen.length === 1 ? 0 : eenClub.seizoenIndex(seizoen);
-    if (seizoenIndex < 0) {
-        fout("seizoen niet gevonden");
-    }
-    const eenSeizoen = eenClub.seizoen[seizoenIndex];
-    if (teamCode === undefined && rondeNummer === undefined && knsbNummer === undefined) {
-        return eenSeizoen;
-    }
+    const eenSeizoen = eenClub.seizoenTak(seizoen);
 
     if (eenSeizoen.team.length === 0) {
         fout("geen teams");
@@ -198,26 +166,12 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
     }
 }
 
-function clubToevoegen(revisie, object) {
-    const club = clubMaken(revisie, object);
-    if (club) {
-        const clubIndex = boom.clubIndex(club.clubCode);
-        if (clubIndex >= 0) {
-            console.log(`${club.clubCode}: ${boom.club[clubIndex].vereniging} overschrijft ${club.vereniging}`);
-            boom.club[clubIndex] = club;
-        } else {
-            boom.club.push(club);
-        }
-    }
-    return club;
-}
-
 // clubCode int
 const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
 function clubMaken(object) {
-    const revisie = boom.revisie;
+    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         vereniging,
@@ -226,13 +180,34 @@ function clubMaken(object) {
     if (typeof clubCode !== "number") {
         return null;
     }
+    console.log(`clubMaken(${clubCode}, ${vereniging}, ${teamNaam}) ${revisie}`);
+
     const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
-    const seizoen = [];
+    let seizoen = [];
 
     function seizoenIndex(seizoenCode) {
         return seizoen.findIndex(function(eenSeizoen) {
             return eenSeizoen.seizoen === seizoenCode;
         })
+    }
+
+    function seizoenen() {
+        if (seizoen.length === 0) {
+            seizoen = boom.leesSeizoenen(clubCode).map(seizoenMaken);
+        }
+        return seizoen;
+    }
+
+    function seizoenTak(seizoenCode) {
+        const index = seizoenen().findIndex(function(eenSeizoen) {
+            return eenSeizoen.seizoen === seizoenCode;
+        });
+        if (index < 0) {
+            console.log(`seizoenTak(${clubCode}, ${seizoenCode}) niet gevonden`);
+            return undefined;
+        } else {
+            return seizoen[index];
+        }
     }
 
     function kaleClub() {
@@ -252,11 +227,14 @@ function clubMaken(object) {
         clubTekst,
         seizoen,
         seizoenIndex,  // (seizoenCode)
+        seizoenen,     // ()
+        seizoenTak,    // (seizoenCode)
         kaleClub       // ()
     });
 }
 
 function seizoenToevoegen(revisie, object) {
+    console.log("seizoenToevoegen()");
     const clubIndex = boom.clubIndex(object.clubCode);
     if (clubIndex < 0) {
         return null;
@@ -280,7 +258,8 @@ Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
 De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
 met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
  */
-function seizoenMaken(revisie, object) {
+function seizoenMaken(object) {
+    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen
@@ -288,6 +267,8 @@ function seizoenMaken(revisie, object) {
     if (seizoen.length === 0 || seizoen.length > 4) {
         return null;
     }
+    console.log(`${revisie}: seizoenMaken(${clubCode}, ${seizoen})`);
+
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
         ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
         : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
@@ -910,7 +891,6 @@ module.exports = { // CommonJS voor node.js
     boomOnderhoud,
     clubTak,               // (clubCode)
     tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
-    clubToevoegen,         // (revisie, object)
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,

@@ -129,6 +129,7 @@ Refresh Android cache
 - [HTML uitleg](https://www.patrickweaver.net/blog/a-blog-post-with-every-html-element/)
 - [Unicode](https://tonsky.me/blog/unicode/)
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
+- [CSS kills SPA](https://www.jonoalderson.com/conjecture/its-time-for-modern-css-to-kill-the-spa/)
 - [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
 - [website load faster!](https://www.docuseal.com/blog/make-any-website-load-faster-with-6-lines-html)
 - [introduction to svg](https://www.joshwcomeau.com/svg/friendly-introduction-to-svg/)
