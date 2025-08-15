@@ -35,15 +35,28 @@ TODO leesTeams en leesRonden en leesUitslagen
 TODO PvD db.initialiseren van boom groeien met clubs en seizoenen inlezen
  */
 
+db.boomOnderhoud({
+    leesClubs: function () {
+        return [
+            {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"},
+            {clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd"}
+        ];
+    },
+    leesSeizoenen: function (clubCode) {
+        return [];
+    }
+});
 
+/* TODO verwijderen
 db.clubToevoegen(synchroon.revisie,
     { clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren" });
+db.clubToevoegen(synchroon.revisie,
+    { clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd" });
+ */
 for (const seizoen of ["1819", "1920", "2021", "2122", "2223", "2324", "2425"]) {
     db.seizoenToevoegen(synchroon.revisie, {clubCode: db.WAAGTOREN, seizoen: seizoen});
 }
 
-db.clubToevoegen(synchroon.revisie,
-    { clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd" });
 for (const seizoen of ["2309", "2401"]) {
     db.seizoenToevoegen(synchroon.revisie, {clubCode: db.WAAGTOREN_JEUGD, seizoen: seizoen});
 }
@@ -206,14 +219,21 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.tak(ctx.params.club).kaleClub();
+        ctx.body = db.clubTak(Number(ctx.params.club)).kaleClub();
+    });
+
+    /*
+Frontend: o_o_o.js TODO verwijderen
+ */
+    url.get("/:club/club", async function (ctx) {
+        ctx.body = db.clubTak(Number(ctx.params.club)).kaleClub();
     });
 
     /*
     Frontend: o_o_o.js
      */
     url.get("/:club/seizoenen", function (ctx) {
-        ctx.body = db.tak(ctx.params.club).seizoen.map(function (seizoen) {
+        ctx.body = db.tak(Number(ctx.params.club)).seizoen.map(function (seizoen) {
             return seizoen.kaleSeizoen();
         });
     });

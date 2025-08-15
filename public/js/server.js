@@ -5,12 +5,13 @@
 import { server } from "./html.js";
 import * as db from "./db.js";
 
+// TODO verwijderen
 const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
 
 export async function synchroniseren() {
     const urlSynchroon = "/synchroon";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
-    Object.assign(synchroon, await vraagServer(urlSynchroon));
+    Object.assign(synchroon, await vraagServer(urlSynchroon)); // (db.b00m,
     /*
     TODO PvD
     TODO revisie volgens sessionStorage

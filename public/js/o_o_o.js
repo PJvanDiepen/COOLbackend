@@ -74,6 +74,7 @@ async function seizoenVerwerken() {
     const seizoenenVraag = await server.vraag("/seizoenen");
     const seizoenen = await seizoenenVraag.antwoord();
     for (const seizoen of seizoenen) {
+        console.log(seizoen);
         db.seizoenToevoegen(seizoen.revisie, seizoen);
     }
     o_o_o.seizoen = seizoenBepalen();
@@ -120,7 +121,9 @@ async function seizoenVerwerken() {
 }
 
 function seizoenBepalen() {
+    console.log("seizoenBepalen");
     const eenClub = db.tak(o_o_o.club);
+    console.log(eenClub);
     const i = eenClub.seizoenIndex(o_o_o.seizoen);
     return eenClub.seizoen[i < 0 ? eenClub.seizoen.length - 1 : i].seizoen; // anders laatste seizoen
 }

@@ -57,11 +57,11 @@ const NIEUWE_RANGLIJST = 2;
  * De hiërarchie en samenhang tussen de tabellen van de database
  * is een boom-structuur van objecten op de server en in de browser:
  *
- * boom.eenClub(:club)
- *     .eenSeizoen(:seizoen)
- *     .eenTeam(:team)
- *     .eenRonde(:ronde)
- *     .eenUitslag(:speler)
+ * boom.clubTak(:club)
+ *     .seizoenTak(:seizoen)
+ *     .teamTak(:team)
+ *     .rondeTak(:ronde)
+ *     .uitslagTak(:speler)
  *
  * De objecten in de boom hebben een revisie nummer. Zie synchroon in api.js
  * Na serverStart begint de server met revisie = 0 en daarna +1 na elke mutatie van de database.
@@ -79,9 +79,45 @@ const NIEUWE_RANGLIJST = 2;
  *
  * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
  */
-const b00m = {revisie: 0, club: []};
 
-const boom = boomMaken();
+const boom = {
+    leesClubs: function() {},
+    leesSeizoenen: function() {},
+    leesTeams: function() {},
+    leesRonden: function() {},
+    leesUitslagen: function() {},
+
+    revisie: 0,
+    club: [],
+
+    clubIndex: function(clubCode) {
+        return this.club.findIndex(function(eenClub) {
+            return eenClub.clubCode === clubCode;
+        })
+    },
+
+    groeien: [], // TODO console.log wanneer de boom groeit: { revisie, url }
+    laatsteRevisie: 1 // 1 + aantal keer snoeien (mutaties)
+};
+
+function boomOnderhoud(object) {
+    Object.assign(boom, object);
+}
+
+function clubTak(clubCode) {
+    if (boom.club.length === 0) {
+        boom.club = boom.leesClubs().map(clubMaken);
+    }
+    const i = boom.club.findIndex(function(eenClub) {
+        return eenClub.clubCode === clubCode;
+    });
+    if (i < 0) {
+        console.log (`clubTak(${clubCode}) niet gevonden`);
+        return undefined;
+    } else {
+        return boom.club[i];
+    }
+}
 
 function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
     if (boom.club.length === 0) {
@@ -162,21 +198,6 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
     }
 }
 
-function boomMaken() {
-    const club = [];
-
-    function clubIndex(clubCode) {
-        return club.findIndex(function(eenClub) {
-            return eenClub.clubCode === clubCode;
-        })
-    }
-
-    return Object.freeze( {
-        club,
-        clubIndex // (clubCode)
-    });
-}
-
 function clubToevoegen(revisie, object) {
     const club = clubMaken(revisie, object);
     if (club) {
@@ -195,7 +216,8 @@ function clubToevoegen(revisie, object) {
 const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
-function clubMaken(revisie, object) {
+function clubMaken(object) {
+    const revisie = boom.revisie;
     const {
         clubCode,
         vereniging,
@@ -884,9 +906,10 @@ module.exports = { // CommonJS voor node.js
     GEEN_INVLOED,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
-    boom,
-    tak,                  // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
-    boomMaken,
+    boom,                  // TODO verwijderen?
+    boomOnderhoud,
+    clubTak,               // (clubCode)
+    tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
     clubToevoegen,         // (revisie, object)
     // clubCode int
     WAAGTOREN,
