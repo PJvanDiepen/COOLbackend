@@ -220,7 +220,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/teams", async function (ctx) {
-        const teams = await databaseLezen(ctx.params.club, ctx.params.seizoen);
+        const teams = await databaseLezen(Number(ctx.params.club), ctx.params.seizoen);
         ctx.body = teams.map(function (team) {
             return team.kaleTeam();
         });

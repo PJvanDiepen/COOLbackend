@@ -88,7 +88,7 @@ const boom = {
     leesUitslagen: function() {},
     revisie: 0,
     club: [],
-    groeien: [], // TODO console.log wanneer de boom groeit: { revisie, url }
+    groeien: [], // TODO console log wanneer de boom groeit: { revisie, url }
     laatsteRevisie: 1 // 1 + aantal keer snoeien (mutaties)
 };
 
@@ -162,7 +162,7 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
 
     function fout(tekst) {
         console.log(`${tekst} tak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
-        return null;
+        return undefined;
     }
 }
 
@@ -177,13 +177,14 @@ function clubMaken(object) {
         vereniging,
         teamNaam
     } = object;
-    if (typeof clubCode !== "number") {
-        return null;
-    }
     console.log(`clubMaken(${clubCode}, ${vereniging}, ${teamNaam}) ${revisie}`);
+    if (typeof clubCode !== "number") {
+        console.log("clubCode niet numeriek");
+        return undefined;
+    }
 
     const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
-    let seizoen = [];
+    const seizoen = [];
 
     function seizoenIndex(seizoenCode) {
         return seizoen.findIndex(function(eenSeizoen) {
@@ -192,8 +193,8 @@ function clubMaken(object) {
     }
 
     function seizoenen() {
-        if (seizoen.length === 0) {
-            seizoen = boom.leesSeizoenen(clubCode).map(seizoenMaken);
+        if (seizoen.length === 0) { // seizoen.splice() omdat const seizoen = []
+            seizoen.splice(0, 0, ...boom.leesSeizoenen(clubCode).map(seizoenMaken));
         }
         return seizoen;
     }
@@ -233,26 +234,6 @@ function clubMaken(object) {
     });
 }
 
-function seizoenToevoegen(revisie, object) {
-    console.log("seizoenToevoegen()");
-    const clubIndex = boom.clubIndex(object.clubCode);
-    if (clubIndex < 0) {
-        return null;
-    }
-    const club = boom.club[clubIndex];
-    const seizoen = seizoenMaken(revisie, object);
-    if (seizoen) {
-        const seizoenIndex = club.seizoenIndex(seizoen.seizoen);
-        if (seizoenIndex >= 0) {
-            console.log(`${seizoen.seizoen} overschrijft ${seizoen.seizoenTekst}`);
-            club.seizoen[seizoenIndex] = seizoen;
-        } else {
-            club.seizoen.push(seizoen);
-        }
-    }
-    return seizoen;
-}
-
 /* seizoen char(4)
 Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
 De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
@@ -264,11 +245,11 @@ function seizoenMaken(object) {
         clubCode,
         seizoen
     } = object;
-    if (seizoen.length === 0 || seizoen.length > 4) {
-        return null;
-    }
     console.log(`${revisie}: seizoenMaken(${clubCode}, ${seizoen})`);
-
+    if (seizoen.length === 0 || seizoen.length > 4) {
+        console.log("seizoen niet 4 posities");
+        return undefined;
+    }
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
         ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
         : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
@@ -887,7 +868,6 @@ module.exports = { // CommonJS voor node.js
     GEEN_INVLOED,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
-    boom,                  // TODO verwijderen?
     boomOnderhoud,
     clubTak,               // (clubCode)
     tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
@@ -895,7 +875,6 @@ module.exports = { // CommonJS voor node.js
     WAAGTOREN,
     WAAGTOREN_JEUGD,
     clubMaken,             // (revisie, object)
-    seizoenToevoegen,      // (revisie, object)
     seizoenMaken,          // (revisie, object)
     seizoenVoluit,         // (object)
     teamToevoegen,         // (revisie, object)
