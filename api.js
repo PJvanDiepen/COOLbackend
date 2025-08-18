@@ -11,6 +11,64 @@ const Uitslag = require("./models/uitslag");
 
 const { fn, ref } = require("objection");
 
+/*
+db.boom met db.cjs voor de server en met db.js voor de browser.
+ */
+const db = require("./modules/db.cjs");
+
+function leesDatabase () {
+   function leesClubs() {
+       return [
+           {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"},
+           {clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd"}
+       ];
+   }
+
+   function leesSeizoenen(clubCode) { // TODO select distinct seizoen from team where clubCode = ?;
+       if (clubCode === db.WAAGTOREN) {
+           return ["1819", "1920", "2021", "2122", "2223", "2324", "2425"].map(function (seizoen) {
+               return {clubCode: clubCode, seizoen: seizoen};
+           });
+       } else if (clubCode === db.WAAGTOREN_JEUGD) {
+           return ["2309", "2401"].map(function (seizoen) {
+               return {clubCode: clubCode, seizoen: seizoen};
+           });
+       }
+       return [];
+   }
+
+   async function leesTeams(clubCode, seizoen) {
+       return await Team.query()
+           .where("team.clubCode", clubCode)
+           .where("team.seizoen", seizoen);
+   }
+
+   async function leesRonden(clubCode, seizoen, teamCode) {
+       return await Ronde.query()
+           .where("ronde.clubCode", clubCode)
+           .where("ronde.seizoen", seizoen)
+           .where("ronde.teamCode", teamCode);
+   }
+
+   async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
+       return await Uitslag.query()
+           .where("uitslag.clubCode", clubCode)
+           .where("uitslag.seizoen", seizoen)
+           .where("uitslag.teamCode", teamCode)
+           .where("uitslag.rondeNummer", rondeNummer);
+   }
+
+   return Object.freeze({
+       leesClubs,
+       leesSeizoenen,
+       leesTeams,
+       leesRonden,
+       leesUitslagen
+   });
+};
+
+db.boomOnderhoud(leesDatabase());
+
 const package_json = require("./package.json");
 
 const synchroon = {
@@ -18,75 +76,6 @@ const synchroon = {
     serverStart: new Date(),
     revisie: 1, // 1 + aantal mutaties van de database sinds de serverStart
     mutaties: []
-}
-
-const db = require("./modules/db.cjs");
-
-/*
-db.boom met db.cjs voor de server en met db.js voor de browser.
- */
-
-db.boomOnderhoud({
-    leesClubs: function () {
-        return [
-            {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"},
-            {clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd"}
-        ];
-    },
-
-    leesSeizoenen: function (clubCode) {
-        if (clubCode === db.WAAGTOREN) {
-            return ["1819", "1920", "2021", "2122", "2223", "2324", "2425"].map(function (seizoen) {
-                return {clubCode: clubCode, seizoen: seizoen};
-            });
-        } else if (clubCode === db.WAAGTOREN_JEUGD) {
-            return ["2309", "2401"].map(function (seizoen) {
-                return {clubCode: clubCode, seizoen: seizoen};
-            });
-        } else {
-            return [];
-        }
-    }
-});
-
-async function databaseLezen(clubCode, seizoen, teamCode, rondeNummer) {
-    const eenSeizoen = db.tak(clubCode, seizoen);
-    if (eenSeizoen.team.length === 0) {
-        const teams = await Team.query()
-            .where("team.clubCode", clubCode)
-            .where("team.seizoen", seizoen);
-        for (const team of teams) {
-            db.teamToevoegen(synchroon.revisie, team);
-        }
-    }
-    if (teamCode === undefined) {
-        return eenSeizoen.team; // alle teams
-    }
-    const eenTeam = db.tak(clubCode, seizoen, teamCode);
-    if (eenTeam.ronde.length === 0) {
-        const ronden = await Ronde.query()
-            .where("ronde.clubCode", clubCode)
-            .where("ronde.seizoen", seizoen)
-            .where("ronde.teamCode", teamCode);
-        for (const ronde of ronden) {
-            db.rondeToevoegen(synchroon.revisie, ronde);
-        }
-    }
-    if (rondeNummer === undefined) {
-        return eenTeam.ronde; // alle ronden
-    }
-    const eenRonde = db.tak(clubCode, seizoen, teamCode, rondeNummer);
-    if (eenRonde.uitslag.length === 0) {
-        const uitslagen = await Uitslag.query()
-            .where("uitslag.clubCode", clubCode)
-            .where("uitslag.seizoen", seizoen)
-            .where("uitslag.teamCode", teamCode)
-            .where("uitslag.rondeNummer", rondeNummer);
-        for (const uitslag of uitslagen) {
-            db.uitslagToevoegen(synchroon.revisie, uitslag);
-        }
-    }
-    return eenRonde.uitslag;
 }
 
 /**
@@ -204,7 +193,7 @@ module.exports = function (url) {
     });
 
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.clubTak(Number(ctx.params.club)).kaleClub();
+        ctx.body = db.clubTak(Number(ctx.params.club)).kaleClub(); // geen clubs voor browser
     });
 
     /*
@@ -220,10 +209,10 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/teams", async function (ctx) {
-        const teams = await databaseLezen(Number(ctx.params.club), ctx.params.seizoen);
-        ctx.body = teams.map(function (team) {
-            return team.kaleTeam();
-        });
+        ctx.body = db.clubTak(Number(ctx.params.club)).seizoenTak(ctx.params.seizoen).map(
+            function (team) {
+                return team.kaleTeam();
+            });
     });
 
     /*

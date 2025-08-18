@@ -94,6 +94,36 @@ const boom = {
 
 function boomOnderhoud(object) {
     Object.assign(boom, object);
+    /*
+    (async function() {
+        console.log(boom.leesClubs());
+        console.log(boom.leesSeizoenen(0));
+        console.log(await boom.leesTeams(0, "2425"));
+        console.log(await boom.leesRonden(0, "2425", "6"));
+        console.log(await boom.leesUitslagen(0, "2425", "6", 1));
+    })();
+     */
+}
+
+function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
+    const eenClub = clubTak(clubCode);
+    if (seizoen === undefined) {
+        return eenClub;
+    }
+    const eenSeizoen = eenClub.seizoenTak(seizoen);
+    if (teamCode === undefined) {
+        return eenSeizoen;
+    }
+    const eenTeam = eenSeizoen.teamTak(teamCode);
+    if (rondeNummer === undefined) {
+        return eenTeam;
+    }
+    const eenRonde = eenTeam.rondeTak(rondeNummer);
+    if (knsbNummer === undefined) {
+        return eenRonde;
+    } else {
+        return eenRonde.uitslagTak(knsbNummer);
+    }
 }
 
 function clubTak(clubCode) {
@@ -108,61 +138,6 @@ function clubTak(clubCode) {
         return undefined;
     } else {
         return boom.club[index];
-    }
-}
-
-function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    const eenClub = clubTak(clubCode);
-    if (seizoen === undefined) {
-        return eenClub;
-    }
-    const eenSeizoen = eenClub.seizoenTak(seizoen);
-
-    if (eenSeizoen.team.length === 0) {
-        fout("geen teams");
-    } else if (teamCode === undefined && eenSeizoen.team.length > 1) {
-        fout("specificeer teamCode");
-    }
-    const teamIndex =
-        teamCode === undefined && eenSeizoen.team.length === 1 ? 0 : eenSeizoen.teamIndex(teamCode);
-    if (teamIndex < 0) {
-        fout("team niet gevonden");
-    }
-    const eenTeam = eenSeizoen.team[teamIndex];
-    if (rondeNummer === undefined && knsbNummer === undefined) {
-        return eenTeam;
-    }
-
-    if (eenTeam.ronde.length === 0) {
-        fout("geen ronden");
-    } else if (rondeNummer === undefined && eenTeam.ronde.length > 1) {
-        fout("specificeer rondeNummer");
-    }
-    const rondeIndex =
-        rondeNummer === undefined && eenTeam.ronde.length === 1 ? 0 : eenTeam.rondeIndex(Number(rondeNummer));
-    if (rondeIndex < 0) {
-        fout("ronde niet gevonden");
-    }
-    const eenRonde = eenTeam.ronde[rondeIndex];
-    if (knsbNummer === undefined) {
-        return eenRonde;
-    }
-
-    if (eenRonde.uitslag.length === 0) {
-        fout("geen uitslagen");
-    } else if (knsbNummer === undefined && eenRonde.uitslag.length > 1) {
-        fout("specificeer knsbNummer");
-    }
-    const uitslagIndex =
-        knsbNummer === undefined && eenRonde.uitslag.length === 1 ? 0 : eenRonde.uitslagIndex(Number(knsbNummer));
-    if (uitslagIndex < 0) {
-        fout("uitslag niet gevonden");
-    }
-    return eenRonde.uitslag[uitslagIndex];
-
-    function fout(tekst) {
-        console.log(`${tekst} tak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
-        return undefined;
     }
 }
 
@@ -186,12 +161,6 @@ function clubMaken(object) {
     const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
     const seizoen = [];
 
-    function seizoenIndex(seizoenCode) {
-        return seizoen.findIndex(function(eenSeizoen) {
-            return eenSeizoen.seizoen === seizoenCode;
-        })
-    }
-
     function seizoenen() {
         if (seizoen.length === 0) { // seizoen.splice() omdat const seizoen = []
             seizoen.splice(0, 0, ...boom.leesSeizoenen(clubCode).map(seizoenMaken));
@@ -200,6 +169,7 @@ function clubMaken(object) {
     }
 
     function seizoenTak(seizoenCode) {
+        console.log(`seizoenTak(${clubCode}, ${seizoenCode})`);
         const index = seizoenen().findIndex(function(eenSeizoen) {
             return eenSeizoen.seizoen === seizoenCode;
         });
@@ -227,7 +197,6 @@ function clubMaken(object) {
         teamNaam,
         clubTekst,
         seizoen,
-        seizoenIndex,  // (seizoenCode)
         seizoenen,     // ()
         seizoenTak,    // (seizoenCode)
         kaleClub       // ()
@@ -269,6 +238,17 @@ function seizoenMaken(object) {
 
     const team = [];
 
+    function teams() {
+        if (team.length === 0) { // team.splice() omdat const team = []
+            (async function() {
+                console.log("teams()");
+                team.splice(0, 0, ...boom.leesTeams(clubCode, seizoen).map(teamMaken));
+                console.log(team);
+            })();
+        }
+        return team;
+    }
+
     function teamIndex(teamCode) {
         return team.findIndex(function(eenTeam) {
             return eenTeam.teamCode === teamCode;
@@ -299,30 +279,6 @@ function seizoenVoluit(object) { // TODO naar seizoenMaken
     return tak(object.clubCode, object.seizoen).seizoenTekst;
 }
 
-function teamToevoegen(revisie, object) {
-    const clubIndex = boom.clubIndex(object.clubCode);
-    if (clubIndex < 0) {
-        return null;
-    }
-    const club = boom.club[clubIndex];
-    const seizoenIndex = club.seizoenIndex(object.seizoen);
-    if (seizoenIndex < 0) {
-        return null;
-    }
-    const seizoen = club.seizoen[seizoenIndex];
-    const team = teamMaken(revisie, object);
-    if (team) {
-        const teamIndex = seizoen.teamIndex(seizoen.teamCode);
-        if (teamIndex >= 0) {
-            console.log(`${team.teamCode} overschrijft ${team.teamTekst}`);
-            seizoen.team[teamIndex] = team;
-        } else {
-            seizoen.team.push(team);
-        }
-    }
-    return team;
-}
-
 // teamCode char(3)
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETITIE= "ira";
@@ -330,7 +286,8 @@ const JEUGD_COMPETITIE= "ije";
 const SNELSCHAKEN= "izs";
 const ZWITSERS_TEST= "izt";
 
-function teamMaken(revisie, object) {
+function teamMaken(object) {
+    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen,
@@ -344,8 +301,10 @@ function teamMaken(revisie, object) {
         borden,
         teamleider // TODO verwijderen
     } = object;
+    console.log(`${revisie}: teamMaken(${clubCode}, ${seizoen}, ${teamCode})`);
     if (teamCode.length === 0 || teamCode.length > 3) {
-        return null;
+        console.log("teamCode niet 3 posities");
+        return undefined;
     }
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
     const ronde = [];
@@ -495,36 +454,8 @@ function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
     }
 }
 
-function rondeToevoegen(revisie, object) {
-    const clubIndex = boom.clubIndex(object.clubCode);
-    if (clubIndex < 0) {
-        return null;
-    }
-    const club = boom.club[clubIndex];
-    const seizoenIndex = club.seizoenIndex(object.seizoen);
-    if (seizoenIndex < 0) {
-        return null;
-    }
-    const seizoen = club.seizoen[seizoenIndex];
-    const teamIndex = seizoen.teamIndex(object.teamCode);
-    if (teamIndex < 0) {
-        return null;
-    }
-    const team = seizoen.team[teamIndex];
-    const ronde = rondeMaken(revisie, object);
-    if (ronde) {
-        const rondeIndex = team.rondeIndex(ronde.rondeNummer);
-        if (rondeIndex >= 0) {
-            console.log(`${ronde.rondeNummer} overschrijft ${ronde.rondeTekst}`);
-            team.ronde[rondeIndex] = ronde;
-        } else {
-            team.ronde.push(ronde);
-        }
-    }
-    return ronde;
-}
-
-function rondeMaken(revisie, object) {
+function rondeMaken(object) {
+    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen,
@@ -534,8 +465,10 @@ function rondeMaken(revisie, object) {
         tegenstander,
         datum
     } = object;
+    console.log(`${revisie}: rondeMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${uithuis}, ${tegenstander}, ${datum})`);
     if (typeof rondeNummer !== "number") {
-        return null;
+        console.log("rondeNummer niet numeriek");
+        return undefined;
     }
     const rondeTekst = isCompetitie(object)
         ? `ronde ${rondeNummer} ${teamVoluit(teamCode)}` // competitieronde
@@ -609,41 +542,8 @@ function rondeMaken(revisie, object) {
     });
 }
 
-function uitslagToevoegen(revisie, object) {
-    const clubIndex = boom.clubIndex(object.clubCode);
-    if (clubIndex < 0) {
-        return null;
-    }
-    const club = boom.club[clubIndex];
-    const seizoenIndex = club.seizoenIndex(object.seizoen);
-    if (seizoenIndex < 0) {
-        return null;
-    }
-    const seizoen = club.seizoen[seizoenIndex];
-    const teamIndex = seizoen.teamIndex(object.teamCode);
-    if (teamIndex < 0) {
-        return null;
-    }
-    const team = seizoen.team[teamIndex];
-    const rondeIndex = team.rondeIndex(object.rondeNummer);
-    if (rondeIndex < 0) {
-        return null;
-    }
-    const ronde = team.ronde[rondeIndex];
-    const uitslag = uitslagMaken(revisie, object);
-    if (uitslag) {
-        const uitslagIndex = ronde.uitslagIndex(uitslag.knsbNummer);
-        if (uitslagIndex >= 0) {
-            console.log(`${uitslag.knsbNummer} overschrijft ${uitslag.knsbNummer}`); // TODO naam
-            ronde.uitslag[uitslagIndex] = uitslag;
-        } else {
-            ronde.uitslag.push(uitslag);
-        }
-    }
-    return uitslag;
-}
-
-function uitslagMaken(revisie, object) {
+function uitslagMaken(object) {
+    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen,
@@ -659,6 +559,7 @@ function uitslagMaken(revisie, object) {
         competitie
     } = object;
     if (typeof knsbNummer !== "number") {
+        console.log("knsbNummer niet numeriek");
         return null;
     }
     const uitslagTekst = // TODO uitwerken
@@ -805,7 +706,7 @@ const resultaatInvullen = new Map([
     [VERLIES, "0-1"]]);
 
 function resultaatSelecteren(uitslag) {
-    return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].slice(1); // met of zonder blanko resultaat
+    return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].splice(1); // met of zonder blanko resultaat
 }
 
 const planningInvullen = new Map([
@@ -838,10 +739,10 @@ const TEAMLEIDER = 2;
 const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 4;
 const BEHEERDER = 8;
-const ONTWIKKElAAR = 9;
+const ONTWIKKELAAR = 9;
 
 const functieInvullen = new Map ([
-    [ONTWIKKElAAR, "ontwikkelaar"],
+    [ONTWIKKELAAR, "ontwikkelaar"],
     [BEHEERDER, "systeembeheerder"],
     [WEDSTRIJDLEIDER, "wedstrijdleider"],
     [BESTUUR, "bestuur"],
@@ -868,9 +769,9 @@ module.exports = { // CommonJS voor node.js
     GEEN_INVLOED,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
-    boomOnderhoud,
-    clubTak,               // (clubCode)
+    boomOnderhoud,         // (object)
     tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
+    clubTak,               // (clubCode)
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
@@ -936,7 +837,7 @@ module.exports = { // CommonJS voor node.js
     BESTUUR,
     WEDSTRIJDLEIDER,
     BEHEERDER,
-    ONTWIKKElAAR,
+    ONTWIKKElAAR: ONTWIKKELAAR,
     functieInvullen,
     gebruikerFunctie      // (speler)
 }
