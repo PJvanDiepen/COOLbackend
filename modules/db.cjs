@@ -239,7 +239,7 @@ function seizoenMaken(object) {
     const team = [];
 
     function teams() {
-        if (team.length === 0) { // team.splice() omdat const team = []
+        if (team.length === 0) {
             (async function() {
                 console.log("teams()");
                 team.splice(0, 0, ...boom.leesTeams(clubCode, seizoen).map(teamMaken));
@@ -249,10 +249,17 @@ function seizoenMaken(object) {
         return team;
     }
 
-    function teamIndex(teamCode) {
-        return team.findIndex(function(eenTeam) {
+    function teamTak(teamCode) {
+        console.log(`teamTak(${clubCode}, ${seizoen}, ${teamCode})`);
+        const index = teams().findIndex(function(eenTeam) {
             return eenTeam.teamCode === teamCode;
-        })
+        });
+        if (index < 0) {
+            console.log(`teamTak(${clubCode}, ${seizoen}), ${teamCode}) niet gevonden`);
+            return undefined;
+        } else {
+            return team[index];
+        }
     }
 
     function kaleSeizoen() {
@@ -270,7 +277,8 @@ function seizoenMaken(object) {
         seizoenTekst,
         seizoenDaarna,    // (seizoenCode)
         team,
-        teamIndex,        // (teamCode)
+        teams,            // ()
+        teamTak,          // (teamCode)
         kaleSeizoen       // ()
     });
 }
@@ -309,10 +317,28 @@ function teamMaken(object) {
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
     const ronde = [];
 
-    function rondeIndex(rondeNummer) {
-        return ronde.findIndex(function(eenRonde) {
+    function ronden() {
+        if (ronde.length === 0) {
+            (async function() {
+                console.log("ronden()");
+                ronde.splice(0, 0, ...boom.leesRonden(clubCode, seizoen, teamCode).map(rondeMaken));
+                console.log(ronde);
+            })();
+        }
+        return ronde;
+    }
+
+    function rondeTak(rondeNummer) {
+        console.log(`rondeTak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer})`);
+        const index = ronden().findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
-        })
+        });
+        if (index < 0) {
+            console.log(`rondeTak(${clubCode}, ${seizoen}), ${teamCode}, ${rondeNummer}) niet gevonden`);
+            return undefined;
+        } else {
+            return ronde[index];
+        }
     }
 
     function rondeCompleet() {
@@ -401,7 +427,8 @@ function teamMaken(object) {
         teamleider,
         teamTekst,
         ronde,
-        rondeIndex,      // (rondeNummer)
+        ronden,          // ()
+        rondeTak,        // (rondeNummer)
         rondeCompleet,   // ()
         rondeInvullen,   // ()
         rondeIndelen,    // ()
@@ -478,10 +505,28 @@ function rondeMaken(object) {
 
     const uitslag = [];
 
-    function uitslagIndex(knsbNummer) {
-        return uitslag.findIndex(function(eenUitslag) {
+    function uitslagen() {
+        if (uitslag.length === 0) {
+            (async function() {
+                console.log("uitslagen()");
+                uitslag.splice(0, 0, ...boom.leesUitslagen(clubCode, seizoen, teamCode, rondeNummer).map(uitslagMaken));
+                console.log(uitslag);
+            })();
+        }
+        return uitslag;
+    }
+
+    function uitslagTak(knsbNummer) {
+        console.log(`uitslagTak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
+        const index = uitslagen().findIndex(function(eenUitslag) {
             return eenUitslag.knsbNummer === knsbNummer;
-        })
+        });
+        if (index < 0) {
+            console.log(`uitslagTak(${clubCode}, ${seizoen}), ${teamCode}, ${rondeNummer}, ${knsbNummer}) niet gevonden`);
+            return undefined;
+        } else {
+            return uitslag[index];
+        }
     }
 
     function uitslagenCompleet() {
@@ -535,7 +580,8 @@ function rondeMaken(object) {
         datum,
         rondeTekst,
         uitslag,
-        uitslagIndex,      // (rondeNummer)
+        uitslagen,         // ()
+        uitslagTak,        // (knsbNummer)
         uitslagenCompleet, // ()
         uitslagenInvullen, // ()
         kaleRonde          // ()
@@ -775,24 +821,21 @@ module.exports = { // CommonJS voor node.js
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
-    clubMaken,             // (revisie, object)
-    seizoenMaken,          // (revisie, object)
+    clubMaken,             // (object)
+    seizoenMaken,          // (object)
     seizoenVoluit,         // (object)
-    teamToevoegen,         // (revisie, object)
     // teamCode char(3)
     INTERNE_COMPETITIE,
     RAPID_COMPETITIE,
     JEUGD_COMPETITIE,
     SNELSCHAKEN,
     ZWITSERS_TEST,
-    teamMaken,             // (revisie, object)
+    teamMaken,             // (object)
     isCompetitie,          // (team)
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
     teamVoluit,            // (teamCode)
-    rondeToevoegen,        // (revisie, object)
-    rondeMaken,            // (revisie, object)
-    uitslagToevoegen,      // (revisie, object)
+    rondeMaken,            // (object)
     uitslagMaken,          // (revisie, object)
 
     // knsbNummer int
@@ -837,7 +880,7 @@ module.exports = { // CommonJS voor node.js
     BESTUUR,
     WEDSTRIJDLEIDER,
     BEHEERDER,
-    ONTWIKKElAAR: ONTWIKKELAAR,
+    ONTWIKKELAAR,
     functieInvullen,
     gebruikerFunctie      // (speler)
 }
