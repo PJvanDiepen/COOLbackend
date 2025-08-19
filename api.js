@@ -71,12 +71,7 @@ db.boomOnderhoud(leesDatabase());
 
 const package_json = require("./package.json");
 
-const synchroon = {
-    versie: package_json.version,
-    serverStart: new Date(),
-    revisie: 1, // 1 + aantal mutaties van de database sinds de serverStart
-    mutaties: []
-}
+db.boomOnderhoud({"versie": package_json.version});
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
@@ -112,11 +107,9 @@ module.exports = function (url) {
 
     /*
     Frontend: o_o_o.js
-
-    TODO ctx.params.revisie voor selectie van mutaties
      */
-    url.get("/synchroon", async function (ctx) {
-        ctx.body = JSON.stringify(synchroon);
+    url.get("/synchroon/:revisie", async function (ctx) {
+        ctx.body = JSON.stringify(db.synchroon(Number(ctx.params.revisie)));
     });
 
     /*
@@ -209,10 +202,10 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/teams", async function (ctx) {
-        ctx.body = db.clubTak(Number(ctx.params.club)).seizoenTak(ctx.params.seizoen).map(
-            function (team) {
-                return team.kaleTeam();
-            });
+        const teams = db.clubTak(Number(ctx.params.club)).seizoenTak(ctx.params.seizoen).teams();
+        ctx.body = teams.map(function (team) {
+            return team.kaleTeam();
+        });
     });
 
     /*

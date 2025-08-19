@@ -63,10 +63,7 @@ const NIEUWE_RANGLIJST = 2;
  *     .rondeTak(:ronde)
  *     .uitslagTak(:speler)
  *
- * De objecten in de boom hebben een revisie nummer. Zie synchroon in api.js
- * Na serverStart begint de server met revisie = 0 en daarna +1 na elke mutatie van de database.
- *
- * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
+ * Na serverStart begint de server met revisie = 1 en daarna +1 na elke mutatie van de database.
  *
  * De server leest data uit de database naar aanleiding van een vraag van de browser en
  * slaat die op als objecten op in de boom,
@@ -74,10 +71,25 @@ const NIEUWE_RANGLIJST = 2;
  *
  * Als de browser data van de server leest, slaat de server die data ook op in sessionStorage,
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
- * Behalve de gevraagde data stuurt de server ook steeds het revisie nummer,
+ * Behalve de gevraagde data stuurt de server ook steeds de revisie van de boom,
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
  *
- * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
+ * De boom groeit als het nodig is, maar dan wel met alle vertakkingen tegelijk vanuit een object
+ * bijvoorbeeld alle uitslagen van een ronde of alle teams (en competities) per seizoen.
+ * Om te groeien gebruikt de boom: leesClubs, leesSeizoenen, leesTeams, leesRonden en leesUitslagen.
+ * Deze groeifuncties zijn verschillend voor de server (database lezen) en de browser (server vragen).
+ *
+ * Na een mutatie van de database worden alle vertakkingen vanuit een object gesnoeid.
+ * Na bijvoorbeeld het invullen van een uitslag, worden alle uitslagen van die ronde gesnoeid,
+ * want in ieder geval een uitslag is niet meer actueel en misschien komen er meer mutaties voor die ronde.
+ * Zo blijft de boom altijd actueel.
+ *
+ * Na een mutatie van de database krijgt de boom een nieuwe revisie +1 en vermeldt de server
+ * in groeien welke vertakkingen voor deze revisie opnieuw moeten groeien.
+ * Na bijvoorbeeld het invullen van een uitslag, moeten alle uitslagen van die ronde opnieuw groeien.
+ *
+ * Aan de hand van de lijst van mutaties in groeien ziet de browser, welke vertakkingen in
+ * sessionStorage nog actueel zijn en welke de browser opnieuw van de browser moet vragen.
  */
 
 const boom = {
@@ -86,23 +98,24 @@ const boom = {
     leesTeams: function() {},
     leesRonden: function() {},
     leesUitslagen: function() {},
-    revisie: 0,
     club: [],
-    groeien: [], // TODO console log wanneer de boom groeit: { revisie, url }
-    laatsteRevisie: 1 // 1 + aantal keer snoeien (mutaties)
+    mutatie: [], // TODO console log wanneer de boom groeit: { revisie, url }
+    revisie: 1, // 1 + aantal mutaties
+    serverStart: new Date(),
+    versie: "0.0.0" // blijft 0.0.0 indien browser
 };
 
 function boomOnderhoud(object) {
     Object.assign(boom, object);
-    /*
-    (async function() {
-        console.log(boom.leesClubs());
-        console.log(boom.leesSeizoenen(0));
-        console.log(await boom.leesTeams(0, "2425"));
-        console.log(await boom.leesRonden(0, "2425", "6"));
-        console.log(await boom.leesUitslagen(0, "2425", "6", 1));
-    })();
-     */
+}
+
+function synchroon(revisie) {
+    return {
+        mutatie: [], // TODO boom.mutatie vanaf revisie
+        revisie: boom.revisie,
+        serverStart: boom.serverStart,
+        versie: boom.versie
+    };
 }
 
 function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
@@ -128,7 +141,10 @@ function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
 
 function clubTak(clubCode) {
     if (boom.club.length === 0) {
-        boom.club = boom.leesClubs().map(clubMaken);
+        (async function() {
+            const clubs = await boom.leesClubs();
+            boom.club = clubs.map(clubMaken);
+        })();
     }
     const index = boom.club.findIndex(function(eenClub) {
         return eenClub.clubCode === clubCode;
@@ -146,13 +162,12 @@ const WAAGTOREN = 0;
 const WAAGTOREN_JEUGD = 1;
 
 function clubMaken(object) {
-    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         vereniging,
         teamNaam
     } = object;
-    console.log(`clubMaken(${clubCode}, ${vereniging}, ${teamNaam}) ${revisie}`);
+    console.log(`clubMaken(${clubCode}, ${vereniging}, ${teamNaam})`);
     if (typeof clubCode !== "number") {
         console.log("clubCode niet numeriek");
         return undefined;
@@ -169,7 +184,6 @@ function clubMaken(object) {
     }
 
     function seizoenTak(seizoenCode) {
-        console.log(`seizoenTak(${clubCode}, ${seizoenCode})`);
         const index = seizoenen().findIndex(function(eenSeizoen) {
             return eenSeizoen.seizoen === seizoenCode;
         });
@@ -183,7 +197,6 @@ function clubMaken(object) {
 
     function kaleClub() {
         return {
-            revisie: revisie,
             clubCode: clubCode,
             vereniging: vereniging,
             teamNaam: teamNaam
@@ -191,7 +204,6 @@ function clubMaken(object) {
     }
 
     return Object.freeze({
-        revisie,
         clubCode,
         vereniging,
         teamNaam,
@@ -209,13 +221,12 @@ De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar co
 met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "2409", enz.
  */
 function seizoenMaken(object) {
-    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen
     } = object;
-    console.log(`${revisie}: seizoenMaken(${clubCode}, ${seizoen})`);
-    if (seizoen.length === 0 || seizoen.length > 4) {
+    console.log(`seizoenMaken(${clubCode}, ${seizoen})`);
+    if (seizoen.length > 4) {
         console.log("seizoen niet 4 posities");
         return undefined;
     }
@@ -241,9 +252,8 @@ function seizoenMaken(object) {
     function teams() {
         if (team.length === 0) {
             (async function() {
-                console.log("teams()");
-                team.splice(0, 0, ...boom.leesTeams(clubCode, seizoen).map(teamMaken));
-                console.log(team);
+                const teams = await boom.leesTeams(clubCode, seizoen);
+                team.splice(0, 0, ...teams.map(teamMaken));
             })();
         }
         return team;
@@ -264,14 +274,12 @@ function seizoenMaken(object) {
 
     function kaleSeizoen() {
         return {
-            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen
         };
     }
 
     return Object.freeze({
-        revisie,
         clubCode,
         seizoen,
         seizoenTekst,
@@ -295,7 +303,6 @@ const SNELSCHAKEN= "izs";
 const ZWITSERS_TEST= "izt";
 
 function teamMaken(object) {
-    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen,
@@ -309,8 +316,8 @@ function teamMaken(object) {
         borden,
         teamleider // TODO verwijderen
     } = object;
-    console.log(`${revisie}: teamMaken(${clubCode}, ${seizoen}, ${teamCode})`);
-    if (teamCode.length === 0 || teamCode.length > 3) {
+    console.log(`teamMaken(${clubCode}, ${seizoen}, ${teamCode})`);
+    if (teamCode.length > 3) {
         console.log("teamCode niet 3 posities");
         return undefined;
     }
@@ -320,16 +327,14 @@ function teamMaken(object) {
     function ronden() {
         if (ronde.length === 0) {
             (async function() {
-                console.log("ronden()");
-                ronde.splice(0, 0, ...boom.leesRonden(clubCode, seizoen, teamCode).map(rondeMaken));
-                console.log(ronde);
+                const ronden = await boom.leesRonden(clubCode, seizoen, teamCode);
+                ronde.splice(0, 0, ...ronden.map(rondeMaken));
             })();
         }
         return ronde;
     }
 
     function rondeTak(rondeNummer) {
-        console.log(`rondeTak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer})`);
         const index = ronden().findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
         });
@@ -397,7 +402,6 @@ function teamMaken(object) {
 
     function kaleTeam() {
         return {
-            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen,
             teamCode: teamCode,
@@ -413,7 +417,6 @@ function teamMaken(object) {
     }
 
     return Object.freeze({
-        revisie,
         clubCode,
         seizoen,
         teamCode,
@@ -482,7 +485,6 @@ function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
 }
 
 function rondeMaken(object) {
-    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen,
@@ -492,7 +494,7 @@ function rondeMaken(object) {
         tegenstander,
         datum
     } = object;
-    console.log(`${revisie}: rondeMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${uithuis}, ${tegenstander}, ${datum})`);
+    console.log(`rondeMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${uithuis}, ${tegenstander}, ${datum})`);
     if (typeof rondeNummer !== "number") {
         console.log("rondeNummer niet numeriek");
         return undefined;
@@ -558,7 +560,6 @@ function rondeMaken(object) {
 
     function kaleRonde() {
         return {
-            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen,
             teamCode: teamCode,
@@ -570,7 +571,6 @@ function rondeMaken(object) {
     }
 
     return Object.freeze({
-        revisie,
         clubCode,
         seizoen,
         teamCode,
@@ -589,7 +589,6 @@ function rondeMaken(object) {
 }
 
 function uitslagMaken(object) {
-    const revisie = boom.laatsteRevisie;
     const {
         clubCode,
         seizoen,
@@ -649,7 +648,6 @@ function uitslagMaken(object) {
 
     function kaleUitslag() {
         return {
-            revisie: revisie,
             clubCode: clubCode,
             seizoen: seizoen,
             teamCode: teamCode,
@@ -666,7 +664,6 @@ function uitslagMaken(object) {
     }
 
     return Object.freeze({
-        revisie,
         clubCode,
         seizoen,
         teamCode,
@@ -816,6 +813,7 @@ module.exports = { // CommonJS voor node.js
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
+    synchroon,             // (revisie)
     tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
     clubTak,               // (clubCode)
     // clubCode int
@@ -836,7 +834,7 @@ module.exports = { // CommonJS voor node.js
     isTeam,                // (team)
     teamVoluit,            // (teamCode)
     rondeMaken,            // (object)
-    uitslagMaken,          // (revisie, object)
+    uitslagMaken,          // (object)
 
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,
