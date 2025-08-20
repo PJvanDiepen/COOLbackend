@@ -39,9 +39,9 @@ TODO mutaties met verwijderen
         }]);
     await gebruikers(html.id("gebruikers"));
     await laatsteMutaties(html.id("mutaties"));
-    const versie = await zyq.serverFetch(`/versie`);
+    const server = await zyq.serverFetch(`/server`);
     html.id("computer").append(
-        `0-0-0 versie ${versie.versie} sinds ${zyq.tijdGeleden(versie.tijdstip)}`);
+        `0-0-0 versie ${server.versie} sinds ${zyq.tijdGeleden(server.start)}`);
 })();
 
 async function gebruikers(lijst) {

@@ -24,17 +24,11 @@ function leesDatabase () {
        ];
    }
 
-   function leesSeizoenen(clubCode) { // TODO select distinct seizoen from team where clubCode = ?;
-       if (clubCode === db.WAAGTOREN) {
-           return ["1819", "1920", "2021", "2122", "2223", "2324", "2425"].map(function (seizoen) {
-               return {clubCode: clubCode, seizoen: seizoen};
-           });
-       } else if (clubCode === db.WAAGTOREN_JEUGD) {
-           return ["2309", "2401"].map(function (seizoen) {
-               return {clubCode: clubCode, seizoen: seizoen};
-           });
-       }
-       return [];
+   async function leesSeizoenen(clubCode) {
+       return await Team.query()
+           .select("team.clubCode", "team.seizoen")
+           .where("team.clubCode", clubCode)
+           .distinct("team.seizoen");
    }
 
    async function leesTeams(clubCode, seizoen) {
@@ -109,7 +103,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/synchroon/:revisie", async function (ctx) {
-        ctx.body = JSON.stringify(db.synchroon(Number(ctx.params.revisie))); // TODO zonder Number
+        ctx.body = JSON.stringify(db.synchroon(ctx.params.revisie));
     });
 
     /*
@@ -248,16 +242,8 @@ module.exports = function (url) {
     /*
     Frontend: beheer.js
      */
-    url.get("/versie", async function (ctx) {
-        ctx.body = JSON.stringify(
-            {versie: package_json.version, tijdstip: synchroon.serverStart});
-    });
-
-    /*
-    Frontend: beheer.js
-     */
-    url.get("/geheugen", async function (ctx) {
-        ctx.body = JSON.stringify([os.freemem(), os.totalmem()]);
+    url.get("/server", async function (ctx) {
+        ctx.body = JSON.stringify(db.serverInformatie());
     });
 
     /*

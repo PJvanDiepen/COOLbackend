@@ -110,12 +110,25 @@ function boomOnderhoud(object) {
 }
 
 function synchroon(revisie) {
+    revisie = Number(revisie);
+    const mutaties = boom.mutatie.filter(function(mutatie) {
+        console.log(mutatie);
+        return true; // TODO boom.mutatie vanaf revisie
+    });
     return {
-        mutatie: [], // TODO boom.mutatie vanaf revisie
+        mutatie: mutaties,
         revisie: boom.revisie,
         serverStart: boom.serverStart,
         versie: boom.versie
     };
+}
+
+function serverInformatie() { // TODO vervangen door synchroon
+    return {
+        start: boom.serverStart,
+        versie: boom.versie
+    }
+
 }
 
 async function alleClubs() {
@@ -804,6 +817,7 @@ module.exports = { // CommonJS voor node.js
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
     synchroon,             // (revisie)
+    serverInformatie,      // ()
     clubTak,               // (clubCode)
     // clubCode int
     WAAGTOREN,

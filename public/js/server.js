@@ -9,16 +9,13 @@ import * as db from "./db.js";
 const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
 
 export async function synchroniseren() {
-    const urlSynchroon = "/synchroon";
+    const urlSynchroon = "/synchroon/0";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
     Object.assign(synchroon, await vraagServer(urlSynchroon)); // (db.b00m,
     /*
     TODO PvD
-    TODO revisie volgens sessionStorage
-    TODO /synchroon met revisie doorgeven, zodat server revisie kan vergelijken met sessionStorage
     TODO indien server herstart dan alles verwijderen uit sessionStorage
     TODO vergelijk mutaties sinds start van server met sessionStorage
-    TODO indien niet actueel verwijderen uit sessionStorage (voorlopig dus niets)
      */
     verwijderNietActueel(!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart
         ? 0 // na herstart server is niets actueel
