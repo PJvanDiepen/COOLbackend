@@ -118,26 +118,6 @@ function synchroon(revisie) {
     };
 }
 
-async function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    const eenClub = await clubTak(clubCode);
-    if (seizoen === undefined) {
-        return eenClub;
-    }
-    const eenSeizoen = await eenClub.seizoenTak(seizoen);
-    if (teamCode === undefined) {
-        return eenSeizoen;
-    }
-    const eenTeam = await eenSeizoen.teamTak(teamCode);
-    if (rondeNummer === undefined) {
-        return eenTeam;
-    }
-    const eenRonde = await eenTeam.rondeTak(rondeNummer);
-    if (knsbNummer === undefined) {
-        return eenRonde;
-    }
-    return eenRonde.uitslagTak(knsbNummer);
-}
-
 async function alleClubs() {
     if (boom.club.length === 0) {
         const clubs = await boom.leesClubs();
@@ -168,19 +148,17 @@ function clubMaken(object) {
         vereniging,
         teamNaam
     } = object;
-    console.log(`clubMaken(${clubCode}, ${vereniging}, ${teamNaam})`);
+    const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
+    console.log(`clubMaken = ${clubTekst}`);
     if (typeof clubCode !== "number") {
         console.log("clubCode niet numeriek");
         return undefined;
     }
-
-    const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
     const seizoen = [];
 
     async function alleSeizoenen() {
         if (seizoen.length === 0) {
-            const seizoenen = await boom.leesSeizoenen(clubCode);
-            seizoen.splice(0, 0, ...seizoenen.map(seizoenMaken));
+            seizoen.splice(0, 0, ...(await boom.leesSeizoenen(clubCode)).map(seizoenMaken));
         }
         return seizoen;
     }
@@ -216,6 +194,11 @@ function clubMaken(object) {
     });
 }
 
+async function seizoenTak(clubCode, seizoen) {
+    const eenClub = await clubTak(clubCode);
+    return await eenClub.seizoenTak(seizoen);
+}
+
 /* seizoen char(4)
 Seizoenen volgen elkaar standaard op: "1819", "1920", "2021", enz.
 De Waagtoren Jeugd en andere schaakverenigingen hebben een voorjaar en najaar competitie
@@ -226,14 +209,14 @@ function seizoenMaken(object) {
         clubCode,
         seizoen
     } = object;
-    console.log(`seizoenMaken(${clubCode}, ${seizoen})`);
+    const seizoenTekst = clubCode === WAAGTOREN_JEUGD
+        ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
+        : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
+    console.log(`seizoenMaken = ${seizoenTekst}`);
     if (seizoen.length > 4) {
         console.log("seizoen niet 4 posities");
         return undefined;
     }
-    const seizoenTekst = clubCode === WAAGTOREN_JEUGD
-        ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
-        : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
 
     const seizoenDaarna = clubCode === WAAGTOREN_JEUGD
         ? function () {
@@ -292,6 +275,11 @@ function seizoenVoluit(object) { // TODO naar seizoenMaken
     return tak(object.clubCode, object.seizoen).seizoenTekst;
 }
 
+async function teamTak(clubCode, seizoen, teamCode) {
+    const eenSeizoen = await seizoenTak(clubCode, seizoen);
+    return await eenSeizoen.teamTak(teamCode);
+}
+
 // teamCode char(3)
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETITIE= "ira";
@@ -313,12 +301,12 @@ function teamMaken(object) {
         borden,
         teamleider // TODO verwijderen
     } = object;
-    console.log(`teamMaken(${clubCode}, ${seizoen}, ${teamCode})`);
+    const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
+    console.log(`teamMaken = ${teamTekst}`);
     if (teamCode.length > 3) {
         console.log("teamCode niet 3 posities");
         return undefined;
     }
-    const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
     const ronde = [];
 
     async function alleRonden() {
@@ -479,6 +467,11 @@ function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
     }
 }
 
+async function rondeTak(clubCode, seizoen, teamCode, rondeNummer) {
+    const eenTeam = await teamTak(clubCode, seizoen, teamCode);
+    return await eenTeam.rondeTak(rondeNummer);
+}
+
 function rondeMaken(object) {
     const {
         clubCode,
@@ -489,16 +482,16 @@ function rondeMaken(object) {
         tegenstander,
         datum
     } = object;
-    console.log(`rondeMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${uithuis}, ${tegenstander}, ${datum})`);
-    if (typeof rondeNummer !== "number") {
-        console.log("rondeNummer niet numeriek");
-        return undefined;
-    }
     const rondeTekst = isCompetitie(object)
         ? `ronde ${rondeNummer} ${teamVoluit(teamCode)}` // competitieronde
         : uithuis === THUIS
         ? `${teamVoluit(teamCode)} - ${tegenstander}` // thuiswedstrijd
         : `${tegenstander} - ${teamVoluit(teamCode)}`; // uitwedstrijd
+    console.log(`rondeMaken = ${rondeTekst}`);
+    if (typeof rondeNummer !== "number") {
+        console.log("rondeNummer niet numeriek");
+        return undefined;
+    }
 
     const uitslag = [];
 
@@ -579,6 +572,11 @@ function rondeMaken(object) {
     });
 }
 
+async function uitslagTak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
+    const eenRonde = await rondeTak(clubCode, seizoen, teamCode, rondeNummer);
+    return await eenRonde.uitslagTak(knsbNummer);
+}
+
 function uitslagMaken(object) {
     const {
         clubCode,
@@ -594,13 +592,13 @@ function uitslagMaken(object) {
         datum,
         competitie
     } = object;
-    console.log(`uitslagMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${bordNummer}, ${knsbNummer}, ${partij}, ${witZwart}, ${tegenstanderNummer}, ${resultaat}, ${datum}, ${competitie})`);
+    const uitslagTekst = // TODO uitwerken
+        `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
+    // console.log(`uitslagMaken = ${uitslagTekst}`);
     if (typeof knsbNummer !== "number") {
         console.log("knsbNummer niet numeriek");
         return null;
     }
-    const uitslagTekst = // TODO uitwerken
-        `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
 
     function isCompleet() {
         return isUitslag(true);
@@ -806,13 +804,15 @@ module.exports = { // CommonJS voor node.js
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
     synchroon,             // (revisie)
-    tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
+    clubTak,               // (clubCode)
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
     clubMaken,             // (object)
+    seizoenTak,            // (clubCode, seizoen)
     seizoenMaken,          // (object)
     seizoenVoluit,         // (object)
+    teamTak,               // (clubCode, seizoen, teamCode)
     // teamCode char(3)
     INTERNE_COMPETITIE,
     RAPID_COMPETITIE,
@@ -824,7 +824,9 @@ module.exports = { // CommonJS voor node.js
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
     teamVoluit,            // (teamCode)
+    rondeTak,              // (clubCode, seizoen, teamCode, rondeNummer)
     rondeMaken,            // (object)
+    uitslagTak,            // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
     uitslagMaken,          // (object)
 
     // knsbNummer int
