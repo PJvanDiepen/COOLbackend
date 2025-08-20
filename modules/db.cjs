@@ -118,43 +118,44 @@ function synchroon(revisie) {
     };
 }
 
-function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    const eenClub = clubTak(clubCode);
+async function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
+    const eenClub = await clubTak(clubCode);
     if (seizoen === undefined) {
         return eenClub;
     }
-    const eenSeizoen = eenClub.seizoenTak(seizoen);
+    const eenSeizoen = await eenClub.seizoenTak(seizoen);
     if (teamCode === undefined) {
         return eenSeizoen;
     }
-    const eenTeam = eenSeizoen.teamTak(teamCode);
+    const eenTeam = await eenSeizoen.teamTak(teamCode);
     if (rondeNummer === undefined) {
         return eenTeam;
     }
-    const eenRonde = eenTeam.rondeTak(rondeNummer);
+    const eenRonde = await eenTeam.rondeTak(rondeNummer);
     if (knsbNummer === undefined) {
         return eenRonde;
-    } else {
-        return eenRonde.uitslagTak(knsbNummer);
     }
+    return eenRonde.uitslagTak(knsbNummer);
 }
 
-function clubTak(clubCode) {
+async function alleClubs() {
     if (boom.club.length === 0) {
-        (async function() {
-            const clubs = await boom.leesClubs();
-            boom.club = clubs.map(clubMaken);
-        })();
+        const clubs = await boom.leesClubs();
+        console.log("na await clubs =");
+        boom.club.splice(0, 0, ...clubs.map(clubMaken));
     }
-    const index = boom.club.findIndex(function(eenClub) {
+    return boom.club;
+}
+
+async function clubTak(clubCode) {
+    const index = (await alleClubs()).findIndex(function(eenClub) {
         return eenClub.clubCode === clubCode;
     });
     if (index < 0) {
         console.log(`clubTak(${clubCode}) niet gevonden`);
         return undefined;
-    } else {
-        return boom.club[index];
     }
+    return boom.club[index];
 }
 
 // clubCode int
@@ -176,23 +177,24 @@ function clubMaken(object) {
     const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
     const seizoen = [];
 
-    function seizoenen() {
-        if (seizoen.length === 0) { // seizoen.splice() omdat const seizoen = []
-            seizoen.splice(0, 0, ...boom.leesSeizoenen(clubCode).map(seizoenMaken));
+    async function alleSeizoenen() {
+        if (seizoen.length === 0) {
+            const seizoenen = await boom.leesSeizoenen(clubCode);
+            console.log("na await seizoenen =");
+            seizoen.splice(0, 0, ...seizoenen.map(seizoenMaken));
         }
         return seizoen;
     }
 
-    function seizoenTak(seizoenCode) {
-        const index = seizoenen().findIndex(function(eenSeizoen) {
+    async function seizoenTak(seizoenCode) {
+        const index = (await alleSeizoenen()).findIndex(function(eenSeizoen) {
             return eenSeizoen.seizoen === seizoenCode;
         });
         if (index < 0) {
             console.log(`seizoenTak(${clubCode}, ${seizoenCode}) niet gevonden`);
             return undefined;
-        } else {
-            return seizoen[index];
         }
+        return seizoen[index];
     }
 
     function kaleClub() {
@@ -209,7 +211,7 @@ function clubMaken(object) {
         teamNaam,
         clubTekst,
         seizoen,
-        seizoenen,     // ()
+        alleSeizoenen, // ()
         seizoenTak,    // (seizoenCode)
         kaleClub       // ()
     });
@@ -249,27 +251,24 @@ function seizoenMaken(object) {
 
     const team = [];
 
-    function teams() {
+    async function alleTeams() {
         if (team.length === 0) {
-            (async function() {
-                const teams = await boom.leesTeams(clubCode, seizoen);
-                team.splice(0, 0, ...teams.map(teamMaken));
-            })();
+            const teams = await boom.leesTeams(clubCode, seizoen);
+            console.log("na await teams =");
+            team.splice(0, 0, ...teams.map(teamMaken));
         }
         return team;
     }
 
-    function teamTak(teamCode) {
-        console.log(`teamTak(${clubCode}, ${seizoen}, ${teamCode})`);
-        const index = teams().findIndex(function(eenTeam) {
+    async function teamTak(teamCode) {
+        const index = (await alleTeams()).findIndex(function(eenTeam) {
             return eenTeam.teamCode === teamCode;
         });
         if (index < 0) {
             console.log(`teamTak(${clubCode}, ${seizoen}), ${teamCode}) niet gevonden`);
             return undefined;
-        } else {
-            return team[index];
         }
+        return team[index];
     }
 
     function kaleSeizoen() {
@@ -285,7 +284,7 @@ function seizoenMaken(object) {
         seizoenTekst,
         seizoenDaarna,    // (seizoenCode)
         team,
-        teams,            // ()
+        alleTeams,        // ()
         teamTak,          // (teamCode)
         kaleSeizoen       // ()
     });
@@ -324,26 +323,24 @@ function teamMaken(object) {
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
     const ronde = [];
 
-    function ronden() {
+    async function alleRonden() {
         if (ronde.length === 0) {
-            (async function() {
-                const ronden = await boom.leesRonden(clubCode, seizoen, teamCode);
-                ronde.splice(0, 0, ...ronden.map(rondeMaken));
-            })();
+            const ronden = await boom.leesRonden(clubCode, seizoen, teamCode);
+            console.log("na await ronden =");
+            ronde.splice(0, 0, ...ronden.map(rondeMaken));
         }
         return ronde;
     }
 
-    function rondeTak(rondeNummer) {
-        const index = ronden().findIndex(function(eenRonde) {
+    async function rondeTak(rondeNummer) {
+        const index = (await alleRonden()).findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
         });
         if (index < 0) {
-            console.log(`rondeTak(${clubCode}, ${seizoen}), ${teamCode}, ${rondeNummer}) niet gevonden`);
+            console.log(`rondeTak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}) niet gevonden`);
             return undefined;
-        } else {
-            return ronde[index];
         }
+        return ronde[index];
     }
 
     function rondeCompleet() {
@@ -430,7 +427,7 @@ function teamMaken(object) {
         teamleider,
         teamTekst,
         ronde,
-        ronden,          // ()
+        alleRonden,      // ()
         rondeTak,        // (rondeNummer)
         rondeCompleet,   // ()
         rondeInvullen,   // ()
@@ -507,28 +504,24 @@ function rondeMaken(object) {
 
     const uitslag = [];
 
-    function uitslagen() {
+    async function alleUitslagen() {
         if (uitslag.length === 0) {
-            (async function() {
-                console.log("uitslagen()");
-                uitslag.splice(0, 0, ...boom.leesUitslagen(clubCode, seizoen, teamCode, rondeNummer).map(uitslagMaken));
-                console.log(uitslag);
-            })();
+            const uitslagen = await boom.leesUitslagen(clubCode, seizoen, teamCode, rondeNummer);
+            console.log("na await uitslagen =");
+            uitslag.splice(0, 0, ...uitslagen.map(uitslagMaken));
         }
         return uitslag;
     }
 
-    function uitslagTak(knsbNummer) {
-        console.log(`uitslagTak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${knsbNummer})`);
-        const index = uitslagen().findIndex(function(eenUitslag) {
+    async function uitslagTak(knsbNummer) {
+        const index = (await alleUitslagen()).findIndex(function(eenUitslag) {
             return eenUitslag.knsbNummer === knsbNummer;
         });
         if (index < 0) {
             console.log(`uitslagTak(${clubCode}, ${seizoen}), ${teamCode}, ${rondeNummer}, ${knsbNummer}) niet gevonden`);
             return undefined;
-        } else {
-            return uitslag[index];
         }
+        return uitslag[index];
     }
 
     function uitslagenCompleet() {
@@ -580,7 +573,7 @@ function rondeMaken(object) {
         datum,
         rondeTekst,
         uitslag,
-        uitslagen,         // ()
+        alleUitslagen,     // ()
         uitslagTak,        // (knsbNummer)
         uitslagenCompleet, // ()
         uitslagenInvullen, // ()
@@ -815,7 +808,6 @@ module.exports = { // CommonJS voor node.js
     boomOnderhoud,         // (object)
     synchroon,             // (revisie)
     tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
-    clubTak,               // (clubCode)
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,

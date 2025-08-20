@@ -17,7 +17,7 @@ db.boom met db.cjs voor de server en met db.js voor de browser.
 const db = require("./modules/db.cjs");
 
 function leesDatabase () {
-   function leesClubs() {
+   async function leesClubs() {
        return [
            {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"},
            {clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd"}
@@ -186,14 +186,17 @@ module.exports = function (url) {
     });
 
     url.get("/:club/club", async function (ctx) {
-        ctx.body = db.clubTak(Number(ctx.params.club)).kaleClub(); // geen clubs voor browser
+        const eenClub = await db.tak(Number(ctx.params.club));
+        ctx.body = eenClub.kaleClub();
     });
 
     /*
     Frontend: o_o_o.js
      */
-    url.get("/:club/seizoenen", function (ctx) {
-        ctx.body = db.clubTak(Number(ctx.params.club)).seizoenen().map(function (seizoen) {
+    url.get("/:club/seizoenen", async function (ctx) {
+        const eenClub = await db.tak(Number(ctx.params.club));
+        const seizoenen = await eenClub.alleSeizoenen();
+        ctx.body = seizoenen.map(function (seizoen) {
             return seizoen.kaleSeizoen();
         });
     });
@@ -202,7 +205,8 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/teams", async function (ctx) {
-        const teams = db.clubTak(Number(ctx.params.club)).seizoenTak(ctx.params.seizoen).teams();
+        const eenSeizoen= await db.tak(Number(ctx.params.club), ctx.params.seizoen);
+        const teams = await eenSeizoen.alleTeams();
         ctx.body = teams.map(function (team) {
             return team.kaleTeam();
         });
@@ -212,7 +216,8 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
-        const ronden = await databaseLezen(ctx.params.club, ctx.params.seizoen, ctx.params.team);
+        const eenTeam = await db.tak(Number(ctx.params.club), ctx.params.seizoen, ctx.params.team);
+        const ronden = await eenTeam.alleRonden();
         ctx.body = ronden.map(function (ronde) {
             return ronde.kaleRonde();
         });
@@ -222,7 +227,9 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/:team/:ronde/uitslagen", async function (ctx) {
-        const uitslagen = await databaseLezen(ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde);
+        const eenRonde = await db.tak(Number(ctx.params.club), ctx.params.seizoen, ctx.params.team, Number(ctx.params.ronde));
+        console.log(eenRonde);
+        const uitslagen = await eenRonde.alleUitslagen();
         ctx.body = uitslagen.map(function (uitslag) {
             return uitslag.kaleUitslag();
         });
