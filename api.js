@@ -109,7 +109,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/synchroon/:revisie", async function (ctx) {
-        ctx.body = JSON.stringify(db.synchroon(Number(ctx.params.revisie)));
+        ctx.body = JSON.stringify(db.synchroon(Number(ctx.params.revisie))); // TODO zonder Number
     });
 
     /*
@@ -186,7 +186,7 @@ module.exports = function (url) {
     });
 
     url.get("/:club/club", async function (ctx) {
-        const eenClub = await db.tak(Number(ctx.params.club));
+        const eenClub = await db.tak(ctx.params.club);
         ctx.body = eenClub.kaleClub();
     });
 
@@ -194,7 +194,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/seizoenen", async function (ctx) {
-        const eenClub = await db.tak(Number(ctx.params.club));
+        const eenClub = await db.tak(ctx.params.club);
         const seizoenen = await eenClub.alleSeizoenen();
         ctx.body = seizoenen.map(function (seizoen) {
             return seizoen.kaleSeizoen();
@@ -205,7 +205,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/teams", async function (ctx) {
-        const eenSeizoen= await db.tak(Number(ctx.params.club), ctx.params.seizoen);
+        const eenSeizoen= await db.tak(ctx.params.club, ctx.params.seizoen);
         const teams = await eenSeizoen.alleTeams();
         ctx.body = teams.map(function (team) {
             return team.kaleTeam();
@@ -216,7 +216,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
-        const eenTeam = await db.tak(Number(ctx.params.club), ctx.params.seizoen, ctx.params.team);
+        const eenTeam = await db.tak(ctx.params.club, ctx.params.seizoen, ctx.params.team);
         const ronden = await eenTeam.alleRonden();
         ctx.body = ronden.map(function (ronde) {
             return ronde.kaleRonde();
@@ -227,8 +227,7 @@ module.exports = function (url) {
     Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/:team/:ronde/uitslagen", async function (ctx) {
-        const eenRonde = await db.tak(Number(ctx.params.club), ctx.params.seizoen, ctx.params.team, Number(ctx.params.ronde));
-        console.log(eenRonde);
+        const eenRonde = await db.tak(ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde);
         const uitslagen = await eenRonde.alleUitslagen();
         ctx.body = uitslagen.map(function (uitslag) {
             return uitslag.kaleUitslag();

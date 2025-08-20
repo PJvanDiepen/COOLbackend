@@ -141,13 +141,13 @@ async function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
 async function alleClubs() {
     if (boom.club.length === 0) {
         const clubs = await boom.leesClubs();
-        console.log("na await clubs =");
         boom.club.splice(0, 0, ...clubs.map(clubMaken));
     }
     return boom.club;
 }
 
 async function clubTak(clubCode) {
+    clubCode = Number(clubCode);
     const index = (await alleClubs()).findIndex(function(eenClub) {
         return eenClub.clubCode === clubCode;
     });
@@ -180,7 +180,6 @@ function clubMaken(object) {
     async function alleSeizoenen() {
         if (seizoen.length === 0) {
             const seizoenen = await boom.leesSeizoenen(clubCode);
-            console.log("na await seizoenen =");
             seizoen.splice(0, 0, ...seizoenen.map(seizoenMaken));
         }
         return seizoen;
@@ -254,7 +253,6 @@ function seizoenMaken(object) {
     async function alleTeams() {
         if (team.length === 0) {
             const teams = await boom.leesTeams(clubCode, seizoen);
-            console.log("na await teams =");
             team.splice(0, 0, ...teams.map(teamMaken));
         }
         return team;
@@ -326,13 +324,13 @@ function teamMaken(object) {
     async function alleRonden() {
         if (ronde.length === 0) {
             const ronden = await boom.leesRonden(clubCode, seizoen, teamCode);
-            console.log("na await ronden =");
             ronde.splice(0, 0, ...ronden.map(rondeMaken));
         }
         return ronde;
     }
 
     async function rondeTak(rondeNummer) {
+        rondeNummer = Number(rondeNummer);
         const index = (await alleRonden()).findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
         });
@@ -507,13 +505,13 @@ function rondeMaken(object) {
     async function alleUitslagen() {
         if (uitslag.length === 0) {
             const uitslagen = await boom.leesUitslagen(clubCode, seizoen, teamCode, rondeNummer);
-            console.log("na await uitslagen =");
             uitslag.splice(0, 0, ...uitslagen.map(uitslagMaken));
         }
         return uitslag;
     }
 
     async function uitslagTak(knsbNummer) {
+        knsbNummer = Number(knsbNummer);
         const index = (await alleUitslagen()).findIndex(function(eenUitslag) {
             return eenUitslag.knsbNummer === knsbNummer;
         });
@@ -596,6 +594,7 @@ function uitslagMaken(object) {
         datum,
         competitie
     } = object;
+    console.log(`uitslagMaken(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}, ${bordNummer}, ${knsbNummer}, ${partij}, ${witZwart}, ${tegenstanderNummer}, ${resultaat}, ${datum}, ${competitie})`);
     if (typeof knsbNummer !== "number") {
         console.log("knsbNummer niet numeriek");
         return null;
