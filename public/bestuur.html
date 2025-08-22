@@ -12,6 +12,15 @@
          #competities td:nth-child(2), #ratinglijsten td:nth-child(2), #tabel td:nth-child(5), #tabel td:nth-child(6) {
             text-align: center; /* code, knsb en nhsb */
          }
+         .knipper {
+             animation: knipperen 1s infinite;
+         }
+
+         @keyframes knipperen {
+             0%   { opacity: 1; }
+             50%  { opacity: 0; }
+             100% { opacity: 1; }
+         }
     </style>
 </head>
 <body>
@@ -46,7 +55,7 @@
             <input type="file" id="csvFile" accept=".csv" hidden/>
             <label for="csvFile" id="bestand">Selecteer ratinglijst-bestand</label>
         </p>
-        <p id="informeer"></p>
+        <p class="knipper" id="informeer"></p>
     </details>
     <table id="tabel">
         <tr>

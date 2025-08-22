@@ -171,7 +171,7 @@ async function leesRatinglijst(filesList, output) {
             const reader = new FileReader();
             reader.readAsText(files[0]);
             reader.onerror = function() {
-                html.tekstToevoegen(output, `${files[0].name} lezen gaat fout met code: ${reader.error.code}.`);
+                html.tekstToevoegen(output, `${files[0].name} lezen gaat fout met code: ${reader.error}.`);
             };
             reader.onload = async function() {
                 const regels = reader.result.split('\r\n');
@@ -187,7 +187,7 @@ async function leesRatinglijst(filesList, output) {
 
 async function verwerkRatinglijst(maand, jaar, regels) {
     const ratingMuteren = await server.vraag("/rating/muteren");
-    ratingMuteren.specificeren({maand: maand, jaar: jaar});
+    ratingMuteren.specificeren({uuid: zyq.uuidToken, maand: maand, jaar: jaar});
     let gewijzigd = 0;
     let toegevoegd = 0;
     for (const regel of regels) {
@@ -199,7 +199,7 @@ async function verwerkRatinglijst(maand, jaar, regels) {
         }
     }
     const ratingVerwijderen = await server.vraag("/rating/verwijderen");
-    ratingVerwijderen.specificeren({maand: maand, jaar: jaar});
+    ratingVerwijderen.specificeren({uuid: zyq.uuidToken, maand: maand, jaar: jaar});
     const verwijderd = await ratingVerwijderen.muteren();
-    html.zelfdePagina(`wijzig=${gewijzigd}&voegtoe=${toegevoegd}&verwijder${verwijderd}`);
+    html.zelfdePagina(`wijzig=${gewijzigd}&voegtoe=${toegevoegd}&verwijder=${verwijderd}`);
 }
