@@ -50,16 +50,20 @@ function leesDatabase () {
            .where("uitslag.seizoen", seizoen)
            .where("uitslag.teamCode", teamCode)
            .where("uitslag.rondeNummer", rondeNummer);
-       if (clubCode === 0 && seizoen === "2425" && teamCode === "int" && rondeNummer === 33) {
-           console.log("leesUitslagen: niet gesorteerd");
-           console.log(uitslagen);
-           uitslagen.sort(function (a, b) {
-               if (a.bordNummer < b.bordNummer) return -1;
-               if (a.bordNummer > b.bordNummer) return 1;
-               return 0;
+       if (clubCode === 0 && seizoen === "2425" && teamCode === "int" && rondeNummer === 11) {
+           uitslagen.sort(function (een, ander) {
+               if (een.bordNummer === 0 && ander.bordNummer === 0) {
+                   return een.partij === db.ONEVEN ? -1 : 1; // oneven voor extern, afwezig, enz.
+               } else if (een.bordNummer === 0) { // geen bordNummer na ander
+                   return 1;
+               } else if (ander.bordNummer === 0) { // geen bordNummer voor een
+                   return -1;
+               } else if (een.bordNummer === ander.bordNummer) {
+                   return een.witZwart === db.WIT ? -1 : 1; // wit voor zwart indien zelfde bordNummer
+               } else {
+                   return een.bordNummer - ander.bordNummer; // op bordNummer
+               }
            });
-           console.log("leesUitslagen: wel gesorteerd");
-           console.log(uitslagen);
        }
        return uitslagen;
    }
