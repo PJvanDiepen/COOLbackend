@@ -24,6 +24,8 @@ delimiter ;
 -- versie 4 rapidPunten voor rapid competitie
 -- versie 5 zwitsersPunten voor Zwitsers systeem
 -- versie 6 jeugd competitie met barrière punten en drie keer afzeggen
+-- versie 7 externeAftrek voor alle externe wedstrijden niet op dinsdag
+-- versie 8 externeAftrek vanaf seizoen = 2526 
 
 drop function subgroep; -- 0-0-0.nl versie 0.8.59
 
@@ -182,7 +184,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.8.59
+drop function totalen; -- 0-0-0.nl versie 0.8.66
 
 delimiter $$
 create function totalen(clubCode int, seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -211,6 +213,7 @@ begin
     declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
+    declare externePartijen int default 0;
     declare minimumInternePartijen int default 0;
     declare internKleur int; -- 0 = wit, 1 = zwart
     declare internResultaat int; -- 0 = verlies, 1 = remise, 2 = winst
@@ -285,14 +288,15 @@ begin
         end while; 
     close uitslagen;
     set tegenstanders = concat(tegenstanders, ' 0'); -- rondeNummer = 0
+    set externePartijen = witExtern + zwartExtern;
     if witIntern = 0 and zwartIntern = 0 and oneven = 0 then
         set prijs = 0;
-        set sorteer = witExtern + zwartExtern;
+        set sorteer = externePartijen;
 	else
         if (witIntern + zwartIntern + oneven + reglementairGewonnen + externTijdensInterneRonde) < minimumInternePartijen then
 			set prijs = 0;
 		end if;
-        set aftrek = afzeggingenAftrek(versie, afzeggingen);
+        set aftrek = afzeggingenAftrek(versie, afzeggingen) + externeAftrek(versie, externePartijen, externTijdensInterneRonde);
         set sorteer = startPunten + totaal - aftrek;
     end if;
     return concat(
@@ -321,13 +325,13 @@ end;
 $$
 delimiter ;
 
-drop function extraPunten; -- 0-0-0.nl versie 0.8.41
+drop function extraPunten; -- 0-0-0.nl versie 0.8.66
 
 delimiter $$
 create function extraPunten(versie int, interneRating int)
     returns int deterministic
 begin
-    if versie <= 3 then -- interne competitie reglement artikel 11
+    if versie <= 3 or versie > 6 then -- interne competitie reglement artikel 11
         return 300;
 	elseif versie = 6 and interneRating < 1100 then -- barrière punten voor jeugd competitie
         return 270;
@@ -356,6 +360,23 @@ begin
         return -12;
     elseif versie = 6 then
         return afzeggingen * -4;
+	else
+        return 0;
+    end if;
+end;
+$$
+delimiter ;
+
+drop function externeAftrek; -- 0-0-0.nl versie 0.8.66
+
+delimiter $$
+create function externeAftrek(versie int, externePartijen int, externTijdensInterneRonde int)
+    returns int deterministic
+begin 
+    if versie = 7 then
+        return (externePartijen - externTijdensInterneRonde) * 4;
+    elseif versie = 8 and (externePartijen - externTijdensInterneRonde) > 4 then -- interne competitie reglement artikel 12
+        return (externePartijen - externTijdensInterneRonde - 4) * 4; -- 4 ronden tellen wel mee
 	else
         return 0;
     end if;

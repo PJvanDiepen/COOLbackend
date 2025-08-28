@@ -58,6 +58,7 @@ Refresh Android cache
 - [DOM manipulation](https://phuoc.ng/collection/html-dom/)
 - [memory efficient DOM manipulation](https://frontendmasters.com/blog/patterns-for-memory-efficient-dom-manipulation/)
 - [GrowField](https://growfield.js.org/)
+- [promises](https://www.joshwcomeau.com/javascript/promises/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
 - [async to array](https://allthingssmitty.com/2025/07/14/modern-async-iteration-in-javascript-with-array-fromasync/)
 - [promises training](https://github.com/henriqueinonhe/promises-training)
@@ -145,6 +146,7 @@ Refresh Android cache
 - [server or browser](https://vercel.com/blog/how-to-choose-the-best-rendering-strategy-for-your-app)
 
 # software enigineering
+- [SOLID](https://jsdev.space/solid-design-principles/)
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Linus Torvalds on Git](https://www.youtube.com/watch?v=4XpnKHJAok8)
@@ -185,6 +187,7 @@ Refresh Android cache
 - [Monte Carlo simulatie schaken](https://medium.com/@ishaan.gupta0401/monte-carlo-tree-search-application-on-chess-5573fc0efb75)
 - [Monte Carlo simulatie investeren](https://www.investopedia.com/terms/m/montecarlosimulation.asp)
 - [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
+- [Arlette](https://issuu.com/schaakbond/docs/schaakmagazine_2007-2)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)

@@ -263,18 +263,67 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values -- TODO NHSB
 (0, "2526", "n1", 1, "u", "'t Saense Paard N1", '2024-09-25');
 
--- speler
+-- speler TODO compleet maken
 with r as (select * from rating  where jaar = 2025 and maand = 8)
 select r.knsbNaam, r.knsbRating, s.* 
 from speler s left join r on s.knsbNummer = r.knsbNummer  
 where seizoen = "2425" and s.knsbNummer < 7234567;
 
+-- speler toevoegen met knsbNummer
+insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien)
+with r as (select * from rating  where jaar = 2025 and maand = 8) -- augustus
+select 0, "2526", "int", "", "", p.knsbNummer, r.knsbRating, "2025-08-01", r.knsbRating, "int", "", "", "", "", 0, 0, 0
+from persoon p join r on p.knsbNummer = r.knsbNummer  
+where p.knsbNummer in(8978717, 6420557, 7509920); -- Ellen van der Hoeven, Jasper Seelmeijer, Dirk van der Meiden
+
+-- speler toevoegen met knsbNummer
+insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien)
+with r as (select * from rating  where jaar = 2025 and maand = 8) -- augustus
+select 0, "2526", "int", "", "", p.knsbNummer, r.knsbRating, "2025-08-01", r.knsbRating, "int", "", "", "", "", 0, 0, 0
+from persoon p join r on p.knsbNummer = r.knsbNummer  
+where p.knsbNummer = 7084022; -- John Kramer
+
+insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
+(0, "2526", "int", "", "", 7084022, 1888, '2025-08-01', 1888, "int", "", "", "", "", 0, 0, 0);
+
+select * from speler where knsbNummer = 7084022;
+
+update speler set knsbRating = 1888 where knsbNummer = 7084022;
+
+
+insert into gebruiker (knsbNummer, mutatieRechten, uuidToken, email, datumEmail, telefoon) values
+(7084022, 1, uuid(), "john-kramer@kpnmail.nl", "2025-08-27", "");
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer 
+where s.knsbNummer = 7084022; -- John Kramer
+
+update speler set knsbTeam = "0" where seizoen = "2526" and knsbNummer = 8795941; -- Guido van Hesseling 
+
+
+-- gebruiker toevoegen
+
+select * from speler
+where seizoen = @seizoen and knsbNummer in(7359913, 8285574, 8611922, 189, 190, 8966133, 9040845, 9045388); 
+-- Dimitri Reinderman, Maaike Keetman, Tycho Bakker, Julian en Christian Huisman, Jelle Koopmans 
+
+delete from speler
+where seizoen = @seizoen and knsbNummer in(7359913, 8285574, 8611922, 189, 190, 8966133, 9040845, 9045388); 
+-- Dimitri Reinderman, Maaike Keetman, Tycho Bakker, Julian en Christian Huisman, Jelle Koopmans 
+
+select * from uitslag 
+where seizoen = @seizoen and teamCode ="1" and rondeNummer = 3 and knsbNummer = 8795941;
+
+delete from uitslag 
+where seizoen = @seizoen and teamCode ="1" and rondeNummer = 3 and knsbNummer = 8795941;
+
+-- kopieer spelers van vorig seizoen met knsbNummer
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien)
 with r as (select * from rating  where jaar = 2025 and maand = 8) -- augustus
 select 0, "2526", "int", "", "", s.knsbNummer, r.knsbRating, "2025-08-01", r.knsbRating, "int", "", "", "", "", 0, 0, 0
 from speler s join r on s.knsbNummer = r.knsbNummer  
 where seizoen = "2425";
 
+-- kopieer spelers van vorig seizoen zonder knsbNummer
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien)
 select 0, "2526", "int", "", "", knsbNummer, 0, "2025-09-01", 1000, "int", "", "", "", "", 0, 0, 0
 from speler  
@@ -289,12 +338,13 @@ select r.knsbRating, r.knsbNaam, s.*
 from speler s join r on s.knsbNummer = r.knsbNummer
 where seizoen = @seizoen;
 
+-- update spelers met rating van 1 september
 with r as (select * from rating  where jaar = 2025 and maand = 9) -- TODO september
 update speler s join r on s.knsbNummer = r.knsbNummer
 set s.knsbRating = r.knsbRating, s.interneRating = r.knsbRating, s.datum = "2025-09-01"
 where seizoen = @seizoen;  
 
-select * from speler where seizoen = @seizoen;
+select * from speler where seizoen = @seizoen and knsbNummer = 8978717;
 delete from speler where seizoen = @seizoen;
 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
@@ -308,6 +358,7 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 (0, "2526", "int", "", "", 6214153, 1790, '2025-08-01', 1790, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 6225934, 1885, '2025-08-01', 1885, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 6335670, 2024, '2025-08-01', 2024, "int", "", "", "", "", 0, 0, 0),
+(0, "2526", "int", "", "", 6420557, 1864, '2025-08-01', 1864, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 6565801, 1902, '2025-08-01', 1902, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 6572511, 1912, '2025-08-01', 1912, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 6930957, 1900, '2025-08-01', 1900, "int", "", "", "", "", 0, 0, 0),
@@ -330,6 +381,7 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 (0, "2526", "int", "", "", 7468362, 1880, '2025-08-01', 1880, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 7468417, 2018, '2025-08-01', 2018, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 7504310, 1809, '2025-08-01', 1809, "int", "", "", "", "", 0, 0, 0),
+(0, "2526", "int", "", "", 7509920, 1986, '2025-08-01', 1986, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 7518203, 1652, '2025-08-01', 1652, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 7519930, 1678, '2025-08-01', 1678, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 7529522, 1860, '2025-08-01', 1860, "int", "", "", "", "", 0, 0, 0),
@@ -386,6 +438,7 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 (0, "2526", "int", "", "", 8931098, 0, '2025-08-01', 0, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 8950876, 1310, '2025-08-01', 1310, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 8966133, 0, '2025-08-01', 0, "int", "", "", "", "", 0, 0, 0),
+(0, "2526", "int", "", "", 8978717, 1483, '2025-08-01', 1483, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 9008967, 1787, '2025-08-01', 1787, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 9023234, 1618, '2025-08-01', 1618, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 9040845, 0, '2025-08-01', 0, "int", "", "", "", "", 0, 0, 0),

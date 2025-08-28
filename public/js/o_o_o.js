@@ -145,6 +145,8 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
     if (o_o_o.competitie === db.INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
             return 2;
+        } else if (o_o_o.seizoen === "2526") { // TODO en latere seizoenen?
+            return 8;
         } else {
             return 3; // vanaf seizoen 2021-2022
         }
@@ -155,6 +157,7 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
     } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
         return 6;
     }
+    return o_o_o.versie;
 }
 
 /**

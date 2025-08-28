@@ -45,11 +45,23 @@ function leesDatabase () {
    }
 
    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
-       return await Uitslag.query()
+       const uitslagen = await Uitslag.query()
            .where("uitslag.clubCode", clubCode)
            .where("uitslag.seizoen", seizoen)
            .where("uitslag.teamCode", teamCode)
            .where("uitslag.rondeNummer", rondeNummer);
+       if (clubCode === 0 && seizoen === "2425" && teamCode === "int" && rondeNummer === 33) {
+           console.log("leesUitslagen: niet gesorteerd");
+           console.log(uitslagen);
+           uitslagen.sort(function (a, b) {
+               if (a.bordNummer < b.bordNummer) return -1;
+               if (a.bordNummer > b.bordNummer) return 1;
+               return 0;
+           });
+           console.log("leesUitslagen: wel gesorteerd");
+           console.log(uitslagen);
+       }
+       return uitslagen;
    }
 
    return Object.freeze({
@@ -179,6 +191,9 @@ module.exports = function (url) {
         ctx.body = mutaties;
     });
 
+    /*
+        Frontend: o_o_o.js
+     */
     url.get("/:club/club", async function (ctx) {
         const eenClub = await db.clubTak(ctx.params.club);
         ctx.body = eenClub.kaleClub();
