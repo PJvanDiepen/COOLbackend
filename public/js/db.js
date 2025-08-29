@@ -852,10 +852,10 @@ const TEAMLEIDER = 2;
 const BESTUUR = 3;
 const WEDSTRIJDLEIDER = 4;
 const BEHEERDER = 8;
-const ONTWIKKElAAR = 9;
+const ONTWIKKELAAR = 9;
 
 const functieInvullen = new Map ([
-    [ONTWIKKElAAR, "ontwikkelaar"],
+    [ONTWIKKELAAR, "ontwikkelaar"],
     [BEHEERDER, "systeembeheerder"],
     [WEDSTRIJDLEIDER, "wedstrijdleider"],
     [BESTUUR, "bestuur"],
@@ -952,7 +952,7 @@ export { // ES6 voor browser,
     BESTUUR,
     WEDSTRIJDLEIDER,
     BEHEERDER,
-    ONTWIKKElAAR,
+    ONTWIKKELAAR,
     functieInvullen,
     gebruikerFunctie      // (speler)
 }

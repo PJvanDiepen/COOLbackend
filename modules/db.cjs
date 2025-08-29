@@ -57,13 +57,16 @@ const NIEUWE_RANGLIJST = 2;
  * De hiërarchie en samenhang tussen de tabellen van de database
  * is een boom-structuur van objecten op de server en in de browser:
  *
- * boom.clubTak(:club)
- *     .seizoenTak(:seizoen)
- *     .teamTak(:team)
- *     .rondeTak(:ronde)
- *     .uitslagTak(:speler)
+ * boom.eenClub(:club)
+ *     .eenSeizoen(:seizoen)
+ *     .eenTeam(:team)
+ *     .eenRonde(:ronde)
+ *     .eenUitslag(:speler)
  *
- * Na serverStart begint de server met revisie = 1 en daarna +1 na elke mutatie van de database.
+ * De objecten in de boom hebben een revisie nummer. Zie synchroon in api.js
+ * Na serverStart begint de server met revisie = 0 en daarna +1 na elke mutatie van de database.
+ *
+ * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
  * De server leest data uit de database naar aanleiding van een vraag van de browser en
  * slaat die op als objecten op in de boom,
@@ -71,25 +74,10 @@ const NIEUWE_RANGLIJST = 2;
  *
  * Als de browser data van de server leest, slaat de server die data ook op in sessionStorage,
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
- * Behalve de gevraagde data stuurt de server ook steeds de revisie van de boom,
+ * Behalve de gevraagde data stuurt de server ook steeds het revisie nummer,
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
  *
- * De boom groeit als het nodig is, maar dan wel met alle vertakkingen tegelijk vanuit een object
- * bijvoorbeeld alle uitslagen van een ronde of alle teams (en competities) per seizoen.
- * Om te groeien gebruikt de boom: leesClubs, leesSeizoenen, leesTeams, leesRonden en leesUitslagen.
- * Deze groeifuncties zijn verschillend voor de server (database lezen) en de browser (server vragen).
- *
- * Na een mutatie van de database worden alle vertakkingen vanuit een object gesnoeid.
- * Na bijvoorbeeld het invullen van een uitslag, worden alle uitslagen van die ronde gesnoeid,
- * want in ieder geval een uitslag is niet meer actueel en misschien komen er meer mutaties voor die ronde.
- * Zo blijft de boom altijd actueel.
- *
- * Na een mutatie van de database krijgt de boom een nieuwe revisie +1 en vermeldt de server
- * in groeien welke vertakkingen voor deze revisie opnieuw moeten groeien.
- * Na bijvoorbeeld het invullen van een uitslag, moeten alle uitslagen van die ronde opnieuw groeien.
- *
- * Aan de hand van de lijst van mutaties in groeien ziet de browser, welke vertakkingen in
- * sessionStorage nog actueel zijn en welke de browser opnieuw van de browser moet vragen.
+ * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
  */
 
 const boom = {

@@ -1570,7 +1570,7 @@ module.exports = function (url) {
     url.get("/:uuid/verwijder/mutaties", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) {
+        if (gebruiker.juisteRechten(db.ONTWIKKELAAR)) {
             aantal = await Mutatie.query().delete()
                 .where("knsbNummer", gebruiker.dader.knsbNummer);
             await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
@@ -1588,7 +1588,7 @@ module.exports = function (url) {
     url.get("/:uuid/conversie", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) {
+        if (gebruiker.juisteRechten(db.ONTWIKKELAAR)) {
             const spelers = await Speler.query()
                 .where("clubCode", 0)
                 .where("seizoen", "2324")
