@@ -58,8 +58,6 @@ function leesDatabase () {
                    return 1;
                } else if (ander.bordNummer === 0) { // geen bordNummer voor een
                    return -1;
-               } else if (een.bordNummer === ander.bordNummer) {
-                   return een.witZwart === db.WIT ? -1 : 1; // wit voor zwart indien zelfde bordNummer
                } else {
                    return een.bordNummer - ander.bordNummer; // op bordNummer
                }

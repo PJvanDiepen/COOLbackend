@@ -128,8 +128,10 @@ Refresh Android cache
 - [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
 - [Zeekat CSS!](https://zeekat.nl/index.html)
 - [HTML uitleg](https://www.patrickweaver.net/blog/a-blog-post-with-every-html-element/)
+- [about the internet connection](https://csswizardry.com/Obs.js/demo/)
 - [Unicode](https://tonsky.me/blog/unicode/)
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
+- [You no longer need JavaScript](https://lyra.horse/blog/2025/08/you-dont-need-js/)
 - [CSS kills SPA](https://www.jonoalderson.com/conjecture/its-time-for-modern-css-to-kill-the-spa/)
 - [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
 - [website load faster!](https://www.docuseal.com/blog/make-any-website-load-faster-with-6-lines-html)
@@ -147,6 +149,7 @@ Refresh Android cache
 
 # software enigineering
 - [SOLID](https://jsdev.space/solid-design-principles/)
+- [big O](https://samwho.dev/big-o/)
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Linus Torvalds on Git](https://www.youtube.com/watch?v=4XpnKHJAok8)

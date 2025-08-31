@@ -57,6 +57,7 @@ delete from ronde where clubCode = 0 and seizoen = "2324" and teamCode = "int" a
 select maand, jaar, count(*) leden from rating group by maand, jaar;
 
 -- TODO wijzig datum externe wedstrijd
+set @seizoen = '2526';
 set @team = 'n1';
 set @ronde = 1;
 set @datum = '2025-10-10';
@@ -70,6 +71,7 @@ update uitslag set partij = "p", datum = @datum
 where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde; 
 
 -- TODO partij wijzigen
+set @seizoen = '2526';
 set @team = 'int';
 set @competitie = 'int';
 set @ronde = 33;
@@ -301,14 +303,15 @@ update speler set knsbTeam = "0" where seizoen = "2526" and knsbNummer = 8795941
 
 
 -- gebruiker toevoegen
+set @seizoen = '2526';
 
 select * from speler
 where seizoen = @seizoen and knsbNummer in(7359913, 8285574, 8611922, 189, 190, 8966133, 9040845, 9045388); 
 -- Dimitri Reinderman, Maaike Keetman, Tycho Bakker, Julian en Christian Huisman, Jelle Koopmans 
 
 delete from speler
-where seizoen = @seizoen and knsbNummer in(7359913, 8285574, 8611922, 189, 190, 8966133, 9040845, 9045388); 
--- Dimitri Reinderman, Maaike Keetman, Tycho Bakker, Julian en Christian Huisman, Jelle Koopmans 
+where seizoen = @seizoen and knsbNummer in(7359913, 8285574, 7778100, 8611922, 189, 190, 8966133, 9040845, 9045388); 
+-- Dimitri Reinderman, Maaike Keetman, Arlette van Weersel, Tycho Bakker, Julian en Christian Huisman, Jelle Koopmans 
 
 select * from uitslag 
 where seizoen = @seizoen and teamCode ="1" and rondeNummer = 3 and knsbNummer = 8795941;
