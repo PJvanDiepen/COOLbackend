@@ -191,6 +191,7 @@ Refresh Android cache
 - [Monte Carlo simulatie investeren](https://www.investopedia.com/terms/m/montecarlosimulation.asp)
 - [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
 - [Arlette](https://issuu.com/schaakbond/docs/schaakmagazine_2007-2)
+- [Reglementen](https://schaakbond.nl/de-knsb/reglementen/)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)

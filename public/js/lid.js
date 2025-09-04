@@ -156,6 +156,10 @@ async function lidFormulier(persoon, septemberRating) {
         const muteren = persoon.datum === null ? "speler/toevoegen" : "speler/wijzigen";
         const rating = knsbRating.value;
         const ratingIntern = interneRating.value;
+        /*
+        TODO 1000 invullen in de URL
+        https://0-0-0.nl/[uuid]/0/2526/int/speler/toevoegen/192/0/1000/0/0/int%20/2000-09-01
+         */
         const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
         const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;
         if (await zyq.serverFetch(`/${uuid}/${key}/${muteren}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${jaar}-09-01`)) {

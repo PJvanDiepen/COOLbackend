@@ -1,5 +1,5 @@
 use waagtoren; -- ga naar TODO
-set @seizoen = '2526';
+set @seizoen = "2526";
 
 -- TODO issue #37 afwezig en externe wedstrijd op dinsdag
 
@@ -74,8 +74,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2526';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 33;
-set @bord = 14;
+set @ronde = 1;
+set @bord = 23;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -86,8 +86,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit   = 8350738; -- Ramon Witte
-set @zwart = 8224502; -- Jan van Gijsen
+set @wit   = 8915346; -- Luca de Graaf
+set @zwart = 192; -- Alexander van der Linden
 
 select * from persoon where knsbNummer = @wit;
 
@@ -288,10 +288,83 @@ where p.knsbNummer = 7084022; -- John Kramer
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
 (0, "2526", "int", "", "", 7084022, 1888, '2025-08-01', 1888, "int", "", "", "", "", 0, 0, 0);
 
+insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol, emailZien, telefoonZien) values
+(0, "2526", "int", "", "", 6187885, 1615, '2025-09-01', 1615, "int", "", "", "", "", 0, 0, 0); -- Bob de Mon
+
+-- rating 1-9-2025
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 8795941; -- Guido van Hesseling 
+update speler set interneRating = 2232, knsbRating = 2232, datum = '2025-09-01', nhsbTeam = "n0" 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 8795941;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7428960; -- Frank Agter 
+update speler set interneRating = 2227, knsbRating = 2227, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7428960;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 8096242; -- Michaël van Liempt 
+update speler set interneRating = 2172, knsbRating = 2172, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 8096242;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 6335670; -- Hebert Perez Garcia 
+update speler set interneRating = 2027, knsbRating = 2027, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 6335670;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7613166; -- Peter Kalisvaart 
+update speler set interneRating = 2047, knsbRating = 2047, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7613166;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 8587337; -- Max Hooijmans 
+update speler set interneRating = 1939, knsbRating = 1939, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 8587337;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7292043; -- Rob Freer 
+update speler set interneRating = 1879, knsbRating = 1879, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7292043;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7546506; -- Edward Schenkel
+update speler set interneRating = 1861, knsbRating = 1861, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7546506;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7699010; -- Ruud Niewenhuis
+update speler set interneRating = 1826, knsbRating = 1826, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7699010;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 6951362; -- Johan Plooijer 
+update speler set interneRating = 1778, knsbRating = 1778, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 6951362;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7443172; -- Anton Schermer 
+update speler set interneRating = 1776, knsbRating = 1776, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7443172;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 9077651; -- Lennart van der Kraan
+update speler set interneRating = 1630, knsbRating = 1630, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 9077651;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7777715; -- Richard Gooijers
+update speler set interneRating = 1463, knsbRating = 1463, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7777715;
+
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer  
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and s.knsbNummer = 7771665; -- Yvonne Schol
+update speler set interneRating = 1433, knsbRating = 1433, datum = '2025-09-01' 
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" and knsbNummer = 7771665;
+
 select * from speler where knsbNummer = 7084022;
 
 update speler set knsbRating = 1888 where knsbNummer = 7084022;
-
 
 insert into gebruiker (knsbNummer, mutatieRechten, uuidToken, email, datumEmail, telefoon) values
 (7084022, 1, uuid(), "john-kramer@kpnmail.nl", "2025-08-27", "");
@@ -346,6 +419,12 @@ with r as (select * from rating  where jaar = 2025 and maand = 9) -- TODO septem
 update speler s join r on s.knsbNummer = r.knsbNummer
 set s.knsbRating = r.knsbRating, s.interneRating = r.knsbRating, s.datum = "2025-09-01"
 where seizoen = @seizoen;  
+
+-- spelers op rating
+select naam, s.* 
+from speler s join persoon p on p.knsbNummer = s.knsbNummer
+where clubCode = 0 and seizoen = "2526" and teamCode = "int" 
+order by s.knsbRating desc; 
 
 select * from speler where seizoen = @seizoen and knsbNummer = 8978717;
 delete from speler where seizoen = @seizoen;
@@ -450,11 +529,150 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 (0, "2526", "int", "", "", 9065100, 2006, '2025-08-01', 2006, "int", "", "", "", "", 0, 0, 0),
 (0, "2526", "int", "", "", 9077651, 1595, '2025-08-01', 1595, "int", "", "", "", "", 0, 0, 0);
 
--- ronde 1 TODO
+-- ronde 1
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0, "2526", "int", 1, 0, 6565801, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7101193, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7399469, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7544438, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7582102, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7649213, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7665834, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7707832, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 7771665, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 8400183, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 8472530, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 8484443, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 8795941, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 8978717, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 9065100, "a", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 0, 8226317, "p", "", 0, "", '2025-09-02', "int"),
+(0, "2526", "int", 1, 1, 7535396, "i", "w", 5968611, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 1, 5968611, "i", "z", 7535396, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 2, 7613166, "i", "w", 7824674, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 2, 7824674, "i", "z", 7613166, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 3, 6572511, "i", "w", 7129991, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 3, 7129991, "i", "z", 6572511, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 4, 7099950, "i", "w", 6930957, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 4, 6930957, "i", "z", 7099950, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 5, 7084022, "i", "w", 8112654, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 5, 8112654, "i", "z", 7084022, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 6, 6207520, "i", "w", 7292043, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 6, 7292043, "i", "z", 6207520, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 7, 7441346, "i", "w", 8587337, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 7, 8587337, "i", "z", 7441346, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 8, 7386060, "i", "w", 7546506, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 8, 7546506, "i", "z", 7386060, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 9, 7529522, "i", "w", 7758014, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 9, 7758014, "i", "z", 7529522, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 10, 7210137, "i", "w", 7731812, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 10, 7731812, "i", "z", 7210137, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 11, 7282033, "i", "w", 7269900, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 11, 7269900, "i", "z", 7282033, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 12, 7419621, "i", "w", 7699010, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 12, 7699010, "i", "z", 7419621, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 13, 8372881, "i", "w", 6951362, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 13, 6951362, "i", "z", 8372881, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 14, 7443172, "i", "w", 7904589, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 14, 7904589, "i", "z", 7443172, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 15, 9023234, "i", "w", 6212404, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 15, 6212404, "i", "z", 9023234, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 16, 8617367, "i", "w", 6187885, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 16, 6187885, "i", "z", 8617367, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 17, 8243312, "i", "w", 7519930, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 17, 7519930, "i", "z", 8243312, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 18, 8073978, "i", "w", 8358966, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 18, 8358966, "i", "z", 8073978, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 19, 8335415, "i", "w", 8224502, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 19, 8224502, "i", "z", 8335415, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 20, 7321534, "i", "w", 8350738, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 20, 8350738, "i", "z", 7321534, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 21, 7777715, "i", "w", 7518203, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 21, 7518203, "i", "z", 7777715, "½", '2025-09-02', "int"),
+(0, "2526", "int", 1, 22, 9077651, "i", "w", 8950876, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 22, 8950876, "i", "z", 9077651, "0", '2025-09-02', "int"),
+(0, "2526", "int", 1, 23, 8915346, "i", "w", 192, "1", '2025-09-02', "int"),
+(0, "2526", "int", 1, 23, 192, "i", "z", 8915346, "0", '2025-09-02', "int");
+
+-- ronde 2 TODO
+set @seizoen = "2526";
 set @team = "int";
-set @ronde = 1;
+set @ronde = 2;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0, "2526", "int", 2, 0, 192, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 6212404, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 6565801, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 6572511, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 6930957, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 6951362, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7099950, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7101193, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7269900, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7282033, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7292043, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7321534, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7419621, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7443172, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7519930, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7529522, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7544438, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7546506, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7649213, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7665834, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7699010, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7707832, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7731812, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7771665, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8073978, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8112654, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8224502, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8243312, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8358966, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8587337, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 9023234, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 9065100, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 9077651, "m", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7399469, "n", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7535396, "n", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7758014, "n", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 5968611, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 6187885, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 6207520, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7084022, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7129991, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7210137, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7386060, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7441346, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7518203, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7582102, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7613166, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7777715, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7824674, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 7904589, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8226317, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8335415, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8350738, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8372881, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8400183, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8472530, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8484443, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8617367, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8795941, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8915346, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8950876, "p", "", 0, "", '2025-09-09', "int"),
+(0, "2526", "int", 2, 0, 8978717, "p", "", 0, "", '2025-09-09', "int");
+
+
+-- ronde 3 TODO
+set @seizoen = "2526";
+set @team = "int";
+set @ronde = 2;
+select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+
 
 -- Waagtoren KNSB beker
 
