@@ -48,6 +48,40 @@ function verwijderNietActueel(revisie) {
     }
 }
 
+async function groeiFuncties () { // zie api.js
+    const clubVraag = await server.vraag("/club");
+
+    async function leesClubs() {
+
+    }
+
+    async function leesSeizoenen(clubCode) {
+
+    }
+
+    async function leesTeams(clubCode, seizoen) {
+
+    }
+
+    async function leesRonden(clubCode, seizoen, teamCode) {
+
+    }
+
+    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
+
+    }
+
+    return Object.freeze({
+        leesClubs,
+        leesSeizoenen,
+        leesTeams,
+        leesRonden,
+        leesUitslagen
+    });
+};
+
+// db.boomOnderhoud(leesDatabase());
+
 export async function vraag(commando) {
     const vraagVanServer = await vraagZoeken(commando);
     if (!vraagVanServer) {
@@ -123,7 +157,6 @@ async function vraagZoeken(commando) {
     } else if (vragen.length > 1) {
         console.log(`Server herkent meer vragen met ${commando}`);
         console.log(vragen);
-        return vragen[0];
     }
     return vragen[0]; // eerste of enige vraag
 }

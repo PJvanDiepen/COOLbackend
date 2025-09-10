@@ -20,7 +20,7 @@ import * as zyq from "./zyq.js";
     await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
-        [db.ONTWIKKElAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
+        [db.ONTWIKKELAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
             zyq.backupSQL("uitslag", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/backup/uitslagen/${rondeNummer}`));
         }],
@@ -42,8 +42,8 @@ import * as zyq from "./zyq.js";
         }]);
     await rondeSelecteren(o_o_o.competitie, rondeNummer);
     await uitslagenRonde(rondeNummer, html.id("uitslagen"));
-    html.id("kop").textContent =
-        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeGegevens(o_o_o.team, rondeNummer))}`;
+    html.id("kop").textContent = "Voorlopig geen kop";  // TODO voorlopig
+        // `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeGegevens(o_o_o.team, rondeNummer))}`;
 })();
 
 async function uitslagenRonde(rondeNummer, lijst) {

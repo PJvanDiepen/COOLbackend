@@ -25,9 +25,11 @@ Refresh Android cache
 
 # Browser
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+- [Chrome 17](https://addyosmani.com/blog/chrome-17th/)
+- [Chrome API](https://anchorbrowser.io/blog/top-chrome-apis-every-developer-should-try)
+- [Firefox DevTools](https://developer.mozilla.org/en-US/docs/Tools)
 
 # MySQL
-
 - [MySQL tutorial](https://www.mysqltutorial.org/)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
@@ -38,7 +40,6 @@ Refresh Android cache
 - [database design example](https://blog.devart.com/sql-database-design-basics-with-example.html)
 
 # JavaScript
-
 - [ECMA JavaScript](https://262.ecma-international.org/)
 - [JavaScript tutorial](https://javascript.info/)
 - [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)

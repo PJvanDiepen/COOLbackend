@@ -80,7 +80,7 @@ const NIEUWE_RANGLIJST = 2;
  * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
  */
 
-const boom = { // de leesfuncties zijn verschillend voor de server en de browser
+const boom = { // de groeiFuncties zijn verschillend voor de server en de browser
     leesClubs: function() {},
     leesSeizoenen: function() {},
     leesTeams: function() {},

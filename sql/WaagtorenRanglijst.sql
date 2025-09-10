@@ -232,7 +232,7 @@ begin
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
             and u.competitie = competitie;
     declare continue handler for not found set found = false;
-    if versie <= 4 then -- interne competitie
+    if versie <= 4 or versie >= 7 then -- interne competitie 
 		set minimumInternePartijen = 20; -- reglement artikel 2
 		set minimumPartijenGeleden = 7; -- reglement artikel 3
 	end if;

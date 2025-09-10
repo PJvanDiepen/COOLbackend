@@ -9,9 +9,9 @@
  *
  * html.js bevat alle code voor interactie met HTML en CSS
  * db.js bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
+ * server.js bevat alle code voor de interactie met de server op 0-0-0.nl
  * enz.
  */
-
 import * as html from "./html.js";
 import * as db from "./db.js";
 import * as server from "./server.js";
@@ -22,10 +22,20 @@ import * as zyq from "./zyq.js";
  * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
  * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
  */
-export async function init() {
-    await server.synchroniseren();
+export async function init(urlParameters) {
+    /*
+    TODO 0  o_o_o.init(object met url parameters) elke pagina weet wat ie nodig heeft
+    TODO 1. html.urlVerwerken(object met url parameters)
+    TODO 1a. clubCode en seizoen eventueel uit sessionStorage
+    TODO 2. server.synchroniseren met diverse url keys
+    TODO 3. seizoenVerwerken verwijderen
+    TODO 4. Iets anders dan o_o_o?
+     */
+    // TODO const url = html.urlVerwerken(urlParameters);
+    // TODO await server.synchroniseren();
     urlVerwerken();
     await zyq.gebruikerVerwerken();
+    /* TODO begin voorlopig
     await seizoenVerwerken();
     o_o_o.competitie = db.isCompetitie({teamCode: o_o_o.team })
         ? o_o_o.team
@@ -34,6 +44,13 @@ export async function init() {
         o_o_o.team = o_o_o.competitie;
     }
     o_o_o.versie = versieBepalen();
+    TODO einde voorlopig
+     */
+    o_o_o.seizoen = "2526";
+    o_o_o.competitie = "int";
+    o_o_o.team = "int";
+    o_o_o.versie = 8;
+    console.log("o_o_o.js: init tot hier");
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
 }
 

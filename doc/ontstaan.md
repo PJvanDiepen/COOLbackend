@@ -1,10 +1,16 @@
 # Ontstaansgeschiedenis 0-0-0
 
 Inmiddels heb ik, Peter van Diepen al jaren aan 0-0-0 gewerkt en is het nuttig om de geschiedenis 
-van de belangrijkste ontwerpbeslissingen vast te leggen, zodat anderen weten hoe dit alles is ontstaan. 
+van de belangrijkste ontwerpbeslissingen vast te leggen, zodat anderen weten hoe dit alles is ontstaan.
+
+Toen ik begon, had ik nog nooit in JavaScript geprogrammeerd en had ik geen ervaring met web-app's.
+Daarom was mijn motto:
 
 Ik heb het nog nooit gedaan dus ik denk dat ik het wel kan
 (Pipi Langkous)
+
+Na een aantal jaren steeds nieuwe functionaliteit toevoegen, was het allemaal heel complex geworden.
+Toen besloot ik dat het een en ander opnieuw moest ontwerpen met een nieuw motto: 
 
 Alles draait om de eenvoud
 (Het Goede Doel)
@@ -150,8 +156,8 @@ De reglement-data van deze prototypes staat vooralsnog in vier MySQL stored func
 - versie 4 `rapidPunten` voor rapid competitie
 - versie 5 `zwitsersPunten` voor Zwitsers systeem (niet in gebruik)
 - versie 6 jeugd competitie met barrière punten en drie keer afzeggen (najaars competitie 2023)
-- versie 7 jeugd competitie vanaf voorjaars competitie 2024
-- versie 8 Alkmaar systeem waarbij externe wedstrijden op andere dagen dan dinsdag niet meetellen (2025-2026)
+- versie 7 met `externeAftrek` voor alle externe wedstrijden niet op dinsdag
+- versie 8 met `externeAftrek` vanaf seizoen 2025-2026
 
 In de web-app verschijnt de ranglijst van een geselecteerde competitie, seizoen en schaakvereniging, 
 maar je kunt ook testen hoe de ranglijst eruit ziet als je een andere `versie` kiest.  
@@ -177,6 +183,9 @@ Ten eerste voor het afzeggen. In versie 2 was er nog `afzeggingenAftrek` na 7 ke
 Vanaf versie 3 is die afgeschaft in de reglement-data en het reglement.
 Ten tweede kende Rokade ingebouwde regels voor reglementaire winst, verlies en remise.
 Die zijn overgenomen in `punten` van de reglement-data en in het reglement.
+
+Met ingang van seizoen 2025-2026 geldt een maximum van 4 externe wedstrijden niet op dinsdag die meetellen 
+voor de interne competitie van de Waagtoren.
 
 ## Rokade wordt 0-0-0
 

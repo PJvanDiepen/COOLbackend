@@ -11,12 +11,9 @@ const Uitslag = require("./models/uitslag");
 
 const { fn, ref } = require("objection");
 
-/*
-db.boom met db.cjs voor de server en met db.js voor de browser.
- */
 const db = require("./modules/db.cjs");
 
-function leesDatabase () {
+function groeiFuncties () { // zie server.js
    async function leesClubs() {
        return [
            {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"},
@@ -75,7 +72,7 @@ function leesDatabase () {
    });
 };
 
-db.boomOnderhoud(leesDatabase());
+db.boomOnderhoud(groeiFuncties());
 
 const package_json = require("./package.json");
 

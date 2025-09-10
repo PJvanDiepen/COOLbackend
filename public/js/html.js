@@ -8,6 +8,10 @@ export const pagina = new URL(location);
 export const params = pagina.searchParams;
 export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 
+export function urlVerwerken(gevraagdeParameters) {
+    const urlParameters = URLSearchParams;
+    // TODO PvD
+}
 
 export const SCHEIDING = " \u232A ";
 export const VINKJE = "\u00a0\u00a0✔\u00a0"; // met no break spaces

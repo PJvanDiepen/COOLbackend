@@ -1,5 +1,7 @@
 use waagtoren;
 
+select distinct m.knsbNummer, naam from mutatie m join persoon p on p.knsbNummer = m.knsbNummer order by naam;   
+
 -- waagtoren 1
 select naam, s.knsbNummer, s.knsbRating, nhsbTeam, knsbTeam from speler s
 join persoon p on p.knsbNummer = s.knsbNummer
