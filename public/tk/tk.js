@@ -221,13 +221,13 @@ const tk = [
         link: "https://nl.wikipedia.org/wiki/Kabinet-Schoof"
     },
     {jaar: 2025,
-        zetels: "PVV=32&GL/PvdA=25&CDA=24&VVD=16&D66=11&JA21=9&SP=6&PvdD=5&BBB=5&CU=4&Denk=4&Volt=3&FvD=3&SGP=3&NSC=0",
+        zetels: "PVV=32&GL/PvdA=25&CDA=24&VVD=16&D66=11&JA21=11&SP=6&PvdD=4&BBB=4&CU=4&Denk=4&FvD=3&Volt=3&SGP=3&NSC=0",
         kabinet: "Peilingwijzer Tom Louwerse",
         breed: 640,
         hoog: 427,
         link: "https://peilingwijzer.tomlouwerse.nl"
     } /*
-    bovenstaande is bijgewerkt 3/9/2025
+    bovenstaande is bijgewerkt 17/9/2025
 
     {jaar: 2023,
         zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
