@@ -1,13 +1,13 @@
 /*
- * Deze module bevat globale variabelen en code die op meer dan een pagina wordt gebruikt.
+ * Deze module o_o_o.js bevat code die op meer dan een pagina wordt gebruikt.
  *
- * De eerste pagina van 0-0-0.nl staat in index.html en start.html is de pagina, die de 0-0-0 app start.
+ * De eerste pagina van 0-0-0.nl is index.html en start.html is de pagina, die de 0-0-0 app start.
  * De bijhorende start.js verwerkt de url, vult de pagina aan en reageert op de gebruiker.
- *
  * Dit geldt voor alle vervolg pagina's. Bij agenda.html hoort agenda.js, bij bestuur.html hoort bestuur.js en zo voort.
- * Daarnaast zijn er modules:
  *
- * html.js bevat alle code voor interactie met HTML en CSS
+ * Alle pagina's gebruiken code van o_o_o.js en daarnaast zijn er modules:
+ *
+ * html.js bevat alle code voor de interactie met HTML en CSS
  * db.js bevat alle code voor het valideren van de velden in de tabellen van de MySQL database
  * server.js bevat alle code voor de interactie met de server op 0-0-0.nl
  * enz.
@@ -19,21 +19,25 @@ import * as server from "./server.js";
 import * as zyq from "./zyq.js";
 
 /**
- * Elke verwerking van een pagina van 0-0-0 begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
- * Daarna pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
+ * Elke verwerking van een pagina begint met init(), eventueel competitieTitel() en het verwerken van mutaties.
+ * Daarna volgt pagina maken en mutaties markeren met gewijzigd() en meestal een menu().
+ *
+ * Achtereenvolgens verwerkt urlVerwerken() de parameters die de pagina nodig en zet het resultaat in url,
+ * synchroniseert met de server en geeft url terug aan de pagina.
+ *
+ * @param parameters van een pagina ["club", "seizoen", ...]
+ * @returns {Promise<void>} url object met de parameters en eventuele aanvullingen
  */
-export async function init(urlParameters) {
+export async function init(parameters) {
     /*
-    TODO 0  o_o_o.init(object met url parameters) elke pagina weet wat ie nodig heeft
-    TODO 1. html.urlVerwerken(object met url parameters)
+    TODO hernoem init naar urlVerwerken
+    TODO 0. Geen globale variabelen, maar alleen code. Alles klaarzetten in server.js
     TODO 1a. clubCode en seizoen eventueel uit sessionStorage
     TODO 2. server.synchroniseren met diverse url keys
     TODO 3. seizoenVerwerken verwijderen
     TODO 4. Iets anders dan o_o_o?
      */
-    // TODO const url = html.urlVerwerken(urlParameters);
-    // TODO await server.synchroniseren();
-    urlVerwerken();
+    const url = urlVerwerken(parameters);
     await zyq.gebruikerVerwerken();
     /* TODO begin voorlopig
     await seizoenVerwerken();
@@ -52,6 +56,7 @@ export async function init(urlParameters) {
     o_o_o.versie = 8;
     console.log("o_o_o.js: init tot hier");
     Object.assign(zyq.o_o_o, o_o_o); // TODO voorlopig i.v.m. zyq.aanroepen
+    return url;
 }
 
 export const o_o_o = {

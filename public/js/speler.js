@@ -18,6 +18,7 @@ import * as zyq from "./zyq.js";
                 `/${o_o_o.club}/${o_o_o.seizoen}/backup/speler/${o_o_o.speler}`));
         }]);
     uitslagenSpeler(html.id("kop"), html.id("tabel"));
+    // TODO naar kolom. Verwijderd door patch met nano op 17-9-2025
     await ratingPerMaandSpeler(html.id("ratings"), o_o_o.speler);
 })();
 

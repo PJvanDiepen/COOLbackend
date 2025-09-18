@@ -118,18 +118,30 @@ function rondeNummers(ronden) {
     return nummers;
 }
 
+// TODO uit speler
 function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
-    for (const speler of spelers) {
-        if (nhsbTeam && speler.nhsbTeam === teamCode) {
-            return speler.knsbRating + 80; // NHSB reglement artikel 20
-        } else if (speler.knsbTeam === teamCode) {
-            return speler.knsbRating + 40; // KNSB reglement artikel 13.2
-        }
-    }
-    if (teamCode === "nbb") { // NHSB beker (brons)
+    if (teamCode === "2") { // 40 + 2102 Nico Hauwert
+        return 2142;
+    } else if (teamCode === "3") { // 40 + 2006 Alberto Alvarez Alonso
+        return 2046;
+    } else if (teamCode === "4") { // 40 + 1861 Edward Schenkel
+        return 1901;
+    } else if (teamCode === "5") { // 40 + 1790 Jan Poland
+        return 1830;
+    } else if (teamCode === "6") { // 40 + 1661 Jan van Gijsen
+        return 1701;
+    } else if (teamCode === "nbb") { // NHSB beker (brons)
         return 1750;
     } else if (teamCode === "nbz") { // NHSB beker (zilver)
         return 1950;
+    } else if (teamCode === "n2") { // 80 + 2102 Nico Hauwert
+        return 2182;
+    } else if (teamCode === "n3") { // 80 + 1902 Ernst Hoogenes
+        return 1982;
+    } else if (teamCode === "n4") { // 80 + 1861 Edward Schenkel
+        return 1941;
+    } else if (teamCode === "n5") { // 80 + 1757 Nico Mak
+        return 1837;
     } else {
         return 3000;
     }

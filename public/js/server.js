@@ -78,9 +78,11 @@ async function groeiFuncties () { // zie api.js
         leesRonden,
         leesUitslagen
     });
-};
+}
 
 // db.boomOnderhoud(leesDatabase());
+
+
 
 export async function vraag(commando) {
     const vraagVanServer = await vraagZoeken(commando);
@@ -99,6 +101,11 @@ export async function vraag(commando) {
         jaar: 2025,
         csv: ""
     };
+
+    /*
+    TODO url = { }; na invullen door urlVerwerken() en gebruikerVerwerken() en zo voort
+    TODO specificeren(url);
+     */
 
     function specificeren(object) {
         for (const [key, value] of Object.entries(object)) {

@@ -20,7 +20,7 @@ import * as zyq from "./zyq.js";
     if (true) { // TODO (o_o_o.vereniging === "Waagtoren")
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
-    const laatsteUitslagen = 2; // laatsteUitslagenRonde(); TODO voorlopig
+    const laatsteUitslagen = 3; // laatsteUitslagenRonde(); TODO voorlopig
     const invullenUitslagen = 0; // invullenUitslagenRonde(); TODO voorlopig
     const voorlopigeIndeling = 0; // indelenRonde(); TODO voorlopig
     // console.log(`laatste r${laatsteUitslagen} invullen r${invullenUitslagen} indelen r${voorlopigeIndeling}`);

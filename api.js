@@ -70,7 +70,7 @@ function groeiFuncties () { // zie server.js
        leesRonden,
        leesUitslagen
    });
-};
+}
 
 db.boomOnderhoud(groeiFuncties());
 
