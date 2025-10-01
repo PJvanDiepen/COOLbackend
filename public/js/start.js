@@ -13,7 +13,7 @@ import * as zyq from "./zyq.js";
  */
 
 (async function() {
-    await init();
+    await init({});
     html.id("kop").textContent = "Voorlopig geen kop"; // TODO voorlopig
         // `${o_o_o.vereniging}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}${db.teamVoluit(o_o_o.competitie)}`;
     const plaatje = html.id("plaatje");

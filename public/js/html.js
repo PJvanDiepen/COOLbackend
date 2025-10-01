@@ -5,12 +5,32 @@
 import * as db from "./db.js";
 
 export const pagina = new URL(location);
-export const params = pagina.searchParams;
+export const params = pagina.searchParams; // TODO verwijderen
 export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
 
+export const url = {};
+
+/**
+ * urlVerwerken() maakt url object aan de hand van de gevraagdeParameters van de pagina.
+ * Ten eerste uit de gegeven urlParameters.
+ * Ten tweede uit de gevraagdeParameters die al zijn ingevuld door de pagina.
+ *
+ * @param gevraagdeParameters van pagina
+ */
 export function urlVerwerken(gevraagdeParameters) {
-    const urlParameters = URLSearchParams;
-    // TODO PvD
+    const urlParameters = pagina.searchParams;
+    url.uuid = urlParameters.get("uuid");
+    for (const [key, value] of Object.entries(gevraagdeParameters)) {
+        const numeriek = typeof value === "number";
+        if (urlParameters.has(key)) {
+            url[key] = numeriek ? Number(urlParameters.get(key)) : urlParameters.get(key);
+        } else {
+            url[key] = value;
+        }
+        if (value === "") {
+            console.log(`urlVerwerken ${key}=""`);
+        }
+    }
 }
 
 export const SCHEIDING = " \u232A ";

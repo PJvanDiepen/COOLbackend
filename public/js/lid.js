@@ -159,6 +159,7 @@ async function lidFormulier(persoon, septemberRating) {
         /*
         TODO 1000 invullen in de URL
         https://0-0-0.nl/[uuid]/0/2526/int/speler/toevoegen/192/0/1000/0/0/int%20/2000-09-01
+        https://0-0-0.nl/[uuid]/0/2526/int/speler/wijzigen/8587337/0/[?]/n1/0/int%20/2000-09-01
          */
         const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
         const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;

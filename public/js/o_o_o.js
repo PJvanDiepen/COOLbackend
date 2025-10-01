@@ -37,7 +37,7 @@ export async function init(parameters) {
     TODO 3. seizoenVerwerken verwijderen
     TODO 4. Iets anders dan o_o_o?
      */
-    const url = urlVerwerken(parameters);
+    const url = html.urlVerwerken(parameters);
     await zyq.gebruikerVerwerken();
     /* TODO begin voorlopig
     await seizoenVerwerken();

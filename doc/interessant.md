@@ -85,6 +85,7 @@ Refresh Android cache
 - [CORS](https://jakearchibald.com/2021/cors/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
+- [npm security](https://github.com/bodadotsh/npm-security-best-practices)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
 - [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
