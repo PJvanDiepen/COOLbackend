@@ -2,18 +2,23 @@
 
 import * as db from "./db.js";
 import * as html from "./html.js";
+import * as server from "./server.js";
+/*
+TODO verwijderen
 import { o_o_o, init, laatsteUitslagenRonde, invullenUitslagenRonde, indelenRonde } from "./o_o_o.js";
+ */
 
 import * as zyq from "./zyq.js";
 
-/*
-    verwerk vereniging=[vereniging]
-    of
-    verwerk team=<teamCode>&competitie=<teamCode>
- */
-
 (async function() {
-    await init({});
+    html.urlVerwerken({
+        uuid: "",
+        club: 0,
+        seizoen: "",
+        team: "",
+        competitie: ""
+    });
+    await server.synchroniseren();
     html.id("kop").textContent = "Voorlopig geen kop"; // TODO voorlopig
         // `${o_o_o.vereniging}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}${db.teamVoluit(o_o_o.competitie)}`;
     const plaatje = html.id("plaatje");

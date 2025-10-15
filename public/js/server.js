@@ -2,7 +2,7 @@
  * Deze module bevat alle code voor het synchroniseren van de browser met de server.
  */
 
-import { server } from "./html.js";
+import { server, url } from "./html.js";
 import * as db from "./db.js";
 
 // TODO verwijderen

@@ -51,7 +51,7 @@ Refresh Android cache
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
-- [Vanilla JavaScript](https://vanjs.org/)
+- [VanJS UI Framework without React/JSX](https://vanjs.org/)
 - [js algorithms](https://github.com/trekhleb/javascript-algorithms)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [Copy to clipboard](https://www.freecodecamp.org/news/copy-text-to-clipboard-javascript/)
