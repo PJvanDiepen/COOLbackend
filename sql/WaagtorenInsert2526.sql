@@ -1278,33 +1278,67 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 
 -- Waagtoren n1 TODO
 set @team = "n1";
-set @ronde = 1;
+set @ronde = 2;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
 insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
-(0,"2526","n1",1,4,7099950,"e","w",0,"1",'2025-09-23',"int"),
-(0,"2526","n1",1,6,7129991,"e","w",0,"1",'2025-09-23',"int"),
-(0,"2526","n1",1,2,7428960,"e","w",0,"1",'2025-09-23',"int"),
-(0,"2526","n1",1,5,7613166,"e","z",0,"1",'2025-09-23',"int"),
 (0,"2526","n1",1,1,7970094,"e","z",0,"1",'2025-09-23',"int"),
+(0,"2526","n1",1,2,7428960,"e","w",0,"1",'2025-09-23',"int"),
 (0,"2526","n1",1,3,8096242,"e","z",0,"½",'2025-09-23',"int"),
+(0,"2526","n1",1,4,7099950,"e","w",0,"1",'2025-09-23',"int"),
+(0,"2526","n1",1,5,7613166,"e","z",0,"1",'2025-09-23',"int"),
+(0,"2526","n1",1,6,7129991,"e","w",0,"1",'2025-09-23',"int"),
 (0,"2526","n1",1,7,8112654,"e","z",0,"½",'2025-09-23',"int"),
-(0,"2526","n1",1,8,8587337,"e","w",0,"1",'2025-09-23',"int");
+(0,"2526","n1",1,8,8587337,"e","w",0,"1",'2025-09-23',"int"),
+(0,"2526","n1",2,1,8096242,"e","w",0,"½",'2025-10-16',"int"),
+(0,"2526","n1",2,2,5968611,"e","z",0,"1",'2025-10-16',"int"),
+(0,"2526","n1",2,3,7970094,"e","w",0,"1",'2025-10-16',"int"),
+(0,"2526","n1",2,4,7099950,"e","z",0,"½",'2025-10-16',"int"),
+(0,"2526","n1",2,5,7613166,"e","w",0,"0",'2025-10-16',"int"),
+(0,"2526","n1",2,6,7509920,"e","z",0,"0",'2025-10-16',"int"),
+(0,"2526","n1",2,7,8112654,"e","w",0,"1",'2025-10-16',"int"),
+(0,"2526","n1",2,8,8587337,"e","z",0,"½",'2025-10-16',"int");
+
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+
+(0,"2526","n1",2,1,8096242,"e","w",0,"½",'2025-10-16',"int"),
+(0,"2526","n1",2,2,5968611,"e","z",0,"1",'2025-10-16',"int"),
+(0,"2526","n1",2,3,7970094,"e","w",0,"1",'2025-10-16',"int"),
+(0,"2526","n1",2,4,7099950,"e","z",0,"½",'2025-10-16',"int"),
+(0,"2526","n1",2,5,7613166,"e","w",0,"0",'2025-10-16',"int"),
+(0,"2526","n1",2,6,7509920,"e","z",0,"0",'2025-10-16',"int"),
+(0,"2526","n1",2,7,8112654,"e","w",0,"1",'2025-10-16',"int"),
+(0,"2526","n1",2,8,8587337,"e","z",0,"½",'2025-10-16',"int");
 
 -- Waagtoren n2 TODO
 set @team = "n2";
-set @ronde = 1;
+set @ronde = 2;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
 insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
-(0,"2526","n2",1,4,6207520,"e","z",0,"½",'2025-09-26',"int"),
-(0,"2526","n2",1,3,7529522,"e","w",0,"1",'2025-09-26',"int"),
-(0,"2526","n2",1,6,7824674,"e","z",0,"1",'2025-09-26',"int"),
 (0,"2526","n2",1,1,8112654,"e","w",0,"0",'2025-09-26',"int"),
+(0,"2526","n2",1,2,9065100,"e","z",0,"1",'2025-09-26',"int"),
+(0,"2526","n2",1,3,7529522,"e","w",0,"1",'2025-09-26',"int"),
+(0,"2526","n2",1,4,6207520,"e","z",0,"½",'2025-09-26',"int"),
 (0,"2526","n2",1,5,8484443,"e","w",0,"½",'2025-09-26',"int"),
-(0,"2526","n2",1,2,9065100,"e","z",0,"1",'2025-09-26',"int");
+(0,"2526","n2",1,6,7824674,"e","z",0,"1",'2025-09-26',"int"),
+(0,"2526","n2",2,1,7099950,"e","z",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,2,9065100,"e","w",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,3,8112654,"e","z",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,4,6207520,"e","w",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,5,8484443,"e","z",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,6,7824674,"e","w",0,"½",'2025-10-14',"int");
+
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+
+(0,"2526","n2",2,1,7099950,"e","z",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,2,9065100,"e","w",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,3,8112654,"e","z",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,4,6207520,"e","w",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,5,8484443,"e","z",0,"1",'2025-10-14',"int"),
+(0,"2526","n2",2,6,7824674,"e","w",0,"½",'2025-10-14',"int");
 
 -- Waagtoren n3 TODO
 set @team = "n3";
