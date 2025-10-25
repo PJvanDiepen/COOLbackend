@@ -785,7 +785,7 @@ const maandInvullen = new Map([
     [11, "november"],
     [12, "december"]]);
 
-// gebruiker.mutatieRechten int
+// gebruiker.rol en speler.rol int
 const IEDEREEN = 0;
 const GEREGISTREERD = 1;
 const TEAMLEIDER = 2;

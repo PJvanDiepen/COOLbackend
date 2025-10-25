@@ -5,18 +5,42 @@
 import { server, url } from "./html.js";
 import * as db from "./db.js";
 
-// TODO verwijderen
+const sessie = {
+    uuid: "",
+    club: 0,
+    seizoen: "",
+    gebruiker: {}
+};
+
 const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
 
+/**
+ * synchroniseren start de sessie, maakt verbinding met de server
+ *
+ * @returns {Promise<void>}
+ */
 export async function synchroniseren() {
-    const urlSynchroon = "/synchroon/0";
-    const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
-    Object.assign(synchroon, await vraagServer(urlSynchroon)); // (db.b00m,
+    console.log("--- synchroniseren ---");
+    const uuid = // TODO key: Waagtoren verwijderen
+        localStorage.getItem("Waagtoren") || localStorage.getItem("o_o_o");
+    const vorigeSessie = JSON.parse(sessionStorage.getItem("sessie"));
+    console.log(url);
     /*
-    TODO PvD
+    TODO verwijder synchroon?
+    TODO sessie met uuid, club, seizoen voor vraag, invullen, enz.
+    TODO groeiFuncties() compleet maken
+    TODO eerste contact met server
+    TODO seizoenen van gegeven club
+    TODO een seizoen kiezen en dan alle teams van dat seizoen
+    TODO gebruiker en teams voor mutatieRechten
+    TODO groeiFuncties() voor lezen gebruiker + spelers
+    TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
     TODO indien server herstart dan alles verwijderen uit sessionStorage
     TODO vergelijk mutaties sinds start van server met sessionStorage
      */
+    const urlSynchroon = "/synchroon/0";
+    const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
+    Object.assign(synchroon, await vraagServer(urlSynchroon)); // (db.b00m,
     verwijderNietActueel(!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart
         ? 0 // na herstart server is niets actueel
         : Number(synchroon.revisie));
@@ -81,8 +105,6 @@ async function groeiFuncties () { // zie api.js
 }
 
 // db.boomOnderhoud(leesDatabase());
-
-
 
 export async function vraag(commando) {
     const vraagVanServer = await vraagZoeken(commando);

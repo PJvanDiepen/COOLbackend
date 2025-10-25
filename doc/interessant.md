@@ -93,6 +93,13 @@ Refresh Android cache
 - [node streams](https://pavel-romanov.com/building-a-mental-model-of-nodejs-streams)
 - [node in 2025](https://kashw1n.com/blog/nodejs-2025/)
 
+# webscraping
+
+- [web scraping](https://blog.apify.com/best-javascript-web-scraping-libraries/)
+- [Axios + Cheerio tutorial](https://proxyway.com/guides/cheerio-web-scraping-a-tutorial)
+- [Axios + Cheerio step by step](https://oxylabs.io/blog/cheerio-web-scraping)
+- [Axios + Cheerio guide](https://blog.apify.com/web-scraping-with-cheerio/)
+
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
 - [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
@@ -122,6 +129,8 @@ Refresh Android cache
 - [html, css, JavaScript, etc.](https://learn-wcs.com/)
 - [Form validation](https://expressionstatement.com/html-form-validation-is-heavily-underused)
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
+- [output tag](https://denodell.com/blog/html-best-kept-secret-output-tag)
+- [output tag example](https://rud.is/drop/output.html)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [Modern css](https://frontendmasters.com/blog/what-you-need-to-know-about-modern-css-spring-2024-edition/)

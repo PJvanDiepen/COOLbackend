@@ -161,6 +161,7 @@ export function tekstOverschrijven(node, tekst) {
     node.textContent = tekst;
 }
 
+// TODO gebruik output tag zie: https://rud.is/drop/output.html
 export function tekstToevoegen(node, tekst) {
     node.textContent += tekst;
 }
