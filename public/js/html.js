@@ -3,6 +3,7 @@
  */
 
 import * as db from "./db.js";
+import {uuidActiveren, uuidToken} from "./zyq";
 
 export const pagina = new URL(location);
 export const params = pagina.searchParams; // TODO verwijderen
@@ -13,15 +14,14 @@ export const url = {};
  * urlVerwerken() maakt url object aan de hand van de gevraagdeParameters van de pagina.
  * Ten eerste uit de gegeven urlParameters.
  * Ten tweede uit de gevraagdeParameters die al zijn ingevuld door de pagina.
- *
- * De url.uuid komt uit localStorage of uit urlParameters.
- * TODO zie zyq.js: uuidActiveren of vorigeSessie
+ * Daarnaast is url.uuid eventueel een van de gegeven urlParameters,
+ * maar nooit een van de gevraagdeParameters.
  *
  * @param gevraagdeParameters van pagina
  */
 export function urlVerwerken(gevraagdeParameters) {
     const urlParameters = pagina.searchParams;
-    url.uuid = urlParameters.get("uuid");
+    url.uuid = uuidVerwerken(urlParameters.get("uuid"));
     for (const [key, value] of Object.entries(gevraagdeParameters)) {
         const numeriek = typeof value === "number";
         if (urlParameters.has(key)) {
@@ -33,6 +33,36 @@ export function urlVerwerken(gevraagdeParameters) {
             console.log(`urlVerwerken ${key}=""`);
         }
     }
+}
+
+/**
+ * Bestuur vult e-mail of telefoon in voor gebruiker. 0-0-0 genereert een uuid om de gebruiker te herkennen.
+ * De gebruiker krijgt uuid uitsluitend via e-mail of telefoon: WhatsApp, Signal of Messenger.
+ *
+ * Indien uuidCorrect is, legt uuidVerwerken de uuid vast in localStorage.
+ *
+ * @param uuid uit url
+ * @returns {*|string}
+ */
+function uuidVerwerken(uuid) {
+    if (uuid === "wissen") {
+        localStorage.clear(); // voor de ONTWIKKELAAR
+        return uuid;
+    } else if (uuidCorrect(uuid)) {
+        localStorage.setItem("o_o_o", uuid);
+        return uuid;
+    }
+    const uuidGevonden = localStorage.getItem("o_o_o");
+    if (uuidCorrect(uuidGevonden)) {
+        return uuidGevonden;
+    } else {
+        localStorage.removeItem("o_o_o");
+        return "fout";
+    }
+}
+
+function uuidCorrect(uuid) {
+    return /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi.test(uuid) ? uuid : "";
 }
 
 export const SCHEIDING = " \u232A ";

@@ -21,12 +21,11 @@ const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
  */
 export async function synchroniseren() {
     console.log("--- synchroniseren ---");
-    const uuid = // TODO key: Waagtoren verwijderen
-        localStorage.getItem("Waagtoren") || localStorage.getItem("o_o_o");
     const vorigeSessie = JSON.parse(sessionStorage.getItem("sessie"));
     console.log(url);
     /*
     TODO verwijder synchroon?
+    TODO Zie uuidActiveren van zyq.js
     TODO sessie met uuid, club, seizoen voor vraag, invullen, enz.
     TODO groeiFuncties() compleet maken
     TODO eerste contact met server
