@@ -51,7 +51,7 @@ export const gebruiker = {}; // gebruikerVerwerken
  */
 export async function gebruikerVerwerken() {
     if (uuidActiveren && uuidActiveren === uuidToken) {
-        await serverFetch(`/${uuidToken}/activeer`);
+        await serverFetch(`/${uuidToken}/activeer`); // TODO overbodig!!!
         localStorage.setItem("o_o_o", uuidToken);
     }
     if (uuidToken) {
@@ -196,7 +196,7 @@ export function datumLeesbaar(object) {
  *
  * @param jsonDatum of vandaag
  * @param dagen optellen bij gegeven datum
- * @returns {string} jjjj-mm-dd evenetueel met voorloopNul voor maand en dag
+ * @returns {string} jjjj-mm-dd eventueel met voorloopNul voor maand en dag
  */
 export function datumSQL(jsonDatum = null, dagen = 0) {
     const datum = jsonDatum ? new Date(jsonDatum) : new Date();

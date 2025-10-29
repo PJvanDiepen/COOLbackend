@@ -70,24 +70,6 @@ export const o_o_o = {
     naam: ""
 };
 
-/*
-TODO url voor de duidelijkheid afsplitsen van o_o_o
-TODO url als geheel opslaan in sessionStorage (geen losse parameters)
- */
-function urlVerwerken() {
-    for (const [key, value] of Object.entries(o_o_o)) {
-        let parameter = html.params.get(key); // inlezen van url
-        if (parameter) {
-            sessionStorage.setItem(key, parameter); // opslaan voor sessie
-        } else {
-            parameter = sessionStorage.getItem(key); // inlezen van sessie
-        }
-        if (parameter) {
-            o_o_o[key] = value === 0 ? Number(parameter) : parameter; // indien 0 dan getal anders tekst
-        }
-    }
-}
-
 async function seizoenVerwerken() {
     console.log("seizoenVerwerken");
     const clubVraag = await server.vraag("/club");

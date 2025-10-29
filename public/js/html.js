@@ -3,7 +3,6 @@
  */
 
 import * as db from "./db.js";
-import {uuidActiveren, uuidToken} from "./zyq";
 
 export const pagina = new URL(location);
 export const params = pagina.searchParams; // TODO verwijderen
@@ -21,7 +20,6 @@ export const url = {};
  */
 export function urlVerwerken(gevraagdeParameters) {
     const urlParameters = pagina.searchParams;
-    url.uuid = uuidVerwerken(urlParameters.get("uuid"));
     for (const [key, value] of Object.entries(gevraagdeParameters)) {
         const numeriek = typeof value === "number";
         if (urlParameters.has(key)) {
@@ -33,10 +31,12 @@ export function urlVerwerken(gevraagdeParameters) {
             console.log(`urlVerwerken ${key}=""`);
         }
     }
+    url.uuid = uuidVerwerken(urlParameters.get("uuid"));
 }
 
 /**
- * Bestuur vult e-mail of telefoon in voor gebruiker. 0-0-0 genereert een uuid om de gebruiker te herkennen.
+ * Het bestuur vult e-mail of telefoon in van een gebruiker.
+ * 0-0-0 genereert een uuid om de gebruiker te herkennen.
  * De gebruiker krijgt uuid uitsluitend via e-mail of telefoon: WhatsApp, Signal of Messenger.
  *
  * Indien uuidCorrect is, legt uuidVerwerken de uuid vast in localStorage.

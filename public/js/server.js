@@ -25,7 +25,7 @@ export async function synchroniseren() {
     console.log(url);
     /*
     TODO verwijder synchroon?
-    TODO Zie uuidActiveren van zyq.js
+    TODO Zie gebruiker in zyq.js
     TODO sessie met uuid, club, seizoen voor vraag, invullen, enz.
     TODO groeiFuncties() compleet maken
     TODO eerste contact met server

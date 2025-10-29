@@ -219,23 +219,26 @@ const tk = [
         breed: 829,
         hoog: 553,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Schoof"
-    },
+    }, /*
     {jaar: 2025,
         zetels: "PVV=26&GL/PvdA=24&D66=23&CDA=20&VVD=17&JA21=10&FvD=5&SP=4&BBB=4&Denk=3&PvdD=3&SGP=3&&CU=3&50Plus=2&Volt=2&NSC=1",
         kabinet: "Peilingwijzer Tom Louwerse",
         breed: 640,
         hoog: 427,
         link: "https://peilingwijzer.tomlouwerse.nl"
-    } /*
+    }
     bovenstaande is bijgewerkt 28/10/2025
 
-    {jaar: 2023,
-        zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
+    hieronder staat de exitpoll
+
+    */
+    {jaar: 2025,
+        zetels: "D66=27&PVV=25&VVD=23&GL/PvdA=20&CDA=19&JA21=9&FvD=6&BBB=4&SP=3&Denk=3&PvdD=3&SGP=3&CU=2&50plus=2&Volt=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
         link: "https://www.verkiezingensite.nl"
-    } */
+    }
 ]
 
 function jarenVerwerken(jaren) {
