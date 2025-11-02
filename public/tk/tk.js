@@ -233,11 +233,11 @@ const tk = [
 
     */
     {jaar: 2025,
-        zetels: "D66=27&PVV=25&VVD=23&GL/PvdA=20&CDA=19&JA21=9&FvD=6&BBB=4&SP=3&Denk=3&PvdD=3&SGP=3&CU=2&50plus=2&Volt=1",
+        zetels: "D66=26&PVV=26&VVD=22&GL/PvdA=20&CDA=18&JA21=9&FvD=7&BBB=4&SP=3&CU=3&Denk=3&SGP=3&PvdD=3&50plus=2&Volt=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
-        link: "https://www.verkiezingensite.nl"
+        link: "https://www.verkiezingsuitslagen.nl/verkiezingen/detail/TK20251029"
     }
 ]
 
