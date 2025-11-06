@@ -233,7 +233,7 @@ const tk = [
 
     */
     {jaar: 2025,
-        zetels: "D66=26&PVV=26&VVD=22&GL/PvdA=20&CDA=18&JA21=9&FvD=7&BBB=4&SP=3&CU=3&Denk=3&SGP=3&PvdD=3&50plus=2&Volt=1",
+        zetels: "D66=26&PVV=26&VVD=22&GL/PvdA=20&CDA=18&JA21=9&FvD=7&BBB=4&SGP=3&PvdD=3&CU=3&Denk=3&SP=3&50plus=2&Volt=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
