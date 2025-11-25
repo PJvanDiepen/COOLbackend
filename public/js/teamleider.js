@@ -142,6 +142,8 @@ function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
         return 1941;
     } else if (teamCode === "n5") { // 80 + 1757 Nico Mak
         return 1837;
+    } else if (teamCode === "nv1") { // 80 + 1652 Theo de Bruijn
+        return 1732;
     } else {
         return 3000;
     }

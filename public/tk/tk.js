@@ -229,7 +229,7 @@ const tk = [
     }
     bovenstaande is bijgewerkt 28/10/2025
 
-    hieronder staat de exitpoll
+    hieronder staat de uitslag
 
     */
     {jaar: 2025,

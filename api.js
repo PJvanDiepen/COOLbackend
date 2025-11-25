@@ -11,72 +11,101 @@ const Uitslag = require("./models/uitslag");
 
 const { fn, ref } = require("objection");
 
+const package_json = require("./package.json");
+
+const versie = package_json.version;
+const serverStart = new Date();
+let boomRevisie = 1; // +1 na elke mutatie
+const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
+
+/**
+ * Naar aanleiding van een vraag van de browser maakt antwoord een antwoord
+ * die bestaat uit een synchronisatie object en daarna de gevraagdeData.
+ * Bovendien maakt antwoord het antwoord geschikt om over het internet te sturen.
+ * De browser synchroniseert elke keer de browser boom met de server boom.
+ *
+ * @param params revisie en club van de browser boom
+ * @param gevraagdeData om naar de browser te sturen
+ * @returns {string} [ synchronisatie object, ...gevraagdeData]
+ */
+function antwoord(params, gevraagdeData) {
+    const revisie = Number(params.revisie);
+    const juisteClub = `/${params.club}`;
+    const laatsteMutaties = { };
+    for (const [key, value] of Object.entries(mutaties)) {
+        console.log(key, value); // TODO verwijderen na testen
+        if (value > revisie && key.startsWith(juisteClub)) { // alleen actuele en relevante mutaties
+            laatsteMutaties[key] = value;
+        }
+    }
+    return JSON.stringify([{ versie: versie,
+        serverStart: serverStart,
+        revisie: boomRevisie,
+        mutaties: laatsteMutaties }, ...gevraagdeData]);
+}
+
 const db = require("./modules/db.cjs");
 
-function groeiFuncties () { // zie server.js
-   async function leesClubs() {
-       return [
-           {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"},
-           {clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd"}
-       ];
-   }
+function groeiFuncties () {
+    async function leesClubs() {
+        return [
+            {clubCode: db.WAAGTOREN, vereniging: "Waagtoren", teamNaam: "Waagtoren"},
+            {clubCode: db.WAAGTOREN_JEUGD, vereniging: "Waagtoren", teamNaam: "Waagtoren jeugd"}
+        ];
+    }
 
-   async function leesSeizoenen(clubCode) {
-       return await Team.query()
-           .select("team.clubCode", "team.seizoen")
-           .where("team.clubCode", clubCode)
-           .distinct("team.seizoen");
-   }
+    async function leesSeizoenen(clubCode) {
+        return Team.query()
+            .select("team.clubCode", "team.seizoen")
+            .where("team.clubCode", clubCode)
+            .distinct("team.seizoen");
+    }
 
-   async function leesTeams(clubCode, seizoen) {
-       return await Team.query()
-           .where("team.clubCode", clubCode)
-           .where("team.seizoen", seizoen);
-   }
+    async function leesTeams(clubCode, seizoen) {
+        return Team.query()
+            .where("team.clubCode", clubCode)
+            .where("team.seizoen", seizoen);
+    }
 
-   async function leesRonden(clubCode, seizoen, teamCode) {
-       return await Ronde.query()
-           .where("ronde.clubCode", clubCode)
-           .where("ronde.seizoen", seizoen)
-           .where("ronde.teamCode", teamCode);
-   }
+    async function leesRonden(clubCode, seizoen, teamCode) {
+        return Ronde.query()
+            .where("ronde.clubCode", clubCode)
+            .where("ronde.seizoen", seizoen)
+            .where("ronde.teamCode", teamCode);
+    }
 
-   async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
-       const uitslagen = await Uitslag.query()
-           .where("uitslag.clubCode", clubCode)
-           .where("uitslag.seizoen", seizoen)
-           .where("uitslag.teamCode", teamCode)
-           .where("uitslag.rondeNummer", rondeNummer);
-       if (clubCode === 0 && seizoen === "2425" && teamCode === "int" && rondeNummer === 11) {
-           uitslagen.sort(function (een, ander) {
-               if (een.bordNummer === 0 && ander.bordNummer === 0) {
-                   return een.partij === db.ONEVEN ? -1 : 1; // oneven voor extern, afwezig, enz.
-               } else if (een.bordNummer === 0) { // geen bordNummer na ander
-                   return 1;
-               } else if (ander.bordNummer === 0) { // geen bordNummer voor een
-                   return -1;
-               } else {
-                   return een.bordNummer - ander.bordNummer; // op bordNummer
-               }
-           });
-       }
-       return uitslagen;
-   }
+    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
+        const uitslagen = await Uitslag.query()
+            .where("uitslag.clubCode", clubCode)
+            .where("uitslag.seizoen", seizoen)
+            .where("uitslag.teamCode", teamCode)
+            .where("uitslag.rondeNummer", rondeNummer);
+        if (clubCode === 0 && seizoen === "2425" && teamCode === "int" && rondeNummer === 11) {
+            uitslagen.sort(function (een, ander) {
+                if (een.bordNummer === 0 && ander.bordNummer === 0) {
+                    return een.partij === db.ONEVEN ? -1 : 1; // oneven voor extern, afwezig, enz.
+                } else if (een.bordNummer === 0) { // geen bordNummer na ander
+                    return 1;
+                } else if (ander.bordNummer === 0) { // geen bordNummer voor een
+                    return -1;
+                } else {
+                    return een.bordNummer - ander.bordNummer; // op bordNummer
+                }
+            });
+        }
+        return uitslagen;
+    }
 
-   return Object.freeze({
-       leesClubs,
-       leesSeizoenen,
-       leesTeams,
-       leesRonden,
-       leesUitslagen
-   });
+    return Object.freeze({
+        leesClubs,
+        leesSeizoenen,
+        leesTeams,
+        leesRonden,
+        leesUitslagen
+    });
 }
 
 db.boomOnderhoud(groeiFuncties());
-
-const package_json = require("./package.json");
-
-db.boomOnderhoud({"versie": package_json.version});
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
@@ -85,6 +114,8 @@ db.boomOnderhoud({"versie": package_json.version});
  *  :uuid
  *      uuidToken van een gebruiker
  *      deze ontbreekt indien de informatie openbaar is en de gebruiker niets muteert
+ *  :revisie
+ *      revisie van de browser boom
  *  :club
  *      clubCode van de vereniging
  *  :seizoen
@@ -106,22 +137,31 @@ db.boomOnderhoud({"versie": package_json.version});
  *      /:club/club
  *      enz.
  *
- *  Een api-endpoint geeft een antwoord (object) met revisie en andere properties.
+ *  Een api-endpoint geeft verschillende een aantal soorten antwoorden.
+ *  Synchroon bevat versie, serverStart, revisie en mutaties. Zie db.cjs
+ *  Revisie is altijd de actuele revisie van de hele boom.
+ *  Takken van de boom kunnen van een oudere revisie zijn.
+ *  Zelfs als ze opnieuw worden gelezen uit de MySQL database.
+ *
+ *  1. [ <synchroon> ]
+ *  2. [ <synchroon>, <tak1>, <tak2>, ...]
+ *  3. [ <synchroon>, <data1>, <data2>, ...]
+ *
  */
 module.exports = function (url) {
 
     /*
-    Frontend: o_o_o.js
-     */
-    url.get("/synchroon/:revisie", async function (ctx) {
-        ctx.body = JSON.stringify(db.synchroon(ctx.params.revisie));
+    Frontend: server.js
+    */
+    url.get("/:revisie/:club/synchroon:", async function (ctx) {
+        ctx.body = antwoord(ctx.params, []);
     });
 
     /*
-    Frontend: o_o_o.js
+    Frontend: server.js
      */
-    url.get("/vragen", async function (ctx) {
-        ctx.body = JSON.stringify(db.vragen);
+    url.get("/:revisie/:club/vragen:", async function (ctx) {
+        ctx.body = antwoord(ctx.params, db.vragen);
     });
 
     /*

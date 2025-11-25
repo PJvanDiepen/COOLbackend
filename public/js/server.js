@@ -5,12 +5,7 @@
 import { server, url } from "./html.js";
 import * as db from "./db.js";
 
-const sessie = {
-    uuid: "",
-    club: 0,
-    seizoen: "",
-    gebruiker: {}
-};
+const sessie = { };
 
 const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
 
@@ -21,12 +16,15 @@ const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
  */
 export async function synchroniseren() {
     console.log("--- synchroniseren ---");
-    const vorigeSessie = JSON.parse(sessionStorage.getItem("sessie"));
     console.log(url);
+    sessie.uuid = url.uuid;
+    const vorigeSessie = JSON.parse(sessionStorage.getItem("sessie")) || { };
+    sessie.club = url.club || vorigeSessie.club || 0;
+    // TODO seizoenen lezen voor deze club
+    sessie.seizoen = url.seizoen || vorigeSessie.seizoen || ""; // of laatste seizoen
+    console.log(sessie);
     /*
-    TODO verwijder synchroon?
-    TODO Zie gebruiker in zyq.js
-    TODO sessie met uuid, club, seizoen voor vraag, invullen, enz.
+    TODO hoe te doen met revisie en mutaties?
     TODO groeiFuncties() compleet maken
     TODO eerste contact met server
     TODO seizoenen van gegeven club
@@ -36,6 +34,7 @@ export async function synchroniseren() {
     TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
     TODO indien server herstart dan alles verwijderen uit sessionStorage
     TODO vergelijk mutaties sinds start van server met sessionStorage
+    TODO verbeter verwijderNietActueel
      */
     const urlSynchroon = "/synchroon/0";
     const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));

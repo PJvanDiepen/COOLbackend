@@ -11,6 +11,8 @@ const versieIndelen = Number(html.params.get("indelen")) || 0;
 const indeling = html.id("indeling");
 
 /*
+TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor correct aantal borden
+
     verwerk ronde=<ronde>
            &rangnummers=aan
            &indelen=<versienummer indelen algoritme>

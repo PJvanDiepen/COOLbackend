@@ -63,8 +63,8 @@ const NIEUWE_RANGLIJST = 2;
  *     .eenRonde(:ronde)
  *     .eenUitslag(:speler)
  *
- * De objecten in de boom hebben een revisie nummer. Zie synchroon in api.js
- * Na serverStart begint de server met revisie = 0 en daarna +1 na elke mutatie van de database.
+ * De boom heeft een revisie nummer. Zie synchroon in api.js
+ * Na serverStart begint de server met revisie = 1 en daarna +1 na elke mutatie van de database.
  *
  * Server en browser gebruiken verschillende technieken om de data te synchroniseren.
  *
@@ -86,29 +86,11 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
     leesTeams: function() {},
     leesRonden: function() {},
     leesUitslagen: function() {},
-    club: [],
-    mutatie: [], // TODO console log wanneer de boom groeit: { revisie, url }
-    revisie: 1, // 1 + aantal mutaties
-    serverStart: new Date(),
-    versie: "0.0.0" // blijft 0.0.0 indien browser
+    club: []
 };
 
 function boomOnderhoud(object) {
     Object.assign(boom, object);
-}
-
-function synchroon(revisie) {
-    revisie = Number(revisie);
-    const mutaties = boom.mutatie.filter(function(mutatie) {
-        console.log(mutatie);
-        return true; // TODO boom.mutatie vanaf revisie
-    });
-    return {
-        mutatie: mutaties,
-        revisie: boom.revisie,
-        serverStart: boom.serverStart,
-        versie: boom.versie
-    };
 }
 
 function serverInformatie() { // TODO vervangen door synchroon
@@ -804,7 +786,6 @@ module.exports = { // CommonJS voor node.js
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
-    synchroon,             // (revisie)
     serverInformatie,      // ()
     clubTak,               // (clubCode)
     // clubCode int
