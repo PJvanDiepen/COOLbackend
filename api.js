@@ -15,33 +15,44 @@ const package_json = require("./package.json");
 
 const versie = package_json.version;
 const serverStart = new Date();
-let boomRevisie = 1; // +1 na elke mutatie
+let serverRevisie = 1; // +1 na elke mutatie
 const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
 
 /**
- * Naar aanleiding van een vraag van de browser maakt antwoord een antwoord
- * die bestaat uit een synchronisatie object en daarna de gevraagdeData.
- * Bovendien maakt antwoord het antwoord geschikt om over het internet te sturen.
- * De browser synchroniseert elke keer de browser boom met de server boom.
+ * De serverRevisie is altijd de actuele revisie van de server boom. Zie db.cjs
+ * De mutaties kunnen van oudere revisies zijn.
+ * De browser is actueel tot de browserRevisie.
+ *
+ * synchroon geeft informatie over de server met mutaties
+ * die nieuwer zijn dan de browserRevisie en relevant voor de juisteClub.
  *
  * @param params revisie en club van de browser boom
- * @param gevraagdeData om naar de browser te sturen
- * @returns {string} [ synchronisatie object, ...gevraagdeData]
+ * @returns {versie: string, serverStart: Date, revisie: number, mutaties: {}}
  */
-function antwoord(params, gevraagdeData) {
-    const revisie = Number(params.revisie);
+function synchroon(params) {
+    const browserRevisie = Number(params.revisie);
     const juisteClub = `/${params.club}`;
     const laatsteMutaties = { };
     for (const [key, value] of Object.entries(mutaties)) {
-        console.log(key, value); // TODO verwijderen na testen
-        if (value > revisie && key.startsWith(juisteClub)) { // alleen actuele en relevante mutaties
+        if (value > browserRevisie && key.startsWith(juisteClub)) {
             laatsteMutaties[key] = value;
         }
     }
-    return JSON.stringify([{ versie: versie,
+    return {
+        versie: versie,
         serverStart: serverStart,
-        revisie: boomRevisie,
-        mutaties: laatsteMutaties }, ...gevraagdeData]);
+        revisie: serverRevisie,
+        mutaties: laatsteMutaties
+    };
+}
+
+function synchroonZonderMutaties() {
+    return {
+        versie: versie,
+        serverStart: serverStart,
+        revisie: serverRevisie,
+        mutaties: { }
+    };
 }
 
 const db = require("./modules/db.cjs");
@@ -143,25 +154,21 @@ db.boomOnderhoud(groeiFuncties());
  *  Takken van de boom kunnen van een oudere revisie zijn.
  *  Zelfs als ze opnieuw worden gelezen uit de MySQL database.
  *
- *  1. [ <synchroon> ]
- *  2. [ <synchroon>, <tak1>, <tak2>, ...]
- *  3. [ <synchroon>, <data1>, <data2>, ...]
- *
+ *  1. [ <synchroon>, <tak1>, <tak2>, ...]
+ *  2. [ <synchroon>, <data1>, <data2>, ...]
  */
+
+function antwoord(synchroon, gevraagdeData) {
+    return JSON.stringify([synchroon, ...gevraagdeData]);
+}
+
 module.exports = function (url) {
 
     /*
     Frontend: server.js
-    */
-    url.get("/:revisie/:club/synchroon:", async function (ctx) {
-        ctx.body = antwoord(ctx.params, []);
-    });
-
-    /*
-    Frontend: server.js
      */
-    url.get("/:revisie/:club/vragen:", async function (ctx) {
-        ctx.body = antwoord(ctx.params, db.vragen);
+    url.get("/vragen", async function (ctx) {
+        ctx.body = antwoord(synchroonZonderMutaties(), db.vragen);
     });
 
     /*

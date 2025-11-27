@@ -1319,6 +1319,17 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","nbb",1,3,8485059,"e","w",0,"0",'2025-11-14',"int"),
 (0,"2526","nbb",1,4,7321534,"e","z",0,"1",'2025-11-14',"int");
 
+set @team = "nbz";
+set @ronde = 1;
+select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0,"2526","nbz",1,1,6930957,"e","w",0,"½",'2025-11-25',"int"),
+(0,"2526","nbz",1,2,7529522,"e","z",0,"1",'2025-11-25',"int"),
+(0,"2526","nbz",1,3,9056674,"e","w",0,"1",'2025-11-25',"int"),
+(0,"2526","nbz",1,4,8484443,"e","z",0,"1",'2025-11-25',"int");
+
 -- Waagtoren n1
 set @team = "n1";
 set @ronde = 3;
