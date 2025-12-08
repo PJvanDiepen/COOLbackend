@@ -13,7 +13,12 @@
  * Op de server vult app.js de lijst van mogelijke vragen aan de server.
  * In de browser moet o_o_o.js die vragen van de server inlezen.
  */
-const vragen = [];
+const synchroon = {
+    versie: "0.0.0.",
+    vragen: [],
+    start: new Date(),
+    revisie: 0 // +1 na elke mutatie op de server
+}
 
 /**
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
@@ -91,33 +96,6 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
 
 function boomOnderhoud(object) {
     Object.assign(boom, object);
-}
-
-function serverInformatie() { // TODO vervangen door synchroon
-    return {
-        start: boom.serverStart,
-        versie: boom.versie
-    }
-}
-
-async function tak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    const eenClub = await clubTak(clubCode);
-    if (seizoen === undefined) {
-        return eenClub;
-    }
-    const eenSeizoen = await eenClub.seizoenTak(seizoen);
-    if (teamCode === undefined) {
-        return eenSeizoen;
-    }
-    const eenTeam = await eenSeizoen.teamTak(teamCode);
-    if (rondeNummer === undefined) {
-        return eenTeam;
-    }
-    const eenRonde = await eenTeam.rondeTak(rondeNummer);
-    if (knsbNummer === undefined) {
-        return eenRonde;
-    }
-    return eenRonde.uitslagTak(knsbNummer);
 }
 
 async function alleClubs() {
@@ -793,7 +771,7 @@ function gebruikerFunctie(speler) {
 }
 
 export { // ES6 voor browser,
-    vragen,
+    synchroon,
     key,                   // (object)
     // database mutatie
     VERWIJDERD,
@@ -805,8 +783,6 @@ export { // ES6 voor browser,
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
-    serverInformatie,      // ()
-    tak,                   // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer) TODO verwijderen
     clubTak,               // (clubCode)
     // clubCode int
     WAAGTOREN,

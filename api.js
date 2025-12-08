@@ -11,50 +11,6 @@ const Uitslag = require("./models/uitslag");
 
 const { fn, ref } = require("objection");
 
-const package_json = require("./package.json");
-
-const versie = package_json.version;
-const serverStart = new Date();
-let serverRevisie = 1; // +1 na elke mutatie
-const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
-
-/**
- * De serverRevisie is altijd de actuele revisie van de server boom. Zie db.cjs
- * De mutaties kunnen van oudere revisies zijn.
- * De browser is actueel tot de browserRevisie.
- *
- * synchroon geeft informatie over de server met mutaties
- * die nieuwer zijn dan de browserRevisie en relevant voor de juisteClub.
- *
- * @param params revisie en club van de browser boom
- * @returns {versie: string, serverStart: Date, revisie: number, mutaties: {}}
- */
-function synchroon(params) {
-    const browserRevisie = Number(params.revisie);
-    const juisteClub = `/${params.club}`;
-    const laatsteMutaties = { };
-    for (const [key, value] of Object.entries(mutaties)) {
-        if (value > browserRevisie && key.startsWith(juisteClub)) {
-            laatsteMutaties[key] = value;
-        }
-    }
-    return {
-        versie: versie,
-        serverStart: serverStart,
-        revisie: serverRevisie,
-        mutaties: laatsteMutaties
-    };
-}
-
-function synchroonZonderMutaties() {
-    return {
-        versie: versie,
-        serverStart: serverStart,
-        revisie: serverRevisie,
-        mutaties: { }
-    };
-}
-
 const db = require("./modules/db.cjs");
 
 function groeiFuncties () {
@@ -118,6 +74,73 @@ function groeiFuncties () {
 
 db.boomOnderhoud(groeiFuncties());
 
+const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
+
+/**
+ * De serverRevisie is altijd de actuele revisie van de server boom. Zie db.cjs
+ * De mutaties kunnen van oudere revisies zijn.
+ * De browser is actueel tot de browserRevisie.
+ *
+ * synchroon geeft informatie over de server met mutaties
+ * die nieuwer zijn dan de browserRevisie en relevant voor de juisteClub.
+ *
+ * @param params revisie en club van de browser boom
+ * @returns {versie: string, serverStart: Date, revisie: number, mutaties: {}}
+ */
+function synchroon(params) {
+    const browserRevisie = Number(params.revisie);
+    const juisteClub = `/${params.club}`;
+    const laatsteMutaties = { };
+    for (const [key, value] of Object.entries(mutaties)) {
+        if (value > browserRevisie && key.startsWith(juisteClub)) {
+            laatsteMutaties[key] = value;
+        }
+    }
+    return {
+        versie: db.synchroon.versie,
+        start: db.synchroon.start,
+        revisie: db.synchroon.revisie,
+        mutaties: laatsteMutaties
+    };
+}
+
+/**
+ * Bij eersteContact synchroniseert de browser met de server.
+ *
+ * Indien de browser al eerder contact had tijdens een sessie
+ * stuurt eersteContact antwoord met synchroon en mutaties en geen gevraagdeData,
+ * want de browser is al synchroon tot de browserRevisie en de vragen zijn al verstuurd.
+ *
+ * Bij eersteContact van de sessie stuurt eersteContact antwoord met synchroon zonder mutaties
+ * en de vragen als gevraagdeData.
+ *
+ * @param params revisie en club van de browser boom
+ * @returns {string} antwoord
+ */
+function eersteContact(params) {
+    if (Number(params.revisie)) {
+        return antwoord(synchroon(params), []);
+    } else {
+        return antwoord({
+            versie: db.synchroon.versie,
+            start: db.synchroon.start,
+            revisie: db.synchroon.revisie,
+            mutaties: { }
+        }, db.synchroon.vragen);
+    }
+}
+
+/**
+ * Een api-endpoint geeft antwoord aan de browser met synchroon en gevraagdeData.
+ *
+ * @param synchroon
+ * @param gevraagdeData
+ * @returns {string}
+ */
+function antwoord(synchroon, gevraagdeData) {
+    return JSON.stringify([synchroon, ...gevraagdeData]);
+}
+
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
  * de vaste parameters van een endpoint staan in een vaste volgorde.
@@ -147,28 +170,14 @@ db.boomOnderhoud(groeiFuncties());
  *  maar niet waar :uuid ontbreekt
  *      /:club/club
  *      enz.
- *
- *  Een api-endpoint geeft verschillende een aantal soorten antwoorden.
- *  Synchroon bevat versie, serverStart, revisie en mutaties. Zie db.cjs
- *  Revisie is altijd de actuele revisie van de hele boom.
- *  Takken van de boom kunnen van een oudere revisie zijn.
- *  Zelfs als ze opnieuw worden gelezen uit de MySQL database.
- *
- *  1. [ <synchroon>, <tak1>, <tak2>, ...]
- *  2. [ <synchroon>, <data1>, <data2>, ...]
  */
-
-function antwoord(synchroon, gevraagdeData) {
-    return JSON.stringify([synchroon, ...gevraagdeData]);
-}
-
 module.exports = function (url) {
 
     /*
     Frontend: server.js
      */
-    url.get("/vragen", async function (ctx) {
-        ctx.body = antwoord(synchroonZonderMutaties(), db.vragen);
+    url.get("/:revisie/:club/synchroon", async function (ctx) {
+        ctx.body = eersteContact(ctx.params);
     });
 
     /*

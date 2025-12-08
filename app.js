@@ -22,10 +22,12 @@ app.use(cors()); // Also worth mentioning that app.use(cors()) has to go before 
 
 registerApi(router);
 
-const { vragen } = require('./modules/db.cjs');
+const { synchroon } = require('./modules/db.cjs');
+const package_json = require("./package.json");
 
+synchroon.versie = package_json.version;
 for (const route of router.stack) {
-  vragen.push(route.path);
+  synchroon.vragen.push(route.path);
 }
 
 app.use(bodyParser());

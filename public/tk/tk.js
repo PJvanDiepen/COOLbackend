@@ -279,12 +279,16 @@ function kabinetVerwerken(kader, kop) {
 
 const TWEEDE_KAMER = 150;
 const MEERDERHEID = 76;
-const AANTAL_PARTIJEN = 5;
+const AANTAL_PARTIJEN = 7;
 const DEEL = 55; // plaatje als percentage van window
 const VINKJE = "\u00a0\u00a0✔\u00a0\u00a0";
 const STREEP = "___";
 const lijsten = [];
 const kabinetten = [];
+
+function uitleg(met) {
+    met.append(` met minimaal ${MEERDERHEID} zetels en maximaal ${AANTAL_PARTIJEN} partijen.`);
+}
 
 function uitslagenVerwerken(kop1, kop2, deLijsten) {
     const kabinet = tk[jaarIndex(jaar)];

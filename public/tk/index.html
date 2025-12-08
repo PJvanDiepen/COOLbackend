@@ -13,9 +13,8 @@
 </head>
 <body>
     <h1>Tweede Kamer verkiezingen</h1>
-    <p>
-        Deze webpagina formeert meerderheidskabinetten met minimaal 76 zetels en maximaal 5 partijen
-        naar aanleiding van de uitslagen van Tweede Kamer verkiezingen.
+    <p id="uitleg">
+        Deze webpagina formeert meerderheidskabinetten naar aanleiding van de uitslagen van Tweede Kamer verkiezingen
     </p>
     <aside id="kader" class="rechts randje">
         <h2 id="h2kabinet"></h2>
@@ -36,7 +35,7 @@
     </p>
     <p>
         Hieronder verschijnen de kabinetten die ook mogelijk waren.
-        Eventueel kunt een partij uitsluiten voor de kabinetsformatie door op het vinkje van die partij te klikken.
+        Eventueel kunt u een partij uitsluiten voor de kabinetsformatie door op het vinkje van die partij te klikken.
         Een streepje bij een partij betekent dat die partij niet meedoet bij het meerderheidskabinetten formeren.
     </p>
     <h2 id="h2lijsten"></h2>
@@ -52,6 +51,7 @@
     </table>
     <script src="tk.js"></script>
     <script>
+        uitleg(document.getElementById("uitleg"));
         jarenVerwerken(document.getElementById("jaren"));
         parametersVerwerken();
         kabinetVerwerken(document.getElementById("kader"), document.getElementById("h2kabinet"));

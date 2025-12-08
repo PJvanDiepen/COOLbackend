@@ -7,26 +7,27 @@ import * as db from "./db.js";
 
 const sessie = { };
 
-const synchroon = { }; // versie, serverStart en revisie: 0 zie api.js
-
 /**
- * synchroniseren start de sessie, maakt verbinding met de server
+ * synchroniseren (her)start de sessie en synchroniseert met de server
  *
  * @returns {Promise<void>}
  */
 export async function synchroniseren() {
     console.log("--- synchroniseren ---");
     console.log(url);
-    sessie.uuid = url.uuid;
-    const vorigeSessie = JSON.parse(sessionStorage.getItem("sessie")) || { };
+    console.log(db.synchroon);
+    const vorigeSessie = JSON.parse(sessionStorage.getItem("sessie")) || db.synchroon;
+    console.log(vorigeSessie);
     sessie.club = url.club || vorigeSessie.club || 0;
-    // TODO seizoenen lezen voor deze club
-    sessie.seizoen = url.seizoen || vorigeSessie.seizoen || ""; // of laatste seizoen
     console.log(sessie);
+    const nietSynchroon = JSON.parse(sessionStorage.getItem(`/${sessie.club}/synchroon`)); // TODO ???
+    console.log(nietSynchroon);
     /*
+    TODO sessieVerwerken met db.synchroon
+    TODO sessieVerwerken zie html.js: urlVerwerken en uuidVerwerken
     TODO hoe te doen met revisie en mutaties?
+    TODO synchroon verwerken
     TODO groeiFuncties() compleet maken
-    TODO eerste contact met server
     TODO seizoenen van gegeven club
     TODO een seizoen kiezen en dan alle teams van dat seizoen
     TODO gebruiker en teams voor mutatieRechten
@@ -36,14 +37,15 @@ export async function synchroniseren() {
     TODO vergelijk mutaties sinds start van server met sessionStorage
     TODO verbeter verwijderNietActueel
      */
-    const urlSynchroon = "/synchroon/0";
-    const nietSynchroon = JSON.parse(sessionStorage.getItem(urlSynchroon));
-    Object.assign(synchroon, await vraagServer(urlSynchroon)); // (db.b00m,
+
+
+    const urlSynchroon = "/0/0/synchroon"; // eerste contact met server
+    const test = await vraagServer(urlSynchroon);
+    console.log(test);
     verwijderNietActueel(!nietSynchroon || synchroon.serverStart > nietSynchroon.serverStart
         ? 0 // na herstart server is niets actueel
         : Number(synchroon.revisie));
     sessionStorage.setItem(urlSynchroon, JSON.stringify(synchroon));
-    db.vragen.push(...await vraagLokaal("/vragen"));
 }
 
 function verwijderNietActueel(revisie) {
@@ -111,14 +113,15 @@ export async function vraag(commando) {
     }
     const specificatie = {
         uuid: "",
+        revisie: 0,
         club: 0,
         seizoen: "",
         team: "",
         competitie: "",
-        ronde: 1,
+        ronde: 0,
         speler: 0,
-        maand: 1,
-        jaar: 2025,
+        maand: 0,
+        jaar: 0,
         csv: ""
     };
 
@@ -137,6 +140,7 @@ export async function vraag(commando) {
     function invullen() {
         return vraagVanServer
             .replace(":uuid", specificatie.uuid)
+            .replace(":revisie", specificatie.revisie)
             .replace(":club", specificatie.club)
             .replace(":seizoen", specificatie.seizoen)
             .replace(":team", specificatie.team)
@@ -158,19 +162,28 @@ export async function vraag(commando) {
         return this;
     }
 
+    // TODO synchroon verwerken
+    // TODO
+
     async function muteren() {
-        return await vraagServer(invullen());
+        return await vraagServer(invullen());  // TODO aantal mutaties teruggeven
     }
 
-    async function antwoord() {
-        return await vraagLokaal(invullen());
+    async function antwoorden() {
+        const url = invullen();
+        let antwoord = JSON.parse(sessionStorage.getItem(url)); // indien lokaal dan niet vraagServer
+        if (!antwoord) {
+            antwoord = await vraagServer(url);
+            sessionStorage.setItem(url, JSON.stringify(antwoord));
+        }
+        return antwoord;
     }
 
     return Object.freeze({
         specificeren, // (object) ->
         afdrukken,    // () ->
         muteren,      // ()
-        antwoord      // ()
+        antwoorden    // ()
     });
 }
 

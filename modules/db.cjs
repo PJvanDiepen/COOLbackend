@@ -13,7 +13,12 @@
  * Op de server vult app.js de lijst van mogelijke vragen aan de server.
  * In de browser moet o_o_o.js die vragen van de server inlezen.
  */
-const vragen = [];
+const synchroon = {
+    versie: "0.0.0.",
+    vragen: [],
+    start: new Date(),
+    revisie: 0 // +1 na elke mutatie op de server
+}
 
 /**
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
@@ -91,14 +96,6 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
 
 function boomOnderhoud(object) {
     Object.assign(boom, object);
-}
-
-function serverInformatie() { // TODO vervangen door synchroon
-    return {
-        start: boom.serverStart,
-        versie: boom.versie
-    }
-
 }
 
 async function alleClubs() {
@@ -774,7 +771,7 @@ function gebruikerFunctie(speler) {
 }
 
 module.exports = { // CommonJS voor node.js
-    vragen,
+    synchroon,
     key,                   // (object)
     // database mutatie
     VERWIJDERD,
@@ -786,7 +783,6 @@ module.exports = { // CommonJS voor node.js
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
-    serverInformatie,      // ()
     clubTak,               // (clubCode)
     // clubCode int
     WAAGTOREN,
