@@ -7,17 +7,38 @@
  *
  * Het enige verschil tussen de twee versies is de export-lijst.
  *
+ * Voor het ontwikkelen of verbeteren van functionaliteit voor de server of de browser
+ * is het handig dat er twee versies zijn.
+ * Maar uiteindelijk is het de bedoeling dat de code identiek blijft voor de server en de browser
+ * in deze module of wordt afgesplitst naar andere modules.
+ *
  * Alleen db.cjs en db.js hebben export-lijsten.
  * Alle andere modules gebruiken geen export-lijsten, maar de ES6 conventie met export voor elke declaratie.
  *
  * Op de server vult app.js de lijst van mogelijke vragen aan de server.
- * In de browser moet o_o_o.js die vragen van de server inlezen.
+ * In de browser moet server.js die vragen van de server inlezen.
+ *
+ * Op de server verzorgt api.js de verbinding met de MySQL database aan de hand van vragen van de browser.
+ * In de browser verzorgt server.js de synchronisatie met de server aan de hand van synchroon en boom.
+ *
+ * mutaties zijn key value paren: { url1, revisie1, url2, revisie2, ...}
+ * De revisie hoort bij de meest recente mutatie van de database en is te vinden via de url.
+ * De url verwijst op de server naar de database en naar sessionStorage van de browser
+ * of naar de boom.
+ *
+ * club beperkt het aantal mutaties die de server naar de browser stuurt.
  */
 const synchroon = {
     versie: "0.0.0.",
-    vragen: [],
+    vragen: [], // mogelijke vragen aan de server
     start: new Date(),
-    revisie: 0 // +1 na elke mutatie op de server
+    revisie: 0, // +1 na elke mutatie op de server
+    mutaties: {}, // alle mutaties op de server sinds de start van de server
+    club: 0
+}
+
+function synchroonBijwerken(object) {
+    Object.assign(synchroon, object);
 }
 
 /**
@@ -772,6 +793,7 @@ function gebruikerFunctie(speler) {
 
 export { // ES6 voor browser,
     synchroon,
+    synchroonBijwerken,    // (object)
     key,                   // (object)
     // database mutatie
     VERWIJDERD,

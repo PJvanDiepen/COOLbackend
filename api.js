@@ -74,10 +74,11 @@ function groeiFuncties () {
 
 db.boomOnderhoud(groeiFuncties());
 
+db.synchroon.revisie = 1;
 const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
 
 /**
- * De serverRevisie is altijd de actuele revisie van de server boom. Zie db.cjs
+ * De db.synchroon.revisie is altijd de actuele revisie van de server boom.
  * De mutaties kunnen van oudere revisies zijn.
  * De browser is actueel tot de browserRevisie.
  *
@@ -85,7 +86,7 @@ const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
  * die nieuwer zijn dan de browserRevisie en relevant voor de juisteClub.
  *
  * @param params revisie en club van de browser boom
- * @returns {versie: string, serverStart: Date, revisie: number, mutaties: {}}
+ * @returns {versie: string, start: Date, revisie: number, mutaties: {}}
  */
 function synchroon(params) {
     const browserRevisie = Number(params.revisie);
@@ -105,14 +106,15 @@ function synchroon(params) {
 }
 
 /**
- * Bij eersteContact synchroniseert de browser met de server.
+ * eersteContact van de server synchroniseert met eersteContact van de browser. Zie server.js
  *
- * Indien de browser al eerder contact had tijdens een sessie
- * stuurt eersteContact antwoord met synchroon en mutaties en geen gevraagdeData,
- * want de browser is al synchroon tot de browserRevisie en de vragen zijn al verstuurd.
+ * Bij eersteContact van de browser stuurt eersteContact antwoord met synchroon zonder mutaties
+ * en de mogelijke vragen als gevraagdeData.
+ * De browser is helemaal synchroon, want begint verder zonder data.
  *
- * Bij eersteContact van de sessie stuurt eersteContact antwoord met synchroon zonder mutaties
- * en de vragen als gevraagdeData.
+ * Indien de browser al eerder contact had tijdens een sessie stuurt eersteContact antwoord
+ * zonder gevraagdeData met synchroon en mutaties vanaf de browserRevisie.
+ * De browser is al synchroon tot de browserRevisie en de mogelijke vragen zijn al verstuurd.
  *
  * @param params revisie en club van de browser boom
  * @returns {string} antwoord
@@ -131,11 +133,11 @@ function eersteContact(params) {
 }
 
 /**
- * Een api-endpoint geeft antwoord aan de browser met synchroon en gevraagdeData.
+ * Een api-endpoint geeft antwoord aan de browser met sessie, mutaties en gevraagdeData.
  *
- * @param synchroon
+ * @param synchroon informatie van de server
  * @param gevraagdeData
- * @returns {string}
+ * @returns antwoord
  */
 function antwoord(synchroon, gevraagdeData) {
     return JSON.stringify([synchroon, ...gevraagdeData]);
