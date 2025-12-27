@@ -25,16 +25,14 @@
  * De revisie hoort bij de meest recente mutatie van de database en is te vinden via de url.
  * De url verwijst op de server naar de database en naar sessionStorage van de browser
  * of naar de boom.
- *
- * club beperkt het aantal mutaties die de server naar de browser stuurt.
  */
 const synchroon = {
-    versie: "0.0.0.",
+    versie: "0.0.0.", // zie package.json
     vragen: [], // mogelijke vragen aan de server
-    start: new Date(),
+    start: new Date().toISOString(), // JSON: jjjj-mm-ddTuu:mm:ss.sssZ
     revisie: 0, // +1 na elke mutatie op de server
     mutaties: {}, // alle mutaties op de server sinds de start van de server
-    club: 0
+    club: 0 // beperk het aantal mutaties die de server naar de browser stuurt
 }
 
 function synchroonBijwerken(object) {

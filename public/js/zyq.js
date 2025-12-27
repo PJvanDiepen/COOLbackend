@@ -184,6 +184,7 @@ export function tijdGeleden(jsonDatum) {
     }
 }
 
+// TODO vereenvoudigen zie stickchess.js
 export function datumLeesbaar(object) {
     const datum = new Date(object.datum);
     return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;

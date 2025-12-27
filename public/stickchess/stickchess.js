@@ -245,13 +245,8 @@ for (let i = 1; i <= aantalRonden ; i++) {
     uitslagenVerwerken(toernooi[url.toernooi].ronde[i]);
 }
 
-function datumLeesbaar(jsonDatum) {
-    const datum = new Date(jsonDatum);
-    return `${voorloopNul(datum.getDate())}-${voorloopNul(datum.getMonth()+1)}-${datum.getFullYear()}`;
-}
-
-function voorloopNul(getal) {
-    return getal < 10 ? "0" + getal : getal;
+function datumLeesbaar(isoDatum) { // jjjj-mm-ddTuu:mm:ss.sssZ
+    return `${isoDatum.substring(8,10)}${isoDatum.substring(4,7)}-${isoDatum.substring(0,4)}`;
 }
 
 function koppelVerwerken(koppel) {

@@ -31,9 +31,10 @@ export async function eersteContact() {
     const antwoord = await vraagServer(`/${db.synchroon.revisie}/${db.synchroon.club}/synchroon`);
     console.log(antwoord);
     if (db.synchroon.revisie === 0) {
-        db.synchroon.vragen = antwoord.slice(1);
+        db.synchroon.vragen = synchroniseren(antwoord);
+    } else {
+        synchroniseren(antwoord);
     }
-    synchroniseren(antwoord);
 }
 
 /*
@@ -46,12 +47,32 @@ TODO groeiFuncties() voor lezen gebruiker + spelers
 TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
  */
 
+// Save any object (with Dates) to sessionStorage
+function saveJSON(key, value) {
+    sessionStorage.setItem(key, JSON.stringify(value));
+}
+
+// Load JSON and automatically convert ISO strings back to Dates
+function loadJSON(key) {
+    const raw = sessionStorage.getItem(key);
+    if (!raw) return null;
+
+    return JSON.parse(raw, (k, v) => {
+        // Detect ISO date strings
+        if (typeof v === "string" && /^\d{4}-\d{2}-\d{2}T/.test(v)) {
+            return new Date(v);
+        }
+        return v;
+    });
+}
+
+
 /**
  * Na eersteContact of vraag aan de server verwerkt synchroniseren het antwoord van de server
  * met synchroon {} en gevraagdeData. Zie api.js
  *
  * @param antwoord van server
- * @returns {*[]} gevraagdeData
+ * @returns [] gevraagdeData
  */
 function synchroniseren(antwoord) {
 
@@ -63,7 +84,8 @@ function synchroniseren(antwoord) {
     TODO strip mutaties van synchroon
     TODO revisie en gevraagdeData opslaan in sessionStorage met juiste key
      */
-    return []; // gevraagdeData
+    console.log("--- synchroniseren ---")
+    return antwoord.slice(1); // gevraagdeData
 }
 
 export async function vraag(commando) {
