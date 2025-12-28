@@ -227,7 +227,7 @@ const uitslagKoppel = new Map([
 ]);
 
 document.getElementById("kop").textContent = toernooi[url.toernooi].naam;
-document.getElementById("toernooi").append(` toernooi op ${toernooi[url.toernooi].datum}`);
+document.getElementById("toernooi").append(` toernooi ${toernooi[url.toernooi].datum}`);
 const ranglijst = document.getElementById("ranglijst");
 const spelerNummer = new Map();
 const locatieNummer = new Map();
@@ -246,7 +246,7 @@ for (let i = 1; i <= aantalRonden ; i++) {
 }
 
 function datumLeesbaar(isoDatum) { // jjjj-mm-ddTuu:mm:ss.sssZ
-    return `${isoDatum.substring(8,10)}${isoDatum.substring(4,7)}-${isoDatum.substring(0,4)}`;
+    return `${isoDatum.substring(8,10)}-${isoDatum.substring(5,7)}-${isoDatum.substring(0,4)}`;
 }
 
 function koppelVerwerken(koppel) {

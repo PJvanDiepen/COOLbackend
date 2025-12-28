@@ -78,18 +78,19 @@ db.synchroon.revisie = 1;
 const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
 
 /**
- * De db.synchroon.revisie is altijd de actuele revisie van de server boom.
+ * De db.synchroon.revisie is altijd de actuele revisie van de server.
  * De mutaties kunnen van oudere revisies zijn.
  * De browser is actueel tot de browserRevisie.
  *
  * synchroon geeft informatie over de server met mutaties
  * die nieuwer zijn dan de browserRevisie en relevant voor de juisteClub.
  *
- * @param params revisie en club van de browser boom
- * @returns {versie: string, start: Date, revisie: number, mutaties: {}}
+ * @param params revisie en club van de browser
+ * @returns db.synchroon zonder club, een beperkt aantal mutaties en vaak zonder vragen
  */
-function synchroon(params) {
+function antwoord(params, gevraagdeData) {
     const browserRevisie = Number(params.revisie);
+    const mogelijkeVragen = browserRevisie ? [] : db.synchroon.vragen;
     const juisteClub = `/${params.club}`;
     const laatsteMutaties = { };
     for (const [key, value] of Object.entries(mutaties)) {
@@ -97,12 +98,13 @@ function synchroon(params) {
             laatsteMutaties[key] = value;
         }
     }
-    return {
+    return JSON.stringify([{
         versie: db.synchroon.versie,
+        vragen: mogelijkeVragen,
         start: db.synchroon.start,
         revisie: db.synchroon.revisie,
         mutaties: laatsteMutaties
-    };
+    }, gevraagdeData]);
 }
 
 /**
@@ -119,29 +121,15 @@ function synchroon(params) {
  * @param params revisie en club van de browser boom
  * @returns {string} antwoord
  */
-function eersteContact(params) {
-    if (Number(params.revisie)) {
-        return antwoord(synchroon(params), []);
-    } else {
-        return antwoord({
-            versie: db.synchroon.versie,
-            start: db.synchroon.start,
-            revisie: db.synchroon.revisie,
-            mutaties: { }
-        }, db.synchroon.vragen);
-    }
-}
 
 /**
  * Een api-endpoint geeft antwoord aan de browser met sessie, mutaties en gevraagdeData.
  *
- * @param synchroon informatie van de server
+ * @param params informatie van de server
  * @param gevraagdeData
  * @returns antwoord
  */
-function antwoord(synchroon, gevraagdeData) {
-    return JSON.stringify([synchroon, ...gevraagdeData]);
-}
+
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
@@ -179,7 +167,7 @@ module.exports = function (url) {
     Frontend: server.js
      */
     url.get("/:revisie/:club/synchroon", async function (ctx) {
-        ctx.body = eersteContact(ctx.params);
+        ctx.body = antwoord(ctx.params, []);
     });
 
     /*

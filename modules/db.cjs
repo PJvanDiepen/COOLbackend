@@ -27,16 +27,12 @@
  * of naar de boom.
  */
 const synchroon = {
-    versie: "0.0.0.", // zie package.json
+    versie: "0.0.0", // zie package.json
     vragen: [], // mogelijke vragen aan de server
-    start: new Date().toISOString(), // JSON: jjjj-mm-ddTuu:mm:ss.sssZ
+    start: new Date().toISOString(), // jjjj-mm-ddTuu:mm:ss.sssZ
     revisie: 0, // +1 na elke mutatie op de server
     mutaties: {}, // alle mutaties op de server sinds de start van de server
-    club: 0 // beperk het aantal mutaties die de server naar de browser stuurt
-}
-
-function synchroonBijwerken(object) {
-    Object.assign(synchroon, object);
+    club: 0 // beperkt het aantal mutaties die de server naar de browser stuurt
 }
 
 /**
@@ -791,7 +787,6 @@ function gebruikerFunctie(speler) {
 
 module.exports = { // CommonJS voor node.js
     synchroon,
-    synchroonBijwerken,    // (object)
     key,                   // (object)
     // database mutatie
     VERWIJDERD,

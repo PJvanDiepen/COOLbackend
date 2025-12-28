@@ -155,6 +155,7 @@ export function naarTeam(uitslag) {
     return htmlLink(`team.html?team=${uitslag.teamCode}#ronde${uitslag.rondeNummer}`, db.wedstrijdVoluit(u));
 }
 
+// TODO vereenvoudigen
 export function tijdGeleden(jsonDatum) {
     const seconden = (new Date() - new Date(jsonDatum)) / 1000;
     if (seconden < 60) {

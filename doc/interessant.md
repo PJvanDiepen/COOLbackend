@@ -41,6 +41,7 @@ Refresh Android cache
 
 # JavaScript
 - [ECMA JavaScript](https://262.ecma-international.org/)
+- [code conventions](https://www.crockford.com/code.html)
 - [JavaScript tutorial](https://javascript.info/)
 - [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
 - [undefined](https://dmitripavlutin.com/7-tips-to-handle-undefined-in-javascript/)
