@@ -8,9 +8,9 @@ import { server, url } from "./html.js";
 import * as db from "./db.js";
 
 /**
- * eersteContact van de browser synchroniseert met eersteContact van de server. Zie api.js
+ * eersteContact van de browser synchroniseert met de server. Zie api.js
  *
- * Bij eersteContact van de server stuurt eersteContact van de server antwoord
+ * Bij eersteContact van de server stuurt de server antwoord
  * met synchroon zonder mutaties en de mogelijke vragen als gevraagdeData.
  * De browser is helemaal synchroon, want begint verder zonder data.
  *
@@ -23,7 +23,7 @@ import * as db from "./db.js";
 export async function eersteContact() {
     console.log("--- eersteContact: url, db.synchroon, antwoord, db:synchroon ---");
     console.log(url);
-    Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem("sessie")));
+    Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem("synchroon")));
     if (url.hasOwnProperty("club")) {
         db.synchroon.club = url.club;
     }
@@ -46,7 +46,7 @@ TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
 
 /**
  * Na eersteContact of vraag aan de server verwerkt synchroniseren het antwoord van de server
- * met synchroon {} en gevraagdeData. Zie api.js
+ * met synchroon en gevraagdeData. Zie api.js
  *
  * @param antwoord van server
  * @returns [] gevraagdeData
@@ -55,7 +55,7 @@ function synchroniseren(antwoord) {
 
     /*
     TODO documenteren
-    TODO sessionStorage.setItem("sessie")
+    TODO indien gewijzigd dan sessionStorage.setItem("synchroon")
     TODO indien server herstart dan alles verwijderen uit sessionStorage
     TODO mutaties synchroniseren (= niet actueel data verwijderen)
     TODO strip mutaties van synchroon

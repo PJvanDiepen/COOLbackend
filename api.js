@@ -73,63 +73,38 @@ function groeiFuncties () {
 }
 
 db.boomOnderhoud(groeiFuncties());
-
 db.synchroon.revisie = 1;
-const mutaties = new Map(); // { url1: revisie1, url2: revisie2, ... }
 
 /**
- * De db.synchroon.revisie is altijd de actuele revisie van de server.
- * De mutaties kunnen van oudere revisies zijn.
- * De browser is actueel tot de browserRevisie.
+ * Een api-endpoint geeft antwoord aan de browser: synchroon en de gevraagdeData. Zie db.cjs
  *
- * synchroon geeft informatie over de server met mutaties
- * die nieuwer zijn dan de browserRevisie en relevant voor de juisteClub.
+ * Aan de hand van browserRevisie en juisteClub beperkt antwoord het aantal mutaties voor de browser.
+ * Uitsluitend als browserRevisie = 0 of groter dan db.revisie stuurt antwoord alle mogelijke vragen.
+ *
+ * Als browserRevisie > db.revisie is de server herstart na de vorige vraag van de browser
+ * en zijn er misschien andere vragen mogelijk.
  *
  * @param params revisie en club van de browser
- * @returns db.synchroon zonder club, een beperkt aantal mutaties en vaak zonder vragen
+ * @param gevraagdeData
+ * @returns synchroon en gevraagdeData
  */
 function antwoord(params, gevraagdeData) {
     const browserRevisie = Number(params.revisie);
-    const mogelijkeVragen = browserRevisie ? [] : db.synchroon.vragen;
     const juisteClub = `/${params.club}`;
     const laatsteMutaties = { };
-    for (const [key, value] of Object.entries(mutaties)) {
+    for (const [key, value] of Object.entries(db.mutaties)) {
         if (value > browserRevisie && key.startsWith(juisteClub)) {
             laatsteMutaties[key] = value;
         }
     }
     return JSON.stringify([{
         versie: db.synchroon.versie,
-        vragen: mogelijkeVragen,
+        vragen: browserRevisie > 0 && browserRevisie < db.revisie ? [] : db.synchroon.vragen,
         start: db.synchroon.start,
         revisie: db.synchroon.revisie,
         mutaties: laatsteMutaties
-    }, gevraagdeData]);
+    }, ...gevraagdeData]);
 }
-
-/**
- * eersteContact van de server synchroniseert met eersteContact van de browser. Zie server.js
- *
- * Bij eersteContact van de browser stuurt eersteContact antwoord met synchroon zonder mutaties
- * en de mogelijke vragen als gevraagdeData.
- * De browser is helemaal synchroon, want begint verder zonder data.
- *
- * Indien de browser al eerder contact had tijdens een sessie stuurt eersteContact antwoord
- * zonder gevraagdeData met synchroon en mutaties vanaf de browserRevisie.
- * De browser is al synchroon tot de browserRevisie en de mogelijke vragen zijn al verstuurd.
- *
- * @param params revisie en club van de browser boom
- * @returns {string} antwoord
- */
-
-/**
- * Een api-endpoint geeft antwoord aan de browser met sessie, mutaties en gevraagdeData.
- *
- * @param params informatie van de server
- * @param gevraagdeData
- * @returns antwoord
- */
-
 
 /**
  * De url van een api-endpoint bestaat uit een of meer commando's en parameters
