@@ -92,9 +92,11 @@ function antwoord(params, gevraagdeData) {
     const browserRevisie = Number(params.revisie);
     const juisteClub = `/${params.club}`;
     const laatsteMutaties = { };
-    for (const [key, value] of Object.entries(db.mutaties)) {
-        if (value > browserRevisie && key.startsWith(juisteClub)) {
-            laatsteMutaties[key] = value;
+    if (db.mutaties) { // TODO overbodig na de eerste mutatie: misschien leesClubs
+        for (const [key, value] of Object.entries(db.mutaties)) {
+            if (value > browserRevisie && key.startsWith(juisteClub)) {
+                laatsteMutaties[key] = value;
+            }
         }
     }
     return JSON.stringify([{

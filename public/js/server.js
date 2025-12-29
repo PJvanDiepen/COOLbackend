@@ -45,8 +45,22 @@ TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
  */
 
 /**
- * Na eersteContact of vraag aan de server verwerkt synchroniseren het antwoord van de server
- * met synchroon en gevraagdeData. Zie api.js
+ * Het antwoord van de server bestaat uit synchroon en gevraagdeData. Zie api.js
+ * De browser gebruikt synchroon om te synchroniseren met de server
+ * en geeft de gevraagdeData terug.
+ * Eventueel slaat synchroniseren de meest actuele synchroon op in sessionStorage.
+ *
+ * Indien server start later was dan browser start of vorige server start
+ * dan zijn alle antwoorden van de server in sessionStorage niet meer actueel en
+ * verwijdert synchroniseren alle antwoorden.
+ *
+ * synchroniseren vergelijkt de mutaties in synchroon met de antwoorden in sessionStorage.
+ * Indien revisie van mutatie in synchroon > dan revisie van antwoord server in sessionStorage
+ * dan is dat antwoord in sessionStorage niet meer actueel en verwijdert synchroniseren dat antwoord.
+ * De antwoorden in sessionStorage die overblijven zijn allemaal actueel.
+ *
+ * Uitsluitend als in synchroon mogelijke vragen aan de server staan,
+ * zijn dat de meest actuele vragen die synchroniseren.
  *
  * @param antwoord van server
  * @returns [] gevraagdeData
@@ -54,7 +68,6 @@ TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
 function synchroniseren(antwoord) {
 
     /*
-    TODO documenteren
     TODO indien gewijzigd dan sessionStorage.setItem("synchroon")
     TODO indien server herstart dan alles verwijderen uit sessionStorage
     TODO mutaties synchroniseren (= niet actueel data verwijderen)
@@ -63,7 +76,9 @@ function synchroniseren(antwoord) {
      */
     console.log("--- synchroniseren ---");
     const synchroon = antwoord[0];
-
+    if (synchroon.vragen.length > 0) {
+        db.synchroon.vragen = synchroon.vragen;
+    }
     return antwoord.slice(1); // gevraagdeData
 }
 
