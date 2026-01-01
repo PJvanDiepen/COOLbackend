@@ -1,11 +1,28 @@
 /*
  * Deze module bevat alle code voor het synchroniseren van de browser met de server.
- *
- *
  */
 
 import { server, url } from "./html.js";
 import * as db from "./db.js";
+
+const SESSIE = "sessie";
+
+/**
+ * synchroonBijwerken werkt de synchroon van de browser bij met de synchroon van de server.
+ *
+ * Uitsluitend als in synchroon mogelijke vragen aan de server staan, zijn dat de meest actuele vragen.
+ *
+ * @param synchroon van de server
+ */
+function synchroonBijwerken(synchroon) {
+    db.synchroon.versie = synchroon.versie;
+    if (synchroon.vragen.length > 0) {
+        db.synchroon.vragen = synchroon.vragen;
+    }
+    db.synchroon.start = synchroon.start;
+    db.synchroon.revisie = synchroon.revisie;
+    sessionStorage.setItem(SESSIE, JSON.stringify(db.synchroon));
+}
 
 /**
  * eersteContact van de browser synchroniseert met de server. Zie api.js
@@ -21,17 +38,50 @@ import * as db from "./db.js";
  * @returns {Promise<void>}
  */
 export async function eersteContact() {
-    console.log("--- eersteContact: url, db.synchroon, antwoord, db:synchroon ---");
-    console.log(url);
-    Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem("synchroon")));
+    Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem(SESSIE)));
     if (url.hasOwnProperty("club")) {
         db.synchroon.club = url.club;
     }
-    console.log(db.synchroon);
     const antwoord = await vraagServer(`/${db.synchroon.revisie}/${db.synchroon.club}/synchroon`);
-    console.log(antwoord);
     synchroniseren(antwoord);
-    console.log(db.synchroon);
+}
+
+/**
+ * Het antwoord van de server bestaat uit synchroon en gevraagdeData. Zie api.js
+ * De browser gebruikt synchroon om te synchroniseren met de server
+ * en geeft de gevraagdeData terug.
+ * Eventueel zal synchroniseren synchroonBijwerken met synchrooon van de server.
+ *
+ * Indien server start later was dan browser start of vorige server start
+ * dan zijn alle antwoorden van de server in sessionStorage niet meer actueel en
+ * verwijdert synchroniseren alle antwoorden in sessionStorage.
+ *
+ * synchroniseren vergelijkt de mutaties in synchroon met de antwoorden in sessionStorage.
+ * Indien revisie van mutatie in synchroon > dan revisie van antwoord server in sessionStorage
+ * dan is dat antwoord in sessionStorage niet meer actueel en verwijdert synchroniseren dat antwoord.
+ * De antwoorden in sessionStorage die overblijven zijn allemaal actueel.
+ *
+ * @param antwoord van server
+ * @returns [] gevraagdeData
+ */
+function synchroniseren(antwoord) {
+    const synchroon = antwoord[0];
+    if (synchroon.revisie > db.synchroon.revisie || synchroon.start > db.synchroon.start) {
+        const juisteClub = `/${db.synchroon.club}`;
+        for (const key of Object.keys(sessionStorage)) {
+            if (key.startsWith(juisteClub)) {
+                sessionStorage.removeItem(key); // alle antwoorden zijn niet meer actueel
+            }
+        }
+        synchroonBijwerken(synchroon);
+    } else {
+        for (const [key, value] of Object.entries(synchroon.mutaties)) { // actuele mutaties
+            if (Number(value) > Number(sessionStorage.getItem(key))) {
+                sessionStorage.removeItem(key); // niet actueel antwoord verwijderen
+            }
+        }
+    }
+    return antwoord.slice(1); // gevraagdeData
 }
 
 /*
@@ -43,44 +93,6 @@ TODO gebruiker en teams voor mutatieRechten
 TODO groeiFuncties() voor lezen gebruiker + spelers
 TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
  */
-
-/**
- * Het antwoord van de server bestaat uit synchroon en gevraagdeData. Zie api.js
- * De browser gebruikt synchroon om te synchroniseren met de server
- * en geeft de gevraagdeData terug.
- * Eventueel slaat synchroniseren de meest actuele synchroon op in sessionStorage.
- *
- * Indien server start later was dan browser start of vorige server start
- * dan zijn alle antwoorden van de server in sessionStorage niet meer actueel en
- * verwijdert synchroniseren alle antwoorden.
- *
- * synchroniseren vergelijkt de mutaties in synchroon met de antwoorden in sessionStorage.
- * Indien revisie van mutatie in synchroon > dan revisie van antwoord server in sessionStorage
- * dan is dat antwoord in sessionStorage niet meer actueel en verwijdert synchroniseren dat antwoord.
- * De antwoorden in sessionStorage die overblijven zijn allemaal actueel.
- *
- * Uitsluitend als in synchroon mogelijke vragen aan de server staan,
- * zijn dat de meest actuele vragen die synchroniseren.
- *
- * @param antwoord van server
- * @returns [] gevraagdeData
- */
-function synchroniseren(antwoord) {
-
-    /*
-    TODO indien gewijzigd dan sessionStorage.setItem("synchroon")
-    TODO indien server herstart dan alles verwijderen uit sessionStorage
-    TODO mutaties synchroniseren (= niet actueel data verwijderen)
-    TODO strip mutaties van synchroon
-    TODO revisie en gevraagdeData opslaan in sessionStorage met juiste key
-     */
-    console.log("--- synchroniseren ---");
-    const synchroon = antwoord[0];
-    if (synchroon.vragen.length > 0) {
-        db.synchroon.vragen = synchroon.vragen;
-    }
-    return antwoord.slice(1); // gevraagdeData
-}
 
 export async function vraag(commando) {
     const vraagVanServer = await vraagZoeken(commando);

@@ -35,6 +35,11 @@ const synchroon = {
     club: 0 // beperkt het aantal mutaties die de server naar de browser stuurt
 }
 
+function mutatiesBijwerken(key) {
+    synchroon.revisie++;
+    synchroon.mutaties[key] = synchroon.revisie;
+}
+
 /**
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
  *
@@ -787,6 +792,7 @@ function gebruikerFunctie(speler) {
 
 export { // ES6 voor browser,
     synchroon,
+    mutatiesBijwerken,     // (key)
     key,                   // (object)
     // database mutatie
     VERWIJDERD,

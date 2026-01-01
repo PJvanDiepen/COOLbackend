@@ -73,7 +73,7 @@ function groeiFuncties () {
 }
 
 db.boomOnderhoud(groeiFuncties());
-db.synchroon.revisie = 1;
+db.mutatiesBijwerken("/start"); // server start met revisie = 1
 
 /**
  * Een api-endpoint geeft antwoord aan de browser: synchroon en de gevraagdeData. Zie db.cjs
@@ -92,16 +92,14 @@ function antwoord(params, gevraagdeData) {
     const browserRevisie = Number(params.revisie);
     const juisteClub = `/${params.club}`;
     const laatsteMutaties = { };
-    if (db.mutaties) { // TODO overbodig na de eerste mutatie: misschien leesClubs
-        for (const [key, value] of Object.entries(db.mutaties)) {
-            if (value > browserRevisie && key.startsWith(juisteClub)) {
-                laatsteMutaties[key] = value;
-            }
+    for (const [key, value] of Object.entries(db.synchroon.mutaties)) {
+        if (Number(value) > browserRevisie && key.startsWith(juisteClub)) {
+            laatsteMutaties[key] = value;
         }
     }
     return JSON.stringify([{
         versie: db.synchroon.versie,
-        vragen: browserRevisie > 0 && browserRevisie < db.revisie ? [] : db.synchroon.vragen,
+        vragen: browserRevisie > 0 && browserRevisie < db.synchroon.revisie ? [] : db.synchroon.vragen,
         start: db.synchroon.start,
         revisie: db.synchroon.revisie,
         mutaties: laatsteMutaties
