@@ -81,8 +81,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2526';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 15;
-set @bord = 13;
+set @ronde = 16;
+set @bord = 8;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -98,8 +98,8 @@ set @zwart = 9077651; -- Lennart van der Kraan
 
 select * from persoon where knsbNummer = @wit;
 
-set @oneven = 6187885; -- Bob de Mon
-set @afwezig = 7699010; -- Ruud Niewenhuis
+set @oneven = 7731812; -- Alexander Versluis
+set @afwezig = 9023234; -- Albert Boekema
 set @extern = 7758014; -- Alex
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer

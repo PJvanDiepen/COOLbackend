@@ -1,5 +1,17 @@
 /*
- * Deze module bevat alle code voor het synchroniseren van de browser met de server.
+ * Deze module bevat alle code voor de interactie met de server op 0-0-0.nl
+ *
+ * De server verzorgt de interactie met de database en krijgt vragen van browsers van gebruikers.
+ * Daarom is het noodzakelijk om de browser voortdurend te synchroniseren met de server.
+ *
+ * Daarnaast probeert de browser zo min mogelijk vragen te stellen aan de server
+ * door antwoorden van de server in sessionStorage te gebruiken.
+ *
+ * De browser stelt een vraag aan de server door middel van een url.
+ * Het antwoord van de server bestaat uit synchroon en daarna de gevraagdeData.
+ * Na synchroniseren slaat de browser een antwoord op in sessionStorage met
+ * een key die bestaat uit url zonder uuid en revisie en
+ * een value die bestaat uit revisie en de gevraagdeData.
  */
 
 import { server, url } from "./html.js";
@@ -8,9 +20,11 @@ import * as db from "./db.js";
 const SESSIE = "sessie";
 
 /**
- * synchroonBijwerken werkt de synchroon van de browser bij met de synchroon van de server.
+ * synchroonBijwerken werkt synchroon van de browser bij met synchroon van de server.
+ * Zie db.js
  *
- * Uitsluitend als in synchroon mogelijke vragen aan de server staan, zijn dat de meest actuele vragen.
+ * Uitsluitend als in synchroon mogelijke vragen aan de server staan,
+ * zijn dat de meest actuele vragen die de browser aan de server kan stellen.
  *
  * @param synchroon van de server
  */
@@ -27,32 +41,57 @@ function synchroonBijwerken(synchroon) {
 /**
  * eersteContact van de browser synchroniseert met de server. Zie api.js
  *
- * Bij eersteContact van de server stuurt de server antwoord
- * met synchroon zonder mutaties en de mogelijke vragen als gevraagdeData.
- * De browser is helemaal synchroon, want begint verder zonder data.
+ * Bij eersteContact stuurt de server antwoord
+ * met synchroon zonder mutaties en de mogelijke vragen en zonder gevraagdeData.
+ * De browser is helemaal synchroon, want begint zonder eerdere antwoorden.
  *
- * Indien de browser al eerder contact had tijdens een sessie stuurt eersteContact antwoord
- * zonder gevraagdeData met synchroon en mutaties vanaf de browserRevisie.
+ * Indien de browser al eerder contact had tijdens een SESSIE stuurt de server antwoord
+ * met synchroon en mutaties vanaf de browserRevisie en zonder gevraagdeData.
  * De browser is al synchroon tot de browserRevisie en de mogelijke vragen zijn al verstuurd.
  *
  * @returns {Promise<void>}
  */
 export async function eersteContact() {
     Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem(SESSIE)));
-    if (url.hasOwnProperty("club")) {
-        db.synchroon.club = url.club;
-    }
-    const antwoord = await vraagServer(`/${db.synchroon.revisie}/${db.synchroon.club}/synchroon`);
-    synchroniseren(antwoord);
+    synchroniseren(await vraagServer(`/${db.synchroon.revisie}/${url.club}/synchroon`));
+
+    console.log(await leesClubs());
+    console.log(await leesSeizoenen(0));
+    const test = await groeiFuncties();
+    console.log(await test.leesClubs());
+    console.log(await test.leesSeizoenen(0));
+
+    db.boomOnderhoud(groeiFuncties());
+}
+
+async function leesClubs() {
+    console.log("--- leesClubs ---");
+    const clubsVraag = await vraag("/clubs");
+    clubsVraag.afdrukken();
+    const antwoord = await clubsVraag.antwoorden();
+    console.log(antwoord);
+    console.log("--- leesClubs 2 ---");
+    return antwoord;
+}
+
+async function leesSeizoenen(clubCode) {
+    console.log("--- leesSeizoenen ---");
+    const seizoenenVraag = await vraag("/seizoenen");
+    seizoenenVraag.afdrukken();
+    const antwoord = await seizoenenVraag.specificeren(clubCode).antwoorden();
+    console.log(antwoord);
+    console.log("--- leesSeizoenen 2 ---");
+    return antwoord;
 }
 
 /**
  * Het antwoord van de server bestaat uit synchroon en gevraagdeData. Zie api.js
+ *
  * De browser gebruikt synchroon om te synchroniseren met de server
  * en geeft de gevraagdeData terug.
- * Eventueel zal synchroniseren synchroonBijwerken met synchrooon van de server.
+ * Eventueel zal synchroniseren synchroonBijwerken met synchroon van de server.
  *
- * Indien server start later was dan browser start of vorige server start
+ * Indien de server later was gestart dan de browser of de vorige server start
  * dan zijn alle antwoorden van de server in sessionStorage niet meer actueel en
  * verwijdert synchroniseren alle antwoorden in sessionStorage.
  *
@@ -61,13 +100,15 @@ export async function eersteContact() {
  * dan is dat antwoord in sessionStorage niet meer actueel en verwijdert synchroniseren dat antwoord.
  * De antwoorden in sessionStorage die overblijven zijn allemaal actueel.
  *
+ * In sessionStorage staan antwoorden die beginnen met revisie en daarna de gevraagdeData.
+ *
  * @param antwoord van server
  * @returns [] gevraagdeData
  */
 function synchroniseren(antwoord) {
     const synchroon = antwoord[0];
     if (synchroon.revisie > db.synchroon.revisie || synchroon.start > db.synchroon.start) {
-        const juisteClub = `/${db.synchroon.club}`;
+        const juisteClub = `/${url.club}`;
         for (const key of Object.keys(sessionStorage)) {
             if (key.startsWith(juisteClub)) {
                 sessionStorage.removeItem(key); // alle antwoorden zijn niet meer actueel
@@ -75,8 +116,8 @@ function synchroniseren(antwoord) {
         }
         synchroonBijwerken(synchroon);
     } else {
-        for (const [key, value] of Object.entries(synchroon.mutaties)) { // actuele mutaties
-            if (Number(value) > Number(sessionStorage.getItem(key))) {
+        for (const [key, value] of Object.entries(synchroon.mutaties)) {
+            if (Number(value) > Number(sessionStorage.getItem(key)[0])) { // revisies vergelijken
                 sessionStorage.removeItem(key); // niet actueel antwoord verwijderen
             }
         }
@@ -84,22 +125,56 @@ function synchroniseren(antwoord) {
     return antwoord.slice(1); // gevraagdeData
 }
 
-/*
-TODO synchroniseren ook aanroepen bij vraag antwoorden
-TODO groeiFuncties() compleet maken
-TODO seizoenen van gegeven club
-TODO een seizoen kiezen en dan alle teams van dat seizoen
-TODO gebruiker en teams voor mutatieRechten
-TODO groeiFuncties() voor lezen gebruiker + spelers
-TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
- */
+function groeiFuncties () { // vergelijk met api.js
+    console.log("--- groeiFuncties ---");
 
-export async function vraag(commando) {
-    const vraagVanServer = await vraagZoeken(commando);
+    async function leesClubs() {
+        console.log("--- leesClubs 1 ---");
+        const clubsVraag = await vraag("/clubs");
+        clubsVraag.afdrukken();
+        const antwoord = await clubsVraag.antwoorden();
+        console.log(antwoord);
+        console.log("--- leesClubs 2 ---");
+        return antwoord;
+    }
+
+    async function leesSeizoenen(clubCode) {
+        console.log("--- leesSeizoenen 1 ---");
+        const seizoenenVraag = await vraag("/seizoenen");
+        seizoenenVraag.afdrukken();
+        const antwoord = await seizoenenVraag.specificeren(clubCode).antwoorden();
+        console.log(antwoord);
+        console.log("--- leesSeizoenen 2 ---");
+        return antwoord;
+    }
+
+    async function leesTeams(clubCode, seizoen) {
+
+    }
+
+    async function leesRonden(clubCode, seizoen, teamCode) {
+
+    }
+
+    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
+
+    }
+
+    return Object.freeze({
+        leesClubs,
+        leesSeizoenen,
+        leesTeams,
+        leesRonden,
+        leesUitslagen
+    });
+}
+
+export function vraag(commando) {
+    const vraagVanServer = vraagZoeken(commando);
     if (!vraagVanServer) {
         return Object.freeze({});
     }
-    const specificatie = {
+    const specificatie = { // zie api.js
         uuid: "",
         revisie: 0,
         club: 0,
@@ -122,9 +197,9 @@ export async function vraag(commando) {
 
     function invullen() {
         return vraagVanServer
-            .replace(":uuid", specificatie.uuid)
-            .replace(":revisie", specificatie.revisie)
-            .replace(":club", specificatie.club)
+            .replace(":uuid", url.uuid) // uit localStorage zie html.js
+            .replace(":revisie", db.synchroon.revisie) // meest recente revisie
+            .replace(":club", url.club) // uit url zie html.js
             .replace(":seizoen", specificatie.seizoen)
             .replace(":team", specificatie.team)
             .replace(":competitie", specificatie.competitie)
@@ -164,19 +239,20 @@ export async function vraag(commando) {
     }
 
     async function muteren() {
-        return await vraagServer(invullen());  // TODO aantal mutaties teruggeven
+        return synchroniseren(await vraagServer(invullen()));
     }
 
     async function antwoorden() {
         const url = invullen();
         const key = zonder(url);
-        // TODO synchroniseren aanroepen
-        const value = JSON.parse(sessionStorage.getItem(key)); // indien lokaal dan niet vraagServer
-        if (!value) {
-            const antwoord = await vraagServer(url);
-            sessionStorage.setItem(key, JSON.stringify(antwoord));
+        const value = JSON.parse(sessionStorage.getItem(key));
+        if (value) {
+            return value.slice(1); // gevraagdeData zonder revisie
+        } else {
+            const antwoord = synchroniseren(await vraagServer(url));
+            sessionStorage.setItem(key, JSON.stringify([db.synchroon.revisie, ...antwoord]));
+            return antwoord;
         }
-        return antwoord;
     }
 
     return Object.freeze({
@@ -188,7 +264,7 @@ export async function vraag(commando) {
     });
 }
 
-async function vraagZoeken(commando) {
+function vraagZoeken(commando) {
     const vragen = db.synchroon.vragen.filter(function (vraag) {
         return vraag.includes(commando);
     });
@@ -203,28 +279,10 @@ async function vraagZoeken(commando) {
 }
 
 /**
- * vraagLokaal optimaliseert de verbinding met de server
- * door het antwoord van de server ook lokaal op te slaan
- *
- * vraagLokaal krijgt object van vraagServer met revisie: <getal> data: [...]
- *
- * @param key de vraag aan de server
- * @returns {Promise<any>} revisie en data uit het antwoord van de server
- */
-async function vraagLokaal(key) {
-    let antwoord = JSON.parse(sessionStorage.getItem(key)); // indien lokaal dan niet vraagServer
-    if (!antwoord) {
-        antwoord = await vraagServer(key);
-        sessionStorage.setItem(key, JSON.stringify(antwoord));
-    }
-    return antwoord;
-}
-
-/**
  * vraagServer maakt verbinding met de server
  *
- * @param url de vraag aan de database op de server
- * @returns {Promise<any>} het antwoord van de server
+ * @param url vraag aan de server
+ * @returns {Promise<any>} antwoord van de server
  */
 async function vraagServer(url) {
     try {
@@ -240,36 +298,4 @@ async function vraagServer(url) {
         console.trace(`--- vraagServer error ---`);
         console.error(error);
     }
-}
-
-async function groeiFuncties () { // zie api.js
-    const clubVraag = await server.vraag("/club");
-
-    async function leesClubs() {
-
-    }
-
-    async function leesSeizoenen(clubCode) {
-
-    }
-
-    async function leesTeams(clubCode, seizoen) {
-
-    }
-
-    async function leesRonden(clubCode, seizoen, teamCode) {
-
-    }
-
-    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
-
-    }
-
-    return Object.freeze({
-        leesClubs,
-        leesSeizoenen,
-        leesTeams,
-        leesRonden,
-        leesUitslagen
-    });
 }

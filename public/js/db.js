@@ -31,13 +31,11 @@ const synchroon = {
     vragen: [], // mogelijke vragen aan de server
     start: new Date().toISOString(), // jjjj-mm-ddTuu:mm:ss.sssZ
     revisie: 0, // +1 na elke mutatie op de server
-    mutaties: {}, // alle mutaties op de server sinds de start van de server
-    club: 0 // beperkt het aantal mutaties die de server naar de browser stuurt
+    mutaties: {} // alle mutaties op de server sinds de start van de server
 }
 
 function mutatiesBijwerken(key) {
-    synchroon.revisie++;
-    synchroon.mutaties[key] = synchroon.revisie;
+    synchroon.mutaties[key] = ++synchroon.revisie;
 }
 
 /**

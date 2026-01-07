@@ -146,6 +146,25 @@ module.exports = function (url) {
     });
 
     /*
+    Frontend: server.js
+     */
+    url.get("/:revisie/:club/clubs", async function (ctx) {
+        const eenClub = await db.clubTak(ctx.params.club);
+        ctx.body = antwoord(ctx.params, [eenClub.kaleClub()]);
+    });
+
+    /*
+    Frontend: server.js
+     */
+    url.get("/:revisie/:club/seizoenen", async function (ctx) {
+        const eenClub = await db.clubTak(ctx.params.club);
+        const seizoenen = await eenClub.alleSeizoenen();
+        ctx.body = antwoord(ctx.params, seizoenen.map(function (seizoen) {
+            return seizoen.kaleSeizoen();
+        }));
+    });
+
+    /*
     KNSB ratinglijst is CSV bestand met 8 velden
 
     0 Relatienummer > knsbNummer

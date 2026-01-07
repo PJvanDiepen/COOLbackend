@@ -16,8 +16,24 @@ import * as zyq from "./zyq.js";
         competitie: ""
     });
     await server.eersteContact();
-    html.id("kop").textContent = "Voorlopig geen kop"; // TODO voorlopig
-        // `${o_o_o.vereniging}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}${db.teamVoluit(o_o_o.competitie)}`;
+    console.log("--- na server.eersteContact(): html.url, db.synchroon, club ---");
+    console.log(html.url);
+    console.log(db.synchroon);
+    console.log(typeof html.url.club);
+    const club = await db.clubTak(html.url.club);
+    console.log(club);
+    /*
+    TODO kop: Waagtoren 〉 2025-2026 〉 interne competitie
+    TODO server.js: groeiFuncties() compleet maken
+    TODO seizoenen van gegeven club
+    TODO een seizoen kiezen en dan alle teams van dat seizoen
+    TODO gebruiker en teams voor mutatieRechten
+    TODO groeiFuncties() voor lezen gebruiker + spelers
+    TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
+     */
+
+    html.id("kop").textContent = `${club.vereniging}${html.SCHEIDING}Voorlopig`;
+
     const plaatje = html.id("plaatje");
     if (true) { // TODO (o_o_o.vereniging === "Waagtoren")
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));

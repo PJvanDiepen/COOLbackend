@@ -7,8 +7,11 @@ import * as db from "./db.js";
 export const pagina = new URL(location);
 export const params = pagina.searchParams; // TODO verwijderen
 export const server = pagina.host.match("localhost") ? "http://localhost:3000" : "https://0-0-0.nl";
-export const url = {};
 
+export const url = {
+    uuid: "",
+    club: 0
+};
 /**
  * urlVerwerken() maakt url object aan de hand van de gevraagdeParameters van de pagina.
  * Ten eerste uit de gegeven urlParameters.
