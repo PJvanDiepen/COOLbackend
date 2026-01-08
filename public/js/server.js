@@ -17,6 +17,50 @@
 import { server, url } from "./html.js";
 import * as db from "./db.js";
 
+function groeiFuncties () {
+    const clubsVraag = vraag("/clubs");
+
+    async function leesClubs() {
+        return await clubsVraag.antwoorden();
+    }
+
+    const seizoenenVraag = vraag("/seizoenen");
+
+    async function leesSeizoenen(clubCode) {
+        const object = {club: clubCode};
+        return await seizoenenVraag.specificeren(object).antwoorden();
+    }
+
+    const teamsVraag = vraag("/teams");
+
+    async function leesTeams(clubCode, seizoen) {
+        const object = {club: clubCode, seizoen: seizoen};
+        return await teamsVraag.specificeren(object).antwoorden();
+    }
+
+    const rondenVraag = vraag("/ronden");
+
+    async function leesRonden(clubCode, seizoen, teamCode) {
+        const object = {club: clubCode, seizoen: seizoen, team: teamCode};
+        return await rondenVraag.specificeren(object).antwoorden();
+    }
+
+    const uitslagenVraag = vraag("/uitslagen");
+
+    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
+        const object = {club: clubCode, seizoen: seizoen, team: teamCode, ronde: rondeNummer};
+        return await uitslagenVraag.specificeren(object).antwoorden();
+    }
+
+    return Object.freeze({
+        leesClubs,
+        leesSeizoenen,
+        leesTeams,
+        leesRonden,
+        leesUitslagen
+    });
+}
+
 const SESSIE = "sessie";
 
 /**
@@ -54,34 +98,7 @@ function synchroonBijwerken(synchroon) {
 export async function eersteContact() {
     Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem(SESSIE)));
     synchroniseren(await vraagServer(`/${db.synchroon.revisie}/${url.club}/synchroon`));
-
-    console.log(await leesClubs());
-    console.log(await leesSeizoenen(0));
-    const test = await groeiFuncties();
-    console.log(await test.leesClubs());
-    console.log(await test.leesSeizoenen(0));
-
     db.boomOnderhoud(groeiFuncties());
-}
-
-async function leesClubs() {
-    console.log("--- leesClubs ---");
-    const clubsVraag = await vraag("/clubs");
-    clubsVraag.afdrukken();
-    const antwoord = await clubsVraag.antwoorden();
-    console.log(antwoord);
-    console.log("--- leesClubs 2 ---");
-    return antwoord;
-}
-
-async function leesSeizoenen(clubCode) {
-    console.log("--- leesSeizoenen ---");
-    const seizoenenVraag = await vraag("/seizoenen");
-    seizoenenVraag.afdrukken();
-    const antwoord = await seizoenenVraag.specificeren(clubCode).antwoorden();
-    console.log(antwoord);
-    console.log("--- leesSeizoenen 2 ---");
-    return antwoord;
 }
 
 /**
@@ -125,53 +142,9 @@ function synchroniseren(antwoord) {
     return antwoord.slice(1); // gevraagdeData
 }
 
-function groeiFuncties () { // vergelijk met api.js
-    console.log("--- groeiFuncties ---");
-
-    async function leesClubs() {
-        console.log("--- leesClubs 1 ---");
-        const clubsVraag = await vraag("/clubs");
-        clubsVraag.afdrukken();
-        const antwoord = await clubsVraag.antwoorden();
-        console.log(antwoord);
-        console.log("--- leesClubs 2 ---");
-        return antwoord;
-    }
-
-    async function leesSeizoenen(clubCode) {
-        console.log("--- leesSeizoenen 1 ---");
-        const seizoenenVraag = await vraag("/seizoenen");
-        seizoenenVraag.afdrukken();
-        const antwoord = await seizoenenVraag.specificeren(clubCode).antwoorden();
-        console.log(antwoord);
-        console.log("--- leesSeizoenen 2 ---");
-        return antwoord;
-    }
-
-    async function leesTeams(clubCode, seizoen) {
-
-    }
-
-    async function leesRonden(clubCode, seizoen, teamCode) {
-
-    }
-
-    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
-
-    }
-
-    return Object.freeze({
-        leesClubs,
-        leesSeizoenen,
-        leesTeams,
-        leesRonden,
-        leesUitslagen
-    });
-}
-
 export function vraag(commando) {
-    const vraagVanServer = vraagZoeken(commando);
-    if (!vraagVanServer) {
+    const vraagAanServer = vraagZoeken(commando);
+    if (!vraagAanServer) {
         return Object.freeze({});
     }
     const specificatie = { // zie api.js
@@ -196,7 +169,7 @@ export function vraag(commando) {
     }
 
     function invullen() {
-        return vraagVanServer
+        return vraagAanServer
             .replace(":uuid", url.uuid) // uit localStorage zie html.js
             .replace(":revisie", db.synchroon.revisie) // meest recente revisie
             .replace(":club", url.club) // uit url zie html.js
@@ -222,9 +195,9 @@ export function vraag(commando) {
         return url;
     }
 
-    const zonder = vraagVanServer.startsWith("/:uuid/:revisie")
+    const zonder = vraagAanServer.startsWith("/:uuid/:revisie")
         ? vanafDerdeDeel
-        : (vraagVanServer.startsWith("/:uuid") || vraagVanServer.startsWith("/:revisie"))
+        : (vraagAanServer.startsWith("/:uuid") || vraagAanServer.startsWith("/:revisie"))
             ? vanafTweedeDeel
             : vanafEersteDeel;
 
@@ -232,7 +205,7 @@ export function vraag(commando) {
         if (tekst) {
             console.log(`--- ${tekst} ---`);
         }
-        console.log(vraagVanServer);
+        console.log(vraagAanServer);
         console.log(specificatie);
         console.log(invullen());
         return this;

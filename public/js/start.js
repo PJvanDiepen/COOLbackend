@@ -16,26 +16,31 @@ import * as zyq from "./zyq.js";
         competitie: ""
     });
     await server.eersteContact();
-    console.log("--- na server.eersteContact(): html.url, db.synchroon, club ---");
+    console.log("--- html.url, db.synchroon, seizoenen, uitslagen ronde 1 ---")
     console.log(html.url);
-    console.log(db.synchroon);
-    console.log(typeof html.url.club);
+    console.log(db.synchroon)
     const club = await db.clubTak(html.url.club);
-    console.log(club);
+    const seizoenen = await club.alleSeizoenen();
+    console.log(seizoenen);
+    const seizoen = seizoenen[seizoenen.length - 1]; // laatste seizoen
+    html.id("kop").textContent =
+        `${club.vereniging}${html.SCHEIDING}${seizoen.seizoenTekst}${html.SCHEIDING} Voorlopig`;
+
+    const ronde = await db.rondeTak(club.clubCode, seizoen.seizoen, db.INTERNE_COMPETITIE, 1);
+    const uitslagen = await ronde.alleUitslagen();
+    for (const uitslag of uitslagen) {
+        console.log(uitslag.uitslagTekst);
+    }
     /*
+    TODO complete jaaragenda inlezen?
     TODO kop: Waagtoren 〉 2025-2026 〉 interne competitie
-    TODO server.js: groeiFuncties() compleet maken
-    TODO seizoenen van gegeven club
-    TODO een seizoen kiezen en dan alle teams van dat seizoen
     TODO gebruiker en teams voor mutatieRechten
     TODO groeiFuncties() voor lezen gebruiker + spelers
     TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
      */
 
-    html.id("kop").textContent = `${club.vereniging}${html.SCHEIDING}Voorlopig`;
-
     const plaatje = html.id("plaatje");
-    if (true) { // TODO (o_o_o.vereniging === "Waagtoren")
+    if (club.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
     const laatsteUitslagen = 3; // laatsteUitslagenRonde(); TODO voorlopig

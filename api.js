@@ -137,25 +137,20 @@ function antwoord(params, gevraagdeData) {
  *      enz.
  */
 module.exports = function (url) {
-
     /*
+    synchroniseren en groeiFuncties
+
     Frontend: server.js
      */
     url.get("/:revisie/:club/synchroon", async function (ctx) {
         ctx.body = antwoord(ctx.params, []);
     });
 
-    /*
-    Frontend: server.js
-     */
     url.get("/:revisie/:club/clubs", async function (ctx) {
         const eenClub = await db.clubTak(ctx.params.club);
         ctx.body = antwoord(ctx.params, [eenClub.kaleClub()]);
     });
 
-    /*
-    Frontend: server.js
-     */
     url.get("/:revisie/:club/seizoenen", async function (ctx) {
         const eenClub = await db.clubTak(ctx.params.club);
         const seizoenen = await eenClub.alleSeizoenen();
@@ -163,6 +158,30 @@ module.exports = function (url) {
             return seizoen.kaleSeizoen();
         }));
     });
+
+    url.get("/:revisie/:club/:seizoen/teams", async function (ctx) {
+        const eenSeizoen = await db.seizoenTak(ctx.params.club, ctx.params.seizoen);
+        const teams = await eenSeizoen.alleTeams();
+        ctx.body = antwoord(ctx.params, teams.map(function (team) {
+            return team.kaleTeam();
+        }));
+    });
+
+    url.get("/:revisie/:club/:seizoen/:team/ronden", async function (ctx) {
+        const eenTeam = await db.teamTak(ctx.params.club, ctx.params.seizoen, ctx.params.team);
+        const ronden = await eenTeam.alleRonden();
+        ctx.body = antwoord(ctx.params, ronden.map(function (ronde) {
+            return ronde.kaleRonde();
+        }));
+    });
+
+    url.get("/:revisie/:club/:seizoen/:team/:ronde/uitslagen", async function (ctx) {
+        const eenRonde = await db.rondeTak(ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde);
+        const uitslagen = await eenRonde.alleUitslagen();
+        ctx.body = antwoord(ctx.params, uitslagen.map(function (uitslag) {
+            return uitslag.kaleUitslag();
+        }));
+    })
 
     /*
     KNSB ratinglijst is CSV bestand met 8 velden
