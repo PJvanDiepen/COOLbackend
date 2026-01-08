@@ -124,8 +124,8 @@ async function alleClubs() {
     return boom.club;
 }
 
-async function clubTak(clubCode) {
-    clubCode = Number(clubCode);
+async function clubTak(object) {
+    const clubCode = Number(object.club);
     const index = (await alleClubs()).findIndex(function(eenClub) {
         return eenClub.clubCode === clubCode;
     });
@@ -134,6 +134,30 @@ async function clubTak(clubCode) {
         return undefined;
     }
     return boom.club[index];
+}
+
+async function seizoenTak(object) {
+    const seizoen = object.seizoen;
+    const eenClub = await clubTak(object);
+    return await eenClub.seizoenTak(seizoen);
+}
+
+async function teamTak(object) {
+    const teamCode = object.team;
+    const eenSeizoen = await seizoenTak(object);
+    return await eenSeizoen.teamTak(teamCode);
+}
+
+async function rondeTak(object) {
+    const rondeNummer = Number(object.ronde);
+    const eenTeam = await teamTak(object);
+    return await eenTeam.rondeTak(rondeNummer);
+}
+
+async function uitslagTak(object) {
+    const knsbNummer = Number(object.speler);
+    const eenRonde = await rondeTak(object);
+    return await eenRonde.uitslagTak(knsbNummer);
 }
 
 // clubCode int
@@ -191,11 +215,6 @@ function clubMaken(object) {
         seizoenTak,    // (seizoenCode)
         kaleClub       // ()
     });
-}
-
-async function seizoenTak(clubCode, seizoen) {
-    const eenClub = await clubTak(clubCode);
-    return await eenClub.seizoenTak(seizoen);
 }
 
 /* seizoen char(4)
@@ -274,11 +293,6 @@ function seizoenVoluit(object) { // TODO naar seizoenMaken
     return tak(object.clubCode, object.seizoen).seizoenTekst;
 }
 
-async function teamTak(clubCode, seizoen, teamCode) {
-    const eenSeizoen = await seizoenTak(clubCode, seizoen);
-    return await eenSeizoen.teamTak(teamCode);
-}
-
 // teamCode char(3)
 const INTERNE_COMPETITIE = "int";
 const RAPID_COMPETITIE= "ira";
@@ -318,7 +332,6 @@ function teamMaken(object) {
     }
 
     async function rondeTak(rondeNummer) {
-        rondeNummer = Number(rondeNummer);
         const index = (await alleRonden()).findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
         });
@@ -467,11 +480,6 @@ function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
     }
 }
 
-async function rondeTak(clubCode, seizoen, teamCode, rondeNummer) {
-    const eenTeam = await teamTak(clubCode, seizoen, teamCode);
-    return await eenTeam.rondeTak(rondeNummer);
-}
-
 function rondeMaken(object) {
     const {
         clubCode,
@@ -505,7 +513,6 @@ function rondeMaken(object) {
     }
 
     async function uitslagTak(knsbNummer) {
-        knsbNummer = Number(knsbNummer);
         const index = (await alleUitslagen()).findIndex(function(eenUitslag) {
             return eenUitslag.knsbNummer === knsbNummer;
         });
@@ -571,11 +578,6 @@ function rondeMaken(object) {
         uitslagenInvullen, // ()
         kaleRonde          // ()
     });
-}
-
-async function uitslagTak(clubCode, seizoen, teamCode, rondeNummer, knsbNummer) {
-    const eenRonde = await rondeTak(clubCode, seizoen, teamCode, rondeNummer);
-    return await eenRonde.uitslagTak(knsbNummer);
 }
 
 function uitslagMaken(object) {
@@ -805,15 +807,17 @@ module.exports = { // CommonJS voor node.js
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
-    clubTak,               // (clubCode)
+    clubTak,               // (object)
+    seizoenTak,            // (object)
+    teamTak,               // (object)
+    rondeTak,              // (object)
+    uitslagTak,            // (object)
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
     clubMaken,             // (object)
-    seizoenTak,            // (clubCode, seizoen)
     seizoenMaken,          // (object)
     seizoenVoluit,         // (object)
-    teamTak,               // (clubCode, seizoen, teamCode)
     // teamCode char(3)
     INTERNE_COMPETITIE,
     RAPID_COMPETITIE,
@@ -825,9 +829,7 @@ module.exports = { // CommonJS voor node.js
     isBekerCompetitie,     // (team)
     isTeam,                // (team)
     teamVoluit,            // (teamCode)
-    rondeTak,              // (clubCode, seizoen, teamCode, rondeNummer)
     rondeMaken,            // (object)
-    uitslagTak,            // (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
     uitslagMaken,          // (object)
 
     // knsbNummer int

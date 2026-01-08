@@ -19,14 +19,15 @@ import * as zyq from "./zyq.js";
     console.log("--- html.url, db.synchroon, seizoenen, uitslagen ronde 1 ---")
     console.log(html.url);
     console.log(db.synchroon)
-    const club = await db.clubTak(html.url.club);
+    const club = await db.clubTak(html.url);
     const seizoenen = await club.alleSeizoenen();
     console.log(seizoenen);
     const seizoen = seizoenen[seizoenen.length - 1]; // laatste seizoen
     html.id("kop").textContent =
         `${club.vereniging}${html.SCHEIDING}${seizoen.seizoenTekst}${html.SCHEIDING} Voorlopig`;
 
-    const ronde = await db.rondeTak(club.clubCode, seizoen.seizoen, db.INTERNE_COMPETITIE, 1);
+    const ronde = await db.rondeTak({
+        club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE, ronde: 1 });
     const uitslagen = await ronde.alleUitslagen();
     for (const uitslag of uitslagen) {
         console.log(uitslag.uitslagTekst);

@@ -147,12 +147,12 @@ module.exports = function (url) {
     });
 
     url.get("/:revisie/:club/clubs", async function (ctx) {
-        const eenClub = await db.clubTak(ctx.params.club);
+        const eenClub = await db.clubTak(ctx.params);
         ctx.body = antwoord(ctx.params, [eenClub.kaleClub()]);
     });
 
     url.get("/:revisie/:club/seizoenen", async function (ctx) {
-        const eenClub = await db.clubTak(ctx.params.club);
+        const eenClub = await db.clubTak(ctx.params);
         const seizoenen = await eenClub.alleSeizoenen();
         ctx.body = antwoord(ctx.params, seizoenen.map(function (seizoen) {
             return seizoen.kaleSeizoen();
@@ -160,7 +160,7 @@ module.exports = function (url) {
     });
 
     url.get("/:revisie/:club/:seizoen/teams", async function (ctx) {
-        const eenSeizoen = await db.seizoenTak(ctx.params.club, ctx.params.seizoen);
+        const eenSeizoen = await db.seizoenTak(ctx.params);
         const teams = await eenSeizoen.alleTeams();
         ctx.body = antwoord(ctx.params, teams.map(function (team) {
             return team.kaleTeam();
@@ -168,7 +168,7 @@ module.exports = function (url) {
     });
 
     url.get("/:revisie/:club/:seizoen/:team/ronden", async function (ctx) {
-        const eenTeam = await db.teamTak(ctx.params.club, ctx.params.seizoen, ctx.params.team);
+        const eenTeam = await db.teamTak(ctx.params);
         const ronden = await eenTeam.alleRonden();
         ctx.body = antwoord(ctx.params, ronden.map(function (ronde) {
             return ronde.kaleRonde();
@@ -176,7 +176,7 @@ module.exports = function (url) {
     });
 
     url.get("/:revisie/:club/:seizoen/:team/:ronde/uitslagen", async function (ctx) {
-        const eenRonde = await db.rondeTak(ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde);
+        const eenRonde = await db.rondeTak(ctx.params);
         const uitslagen = await eenRonde.alleUitslagen();
         ctx.body = antwoord(ctx.params, uitslagen.map(function (uitslag) {
             return uitslag.kaleUitslag();
@@ -249,58 +249,6 @@ module.exports = function (url) {
         ctx.body = mutaties;
     });
 
-    /*
-        Frontend: o_o_o.js
-     */
-    url.get("/:club/club", async function (ctx) {
-        const eenClub = await db.clubTak(ctx.params.club);
-        ctx.body = eenClub.kaleClub();
-    });
-
-    /*
-    Frontend: o_o_o.js
-     */
-    url.get("/:club/seizoenen", async function (ctx) {
-        const eenClub = await db.clubTak(ctx.params.club);
-        const seizoenen = await eenClub.alleSeizoenen();
-        ctx.body = seizoenen.map(function (seizoen) {
-            return seizoen.kaleSeizoen();
-        });
-    });
-
-    /*
-    Frontend: o_o_o.js
-     */
-    url.get("/:club/:seizoen/teams", async function (ctx) {
-        const eenSeizoen= await db.seizoenTak(ctx.params.club, ctx.params.seizoen);
-        const teams = await eenSeizoen.alleTeams();
-        ctx.body = teams.map(function (team) {
-            return team.kaleTeam();
-        });
-    });
-
-    /*
-    Frontend: o_o_o.js
-     */
-    url.get("/:club/:seizoen/:team/ronden", async function (ctx) {
-        const eenTeam = await db.teamTak(ctx.params.club, ctx.params.seizoen, ctx.params.team);
-        const ronden = await eenTeam.alleRonden();
-        ctx.body = ronden.map(function (ronde) {
-            return ronde.kaleRonde();
-        });
-    });
-
-    /*
-    Frontend: o_o_o.js
-     */
-    url.get("/:club/:seizoen/:team/:ronde/uitslagen", async function (ctx) {
-        const eenRonde = await db.rondeTak(ctx.params.club, ctx.params.seizoen, ctx.params.team, ctx.params.ronde);
-        const uitslagen = await eenRonde.alleUitslagen();
-        ctx.body = uitslagen.map(function (uitslag) {
-            return uitslag.kaleUitslag();
-        });
-    });
-    
     // versie 0.8.60 had 60 endpoints
 
     // geef values zonder keys van 1 kolom -----------------------------------------------------------------------------
