@@ -26,29 +26,25 @@ function groeiFuncties () {
 
     const seizoenenVraag = vraag("/seizoenen");
 
-    async function leesSeizoenen(clubCode) {
-        const object = {club: clubCode};
-        return await seizoenenVraag.specificeren(object).antwoorden();
+    async function leesSeizoenen(object) {
+         return await seizoenenVraag.specificeren(object).antwoorden();
     }
 
     const teamsVraag = vraag("/teams");
 
-    async function leesTeams(clubCode, seizoen) {
-        const object = {club: clubCode, seizoen: seizoen};
+    async function leesTeams(object) {
         return await teamsVraag.specificeren(object).antwoorden();
     }
 
     const rondenVraag = vraag("/ronden");
 
-    async function leesRonden(clubCode, seizoen, teamCode) {
-        const object = {club: clubCode, seizoen: seizoen, team: teamCode};
+    async function leesRonden(object) {
         return await rondenVraag.specificeren(object).antwoorden();
     }
 
     const uitslagenVraag = vraag("/uitslagen");
 
-    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
-        const object = {club: clubCode, seizoen: seizoen, team: teamCode, ronde: rondeNummer};
+    async function leesUitslagen(object) {
         return await uitslagenVraag.specificeren(object).antwoorden();
     }
 

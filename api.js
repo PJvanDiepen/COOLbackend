@@ -21,32 +21,32 @@ function groeiFuncties () {
         ];
     }
 
-    async function leesSeizoenen(clubCode) {
+    async function leesSeizoenen(object) {
         return Team.query()
             .select("team.clubCode", "team.seizoen")
-            .where("team.clubCode", clubCode)
+            .where("team.clubCode", object.club)
             .distinct("team.seizoen");
     }
 
-    async function leesTeams(clubCode, seizoen) {
+    async function leesTeams(object) {
         return Team.query()
-            .where("team.clubCode", clubCode)
-            .where("team.seizoen", seizoen);
+            .where("team.clubCode", object.club)
+            .where("team.seizoen", object.seizoen);
     }
 
-    async function leesRonden(clubCode, seizoen, teamCode) {
+    async function leesRonden(object) {
         return Ronde.query()
-            .where("ronde.clubCode", clubCode)
-            .where("ronde.seizoen", seizoen)
-            .where("ronde.teamCode", teamCode);
+            .where("ronde.clubCode", object.club)
+            .where("ronde.seizoen", object.seizoen)
+            .where("ronde.teamCode", object.team);
     }
 
-    async function leesUitslagen(clubCode, seizoen, teamCode, rondeNummer) {
+    async function leesUitslagen(object) {
         const uitslagen = await Uitslag.query()
-            .where("uitslag.clubCode", clubCode)
-            .where("uitslag.seizoen", seizoen)
-            .where("uitslag.teamCode", teamCode)
-            .where("uitslag.rondeNummer", rondeNummer);
+            .where("uitslag.clubCode", object.club)
+            .where("uitslag.seizoen", object.seizoen)
+            .where("uitslag.teamCode", object.team)
+            .where("uitslag.rondeNummer", object.ronde);
         uitslagen.sort(function (een, ander) {
             if (een.bordNummer === 0 && ander.bordNummer === 0) {
                 return een.partij === db.ONEVEN ? -1 : 1; // oneven voor extern, afwezig, enz.

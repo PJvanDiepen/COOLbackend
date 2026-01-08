@@ -156,7 +156,7 @@ function clubMaken(object) {
 
     async function alleSeizoenen() {
         if (seizoen.length === 0) {
-            const seizoenen = await boom.leesSeizoenen(clubCode);
+            const seizoenen = await boom.leesSeizoenen({ club: clubCode });
             seizoen.splice(0, 0, ...seizoenen.map(seizoenMaken));
         }
         return seizoen;
@@ -234,7 +234,7 @@ function seizoenMaken(object) {
 
     async function alleTeams() {
         if (team.length === 0) {
-            const teams = await boom.leesTeams(clubCode, seizoen);
+            const teams = await boom.leesTeams({ club: clubCode, seizoen: seizoen });
             team.splice(0, 0, ...teams.map(teamMaken));
         }
         return team;
@@ -310,7 +310,8 @@ function teamMaken(object) {
 
     async function alleRonden() {
         if (ronde.length === 0) {
-            const ronden = await boom.leesRonden(clubCode, seizoen, teamCode);
+            const ronden = await boom.leesRonden(
+                { club: clubCode, seizoen: seizoen, team: teamCode});
             ronde.splice(0, 0, ...ronden.map(rondeMaken));
         }
         return ronde;
@@ -496,7 +497,8 @@ function rondeMaken(object) {
 
     async function alleUitslagen() {
         if (uitslag.length === 0) {
-            const uitslagen = await boom.leesUitslagen(clubCode, seizoen, teamCode, rondeNummer);
+            const uitslagen = await boom.leesUitslagen(
+                { club: clubCode, seizoen: seizoen, team: teamCode, ronde: rondeNummer });
             uitslag.splice(0, 0, ...uitslagen.map(uitslagMaken));
         }
         return uitslag;
