@@ -156,7 +156,8 @@ function clubMaken(object) {
 
     async function alleSeizoenen() {
         if (seizoen.length === 0) {
-            seizoen.splice(0, 0, ...(await boom.leesSeizoenen(clubCode)).map(seizoenMaken));
+            const seizoenen = await boom.leesSeizoenen(clubCode);
+            seizoen.splice(0, 0, ...seizoenen.map(seizoenMaken));
         }
         return seizoen;
     }

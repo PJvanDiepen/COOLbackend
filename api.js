@@ -47,19 +47,19 @@ function groeiFuncties () {
             .where("uitslag.seizoen", seizoen)
             .where("uitslag.teamCode", teamCode)
             .where("uitslag.rondeNummer", rondeNummer);
-        if (clubCode === 0 && seizoen === "2425" && teamCode === "int" && rondeNummer === 11) {
-            uitslagen.sort(function (een, ander) {
-                if (een.bordNummer === 0 && ander.bordNummer === 0) {
-                    return een.partij === db.ONEVEN ? -1 : 1; // oneven voor extern, afwezig, enz.
-                } else if (een.bordNummer === 0) { // geen bordNummer na ander
-                    return 1;
-                } else if (ander.bordNummer === 0) { // geen bordNummer voor een
-                    return -1;
-                } else {
-                    return een.bordNummer - ander.bordNummer; // op bordNummer
-                }
-            });
-        }
+        uitslagen.sort(function (een, ander) {
+            if (een.bordNummer === 0 && ander.bordNummer === 0) {
+                return een.partij === db.ONEVEN ? -1 : 1; // oneven voor extern, afwezig, enz.
+            } else if (een.bordNummer === 0) { // geen bordNummer na ander
+                return 1;
+            } else if (ander.bordNummer === 0) { // geen bordNummer voor een
+                return -1;
+            } else if (een.bordNummer === ander.bordNummer) {
+                return een.witZwart === db.WIT ? -1 : 1; // wit voor zwart
+            } else {
+                return een.bordNummer - ander.bordNummer; // op bordNummer
+            }
+        });
         return uitslagen;
     }
 
