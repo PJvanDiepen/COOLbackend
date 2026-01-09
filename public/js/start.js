@@ -12,19 +12,16 @@ import * as zyq from "./zyq.js";
     html.urlVerwerken({
         club: 0,
         seizoen: "",
-        team: "",
-        competitie: ""
+        competitie: db.INTERNE_COMPETITIE
     });
     await server.eersteContact();
-    console.log("--- html.url, db.synchroon, seizoenen, uitslagen ronde 1 ---")
-    console.log(html.url);
-    console.log(db.synchroon)
     const club = await db.clubTak(html.url);
     const seizoenen = await club.alleSeizoenen();
-    console.log(seizoenen);
-    const seizoen = seizoenen[seizoenen.length - 1]; // laatste seizoen
+    const seizoen = // gegeven seizoen of laatste seizoen
+        await club.seizoenTak(html.url.seizoen) || seizoenen[seizoenen.length - 1];
+    seizoenSelecteren(seizoen.seizoen, seizoenen);
     html.id("kop").textContent =
-        `${club.vereniging}${html.SCHEIDING}${seizoen.seizoenTekst}${html.SCHEIDING} Voorlopig`;
+        `${club.vereniging}${html.SCHEIDING}${seizoen.seizoenTekst}${html.SCHEIDING} ???`;
 
     const ronde = await db.rondeTak({
         club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE, ronde: 1 });
@@ -37,21 +34,15 @@ import * as zyq from "./zyq.js";
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
     /*
-TODO laatste seizoen of url.seizoen
-TODO complete jaaragenda inlezen?
-TODO kop: Waagtoren 〉 2025-2026 〉 interne competitie
-TODO knop voor seizoenen
-TODO knop voor teams
-TODO start.js zoals versie 0.8.66
-TODO zonder o_o_o.js en zyq.js
-TODO gebruiker en teams voor mutatieRechten
-TODO groeiFuncties() voor lezen gebruiker + spelers
-TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
+    TODO complete jaaragenda inlezen?
+    TODO kop: Waagtoren 〉 2025-2026 〉 interne competitie
+    TODO knop voor teams
+    TODO start.js zoals versie 0.8.66
+    TODO start.js zonder o_o_o.js en zyq.js
+    TODO gebruiker en teams voor mutatieRechten
+    TODO groeiFuncties() voor lezen gebruiker + spelers
+    TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
 
-    const laatsteUitslagen = 3; // laatsteUitslagenRonde(); TODO voorlopig
-    const invullenUitslagen = 0; // invullenUitslagenRonde(); TODO voorlopig
-    const voorlopigeIndeling = 0; // indelenRonde(); TODO voorlopig
-    // console.log(`laatste r${laatsteUitslagen} invullen r${invullenUitslagen} indelen r${voorlopigeIndeling}`);
     const menuKeuzes = [
         [db.IEDEREEN, `Ranglijst na ronde ${laatsteUitslagen}`,`ranglijst.html?${laatsteUitslagen}`], // menu0
         [db.IEDEREEN, `Uitslagen ronde ${laatsteUitslagen}`,`ronde.html?ronde=${laatsteUitslagen}`]]; // menu1
@@ -77,21 +68,17 @@ TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
         [db.IEDEREEN, html.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
         [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
     sessionStorage.setItem(html.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
-    seizoenSelecteren(o_o_o.competitie);
-    await competitieSelecteren();
      */
     console.log("start.js tot hier");
 })();
 
-const alleSeizoenen = [{ seizoen: "2526", seizoenTekst: "2025-2026" } ];
-
-function seizoenSelecteren(teamCode) {
-    const seizoenenSelectie = [];
-    for (const seizoen of alleSeizoenen) { // TODO db.tak(o_o_o.club).seizoen
-        seizoenenSelectie.push([seizoen.seizoen, seizoen.seizoenTekst]);
-    }
-    html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenenSelectie, function (seizoen) {
-        html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
+function seizoenSelecteren(eersteKeuze, seizoenen) {
+    const knop = html.id("seizoenSelecteren");
+    const selectieLijst = seizoenen.map(function (seizoen) {
+        return [seizoen.seizoen, seizoen.seizoenTekst];
+    });
+    html.selectie(knop, eersteKeuze, selectieLijst, function (keuze) {
+        html.zelfdePagina(`club=${html.url.club}&seizoen=${keuze}&competitie=${html.url.competitie}`);
     });
 }
 
