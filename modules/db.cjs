@@ -227,6 +227,7 @@ function seizoenMaken(object) {
         clubCode,
         seizoen
     } = object;
+    // TODO seizoenTekst in plaats van seizoenVoluit
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
         ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
         : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
@@ -287,10 +288,6 @@ function seizoenMaken(object) {
         teamTak,          // (teamCode)
         kaleSeizoen       // ()
     });
-}
-
-function seizoenVoluit(object) { // TODO naar seizoenMaken
-    return tak(object.clubCode, object.seizoen).seizoenTekst;
 }
 
 // teamCode char(3)
@@ -490,6 +487,7 @@ function rondeMaken(object) {
         tegenstander,
         datum
     } = object;
+    // TODO rondeTekst in plaats van wedstrijdVoluit
     const rondeTekst = isCompetitie(object)
         ? `ronde ${rondeNummer} ${teamVoluit(teamCode)}` // competitieronde
         : uithuis === THUIS
@@ -723,10 +721,6 @@ const VERLIES = "0";
 const THUIS = "t";
 const UIT = "u";
 
-function wedstrijdVoluit(ronde) { // TODO naar rondeMaken
-    return tak(ronde.clubCode, ronde.seizoen, ronde.teamCode, ronde.rondeNummer).rondeTekst;
-}
-
 const geenPartijInvullen = new Map([
     [AFWEZIG, "afgezegd"],
     [ONEVEN, "oneven"],
@@ -817,7 +811,6 @@ module.exports = { // CommonJS voor node.js
     WAAGTOREN_JEUGD,
     clubMaken,             // (object)
     seizoenMaken,          // (object)
-    seizoenVoluit,         // (object)
     // teamCode char(3)
     INTERNE_COMPETITIE,
     RAPID_COMPETITIE,
@@ -861,7 +854,6 @@ module.exports = { // CommonJS voor node.js
     // uitslag.uithuis char(1)
     THUIS,
     UIT,
-    wedstrijdVoluit,       // (ronde)
     geenPartijInvullen,
     resultaatInvullen,
     resultaatSelecteren,   // (uitslag)

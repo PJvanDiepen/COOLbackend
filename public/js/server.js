@@ -58,7 +58,6 @@ function groeiFuncties () {
 }
 
 const SESSIE = "sessie";
-
 /**
  * synchroonBijwerken werkt synchroon van de browser bij met synchroon van de server.
  * Zie db.js
@@ -179,23 +178,17 @@ export function vraag(commando) {
             .replace(":csv", specificatie.csv);
     }
 
-    function vanafDerdeDeel(url) {
-        return url.replace(/^(?:[^/]*\/){3}/, "");
-    }
-
-    function vanafTweedeDeel(url) {
-        return url.replace(/^[^/]*\//, "");
-    }
-
-    function vanafEersteDeel(url) {
-        return url;
-    }
-
     const zonder = vraagAanServer.startsWith("/:uuid/:revisie")
-        ? vanafDerdeDeel
+        ? function (url) {
+            return url.replace(/^(?:[^/]*\/){3}/, ""); // vanaf derde deel
+        }
         : (vraagAanServer.startsWith("/:uuid") || vraagAanServer.startsWith("/:revisie"))
-            ? vanafTweedeDeel
-            : vanafEersteDeel;
+            ? function (url) {
+                return url.replace(/^[^/]*\//, ""); // vanaf tweede deel
+            }
+            : function (url) { // vanaf eerste deel
+                return url;
+            };
 
     function afdrukken(tekst = "") {
         if (tekst) {

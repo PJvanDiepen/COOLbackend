@@ -32,18 +32,22 @@ import * as zyq from "./zyq.js";
     for (const uitslag of uitslagen) {
         console.log(uitslag.uitslagTekst);
     }
-    /*
-    TODO complete jaaragenda inlezen?
-    TODO kop: Waagtoren 〉 2025-2026 〉 interne competitie
-    TODO gebruiker en teams voor mutatieRechten
-    TODO groeiFuncties() voor lezen gebruiker + spelers
-    TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
-     */
-
     const plaatje = html.id("plaatje");
     if (club.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
+    /*
+TODO laatste seizoen of url.seizoen
+TODO complete jaaragenda inlezen?
+TODO kop: Waagtoren 〉 2025-2026 〉 interne competitie
+TODO knop voor seizoenen
+TODO knop voor teams
+TODO start.js zoals versie 0.8.66
+TODO zonder o_o_o.js en zyq.js
+TODO gebruiker en teams voor mutatieRechten
+TODO groeiFuncties() voor lezen gebruiker + spelers
+TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
+
     const laatsteUitslagen = 3; // laatsteUitslagenRonde(); TODO voorlopig
     const invullenUitslagen = 0; // invullenUitslagenRonde(); TODO voorlopig
     const voorlopigeIndeling = 0; // indelenRonde(); TODO voorlopig
@@ -75,6 +79,7 @@ import * as zyq from "./zyq.js";
     sessionStorage.setItem(html.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
     seizoenSelecteren(o_o_o.competitie);
     await competitieSelecteren();
+     */
     console.log("start.js tot hier");
 })();
 
@@ -99,5 +104,28 @@ async function competitieSelecteren() {
     });
     html.selectie(html.id("competitieSelecteren"), o_o_o.competitie, competities, function (competitie) {
         html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
+    });
+}
+
+/**
+ * teamSelecteren voor ranglijst.js en team.js
+ *
+ * TODO bijna hetzelfde als start.js: competitieSelecteren en teamleider.js: teamSelecteren
+ *
+ * @param teamCode team of competitie
+ * @returns {Promise<void>}
+ */
+export async function teamSelecteren(teamCode) {
+    const teams = (await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`)).filter(function (team) {
+        return db.isCompetitie(team) || db.isTeam(team);
+    }).map(function (team) {
+        return [team.teamCode, db.teamVoluit(team.teamCode)];
+    });
+    html.selectie(html.id("teamSelecteren"), teamCode, teams, function (teamCode) {
+        if (teamCode === "" ? false : teamCode.substring(0,1) === "i") {
+            html.anderePagina(`ranglijst.html?competitie=${teamCode}`);
+        } else {
+            html.anderePagina(`team.html?team=${teamCode}`);
+        }
     });
 }
