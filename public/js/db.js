@@ -697,6 +697,7 @@ function inCompetitie(speler, teamCode) { // TODO overbodig?
 
 // uitslag.partij char(1)
 const AFWEZIG              = "a";
+const BYE                  = "b";
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
 const MEEDOEN              = "m"; // na aanmelden voor interne partij
