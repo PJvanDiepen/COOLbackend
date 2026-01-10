@@ -48,6 +48,7 @@ velden[restVelden[1]].textContent = KONING;
 velden[restVelden[2]].textContent = TOREN;
 
 /*
+TODO 0-0 bestaat Ke1/8-g1/8 en Th1/8-f1/8 met juiste beginvelden en dito voor 0-0-0
 TODO diagram met 64 velden
 
 https://sam-koblenski.blogspot.com/2017/06/a-barely-adequate-guide-to-displaying.html

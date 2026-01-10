@@ -29,6 +29,18 @@ import * as zyq from "./zyq.js";
     for (const uitslag of uitslagen) {
         console.log(uitslag.uitslagTekst);
     }
+    const vijfde = await db.teamTak({ club: club.clubCode, seizoen: seizoen.seizoen, team: "5" });
+    await vijfde.alleRonden();
+
+    const competitie = await db.teamTak({
+        club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE });
+    const nietGespeeld = await competitie.actueleRonden();
+    for (const dinsdag of nietGespeeld) {
+        console.log(dinsdag.rondeTekst);
+    }
+
+
+
     const plaatje = html.id("plaatje");
     if (club.vereniging === "Waagtoren") {
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));

@@ -328,6 +328,19 @@ function teamMaken(object) {
         return ronde;
     }
 
+    const actueel = []; // ronden waarvan uitslagen niet compleet zijn
+
+    async function actueleRonden() {
+        await alleRonden();
+        actueel.length = 0; // begin met alleRonden en geen actuele ronden
+        for (const eenRonde of ronde) {
+            if (!eenRonde.uitslagenCompleet()) {
+                actueel.push(eenRonde);
+            }
+        }
+        return actueel;
+    }
+
     async function rondeTak(rondeNummer) {
         const index = (await alleRonden()).findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
@@ -424,6 +437,7 @@ function teamMaken(object) {
         teamTekst,
         ronde,
         alleRonden,      // ()
+        actueleRonden,   // ()
         rondeTak,        // (rondeNummer)
         rondeCompleet,   // ()
         rondeInvullen,   // ()
@@ -489,11 +503,11 @@ function rondeMaken(object) {
     } = object;
     // TODO rondeTekst in plaats van wedstrijdVoluit
     const rondeTekst = isCompetitie(object)
-        ? `ronde ${rondeNummer} ${teamVoluit(teamCode)}` // competitieronde
+        ? `${teamVoluit(teamCode)}` // competitieronde
         : uithuis === THUIS
         ? `${teamVoluit(teamCode)} - ${tegenstander}` // thuiswedstrijd
         : `${tegenstander} - ${teamVoluit(teamCode)}`; // uitwedstrijd
-    console.log(`rondeMaken = ${rondeTekst}`);
+    console.log(`rondeMaken = ronde ${rondeNummer} ${rondeTekst}`);
     if (typeof rondeNummer !== "number") {
         console.log("rondeNummer niet numeriek");
         return undefined;
@@ -521,7 +535,9 @@ function rondeMaken(object) {
         return uitslag[index];
     }
 
-    function uitslagenCompleet() {
+    async function uitslagenCompleet() {
+        await alleUitslagen();
+        console.log
         for (const eenUitslag of uitslag) {
             if (!eenUitslag.isCompleet()) {
                 return false;
@@ -595,7 +611,7 @@ function uitslagMaken(object) {
     } = object;
     const uitslagTekst = // TODO uitwerken
         `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
-    // console.log(`uitslagMaken = ${uitslagTekst}`);
+    console.log(`uitslagMaken = ${uitslagTekst}`);
     if (typeof knsbNummer !== "number") {
         console.log("knsbNummer niet numeriek");
         return null;

@@ -38,7 +38,8 @@ function groeiFuncties () {
         return Ronde.query()
             .where("ronde.clubCode", object.club)
             .where("ronde.seizoen", object.seizoen)
-            .where("ronde.teamCode", object.team);
+            .where("ronde.teamCode", object.team)
+            .orderBy(["ronde.datum","ronde.rondeNummer"]);
     }
 
     async function leesUitslagen(object) {
