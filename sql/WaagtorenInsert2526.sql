@@ -1,6 +1,6 @@
 use waagtoren; -- ga naar TODO
 set @seizoen = "2526";
-set @team = "n1";
+set @team = "nv1";
 
 -- @team.csv
 select * from uitslag where seizoen = @seizoen and teamCode = @team order by rondeNummer, bordNummer;

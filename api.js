@@ -1689,15 +1689,15 @@ async function planningMuteren(uitslag, partij) {
     }
 }
 
-function isPaar(uitslag) { // TODO TODO zie db.uitslagMaken
+function isPaar(uitslag) {
     return uitslag.partij === db.INGEDEELD || uitslag.partij === db.TOCH_INGEDEELD;
 }
 
-function isGeenPaar(uitslag) { // TODO TODO zie db.uitslagMaken
+function isGeenPaar(uitslag) {
     return uitslag.partij === db.PLANNING || uitslag.partij === db.MEEDOEN || uitslag.partij === db.NIET_MEEDOEN;
 }
 
-function isMeedoen(uitslag) { // TODO TODO zie db.uitslagMaken
+function isMeedoen(uitslag) {
     return db.planningInvullen.get(uitslag.partij) === db.NIET_MEEDOEN;
 }
 

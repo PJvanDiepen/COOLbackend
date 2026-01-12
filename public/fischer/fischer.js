@@ -21,7 +21,7 @@ for (const veld of ["a1", "b1", "c1", "d1", "e1", "f1", "g1", "h1"]) {
     velden.push(document.getElementById(veld));
 }
 
-let stellingNummer = 0 ; // TODO bereken stellingNummer in zetStuk
+const BEGINSTELLING = 518; // TODO bereken stellingNummer in zetStuk
 
 function zetStuk(keuzeVelden, stuk) {
     velden[kiesEen(keuzeVelden)].textContent = stuk;

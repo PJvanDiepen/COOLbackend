@@ -180,10 +180,11 @@ function clubMaken(object) {
 
     async function alleSeizoenen() {
         if (seizoen.length === 0) {
-            const seizoenen = await boom.leesSeizoenen({ club: clubCode });
+            const seizoenen = await boom.leesSeizoenen(
+                { club: clubCode });  // TODO object geen seizoenen
             seizoen.splice(0, 0, ...seizoenen.map(seizoenMaken));
         }
-        return seizoen;
+        return seizoen; // TODO seizoen.length ? seizoen : zie bovenstaande if
     }
 
     async function seizoenTak(seizoenCode) {
@@ -197,7 +198,7 @@ function clubMaken(object) {
         return seizoen[index];
     }
 
-    function kaleClub() {
+    function kaleClub() { // TODO object i.p.v. kaleClub()
         return {
             clubCode: clubCode,
             vereniging: vereniging,
@@ -206,14 +207,15 @@ function clubMaken(object) {
     }
 
     return Object.freeze({
-        clubCode,
+        // TODO object i.p.v. kaleClub()
+        clubCode,      // key
         vereniging,
         teamNaam,
         clubTekst,
         seizoen,
         alleSeizoenen, // ()
         seizoenTak,    // (seizoenCode)
-        kaleClub       // ()
+        kaleClub       // () TODO verwijderen
     });
 }
 
@@ -225,7 +227,7 @@ met de seizoensovergangen in januari en juli. Bijvoorbeeld: "2309", "2401", "240
 function seizoenMaken(object) {
     const {
         clubCode,
-        seizoen
+        seizoen // geen seizoen in database en daarom is seizoenCode niet nodig
     } = object;
     // TODO seizoenTekst in plaats van seizoenVoluit
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
@@ -257,7 +259,7 @@ function seizoenMaken(object) {
             const teams = await boom.leesTeams({ club: clubCode, seizoen: seizoen });
             team.splice(0, 0, ...teams.map(teamMaken));
         }
-        return team;
+        return team; // TODO refactor zie alleSeizoenen
     }
 
     async function teamTak(teamCode) {
@@ -271,7 +273,7 @@ function seizoenMaken(object) {
         return team[index];
     }
 
-    function kaleSeizoen() {
+    function kaleSeizoen() { // TODO object i.p.v. kaleSeizoen()
         return {
             clubCode: clubCode,
             seizoen: seizoen
@@ -279,14 +281,15 @@ function seizoenMaken(object) {
     }
 
     return Object.freeze({
+        // TODO object i.p.v. kaleSeizoen()
         clubCode,
-        seizoen,
+        seizoen,       // key vanaf clubCode
         seizoenTekst,
-        seizoenDaarna,    // (seizoenCode)
+        seizoenDaarna, // ()
         team,
-        alleTeams,        // ()
-        teamTak,          // (teamCode)
-        kaleSeizoen       // ()
+        alleTeams,     // ()
+        teamTak,       // (teamCode)
+        kaleSeizoen    // () TODO verwijderen
     });
 }
 
@@ -325,16 +328,18 @@ function teamMaken(object) {
                 { club: clubCode, seizoen: seizoen, team: teamCode});
             ronde.splice(0, 0, ...ronden.map(rondeMaken));
         }
-        return ronde;
+        return ronde; // TODO refactor zie alleSeizoenen
     }
 
-    const actueel = []; // ronden waarvan uitslagen niet compleet zijn
+    const actueel = [];
 
     async function actueleRonden() {
         await alleRonden();
         actueel.length = 0; // begin met alleRonden en geen actuele ronden
         for (const eenRonde of ronde) {
-            if (!eenRonde.uitslagenCompleet()) {
+            console.log(`rondeNummer = ${eenRonde.rondeNummer}`);
+            if (await eenRonde.uitslagenInvullen()) {
+                console.log(`ronde ${eenRonde.rondeNummer} nog uitslagenInvullen`);
                 actueel.push(eenRonde);
             }
         }
@@ -352,61 +357,7 @@ function teamMaken(object) {
         return ronde[index];
     }
 
-    function rondeCompleet() {
-        indexenInvullen();
-        return indexUitslagenCompleet >= 0 ? ronde[indexUitslagenCompleet] : null;
-    }
-
-    function rondeInvullen() {
-        indexenInvullen();
-        return indexUitslagenInvullen >= 0 ? ronde[indexUitslagenInvullen] : null;
-    }
-
-    function rondeIndelen() {
-        indexenInvullen();
-        return indexIndelen >= 0 ? ronde[indexIndelen] : null;
-    }
-
-    let indexUitslagenCompleet = -1;
-    let indexUitslagenInvullen = -1;
-    let indexIndelen = -1;
-
-    function indexenInvullen() { // TODO aanroep na groei function
-        console.log("--- indexenInvullen() ---");
-        if (ronde.length < 1) {
-            console.log(`indexenInvullen() gaat fout met ${teamTekst}`);
-        } else if (indexUitslagenCompleet === -1 && indexUitslagenInvullen === -1 && indexIndelen === -1) {
-            let index = 0;
-            while (index < ronde.length && ronde[index].uitslagenCompleet()) {
-                index++;
-            }
-            console.log(`indexenInvullen() index = ${index}`);
-            if (index + 1 > ronde.length) {
-                console.log(`indexenInvullen() if index + 1 > ronde.length`);
-                indexUitslagenCompleet = ronde.length - 1; // ronden compleet tot en met laatste ronde
-                indexUitslagenInvullen = -1;
-                indexIndelen = -1;
-            } else if (ronde[index].uitslagenInvullen()) {
-                console.log(`indexenInvullen() if ronde[index].uitslagenInvullen()`);
-                indexUitslagenCompleet = index - 1;
-                indexUitslagenInvullen = index;
-                indexIndelen = index + 1;
-            } else {
-                console.log(`indexenInvullen() else`);
-                indexUitslagenCompleet = index - 1;
-                indexUitslagenInvullen = - 1;
-                indexIndelen = index;
-            }
-            for (let i = index + 1; i < ronde.length; i++) {
-                if (ronde[i].uitslagenCompleet()) {
-                    console.log(`${ronde[i].rondeTekst} is wel compleet`);
-                }
-            }
-            console.log(`compleet: ${indexUitslagenCompleet} invullen: ${indexUitslagenInvullen} indelen: ${indexIndelen}`);
-        }
-    }
-
-    function kaleTeam() {
+    function kaleTeam() { // TODO object i.p.v. kaleTeam()
         return {
             clubCode: clubCode,
             seizoen: seizoen,
@@ -423,26 +374,24 @@ function teamMaken(object) {
     }
 
     return Object.freeze({
+        // TODO object i.p.v. kaleTeam()
         clubCode,
         seizoen,
-        teamCode,
+        teamCode,      // key vanaf clubCode
         reglement,
         maand,
         jaar,
-        bond,
-        poule,
+        bond,          // TODO verwijderen
+        poule,         // TODO verwijderen
         omschrijving,
         borden,
-        teamleider,
+        teamleider,    // TODO verwijderen
         teamTekst,
         ronde,
-        alleRonden,      // ()
-        actueleRonden,   // ()
-        rondeTak,        // (rondeNummer)
-        rondeCompleet,   // ()
-        rondeInvullen,   // ()
-        rondeIndelen,    // ()
-        kaleTeam         // ()
+        alleRonden,    // ()
+        actueleRonden, // ()
+        rondeTak,      // (rondeNummer)
+        kaleTeam       // () TODO verwijderen
     });
 }
 
@@ -459,7 +408,7 @@ function isTeam(team) {
         : team.teamCode.substring(0,1) !== "i";
 }
 
-function teamVoluit(teamCode) { // TODO naar teamMaken en uit database
+function teamVoluit(teamCode) { // TODO naar teamMaken en leesCompetities
     if (teamCode === INTERNE_COMPETITIE) {
         return "interne competitie";
     } else if (teamCode === RAPID_COMPETITIE) {
@@ -521,7 +470,20 @@ function rondeMaken(object) {
                 { club: clubCode, seizoen: seizoen, team: teamCode, ronde: rondeNummer });
             uitslag.splice(0, 0, ...uitslagen.map(uitslagMaken));
         }
-        return uitslag;
+        return uitslag; // TODO refactor zie alleSeizoenen
+    }
+
+    async function uitslagenInvullen() {
+        await alleUitslagen();
+        for (const eenUitslag of uitslag) {
+            console.log(eenUitslag.uitslagTekst);
+            if (eenUitslag.zonderResultaat()) {
+                console.log("nog geen resultaat")
+                return true; // indien geen resultaat dan nog uitslagenInvullen
+            }
+        }
+        console.log("alle uitslagen zijn ingevuld");
+        return false; // alle uitslagen zijn ingevuld
     }
 
     async function uitslagTak(knsbNummer) {
@@ -535,36 +497,7 @@ function rondeMaken(object) {
         return uitslag[index];
     }
 
-    async function uitslagenCompleet() {
-        await alleUitslagen();
-        console.log
-        for (const eenUitslag of uitslag) {
-            if (!eenUitslag.isCompleet()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    function uitslagenInvullen() {
-        console.log("--- uitslagenInvullen() --- ?");
-
-        let ingevuld = 0;
-        for (const eenUitslag of uitslag) {
-            console.log(`r${eenUitslag.rondeNummer} ${eenUitslag.uitslagTekst} ${eenUitslag.resultaat} x = ${ingevuld}`);
-
-            if (eenUitslag.isPlanning()) {
-                console.log(`${eenUitslag.uitslagTekst} is planning en geen in te vullen uitslag`);
-                return false;
-            } else if (eenUitslag.isCompleet()) {
-                ingevuld++;
-            }
-        }
-        console.log(`--- uitslagenInvullen() --- ${uitslag.length} > ${ingevuld}`);
-        return uitslag.length > ingevuld;
-    }
-
-    function kaleRonde() {
+    function kaleRonde() { // TODO object i.p.v. kaleRonde()
         return {
             clubCode: clubCode,
             seizoen: seizoen,
@@ -577,20 +510,20 @@ function rondeMaken(object) {
     }
 
     return Object.freeze({
+        // TODO object i.p.v. kaleRonde()
         clubCode,
         seizoen,
         teamCode,
-        rondeNummer,
+        rondeNummer,       // key vanaf clubCode
         uithuis,
         tegenstander,
         datum,
         rondeTekst,
         uitslag,
         alleUitslagen,     // ()
-        uitslagTak,        // (knsbNummer)
-        uitslagenCompleet, // ()
         uitslagenInvullen, // ()
-        kaleRonde          // ()
+        uitslagTak,        // (knsbNummer)
+        kaleRonde          // () TODO verwijderen
     });
 }
 
@@ -611,49 +544,23 @@ function uitslagMaken(object) {
     } = object;
     const uitslagTekst = // TODO uitwerken
         `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
-    console.log(`uitslagMaken = ${uitslagTekst}`);
+    // console.log(`uitslagMaken = ${uitslagTekst}`);
     if (typeof knsbNummer !== "number") {
         console.log("knsbNummer niet numeriek");
         return null;
     }
 
-    function isCompleet() {
-        return isUitslag(true);
-    }
-
-    function isIngedeeld() {
-        return isUitslag(false);
-    }
-
-    function isUitslag(metResultaat) {
-        if (isPlanning()) {
-            return false;
+    function zonderResultaat() {
+        if (planningInvullen.has(partij)) {
+            return true;
         } else if (partij === EXTERNE_PARTIJ || geenPartijInvullen.has(partij)) {
-            return true; // externe partij of geen partij tijdens interne competitie
-        } else if (!resultaatInvullen.has(resultaat)) {
-            return false;
-        } else {
-            return metResultaat ? resultaat !== "" : true; // blanko is geen resultaat
+            return false; // externe partij of geen partij tijdens interne competitie is wel resultaat
+        } else if (resultaatInvullen.has(resultaat)) {
+            return resultaat === ""; // blanko is geen resultaat
         }
     }
 
-    function isPlanning() {
-        return planningInvullen.has(partij);
-    }
-
-    function isPaar() {
-        return partij === INGEDEELD || partij === TOCH_INGEDEELD;
-    }
-
-    function isGeenPaar() {
-        return partij === PLANNING || partij === MEEDOEN || partij === NIET_MEEDOEN;
-    }
-
-    function isMeedoen() {
-        return planningInvullen.get(partij) === NIET_MEEDOEN;
-    }
-
-    function kaleUitslag() {
+    function kaleUitslag() { // TODO object i.p.v. kaleUitslag()
         return {
             clubCode: clubCode,
             seizoen: seizoen,
@@ -671,12 +578,13 @@ function uitslagMaken(object) {
     }
 
     return Object.freeze({
+        // TODO object i.p.v. kaleUitslag()
         clubCode,
         seizoen,
         teamCode,
         rondeNummer,
-        bordNummer,
-        knsbNummer,
+        bordNummer,         // niet in key
+        knsbNummer,         // key vanaf clubCode
         partij,
         witZwart,
         tegenstanderNummer,
@@ -684,13 +592,8 @@ function uitslagMaken(object) {
         datum,
         competitie,
         uitslagTekst,
-        isCompleet, // ()
-        isIngedeeld, // ()
-        isPlanning,  // ()
-        isPaar,      // ()
-        isGeenPaar,  // ()
-        isMeedoen,   // ()
-        kaleUitslag  // ()
+        zonderResultaat,    // ()
+        kaleUitslag         // () TODO verwijderen
     });
 }
 
@@ -712,15 +615,14 @@ function inCompetitie(speler, teamCode) { // TODO overbodig?
 }
 
 // uitslag.partij char(1)
-const AFWEZIG              = "a";
-const BYE                  = "b";
+const AFWEZIG              = "a"; // TODO verwijderen?
 const EXTERNE_PARTIJ       = "e";
 const INTERNE_PARTIJ       = "i";
 const MEEDOEN              = "m"; // na aanmelden voor interne partij
 const NIET_MEEDOEN         = "n"; // na afzeggen voor interne partij
 const ONEVEN               = "o";
-const PLANNING             = "p";
-const REGLEMENTAIRE_REMISE = "r"; // vrijgesteld
+const PLANNING             = "p"; // TODO verwijderen
+const REGLEMENTAIRE_REMISE = "r"; // bye of vrijgesteld
 const EXTERN_THUIS         = "t"; // na aanmelden voor externe partij
 const EXTERN_UIT           = "u"; // na aanmelden voor externe partij
 const REGLEMENTAIR_VERLIES = "v";
@@ -757,7 +659,7 @@ function resultaatSelecteren(uitslag) {
 }
 
 const planningInvullen = new Map([
-    [PLANNING, MEEDOEN],
+    [PLANNING, MEEDOEN], // TODO verwijderen
     [NIET_MEEDOEN, MEEDOEN],
     [MEEDOEN, NIET_MEEDOEN],
     [EXTERN_THUIS, NIET_MEEDOEN],
@@ -854,7 +756,7 @@ export { // ES6 voor browser,
     NIET_MEEDOEN,          // na afzeggen
     ONEVEN,
     PLANNING,
-    REGLEMENTAIRE_REMISE,  // vrijgesteld
+    REGLEMENTAIRE_REMISE,  // bye of vrijgesteld
     EXTERN_THUIS,          // na aanmelden voor externe partij thuis
     EXTERN_UIT,            // na aanmelden voor externe partij uit
     REGLEMENTAIR_VERLIES,

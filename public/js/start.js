@@ -35,10 +35,10 @@ import * as zyq from "./zyq.js";
     const competitie = await db.teamTak({
         club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE });
     const nietGespeeld = await competitie.actueleRonden();
+    console.log("--- dinsdag ---");
     for (const dinsdag of nietGespeeld) {
         console.log(dinsdag.rondeTekst);
     }
-
 
 
     const plaatje = html.id("plaatje");
