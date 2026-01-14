@@ -158,7 +158,15 @@ export function vraag(commando) {
 
     function specificeren(object) {
         for (const [key, value] of Object.entries(object)) {
-            specificatie[key] = value;
+            if (key === "teamCode") {
+                specificatie.team = value;
+            } else if (key === "rondeNummer") {
+                specificatie.ronde = value;
+            } else if (key === "knsbNummer") {
+                specificatie.speler = value;
+            } else {
+                specificatie[key] = value;
+            }
         }
         return this;
     }

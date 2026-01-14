@@ -180,11 +180,9 @@ function clubMaken(object) {
 
     async function alleSeizoenen() {
         if (seizoen.length === 0) {
-            const seizoenen = await boom.leesSeizoenen(
-                { club: clubCode });  // TODO object geen seizoenen
-            seizoen.splice(0, 0, ...seizoenen.map(seizoenMaken));
+            seizoen.splice(0, 0, ...(await boom.leesSeizoenen(object)).map(seizoenMaken));
         }
-        return seizoen; // TODO seizoen.length ? seizoen : zie bovenstaande if
+        return seizoen;
     }
 
     async function seizoenTak(seizoenCode) {
@@ -256,10 +254,9 @@ function seizoenMaken(object) {
 
     async function alleTeams() {
         if (team.length === 0) {
-            const teams = await boom.leesTeams({ club: clubCode, seizoen: seizoen });
-            team.splice(0, 0, ...teams.map(teamMaken));
+            team.splice(0, 0, ...(await boom.leesTeams(object)).map(teamMaken));
         }
-        return team; // TODO refactor zie alleSeizoenen
+        return team;
     }
 
     async function teamTak(teamCode) {
@@ -324,11 +321,9 @@ function teamMaken(object) {
 
     async function alleRonden() {
         if (ronde.length === 0) {
-            const ronden = await boom.leesRonden(
-                { club: clubCode, seizoen: seizoen, team: teamCode});
-            ronde.splice(0, 0, ...ronden.map(rondeMaken));
+            ronde.splice(0, 0, ...(await boom.leesRonden(object)).map(rondeMaken));
         }
-        return ronde; // TODO refactor zie alleSeizoenen
+        return ronde;
     }
 
     const actueel = [];
@@ -337,9 +332,7 @@ function teamMaken(object) {
         await alleRonden();
         actueel.length = 0; // begin met alleRonden en geen actuele ronden
         for (const eenRonde of ronde) {
-            console.log(`rondeNummer = ${eenRonde.rondeNummer}`);
             if (await eenRonde.uitslagenInvullen()) {
-                console.log(`ronde ${eenRonde.rondeNummer} nog uitslagenInvullen`);
                 actueel.push(eenRonde);
             }
         }
@@ -467,7 +460,7 @@ function rondeMaken(object) {
     async function alleUitslagen() {
         if (uitslag.length === 0) {
             const uitslagen = await boom.leesUitslagen(
-                { club: clubCode, seizoen: seizoen, team: teamCode, ronde: rondeNummer });
+                { club: clubCode, seizoen: seizoen, teamCode: teamCode, ronde: rondeNummer });
             uitslag.splice(0, 0, ...uitslagen.map(uitslagMaken));
         }
         return uitslag; // TODO refactor zie alleSeizoenen
@@ -476,13 +469,10 @@ function rondeMaken(object) {
     async function uitslagenInvullen() {
         await alleUitslagen();
         for (const eenUitslag of uitslag) {
-            console.log(eenUitslag.uitslagTekst);
             if (eenUitslag.zonderResultaat()) {
-                console.log("nog geen resultaat")
                 return true; // indien geen resultaat dan nog uitslagenInvullen
             }
         }
-        console.log("alle uitslagen zijn ingevuld");
         return false; // alle uitslagen zijn ingevuld
     }
 

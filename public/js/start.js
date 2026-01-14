@@ -37,9 +37,8 @@ import * as zyq from "./zyq.js";
     const nietGespeeld = await competitie.actueleRonden();
     console.log("--- dinsdag ---");
     for (const dinsdag of nietGespeeld) {
-        console.log(dinsdag.rondeTekst);
+        console.log(`ronde ${dinsdag.rondeNummer} ${dinsdag.rondeTekst} nog uitslagenInvullen`);
     }
-
 
     const plaatje = html.id("plaatje");
     if (club.vereniging === "Waagtoren") {

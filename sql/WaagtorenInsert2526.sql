@@ -98,8 +98,8 @@ set @zwart = 9077651; -- Lennart van der Kraan
 
 select * from persoon where knsbNummer = @wit;
 
-set @oneven = 7731812; -- Alexander Versluis
-set @afwezig = 9023234; -- Albert Boekema
+set @oneven = 7386060; -- Jan Meringa
+set @afwezig = 7758014; -- Alex Albrecht
 set @extern = 7758014; -- Alex
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
@@ -2208,7 +2208,7 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 
 -- Waagtoren nv1 TODO
 set @team = "nv1";
-set @ronde = 2;
+set @ronde = 3;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
@@ -2220,4 +2220,8 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","nv1",2,1,7321534,"e","w",0,"0",'2025-11-28',"int"),
 (0,"2526","nv1",2,2,9077651,"e","z",0,"1",'2025-11-28',"int"),
 (0,"2526","nv1",2,3,7582102,"e","w",0,"1",'2025-11-28',"int"),
-(0,"2526","nv1",2,4,8950876,"e","z",0,"1",'2025-11-28',"int");
+(0,"2526","nv1",2,4,8950876,"e","z",0,"1",'2025-11-28',"int"),
+(0,"2526","nv1",3,1,7518203,"e","z",0,"0",'2026-01-13',"int"),
+(0,"2526","nv1",3,2,9077651,"e","w",0,"0",'2026-01-13',"int"),
+(0,"2526","nv1",3,3,9023234,"e","z",0,"0",'2026-01-13',"int"),
+(0,"2526","nv1",3,4,8950876,"e","w",0,"1",'2026-01-13',"int");
