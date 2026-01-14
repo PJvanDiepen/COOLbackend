@@ -196,24 +196,15 @@ function clubMaken(object) {
         return seizoen[index];
     }
 
-    function kaleClub() { // TODO object i.p.v. kaleClub()
-        return {
-            clubCode: clubCode,
-            vereniging: vereniging,
-            teamNaam: teamNaam
-        };
-    }
-
     return Object.freeze({
-        // TODO object i.p.v. kaleClub()
+        object,
         clubCode,      // key
         vereniging,
         teamNaam,
         clubTekst,
         seizoen,
         alleSeizoenen, // ()
-        seizoenTak,    // (seizoenCode)
-        kaleClub       // () TODO verwijderen
+        seizoenTak     // (seizoenCode)
     });
 }
 
@@ -278,15 +269,14 @@ function seizoenMaken(object) {
     }
 
     return Object.freeze({
-        // TODO object i.p.v. kaleSeizoen()
+        object,
         clubCode,
         seizoen,       // key vanaf clubCode
         seizoenTekst,
         seizoenDaarna, // ()
         team,
         alleTeams,     // ()
-        teamTak,       // (teamCode)
-        kaleSeizoen    // () TODO verwijderen
+        teamTak        // (teamCode)
     });
 }
 
@@ -350,24 +340,8 @@ function teamMaken(object) {
         return ronde[index];
     }
 
-    function kaleTeam() { // TODO object i.p.v. kaleTeam()
-        return {
-            clubCode: clubCode,
-            seizoen: seizoen,
-            teamCode: teamCode,
-            reglement: reglement,
-            maand: maand,
-            jaar: jaar,
-            bond: bond, // TODO verwijderen
-            poule: poule, // TODO verwijderen
-            omschrijving: omschrijving,
-            borden: borden,
-            teamleider: teamleider // TODO verwijderen
-        };
-    }
-
     return Object.freeze({
-        // TODO object i.p.v. kaleTeam()
+        object,
         clubCode,
         seizoen,
         teamCode,      // key vanaf clubCode
@@ -383,8 +357,7 @@ function teamMaken(object) {
         ronde,
         alleRonden,    // ()
         actueleRonden, // ()
-        rondeTak,      // (rondeNummer)
-        kaleTeam       // () TODO verwijderen
+        rondeTak       // (rondeNummer)
     });
 }
 
@@ -459,11 +432,9 @@ function rondeMaken(object) {
 
     async function alleUitslagen() {
         if (uitslag.length === 0) {
-            const uitslagen = await boom.leesUitslagen(
-                { club: clubCode, seizoen: seizoen, teamCode: teamCode, ronde: rondeNummer });
-            uitslag.splice(0, 0, ...uitslagen.map(uitslagMaken));
+            uitslag.splice(0, 0, ...(await boom.leesUitslagen(object)).map(uitslagMaken));
         }
-        return uitslag; // TODO refactor zie alleSeizoenen
+        return uitslag;
     }
 
     async function uitslagenInvullen() {
@@ -500,7 +471,7 @@ function rondeMaken(object) {
     }
 
     return Object.freeze({
-        // TODO object i.p.v. kaleRonde()
+        object,
         clubCode,
         seizoen,
         teamCode,
@@ -512,8 +483,7 @@ function rondeMaken(object) {
         uitslag,
         alleUitslagen,     // ()
         uitslagenInvullen, // ()
-        uitslagTak,        // (knsbNummer)
-        kaleRonde          // () TODO verwijderen
+        uitslagTak         // (knsbNummer)
     });
 }
 
@@ -568,7 +538,7 @@ function uitslagMaken(object) {
     }
 
     return Object.freeze({
-        // TODO object i.p.v. kaleUitslag()
+        object,
         clubCode,
         seizoen,
         teamCode,
@@ -582,8 +552,7 @@ function uitslagMaken(object) {
         datum,
         competitie,
         uitslagTekst,
-        zonderResultaat,    // ()
-        kaleUitslag         // () TODO verwijderen
+        zonderResultaat     // ()
     });
 }
 
