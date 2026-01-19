@@ -234,6 +234,7 @@ const tk = [
     */
     {jaar: 2025,
         zetels: "D66=26&PVV=26&VVD=22&GL/PvdA=20&CDA=18&JA21=9&FvD=7&BBB=4&SGP=3&PvdD=3&CU=3&Denk=3&SP=3&50plus=2&Volt=1",
+        formatie: 1,
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
@@ -272,7 +273,7 @@ function parametersVerwerken() {
 
 function kabinetVerwerken(kader, kop) {
     const i = jaarIndex(jaar);
-    kop.textContent = "Kabinet in " + (Math.round(jaar) + (tk[i].formatie ? Number(tk[i].formatie) : 0));
+    kop.textContent = "Kabinet in " + (Math.round(jaar) + (tk[i].formatie ? tk[i].formatie : 0));
     kader.append(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
     kader.append(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
 }

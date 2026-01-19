@@ -22,3 +22,26 @@ import * as server from "./server.js";
 /*
 TODO in plaats van o_o_o.js en zyq.js
  */
+
+
+/**
+ * debug geeft informatie over de boom naar aanleiding van object.
+ *
+ * Indien debug: "server" of "browser" dan alleen de server of browser boom en anders 2 bomen.
+ * Indien <veld>: een waarde heeft, zoekt debug met deze waarde.
+ *
+ * debug vermeldt uit welke tak van de boom de informatie komt,
+ * drukt de gevraagde velden per tak af en
+ * drukt af waar de aanroep van debug precies staat.
+ *
+ * @param object specificeert welke informatie
+ */
+export function debug(object) {
+    if (object.debug === "server" || object.debug !== "browser") {
+        console.log("--- debug: server ---");
+
+    } if (object.debug === "browser" || object.debug !== "server") {
+        console.log("--- debug: browser ---");
+    }
+    console.trace("--- debug ---");
+}

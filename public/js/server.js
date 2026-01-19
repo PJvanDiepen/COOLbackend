@@ -94,6 +94,7 @@ export async function eersteContact() {
     Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem(SESSIE)));
     synchroniseren(await vraagServer(`/${db.synchroon.revisie}/${url.club}/synchroon`));
     db.boomOnderhoud(groeiFuncties());
+    await db.alleClubs();
 }
 
 /**
@@ -145,12 +146,12 @@ export function vraag(commando) {
     const specificatie = { // zie api.js
         uuid: "",
         revisie: 0,
-        club: 0,
+        club: 0,        // clubCode
         seizoen: "",
-        team: "",
-        competitie: "",
-        ronde: 0,
-        speler: 0,
+        team: "",       // teamCode
+        competitie: "", // TODO verwijderen
+        ronde: 0,       // rondeNummer
+        speler: 0,      // knsbNummer
         maand: 0,
         jaar: 0,
         csv: ""

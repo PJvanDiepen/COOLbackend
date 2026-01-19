@@ -3,6 +3,7 @@
 import * as db from "./db.js";
 import * as html from "./html.js";
 import * as server from "./server.js";
+import { debug } from "./componenten.js";
 
 import { o_o_o } from "./o_o_o.js";
 
@@ -15,14 +16,17 @@ import * as zyq from "./zyq.js";
         competitie: db.INTERNE_COMPETITIE
     });
     await server.eersteContact();
-    const club = await db.clubTak(html.url);
+    const club = db.clubTak(html.url.club);
     const seizoenen = await club.alleSeizoenen();
     const seizoen = // gegeven seizoen of laatste seizoen
-        await club.seizoenTak(html.url.seizoen) || seizoenen[seizoenen.length - 1];
+        club.seizoenTak(html.url.seizoen || seizoenen[seizoenen.length - 1].seizoen);
     seizoenSelecteren(seizoen.seizoen, seizoenen);
     html.id("kop").textContent =
         `${club.vereniging}${html.SCHEIDING}${seizoen.seizoenTekst}${html.SCHEIDING} ???`;
 
+    const lijst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    db.aa(lijst, 3, 7);
+    /*
     const ronde = await db.rondeTak({
         club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE, ronde: 1 });
     const uitslagen = await ronde.alleUitslagen();
@@ -39,6 +43,14 @@ import * as zyq from "./zyq.js";
     for (const dinsdag of nietGespeeld) {
         console.log(`ronde ${dinsdag.rondeNummer} ${dinsdag.rondeTekst} nog uitslagenInvullen`);
     }
+    debug({
+        clubCode: db.WAAGTOREN,
+        seizoen: "2526",
+        teamCode: db.INTERNE_COMPETITIE,
+        rondeNummer: 2
+    });
+
+     */
 
     const plaatje = html.id("plaatje");
     if (club.vereniging === "Waagtoren") {

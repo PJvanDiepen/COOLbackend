@@ -22,32 +22,40 @@ function groeiFuncties () {
     }
 
     async function leesSeizoenen(object) {
+        console.log("--- leesSeizoenen ---");
+        console.log(object);
         return Team.query()
             .select("team.clubCode", "team.seizoen")
-            .where("team.clubCode", object.club)
+            .where("team.clubCode", object.clubCode)
             .distinct("team.seizoen");
     }
 
     async function leesTeams(object) {
+        console.log("--- leesTeams ---");
+        console.log(object);
         return Team.query()
-            .where("team.clubCode", object.club)
+            .where("team.clubCode", object.clubCode)
             .where("team.seizoen", object.seizoen);
     }
 
     async function leesRonden(object) {
+        console.log("--- leesRonden ---");
+        console.log(object);
         return Ronde.query()
-            .where("ronde.clubCode", object.club)
+            .where("ronde.clubCode", object.clubCode)
             .where("ronde.seizoen", object.seizoen)
-            .where("ronde.teamCode", object.team)
+            .where("ronde.teamCode", object.teamCode)
             .orderBy(["ronde.datum","ronde.rondeNummer"]);
     }
 
     async function leesUitslagen(object) {
+        console.log("--- leesUitslagen ---");
+        console.log(object);
         const uitslagen = await Uitslag.query()
-            .where("uitslag.clubCode", object.club)
+            .where("uitslag.clubCode", object.clubCode)
             .where("uitslag.seizoen", object.seizoen)
-            .where("uitslag.teamCode", object.team)
-            .where("uitslag.rondeNummer", object.ronde);
+            .where("uitslag.teamCode", object.teamCode)
+            .where("uitslag.rondeNummer", object.rondeNummer);
         uitslagen.sort(function (een, ander) {
             if (een.bordNummer === 0 && ander.bordNummer === 0) {
                 return een.partij === db.ONEVEN ? -1 : 1; // oneven voor extern, afwezig, enz.
@@ -120,7 +128,7 @@ function antwoord(params, gevraagdeData) {
  *      clubCode van de vereniging
  *  :seizoen
  *      van de interne competities en (externe) teams per vereniging
- *  :team of :competitie
+ *  :team
  *      teamCode van competitie of (extern) team
  *  :ronde
  *      rondeNummer van ronde van competitie of (extern) team
@@ -129,14 +137,39 @@ function antwoord(params, gevraagdeData) {
  *
  *  Na de vaste parameters volgt het commando van het endpoint
  *  en daarna eventueel andere parameters
- *      /:uuid/:club/:seizoen/:competitie/:ronde/:speler:/uitslag/:tegenstander/:resultaat
+ *      /:uuid/:club/:seizoen/:team/:ronde/:speler:/uitslag/:tegenstander/:resultaat
  *      enz.
  *
  *  Indien vaste parameters ontbreken staat het commando op die plek,
  *  maar niet waar :uuid ontbreekt
  *      /:club/club
  *      enz.
+ *
+ * tak vertaalt JSON parameters tot een object met de juiste namen en types.
+ * De namen in object worden zoals in de database en
+ * de waarden zijn numeriek gemaakt of blijven tekst.
+ *
+ * @param params JSON parameters
+ * @returns object met de genormaliseerde parameters
  */
+function tak(params) {
+    const object = {};
+    for (const [key, value] of Object.entries(params)) {
+        if (key === "club") {
+            object.clubCode = Number(value);
+        } else if (key === "team") {
+            object.teamCode = value;
+        } else if (key === "rondeNummer") {
+            object.rondeNummer = Number(value);
+        } else if (key === "knsbNummer") {
+            object.knsbNummer = Number(value);
+        } else {
+            object[key] = value;
+        }
+    }
+    return object;
+}
+
 module.exports = function (url) {
     /*
     synchroniseren en groeiFuncties
@@ -149,14 +182,14 @@ module.exports = function (url) {
 
     url.get("/:revisie/:club/clubs", async function (ctx) {
         const eenClub = await db.clubTak(ctx.params);
-        ctx.body = antwoord(ctx.params, [eenClub.kaleClub()]);
+        ctx.body = antwoord(ctx.params, [eenClub.object]);
     });
 
     url.get("/:revisie/:club/seizoenen", async function (ctx) {
         const eenClub = await db.clubTak(ctx.params);
         const seizoenen = await eenClub.alleSeizoenen();
         ctx.body = antwoord(ctx.params, seizoenen.map(function (seizoen) {
-            return seizoen.kaleSeizoen();
+            return seizoen.object;
         }));
     });
 
@@ -164,7 +197,7 @@ module.exports = function (url) {
         const eenSeizoen = await db.seizoenTak(ctx.params);
         const teams = await eenSeizoen.alleTeams();
         ctx.body = antwoord(ctx.params, teams.map(function (team) {
-            return team.kaleTeam();
+            return team.object;
         }));
     });
 
@@ -172,7 +205,7 @@ module.exports = function (url) {
         const eenTeam = await db.teamTak(ctx.params);
         const ronden = await eenTeam.alleRonden();
         ctx.body = antwoord(ctx.params, ronden.map(function (ronde) {
-            return ronde.kaleRonde();
+            return ronde.object;
         }));
     });
 
@@ -180,7 +213,7 @@ module.exports = function (url) {
         const eenRonde = await db.rondeTak(ctx.params);
         const uitslagen = await eenRonde.alleUitslagen();
         ctx.body = antwoord(ctx.params, uitslagen.map(function (uitslag) {
-            return uitslag.kaleUitslag();
+            return uitslag.object;
         }));
     })
 
