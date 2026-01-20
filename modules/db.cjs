@@ -39,6 +39,8 @@ function mutatiesBijwerken(key) {
 }
 
 /**
+ * TODO verwijderen
+ *
  * key vertaalt object naar string voor api-call met :club/:seizoen/:team/:ronde/:speler
  *
  * @param o object
@@ -116,6 +118,53 @@ function boomOnderhoud(object) {
     Object.assign(boom, object);
 }
 
+/**
+ * groei laat eventueel takken groeien en klim in de boom aan de hand van gevraagde informatie in object.
+ *
+ * @param object gevraagde informatie
+ * @returns {Promise<*[]>} tak met club, seizoen, team, ronde, uitslag of minder
+ */
+async function groei(object) {
+    const tak = [];
+    await alleClubs();
+    if ((tak[0] = clubTak(object.clubCode))) {
+        await tak[0].alleSeizoenen();
+        if ((tak[1] = tak[0].seizoenTak(object.seizoen))) {
+            await tak[1].alleTeams();
+            if ((tak[2] = tak[1].teamTak(object.teamCode))) {
+                await tak[2].alleRonden();
+                tak[3] = tak[2].rondeTak(object.rondeNummer);
+                if ((tak[3] = tak[2].rondeTak(object.rondeNummer))) {
+                    await tak[3].alleUitslagen();
+                    tak[4] = tak[3].uitslagTak(object.knsbNummer);
+                }
+            }
+        }
+    }
+    return tak;
+}
+
+/**
+ * klim in de boom aan de hand van gevraagde informatie in object.
+ *
+ * @param object gevraagde informatie
+ * @returns tak met club, seizoen, team, ronde, uitslag of minder
+ */
+function klim(object) {
+    const tak = [];
+    if ((tak[0] = clubTak(object.clubCode))) {
+        if ((tak[1] = tak[0].seizoenTak(object.seizoen))) {
+            if ((tak[2] = tak[1].teamTak(object.teamCode))) {
+                tak[3] = tak[2].rondeTak(object.rondeNummer);
+                if ((tak[3] = tak[2].rondeTak(object.rondeNummer))) {
+                    tak[4] = tak[3].uitslagTak(object.knsbNummer);
+                }
+            }
+        }
+    }
+    return tak;
+}
+
 async function alleClubs() {
     if (boom.club.length === 0) {
         boom.club.splice(0, 0, ...(await boom.leesClubs()).map(clubMaken));
@@ -123,9 +172,8 @@ async function alleClubs() {
     return boom.club;
 }
 
-async function clubTak(object) {
-    const clubCode = Number(object.club);
-    const index = (await alleClubs()).findIndex(function(eenClub) {
+function clubTak(clubCode) {
+    const index = boom.club.findIndex(function(eenClub) {
         return eenClub.clubCode === clubCode;
     });
     if (index < 0) {
@@ -133,30 +181,6 @@ async function clubTak(object) {
         return undefined;
     }
     return boom.club[index];
-}
-
-async function seizoenTak(object) {
-    const seizoen = object.seizoen;
-    const eenClub = await clubTak(object);
-    return await eenClub.seizoenTak(seizoen);
-}
-
-async function teamTak(object) {
-    const teamCode = object.team;
-    const eenSeizoen = await seizoenTak(object);
-    return await eenSeizoen.teamTak(teamCode);
-}
-
-async function rondeTak(object) {
-    const rondeNummer = Number(object.ronde);
-    const eenTeam = await teamTak(object);
-    return await eenTeam.rondeTak(rondeNummer);
-}
-
-async function uitslagTak(object) {
-    const knsbNummer = Number(object.speler);
-    const eenRonde = await rondeTak(object);
-    return await eenRonde.uitslagTak(knsbNummer);
 }
 
 // clubCode int
@@ -184,8 +208,8 @@ function clubMaken(object) {
         return seizoen;
     }
 
-    async function seizoenTak(seizoenCode) {
-        const index = (await alleSeizoenen()).findIndex(function(eenSeizoen) {
+    function seizoenTak(seizoenCode) {
+        const index = seizoen.findIndex(function(eenSeizoen) {
             return eenSeizoen.seizoen === seizoenCode;
         });
         if (index < 0) {
@@ -249,8 +273,8 @@ function seizoenMaken(object) {
         return team;
     }
 
-    async function teamTak(teamCode) {
-        const index = (await alleTeams()).findIndex(function(eenTeam) {
+    function teamTak(teamCode) {
+        const index = team.findIndex(function(eenTeam) {
             return eenTeam.teamCode === teamCode;
         });
         if (index < 0) {
@@ -321,8 +345,8 @@ function teamMaken(object) {
         return actueel;
     }
 
-    async function rondeTak(rondeNummer) {
-        const index = (await alleRonden()).findIndex(function(eenRonde) {
+    function rondeTak(rondeNummer) {
+        const index = ronde.findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
         });
         if (index < 0) {
@@ -439,8 +463,8 @@ function rondeMaken(object) {
         return false; // alle uitslagen zijn ingevuld
     }
 
-    async function uitslagTak(knsbNummer) {
-        const index = (await alleUitslagen()).findIndex(function(eenUitslag) {
+    function uitslagTak(knsbNummer) {
+        const index = uitslag.findIndex(function(eenUitslag) {
             return eenUitslag.knsbNummer === knsbNummer;
         });
         if (index < 0) {
@@ -642,11 +666,10 @@ module.exports = { // CommonJS voor node.js
     OPNIEUW_INDELEN,
     NIEUWE_RANGLIJST,
     boomOnderhoud,         // (object)
+    groei,                 // (object)
+    klim,                  // (object)
+    alleClubs,             // ()
     clubTak,               // (object)
-    seizoenTak,            // (object)
-    teamTak,               // (object)
-    rondeTak,              // (object)
-    uitslagTak,            // (object)
     // clubCode int
     WAAGTOREN,
     WAAGTOREN_JEUGD,
@@ -709,5 +732,5 @@ module.exports = { // CommonJS voor node.js
     BEHEERDER,
     ONTWIKKELAAR,
     functieInvullen,
-    gebruikerFunctie      // (speler)
+    gebruikerFunctie       // (speler)
 }

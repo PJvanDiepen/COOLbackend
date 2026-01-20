@@ -209,10 +209,6 @@ export function vraag(commando) {
         return this;
     }
 
-    async function muteren() {
-        return synchroniseren(await vraagServer(invullen()));
-    }
-
     async function antwoorden() {
         const url = invullen();
         const key = zonder(url);
@@ -226,12 +222,16 @@ export function vraag(commando) {
         }
     }
 
+    async function muteren() { // TODO andere naam dan muteren
+        return synchroniseren(await vraagServer(invullen()));
+    }
+
     return Object.freeze({
         specificeren, // (object) ->
         zonder,       // TODO alleen voor testen daarna verwijderen
         afdrukken,    // () ->
-        muteren,      // ()
-        antwoorden    // ()
+        antwoorden,   // ()
+        muteren
     });
 }
 

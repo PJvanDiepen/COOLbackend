@@ -145,23 +145,23 @@ function antwoord(params, gevraagdeData) {
  *      /:club/club
  *      enz.
  *
- * tak vertaalt JSON parameters tot een object met de juiste namen en types.
+ * vertaal JSON parameters tot een object met de juiste namen en types.
  * De namen in object worden zoals in de database en
  * de waarden zijn numeriek gemaakt of blijven tekst.
  *
  * @param params JSON parameters
  * @returns object met de genormaliseerde parameters
  */
-function tak(params) {
+function vertaal(params) {
     const object = {};
     for (const [key, value] of Object.entries(params)) {
         if (key === "club") {
             object.clubCode = Number(value);
         } else if (key === "team") {
             object.teamCode = value;
-        } else if (key === "rondeNummer") {
+        } else if (key === "ronde") {
             object.rondeNummer = Number(value);
-        } else if (key === "knsbNummer") {
+        } else if (key === "speler") {
             object.knsbNummer = Number(value);
         } else {
             object[key] = value;
@@ -181,37 +181,37 @@ module.exports = function (url) {
     });
 
     url.get("/:revisie/:club/clubs", async function (ctx) {
-        const eenClub = await db.clubTak(ctx.params);
-        ctx.body = antwoord(ctx.params, [eenClub.object]);
+        const tak = await db.groei(vertaal(ctx.params));
+        ctx.body = antwoord(ctx.params, [tak[0].object]);  // 1 club
     });
 
     url.get("/:revisie/:club/seizoenen", async function (ctx) {
-        const eenClub = await db.clubTak(ctx.params);
-        const seizoenen = await eenClub.alleSeizoenen();
+        const tak = await db.groei(vertaal(ctx.params));
+        const seizoenen = await tak[0].alleSeizoenen();
         ctx.body = antwoord(ctx.params, seizoenen.map(function (seizoen) {
             return seizoen.object;
         }));
     });
 
     url.get("/:revisie/:club/:seizoen/teams", async function (ctx) {
-        const eenSeizoen = await db.seizoenTak(ctx.params);
-        const teams = await eenSeizoen.alleTeams();
+        const tak = await db.groei(vertaal(ctx.params))
+        const teams = await tak[1].alleTeams();
         ctx.body = antwoord(ctx.params, teams.map(function (team) {
             return team.object;
         }));
     });
 
     url.get("/:revisie/:club/:seizoen/:team/ronden", async function (ctx) {
-        const eenTeam = await db.teamTak(ctx.params);
-        const ronden = await eenTeam.alleRonden();
+        const tak = await db.groei(vertaal(ctx.params))
+        const ronden = await tak[2].alleRonden();
         ctx.body = antwoord(ctx.params, ronden.map(function (ronde) {
             return ronde.object;
         }));
     });
 
     url.get("/:revisie/:club/:seizoen/:team/:ronde/uitslagen", async function (ctx) {
-        const eenRonde = await db.rondeTak(ctx.params);
-        const uitslagen = await eenRonde.alleUitslagen();
+        const tak = await db.groei(vertaal(ctx.params))
+        const uitslagen = await tak[3].alleUitslagen();
         ctx.body = antwoord(ctx.params, uitslagen.map(function (uitslag) {
             return uitslag.object;
         }));
