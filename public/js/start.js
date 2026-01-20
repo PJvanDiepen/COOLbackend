@@ -24,8 +24,6 @@ import * as zyq from "./zyq.js";
     html.id("kop").textContent =
         `${club.vereniging}${html.SCHEIDING}${seizoen.seizoenTekst}${html.SCHEIDING} ???`;
 
-    const lijst = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    db.aa(lijst, 3, 7);
     /*
     const ronde = await db.rondeTak({
         club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE, ronde: 1 });
@@ -43,14 +41,27 @@ import * as zyq from "./zyq.js";
     for (const dinsdag of nietGespeeld) {
         console.log(`ronde ${dinsdag.rondeNummer} ${dinsdag.rondeTekst} nog uitslagenInvullen`);
     }
-    debug({
+
+     */
+    const x = {
         clubCode: db.WAAGTOREN,
         seizoen: "2526",
         teamCode: db.INTERNE_COMPETITIE,
         rondeNummer: 2
-    });
+    };
+    console.log("klim", db.klim(x));
+    console.log("groei", await db.groei(x));
+    const y = {
+        clubCode: db.WAAGTOREN,
+        seizoen: "2526",
+        teamCode: "5",
+        rondeNummer: 2,
+        knsbNummer: 6212404
+    };
+    console.log("klim 5", db.klim(y));
+    console.log("groei 5", await db.groei(y));
 
-     */
+
 
     const plaatje = html.id("plaatje");
     if (club.vereniging === "Waagtoren") {

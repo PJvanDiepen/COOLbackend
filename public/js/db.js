@@ -127,19 +127,16 @@ function boomOnderhoud(object) {
 async function groei(object) {
     const tak = [];
     await alleClubs();
-    tak[0] = clubTak(object);
-    if (tak[0]) {
+    if ((tak[0] = clubTak(object.clubCode))) {
         await tak[0].alleSeizoenen();
-        tak[1] = seizoenTak(object);
-        if (tak[1]) {
+        if ((tak[1] = tak[0].seizoenTak(object.seizoen))) {
             await tak[1].alleTeams();
-            tak[2] = teamTak(object);
-            if (tak[2]) {
+            if ((tak[2] = tak[1].teamTak(object.teamCode))) {
                 await tak[2].alleRonden();
-                tak[3] = rondeTak(object);
-                if (tak[3]) {
+                tak[3] = tak[2].rondeTak(object.rondeNummer);
+                if ((tak[3] = tak[2].rondeTak(object.rondeNummer))) {
                     await tak[3].alleUitslagen();
-                    tak[4] = uitslagTak(object);
+                    tak[4] = tak[3].uitslagTak(object.knsbNummer);
                 }
             }
         }
@@ -155,15 +152,12 @@ async function groei(object) {
  */
 function klim(object) {
     const tak = [];
-    tak[0] = clubTak(object);
-    if (tak[0]) {
-        tak[1] = seizoenTak(object);
-        if (tak[1]) {
-            tak[2] = teamTak(object);
-            if (tak[2]) {
-                tak[3] = rondeTak(object);
-                if (tak[3]) {
-                    tak[4] = uitslagTak(object);
+    if ((tak[0] = clubTak(object.clubCode))) {
+        if ((tak[1] = tak[0].seizoenTak(object.seizoen))) {
+            if ((tak[2] = tak[1].teamTak(object.teamCode))) {
+                tak[3] = tak[2].rondeTak(object.rondeNummer);
+                if ((tak[3] = tak[2].rondeTak(object.rondeNummer))) {
+                    tak[4] = tak[3].uitslagTak(object.knsbNummer);
                 }
             }
         }
@@ -351,12 +345,7 @@ function teamMaken(object) {
         return actueel;
     }
 
-    async function rondeTak(rondeNummer) {
-        await alleRonden();
-        return tak(rondeNummer);
-    }
-
-    function tak(rondeNummer) {
+    function rondeTak(rondeNummer) {
         const index = ronde.findIndex(function(eenRonde) {
             return eenRonde.rondeNummer === rondeNummer;
         });
@@ -474,12 +463,7 @@ function rondeMaken(object) {
         return false; // alle uitslagen zijn ingevuld
     }
 
-    async function uitslagTak(knsbNummer) {
-        await alleUitslagen();
-        return tak(knsbNummer);
-    }
-
-    function tak(knsbNummer) {
+    function uitslagTak(knsbNummer) {
         const index = uitslag.findIndex(function(eenUitslag) {
             return eenUitslag.knsbNummer === knsbNummer;
         });
@@ -668,29 +652,6 @@ function gebruikerFunctie(speler) {
     }
 }
 
-function aa(object, van = 0, tot = 5) {
-    if (Array.isArray(object)) {
-        tot = Math.min(object.length-1, tot);
-        console.log(`[ --- ${van} - ${tot} (${object.length}) ---`);
-        if (van) {
-            console.log("...");
-        }
-        for (let i = van; i <= tot; i++) {
-            oa(object[i]);
-        }
-        if (tot < object.length - 1) {
-            console.log("...");
-        }
-        console.log(`] --- (${object.length}) ---`);
-    } else {
-        oa(object);
-    }
-}
-
-function oa(object) {
-    console.log(object);
-}
-
 export { // ES6 voor browser,
     synchroon,
     mutatiesBijwerken,     // (key)
@@ -771,7 +732,5 @@ export { // ES6 voor browser,
     BEHEERDER,
     ONTWIKKELAAR,
     functieInvullen,
-    gebruikerFunctie,      // (speler)
-    aa,                    // (object)
-    oa                     // (object)
+    gebruikerFunctie       // (speler)
 }

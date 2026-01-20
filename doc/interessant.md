@@ -76,6 +76,7 @@ Refresh Android cache
 - [optional chaining and default](https://allthingssmitty.com/2025/06/02/write-more-reliable-javascript-with-optional-chaining/)
 - [web scraping](https://blog.apify.com/best-javascript-web-scraping-libraries/)
 - [url as state](https://alfy.blog/2025/10/31/your-url-is-your-state.html)
+- [iterator instead of array](https://allthingssmitty.com/2026/01/12/stop-turning-everything-into-arrays-and-do-less-work-instead/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
