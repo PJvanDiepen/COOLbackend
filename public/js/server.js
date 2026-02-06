@@ -222,7 +222,7 @@ export function vraag(commando) {
         }
     }
 
-    async function muteren() { // TODO andere naam dan muteren
+    async function muteren() { // of andere actie op de server
         return synchroniseren(await vraagServer(invullen()));
     }
 

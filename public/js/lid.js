@@ -22,10 +22,10 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
         `${o_o_o.vereniging}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}`;
     const persoon = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/persoon/${lidNummer}`);
     const septemberRating = await ratingLezen();
-    await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
+    await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER_O, "wijzig KNSB gegevens (let op!)", function () {
             html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
         }],
-        [db.BEHEERDER, `${persoon.naam} verwijderen`, async function () {
+        [db.BEHEERDER_O, `${persoon.naam} verwijderen`, async function () {
             const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/persoon/${lidNummer}`);
             if (mutaties) {
                 html.anderePagina("bestuur.html");
@@ -33,7 +33,7 @@ const knsbWijzigen = html.params.get("knsb") === "wijzigen";
                 console.log(`${persoon.naam} is niet verwijderd`);
             }
         }],
-        [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
+        [db.WEDSTRIJDLEIDER_O, `agenda van ${persoon.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${lidNummer}`);
         }]);
     await lidFormulier(persoon, septemberRating);
@@ -131,7 +131,7 @@ async function lidFormulier(persoon, septemberRating) {
         knsbNummer.disabled = false; // enable input
         knsbRating.disabled = false; // enable input
     }
-    if (db.BESTUUR <= zyq.gebruiker.mutatieRechten) {
+    if (db.BESTUUR_O <= zyq.gebruiker.mutatieRechten) {
         interneRating.disabled = false; // enable input
         knsbTeam.disabled = false; // enable input
         nhsbTeam.disabled = false; // enable input

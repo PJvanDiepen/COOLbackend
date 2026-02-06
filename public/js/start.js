@@ -24,25 +24,6 @@ import * as zyq from "./zyq.js";
     html.id("kop").textContent =
         `${club.vereniging}${html.SCHEIDING}${seizoen.seizoenTekst}${html.SCHEIDING} ???`;
 
-    /*
-    const ronde = await db.rondeTak({
-        club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE, ronde: 1 });
-    const uitslagen = await ronde.alleUitslagen();
-    for (const uitslag of uitslagen) {
-        console.log(uitslag.uitslagTekst);
-    }
-    const vijfde = await db.teamTak({ club: club.clubCode, seizoen: seizoen.seizoen, team: "5" });
-    await vijfde.alleRonden();
-
-    const competitie = await db.teamTak({
-        club: club.clubCode, seizoen: seizoen.seizoen, team: db.INTERNE_COMPETITIE });
-    const nietGespeeld = await competitie.actueleRonden();
-    console.log("--- dinsdag ---");
-    for (const dinsdag of nietGespeeld) {
-        console.log(`ronde ${dinsdag.rondeNummer} ${dinsdag.rondeTekst} nog uitslagenInvullen`);
-    }
-
-     */
     const x = {
         clubCode: db.WAAGTOREN,
         seizoen: "2526",
@@ -58,6 +39,7 @@ import * as zyq from "./zyq.js";
         rondeNummer: 2,
         knsbNummer: 6212404
     };
+    debug(y);
     console.log("klim 5", db.klim(y));
     console.log("groei 5", await db.groei(y));
 
@@ -78,20 +60,20 @@ import * as zyq from "./zyq.js";
     TODO rolGebruiker test in db.js en db.cjs met groeiFunctie
 
     const menuKeuzes = [
-        [db.IEDEREEN, `Ranglijst na ronde ${laatsteUitslagen}`,`ranglijst.html?${laatsteUitslagen}`], // menu0
-        [db.IEDEREEN, `Uitslagen ronde ${laatsteUitslagen}`,`ronde.html?ronde=${laatsteUitslagen}`]]; // menu1
+        [db.IEDEREEN_O, `Ranglijst na ronde ${laatsteUitslagen}`,`ranglijst.html?${laatsteUitslagen}`], // menu0
+        [db.IEDEREEN_O, `Uitslagen ronde ${laatsteUitslagen}`,`ronde.html?ronde=${laatsteUitslagen}`]]; // menu1
     if (voorlopigeIndeling) {
-        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${voorlopigeIndeling}`, `indelen.html?ronde=${voorlopigeIndeling}`]); // menu2
+        menuKeuzes.push([db.GEREGISTREERD_O, `Voorlopige indeling ronde ${voorlopigeIndeling}`, `indelen.html?ronde=${voorlopigeIndeling}`]); // menu2
     } else if (invullenUitslagen) {
-        menuKeuzes.push([db.GEREGISTREERD, `Uitslagen invullen ronde ${invullenUitslagen}`, `ronde.html?ronde=${invullenUitslagen}`]); // menu2
+        menuKeuzes.push([db.GEREGISTREERD_O, `Uitslagen invullen ronde ${invullenUitslagen}`, `ronde.html?ronde=${invullenUitslagen}`]); // menu2
     }
-    if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
-        menuKeuzes.push([db.IEDEREEN, "Aanmelden voor 0-0-0", "aanmelden.html"]);
+    if (zyq.gebruiker.mutatieRechten === db.IEDEREEN_O) { // indien niet geregistreerd
+        menuKeuzes.push([db.IEDEREEN_O, "Aanmelden voor 0-0-0", "aanmelden.html"]);
     }
     menuKeuzes.push(
-        [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
-        [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
-        [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
+        [db.GEREGISTREERD_O, "Aanmelden / Afzeggen", "agenda.html"],
+        [db.BESTUUR_O, "Overzicht voor bestuur", "bestuur.html"],
+        [db.TEAMLEIDER_O, "Overzicht voor teamleiders", "teamleider.html"]);
     for (let i = 0; i < menuKeuzes.length; i++) {
         const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
         if (minimumRechten <= zyq.gebruiker.mutatieRechten) {
@@ -99,8 +81,8 @@ import * as zyq from "./zyq.js";
         }
     }
     menuKeuzes.push(
-        [db.IEDEREEN, html.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
-        [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
+        [db.IEDEREEN_O, html.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
+        [db.GEREGISTREERD_O, "systeembeheer", "beheer.html"]);
     sessionStorage.setItem(html.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
      */
     console.log("start.js tot hier");

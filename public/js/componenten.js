@@ -36,10 +36,13 @@ TODO in plaats van o_o_o.js en zyq.js
  *
  * @param object specificeert welke informatie
  */
-export function debug(object) {
+export async function debug(object) {
     if (object.debug === "server" || object.debug !== "browser") {
         console.log("--- debug: server ---");
-
+        const debugVraag
+            = server.vraag(`/tak_${Object.keys(object).length-2}`);
+        console.log(debugVraag);
+        await debugVraag.muteren();
     } if (object.debug === "browser" || object.debug !== "server") {
         console.log("--- debug: browser ---");
     }

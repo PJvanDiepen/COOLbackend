@@ -119,10 +119,14 @@ function boomOnderhoud(object) {
 }
 
 /**
- * groei laat eventueel takken groeien en klim in de boom aan de hand van gevraagde informatie in object.
+ * groei laat eventueel takken groeien en klimt in de boom aan de hand van gevraagde informatie.
  *
  * @param object gevraagde informatie
- * @returns {Promise<*[]>} tak met club, seizoen, team, ronde, uitslag of minder
+ * @returns tak[0] = club,
+ *          tak[1] = seizoen,
+ *          tak[2] = team,
+ *          tak[3] = ronde,
+ *          tak[4] = uitslag of minder
  */
 async function groei(object) {
     const tak = [];
@@ -145,10 +149,14 @@ async function groei(object) {
 }
 
 /**
- * klim in de boom aan de hand van gevraagde informatie in object.
+ * klim in de boom aan de hand van gevraagde informatie.
  *
  * @param object gevraagde informatie
- * @returns tak met club, seizoen, team, ronde, uitslag of minder
+ * @returns tak[0] = club,
+ *          tak[1] = seizoen,
+ *          tak[2] = team,
+ *          tak[3] = ronde,
+ *          tak[4] = uitslag of minder
  */
 function klim(object) {
     const tak = [];
@@ -194,7 +202,6 @@ function clubMaken(object) {
         teamNaam
     } = object;
     const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
-    console.log(`clubMaken = ${clubTekst}`);
     if (typeof clubCode !== "number") {
         console.log("clubCode niet numeriek");
         return undefined;
@@ -245,7 +252,6 @@ function seizoenMaken(object) {
     const seizoenTekst = clubCode === WAAGTOREN_JEUGD
         ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
         : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
-    console.log(`seizoenMaken = ${seizoenTekst}`);
     if (seizoen.length > 4) {
         console.log("seizoen niet 4 posities");
         return undefined;
@@ -318,7 +324,6 @@ function teamMaken(object) {
         teamleider // TODO verwijderen
     } = object;
     const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
-    console.log(`teamMaken = ${teamTekst}`);
     if (teamCode.length > 3) {
         console.log("teamCode niet 3 posities");
         return undefined;
@@ -438,7 +443,6 @@ function rondeMaken(object) {
         : uithuis === THUIS
         ? `${teamVoluit(teamCode)} - ${tegenstander}` // thuiswedstrijd
         : `${tegenstander} - ${teamVoluit(teamCode)}`; // uitwedstrijd
-    console.log(`rondeMaken = ronde ${rondeNummer} ${rondeTekst}`);
     if (typeof rondeNummer !== "number") {
         console.log("rondeNummer niet numeriek");
         return undefined;
@@ -508,7 +512,6 @@ function uitslagMaken(object) {
     } = object;
     const uitslagTekst = // TODO uitwerken
         `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
-    // console.log(`uitslagMaken = ${uitslagTekst}`);
     if (typeof knsbNummer !== "number") {
         console.log("knsbNummer niet numeriek");
         return null;
@@ -628,21 +631,21 @@ const maandInvullen = new Map([
     [12, "december"]]);
 
 // gebruiker.rol en speler.rol int
-const IEDEREEN = 0;
-const GEREGISTREERD = 1;
-const TEAMLEIDER = 2;
-const BESTUUR = 3;
-const WEDSTRIJDLEIDER = 4;
-const BEHEERDER = 8;
-const ONTWIKKELAAR = 9;
+const IEDEREEN_O = 0;
+const GEREGISTREERD_O = 1;
+const TEAMLEIDER_O = 2;
+const BESTUUR_O = 3;
+const WEDSTRIJDLEIDER_O = 4;
+const BEHEERDER_O = 8;
+const ONTWIKKELAAR_O = 9;
 
 const functieInvullen = new Map ([
-    [ONTWIKKELAAR, "ontwikkelaar"],
-    [BEHEERDER, "systeembeheerder"],
-    [WEDSTRIJDLEIDER, "wedstrijdleider"],
-    [BESTUUR, "bestuur"],
-    [TEAMLEIDER, "teamleider"],
-    [GEREGISTREERD, "geregistreerd"]]);
+    [ONTWIKKELAAR_O, "ONTWIKKELAAR_O"],
+    [BEHEERDER_O, "systeemBEHEERDER_O"],
+    [WEDSTRIJDLEIDER_O, "WEDSTRIJDLEIDER_O"],
+    [BESTUUR_O, "bestuur"],
+    [TEAMLEIDER_O, "teamleider"],
+    [GEREGISTREERD_O, "geregistreerd"]]);
 
 function gebruikerFunctie(speler) {
     if (functieInvullen.has(Number(speler.mutatieRechten))) {
@@ -724,13 +727,13 @@ export { // ES6 voor browser,
     planningInvullen,
     maandInvullen,
     // gebruiker.mutatieRechten int
-    IEDEREEN,
-    GEREGISTREERD,
-    TEAMLEIDER,
-    BESTUUR,
-    WEDSTRIJDLEIDER,
-    BEHEERDER,
-    ONTWIKKELAAR,
+    IEDEREEN_O,
+    GEREGISTREERD_O,
+    TEAMLEIDER_O,
+    BESTUUR_O,
+    WEDSTRIJDLEIDER_O,
+    BEHEERDER_O,
+    ONTWIKKELAAR_O,
     functieInvullen,
     gebruikerFunctie       // (speler)
 }

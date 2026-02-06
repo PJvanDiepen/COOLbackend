@@ -17,7 +17,7 @@ const ratinglijstMaandJaarInvullen = new Map([]); // [naam CSV-bestand, [maand, 
     await init();
     const personen = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/personen`);
     await html.menu(zyq.gebruiker.mutatieRechten,
-        [db.ONTWIKKELAAR, "speler conversie", async function() {
+        [db.ONTWIKKELAAR_O, "speler conversie", async function() {
             let mutaties = 0;
             const jaar = 2000 + Number(o_o_o.seizoen.substring(0, 2));
             for (const speler of personen) {

@@ -61,11 +61,11 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
         deelnemersLijst(r, html.id("lijst"), rondeNummer);
     }
     await html.menu(zyq.gebruiker.mutatieRechten,
-        [db.WEDSTRIJDLEIDER, `handmatig indelen ronde ${rondeNummer}`, function () {
+        [db.WEDSTRIJDLEIDER_O, `handmatig indelen ronde ${rondeNummer}`, function () {
             html.anderePagina(`paren.html?ronde=${rondeNummer}`);
         }],
 
-        [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
+        [db.WEDSTRIJDLEIDER_O, "indeling definitief maken", async function () {
             let mutaties = 0;
             const planning = {
                 clubCode: o_o_o.club,
@@ -103,7 +103,7 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
 })();
 
 async function deelnemersRonde(rondeNummer) {
-    if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
+    if (db.GEREGISTREERD_O <= zyq.gebruiker.mutatieRechten) {
         return await zyq.serverFetch(
             `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/deelnemers`); // actuele situatie
     } else {

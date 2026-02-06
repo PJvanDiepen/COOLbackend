@@ -49,7 +49,7 @@ export function urlVerwerken(gevraagdeParameters) {
  */
 function uuidVerwerken(uuid) {
     if (uuid === "wissen") {
-        localStorage.clear(); // voor de ONTWIKKELAAR
+        localStorage.clear(); // voor de ONTWIKKELAAR_O
         return uuid;
     } else if (uuidCorrect(uuid)) {
         localStorage.setItem("o_o_o", uuid);
@@ -91,7 +91,7 @@ https://stackoverflow.com/questions/59068548/how-to-get-all-of-the-element-ids-o
  *
  * De start-pagina maakt een algemeen menu voor de startKeuzes waarin elke keuze bestaat uit minimumRechten, tekst en naarPagina.
  * menu() voegt alle menuKeuzes samen met de startKeuzes en maakt daarbij van de naarPagina de bijbehorende functie.
- * Het samenvoegen begint met de startKeuzes, bij IEDEREEN, MENU komen de menuKeuzes daarna komt de rest van de startKeuzes.
+ * Het samenvoegen begint met de startKeuzes, bij IEDEREEN_O, MENU komen de menuKeuzes daarna komt de rest van de startKeuzes.
  *
  * menu() maakt opties voor select() met uitsluitend de menuKeuzes waarvoor de gebruiker voldoende menuRechten heeft.
  */
@@ -100,7 +100,7 @@ export function menu(menuRechten, ...menuKeuzes) {
     const HAMBURGER = "\u2630";
     const opties = [[HAMBURGER, HAMBURGER]];  // geen functie
     for (const [minimumRechten, tekst, naarPagina] of startKeuzes) {
-        if (minimumRechten === db.IEDEREEN && tekst === MENU) { // de menuKeuzes van een specifieke pagina tussenvoegen
+        if (minimumRechten === db.IEDEREEN_O && tekst === MENU) { // de menuKeuzes van een specifieke pagina tussenvoegen
             for (const [minimumRechten, tekst, functie] of menuKeuzes) {
                 if (minimumRechten <= menuRechten) {
                     opties.push(["", tekst, functie]);

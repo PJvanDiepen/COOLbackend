@@ -17,14 +17,14 @@ import * as zyq from "./zyq.js";
     competitieTitel();
     o_o_o.team = o_o_o.competitie;
     const rondeNummer = Number(html.params.get("ronde")) || 1;
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER_O, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
-        [db.ONTWIKKELAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
+        [db.ONTWIKKELAAR_O, `backup uitslagen ronde ${rondeNummer}` , async function () {
             zyq.backupSQL("uitslag", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/backup/uitslagen/${rondeNummer}`));
         }],
-        [db.WEDSTRIJDLEIDER, `verwijder indeling ronde ${rondeNummer}`, async function () {
+        [db.WEDSTRIJDLEIDER_O, `verwijder indeling ronde ${rondeNummer}`, async function () {
             const mutaties = await zyq.serverFetch(
                 `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/verwijder/indeling`);
             if (mutaties) {
@@ -33,7 +33,7 @@ import * as zyq from "./zyq.js";
                 console.log(`Verwijder indeling ronde ${rondeNummer} is mislukt.`);
             }
         }],
-        [db.BEHEERDER, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
+        [db.BEHEERDER_O, `verwijder ronde ${rondeNummer} (pas op!)`, async function () {
             const mutaties = await zyq.serverFetch(
                 `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/${rondeNummer}/verwijder/ronde`);
             if (!mutaties) {
@@ -94,9 +94,9 @@ function resultaatSelecteren(rondeNummer, uitslag) {
 function uitslagWijzigen(uitslag)  {
     if (o_o_o.seizoen !== zyq.ditSeizoen) { // vorig seizoen nooit wijzigen
         return false;
-    } else if (zyq.gebruiker.mutatieRechten >= db.WEDSTRIJDLEIDER) {
+    } else if (zyq.gebruiker.mutatieRechten >= db.WEDSTRIJDLEIDER_O) {
         return true;
-    } else if (zyq.gebruiker.mutatieRechten >= db.GEREGISTREERD && uitslag.resultaat === "") { // indien nog geen resultaat
+    } else if (zyq.gebruiker.mutatieRechten >= db.GEREGISTREERD_O && uitslag.resultaat === "") { // indien nog geen resultaat
         return uitslag.knsbNummer === zyq.gebruiker.knsbNummer || uitslag.tegenstanderNummer === zyq.gebruiker.knsbNummer;
     } else {
         return false;

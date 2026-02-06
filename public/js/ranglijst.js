@@ -16,7 +16,7 @@ import * as zyq from "./zyq.js";
     await init();
     competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || laatsteUitslagenRonde() || 1;
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, "Rondenlijst", function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER_O, "Rondenlijst", function () {
         html.anderePagina("rondenlijst.html");
     }]);
     await teamSelecteren(o_o_o.competitie);

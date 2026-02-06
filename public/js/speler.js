@@ -10,10 +10,10 @@ import * as zyq from "./zyq.js";
 (async function() {
     await init();
     competitieTitel();
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER, `agenda van ${o_o_o.naam}`, function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.WEDSTRIJDLEIDER_O, `agenda van ${o_o_o.naam}`, function () {
             html.anderePagina(`agenda.html?gebruiker=${o_o_o.speler}&naamGebruiker=${o_o_o.naam}`);
         }],
-        [db.ONTWIKKELAAR, `backup uitslagen ${o_o_o.naam}` , async function () {
+        [db.ONTWIKKELAAR_O, `backup uitslagen ${o_o_o.naam}` , async function () {
             zyq.backupSQL("uitslag", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/backup/speler/${o_o_o.speler}`));
         }]);

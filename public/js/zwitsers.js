@@ -146,7 +146,7 @@ const indelenFun = [
         deelnemersLijst(r, html.id("lijst"));
     }
     await html.menu(zyq.gebruiker.mutatieRechten,
-        [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
+        [db.WEDSTRIJDLEIDER_O, "indeling definitief maken", async function () {
         const planning = {seizoen: o_o_o.seizoen, teamCode: o_o_o.competitie, rondeNummer: rondeNummer};
             let mutaties = 0;
             for (let i = 0; i < wit.length; i++) {
@@ -166,7 +166,7 @@ const indelenFun = [
                 html.anderePagina(`ronde.html?ronde=${rondeNummer}`);
             }
         }],
-        [db.WEDSTRIJDLEIDER, `handmatig indelen ronde ${rondeNummer}`, function () {
+        [db.WEDSTRIJDLEIDER_O, `handmatig indelen ronde ${rondeNummer}`, function () {
             html.anderePagina(`paren.html?ronde=${rondeNummer}`);
         }]);
     const versieOpties = [];
@@ -183,7 +183,7 @@ function zwitsers(teamCode) {
 }
 
 async function deelnemersRonde(rondeNummer) {
-    if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
+    if (db.GEREGISTREERD_O <= zyq.gebruiker.mutatieRechten) {
         return await zyq.serverFetch(`/${zyq.uuidToken}/deelnemers/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}`); // actuele situatie
     } else {
         return [0]; // een onbekende deelnemer, zodat niet alle spelers worden geselecteerd

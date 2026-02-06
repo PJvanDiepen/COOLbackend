@@ -1,8 +1,9 @@
 use waagtoren; -- ga naar TODO
 set @seizoen = "2526";
-set @team = "nv1";
+set @team = "n3";
 
 -- @team.csv
+select * from ronde where seizoen = @seizoen and teamCode = @team order by rondeNummer;
 select * from uitslag where seizoen = @seizoen and teamCode = @team order by rondeNummer, bordNummer;
 
 -- actieve gebruikers
@@ -81,7 +82,7 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2526';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 16;
+set @ronde = 19;
 set @bord = 8;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
@@ -98,7 +99,7 @@ set @zwart = 9077651; -- Lennart van der Kraan
 
 select * from persoon where knsbNummer = @wit;
 
-set @oneven = 7386060; -- Jan Meringa
+set @oneven = 7292043; -- Rob Freer
 set @afwezig = 7758014; -- Alex Albrecht
 set @extern = 7758014; -- Alex
 
@@ -167,13 +168,9 @@ insert into team (clubCode, seizoen, teamCode, reglement, maand, jaar, bond, pou
 (0, "2526", "nbz", 0, 0, 0, "n", "b", "Zilver", 4, 0),
 (0,"2526","nv1",0,0,0,"n","vf","NHSB VF",4,0);
 
-
 -- ronde
 select * from ronde where clubCode = 0 and seizoen = @seizoen;
 delete from ronde where clubCode = 0 and seizoen = @seizoen;
-
-insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-(0,"2526","kbe",2,"u","De Wijker Toren",'2025-12-14'); 
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (0, "2526", "1", 1, "u", "Promotie 1", '2025-09-20'),
@@ -226,9 +223,18 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0, "2526", "6", 7, "u", "HWP Haarlem 6", '2026-03-07');
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+(0,"2526","kbe",2,"u","De Wijker Toren",'2025-12-14'),
+(0,"2526","kbe",3,"u","Kennemer Combinatie",'2026-02-08');
+
+insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (0,"2526","nbb",1,"u","Vredeburg B",'2025-11-14'),
 (0,"2526","nbe",1,"u","Opening 64 G",'2025-12-12'),
 (0,"2526","nbz",1,"u","MSC Z",'2025-11-25');
+
+insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+(0,"2526","nbb",2,"u","Santpoort B",'2026-02-10'),
+(0,"2526","nbe",2,"t",'HWP Haarlem G','2026-02-03'),
+(0,"2526","nbz",2,"t","Het Spaarne Z",'2026-02-17');
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (0, "2526", "n1", 1, "t", "Opening 64 N1", '2025-09-23'),
@@ -1715,7 +1721,6 @@ set @ronde = 16;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
-
 -- Waagtoren KNSB beker TODO
 set @seizoen = "2526";
 set @team = "kbe";
@@ -1728,6 +1733,12 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","kbe",2,2,7970094,"e","z",0,"1",'2025-12-14',"int"),
 (0,"2526","kbe",2,3,8795941,"e","w",0,"1",'2025-12-14',"int"),
 (0,"2526","kbe",2,4,8285574,"e","z",0,"½",'2025-12-14',"int");
+
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, datum, competitie) values
+(0,"2526","kbe",3,1,7657342,"e","z",0,"1",'2026-02-08',"int"),
+(0,"2526","kbe",3,2,7970094,"e","w",0,"1",'2026-02-08',"int"),
+(0,"2526","kbe",3,3,8795941,"e","z",0,"0",'2026-02-08',"int"),
+(0,"2526","kbe",3,4,7099950,"e","w",0,"0",'2026-02-08',"int");
 
 -- Waagtoren 1 TODO
 set @seizoen = "2526";
@@ -2002,7 +2013,7 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 -- Waagtoren NHSB beker goud
 set @seizoen = "2526";
 set @team = "nbe";
-set @ronde = 1;
+set @ronde = 2;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
@@ -2010,7 +2021,11 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","nbe",1,1,8795941,"e","w",0,"1",'2025-12-12',"int"),
 (0,"2526","nbe",1,2,8096242,"e","z",0,"1",'2025-12-12',"int"),
 (0,"2526","nbe",1,3,7428960,"e","w",0,"½",'2025-12-12',"int"),
-(0,"2526","nbe",1,4,5968611,"e","z",0,"1",'2025-12-12',"int");
+(0,"2526","nbe",1,4,5968611,"e","z",0,"1",'2025-12-12',"int"),
+(0,"2526","nbe",2,1,7970094,"e","z",0,"1",'2026-02-03',"int"),
+(0,"2526","nbe",2,2,7428960,"e","w",0,"0",'2026-02-03',"int"),
+(0,"2526","nbe",2,3,8096242,"e","z",0,"½",'2026-02-03',"int"),
+(0,"2526","nbe",2,4,5968611,"e","w",0,"0",'2026-02-03',"int");
 
 -- Waagtoren NHSB beker zilver
 set @seizoen = "2526";
@@ -2112,7 +2127,7 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 
 -- Waagtoren n3 TODO
 set @team = "n3";
-set @ronde = 4;
+set @ronde = 5;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
@@ -2140,11 +2155,17 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","n3",4,3,7699010,"e","w",0,"0",'2025-12-11',"int"),
 (0,"2526","n3",4,4,6565801,"e","z",0,"0",'2025-12-11',"int"),
 (0,"2526","n3",4,5,7731812,"e","w",0,"1",'2025-12-11',"int"),
-(0,"2526","n3",4,6,7292043,"e","z",0,"½",'2025-12-11',"int");
+(0,"2526","n3",4,6,7292043,"e","z",0,"½",'2025-12-11',"int"),
+(0,"2526","n3",5,1,6930957,"e","z",0,"0",'2026-02-03',"int"),
+(0,"2526","n3",5,2,7529522,"e","w",0,"1",'2026-02-03',"int"),
+(0,"2526","n3",5,3,9056674,"e","z",0,"½",'2026-02-03',"int"),
+(0,"2526","n3",5,4,6572511,"e","w",0,"1",'2026-02-03',"int"),
+(0,"2526","n3",5,5,7468362,"e","z",0,"1",'2026-02-03',"int"),
+(0,"2526","n3",5,6,7731812,"e","w",0,"½",'2026-02-03',"int");
 
 -- Waagtoren n4 TODO
 set @team = "n4";
-set @ronde = 4;
+set @ronde = 5;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
@@ -2172,11 +2193,17 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","n4",4,3,7546506,"e","w",0,"0",'2025-12-12',"int"),
 (0,"2526","n4",4,4,6420557,"e","z",0,"1",'2025-12-12',"int"),
 (0,"2526","n4",4,5,6214153,"e","w",0,"0",'2025-12-12',"int"),
-(0,"2526","n4",4,6,7210137,"e","z",0,"1",'2025-12-12',"int");
+(0,"2526","n4",4,6,7210137,"e","z",0,"1",'2025-12-12',"int"),
+(0,"2526","n4",5,1,7546506,"e","z",0,"½",'2026-02-03',"int"),
+(0,"2526","n4",5,2,7758014,"e","w",0,"1",'2026-02-03',"int"),
+(0,"2526","n4",5,3,7282033,"e","z",0,"1",'2026-02-03',"int"),
+(0,"2526","n4",5,4,7210137,"e","w",0,"½",'2026-02-03',"int"),
+(0,"2526","n4",5,5,6212404,"e","z",0,"½",'2026-02-03',"int"),
+(0,"2526","n4",5,6,6214153,"e","w",0,"1",'2026-02-03',"int");
 
 -- Waagtoren n5 TODO
 set @team = "n5";
-set @ronde = 4;
+set @ronde = 5;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
@@ -2204,7 +2231,13 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","n5",4,3,8485059,"e","z",0,"0",'2025-12-09',"int"),
 (0,"2526","n5",4,4,7101193,"e","w",0,"1",'2025-12-09',"int"),
 (0,"2526","n5",4,5,7519930,"e","z",0,"1",'2025-12-09',"int"),
-(0,"2526","n5",4,6,7321534,"e","w",0,"1",'2025-12-09',"int");
+(0,"2526","n5",4,6,7321534,"e","w",0,"1",'2025-12-09',"int"),
+(0,"2526","n5",5,1,7399469,"e","z",0,"0",'2026-02-03',"int"),
+(0,"2526","n5",5,2,8276752,"e","w",0,"0",'2026-02-03',"int"),
+(0,"2526","n5",5,3,8485059,"e","z",0,"0",'2026-02-03',"int"),
+(0,"2526","n5",5,4,7101193,"e","w",0,"0",'2026-02-03',"int"),
+(0,"2526","n5",5,5,7519930,"e","z",0,"0",'2026-02-03',"int"),
+(0,"2526","n5",5,6,7321534,"e","w",0,"½",'2026-02-03',"int");
 
 -- Waagtoren nv1 TODO
 set @team = "nv1";

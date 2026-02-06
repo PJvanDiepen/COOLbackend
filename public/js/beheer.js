@@ -15,26 +15,26 @@ TODO mutaties met verwijderen
 (async function() {
     await init();
     await html.menu(zyq.gebruiker.mutatieRechten,
-        [db.ONTWIKKELAAR, `backup gebruikers` , async function () {
+        [db.ONTWIKKELAAR_O, `backup gebruikers` , async function () {
             zyq.backupSQL("gebruiker", await zyq.serverFetch(
                 `/${zyq.uuidToken}/backup/gebruikers`));
         }],
-        [db.ONTWIKKELAAR, `backup personen` , async function () {
+        [db.ONTWIKKELAAR_O, `backup personen` , async function () {
             zyq.backupSQL("persoon", await zyq.serverFetch(`/backup/personen`));
         }],
-        [db.ONTWIKKELAAR, `backup teams ${db.seizoenVoluit(o_o_o)}`, async function () {
+        [db.ONTWIKKELAAR_O, `backup teams ${db.seizoenVoluit(o_o_o)}`, async function () {
             zyq.backupSQL("team", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/backup/teams`));
         }],
-        [db.ONTWIKKELAAR, `backup ronden ${db.seizoenVoluit(o_o_o)}` , async function () {
+        [db.ONTWIKKELAAR_O, `backup ronden ${db.seizoenVoluit(o_o_o)}` , async function () {
             zyq.backupSQL("ronde", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/backup/ronde`)); // TODO /ronden werkt niet!
         }],
-        [db.ONTWIKKELAAR, `backup spelers ${db.seizoenVoluit(o_o_o)}` , async function () {
+        [db.ONTWIKKELAAR_O, `backup spelers ${db.seizoenVoluit(o_o_o)}` , async function () {
             zyq.backupSQL("speler", await zyq.serverFetch(
                 `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/spelers`));
         }],
-        [db.ONTWIKKELAAR, "test API", function () {
+        [db.ONTWIKKELAAR_O, "test API", function () {
             html.anderePagina("test.html");
         }]);
     await gebruikers(html.id("gebruikers"));
@@ -51,7 +51,7 @@ async function gebruikers(lijst) {
         lijst.append(html.rij(
             ++aantal,
             zyq.naarSpeler(lid),
-            zyq.gebruiker.mutatieRechten >= db.BEHEERDER ? gebruikerEmailSturen(lid) : lid.email,
+            zyq.gebruiker.mutatieRechten >= db.BEHEERDER_O ? gebruikerEmailSturen(lid) : lid.email,
             db.gebruikerFunctie(lid)));
     }
 }

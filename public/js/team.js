@@ -11,7 +11,7 @@ verwerk team=<teamCode>
  */
 (async function() {
     await init();
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.ONTWIKKELAAR, "backup uitslagen van alle ronden" , async function () {
+    await html.menu(zyq.gebruiker.mutatieRechten,[db.ONTWIKKELAAR_O, "backup uitslagen van alle ronden" , async function () {
         zyq.backupSQL("uitslag", await zyq.serverFetch(
             `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.team}/1/backup/uitslagen/9`));
     }]);

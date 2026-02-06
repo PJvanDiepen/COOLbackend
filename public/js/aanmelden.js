@@ -70,7 +70,7 @@ In het registratie formulier
         if (mutaties > 0) {
             html.anderePagina(`bestuur.html?lid=${nieuwLidNummer}`);
         }
-        if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
+        if (zyq.gebruiker.mutatieRechten === db.IEDEREEN_O) { // indien niet geregistreerd
             html.tekstToevoegen(informeer, `Probeer je registratie opnieuw te activeren.`);
         }
     });

@@ -30,7 +30,8 @@ create table persoon (
 
 drop table if exists gebruiker; -- 0-0-0.nl versie 0.8.58
 -- TODO mutatieRechten en datumEmail verwijderen
--- TODO voorkeur voor WhatApp, Signal of email
+-- TODO rol char(1) toevoegen (zie speler)
+-- TODO voorkeur char(1) toevoegen voor keuze WhatsApp, Signal of email
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,
@@ -70,14 +71,6 @@ create table team (
 );
 
 alter table team
-add column maand int not null after reglement;
-
-alter table team
-add column jaar int not null after maand;
-
-describe team;
-
-alter table team
 add constraint fk_team_persoon
     foreign key (teamleider)
     references persoon (knsbNummer)
@@ -85,7 +78,12 @@ add constraint fk_team_persoon
     ON UPDATE CASCADE;
 
 DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.8.56
+-- TODO emailZien, telefoonZien verwijderen
 -- TODO datum, nhsbTeam, knsbTeam, intern1..5 verwijderen
+-- TODO rol char(1) wijzigen (zie gebruiker)
+-- TODO email varchar(100) toevoegen
+-- TODO telefoon telefoon char(15) toevoegen
+-- TODO voorkeur char(1) toevoegen voor keuze WhatsApp, Signal of email
 CREATE TABLE speler (
     clubCode int not null,
     seizoen char(4) not null,
@@ -106,6 +104,14 @@ CREATE TABLE speler (
     telefoonZien int not null,
     PRIMARY KEY (clubCode, seizoen, teamCode, knsbNummer)
 );
+
+alter table speler
+add column maand int not null after reglement;
+
+alter table team
+add column jaar int not null after maand;
+
+describe team;
 
 alter table speler
 add CONSTRAINT fk_speler_team
