@@ -88,6 +88,10 @@ const NIEUWE_RANGLIJST = 2;
  *     .eenRonde(:ronde)
  *     .eenUitslag(:speler)
  *
+ * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
+ * Elk seizoen heeft naast vertakkingen per team ook vertakkingen per speler.
+ * Een speler kan per seizoen in verschillende teams en competities spelen.
+ *
  * De boom heeft een revisie nummer. Zie synchroon in api.js
  * Na serverStart begint de server met revisie = 1 en daarna +1 na elke mutatie van de database.
  *
@@ -101,8 +105,6 @@ const NIEUWE_RANGLIJST = 2;
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
  * Behalve de gevraagde data stuurt de server ook steeds het revisie nummer,
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
- *
- * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
  */
 
 const boom = { // de groeiFuncties zijn verschillend voor de server en de browser
@@ -111,7 +113,9 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
     leesTeams: function() {},
     leesRonden: function() {},
     leesUitslagen: function() {},
-    club: []
+    leesSpelers: function() {},
+    gebruiker: new Map(), // key uuid
+    club: [],
 };
 
 function boomOnderhoud(object) {
@@ -270,6 +274,18 @@ function seizoenMaken(object) {
             return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
         };
 
+    const speler = new Map(); // key knsbNummer
+
+    async function alleSpelers() {
+        if (speler.size === 0) {
+            const spelers = await boom.leesSpelers();
+            for (const eenSpeler of spelers) {
+                console.log(eenSpeler);
+                // TODO alleSpelers afmaken
+            }
+        }
+    }
+
     const team = [];
 
     async function alleTeams() {
@@ -296,6 +312,8 @@ function seizoenMaken(object) {
         seizoen,       // key vanaf clubCode
         seizoenTekst,
         seizoenDaarna, // ()
+        speler,
+        alleSpelers,   // ()
         team,
         alleTeams,     // ()
         teamTak        // (teamCode)
@@ -328,6 +346,7 @@ function teamMaken(object) {
         console.log("teamCode niet 3 posities");
         return undefined;
     }
+
     const ronde = [];
 
     async function alleRonden() {
@@ -630,7 +649,7 @@ const maandInvullen = new Map([
     [11, "november"],
     [12, "december"]]);
 
-// gebruiker.rol en speler.rol int
+// gebruiker.rol en speler.rol int TODO verwijderen
 const IEDEREEN_O = 0;
 const GEREGISTREERD_O = 1;
 const TEAMLEIDER_O = 2;
@@ -638,11 +657,19 @@ const BESTUUR_O = 3;
 const WEDSTRIJDLEIDER_O = 4;
 const BEHEERDER_O = 8;
 const ONTWIKKELAAR_O = 9;
+// gebruiker.rol en speler.rol char(1)
+const BESTUUR = "b";
+const GEREGISTREERD = "g";
+const IEDEREEN = "i";
+const ONTWIKKELAAR = "o";
+const SYSTEEMBEHEER = "s";
+const TEAMLEIDER = "t";
+const WEDSTRIJDLEIDER = "w";
 
 const functieInvullen = new Map ([
-    [ONTWIKKELAAR_O, "ONTWIKKELAAR_O"],
-    [BEHEERDER_O, "systeemBEHEERDER_O"],
-    [WEDSTRIJDLEIDER_O, "WEDSTRIJDLEIDER_O"],
+    [ONTWIKKELAAR_O, "ontwikkelaar"],
+    [BEHEERDER_O, "systeembeheerder"],
+    [WEDSTRIJDLEIDER_O, "wedstrijdleider"],
     [BESTUUR_O, "bestuur"],
     [TEAMLEIDER_O, "teamleider"],
     [GEREGISTREERD_O, "geregistreerd"]]);
@@ -691,7 +718,6 @@ module.exports = { // CommonJS voor node.js
     teamVoluit,            // (teamCode)
     rondeMaken,            // (object)
     uitslagMaken,          // (object)
-
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,
     KNSB_NUMMER,
@@ -726,7 +752,7 @@ module.exports = { // CommonJS voor node.js
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
     maandInvullen,
-    // gebruiker.mutatieRechten int
+    // gebruiker.rol en speler.rol int TODO verwijderen
     IEDEREEN_O,
     GEREGISTREERD_O,
     TEAMLEIDER_O,
@@ -734,6 +760,14 @@ module.exports = { // CommonJS voor node.js
     WEDSTRIJDLEIDER_O,
     BEHEERDER_O,
     ONTWIKKELAAR_O,
+    // gebruiker.rol en speler.rol char(1)
+    BESTUUR,
+    GEREGISTREERD,
+    IEDEREEN,
+    ONTWIKKELAAR,
+    SYSTEEMBEHEER,
+    TEAMLEIDER,
+    WEDSTRIJDLEIDER,
     functieInvullen,
     gebruikerFunctie       // (speler)
 }

@@ -45,12 +45,12 @@ export function urlVerwerken(gevraagdeParameters) {
  * Indien uuidCorrect is, legt uuidVerwerken de uuid vast in localStorage.
  *
  * @param uuid uit url
- * @returns {*|string}
+ * @returns string correcte uuid of "uuid"
  */
 function uuidVerwerken(uuid) {
     if (uuid === "wissen") {
         localStorage.clear(); // voor de ONTWIKKELAAR_O
-        return uuid;
+        return "uuid";
     } else if (uuidCorrect(uuid)) {
         localStorage.setItem("o_o_o", uuid);
         return uuid;
@@ -60,7 +60,7 @@ function uuidVerwerken(uuid) {
         return uuidGevonden;
     } else {
         localStorage.removeItem("o_o_o");
-        return "fout";
+        return "uuid";
     }
 }
 

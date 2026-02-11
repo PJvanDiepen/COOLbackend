@@ -111,7 +111,8 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
     leesTeams: function() {},
     leesRonden: function() {},
     leesUitslagen: function() {},
-    club: []
+    gebruiker: new Map(), // key uuid
+    club: [],
 };
 
 function boomOnderhoud(object) {
@@ -270,6 +271,8 @@ function seizoenMaken(object) {
             return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
         };
 
+    const speler = new Map(); // key knsbNummer
+
     const team = [];
 
     async function alleTeams() {
@@ -328,6 +331,7 @@ function teamMaken(object) {
         console.log("teamCode niet 3 posities");
         return undefined;
     }
+
     const ronde = [];
 
     async function alleRonden() {
@@ -630,7 +634,7 @@ const maandInvullen = new Map([
     [11, "november"],
     [12, "december"]]);
 
-// gebruiker.rol en speler.rol int
+// gebruiker.rol en speler.rol int TODO verwijderen
 const IEDEREEN_O = 0;
 const GEREGISTREERD_O = 1;
 const TEAMLEIDER_O = 2;
@@ -638,11 +642,19 @@ const BESTUUR_O = 3;
 const WEDSTRIJDLEIDER_O = 4;
 const BEHEERDER_O = 8;
 const ONTWIKKELAAR_O = 9;
+// gebruiker.rol en speler.rol char(1)
+const BESTUUR = "b";
+const GEREGISTREERD = "g";
+const IEDEREEN = "i";
+const ONTWIKKELAAR = "o";
+const SYSTEEMBEHEER = "s";
+const TEAMLEIDER = "t";
+const WEDSTRIJDLEIDER = "w";
 
 const functieInvullen = new Map ([
-    [ONTWIKKELAAR_O, "ONTWIKKELAAR_O"],
-    [BEHEERDER_O, "systeemBEHEERDER_O"],
-    [WEDSTRIJDLEIDER_O, "WEDSTRIJDLEIDER_O"],
+    [ONTWIKKELAAR_O, "ontwikkelaar"],
+    [BEHEERDER_O, "systeembeheerder"],
+    [WEDSTRIJDLEIDER_O, "wedstrijdleider"],
     [BESTUUR_O, "bestuur"],
     [TEAMLEIDER_O, "teamleider"],
     [GEREGISTREERD_O, "geregistreerd"]]);
@@ -691,7 +703,6 @@ export { // ES6 voor browser,
     teamVoluit,            // (teamCode)
     rondeMaken,            // (object)
     uitslagMaken,          // (object)
-
     // knsbNummer int
     TIJDELIJK_LID_NUMMER,
     KNSB_NUMMER,
@@ -726,7 +737,7 @@ export { // ES6 voor browser,
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
     maandInvullen,
-    // gebruiker.mutatieRechten int
+    // gebruiker.rol en speler.rol int TODO verwijderen
     IEDEREEN_O,
     GEREGISTREERD_O,
     TEAMLEIDER_O,
@@ -734,6 +745,14 @@ export { // ES6 voor browser,
     WEDSTRIJDLEIDER_O,
     BEHEERDER_O,
     ONTWIKKELAAR_O,
+    // gebruiker.rol en speler.rol char(1)
+    BESTUUR,
+    GEREGISTREERD,
+    IEDEREEN,
+    ONTWIKKELAAR,
+    SYSTEEMBEHEER,
+    TEAMLEIDER,
+    WEDSTRIJDLEIDER,
     functieInvullen,
     gebruikerFunctie       // (speler)
 }

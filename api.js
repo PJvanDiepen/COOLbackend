@@ -72,12 +72,24 @@ function groeiFuncties () {
         return uitslagen;
     }
 
+    async function leesSpelers(object) {
+        console.log("--- leesSpelers ---");
+        console.log(object);
+        return Speler.query()
+            .select("persoon.naam", "speler.*")
+            .join("persoon", "persoon.knsbNummer", "speler.knsbNummer")
+            .where("speler.clubCode", object.clubCode)
+            .where("speler.seizoen", object.seizoen)
+            .orderBy(["speler.knsbNummer","speler.teamCode"]);
+    }
+
     return Object.freeze({
         leesClubs,
         leesSeizoenen,
         leesTeams,
         leesRonden,
-        leesUitslagen
+        leesUitslagen,
+        leesSpelers,
     });
 }
 
@@ -98,7 +110,7 @@ db.mutatiesBijwerken("/start"); // server start met revisie = 1
  * Als browserRevisie > db.revisie is de server herstart na de vorige vraag van de browser
  * en zijn er misschien andere vragen mogelijk.
  *
- * @param params revisie en club van de browser
+ * @param params revisie en club van de browser (vertaal is niet nodig)
  * @param gevraagdeData
  * @returns synchroon en gevraagdeData
  */
@@ -182,7 +194,17 @@ module.exports = function (url) {
     Frontend: server.js
      */
     url.get("/:revisie/:club/synchroon", async function (ctx) {
-        ctx.body = antwoord(ctx.params, []);
+        ctx.body = antwoord(ctx.params,[]);
+    });
+
+    url.get("/:uuid/:revisie/:club/gebruiker/:speler", async function (ctx) {
+        // TODO uuid = "uuid"
+        // TODO speler = 0 of indien ONTWIKKELAAR andere speler!
+        // TODO geef 1 gebruiker
+        const tak = await db.groei(vertaal(ctx.params));
+        const seizoenen = await tak[0].alleSeizoenen();
+        const spelers = await seizoenen[seizoenen.length - 1].alleSpelers();
+        ctx.body = antwoord(ctx.params, []); // 1 gebruiker
     });
 
     url.get("/:revisie/:club/clubs", async function (ctx) {

@@ -94,7 +94,8 @@ export async function eersteContact() {
     Object.assign(db.synchroon, JSON.parse(sessionStorage.getItem(SESSIE)));
     synchroniseren(await vraagServer(`/${db.synchroon.revisie}/${url.club}/synchroon`));
     db.boomOnderhoud(groeiFuncties());
-    await db.alleClubs();
+    await db.alleClubs(); // 1 club
+    await db.alleGebruikers(); // 1 gebruiker
 }
 
 /**
