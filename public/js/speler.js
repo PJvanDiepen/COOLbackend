@@ -85,7 +85,7 @@ async function uitslagenSpeler(kop, lijst) {
         }
     }
     if (t.aftrek()) {
-        const tekst = t.aftrek() > 0 ? "bijtelling" : "aftrek";
+        const tekst = t.aftrek() > 0 ? "bijtelling" : "aftrek volgens reglement artikel 12";
         lijst.append(html.rij("", "", tekst, "", "", "", t.aftrek(), totaal + t.aftrek()));
     }
     if (!t.intern() && t.afzeggingen()) {

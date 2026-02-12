@@ -1,11 +1,9 @@
 # Database
 Er is een MySQL database voor schaakverenigingen en toernooien met de volgende tabellen:
-- `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie van een schaakvereniging
+- `Reglement` voor indelen en berekenen van de ranglijst van een toernooi of competitie van een schaakvereniging
 - `Persoon` namen van leden van schaakverenigingen en deelnemers in toernooien
 - `Gebruiker` personen, die gegevens in de database mogen wijzigen
-- `Rol` van personen bij een schaakvereniging of toernooi 
-- `Seizoen` seizoensgegevens van een schaakvereniging of toernooi 
-- `Speler` spelers per seizoen
+- `Speler` spelers per seizoen van een competitie of toernooi
 - `Team` teams of competities per seizoen
 - `Ronde` ronden per team of competitie per seizoen
 - `Uitslag` uitslagen per ronde per team per seizoen
@@ -16,10 +14,10 @@ De database heeft een tabel `Team` voor teams en competities.
 De eerste letter van `teamCode` in `Team` maakt het onderscheid tussen team en competitie.
 De `teamCode` van een interne competitie begint met de letter i.
 De `teamCode` van een externe competitie begint met een andere letter of cijfer.
-Bij de Waagtoren zijn dat teams, die meespelen voor de NHSB met de letter n en de NHSB met een cijfer.
+Bij de Waagtoren zijn dat teams, die meespelen voor de NHSB met de letter n en de KNSB met een cijfer.
 
 Bij de Waagtoren tellen de uitslagen van teamleden in de externe competities mee voor de interne competitie.
-Daarom staan ze in 0-0-0. 0-0-0 berekent echter geen ranglijsten van externe competities.
+Daarom staan ze in 0-0-0. 0-0-0 berekent geen ranglijsten van externe competities.
 0-0-0 berekent dus uitsluitend ranglijsten van interne competities. Zie `Reglement`.
 
 Het belangrijkste verschil tussen team en competitie is dus de verwerking door 0-0-0.
@@ -28,7 +26,7 @@ De specificaties voor competitie staan daarom bij `Team`.
 
 ## Reglement
 De ranglijst van de Waagtoren wordt berekend volgens het [Alkmaar Systeem](https://www.waagtoren.nl/historie/alksys.html) 
-door middel van stored procedures / functions in MySQL. 
+voorlopig door middel van stored procedures / functions in MySQL. 
 Omdat het reglement van de interne competitie per seizoen kan verschillen en 
 omdat het nuttig is om te kunnen experimenteren met aanpassingen van het reglement 
 willen we verschillende versies van parameters en formules voor de berekening van de ranglijst vastleggen in `Reglement`.
@@ -45,7 +43,7 @@ die per wedstrijdsysteem, per schaakvereniging en per seizoen kunnen verschillen
 Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van 0-0-0.
 
 Voor het opstellen van invallers in teams voor de externe competitie gelden allerlei regels,
-die per schaakbond en per seizoen junnen verschillen.
+die per schaakbond en per seizoen kunnen verschillen.
 Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de 0-0-0.
 
 De specificaties van de `Reglement` tabel ontbreken nog. 
@@ -58,7 +56,6 @@ Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de 
 De `interneRating` is in principe gelijk aan de `knsbRating`van 1 september aan het begin van het seizoen.
  
 ## Persoon
-Voorlopig zijn dit de specificaties van `Persoon`:
 ```
 knsbNummer INT
 naam VARCHAR(45)
@@ -81,11 +78,13 @@ krijgen een tijdelijk nummer in de reeks vanaf `knsbNummer = 100` tot `knsbNumme
 
 ## Gebruiker
 ```
-knsbNummer INT`
-mutatieRechten INT
+knsbNummer INT
 uuidToken CHAR(36)
 email VARCHAR(100)
-datumEmail DATE
+telefoon CHAR(15)
+voorkeur CHAR(1)
+clubCode INT
+rol CHAR(1)
 PRIMARY KEY (uuidToken)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 ```
@@ -96,72 +95,50 @@ Een wedstrijdleider kan uitslagen invoeren en ronden aanmaken.
 0-0-0 herkent een gebruiker aan het `uuidToken`, wat is opgeslagen op de computer van de gebruiker.
 Een lid van de schaakvereniging kan zich als gebruiker registreren met een `email`.
 Via die `email` ontvangt zo'n gebruiker een link om het `uuidToken` te activeren.
-Na het activeren wordt dit vastgelegd in `datumEmail`.
-In `fout` wordt eventueel vastgelegd als er iets misgaat tijdens het registreren of activeren.
-  
-## Seizoen
-```
-seizoen CHAR(4)
-versie INT
-datumCompleet DATE
-```
 
-Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
-
-Voorlopig is er 1 database namelijk van de Waagtoren vanaf seizoen 2018-2019.
-Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`.
-
-Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules 
-voor de berekening van de ranglijst in `Reglement`. 
-Bij elk seizoen van een schaakvereniging hoort een aantal spelers en 
-een aantal teams in de interne en externe competitie.
-Zie verder bij `Speler` en `Team`.
-
-De specificaties van de `Seizoen` tabel zijn nog niet verder uitgewerkt.
- 
 ## Speler
 ```
+clubCode INT
 seizoen CHAR(4)
-nhsbTeam CHAR(3)
-knsbTeam CHAR(3)
+teamCode CHAR(3)
 knsbNummer INT
 knsbRating INT
-datum DATE
-intern1 CHAR(3)
-intern2 CHAR(3)
-intern3 CHAR(3)
-intern4 CHAR(3)
-intern5 CHAR(3)
-PRIMARY KEY (seizoen, knsbNummer)
+interneRating INT
+rol char(1)
+PRIMARY KEY (clubCode, seizoen, teamCode, knsbNummer)
+FOREIGN KEY (clubCode, seizoen, teamCode) REFERENCES Team (clubCode, seizoen, teamCode)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
-FOREIGN KEY (seizoen, nhsbTeam) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, knsbTeam) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern1) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern2) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern3) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern4) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern5) REFERENCES Team (seizoen, teamCode)
 ```
 
 Een `Speler` is een deelnemer in een competitie of team. 
 Een `Speler` krijgt per `seizoen` uit een KNSB ratinglijst een nieuwe `knsbRating`,
-die wordt gebruikt voor de indeling in een team van de KNSB competitie `knsbTeam`, 
-een team in een onderbond competitie `nhsbTeam` en in een `subgroep` van de interne competitie.
+die wordt gebruikt voor de indeling in een team van de KNSB en NHSB competitie 
+en in een `subgroep` van de interne competitie.
 Volgens de reglementen geldt de `knsbRating` van 1 september aan het begin van het `seizoen`.
-Daarom is ook de `datum` vastgelegd.
 
-Omdat de Waagtoren in de NHSB onderbond speelt heet het team in de onderbond voorlopig `nhsbTeam`.  
 
 ## Team
 ```
+clubCode INT
 seizoen CHAR(4)
 teamCode CHAR(3)
-bond CHAR(1)
-poule CHAR(2)
+reglement INT
+maand INT
+jaar INT
 omschrijving VARCHAR(45)
 borden INT
-PRIMARY KEY (seizoen, teamCode)
+PRIMARY KEY (clubCode, seizoen, teamCode)
 ```
+
+Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
+
+Voorlopig is er 1 database namelijk van de Waagtoren vanaf seizoen 2018-2019. `ClubCode = 0` verwijst naar de Waagtoren.
+Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`.
+
+Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules
+voor de berekening van de ranglijst volgens `Reglement`.
+Bij elk seizoen van een schaakvereniging hoort een aantal spelers en
+een aantal teams in de interne en externe competitie.
 
 In elke seizoen heeft de schaakvereniging interne competities en teams die spelen in de externe competities van de KNSB en de regionale onderbond.
 0-0-0 berekent ranglijsten voor interne competities, maar niet voor teams in de externe competities. 
@@ -170,18 +147,19 @@ De uitslagen van externe competities van de eigen teams de schaakvereniging staa
 Elk team heeft een unieke `teamCode` per `seizoen`.
 De Waagtoren heeft `teamCode = 'int'` voor de interne competitie, `teamCode = 'ira'` voor de rapid competitie,
 `teamCode = '1'` voor het eerste team in de KNSB, `teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = 'n1'` voor het eerste team in de NHSB enz.
-In `bond` staat een afkorting: i = intern, k = knsb en n = nhsb. Elk team speelt in een `poule` met een vast aantal `borden`.
+Elk team heeft een vast aantal `borden`.
 
 ## Ronde
 ```
+clubCode INT
 seizoen CHAR(4)
 teamCode CHAR(3)
 rondeNummer INT
 uithuis CHAR(1)
 tegenstander VARCHAR(45)
 datum DATE
-PRIMARY KEY (seizoen, teamCode, rondeNummer)
-FOREIGN KEY (seizoen, teamCode) REFERENCES Team (seizoen, teamCode)
+PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer)
+FOREIGN KEY (clubCode, seizoen, teamCode) REFERENCES Team (clubCode, seizoen, teamCode)
 ```
 
 Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander op een bepaalde datum.
@@ -189,6 +167,7 @@ Indien alle datums voor de ronden bekend zijn, kan 0-0-0 voor elke speler een ka
   
 ## Uitslag
 ```
+clubCode INT
 seizoen CHAR(4)
 teamCode CHAR(3)
 rondeNummer INT
@@ -200,9 +179,12 @@ tegenstanderNummer INT
 resultaat CHAR(1)
 datum DATE
 competitie CHAR(3)
-PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
-FOREIGN KEY (seizoen, competitie) REFERENCES Team (seizoen, teamCode)
+PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
+FOREIGN KEY (clubCode, seizoen, teamCode) REFERENCES Team (clubCode, seizoen, teamCode)
+FOREIGN KEY (clubCode, seizoen, teamCode, rondeNummer) REFERENCES Ronde (clubCode, seizoen, teamCode, rondeNummer)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
+FOREIGN KEY (tegenstanderNummer) REFERENCES Persoon (knsbNummer)
+FOREIGN KEY (clubCode, seizoen, competitie) REFERENCES Team (clubCode, seizoen, teamCode)
 ```
 
 Een uitslag doorloopt 3 fases: planning, indeling en uitslag.

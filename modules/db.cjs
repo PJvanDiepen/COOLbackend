@@ -565,6 +565,80 @@ function uitslagMaken(object) {
     });
 }
 
+function spelerMaken(object) {
+    const {
+        clubCode,
+        seizoen,
+        teamCode,
+        reglement,
+        maand,
+        jaar,
+        bond, // TODO verwijderen
+        poule, // TODO verwijderen
+        omschrijving,
+        borden,
+        teamleider // TODO verwijderen
+    } = object;
+    const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
+    if (teamCode.length > 3) {
+        console.log("teamCode niet 3 posities");
+        return undefined;
+    }
+
+    const ronde = [];
+
+    async function alleRonden() {
+        if (ronde.length === 0) {
+            ronde.splice(0, 0, ...(await boom.leesRonden(object)).map(rondeMaken));
+        }
+        return ronde;
+    }
+
+    const actueel = [];
+
+    async function actueleRonden() {
+        await alleRonden();
+        actueel.length = 0; // begin met alleRonden en geen actuele ronden
+        for (const eenRonde of ronde) {
+            if (await eenRonde.uitslagenInvullen()) {
+                actueel.push(eenRonde);
+            }
+        }
+        return actueel;
+    }
+
+    function rondeTak(rondeNummer) {
+        const index = ronde.findIndex(function(eenRonde) {
+            return eenRonde.rondeNummer === rondeNummer;
+        });
+        if (index < 0) {
+            console.log(`rondeTak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}) niet gevonden`);
+            return undefined;
+        }
+        return ronde[index];
+    }
+
+    return Object.freeze({
+        object,
+        clubCode,
+        seizoen,
+        teamCode,      // key vanaf clubCode
+        reglement,
+        maand,
+        jaar,
+        bond,          // TODO verwijderen
+        poule,         // TODO verwijderen
+        omschrijving,
+        borden,
+        teamleider,    // TODO verwijderen
+        teamTekst,
+        ronde,
+        alleRonden,    // ()
+        actueleRonden, // ()
+        rondeTak       // (rondeNummer)
+    });
+}
+
 // knsbNummer int
 const TIJDELIJK_LID_NUMMER = 100
 const KNSB_NUMMER          = 1000000;
