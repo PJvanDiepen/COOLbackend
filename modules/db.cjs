@@ -23,8 +23,7 @@
  *
  * mutaties zijn key value paren: { url1, revisie1, url2, revisie2, ...}
  * De revisie hoort bij de meest recente mutatie van de database en is te vinden via de url.
- * De url verwijst op de server naar de database en naar sessionStorage van de browser
- * of naar de boom.
+ * De url verwijst op de server naar de database en in de browser naar sessionStorage of naar de boom.
  */
 const synchroon = {
     versie: "0.0.0", // zie package.json
@@ -88,8 +87,10 @@ const NIEUWE_RANGLIJST = 2;
  *     .eenRonde(:ronde)
  *     .eenUitslag(:speler)
  *
+ * De vertakkingen van de boom zijn array's (en geen Map's) en daarom direct bruikbaar als JSON.
+ *
  * De objecten in de boom: club, seizoen, enz. hebben een tak naar objecten lager in de hiërarchie.
- * Elk seizoen heeft naast vertakkingen per team ook vertakkingen per speler.
+ * Elk team heeft naast vertakkingen per ronde ook vertakkingen per speler.
  * Een speler kan per seizoen in verschillende teams en competities spelen.
  *
  * De boom heeft een revisie nummer. Zie synchroon in api.js
@@ -105,6 +106,18 @@ const NIEUWE_RANGLIJST = 2;
  * zodat die niet steeds opnieuw van de server gelezen hoeft te worden.
  * Behalve de gevraagde data stuurt de server ook steeds het revisie nummer,
  * zodat de browser kan bepalen of de data in sessionStorage nog actueel is.
+ *
+ * Server en browser gebruiken verschillende technieken om de data te lezen.
+ * Daarom moeten ze met boomOnderhoud zelf groeiFuncties aan de boom toevoegen.
+ *
+ * Server en browser gebruiken verschillende technieken om data over gebruikers en deelnemers
+ * op te slaan. Het belangrijkste verschil is dat gebruikers wel een uuid hebben en deelnemers niet.
+ * De server leest alle data over de gebruikers uit de database en slaat die op met uuid als key.
+ * De browser krijgt in principe uitsluitend alle data over 1 gebruiker.
+ * De browser krijgt alleen noodzakelijke data over andere deelnemers zonder uuid en
+ * slaat die op met knsbNummer als key.
+ *
+ * Zie gebruikerMaken en deelnemerMaken voor meer informatie.
  */
 
 const boom = { // de groeiFuncties zijn verschillend voor de server en de browser
@@ -114,8 +127,10 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
     leesRonden: function() {},
     leesUitslagen: function() {},
     leesSpelers: function() {},
-    gebruiker: new Map(), // key uuid
-    club: [],
+    leesGebruiker: function() {},
+    gebruiker: new Map(), // op de server met key = uuid
+    deelnemer: new Map(), // vooral in de browser (zonder uuid) met key = knsbNummer
+    club: [] // vertakkingen aan de boom
 };
 
 function boomOnderhoud(object) {
@@ -205,11 +220,11 @@ function clubMaken(object) {
         vereniging,
         teamNaam
     } = object;
-    const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
     if (typeof clubCode !== "number") {
         console.log("clubCode niet numeriek");
         return undefined;
     }
+    const clubTekst = `${vereniging} teamNaam: ${teamNaam}`;
     const seizoen = [];
 
     async function alleSeizoenen() {
@@ -252,14 +267,14 @@ function seizoenMaken(object) {
         clubCode,
         seizoen // geen seizoen in database en daarom is seizoenCode niet nodig
     } = object;
-    // TODO seizoenTekst in plaats van seizoenVoluit
-    const seizoenTekst = clubCode === WAAGTOREN_JEUGD
-        ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
-        : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
     if (seizoen.length > 4) {
         console.log("seizoen niet 4 posities");
         return undefined;
     }
+    // TODO seizoenTekst in plaats van seizoenVoluit
+    const seizoenTekst = clubCode === WAAGTOREN_JEUGD
+        ? `${Number(seizoen.substring(2, 4)) > 6 ? "najaar" : "voorjaar"} 20${seizoen.substring(0, 2)}`
+        : `20${seizoen.substring(0, 2)}-20${seizoen.substring(2, 4)}`;
 
     const seizoenDaarna = clubCode === WAAGTOREN_JEUGD
         ? function () {
@@ -273,18 +288,6 @@ function seizoenMaken(object) {
             const jaar = Number(seizoen.substring(2, 4));
             return `${(jaar).toString().padStart(2,"0")}${(jaar+1).toString().padStart(2, "0")}`;
         };
-
-    const speler = new Map(); // key knsbNummer
-
-    async function alleSpelers() {
-        if (speler.size === 0) {
-            const spelers = await boom.leesSpelers();
-            for (const eenSpeler of spelers) {
-                console.log(eenSpeler);
-                // TODO alleSpelers afmaken
-            }
-        }
-    }
 
     const team = [];
 
@@ -312,8 +315,6 @@ function seizoenMaken(object) {
         seizoen,       // key vanaf clubCode
         seizoenTekst,
         seizoenDaarna, // ()
-        speler,
-        alleSpelers,   // ()
         team,
         alleTeams,     // ()
         teamTak        // (teamCode)
@@ -335,16 +336,36 @@ function teamMaken(object) {
         reglement,
         maand,
         jaar,
-        bond, // TODO verwijderen
-        poule, // TODO verwijderen
+        bond,      // TODO verwijderen
+        poule,     // TODO verwijderen
         omschrijving,
         borden,
         teamleider // TODO verwijderen
     } = object;
-    const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
     if (teamCode.length > 3) {
         console.log("teamCode niet 3 posities");
         return undefined;
+    }
+    const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
+
+    const speler = [];
+
+    async function alleSpelers() {
+        if (speler.length === 0) {
+            speler.splice(0, 0, ...(await boom.leesSpelers(object)).map(spelerMaken));
+        }
+        return speler;
+    }
+
+    function spelerTak(knsbNummer) {
+        const index = speler.findIndex(function(eenSpeler) {
+            return eenSpeler.knsbNummer === knsbNummer;
+        });
+        if (index < 0) {
+            console.log(`spelerTak(${clubCode}, ${seizoen}, ${teamCode}, ${knsbNummer}) niet gevonden`);
+            return undefined;
+        }
+        return speler[index];
     }
 
     const ronde = [];
@@ -394,6 +415,9 @@ function teamMaken(object) {
         borden,
         teamleider,    // TODO verwijderen
         teamTekst,
+        speler,
+        alleSpelers,   // ()
+        spelerTak,     // (knsbNummer)
         ronde,
         alleRonden,    // ()
         actueleRonden, // ()
@@ -456,16 +480,16 @@ function rondeMaken(object) {
         tegenstander,
         datum
     } = object;
+    if (typeof rondeNummer !== "number") {
+        console.log("rondeNummer niet numeriek");
+        return undefined;
+    }
     // TODO rondeTekst in plaats van wedstrijdVoluit
     const rondeTekst = isCompetitie(object)
         ? `${teamVoluit(teamCode)}` // competitieronde
         : uithuis === THUIS
         ? `${teamVoluit(teamCode)} - ${tegenstander}` // thuiswedstrijd
         : `${tegenstander} - ${teamVoluit(teamCode)}`; // uitwedstrijd
-    if (typeof rondeNummer !== "number") {
-        console.log("rondeNummer niet numeriek");
-        return undefined;
-    }
 
     const uitslag = [];
 
@@ -529,12 +553,12 @@ function uitslagMaken(object) {
         datum,
         competitie
     } = object;
-    const uitslagTekst = // TODO uitwerken
-        `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
     if (typeof knsbNummer !== "number") {
         console.log("knsbNummer niet numeriek");
         return null;
     }
+    const uitslagTekst = // TODO uitwerken
+        `${bordNummer}: ${knsbNummer} met ${witZwart} tegen ${tegenstanderNummer} ${partij}`;
 
     function zonderResultaat() {
         if (planningInvullen.has(partij)) {
@@ -552,8 +576,8 @@ function uitslagMaken(object) {
         seizoen,
         teamCode,
         rondeNummer,
-        bordNummer,         // niet in key
-        knsbNummer,         // key vanaf clubCode
+        bordNummer,     // niet in key
+        knsbNummer,     // key vanaf clubCode
         partij,
         witZwart,
         tegenstanderNummer,
@@ -561,81 +585,7 @@ function uitslagMaken(object) {
         datum,
         competitie,
         uitslagTekst,
-        zonderResultaat     // ()
-    });
-}
-
-function spelerMaken(object) {
-    const {
-        clubCode,
-        seizoen,
-        teamCode,
-        reglement,
-        maand,
-        jaar,
-        bond, // TODO verwijderen
-        poule, // TODO verwijderen
-        omschrijving,
-        borden,
-        teamleider // TODO verwijderen
-    } = object;
-    const teamTekst = teamVoluit(teamCode); // TODO met club.teamNaam
-    if (teamCode.length > 3) {
-        console.log("teamCode niet 3 posities");
-        return undefined;
-    }
-
-    const ronde = [];
-
-    async function alleRonden() {
-        if (ronde.length === 0) {
-            ronde.splice(0, 0, ...(await boom.leesRonden(object)).map(rondeMaken));
-        }
-        return ronde;
-    }
-
-    const actueel = [];
-
-    async function actueleRonden() {
-        await alleRonden();
-        actueel.length = 0; // begin met alleRonden en geen actuele ronden
-        for (const eenRonde of ronde) {
-            if (await eenRonde.uitslagenInvullen()) {
-                actueel.push(eenRonde);
-            }
-        }
-        return actueel;
-    }
-
-    function rondeTak(rondeNummer) {
-        const index = ronde.findIndex(function(eenRonde) {
-            return eenRonde.rondeNummer === rondeNummer;
-        });
-        if (index < 0) {
-            console.log(`rondeTak(${clubCode}, ${seizoen}, ${teamCode}, ${rondeNummer}) niet gevonden`);
-            return undefined;
-        }
-        return ronde[index];
-    }
-
-    return Object.freeze({
-        object,
-        clubCode,
-        seizoen,
-        teamCode,      // key vanaf clubCode
-        reglement,
-        maand,
-        jaar,
-        bond,          // TODO verwijderen
-        poule,         // TODO verwijderen
-        omschrijving,
-        borden,
-        teamleider,    // TODO verwijderen
-        teamTekst,
-        ronde,
-        alleRonden,    // ()
-        actueleRonden, // ()
-        rondeTak       // (rondeNummer)
+        zonderResultaat // ()
     });
 }
 
@@ -723,6 +673,72 @@ const maandInvullen = new Map([
     [11, "november"],
     [12, "december"]]);
 
+function spelerMaken(object) {
+    const {
+        naam,     // persoon.naam
+        clubCode,
+        seizoen,
+        teamCode,
+        nhsbTeam, // TODO verwijderen
+        knsbTeam, // TODO verwijderen
+        knsbNummer,
+        knsbRating,
+        datum,    // TODO verwijderen
+        interneRating,
+        intern1,  // TODO verwijderen
+        intern2,  // TODO verwijderen
+        intern3,  // TODO verwijderen
+        intern4,  // TODO verwijderen
+        intern5,  // TODO verwijderen
+        rol
+    } = object;
+    if (typeof knsbNummer !== "number") {
+        console.log("knsbNummer niet numeriek");
+        return null;
+    }
+    const spelerTekst = `${naam} (${knsbNummer})`;
+
+    return Object.freeze({
+        object,
+        clubCode,
+        seizoen,
+        teamCode,
+        nhsbTeam,   // TODO verwijderen
+        knsbTeam,   // TODO verwijderen
+        knsbNummer, // key vanaf clubCode
+        knsbRating,
+        datum,      // TODO verwijderen
+        interneRating,
+        intern1,    // TODO verwijderen
+        intern2,    // TODO verwijderen
+        intern3,    // TODO verwijderen
+        intern4,    // TODO verwijderen
+        intern5,    // TODO verwijderen
+        rol,
+        spelerTekst
+    });
+}
+
+
+/*
+TODO welke functies en velden moet gebruiker uiteindelijk krijgen
+TODO
+ */
+
+function gebruikerMaken(object) {
+    const eenGebruiker = boom.gebruiker.get(object.knsbNummer); // TODO verwijderen!
+    if (eenGebruiker) {
+        if (eenGebruiker.naam !== object.naam) {
+            eenGebruiker.naam = object.naam;
+            console.log(`naam ${object.knsbNummer} "${eenGebruiker.naam}" <-- "${object.naam}"`);
+        }
+    } else {
+        boom.gebruiker.set(object.knsbNummer, Object.hasOwn(object, "uuidToken"
+            ? object // gebruiker + persoon
+            : { knsbNummer: object.knsbNummer, naam: object.naam })); // persoon
+    }
+}
+
 // gebruiker.rol en speler.rol int TODO verwijderen
 const IEDEREEN_O = 0;
 const GEREGISTREERD_O = 1;
@@ -738,6 +754,7 @@ const IEDEREEN = "i";
 const ONTWIKKELAAR = "o";
 const SYSTEEMBEHEER = "s";
 const TEAMLEIDER = "t";
+const VASTE_SPELER = "v";
 const WEDSTRIJDLEIDER = "w";
 
 const functieInvullen = new Map ([
@@ -826,6 +843,8 @@ module.exports = { // CommonJS voor node.js
     resultaatSelecteren,   // (uitslag)
     planningInvullen,
     maandInvullen,
+    spelerMaken,           // (object)
+    gebruikerMaken,        // (object)
     // gebruiker.rol en speler.rol int TODO verwijderen
     IEDEREEN_O,
     GEREGISTREERD_O,

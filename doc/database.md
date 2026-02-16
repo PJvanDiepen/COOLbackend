@@ -88,13 +88,13 @@ rol CHAR(1)
 PRIMARY KEY (uuidToken)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 ```
-Leden van de schaakvereniging mogen gegevens in de database wijzigen afhankelijk van hun `mutatieRechten`. 
-Gewone leden kunnen zich aanmelden of afzeggen.
-Een wedstrijdleider kan uitslagen invoeren en ronden aanmaken.
 
-0-0-0 herkent een gebruiker aan het `uuidToken`, wat is opgeslagen op de computer van de gebruiker.
-Een lid van de schaakvereniging kan zich als gebruiker registreren met een `email`.
-Via die `email` ontvangt zo'n gebruiker een link om het `uuidToken` te activeren.
+De gebruikers van 0-0-0 staan in `Gebruiker`. 0-0-0 herkent een gebuiker aan het `uuidToken`, 
+dat is opgeslagen op de computer van de gebruiker.
+Een gebruiker van 0-0-0 kan zich aanmelden met een `email` en/of een `telefoon` en krijgt dan
+van de systeembeheerder een `uuidToken`.
+In `voorkeur` staat welk contact: email, WhasApp, Signal, enz. de gebruiker wil gebruiken 
+voor de teamleider, wedstrijdleider van een competitie en het bestuur van de schaakvereniging.
 
 ## Speler
 ```
@@ -110,12 +110,28 @@ FOREIGN KEY (clubCode, seizoen, teamCode) REFERENCES Team (clubCode, seizoen, te
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 ```
 
-Een `Speler` is een deelnemer in een competitie of team. 
-Een `Speler` krijgt per `seizoen` uit een KNSB ratinglijst een nieuwe `knsbRating`,
-die wordt gebruikt voor de indeling in een team van de KNSB en NHSB competitie 
-en in een `subgroep` van de interne competitie.
+Een deelnemer in een competitie of team staat in `Speler`. 
+Een speler krijgt per `seizoen` uit een KNSB ratinglijst een nieuwe `knsbRating`,
+die wordt gebruikt voor de indeling in een team van de KNSB en NHSB competitie.
 Volgens de reglementen geldt de `knsbRating` van 1 september aan het begin van het `seizoen`.
+De `interneRating` is hetzelfde als de `knsbRating` tenzij er geen `knsbRating` is.
+De `interneRating` wordt gebruikt voor de `subgroep` van de interne competitie.
 
+De verschillende rollen van spelers worden vastgelegd in `rol`:
+- `b = BESTUUR`
+- `g = GEREGISTREERD` gebruiker
+- `i = IEDEREEN`
+- `o = ONTWIKKELAAR`
+- `s = SYSTEEMBEHEER`
+- `t = TEAMLEIDER` van een team
+- `v = VASTE_SPELER` van een team
+- `w = WEDSTRIJDLEIDER` van competitie
+
+De `rol` van wedstrijdleider, teamleider of vaste speler in een team is vastgelegd in `Speler`
+in combinatie met `clubCode`, `seizoen` en de `teamCode` van competitie of team.
+Een speler kan namelijk spelen in meerdere competities en teams.
+De `rol` van ontwikkelaar, systeembeheerder of bestuurder geldt voor een schaakvereniging en
+is vastgelegd in `Speler` in combinatie met `clubCode`, `seizoen` en `teamCode = rol`.
 
 ## Team
 ```

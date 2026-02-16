@@ -80,7 +80,7 @@ function groeiFuncties () {
             .join("persoon", "persoon.knsbNummer", "speler.knsbNummer")
             .where("speler.clubCode", object.clubCode)
             .where("speler.seizoen", object.seizoen)
-            .orderBy(["speler.knsbNummer","speler.teamCode"]);
+            .orderBy("speler.interneRating","desc");
     }
 
     return Object.freeze({
