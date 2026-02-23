@@ -157,7 +157,7 @@ De reglement-data van deze prototypes staat vooralsnog in vier MySQL stored func
 - versie 5 `zwitsersPunten` voor Zwitsers systeem (niet in gebruik)
 - versie 6 jeugd competitie met barrière punten en drie keer afzeggen (najaars competitie 2023)
 - versie 7 met `externeAftrek` voor alle externe wedstrijden niet op dinsdag
-- versie 8 met `externeAftrek` vanaf seizoen 2025-2026
+- versie 8 met `externeAftrek` vanaf seizoen 2025-2026 na 4 externe wedstrijden niet op dinsdag
 
 In de web-app verschijnt de ranglijst van een geselecteerde competitie, seizoen en schaakvereniging, 
 maar je kunt ook testen hoe de ranglijst eruit ziet als je een andere `versie` kiest.  
@@ -381,12 +381,59 @@ Kortom de database moest veranderen en als ontwikkelaar had ik meer ideeën om d
 de software beter te organiseren met ES6 modules, functies van MySQL en de frontend te verplaatsen naar de backend, 
 en zo voort. Het werd een grote verbouwing waarbij steeds meer zogenaamde kleine klusjes opdoken.
 
-Helaas had ik ook wat andere problemen die niets met 0-0-0 hadden te maken met als resultaat dat ik in 2023-2024 
-0-0-0 wel flink overhoop had gehaald en dat 0-0-0 in 2024-2025 eigenlijk stuk was. 
+Helaas had ik ook wat andere problemen (die niets met 0-0-0 hadden te maken) met als resultaat 
+dat 0-0-0 in het seizoen 2023-2024 flink overhoop was gehaald, maar sindsdien eigenlijk stuk was. 
 De interne competitie van de Waagtoren draaide nog wel, maar de rapid competitie deed ik met SwissMaster 
 en de jeugdleider gebruikte Rokade voor de jeugd competitie.
 
-Uiteraard is het de bedoeling om het een en ander weer op te pakken!
+## Gebruiker en speler
+
+Sinds het seizoen 2020-2021 heeft 0-0-0 de tabel `gebruiker` met `uuidToken` om de gebruiker te herkennen, 
+`email` voor de systeembeheerder om de uuid naar de gebruiker te sturen en algemene `mutatieRechten`.
+
+In `mutatieRechten` staat of de gebruiker: ontwikkelaar, systeembeheerder, bestuurslid, wedstrijdleider, 
+teamleider of een gewone gebruiker is. Bovendien was dat een hiërarchie van rollen waarin 
+een wedstrijdleider meer rechten had dan een teamleider en zo voort.
+In de praktijk bestaat geen hiërarchie en zijn er vooral verschillende rollen en hebben gebruikers
+vaak meer rollen. Ze zijn bijvoorbeeld teamleider of vaste speler in verschillende teams.
+Bovendien kunnen die rollen per seizoen verschillen.
+
+Kortom de tabel `gebruiker` was toe aan een nieuw ontwerp. Het lag voor de hand om een nieuwe tabel `rol` 
+toe te voegen met een one to many relatie van gebruiker naar verschillende rollen.
+
+Uiteindelijk zijn de volgende ontwerpbeslissingen genomen. 
+Ten eerste zijn `mutatieRechten` en de bijbehorende hiërarchie van rollen verwijderd.
+
+Ten tweede is er geen nieuwe tabel `rol`, maar is `rol` toegevoegd aan de tabel `speler`. 
+Een `rol` hoort bij een speler, die in verschillende teams, competities of toernooien speelt en
+per seizoen een andere `knsbRatinging` of `interneRating` heeft. 
+Bij elke gebruiker horen dus meer spelers met verschillende rollen.
+Rollen van gebruikers zoals systeembeheerder en bestuurslid die niet direct bij een team, 
+competitie of seizoen horen, worden vastgelegd in een `speler` met `teamCode = rol`.
+
+Ten derde is zijn `telefoon` en `voorkeur` toegevoegd aan de tabel `gebruiker`.
+Op deze manier kan een gebruiker zelf specificeren hoe het contact met de systeembeheerder,
+een wedstrijdleider of een teamleider verloopt.
+
+Voor het opsturen van een link met een `uuidToken` door de systeembeheerder kan de gebruiker
+in `voorkeur` kiezen voor een e-mail naar het adres in `email` of een Signal- of WhatsApp-bericht
+naar het telefoonnummer in `telefoon`.
+
+Voor het communiceren met een teamleider kan de gebruiker in `voorkeur` kiezen voor een e-mail 
+naar het adres in `email`, bellen naar het telefoonnummer in `telefoon`, Signal, WhatsApp of
+zelfs uitsluitend via 0-0-0 zonder `telefoon` of `email`.
+
+Dus een gebruiker specificeert wat andere gebruikers mogen zien en die gebruikers moeten 
+de juiste `rol` hebben om die gegevens van de gebruiker te mogen zien.
+Alleen een systeembeheerder kan `rol` invullen. En alleen een ontwikkelaar kan een gebruiker
+de rol van systeembeheerder geven.
+
+Dit alles is nog niet in productie en in de paktijk zullen we nog meer toepassingen bedenken.
+
+## Synchroniseren
+
+## Boom
+
 
 ## Links
 - (1) [Alkmaarse systeem](https://www.waagtoren.nl/timeline/2009-september-het-alkmaarse-systeem/)

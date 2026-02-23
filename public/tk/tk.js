@@ -182,8 +182,8 @@ const tk = [
         zetels: "VVD=31&PvdA=30&PVV=24&CDA=21&SP=15&D66=10&GL=10&CU=5&SGP=2&PvdD=2",
         kabinet: "Rutte 1",
         coalitie: "VVD, CDA",
-        breed: 1280,
-        hoog: 658,
+        breed: 799,
+        hoog: 638,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_I"
     },
     {jaar: 2012,
@@ -219,7 +219,17 @@ const tk = [
         breed: 829,
         hoog: 553,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Schoof"
-    }, /*
+    },
+    {jaar: 2025,
+        zetels: "D66=26&PVV=26&VVD=22&GL/PvdA=20&CDA=18&JA21=9&FvD=7&BBB=4&SGP=3&PvdD=3&CU=3&Denk=3&SP=3&50plus=2&Volt=1",
+        formatie: 1,
+        kabinet: "Jetten",
+        coalitie: "D66, VVD, CDA",
+        breed: 1104,
+        hoog: 620,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Jetten"
+    }
+    /*
     {jaar: 2025,
         zetels: "PVV=26&GL/PvdA=24&D66=23&CDA=20&VVD=17&JA21=10&FvD=5&SP=4&BBB=4&Denk=3&PvdD=3&SGP=3&&CU=3&50Plus=2&Volt=2&NSC=1",
         kabinet: "Peilingwijzer Tom Louwerse",
@@ -231,15 +241,14 @@ const tk = [
 
     hieronder staat de uitslag
 
-    */
     {jaar: 2025,
         zetels: "D66=26&PVV=26&VVD=22&GL/PvdA=20&CDA=18&JA21=9&FvD=7&BBB=4&SGP=3&PvdD=3&CU=3&Denk=3&SP=3&50plus=2&Volt=1",
-        formatie: 1,
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
         link: "https://www.verkiezingsuitslagen.nl/verkiezingen/detail/TK20251029"
     }
+    */
 ]
 
 function jarenVerwerken(jaren) {

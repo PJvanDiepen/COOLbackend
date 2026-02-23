@@ -83,6 +83,31 @@ function groeiFuncties () {
             .orderBy("speler.interneRating","desc");
     }
 
+    async function leesRatings(object) {
+        console.log("--- leesRatings ---");
+        console.log(object);
+        return Rating.query()
+            .where("rating.knsbNummer", object.knsbNummer)
+            .orderBy(["rating.jaar","rating.maand"], "asc");
+    }
+
+    async function leesGebruiker(object) {
+        console.log("--- leesGebruiker ---");
+        console.log(object);
+        const gebruiker = {};
+        if (Object.hasOwn(object, "uuidToken")) {
+            return Gebruiker.query()
+                .select("persoon.naam", "gebruiker.*")
+                .join("persoon", "persoon.knsbNummer", "gebruiker.knsbNummer")
+                .where("gebruiker.uuidToken", object.uuidToken);
+        } else {
+            return Gebruiker.query()
+                .select("persoon.naam", "gebruiker.*")
+                .join("persoon", "persoon.knsbNummer", "gebruiker.knsbNummer")
+                .where("gebruiker.knsbNummer", object.knsbNummer);
+        }
+    }
+
     return Object.freeze({
         leesClubs,
         leesSeizoenen,
@@ -90,6 +115,8 @@ function groeiFuncties () {
         leesRonden,
         leesUitslagen,
         leesSpelers,
+        leesRatings,
+        leesGebruiker
     });
 }
 
@@ -172,7 +199,9 @@ function antwoord(params, gevraagdeData) {
 function vertaal(params) {
     const object = {};
     for (const [key, value] of Object.entries(params)) {
-        if (key === "club") {
+        if (key === "uuid") {
+            object.uuidToken = value;
+        } else if (key === "club") {
             object.clubCode = Number(value);
         } else if (key === "team") {
             object.teamCode = value;

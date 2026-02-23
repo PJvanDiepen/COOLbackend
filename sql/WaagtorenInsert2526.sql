@@ -1,6 +1,6 @@
 use waagtoren; -- ga naar TODO
 set @seizoen = "2526";
-set @team = "nbb";
+set @team = "nbz";
 
 -- @team.csv
 select * from ronde where seizoen = @seizoen and teamCode = @team order by rondeNummer;
@@ -250,6 +250,9 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0,"2526","nbb",2,"u","Santpoort B",'2026-02-10'),
 (0,"2526","nbe",2,"t",'HWP Haarlem G','2026-02-03'),
 (0,"2526","nbz",2,"t","Het Spaarne Z",'2026-02-17');
+
+insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+(0,"2526","nbz",3,"u","De Uil Z",'2026-03-09');
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (0, "2526", "n1", 1, "t", "Opening 64 N1", '2025-09-23'),
@@ -2677,7 +2680,7 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 -- Waagtoren NHSB beker zilver
 set @seizoen = "2526";
 set @team = "nbz";
-set @ronde = 1;
+set @ronde = 2;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
@@ -2685,7 +2688,11 @@ insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbN
 (0,"2526","nbz",1,1,6930957,"e","w",0,"½",'2025-11-25',"int"),
 (0,"2526","nbz",1,2,7529522,"e","z",0,"1",'2025-11-25',"int"),
 (0,"2526","nbz",1,3,9056674,"e","w",0,"1",'2025-11-25',"int"),
-(0,"2526","nbz",1,4,8484443,"e","z",0,"1",'2025-11-25',"int");
+(0,"2526","nbz",1,4,8484443,"e","z",0,"1",'2025-11-25',"int"),
+(0,"2526","nbz",2,1,6930957,"e","z",0,"0",'2026-02-17',"int"),
+(0,"2526","nbz",2,2,7529522,"e","w",0,"1",'2026-02-17',"int"),
+(0,"2526","nbz",2,3,9056674,"e","z",0,"½",'2026-02-17',"int"),
+(0,"2526","nbz",2,4,8484443,"e","w",0,"1",'2026-02-17',"int");
 
 -- Waagtoren NHSB beker brons
 set @seizoen = "2526";

@@ -121,6 +121,7 @@ De verschillende rollen van spelers worden vastgelegd in `rol`:
 - `b = BESTUUR`
 - `g = GEREGISTREERD` gebruiker
 - `i = IEDEREEN`
+- `k = KIJKER` van andere schaakvereniging
 - `o = ONTWIKKELAAR`
 - `s = SYSTEEMBEHEER`
 - `t = TEAMLEIDER` van een team
@@ -161,8 +162,8 @@ In elke seizoen heeft de schaakvereniging interne competities en teams die spele
 De uitslagen van externe competities van de eigen teams de schaakvereniging staan wel in 0-0-0, omdat ze meetellen in de interne competitie. 
 
 Elk team heeft een unieke `teamCode` per `seizoen`.
-De Waagtoren heeft `teamCode = 'int'` voor de interne competitie, `teamCode = 'ira'` voor de rapid competitie,
-`teamCode = '1'` voor het eerste team in de KNSB, `teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = 'n1'` voor het eerste team in de NHSB enz.
+De Waagtoren heeft `teamCode = int` voor de interne competitie, `teamCode = ira` voor de rapid competitie,
+`teamCode = '1'` voor het eerste team in de KNSB, `teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = n1` voor het eerste team in de NHSB enz.
 Elk team heeft een vast aantal `borden`.
 
 ## Ronde
@@ -205,34 +206,31 @@ FOREIGN KEY (clubCode, seizoen, competitie) REFERENCES Team (clubCode, seizoen, 
 
 Een uitslag doorloopt 3 fases: planning, indeling en uitslag.
 
-1. De planning fase begint met `partij ='p'`. 
-Dit betekent dat een teamleider een speler heeft aangemeld voor een wedstrijd of dat een gebruiker zich heeft aangemeld voor een competitie.
-Vervolgens kan de gebruiker aangeven of ie wil meedoen of juist niet wil meedoen. 
+1. In de planning fase heeft een speler zich voor een competitie of is aangemeld 
+door een teamleider een speler voor een wedstrijd. Daarna kan de speler zich eventueel afmelden
 Meedoen kent 3 varianten: extern uit, extern thuis en (intern) meedoen.
 2. De indeling fase is als bekend wie de tegenstander wordt.
 3. De laatste fase is als het resultaat bekend is en de uitslag dus compleet is.
 
 De verschillende fases worden vooral vastgelegd in `partij`:
-- a = AFGEZEGD
-- e = EXTERNE_WEDSTRIJD
-- i = INTERNE_PARTIJ
-- m = MEEDOEN na aanmelden
-- n = NIET_MEEDOEN na afzeggen
-- o = ONEVEN
-- p = PLANNING
-- r = REGLEMENTAIRE_REMISE of vrijgesteld
-- t = EXTERN_THUIS
-- u = EXTERN_UIT
-- v = REGLEMENTAIR_VERLIES
-- w = REGLEMENTAIRE_WINST
+- `e = EXTERNE_WEDSTRIJD`
+- `i = INTERNE_PARTIJ`
+- `m = MEEDOEN` na aanmelden
+- `n = NIET_MEEDOEN` na afzeggen
+- `o = ONEVEN`
+- `r = REGLEMENTAIRE_REMISE` of vrijgesteld
+- `t = EXTERN_THUIS`
+- `u = EXTERN_UIT`
+- `v = REGLEMENTAIR_VERLIES`
+- `w = REGLEMENTAIRE_WINST`
 
 Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en voor zwart.
 Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
-een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
+een keer is de zwartspeler vermeld in `knsbNummer` en de witspeler in `tegenstanderNummer`.
 
 Voor de externe competitie zijn er twee mogelijkheden.
 1. Indien de externe partij wordt gespeeld in plaats van een interne partij 
-staat de uitslag twee keer in `Uitslag`: een keer met `teamCode = 'int'` 
+staat de uitslag twee keer in `Uitslag`: een keer met `teamCode = int` 
 en een keer met de `teamCode` bij welke team deze uitslag hoort.
 2. Indien de externe partij op een andere dag wordt gespeeld 
 staat de uitslag een keer in `Uitslag` met de `teamCode` bij welke team deze uitslag hoort.
@@ -241,13 +239,13 @@ Voor elke externe partij staat in `Uitslag` bij `knsbNummer` de speler
 van de eigen schaakvereniging en meestal `tegenstanderNummer = 0`.
 Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstijd 
 tegen een team van de eigen schaakvereniging (of als alle tegenstanders in `Persoon` zijn vastgelegd).   
-Indien `competitie = 'int'` telt deze uitslag mee voor de interne competitie.
+Indien `competitie = int` telt deze uitslag mee voor de interne competitie.
 
-De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
+De verschillende mogelijkheden voor `knsbNummer` en `tegenstanderNummer` zijn:
 - 0 = onbekend
 - bordnummer 1..10 = geen tegenstander 
-- TIJDELIJK_LID_NUMMER > 100 < 1000000
-- KNSB_NUMMER > 1000000
+- `TIJDELIJK_LID_NUMMER` > 100 < 1000000
+- `KNSB_NUMMER` > 1000000
 
 ## Mutatie
 ```
@@ -268,6 +266,6 @@ In `invloed` legt 0-0-0 vast hoeveel invloed de mutatie heeft,
 zodat de frontend kan vragen of er tijdens een sessie belangijke mutaties zijn geweest.  
 
 De verschillende mogelijkheden voor `invloed` zijn:
-- 0 = GEEN_INVLOED
-- 1 = OPNIEUW_INDELEN
-- 2 = NIEUWE_RANGLIJST
+- `0 = GEEN_INVLOED`
+- `1 = OPNIEUW_INDELEN`
+- `2 = NIEUWE_RANGLIJST`

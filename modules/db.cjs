@@ -109,12 +109,13 @@ const NIEUWE_RANGLIJST = 2;
  *
  * Server en browser gebruiken verschillende technieken om de data te lezen.
  * Daarom moeten ze met boomOnderhoud zelf groeiFuncties aan de boom toevoegen.
+ * De groeiFuncties van de server staan in api.js en van de browser in server.js.
  *
  * Server en browser gebruiken verschillende technieken om data over gebruikers en deelnemers
  * op te slaan. Het belangrijkste verschil is dat gebruikers wel een uuid hebben en deelnemers niet.
  * De server leest alle data over de gebruikers uit de database en slaat die op met uuid als key.
  * De browser krijgt in principe uitsluitend alle data over 1 gebruiker.
- * De browser krijgt alleen noodzakelijke data over andere deelnemers zonder uuid en
+ * De browser krijgt alleen noodzakelijke data over andere deelnemers (zonder uuid) en
  * slaat die op met knsbNummer als key.
  *
  * Zie gebruikerMaken en deelnemerMaken voor meer informatie.
@@ -127,6 +128,7 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
     leesRonden: function() {},
     leesUitslagen: function() {},
     leesSpelers: function() {},
+    leesRatings: function() {},
     leesGebruiker: function() {},
     gebruiker: new Map(), // op de server met key = uuid
     deelnemer: new Map(), // vooral in de browser (zonder uuid) met key = knsbNummer
@@ -135,6 +137,56 @@ const boom = { // de groeiFuncties zijn verschillend voor de server en de browse
 
 function boomOnderhoud(object) {
     Object.assign(boom, object);
+}
+
+/**
+ * TODO gebruikerTak en deelnemerTak samenvoegen
+ * TODO verwerking indien niet gevonden met uuid
+ * TODO verwerking indien niet gevonden met knsbNummer
+ * TODO verwerking met uuid en knsbNummer (dan moet de gebruiker er al zijn!)
+ *
+ * gebruikerTak laat eventueel een gebruiker / deelnemer aan de boom groeien.
+ *
+ * @param object met uuidToken, clubCode, knsbNummer
+ * @returns een gebruiker / deelnemer
+ */
+async function gebruikerTak(object) {
+    if (boom.gebruiker.has(object.uuidToken)) {
+        return boom.gebruiker.get(object.uuidToken);
+    } else {
+        const gebruiker = gebruikerMaken(await boom.leesGebruiker(object));
+        boom.gebruiker.set(object.uuidToken, gebruiker);
+        if (boom.deelnemer.has(gebruiker.knsbNummer)) {
+            console.log(`gebruikerTak(${object.uuidToken}) overschrijft deelnemer(${gebruiker.knsbNummer})`);
+        }
+        boom.deelnemer.set(gebruiker.knsbNummer, gebruiker);
+        return gebruiker;
+    }
+}
+
+/**
+ * TODO gebruikerTak en deelnemerTak samenvoegen
+ *
+ * deelnemerTak laat eventueel een deelnemer aan de boom groeien of
+ * een gebruiker / deelnemer als er een uuidToken is.
+ *
+ * @param object met clubCode, knsbNummer
+ * @returns een gebruiker / deelnemer
+ */
+async function deelnemerTak(object) {
+    if (boom.deelnemer.has(object.knsbNummer)) {
+        return boom.deelnemer.get(object.knsbNummer);
+    } else {
+        const gebruiker = gebruikerMaken(await boom.leesDeelnemer(object));
+        boom.deelnemer.set(object.knsbNummer, gebruiker);
+        if (Object.hasOwn(gebruiker, "uuidToken")) {
+            if (boom.gebruiker.has(gebruiker.uuidToken)) {
+                console.log(`deelnemerTak(${object.knsbNummer}) overschrijft gebruiker(${gebruiker.uuidToken})`);
+            }
+            boom.gebruiker.set(gebruiker.uuidToken, gebruiker);
+        }
+        return gebruiker;
+    }
 }
 
 /**
@@ -719,24 +771,67 @@ function spelerMaken(object) {
     });
 }
 
-
-/*
-TODO welke functies en velden moet gebruiker uiteindelijk krijgen
-TODO
- */
-
 function gebruikerMaken(object) {
-    const eenGebruiker = boom.gebruiker.get(object.knsbNummer); // TODO verwijderen!
-    if (eenGebruiker) {
-        if (eenGebruiker.naam !== object.naam) {
-            eenGebruiker.naam = object.naam;
-            console.log(`naam ${object.knsbNummer} "${eenGebruiker.naam}" <-- "${object.naam}"`);
-        }
-    } else {
-        boom.gebruiker.set(object.knsbNummer, Object.hasOwn(object, "uuidToken"
-            ? object // gebruiker + persoon
-            : { knsbNummer: object.knsbNummer, naam: object.naam })); // persoon
+    const {
+        clubCode,       // speler.clubCode
+        naam,           // persoon.naam
+        knsbNummer,
+        mutatieRechten, // TODO verwijderen
+        uuidToken,      // ontbreekt indien deelnemer
+        email,
+        datumEmail,     // TODO verwijderen
+        telefoon,
+        voorkeur
+    } = object;
+    if (typeof knsbNummer !== "number") {
+        console.log("knsbNummer niet numeriek");
+        return null;
     }
+    const gebruikerTekst = `${naam} (${uuidToken})`;
+
+    const speler = [];
+
+    const rating = [];
+
+    async function alleRatings() {
+        if (rating.length === 0 && object.knsbNummer > KNSB_NUMMER) {
+            const ratings = await boom.leesRatings(object);
+            let nieuweRating = -1;
+            for (const eenRating of ratings) {
+                if (eenRating.knsbRating !== nieuweRating) {
+                    nieuweRating = eenRating.knsbRating;
+                    rating.push({
+                        knsbRating: nieuweRating,
+                        datum: new Date(object.jaar, object.maand, 1, 12, 0, 0).toISOString(), // jjjj-mm-ddTuu:mm:ss.sssZ
+                    });
+                }
+            }
+        }
+        return rating;
+    }
+
+    /*
+    TODO spelers inlezen voor rollen
+    TODO functies om rol te controleren
+    TODO functie om niet alle informatie te geven
+     */
+
+    return Object.freeze({
+        object,
+        clubCode,       // speler.clubCode
+        naam,           // persoon.naam
+        knsbNummer,
+        mutatieRechten, // TODO verwijderen
+        uuidToken,      // ontbreekt indien deelnemer
+        email,
+        datumEmail,     // TODO verwijderen
+        telefoon,
+        voorkeur,
+        gebruikerTekst,
+        speler,
+        rating,
+        alleRatings     // ()
+    });
 }
 
 // gebruiker.rol en speler.rol int TODO verwijderen
@@ -751,6 +846,7 @@ const ONTWIKKELAAR_O = 9;
 const BESTUUR = "b";
 const GEREGISTREERD = "g";
 const IEDEREEN = "i";
+const KIJKER = "k";
 const ONTWIKKELAAR = "o";
 const SYSTEEMBEHEER = "s";
 const TEAMLEIDER = "t";
@@ -857,6 +953,7 @@ module.exports = { // CommonJS voor node.js
     BESTUUR,
     GEREGISTREERD,
     IEDEREEN,
+    KIJKER,
     ONTWIKKELAAR,
     SYSTEEMBEHEER,
     TEAMLEIDER,

@@ -69,12 +69,9 @@ CREATE TABLE speler (
     intern3 char(3) not null,
     intern4 char(3) not null,
     intern5 char(3) not null,
-    rol char(1),
+    rol char(1) not null,
     PRIMARY KEY (clubCode, seizoen, teamCode, knsbNummer)
 );
-
-alter table speler
-add column maand int not null after reglement;
 
 alter table speler
 add CONSTRAINT fk_speler_team
