@@ -1,5 +1,5 @@
 use waagtoren;
- 
+
 insert into persoon (knsbNummer, naam) values
 (108, "Aad Schuit"),
 (9001586, "Abdul Rashid Ayobi"),
@@ -107,7 +107,9 @@ insert into persoon (knsbNummer, naam) values
 (8807238, "Jari Muller"),
 (145, "Jasper Breurkens"),
 (6420557, "Jasper Seelemeijer"),
+(199, "Jasper Stam"),
 (8291877, "Jawdat Adib"),
+(197, "Jay Loerakker"),
 (158, "Jazz "),
 (8988243, "Jelle in 't Veld"),
 (9045388, "Jelle Koopmans"),
@@ -170,10 +172,12 @@ insert into persoon (knsbNummer, naam) values
 (172, "Malek Elhadad"),
 (195, "Manon Huiberts"),
 (170, "Marcello van 't Veen"),
+(9040801, "Marcello van 't Veen"),
 (161, "Marie Sofie Groot"),
 (8388105, "Marijn Wester"),
 (7561653, "Mariska de Mie"),
 (8571453, "Marit de Boer"),
+(200, "Marnix Burgers"),
 (193, "Marnix Kruk"),
 (7535385, "Marten Coerts"),
 (8750093, "Martin Rep"),
@@ -188,7 +192,7 @@ insert into persoon (knsbNummer, naam) values
 (9023179, "Michael Sieval"),
 (8096242, "Michaël van Liempt"),
 (8999782, "Michel Durivou"),
-(124, "Michel Hollenberg"),
+(9157841, "Michel Hollenberg"),
 (113, "Michiel Doodeman"),
 (8180810, "Midas Ratsma"),
 (8547110, "Milan de Boer"),
@@ -261,9 +265,11 @@ insert into persoon (knsbNummer, naam) values
 (8849258, "Thijmen Bohré"),
 (138, "Thijs Velseboer"),
 (185, "Thomas"),
+(198, "Thomas Hubers"),
 (146, "Tigo Bakker"),
 (166, "Tijs Bakker"),
 (184, "Tiju Badrinath"),
+(9058555, "Tijuvardan Badrinath"),
 (8112654, "Ton Fasel"),
 (8611922, "Tycho Bakker"),
 (163, "Valentijn "),
@@ -279,3 +285,5 @@ insert into persoon (knsbNummer, naam) values
 (7584566, "Yong Hoon de Rover"),
 (7771665, "Yvonne Schol"),
 (167, "Zeger Snip");
+
+

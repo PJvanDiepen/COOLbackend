@@ -1,0 +1,186 @@
+PvD: restant van Schaken met computers 4
+----------------------------------------
+
+Om een lang verhaal kort te maken. IGM was toen een hobbyproject naast mijn gewone werk. Bij Hoogovens schreef ik een rapport over toepassingen van AI en
+
+Bij de Hoogovens leerde ik veel programmeertalen: Algol, Fortran, Cobol, de machinetaal van de de Univac-compter, Simula en daarnaa
+
+n slotte Meestal constateerde de op die ponsDie deed men toen nProgrammeurs
+Bij mijn eerste twee werkgevers Hoogovens en Lithp Systems waren uitwas ijn eerste twee
+
+
+1973 Computeroperator Hoogovens IJmuiden
+1974 Nieuw rekencentrum
+1975
+1976 BS 66/67
+1976 Cursus Univac Assembler
+1977 IGM
+1978 Programmeur Hoogovens IJmuiden
+1979 Cursus Cobol
+1979 IGM - BS 66/67 rekencentrum Hoogovens
+1980 IGM - BS 66/67 Utrecht
+1980 Cursus Simula
+1980 redacteur HCC Nieuwsbrief
+1981 CSVN 1e kampioenschap Maxboard Wageningen
+1982 CSVN 2e kampioenschap Maxboard ???
+1983 CSVN 3e kampioenschap Maxboard Leiden
+1984-1989 Programmeur Lithp Systems Purmerend
+1984-1988 Hoofdredacteur HCC Nieuwsbrief
+1990-1994 Van Diepen Automatiseert
+1985-1991 Sysop HCC Fido
+1989-1999 Bestuur 0-0-0
+2009-     Bestuur Waagtoren
+
+
+
+
+
+<img src="https://www.waagtoren.nl/wp-content/uploads/2026/03/Boek_schaken_voor_computers.jpg" alt="" width="246" height="350" class="alignright size-full wp-image-56864" />
+
+<strong>Algoritme</strong>
+In <a href="https://www.waagtoren.nl/2025/08/10/schaken-met-computers-3/" target="_blank">Schaken met computers 3</a> beschreef ik hoe een computer het schaakspel in theorie zou kunnen oplossen door middel van retrograde analyse vanuit stellingen die mat of pat zijn. De conclusie was dat dat niet kan, omdat het schaakspel te veel mogelijkheden heeft. Ook met AI zal dat (voorlopig?) niet lukken. In deze aflevering van de serie zal ik proberen te verklaren hoe het mogelijk is computers met AI wel al veel beter kunnen schaken dan alle menselijke schakers.
+
+Ik zal mijn uitleg splitsen in een aantal aspecten.
+
+Ik zal dat weer doen aan de hand van de ontdekkingen uit de geschiedenis van computerschaak, maar niet helemaal chronologisch
+
+Een aantal aspecten heb ik hierboven al genoemd: computers zijn de afgelopen 70 jaar veel sneller geworden, AI is mogelijk door de snelheid van computers,
+
+
+
+Ik zal dat zo veel mogelijk doen doen zonder alle wiskunde, Daarvoor moet ik iets uitleggen over algoritmes, een evaluatiefunctie voor schaken, en hoe neurale netwerken leren.
+
+
+
+
+
+
+Dus voorlopig afkorten tot NNUE. De documentatie staat open source op <a href="https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md" target="_blank">GitHub</a> met uitleg, plaatjes en alle code van Stockfish en de software om NNUE te trainen. Veel wiskunde, veel code en onmogelijk om na te rekenen.
+
+Daarvoor moet ik iets uitleggen over algoritmes, een evaluatiefunctie voor schaken, computerhardware en hoe neurale netwerken leren.
+
+<img class="alignright size-full wp-image-41400" src="https://www.waagtoren.nl/wp-content/uploads/2022/12/icon_128x128@2x.png" alt="" width="256" height="256">Bij Stockfish gaat dat proces van trainen nog steeds door en elke nieuwe versie wordt daarom nog steeds beter. Alle code van Stockfish staat open source op GitHub inclusief de documentatie van <a href="https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md" target="_blank">NNUE</a>, het <em>Efficiently Updatable Neural Network</em>
+
+
+
+
+<img src="https://www.waagtoren.nl/wp-content/uploads/2026/02/Zeef-van-Eratosthenes.gif" alt="" width="445" height="369" class="alignright size-full wp-image-56777" />
+
+In In deze aflevering ga ik proberen te verklaren waarom die engines zo sterk schaken. Daarvoor moet ik iets uitleggen over AI, computers en een algoritme om te schaken.
+
+Zo'n uitleg is ambitieus, maar sinds een lezing van Bas Haring op 8 februari 2026 in de Alkenaer denk ik dat het mogelijk is.
+
+
+Ten eerste hoe een algoritme om te schaken werkt.
+Ten tweede hoe een computer werkt.
+
+- hoe en waarom een computer werkt en dat allemaal mogelijk is.
+
+Plaatje van broodrooster (misschien nog niet)
+
+<a href="https://en.wikipedia.org/wiki/The_Imitation_Game" target="_blank">The Imitation Game</a>
+
+
+
+<a href="https://en.wikipedia.org/wiki/Hidden_Figures" target="_blank">Hidden Figures</a>
+
+Euwe
+Fruitvlieg voor AI-onderzoek
+Eurotom commissie
+
+Bas Haring in Alkmaar als inspiratie voor uitleg over computer en AI
+Uitleg over computer (zie deel 3 van deze serie)
+
+Turing schaakprogramma zonder computer
+Uitleg over schaken met computer: rekenen en stellingevaluatie (Shannon)
+
+Uitleg over wet van Moore
+Mobiel is beter dan wereldkampioen (zie deel 2 van deze serie)
+
+Uitleggen hoe AI de evaluatie functie heeft verbeterd (AlphaZero)
+
+
+
+
+Over Hans Niemann bij Tata Steel en boek van Max Pam
+Verwijzing naar deel 2 over vals spelen, Tata Steel in het 8 uur journaal (zie --->)
+Meest gestelde vraag: hoe doe je dat?
+Naar aanleiding van uitleg aan Nico Hauwert
+
+Uitleg over basis begrippen engine
+Concreet op Lichess.org
+Uitleg over SCID met Stockfish en LeelaZero
+
+En meer niet
+
+Hoe leren in deze tijd
+
+Nobelprijzen 2024 voor chemie en natuurkunde eigenlijk voor neurale netwerken. Alpha Zero. Enz.
+
+Iedereen die zijn klassieken kent, heeft wel eens van de Ilias en de Odyssee gehoord. Ja, inderdaad van van de Homerus en van lang geleden. Zo ongeveer 800 jaar voor onze jaartelling. Een Nederlandse vertaling van Imme Dros is verkrijgbaar in een boek van meer dan 900 bladzijden. Wat niet iedereen weet is, dat in de tijd van Homerus boeken nog amper bestonden, het oud-Griekse schrift was nog in ontwikkeling. Er bestaan sowieso geen oud-Griekse manuscripten of boekrol kopieën. Wat wel is gevonden, zijn kopieën van kopieën van kopieën van kopieën (en zo voort). Geleerden twijfelen zelfs of Homerus heeft geschreven. Misschien bestond hij niet eens! In die tijd was er vooral een orale traditie. De hele Ilias en de hele Odyssee werden door vertellers doorverteld. Die vertellers kenden ze helemaal uit hun hoofd. Ze waren wel op rijm en in
+
+Eeuwen later in de klassieke Griekse tijd waren
+
+Irene Vallejo: Papyrus
+
+iemand die een horloge draagt, weet zonder horloge horloge niet hoe laat het is
+
+iemand die altijd navigatie aan zet, weet nergens meer de weg
+
+Orakel van Delphi in de jaren 70 bezocht
+
+10 zet Jac. Haring
+
+uitleg over juiste vraag stellen
+
+uitleg over software / hardware
+
+uitleg over AlphaZero revolutie: neurale netwerk trainen met miljoenen partijen i.p.v. programmeren
+
+nu in Stockfish
+
+Aanbevelingen voor clubschakers
+
+Mensen denken dat ze tegenwoordig meer weten, omdat ze met Google alles kunnen opzoeken. Schakers denken dat ze beter kunnen schaken, omdat ze hun partijen kunnen analyseren met Stockfish. <over verschil tussen schakers toen en nu>
+
+    chess.com en lichess.com
+
+    --->
+    Mijn vorige artikel <a href="https://www.waagtoren.nl/2023/01/13/schaken-met-computers-2/" rel="noopener" target="_blank">Schaken met computers 2</a> ging over valsspelen met de computer en wereldkampioenen. Sindsdien is de zaak tussen Hans Niemann en Magnus Carlsen zonder rechtzaak geschikt. Je kunt dit allemaal nalezen in de <a href="https://en.wikipedia.org/wiki/Carlsen%E2%80%93Niemann_controversy" rel="noopener" target="_blank">Wikipedia</a>.
+
+    Naar aanleiding van het vorige artikel kreeg ik vaak de vraag: hoe werkt dat valsspelen precies in de praktijk? Ik meende dat het voldoende zou zijn om uit te leggen wat in theorie mogelijk is met computers, maar veel lezers willen dus gewoon weten hoe je dat praktisch kunt aanpakken. In dit artikel zal ik dat enigszins toelichten. Niet met de bedoeling dat je dit tijdens een partij gaat doen, maar vooral hoe je computers kunt gebruiken om beter te leren schaken.
+
+    Discussie met Dimitri Reinderman over opmerking van Anish Giri
+
+    Mat in 10 van Jac. Haring uit boek van Co Buisman niet op te lossen met Stockfish volgens Dimitri
+
+    https://www.schaaksite.nl/2023/02/19/bug-in-stockfish-15-1/
+
+    Dimitri Reinderman constateerde op <a href="https://www.schaaksite.nl/2023/02/19/bug-in-stockfish-15-1/" target="_blank">zijn website</a> dat Stockfish 15 het mat in 10 niet kan vinden terwijl Stockfish 14 (en ouder) dat wel deed.
+    [pgn]
+    [Event "Jac. Haring wit geeft mat in 10 zetten"]
+    [FEN "4N3/8/8/6pR/4B3/3p2p1/3Pp1p1/4K1kb w - - 0 1"]
+    1.Rh8 {Zo moet je toch echt beginnen om mat in 10 te geven.}
+    ( { Maar Stockfish 17 geeft }Rh3 g4 Rxg3 Kh2 Rxg4 g1Q Rxg1 Bxe4 Rg5 {en mat in 23!})
+    g4
+    2.Bh7 Kh2
+    3.Bg6 Kg1
+    4.Bh5 Kh2
+    5.Bg4 Kg1
+    6.Bh3 Kh2
+    7.Nf6 Kg1
+    8.Nd7 Kh2
+    9.Ne5 Kg1
+    10.Nf3
+    *
+    [/pgn]
+
+    Daan Geerke en Daan de Vetten n.a.v. verlies publicatie op deze website
+
+    Wat kunnen amateurs en knoeiers zoals ik.
+
+    Partij Nico Mak - PvD en analyseren met Jeroen Smorenberg op WhatsApp
+
+    Partij Mitchell Weggemans - PvD uitleg over publiceren en Scid vs PC Strip Moves from Start
+
+    https://www.quora.com/Which-chess-engine-would-be-stronger-Alpha-Zero-or-Stockfish-12/answer/Felix-Zaslavskiy

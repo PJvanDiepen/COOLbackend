@@ -1,0 +1,349 @@
+<img src="https://www.waagtoren.nl/wp-content/uploads/2025/06/DeSchaakrevolutiePeterDoggers.jpg" alt="" width="261" height="400" class="alignright size-full wp-image-52192" />De serie Schaken met computers gaat over hoe computers het schaken hebben veranderd voor spelers en toeschouwers. Vroeger gingen we naar schaakverenigingen en toernooien en lazen we in kranten, tijdschriften en boeken over schaken. Dankzij computers kunnen we nu altijd en overal schaken, kunnen we bij alle toernooien in de hele wereld kijken en on line combinaties, eindspelen en openingen trainen. Veel toernooien zijn trouwens uitsluitend on line. Ondertussen verdwijnen de schaakrubrieken in kranten en zijn schaakboeken steeds vaker eerst content op een website en daarna te koop in boekvorm. Je kunt on line schaaklessen nemen bij allerlei schakers. En zo voort.
+
+Tegenwoordig zijn er zelfs schakers die nog nooit op een bord met stukken hebben gespeeld. Ze spelen uitsluitend met een tablet of een telefoon via het internet tegen iemand die ze nog nooit hebben ontmoet (of misschien toch tegen een computer?). Als ze eindelijk eens OTB (on the board) gaan schaken bij een schaakvereniging kunnen ze al goed schaken, maar kennen ze nog niet de schaaknotatie terwijl ze die toch al vaak hadden gezien. Ze waren gewend om hun zetten met hun vinger (of met een muis) in te voeren, maar ze hadden nog nooit goed gelet op de coördinaten bij de velden. Dit verzin ik niet!
+
+In het New in Chess magazine gaat het tegenwoordig ook steeds minder over gewone OTB schaaktoernooien en steeds meer over <a href="https://www.youtube.com/channel/UCQHX6ViZmPsWiYSFAyS0a3Q" target="_blank">Levy Rozman</a>, <a href="https://www.youtube.com/GMHikaru" target="_blank">Hikaru Nakamura</a> en de <a href="https://www.youtube.com/c/BotezLive" target="_blank">Botez sisters</a>, die allerlei schaak-content produceren. Peter Doggers heeft gelijk: er is een schaakrevolutie aan de gang! Hij legt het allemaal goed uit in zijn boek. Ik kan daarom zijn boek van harte aanbevelen vooral voor oudere schakers die nog zijn begonnen zonder computers.
+
+Moderne schakers vinden het heel normaal dat computers veel sterker schaken dan zelfs de wereldkampioen, maar tot ver in de vorige eeuw was dat nog niet het geval. Deep Blue, Fritz en Stockfish (zie <a href="https://www.waagtoren.nl/2023/01/13/schaken-met-computers-2/" rel="noopener" target="_blank">Schaken met computers 2</a>) bestonden nog niet. De computers met de AI-technieken van toen konden varianten nog niet zo diep uitrekenen. Desondanks is in de vorige eeuw een begin gemaakt om eindspelen met weinig stukken helemaal uit te rekenen.
+
+Omdat het aantal mogelijkheden in het schaakspel zo ontzettend groot is en het dus sowieso onmogelijk is om alle varianten vooruit te berekenen, werden die eindspelen achteruit berekend. In theorie is het mogelijk om het hele schaakspel terug te rekenen tot de beginstelling. Deze aflevering van Schaken met computers gaat over die totaal andere benadering naar aanleiding van het toren tegen dame eindspel in de partij <a href="https://www.waagtoren.nl/2025/06/27/geen-bronzen-beker/">Casijn Jong - Gerrit Peereboom</a> Alkmaar 2025.
+
+<strong>Dame tegen toren</strong>
+Het onderzoek naar eindspelen begon natuurlijk al veel eerder zonder computers. De belangrijkste theorie over het dame tegen toren eindspel is al van drie eeuwen geleden!
+<a href="https://en.wikipedia.org/wiki/Fran%C3%A7ois-Andr%C3%A9_Danican_Philidor" target="_blank">François-André Danican Philidor</a> liet in <em>Analyse du jeu des Échecs</em> zien hoe je met de dame kunt winnen.
+
+[pgn]
+[Event "Philidor 1777"]
+[FEN "1k6/1r6/2K5/Q7/8/8/8/8 w - - 0 1"]
+{ In deze stelling staan de stukken van wit ideaal als zwart aan zet is. }
+1.Qe5+ Ka8 2.Qa1+ Kb8 3.Qa5 { Nu is zwart in tempodwang en moet kiezen: mat of torenverlies door dubbele aanval. } Rb1
+( 3...Ra7 4.Qd8# )
+( 3...Rh7 4.Qe5+ Ka8 5.Qa1+ Kb8 6.Qb1+ )
+4.Qd8+ Ka7 5.Qd4+ Ka8 6.Qh8+ Ka7 7.Qh7+ { Wit wint. } *
+[/pgn]
+De toren moet dus van de koning gescheiden worden om die met een aantal schaakjes op te pikken. Maar in de praktijk lukt het soms niet om dat binnen 50 zetten te forceren. Bovendien zijn er stellingen waarin dat helemaal niet lukt.
+<a href="https://en.wikipedia.org/wiki/Domenico_Lorenzo_Ponziani" target="_blank">Domenico Lorenzo Ponziani</a> liet in <em>Il giuoco incomparabile degli scacchi</em> zien hoe je met de toren remise kunt houden.
+
+[pgn]
+[Event "Ponziani 1782"]
+[FEN "5k2/6r1/4Q3/8/8/8/8/7K b - - 0 1"]
+{ In deze stelling kan wit niet ontsnappen aan schaak, dameverlies of pat. }
+1...Rh7+ 2.Kg2 Rg7+ 3.Kf3 Rf7+ 4.Kg4
+( 4.Ke4 Re7 )
+4...Rg7+ 5.Kf5 Rf7+ 6.Kg6 Rg7+ 7.Kh6
+( 7.Kf6 Rg6+ )
+7...Rh7+ { Zwart maakt remise. } *
+[/pgn]
+<strong>Retrograde analyse</strong>
+Het onderzoek van eindspelen met computers gaat uit van een lijst van stellingen. In theorie zijn dat alle mogelijke stellingen. Maar in de praktijk moeten we ons natuurlijk beperken. We beginnen daarom met een lijst van alle stellingen met 1 dame en 2 koningen. Vervolgens laten we de computer die lijst verwerken in een aantal ronden.
+
+In ronde 0 zoekt de computer alle stellingen waarin de dame mat geeft en noteert bij die stellingen de kleur die mat geeft en een 0 voor het aantal zetten tot mat.
+In ronde 1 zoekt de computer alle stellingen waarin een zet mogelijk is die leidt naar een stelling van ronde 0 en noteert bij die stellingen de kleur van de zet en een 1 voor het aantal zetten tot mat.
+In ronde 2 zoekt de computer alle stellingen die leiden naar stellingen van ronde 1 en zo verder.
+
+Uiteindelijk ontstaat zo een lijst van alle stellingen waarvan bekend in hoeveel zetten de dame mat kan geven. De stellingen in de lijst waar geen getal voor het aantal zetten tot mat bekend zijn, zijn pat of de dame gaat verloren. Door deze manier van verwerken (retrograde analyse) blijkt dat de langste reeks tot mat waarbij zowel wit als zwart perfect spelen 10 zetten is.
+
+Op dezelfde manier kunnen we ook mat zetten met een toren helemaal uitrekenen: in 16 zetten. Mat met twee lopers: in 19 zetten. Mat met loper en paard: in 33 zetten. Als de speler met alleen de koning fouten maakt, gaat het sneller mat. Als de speler met loper en paard fouten maakt, kan het meer dan 50 zetten duren en dan is het remise!
+
+<img src="https://www.waagtoren.nl/wp-content/uploads/2025/06/Telefunken-tr4.jpg" alt="" width="500" height="346" class="alignright size-full wp-image-52268" />Om het dame tegen toren eindspel helemaal uit te rekenen moeten we een lijst maken van alle stellingen met alleen een dame plus alle stellingen met alleen een toren plus alle stellingen met dame en toren (in deze volgorde). De langste reeks tot mat met de dame tegen de toren waarbij zowel wit als zwart perfect spelen is 35 zetten.
+
+De verwerking met een computer van zo'n lijst is voor het eerst beschreven in 1970 door <a href="https://www.chessprogramming.org/Thomas_Str%C3%B6hlein" target="_blank">Thomas Ströhlein</a> in <em>Untersuchungen über kombinatorische Spiele</em>. Hij had het een en ander gerealiseerd op een <a href="https://de.wikipedia.org/wiki/TR_4_%28Rechner%29" target="_blank">AEG-Telefunken TR4</a> computer. Dat was toen de grootste Europese computer te koop voor 5 miljoen Deutsche Mark (zie de foto hiernaast). Bijzonder was dat die computer nog een <a href="https://nl.wikipedia.org/wiki/Ferriet_(magneet)" target="_blank">ferrietkernen</a> geheugen had.
+Het verwerken van alle stellingen voor het dame tegen toren eindspel duurde op die computer 29 uur en 6 minuten!
+
+Het resultaat van zo'n verwerking noemen we tegenwoordig een <a href="https://en.wikipedia.org/wiki/Endgame_tablebase" target="_blank">eindspel tablebase</a>. De tablebase is dus die lijst met stellingen en per stelling de kleur die wint en aantal zetten tot mat. Impliciet is daarin theorie van eindspelen vastgelegd. De eerste tablebases waren voor eindspelen met 3 of 4 stukken op het bord. Inmiddels bestaan er tablebases voor eindspelen tot en met 7 stukken en kan je ze bijvoorbeeld op de <a href="https://www.shredderchess.com/online/endgame-database.html" target="_blank">Shredder</a> website raadplegen.
+
+<strong>Dame tegen toren tablebase</strong>
+Aan de hand van de partij <a href="https://www.waagtoren.nl/2025/06/27/geen-bronzen-beker/">Casijn Jong - Gerrit Peereboom</a> Alkmaar 2025 zal ik demonstreren hoe je de informatie uit de tablebase van <a href="https://www.shredderchess.com/online/endgame-database.html" target="_blank">Shredder</a> kunt gebruiken.
+
+Als je begint met te veel stukken op het bord, zegt Shredder: "No information available". Voor de demonstratie begon ik daarom vanaf zet 59. Toen gaf Shredder bij elke stelling een lijst van zetten in 2 kolommen Move en Value. Totaal 27 zetten na zet 59 van wit: "Qe2-f2 Win in 20, Qe2-e6 Win in 21, Qe2-f1 Win in 21, Qe2-e5 Win in 22, Qe2-d3 Win in 22, Qe2-c2 Win in 24, Qe2-h2 Win in 24, Qe2-e3 Win in 24, Qe2-d1 Win in 24, Qe2-d2 Win in 25, Qe2-e1 Win in 25, Qe2-e8 Win in 25, Qe2-b5 Win in 25, Qe2-b2 Win in 26, Qe2-a2 Win in 26, Qe2-e7 Win in 26, Qe2-a6 Win in 26, Kd4-c4 Win in 26, Kd4-d5 Win in 26, Kd4-c5 Win in 26, Kd4-d3 Win in 27, Kd4-c3 Win in 28, Qe2-e4 Draw, Qe2-c4 Draw, Qe2xg4 Draw, Qe2-f3 Lose in 14, Qe2-g2 Lose in 13".
+
+Die getallen zijn het aantal zetten tot mat met de dame ("Win") of met de toren ("Lose") uit de tablebase. De eerste zet in de lijst is de beste zet voor zwart. Indien zowel wit als zwart perfect blijven spelen geeft de zwarte dame mat in 20 zetten. In onderstaande partij speelde zwart op zet 59 dus een zet lager op de lijst met mat in 26.
+
+Hieronder heb ik niet bij elke stelling de hele lijst van zetten vermeld, maar uitsluitend de eerste zet voor zwart (en niet voor wit) indien die afwijkt van de partijvoortzetting. Tussen haakjes staan achtereenvolgens: het aantal zetten tot mat van de partijvoortzetting minus het aantal zetten tot mat van de eerste Shredder-zet en die zet.
+
+[pgn]
+[FEN "8/8/8/8/3k1KR1/8/4q3/8 b - - 0 59"]
+59...Kd5
+( {26-20} 59...Qf2+ )
+60.Kg5 Kd6
+( {26-20} 60...Ke5 )
+61.Kf4 Qh2+
+( {26-25} 61...Qe5+ )
+62.Ke4 Ke6
+( {27-25} 62...Qh5 )
+63.Rf4 Qe2+ 64.Kd4 Qd2+
+( {10-8} 64...Qe5+ )
+65.Ke4 Qe2+ 66.Kd4 Qh5
+( {28-8} 66...Qe5+ )
+67.Re4+ Kd6 68.Ke3 Qh3+
+( {27-26} 68...Qh1 )
+69.Kd2 Kd5 70.Re3 Qh6
+( {25-23} 70...Qf1 )
+71.Kd3 Qg6+ 72.Kd2 Qg5
+( {24-20} 72...Kd4 )
+73.Kd3 Qf5+ 74.Kd2 Kd4 75.Ke2 Qc2+
+( {12-10} 75...Qh5+ )
+76.Kf3 Qd2
+( {28-11} 76...Qf5+ )
+77.Re2 Qd1
+( {22-21} 77...Qd3+ )
+78.Kf2 Kd3 79.Re3+ Kd2 80.Rg3 Qe2+ 81.Kg1 Qe1+
+( {19-15} 81...Ke1 )
+82.Kg2 Ke2 83.Kh2 Kf2 84.Rg2+ Kf3 85.Rg8 Qf2+
+( {10-6} 85...Qe5+ )
+86.Kh1 Qh4+
+( {8-6} 86...Qa2 )
+87.Kg1 Qh3
+( {22-7} 87...Qd4+ )
+88.Rg6 Ke2
+( {19-9} 88...Qh5 )
+89.Rg2+ Ke1
+( {21-18} 89...Kd3 )
+90.Re2+ Kd1 91.Re1+ Kc2 92.Re2+ Kd3 93.Rg2 Qf3
+( {18-17} 93...Qe3+ )
+94.Kh2 Qh5+ 95.Kg1 Ke3 96.Rg3+ Kf4 97.Rg2 Qh4
+( {16-14} 97...Qc5+ )
+98.Rh2 Qe1+ 99.Kg2 Qg3+
+( {14-12} 99...Kg4 )
+100.Kh1 Kf3
+( {26-13} 100...Qf3+ )
+101.Ra2
+( {Opeens kan zwart niet meer winnen! Indien wit} 101.Rf2+ {speelt is het remise!} )
+101...Qh3+
+( {9-6} 101...Qg8 )
+102.Kg1 Qe6
+( {15-8} 102...Qg4+ )
+103.Rg2 Qe1+
+( {11-10} 103...Qb6+ )
+1/2-1/2
+[/pgn]
+Volgens de tablebase kon zwart in deze partij dus voortdurend winnen, maar mistte een aantal eenvoudige kansen op zet 64, 66, 85, 86, 87 en 88 (zie de Philidor stelling) en verloor alles bij elkaar te veel zetten tot mat, zodat zwart niet voor zet 109 kon winnen. Wit kon alleen op zet 101 remise forceren en had verder geen enkele kans. Bovendien speelde wit op meer momenten niet perfect; voor de volledigheid: op zet 63, 69, 70, 72, 74, 75, 77, 83, 84, 85, 86, 87, 98 en 103.
+
+<strong>Walter Browne tegen Belle</strong>
+Spelen grootmeesters het dame tegen toren eindspel beter? In de praktijk van grootmeesters won de dame in bijna <a href="https://www.365chess.com/search-endgames-list.php?id=62" target="_blank">84% van 180 partijen</a> en de andere partijen werden remise.
+Maar de winstvoering is beslist niet eenvoudig. Dat werd in 1978 aangetoond door <a href="https://en.wikipedia.org/wiki/Ken_Thompson" target="_blank">Ken Thompson</a> met <a href="https://en.wikipedia.org/wiki/Belle_(chess_machine)" target="_blank">Belle</a>.
+
+<img src="https://www.waagtoren.nl/wp-content/uploads/2025/06/Belle.jpg" alt="" width="600" height="379" class="alignright size-full wp-image-52314" />Belle was de eerste computer met speciale schaakchips, werd in Linz 1980 computer wereldkampioen en werd in 1983 de eerste (en laatste) computer met de titel USCF meester. In 1978 werkte Thompson aan allerlei aan schaken gerelateerde zijprojecten. Hij hield zich bezig met <a href="https://en.wikipedia.org/wiki/Optical_character_recognition" target="_blank">OCR</a> om de encyclopedie van <a href="https://sahovski.com/" target="_blank">Šahovski Informator</a> in te lezen voor de openingen van Belle en voor eindspelen met weinig stukken had hij de tablebase opnieuw uitgevonden. Hij kende het werk van Thomas Ströhlein niet!
+
+Toen Thompson zijn tablebase ging testen, ontdekte hij hoe moeilijk het dame tegen toren eindspel voor menselijke schakers was. De sterkste schakers probeerden het met de dame, maar Belle met de toren hield ze allemaal op remise! Uiteindelijk werd <a href="https://en.wikipedia.org/wiki/Walter_Browne" target="_blank">Walter Browne</a> uitgedaagd. Hij was toen kampioen van de Verenigde Staten en mocht 2,5 uur bedenktijd gebruiken. Browne zei nog dat dat niet nodig was, omdat hij wel binnen een half uur kon winnen...
+
+Volgens <a href="https://www.shredderchess.com/online/endgame-database.html" target="_blank">Shredder</a> was de beginstelling mat in 35. Indien wit niet de juiste zet speelde, staan tussen haakjes achtereenvolgens: het aantal zetten tot mat van de partijvoortzetting minus het aantal zetten tot mat van de eerste Shredder-zet en die zet.
+[pgn]
+[FEN "K3r3/8/5k2/Q7/8/8/8/8 w - - 0 1"]
+1.Kb7 Re7+ 2.Kc6 Re6+ 3.Kd7 Re7+ 4.Kd8 Re4 5.Qc5 Re5 6.Qd4
+( {31-30} 6.Qc3 )
+6...Kf5 7.Kd7 Re4 8.Qd3
+( {30-29} 8.Qc3 )
+8...Kf4 9.Kd6 Re3 10.Qd4+ Re4 11.Qf2+
+( {27-26} 11.Qf6+ )
+11...Kg4 12.Kd5 Re8 13.Qf6 Re3 14.Kd4 Rf3 15.Qg6+ Kf4 16.Qg2 Ra3 17.Qc6
+( {23-20} 17.Qd2+ )
+17...Ra1 18.Qc7+
+( {24-22} 18.Qc2 )
+18...Kf5 19.Qc2+ Ke6 20.Qd2
+( {25-22} 20.Qc4+ )
+20...Ra7 21.Qb4
+( {25-24} 21.Qe2+ )
+21...Re7 22.Ke4 Kf6+ 23.Kf4 Ke6 24.Qd4 Rf7+ 25.Ke4 Rf6 26.Qd5+
+( {24-21} 26.Qd8 )
+26...Ke7 27.Ke5 Rh6 28.Qb7+ Kd8 29.Qf7 Rc6 30.Kd5 Rb6 31.Kc5
+( {21-19} 31.Qf4 )
+31...Ra6 32.Qc4
+( {23-20} 32.Kd5 )
+32...Rf6 33.Qh4
+( {23-20} 33.Kd5 )
+33...Ke7 34.Kd5 Kf7 35.Ke5
+( {22-21} 35.Qg4 )
+35...Re6+ 36.Kf5 Rd6 37.Qc4+ Ke7 38.Ke5 Rh6 39.Qc7+ Kf8 40.Kf5
+( {21-17} 40.Qd7 )
+40...Ke8 41.Qc1
+( {21-20} 41.Ke5 )
+41...Rd6 42.Qc8+ Ke7 43.Qc7+ Rd7 44.Qc5+ Kd8 45.Ke6
+( {18-16} 45.Qf8+ )
+45...Rb7 1/2-1/2
+[/pgn]
+
+Browne kwam dus niet eens in de buurt van zo'n Philidor stelling! Uiteraard had Thompson hem een van de stellingen gegeven met de langste perfecte zettenreeks volgens de tablebase van Belle. Na afloop stuurden ze Browne die perfecte zettenreeks om te bestuderen. Ongeveer een week later herhaalden ze de test en dit keer had Browne zich ontzettend goed voorbereid.
+
+[pgn]
+[FEN "2KQ4/8/8/8/2r5/2k5/8/8 w - - 0 1"]
+1.Kb7 Rb4+ 2.Kc6 Rc4+ 3.Kb5 Rb4+ 4.Ka5 Re4 5.Qd6 Rd4 6.Qe5
+( {31-30} 6.Qf6 )
+6...Kd3 7.Kb5 Re4 8.Qf6 Ke3 9.Kc5 Rf4 10.Qg6
+( {28-27} 10.Qe5+ )
+10...Ra4 11.Qg3+ Ke2 12.Qc3 Rf4 13.Kd5 Rh4 14.Qc2+ Ke3 15.Qd1 Kf2 16.Qd2+
+( {24-22} 16.Qd3 )
+16...Kf3 17.Qe1
+( {24-23} 17.Qd1+ )
+17...Rg4 18.Qd1+ Kf4 19.Qe2
+( {26-22} 19.Qc1+ )
+19...Rg5+ 20.Kd4 Rf5 21.Qe3+ Kg4 22.Ke4 Rf7 23.Qg1+ Kh5 24.Qg3 Rf8 25.Ke5 Rf7 26.Ke6
+( {21-19} 26.Qd3 )
+26...Rf8 27.Qa3
+( {21-20} 27.Qe5+ )
+27...Rf4 28.Qh3+ Kg5 29.Qg3+ Rg4 30.Qe5+
+( {20-18} 30.Qe3+ )
+30...Kh4 31.Qh2+ Kg5 32.Ke5
+( {20-18} 32.Qd2+ )
+32...Kg6 33.Qh8 Rg5+ 34.Ke6 Rg4 35.Qg8+
+( {20-17} 35.Qe5 )
+35...Kh5 36.Qh7+ Kg5 37.Ke5 Rg3 38.Qg7+ Kh4 39.Qh6+ Kg4 40.Ke4 Rg2 41.Qg6+ Kh3 42.Qh5+ Kg3 43.Ke3 Rg1 44.Qg5+
+( {12-11} 44.Qe5+ )
+44...Kh2 45.Qh4+
+( {13-11} 45.Qe5+ )
+45...Kg2 46.Ke2 Ra1 47.Qe4+ Kh3 48.Qh7+
+( {11-10} 48.Kf2 )
+48...Kg3 49.Qg7+ Kh3
+( {Dit lijkt een foutje in de Belle tablebase. Met} 49...Kf4 {kan zwart het mat nog 4 zetten uitstellen.} )
+50.Qxa1 1-0
+[/pgn]
+Het foutje van Belle op zet 49 was al ontstaan bij de retrograde analyse om de tablebase te maken. Waarschijnlijk beschouwde Thompson het slaan van de toren gelijk aan mat geven met de dame.
+
+De foutjes die Browne maakte, waren volgens de tablebase niet zo groot. Vanaf zet 30 leek het dat Browne precies wist hoe hij het moest aanpakken! De schaakwereld haalde opgelucht adem. Browne had namens alle menselijke schakers de perfect spelende Belle nog even op afstand gehouden; niet met perfect spel, maar met menselijke denkkracht. Het was 1978 en het ging nog over een piepklein eindspelletje.
+
+In die tijd konden gewone schakers nog niet beschikken over tablebases voor eindspelen. We hadden nog geen toegang tot het internet. We hadden zelfs geen computers. De IBM PC kwam pas in 1981 en de Apple Macintosh in 1984. Die immense lijsten van stellingen van zo'n tablebase op papier vastleggen was geen optie. Probeer je maar eens voor te stellen hoe hoog de stapel papier zou worden voor dame tegen toren!
+
+<strong>Twee lopers tegen paard</strong>
+Ken Thompson werkte nog tientallen jaren verder aan tablebases en deed daarbij een aantal ontdekkingen voor de eindspeltheorie.
+
+De retrograde analyse van het twee lopers tegen paard eindspel duurde in 1983 drie weken op een <a href="https://en.wikipedia.org/wiki/VAX-11#VAX-11/750" target="_blank">VAX 11/750</a> computer. Toen was de tablebase compleet en ontdekte Thompson dat twee lopers altijd kunnen winnen van een paard tenzij in de beginstelling meteen een loper verloren gaat of wordt afgeruild.
+
+<a href="https://en.wikipedia.org/wiki/Josef_Kling" target="_blank">Kling</a> en <a href="https://en.wikipedia.org/wiki/Bernhard_Horwitz" target="_blank">Horwitz</a> daarentegen hadden al in 1851 in <em>Chess studies; or endings of games</em> een stelling gepubliceerd waarin het paard remise houdt. Deze conclusie werd ruim 130 jaar lang steeds overgenomen in eindspelboeken. De hoofdvariant en de tekst bij de King-Horwitz positie hieronder zijn bijvoorbeeld citaten uit <em>Het eindspel 1</em> van M.Euwe/J.H.Donner van 1977. De tablebase van Thompson van 1983 toonde dus aan dat die eindspelboeken fout waren!
+
+Tussen haakjes vermeld ik weer het aantal zetten tot mat van de hoofdvariant minus het aantal zetten tot mat van de eerste <a href="https://www.shredderchess.com/online/endgame-database.html" target="_blank">Shredder</a>-zet en die zet.
+
+[pgn]
+[Event "Kling en Horwitz 1851"]
+[FEN "5B2/1n6/1k6/3K4/B7/8/8/8 w - - 0 1"]
+{Deze stelling is remise. Om de zwarte koning uit het kleine bolwerk te drijven, dat hij om zich heen gebouwd heeft, moet wit ver naar de rand gaan:}
+1.Be7
+( {58-57} 1.Bb4 )
+1...Kc7
+( {57-56} 1...Ka5 )
+2.Bg5 Kb6 3.Bf4 Na5 4.Be3+
+( {56-55} 4.Be8 )
+4...Kc7 5.Kc5 Nb7+ 6.Kb5 Nd6+ 7.Ka6
+( {62-53} 7.Kb4 )
+7...Nf5 8.Bf4+
+( {62-61} 8.Bc5 )
+8...Kd8 9.Kb6 Ke7 10.Kc5 Kf6
+( {59-58} 10...Ke6 )
+11.Kd5 Ng7
+{Nu is, in principe, opnieuw de oorspronkelijke stelling bereikt. Indien nodig loopt de zwarte koning verder naar de zone van hoek h1 en desnoods a1; als zijn paard de velden b7, g7, g2 en b2 maar in acht neemt, kan er verder niets gebeuren. Iedere afwijking van deze weg naar remise is echter hoogst gevaarlijk.} *
+[/pgn]
+Volgens Shredder was de beginstelling dus niet remise, maar mat in 57 en de stelling na zet 11 nog steeds mat in 57. Een aantal zetten van wit en zwart waren niet perfect. Met zet 7 verloor wit zelfs 9 zetten tot mat. Wit had zich dus met de variant van 11 zetten van Euwe/Donner totaal niet verbeterd! Daarom leek het alsof de King-Horwitz stelling remise was.
+
+Na de ontdekking van Thompson probeerde eindspel- en computerschaakspecialisten de miljoenen stellingen van de tablebase te duiden. <a href="https://www.chessprogramming.org/John_Roycroft" target="_blank">John Roycroft</a> schreef daarover een uitgebreid artikel in <em>EG No.75</em> van april 1984 (en vervolgartikelen). Naar aanleiding van een stelling uit de tablebase met de langste zettenreeks waarbij wit en zwart perfect spelen schreef <a href="https://www.chessprogramming.org/Jaap_van_den_Herik" target="_blank">Jaap van den Herik</a> een samenvatting in Schakend Nederland van maart 1985. Deze samenvatting heb ik hieronder nog meer ingekort zonder subvarianten.
+[pgn]
+[Result "1-0"]
+[FEN "8/8/8/1B6/8/8/4n3/1KBk4 w - - 0 1"]
+1.Ba4+ Ke1 2.Bb2 Kd2 3.Bb3 Nc3+ 4.Ka1 Kd3 5.Bf7 Kc2 6.Ba3 Nb1 7.Bf8 Nd2 8.Bg8 Nf1 9.Bg7 Ne3 10.Ka2
+{Einde eerste fase: Wit manoeuvreert zich los uit de zwarte opsluiting.}
+10...Kd3 11.Kb2 Ng2 12.Ka3 Nf4 13.Kb4 Ke4 14.Kc5 Nd3+ 15.Kd6 Kf4 16.Bh7 Ke3 17.Bg6 Nb4 18.Bc3 Nd3 19.Ba5 Nf4 20.Bb6+ Kd2 21.Be8 Kc3 22.Ke5 Nd3+ 23.Kd5 Nb2
+{Einde tweede fase: Zwart heeft de Kling-Horwitz positie ingenomen.}
+24.Bf7 Na4 25.Ba5+ Kb3 26.Kd4+ Kc2 27.Kc4 Nb2+ 28.Kb5 Kd3 29.Kb4 Ke3
+{Einde derde fase: Zwarte koning opnieuw in open veld, maar zwarte paard heeft minder bewegingsvrijheid.}
+30.Bb6+ Kf4 31.Bc7+ Ke3 32.Kc3 Nd1+ 33.Kb3 Nf2 34.Bb6+ Kf3 35.Bh5+ Kg3 36.Kc4 Ng4 37.Bc7+ Kh4 38.Bg6 Kg5 39.Bd3 Kf6 40.Kd5 Kg5 41.Bb1 Ne3+ 42.Ke4 Nf5 43.Bc2 Kf6 44.Be5+ Kg5 45.Bc3 Ne7 46.Ba4 Ng6 47.Bb3 Ne7 48.Ba5 Kg6 49.Kf4 Nc6 50.Bc3 Nb8 51.Ba4 Kf7 52.Ke5 Ke7
+{Einde vierde fase: Zwarte koning en zwart paard zijn naar het een rand van het bord gedreven zonder in de gelegenheid gesteld te zijn de Kling-Horwitz positie in te nemen.}
+53.Bb4+ Kd8 54.Kd6 Kc8 55.Bb5 Kb7 56.Bc5 Na6 57.Bc6+ Kb8 58.Bb6 Nb4 59.Be4 Na2 60.Be3 Nc3 61.Bc6 Kc8 62.Kc5 Kc7 63.Bf3 Na4+ 64.Kb5 Nc3+ 65.Kb4 Nb1 66.Be4 Na3 67.Kxa3
+{Einde vijfde fase: Het zwarte paard is geslagen.}
+1-0
+[/pgn]
+
+Nog korter samengevat: je kunt de King-Horwitz stelling niet vermijden, maar je kunt er aan ontsnappen. Op welke momenten dat mogelijk is, is heel moeilijk uit te leggen en kost heel veel zetten.
+
+<strong>Timman- Speelman Linares 1992</strong>
+Jan Timman kende Jaap van den Herik en zijn werk. Bovendien wist Timman al veel over het twee lopers tegen paard eindspel. Timman eindigde namelijk gedeeld eerste met Korchnoi in <a href="https://www.365chess.com/tournaments/Sarajevo_1984/22764" target="_blank">Sarajevo 1984</a>, maar was ongedeeld eerste geworden als de partij <a href="https://www.365chess.com/game.php?gid=2377446&m=150" target="_blank">Popovich-Korchnoi</a> een andere uitslag had gehad. Korchnoi had in die partij bewust afgewikkeld naar paard tegen twee lopers, want dat eindspel was remise dacht Korchnoi! In de toernooizaal was Timman, dankzij Van den Herik, misschien de enige grootmeester die wist dat Popovich wel kon winnen. Hij analyseerde de partij met Eric Lobron, maar kon toen de winstvariant niet vinden. Popovich probeerde het 30 zetten en bood toen remise aan. Dat was een frustrerende ervaring voor Timman.
+
+Toen Jan Timman in <a href="https://www.365chess.com/tournaments/Linares_10th_1992/17851" target="_blank">Linares 1992</a> zelf het eindspel twee lopers tegen paard op het bord kon krijgen in zijn afgebroken partij tegen Jonathan Speelman, belde hij Jaap van den Herik.
+
+Voor alle duidelijkheid: in die tijd werden schaakpartijen afgebroken en had Jan Timman nog geen computer. Zie de hoofdstukjes Afgebroken Partijen en Databases met schaakpartijen (over toen Timman wel een computer ging gebruiken) in <a href="https://www.waagtoren.nl/2023/01/13/schaken-met-computers-2/" target="_blank">Schaken met computers 2</a>.
+
+Timman vroeg aan Van den Herik voorbeelden van hoe de computer dit eindspel kon winnen. Van den Herik stuurde Timman 40 bladzijden per fax van alle relevante publicaties met voorbeelden zoals het vorige diagram, maar dan met alle varianten, subvarianten en de conclusies van John Roycroft. Een dag later begreep Timman al veel meer over twee lopers tegen paard en op de uitspeeldag ging de partij als volgt verder.
+
+Vanaf zet 66 vermeld ik weer tussen haakjes het aantal zetten tot mat van de partijvoortzetting minus het aantal zetten tot mat van de eerste <a href="https://www.shredderchess.com/online/endgame-database.html" target="_blank">Shredder</a>-zet en die zet. Bovendien vermeld ik weer de fases van het vorige diagram, die ik heb overgenomen van Van den Herik uit <em>ICCA Journal Vol.10 No.1</em> van maart 1992. Bij Timman-Speelman was de eerste fase (Wit manoeuvreert zich los uit de zwarte opsluiting) niet nodig en de vijfde fase (Het zwarte paard slaan) kwam niet op het bord, omdat Speelman al eerder opgaf.
+
+[pgn]
+[Site "Linares"]
+[Date "1992.??.??"]
+[Round "10"]
+[White "Jan Timman"]
+[Black "Jonathan Speelman"]
+[Result "1-0"]
+[FEN "8/8/1p6/2nK4/6k1/3p2P1/1B6/5B2 w - - 0 61"]
+
+61.Be5 Kf3 62.Bf4 d2 63.Bxd2 Ne4 64.Bh6 Nxg3 65.Bd3 b5 66.Bxb5 Nf5 67.Bf8
+( {64-60} 67.Bg5 )
+67...Ne3+
+( {63-59} 67...Kf4 )
+68.Kd4
+( {60-59} 68.Ke5 )
+68...Ng2
+{Einde tweede fase: Zwart heeft de Kling-Horwitz positie ingenomen.}
+( {59-58} 68...Nf5+ )
+69.Kd3
+( {66-58} 69.Bc6+ )
+69...Nf4+ 70.Kd2
+( {69-65} 70.Kc4 )
+70...Ng2
+( {68-56} 70...Ke4 )
+71.Bc6+ Kf2 72.Bd6
+( {57-55} 72.Bb7 )
+72...Nh4 73.Bc5+ Kg3 74.Bb6
+( {61-55} 74.Kd3 )
+74...Ng2
+( {60-52} 74...Kf4 )
+75.Bd5
+( {54-52} 75.Bc7+ )
+75...Nh4
+( {53-49} 75...Nf4 )
+76.Ke2 Kf4
+{Einde derde fase: Zwarte koning opnieuw in open veld, maar zwarte paard heeft minder bewegingsvrijheid.}
+77.Bb3 Nf5
+( {47-45} 77...Ng6 )
+78.Bc7+ Kg5 79.Be5 Kg4 80.Bc2
+( {44-43} 80.Kf2 )
+80...Ng3+
+( {43-41} 80...Ne7 )
+81.Kf2 Nf5 82.Bd1+ Kg5 83.Kf3 Nh4+ 84.Ke4 Nf5 85.Ba4
+( {39-37} 85.Bc2 )
+85...Ne7
+( {38-35} 85...Kg6 )
+86.Bd7
+( {39-35} 86.Bc3 )
+86...Ng8 87.Bf4+ Kg6
+( {37-31} 87...Kf6 )
+88.Ke5 Nf6 89.Bb5 Kf7 90.Bc4+ Kg6 91.Ke6
+{Einde vierde fase: Zwarte koning en zwart paard zijn naar het een rand van het bord gedreven zonder in de gelegenheid gesteld te zijn de Kling-Horwitz positie in te nemen.}
+1-0
+[/pgn]
+
+Volgens Shredder was de stelling op zet 66 mat in 60. De zetten van Timman en Speelman waren natuurlijk niet perfect, maar menselijk. Op zet 69 en 70 bijvoorbeeld verloor Timman 8 + 4 zetten tot mat. Maar Speelman profiteerde niet en verloor 12 zetten tot mat op zet 70, omdat hij probeerde in de Kling-Horwitz positie te blijven. In de derde fase ging het nog een paar keer mis bij Timman en iets meer bij Speelman. In de vierde fase deed Timman het duidelijk beter dan Speelman. Speelman gaf op toen hij dacht dat hij het paard zou verliezen. Volgens Shredder was de slotstelling mat in 27 en kon wit het slaan van het paard nog 15 zetten uitstellen.
+
+Twee lopers tegen een paard is dus een ongelofelijk complex eindspel en dankzij de computer is de eindspeltheorie verbeterd. Jan Timman kon deze nieuwe theorie, met een tablebase als secondant, in de praktijk toepassen. Helaas is het niet zo'n belangrijk eindspel, want het komt niet zo vaak voor. Ik vond slechts <a href="https://www.365chess.com/search-endgames-list.php?id=70" target="_blank">18 partijen</a> uit de praktijk van grootmeesters: 7 winstpartijen met de twee lopers en 11 partijen waarin het paard remise houdt.
+
+<strong>Eindspel tablebases op CD-ROM</strong>
+Het was de verdienste van Ken Thompson dat hij de eerste was die tablebases toegankelijk maakte voor schakers. Hij deed dat door vanaf 1991 zoveel mogelijk eindspelen op <a href="https://en.wikipedia.org/wiki/CD-ROM" target="_blank">CD-ROM</a> te zetten en te verkopen voor US $ 10 (inclusief verzendkosten). Uiteindelijk produceerde hij 4 CD-ROM's met vooral eindspelen met 5 stukken op het bord. In die tijd moest je wel computerprogrammeur zijn, want de CD-ROM moest je uitlezen met een C-programma dat je op je eigen computer aan de praat moest krijgen.
+
+<img src="https://www.waagtoren.nl/wp-content/uploads/2025/06/SecretsOfRookEndgames.jpg" alt="" width="261" height="408" class="alignright size-full wp-image-52366" />Het was de verdienste van <a href="https://en.wikipedia.org/wiki/John_Nunn" target="_blank">John Nunn</a> dat hij als eerste de CD-ROM van Thompson gebruikte om een totaal nieuw soort eindspelboek te maken vanuit het perspectief van een grootmeester. Hij behandelde in 320 propvolle bladzijden het toren en pion tegen toren eindspel. Heel uitputtend met hoofdstuk 1 voor de a-pion, hoofdstuk 2 voor de b-pion, hoofdstuk 3 voor de c-pion en hoofdstuk 4 voor de d-pion. En per hoofdstuk paragrafen: pion op rij 7, 6, 5, 4, 3 en 2 en subparagrafen over koning voor de pion, toren voor de pion, toren achter de pion, toren dekt de pion van opzij, koning is afgesneden langs een rij, koning is afgesneden langs een lijn, en zo voort. Verder moest je als lezer begrijpen dat voorbeelden met een f-pion in het c-pion hoofdstuk staan. Nunn had waarschijnlijk de complete eindspelliteratuur doorgespit en ook veel toernooipartijen om alles aan de hand van de tablebase te controleren.
+
+In het voorwoord schreef Nunn: "Dit boek biedt iets nieuws, wat nog nooit eerder mogelijk is geweest. Het nieuwe is dat, met uitzondering van misschien een paar drukfouten, de zetten in dit boek gegarandeerd accuraat zijn".
+
+Toren en pion tegen toren is een zogenaamd elementair toreneindspel, maar Nunn corrigeerde wonderbaarlijk veel analyses van andere grootmeesters en eindspeltheoretici. Voor mij was dit boek een mijlpaal in de geschiedenis van schaken met computers!
+
+Na <em>Secrets of Rook Endings</em> in 1992 schreef John Nunn nog twee boeken waarbij hij de CD-ROM's van Ken Thompson gebruikte: in 1994 <em>Secrets of Pawnless Endings</em> over eindspelen met 4 of 5 stukken zonder pionnen en in 1995 <em>Secrets of Minor-Piece Endings</em> over zogenaamde elementaire eindspelen zonder torens of dames. De eindspelen dame en pion tegen dame (onbegrijpelijk volgens Nunn!), twee paarden tegen pion (Troitsky had dit al "astonishing accurate" gedaan zonder computer!) en loper en paard tegen paard (niet belangrijk voor de praktijk) ontbreken in deze boeken. Het hierboven beschreven dame tegen toren eindspel wordt uitgebreid behandeld in zijn boek van 1994. Het hierboven beschreven twee lopers tegen paard eindspel paste niet meer in de 320 bladzijden van zijn boek van 1994 en kwam daarom in zijn boek van 1995.
+
+<strong>Lomonosov</strong>
+Na Thomas Ströhlein en Ken Thomson zijn anderen verder gegaan met de retrograde analyse van eindspelen. Een goed overzicht staat in de <a href="https://en.wikipedia.org/wiki/Endgame_tablebase" target="_blank">Wikipedia</a>. Het lijkt echter alsof het onderzoek stagneert. Het belangrijkste probleem is natuurlijk dat het schaakspel te veel <a href="https://en.wikipedia.org/wiki/Shannon_number" target="_blank">mogelijkheden</a> heeft. Voor tablebases met meer stukken zijn steeds snellere computers en vooral steeds meer geheugen en opslagmedia noodzakelijk.
+
+Op de <a href="https://www.chessprogramming.org/Lomonosov_Supercomputer" target="_blank">Lomonosov supercomputer</a> (met Nvidia chips!) van de Staatsuniversiteit van Moskou is in 2012 een project afgerond om tablebases voor alle eindspelen met 7 stukken te berekenen. Je kunt het resultaat raadplegen op <a href="https://tb7.chessok.com/probe" target="_blank">ChessOK</a>. Vladimir Makhnychev and Victor Zakharov ontdekten tijdens dit project allerlei idioot lange perfecte zettenreeksen. Vooralsnog is het <a href="https://tb7.chessok.com/articles/Top8DTM_eng" target="_blank">wereldrecord</a>: 549 zetten tot mat in het dame en pion tegen toren, loper en paard eindspel.
+
+[pgn]
+[FEN "1n1k4/6Q1/5KP1/8/7b/1r6/8/8 w - - 0 1"]
+1.Kf5 Rb5+ 2.Kg4 Rb4+ 3.Kf3 Nd7 4.Qh8+ Ke7 5.g7 Bf6 6.g8N+ Ke6 7.Qh3+ Kd6 8. Kg2 Rb2+ 9.Kf1 Rb1+ 10.Ke2 Rb2+ 11.Kd1 Rb1+ 12.Kc2 Rb2+ 13.Kc1 Rb5 14.Qh6 Rc5+ 15.Kb1 Rb5+ 16.Ka2 Ra5+ 17.Kb3 Rf5 18.Ka3 Rf3+ 19.Ka2 Ke6 20.Qh7 Ne5 21.Nh6 Rf2+ 22.Kb1 Rf4 23.Qg8+ Kd6 24.Ka2 Nc6 25.Ng4 Bd4 26.Qg6+ Kd5 27.Qg5+ Ke4 28.Kb1 Nb4 29.Qe7+ Kd3 30.Qh7+ Ke2 31.Qh2+ Kf3 32.Qh3+ Ke4 33.Qg2+ Kd3 34.Qg3+ Ke4 35.Qe1+ Kd3 36.Qd1+ Ke4 37.Qe2+ Kd5 38.Kc1 Kd6 39.Qh2 Nd5 40.Kd2 Bc3+ 41.Ke2 Bd4 42.Qh6+ Kd7 43.Qh7+ Kc6 44.Qg8 Kc5 45.Kd3 Nb4+ 46.Kd2 Nd5 47.Qc8+ Kd6 48.Nh6 Bc3+ 49.Ke2 Re4+ 50.Kf2 Rf4+ 51.Kg1 Bd4+ 52.Kh2 Ne3 53.Qd8+ Kc6 54.Qe8+ Kc5 55.Nf7 Rf2+ 56.Kh3 Rf3+ 57.Kh4 Rf5 58.Nh6 Rf1 59.Qa8 Kb4 60.Kh5 Kc3 61.Qc8+ Kd3 62.Kg6 Rf2 63.Qa8 Rf1 64.Qb8 Kd2 65.Qb3 Ke2 66.Qb5+ Kd2 67.Qg5 Kc2 68.Kh7 Kd3 69.Qb5+ Kc3 70.Qa5+ Kd3 71.Qg5 Rf6 72.Qb5+ Ke4 73.Qb7+ Kd3 74.Qd7 Kc3 75.Qe8 Kd2 76.Qb5 Kc2 77.Qe2+ Kc3 78.Qh5 Rf1 79.Qg6 Rf6 80.Qe4 Kc4 81.Qe8 Kd3 82.Ng8 Rf1 83.Ne7 Rh1+ 84.Kg6 Rg1+ 85.Kf7 Rf1+ 86.Ke6 Rf6+ 87.Kd7 Bc5 88.Nc6 Nd5 89.Nd8 Rd6+ 90.Kc8 Ne7+ 91.Kc7 Nd5+ 92.Kb7 Rb6+ 93.Kc8 Ne7+ 94.Kd7 Nd5 95.Qe1 Rd6+ 96.Kc8 Be3 97.Qd1+ Ke4 98.Qc2+ Kd4 99.Qa4+ Ke5 100.Qh4 Kf5 101.Qh3+ Ke4 102.Nf7 Rc6+ 103.Kd8 Kd4 104.Ke8 Rc7 105.Kf8 Bf4 106.Qe6 Ra7 107.Qe2 Be3 108.Qg4+ Kc5 109.Qc8+ Kd4 110.Qb8 Kd3 111.Kg8 Rc7 112.Qb5+ Kd4 113.Qa4+ Kc5 114.Qa6 Kd4 115.Kf8 Bd2 116.Qf1 Bc3 117.Kg7 Rc6 118.Kg8 Nf6+ 119.Kf8 Rc8+ 120.Kg7 Ne4 121.Qb5 Ke3+ 122.Kh7 Rc7 123.Qb6+ Rc5 124.Qe6 Kf4 125.Qh6+ Kf3 126.Qh3+ Ke2 127.Kg8 Rc6 128.Kf8 Bb4+ 129.Kg7 Bc3+ 130.Kg8 Rf6 131.Qh4 Kd3 132.Nd8 Kd4 133.Qg4 Ke5 134.Qe2 Kf4 135.Qc4 Kf3 136.Qb3 Kf2 137.Ne6 Ke3 138.Qa2 Rf3 139.Qc2 Be5 140.Qd1 Bc3 141.Qc1+ Kd3 142.Nf4+ Kc4 143.Ng2 Rf2 144.Nh4 Nf6+ 145.Kg7 Ne4+ 146.Kg6 Rf6+ 147.Kh5 Kd4 148.Qd1+ Ke3 149.Qb1 Bd2 150.Ng6 Ng3+ 151.Kh6 Bc3 152.Qc1+ Kd3 153.Qg1 Ne4 154.Kh7 Rd6 155.Kg8 Rd8+ 156.Kf7 Rd7+ 157.Ke6 Rd6+ 158.Ke7 Bf6+ 159.Ke8 Rd8+ 160.Kf7 Rd7+ 161.Ke6 Rd6+ 162.Kf5 Rd5+ 163.Kf4 Bg5+ 164.Kg4 Ke2 165.Qa7 Bd2 166.Qe7 Rg5+ 167.Kh3 Ke3 168.Nh4 Rg3+ 169.Kh2 Rg4 170.Qa3+ Bc3 171.Qa7+ Ke2 172.Ng2 Be5+ 173.Kg1 Nd2 174.Qf2+ Kd1 175.Kh1 Bd4 176.Qe1+ Kc2 177.Qe2 Re4 178.Qh5 Nf1 179.Qd5 Nd2 180.Qf5 Kd1 181.Nf4 Be5 182.Qh5+ Kc2 183.Ng6 Bf6 184.Kg2 Bg5 185.Qh7 Kd1 186.Qh8 Be3 187.Qh5+ Kc2 188.Nh4 Bd4 189.Nf5 Be5 190.Qe8 Rg4+ 191.Kh3 Re4 192.Qc8+ Kd1 193.Qc5 Nc4 194.Nh6 Nd2 195.Ng4 Bd4 196.Qb5 Rf4 197.Kh4 Be3 198.Qd3 Bd4 199.Kh5 Re4 200.Qa3 Rf4 201.Qd6 Re4 202.Nh6 Bf2 203.Kg6 Rc4 204.Qe5 Bb6 205.Qg3 Rc6+ 206.Kg7 Rc4 207.Nf7 Bc7 208.Qg1+ Kc2 209.Nh6 Be5+ 210.Kg8 Re4 211.Nf5 Bf4 212.Qh1 Be5 213.Qh3 Kd1 214.Kf8 Bf4 215.Qg4+ Ke1 216.Qg2 Be5 217.Qh1+ Ke2 218.Ke8 Bg3+ 219.Kd7 Bf2 220.Ne7 Rd4+ 221.Nd5 Kd3 222.Kc6 Rh4 223.Qg2 Rc4+ 224.Kb5 Be3 225.Qh1 Bc5 226.Qh7+ Ke2 227.Qh5+ Ke1 228.Kc6 Bd4+ 229.Kd6 Bf2 230.Kd7 Rd4 231.Qh1+ Ke2 232.Ke6 Rh4 233.Qg2 Rc4 234.Ke7 Nf3 235.Qh3 Re4+ 236.Kd8 Rd4 237.Qh5 Bg3 238.Qe8+ Be5 239.Qb5+ Kf2 240.Kc8 Re4 241.Kb7 Bd4 242.Qc6 Rg4 243.Ka6 Rg7 244.Nb4 Re7 245.Nd3+ Ke3 246.Qc1+ Ke4 247.Nb4 Re5 248.Qb1+ Ke3 249.Qc2 Rc5 250.Qd3+ Kf4 251.Qe2 Kg3 252.Qe7 Rh5 253.Nd3 Rh6+ 254.Ka5 Rh4 255.Qe6 Bc3+ 256.Ka6 Bd4 257.Qc6 Be3 258.Qe8 Bd4 259.Qb8+ Kg2 260.Qg8+ Kh3 261.Qg6 Rg4 262.Qc6 Kg3 263.Qc7+ Kh3 264.Nf4+ Kh4 265.Qd6 Kg3 266.Ng6+ Kf2 267.Qe6 Rg1 268.Nf4 Ra1+ 269.Kb7 Ra7+ 270.Kb8 Ra3 271.Qe2+ Kg3 272.Nd3 Rb3+ 273.Kc8 Rb6 274.Qe4 Rf6 275.Kd7 Bc3 276.Nc5 Bd4 277.Ne6 Be5 278.Ng5 Bb2 279.Qe3 Kg4 280.Ne4 Rf7+ 281.Kc6 Rf5 282.Nf2+ Kg3 283.Nd3 Be5 284.Kd7 Rf7+ 285.Ke8 Rf5 286.Qc5 Kg4 287.Nf2+ Kg5 288.Qd5 Kg6 289.Nd3 Bg7 290.Qe4 Kg5 291.Ke7 Bd4 292.Kd7 Rf6 293.Kc8 Rf8+ 294.Kb7 Rf7+ 295.Ka6 Rf6+ 296.Ka5 Bc3+ 297.Ka4 Ra6+ 298.Kb5 Ra5+ 299.Kb6 Rf5 300.Qe7+ Kg6 301.Qe8+ Kg5 302.Kb7 Bd4 303.Qe7+ Kh5 304.Qe4 Rf7+ 305.Ka6 Rf6+ 306.Kb5 Kg5 307.Nb4 Be5 308.Nd5 Rf5 309.Qe3+ Kh5 310.Ka6 Rf7 311.Qf2 Ng5 312.Qc2 Nf3 313.Qc8 Kg5 314.Qe6 Rf5 315.Kb7 Bd4 316.Qe7+ Bf6 317.Qe3+ Kh5 318.Qe4 Kg5 319.Nc7 Nd4 320.Qg2+ Kh5 321.Nd5 Nf3 322.Ne3 Rf4 323.Qh3+ Nh4 324.Qe6 Kg5 325.Qd5+ Kg6 326.Qd6 Kg5 327.Qc5+ Kg6 328.Qc7 Kg5 329.Nd5 Rf3 330.Qc1+ Kg4 331.Ne3+ Kg5 332.Nc4+ Rf4 333.Nb6 Kg4 334.Qd1+ Kg3 335.Nd5 Rf3 336.Qd2 Kg4 337.Ne3+ Kh5 338.Nc4 Bg5 339.Qd1 Bf4 340.Nb6 Bg3 341.Nd7 Kg5 342.Qd5+ Rf5 343.Qe4 Rf4 344.Qe7+ Kg4 345.Qe6+ Kf3 346.Nf6 Kg2 347.Qd5+ Kh2 348.Ne4 Nf5 349.Ng5 Nd6+ 350.Kb6 Bf2+ 351.Kc7 Bg3 352.Kd7 Nf5 353.Qd2+ Rf2 354.Qd1 Rf4 355.Qe2+ Rf2 356.Qh5+ Kg2 357.Kc6 Rc2+ 358.Kd5 Rd2+ 359.Kc4 Rf2 360.Qh3+ Kg1 361.Kb4 Rf1 362.Ka5 Rf4 363.Ka6 Ra4+ 364.Kb5 Rf4 365.Ka5 Rf2 366.Qh8 Kg2 367.Qc3 Rf4 368.Qd2+ Kf1 369.Qd5 Nd4 370.Kb6 Bf2 371.Kc7 Rh4 372.Qe5 Kg2 373.Ne4 Kf3 374.Nd2+ Kg2 375.Qd5+ Kh2 376.Kb7 Rh7+ 377.Ka6 Rh6+ 378.Ka5 Rh4 379.Qd6+ Kh3 380.Qd7+ Kg2 381.Qb7+ Kg3 382.Qg7+ Rg4 383.Nf1+ Kh3 384.Qd7 Kh4 385.Qh7+ Kg5 386.Qg7+ Kf4 387.Qc7+ Kg5 388.Nd2 Rf4 389.Qg7+ Kf5 390.Nc4 Nf3 391.Nd6+ Ke6 392.Ne8 Kf5 393.Ka6 Bd4 394.Nd6+ Ke6 395.Qg8+ Kf6 396.Qh7 Ke6 397.Ne4 Kd5 398.Qb7+ Ke6 399.Ng3 Be5 400.Qb3+ Kd6 401.Qb6+ Ke7 402.Ne4 Kf7 403.Qh6 Kg8 404.Qe6+ Kh8 405.Qe7 Rf5 406.Kb6 Bg7 407.Ng3 Rf6+ 408.Kb5 Nd4+ 409.Kc4 Rc6+ 410.Kd3 Rc3+ 411.Ke4 Rc6 412.Qe8+ Kh7 413.Kd3 Rd6 414.Qh5+ Kg8 415.Ne4 Rd8 416.Ke3 Bh6+ 417.Kf2 Rf8+ 418.Kg2 Kh7 419.Ng3 Ne6 420.Qh4 Ng7 421.Qe4+ Kg8 422.Qd5+ Kh7 423.Qd6 Rf7 424.Qd3+ Kg8 425.Qd5 Bc1 426.Kh3 Ba3 427.Kg4 Be7 428.Qc4 Kf8 429.Qc8+ Ne8 430.Nf5 Rf6 431.Qd7 Rf7 432.Qd3
+Bf6 433.Qe3 Be7 434.Qh6+ Kg8 435.Qh1 Rh7 436.Qd5+ Kf8 437.Kf3 Nf6 438.Qe5 Ne8 439.Ke2 Bf6 440.Qd5 Rf7 441.Kd2 Bg5+ 442.Kc2 Rc7+ 443.Kb2 Bf6+ 444.Kb1 Rh7 445.Qf3 Ra7 446.Qb3 Rc7 447.Qb4+ Kf7 448.Qb6 Rd7 449.Qb3+ Kf8 450.Nh6 Rg7 451.Qa3+ Be7 452.Qf3+ Bf6 453.Ng4 Ke7 454.Kc2 Rg5 455.Qe3+ Kf7 456.Qb3+ Kf8 457.Qe6 Bg7 458.Ne3 Re5 459.Qb6 Bf6 460.Ng4 Rf5 461.Qe6 Rf4 462.Qc8 Bd4 463.Qd7 Bg7 464.Ne3 Rf2+ 465.Kb1 Rf7 466.Qc8 Rc7 467.Qa6 Rd7 468.Qa3+ Kf7 469.Qb3+ Kf8 470.Qb4+ Nd6 471.Qf4+ Kg8 472.Nd5 Nf7 473.Qc4 Ra7 474.Nf4 Rb7+ 475.Kc2 Rb2+ 476.Kd1 Rb6 477.Qc8+ Kh7 478.Qc7 Rd6+ 479.Ke2 Kg8 480.Qe7 Bf8 481.Qe8 Ng5 482.Qc8 Rf6 483.Qg4 Bh6 484.Nh5 Re6+ 485.Kf1 Re5 486.Qc8+ Bf8 487.Qc2 Re6 488.Qa2 Kh7 489.Qg2 Kh6 490.Qh1 Rb6 491.Nf4+ Kg7 492.Qh5 Nh7 493.Qg4+ Kf7 494.Qd7+ Be7 495.Qd5+ Kf8 496.Ne6+ Ke8 497.Qh5+ Kd7 498.Ng7 Nf6 499.Qf5+ Kc7 500.Qe5+ Kd7 501.Qd4+ Kc7 502.Qe3 Nd5 503.Qe5+ Kc6 504.Nf5 Rb7 505.Qe4 Kc5 506.Qc2+ Kb6 507.Qb3+ Kc6 508.Nd4+ Kc5 509.Qxb7 Kxd4 510.Kf2 Ke4 511.Qb1+ Kd4 512.Qg6 Bf6 513.Kf3 Be7 514.Qg1+ Kc4 515.Qg4+ Kc5 516.Ke2 Nf6 517.Qf5+ Kd4 518.Qf4+ Kd5 519.Kf3 Ke6 520.Qc4+ Kf5 521.Qa6 Nd7 522.Qd3+ Ke6 523.Qe3+ Kd6 524.Kf4 Nc5 525.Kf5 Bf8 526.Qf3 Nd7 527.Qc3 Ke7 528.Qd4 Ke8 529.Ke6 Nc5+ 530.Kd5 Nd7 531.Kc6 Nb8+ 532.Kb6 Nd7+ 533.Kc7 Nc5 534.Qc4 Be7 535.Qg8+ Bf8 536.Kc6 Na6 537.Qe6+ Be7 538.Qc8+ Kf7 539.Qxa6 Ke6 540.Qd3 Bg5 541.Qe4+ Kf6 542.Kd6 Bd2 543.Qe5+ Kg6 544.Ke6 Bg5 545.Qf5+ Kh5 546.Qf3+ Kh6 547.Qf7 Bh4 48.Kf5 Bg5 549.Qg6# 1-0
+[/pgn]
+Dit is voorlopig wel even genoeg!
+
+<strong>Serie</strong>
+De serie Schaken met computers begon in 2021 met <a href="https://www.waagtoren.nl/2021/03/06/schaken-met-computers/" rel="noopener" target="_blank">deel 1</a> over Wim Andriessen als pionier op het gebied van schaken met computers. In 2023 volgde <a href="https://www.waagtoren.nl/2023/01/13/schaken-met-computers-2/" rel="noopener" target="_blank">deel 2</a> over Over Deep Blue, Fritz en Stockfish en wereldkampioenen die hun tegenstanders beschuldigen van vals spelen. In deel 3 ging het over achteruit analyseren met computers. In deel 4 zal het weer gaan over vooruit analyseren.
