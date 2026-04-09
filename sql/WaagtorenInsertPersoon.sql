@@ -57,6 +57,7 @@ insert into persoon (knsbNummer, naam) values
 (7509920, "Dirk van der Meiden"),
 (155, "Dokan Mengu"),
 (157, "Douwe Hensbroek"),
+(9158875, "Dovrangeldi Jumageldiyev"),
 (9060370, "Dragos Dimulescu"),
 (7546506, "Edward Schenkel"),
 (8372881, "Egbert van Oene"),
@@ -219,6 +220,7 @@ insert into persoon (knsbNummer, naam) values
 (0, "onbekend"),
 (7582102, "Onno Vellinga"),
 (97, "P.J. van Diepen"),
+(202, "Paul Blumer"),
 (7468362, "Paul Toepoel"),
 (8485059, "Peter Duijs"),
 (99, "Peter Glashouwer"),
@@ -285,5 +287,3 @@ insert into persoon (knsbNummer, naam) values
 (7584566, "Yong Hoon de Rover"),
 (7771665, "Yvonne Schol"),
 (167, "Zeger Snip");
-
-

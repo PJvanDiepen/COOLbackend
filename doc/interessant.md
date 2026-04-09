@@ -44,6 +44,7 @@ Refresh Android cache
 - [code conventions](https://www.crockford.com/code.html)
 - [JavaScript tutorial](https://javascript.info/)
 - [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
+- [temporal](https://bloomberg.github.io/js-blog/post/temporal/)
 - [undefined](https://dmitripavlutin.com/7-tips-to-handle-undefined-in-javascript/)
 - [Type support with plain JavaScript](https://www.pausly.app/blog/full-type-support-with-plain-javascript)
 - [JavaScript nieuwe mogelijkheden](https://betterprogramming.pub/all-javascript-and-typescript-features-of-the-last-3-years-629c57e73e42)
@@ -74,9 +75,9 @@ Refresh Android cache
 - [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
 - [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
 - [optional chaining and default](https://allthingssmitty.com/2025/06/02/write-more-reliable-javascript-with-optional-chaining/)
-- [web scraping](https://blog.apify.com/best-javascript-web-scraping-libraries/)
 - [url as state](https://alfy.blog/2025/10/31/your-url-is-your-state.html)
 - [iterator instead of array](https://allthingssmitty.com/2026/01/12/stop-turning-everything-into-arrays-and-do-less-work-instead/)
+- [bookmarklets](https://css-tricks.com/a-complete-guide-to-bookmarklets/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
@@ -137,6 +138,7 @@ Refresh Android cache
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [Modern css](https://frontendmasters.com/blog/what-you-need-to-know-about-modern-css-spring-2024-edition/)
+- [CSS in 2026](https://blog.gitbutler.com/the-great-css-expansion)
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
 - [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
@@ -162,6 +164,7 @@ Refresh Android cache
 - [server or browser](https://vercel.com/blog/how-to-choose-the-best-rendering-strategy-for-your-app)
 
 # software enigineering
+- [Rob Pike] (https://www.cs.unc.edu/~stotts/COMP590-059-f24/robsrules.html)
 - [SOLID](https://jsdev.space/solid-design-principles/)
 - [big O](https://samwho.dev/big-o/)
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
@@ -196,7 +199,6 @@ Refresh Android cache
 - [betafish](https://github.com/Strryke/betafish)
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [nnue in Stockfish](https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md)
-- [blog over nnue in Stockfish](https://stockfishchess.org/blog/2020/introducing-nnue-evaluation/)
 - [nnue paper](https://github.com/asdfjkl/nnue/blob/main/nnue_en.pdf)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
 - [CalvinBot](https://lichess.org/@/Calvin_Bot)

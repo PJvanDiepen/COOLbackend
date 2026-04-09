@@ -427,7 +427,7 @@ function onevenSpeler(r) {
             console.log(`laatste speler ${r[oneven].naam} was al oneven`);
             oneven--;
         }
-        for (let i = oneven; i > 7; i--) { // eerste 8 aanwezige spelers mogen niet oneven zijn
+        for (let i = oneven; i > 8; i--) { // eerste 8 aanwezige spelers mogen niet oneven zijn
             if (r[i].oneven()) {
                 console.log(`${r[i].naam} was al oneven`);
             } else if (r[i].intern() > r[oneven].intern()) {
