@@ -9,7 +9,20 @@ import { o_o_o } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
+// dinsdag van 0:00 tot 19:00
+function kludge(welkeDag = 2, welkeUur = 19) {
+    const nu = new Date();
+    const dag = nu.getDay();        // 0 = zondag, 1 = maandag, 2 = dinsdag, ...
+    const uur = nu.getHours();
+    if (dag === welkeDag && uur <= welkeUur) {
+        return -1;
+    } else {
+        return 0;
+    }
+}
+
 (async function() {
+    console.log(`kludge: ${kludge(4)}`); // donderdag
     html.urlVerwerken({
         club: 0,
         seizoen: "",
