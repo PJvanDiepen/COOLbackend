@@ -9,252 +9,36 @@ AlphaZero was een onderzoeksproject van DeepMind. Bovendien was AlphaZero een so
 
 <img src="https://www.waagtoren.nl/wp-content/uploads/2026/03/AlphaFold.jpg" alt="" width="321" height="157" class="alignright size-full wp-image-56797" />Daarna heeft DeepMind een veel nuttiger probleem aangepakt namelijk uitzoeken hoe je eiwitmoleculen kunt vouwen. Zie <a href="https://www.nature.com/articles/s41586-021-03819-2.pdf" target="_blank">Highly accurate protein structure prediction with AlphaFold</a>. De overeenkomst met schaken is dat er oneindig veel varianten mogelijk zijn om eiwitmoleculen te vouwen. Bij schaken leidt de ene variant tot mat en na een andere variant ga je zelf mat. In de natuur is de ene variant van een gevouwen eiwit correct, goed of gezond en een andere variant gevaarlijk, slecht, of ongezond.
 
-De Koninklijke Zweedse Academie van Wetenschappen vond AlphaFold zo nuttig dat ze in 2024 de <a href="https://www.nobelprize.org/prizes/chemistry/2024/press-release/" target="_blank">Nobelprijs voor scheikunde</a> onder anderen hadden toegekend aan DeepMind. In 2024 waren er in feite twee Nobelprijzen voor AI: de Nobelprijs voor scheikunde voor bovengenoemde toepassingen van AI en de <a href="https://www.nobelprize.org/prizes/physics/2024/press-release/" target="_blank">Nobelprijs voor natuurkunde</a> voor de ontwikkeling van AI met neurale netwerken vanaf de jaren 80 van de vorige eeuw.
+De Koninklijke Zweedse Academie van Wetenschappen vond AlphaFold zo nuttig dat ze in 2024 de <a href="https://www.nobelprize.org/prizes/chemistry/2024/press-release/" target="_blank">Nobelprijs voor scheikunde</a> onder anderen hadden toegekend aan DeepMind. In 2024 waren er in feite twee Nobelprijzen voor AI: de Nobelprijs voor scheikunde voor bovengenoemde toepassing van AI en de <a href="https://www.nobelprize.org/prizes/physics/2024/press-release/" target="_blank">Nobelprijs voor natuurkunde</a> voor de ontwikkeling van AI met neurale netwerken vanaf de jaren 80 van de vorige eeuw.
 
 <strong>Korte geschiedenis van AI</strong>
-Het wetenschappelijk onderzoek naar AI ging in de vorige eeuw vooral over kennis vastleggen in de AI-programmeertaal LISP en teksten ontleden met behulp van grammatica's oftewel <em>Natural Language Processing</em> (NLP). Toen in deze eeuw computers snel genoeg werden om het leervermogen van het menselijk brein te imiteren door middel van neurale netwerken evolueerden die NLP-systemen tot <em>Large Language Models</em> (LLM) zoals ChatGPT, CoPilot, Claude, Gemini, DeepSeek, en zo voort. Bijzonder is dat die LLM-systemen geen grammatica of vooraf geprogrammeerde kennis bevatten. Ze hebben geleerd taal te begrijpen en te genereren door enorme hoeveelheden tekstvoorbeelden te verwerken. Een LLM is geen systeem om feiten op te zoeken, maar een model dat is getraind om statistische verbanden tussen woorden, zinnen en ideeën te herkennen en kan daarmee vloeiende, contextbewuste antwoorden produceren. Een LLM begrijpt niet wat het doet, maar kan heel goed voorspellen wat een zinvol antwoord kan zijn.
+Het wetenschappelijk onderzoek naar AI ging in de vorige eeuw (een beetje gechargeerd) vooral over kennis vastleggen in de AI-programmeertaal LISP en teksten ontleden met behulp van grammatica's oftewel <em>Natural Language Processing</em> (NLP).
 
-Vroeger probeerden AI-onderzoekers dus om kennis in AI-systemen te programmeren op een manier die mensen nog konden begrijpen. Dat is uiteindelijk niet gelukt. Moderne AI-systemen functioneren dankzij snelle computers die zijn getraind met immens veel informatie. Maar hoe zo'n LLM uiteindelijk werkt, kunnen mensen niet meer begrijpen, omdat de berekeningen die het LLM doet onnavolgbaar zijn. Te veel en te ingewikkeld.
+<img src="https://www.waagtoren.nl/wp-content/uploads/2026/04/LLM.jpg" alt="" width="400" height="257" class="alignright size-full wp-image-57397" />Toen in deze eeuw computers snel genoeg werden om het leervermogen van het menselijk brein te imiteren door middel van neurale netwerken evolueerden die NLP-systemen tot <em>Large Language Models</em> (LLM) zoals ChatGPT, CoPilot, Claude, Gemini, DeepSeek, en zo voort. Bijzonder is dat die LLM-systemen geen grammatica of vooraf geprogrammeerde kennis bevatten. Ze hebben geleerd taal te begrijpen en te genereren door enorme hoeveelheden tekstvoorbeelden te verwerken. Een LLM is geen systeem om feiten op te zoeken, maar een model dat is getraind om statistische verbanden tussen woorden, zinnen en ideeën te herkennen en kan daarmee vloeiende, contextbewuste antwoorden produceren. Een LLM begrijpt niet wat het doet, maar voorspelt wat een zinvol antwoord kan zijn. Zo'n antwoord kan soms gewoon fout zijn.
+
+Vroeger probeerden AI-onderzoekers dus om kennis in AI-systemen te programmeren met LISP op een manier die mensen nog konden begrijpen. Dat is uiteindelijk niet gelukt. Moderne AI-systemen functioneren dankzij snelle computers die zijn getraind met immens veel informatie. Maar hoe zo'n LLM uiteindelijk werkt, kunnen mensen niet meer begrijpen, omdat de berekeningen die het LLM doet onnavolgbaar zijn. Te veel en te ingewikkeld.
 
 Het neurale netwerk van AlphaZero was ook zoiets als een LLM. Het was getraind door miljoenen schaakpartijen te spelen en kon daarna heel goed voorspellen wat een goede zet is. Stockfish en Lc0 gebruiken een neuraal netwerk dat ze <em>Efficiently Updatable Neural Network</em> (NNUE) noemen en dat nog steeds wordt getraind. Stockfish en Lc0 zullen dus nog sterker gaan schaken!
 
 <strong>Mijn persoonlijke geschiedenis met AI</strong>
-Zo ongeveer tussen 1975 en 1990 hield ik mij als programmeur, adviseur en zelfs <em>knowledge enigineer</em> bezig met AI. Ik werkte achtereenvolgens bij Hoogovens aan veel verschillende (niet AI) projecten en bij Lithp Systems aan <em>expert systemen</em> op de IBM PC. Ik mocht naar wetenschappelijke congressen over AI in binnen- en buitenland. Ik was jong en kon alle ontwikkelingen nog bijhouden.
+Zo ongeveer tussen 1975 en 1990 hield ik mij als programmeur, adviseur en zelfs <em>knowledge enigineer</em> bezig met AI. Ik werkte achtereenvolgens bij Hoogovens aan veel verschillende projecten en bij Lithp Systems aan <em>expert systemen</em> op de IBM PC. Ik mocht naar wetenschappelijke congressen over AI in binnen- en buitenland. Ik was jong en kon alle ontwikkelingen nog bijhouden.
 
-De term <em>Artificial Intelligence</em> komt uit Amerika en werd voor het eerst gebruikt in <a href="http://jmc.stanford.edu/articles/dartmouth.html" target="_blank">1955</a>, mijn geboortejaar. Maar in die tijd bestonden nog amper computers, was computers programmeren onmogelijk ingewikkeld en waren de toenmalige computers vreselijk traag. Technisch wetenschappelijk rekenwerk werd toen vooral gedaan door menselijke computers en vaak waren dat vrouwen. Zie bijvoorbeeld de film <a href="https://en.wikipedia.org/wiki/Hidden_Figures" target="_blank">Hidden Figures</a> over drie zwarte vrouwen die als computers voor de NASA werkten.
+De term <em>Artificial Intelligence</em> komt uit Amerika en werd voor het eerst gebruikt in <a href="http://jmc.stanford.edu/articles/dartmouth.html" target="_blank">1955</a>, mijn geboortejaar. De ambitie was om denkende machines te maken! Maar in die tijd bestonden nog amper computers, was computers programmeren onmogelijk ingewikkeld en waren de toenmalige computers vreselijk traag. Technisch wetenschappelijk rekenwerk werd toen vooral gedaan door menselijke computers en vaak waren dat vrouwen. Zie bijvoorbeeld de film <a href="https://en.wikipedia.org/wiki/Hidden_Figures" target="_blank">Hidden Figures</a> over drie zwarte vrouwen die als computers voor de NASA werkten.
 
-Computers programmeren werd iets eenvoudiger toen programmeertalen werden uitgevonden: <a href="https://en.wikipedia.org/wiki/Fortran" target="_blank">FORTRAN</a> voor technisch wetenschappelijk rekenwerk en <a href="https://en.wikipedia.org/wiki/COBOL" target="_blank">COBOL</a> voor administratieve automatisering. Voor AI was dat niet voldoende. In de de academische wereld had men behoefte aan een programmeertaal <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)" target="_blank">LISP</a> speciaal voor <em>Natural Language Processing</em> (NLP) en <em>knowledge representation</em> (KR). Daarmee bouwden ze expert systemen
+Computers programmeren werd iets eenvoudiger toen programmeertalen werden uitgevonden: <a href="https://en.wikipedia.org/wiki/Fortran" target="_blank">FORTRAN</a> voor technisch wetenschappelijk rekenwerk en <a href="https://en.wikipedia.org/wiki/COBOL" target="_blank">COBOL</a> voor administratieve automatisering. In de academische wereld van het AI-onderzoek werd <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)" target="_blank">LISP</a> de belangrijkste programmeertaal. Toen ik in de jaren 70 kennis maakte met AI, bestonden verschillende dialecten van LISP om kennis mee vast te leggen in <em>expert systemen</em> zoals <a href="https://en.wikipedia.org/wiki/Mycin" target="_blank">MYCIN</a> en <a href="https://en.wikipedia.org/wiki/Xcon" target="_blank">XCON</a>. In die tijd dacht men dat <em>expert systemen</em> de wereld zouden gaan veroveren. Vanuit Amerikaanse universiteiten werden bedrijven opgericht zoals Teknowledge en IntelliCorp om die <em>expert systemen</em> te maken op peperdure LISP-computers van Symbolics, LMI en Xerox. <em>Knowledge enigineers</em> interviewden experts en om kennis vast te leggen of te coderen in LISP. Dat was uiteraard ook een kostbaaeen
 
-Toen ik in de jaren 70 kennis maakte met AI en LISP waren er op Amerikaanse universiteiten veel verschillende varianten van LISP. In de jaren 80 ontstond was een miljoenen markt ontstaan voor
+Achteraf gezien
 
-AI-onderzoek had de ambitie om denkende machines te maken.
 
 
+--- weglaten? ---
+In een rapport voor de Hoogovens beschreef ik AI als een nieuwe automatiseringstechnologie: "Na <em>structured programming</em> en <em>databases</em> is er nu AI en met name <em>knowledge engineering</em>. Traditioneel staat AI in de belangstelling van filosofen, linguïsten, psychologen, wiskundigen; kortom wetenschappers. Maar sinds enkele jaren is AI ook interessant voor bouwers en gebruikers van toepassingsprogramma's."
 
-LISP was bijzonder geschikt voor
 
-In de academische wereld van het AI-onderzoek werd <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)" target="_blank">LISP</a> de belangrijkste programmeertaal.
-(Voor mijn gevoel was LISP bovendien de belangrijkste programmeertaal uit de hele geschiedenis van software enigineering! Alle
 
-Als ik terugkijk naar alles wat ik heb gedaan en gelezen over software engineering, denk ik dat zo ongeveer Terugkijkend Daarnaast was LISP belangrijk voor alles wat weis bovendien zo ongeveer alles uitgevonden, wat volgens mij, sowieso heel bijzonder, omdat zo ongeveer alles wat we tegenwoordig doen Bovendien is En volgens mij ook voor alle programmeertaal Daarnaast is LISP volgens mij In LISP Bovendien was LISP volgens mij de belangrijkste programmeertaal , omdat ...
+Toen ik kennis maakte met AI was het een hype uit Amerika.
 
-Expert systemen!
+De term AI alleen al getuigt van torenhoge prententies.
 
+Voor mij was het een blik in de toekomst voor het programmeren van computers, filmindustrie, Windows, kruisraketten, enz.
 
-In de jaren 70 waren expert systemen. Dat waren systemen die deductief konden redeneren Ze werden ontwikkeld  zoals <a href="https://en.wikipedia.org/wiki/Mycin" target="_blank">MYCIN</a> voor het kiezen van de juiste antibiotica en <a href="https://en.wikipedia.org/wiki/Xcon" target="_blank">XCON</a>. knowledge engineer
-
-Het wetenschappelijk onderzoek naar AI ging lange tijd over kennis vastleggen in AI-programmeertalen zoals LISP en teksten ontleden met behulp van grammatica's oftewel <em>Natural Language Processing</em> (NLP). In de jaren 70 en 80 kwamen expert systemen zoals een aantal succesvolle subestonden een aantal succesvolle AI-toepassingonstonden
-
-
-
-----
-Geen echte vooruitgang
-
-In 1981 introduceerde IBM de IBM PC en in 1984 kwam Apple met de Apple Macintosh. Dat was het begin van de PC-revolutie in het bedrijfsleven. De IBM PC en de MS-DOS computers hadden in het begin geen grafische beeldschermen.
-
-<a href="https://en.wikipedia.org/wiki/AI_winter" target="_blank">Winter in de AI-wereld</a>
-
-expert systems
------
-
-<strong>Mijn persoonlijke geschiedenis met schaken en AI</strong>
-Reconstructie periode 1975 - 1990 terugkijken. Werk en hobby liepen door elkaar.
-
-Zo ongeveer tussen 1975 en 1990 heb ik hield ik mij als programmeur, adviseur en zelfs <em>knowledge enigineer</em> bezig met schaken en AI. Ik werkte achtereenvolgens bij Hoogovens aan veel verschillende projecten en bij Lithp Systems aan <em>expert systemen</em> op de IBM PC. Ik mocht naar wetenschappelijke congressen over AI in binnen- en buitenland. Ik was nog jong en kon alle ontwikkelingen nog bijhouden.
-
-Het begon voor mij allemaal in het nieuwe Rekencentrum van Hoogovens. Dat was toen een hypermodern gebouw met kantoren rond een technische ruimte met daarboven zalen met computers van Control Data, Univac en later IBM. Allemaal enorme luchtgekoelde kasten en veel ponskaartenmachines. De Univac 418-III computers waren via een zaal vol enorme modems verbonden met PDP-8 en PDP-11 computers in fabrieken en kantoren elders op het terrein van de Hoogovens.
-
-Beeldschermen waren er toen nog niet! Om computers te programmeren moesten de heren programmeurs netjes schrijven op ponsconcepten. Die handgeschreven formulieren werden vervolgens door dames in het rekencentrum ingetoetst als gaatjes in ponskaarten. Daarna werd de stapel ponskaarten (via speciale  ponskaartenmachines) gevoerd aan een computer. De computer drukte een lijst af van de ponskaarten met meestal allemaal foutboodschappen. Een bode bracht de stapel ponskaarten met de lijst terug naar de programmeur, die de fouten ging verbeteren net zo lang tot het computerprogramma helemaal goed was en de computer precies deed wat de bedoeling was.
-
-<img src="https://www.waagtoren.nl/wp-content/uploads/2026/03/PvD_in_NHD.jpg" alt="" width="307" height="250" class="alignleft size-full wp-image-56896" />Ik hield de computers aan de praat: ponskaarten voeren, lijsten afscheuren, tapes verwisselen, op knoppen drukken en zo voort. Daarnaast leerde ik programmeren op een Univac 418-III. Daarvan waren er twee. Een moest dag en nacht productie draaien in verbinding met fabrieken en kantoren. De andere was voor de programmeurs om op te testen en stond <em>stand by</em> om de productie over te nemen. In de avond- en nachtdienst kon ik die Univac 418-III gebruiken om annuïteitenhypotheken en priemgetallen uit te rekenen en spelletjes te maken zoals boter, kaas en eieren en schaken. Het boter, kaas en eieren programma werd beter naar mate je vaker tegen dat programma speelde. Het was dus al een lerend programma! Het schaakprogramma noemde ik IGM (Ik Ga Mat) en het was, zover ik weet, het tweede complete schaakprogramma van Nederland! Dit allemaal nog met ponskaarten, die ik in de nacht zelf moest maken. Pas in 1978 toen ik als programmeur gewoon overdag werkte, kwamen er beeldbuizen, waarmee ik als programmeur zelf mijn programma's kon intoetsen en testen op de computers die nog steeds in het Rekencentrum stonden.
-
-<img src="https://www.waagtoren.nl/wp-content/uploads/2026/03/Motorola_MC6802P.jpg" alt="" width="256" height="146" class="alignright size-full wp-image-56966" />Ondertussen was de microprocessor chip uitgevonden, kwamen er hobbyisten die zelf computers in elkaar knutselden en ik werd in 1977 lidnummer 71 van de Hobby Computer Club (HCC). Computers, die vroeger in zalen stonden, paste op een chip van een paar vierkante centimeter en een complete computer met beeldscherm paste op een bureau. Via de HCC kon ik van Manudax een Maxboard met een <a href="https://en.wikipedia.org/wiki/Motorola_6800" target="_blank">6800</a> microprocessor lenen om IGM opnieuw te maken.
-
-Zo ongeveer tussen 1975 en 1990 heb ik hield ik mij als programmeur, adviseur en zelfs <em>knowledge enigineer</em> bezig met schaken en AI. Ik werkte achtereenvolgens bij Hoogovens aan veel verschillende projecten en bij Lithp Systems aan <em>expert systemen</em> op de IBM PC. Ik mocht naar wetenschappelijke congressen over AI in binnen- en buitenland. Ik was nog jong en kon alle ontwikkelingen nog bijhouden.
-
-Uitleg waar de torenhoge ambitie vandaan kwam. Zie korte geschiedenis
-
-Bovendien had ik een torenhoge ambitie. Ik had namelijk IGM/Lisp bedacht: een programmeertaal voor schaakprogramma's. Misschien zelfs bruikbaar voor schakers, die nog niets van computers programmeren wisten! IGM programmeren op de Univac 418-III was al omslachtig door die ponskaarten, maar ook omdat ik programmeerde in de machinetaal van de Univac 418-III. Zo wilde ik niet IGM opnieuw programmeren in de machinetaal van de 6800. <a href="https://en.wikipedia.org/wiki/Lisp_(programming_language)" target="_blank">LISP</a> was toen de meest gebruikte AI-programmeertaal. Zeer geschikt om kennis mee vast te leggen, te manipuleren en ideeën snel te testen. Dat wilde ik dus ook met IGM/Lisp. Maar eerst moest ik nog veel 6800-machinetaal programmeren om schaken toe te voegen aan LISP.
-
-Pas in 1981 was IGM/Lisp klaar om op een daadwerkelijk eenvoudige manier ideeën voor een schaakprogramma te testen. Dat was amper op tijd voor het eerste Nederlandse Kampioenschap voor schaakprogramma's van de Computer Schaak Vereniging Nederland (CSVN). Tot een paar uur voor en tijdens het toernooi werkte ik nog aan KAANVAL. In de tijd dat de tegenstander aan zet was, moest KAANVAL advieszetten genereren, die IGM in zijn analyse zou kunnen gebruiken als IGM wel aan zet was. Een advieszet van KAANVAL moest voldoen aan: 1. dreigt schaak te geven of 2. valt een stuk aan, dat door de koning van de tegenstander teruggeslagen kan worden. Dit alles werkte goed in deze partij.
-
-[pgn initial_selection=13w]
-[Event "Nederlands kampioenschap voor computers"]
-[Site "Utrecht"]
-[Date "1981.09.27"]
-[White "IGM"]
-[Black "PK80"]
-[Result "1-0"]
-1.e4 e5 2.Nf3 d6 3.d4 exd4 4.Qxd4 Nc6 5.Bb5 Bd7 6.Bxc6 bxc6 7.O-O c5 8.Qc3 Bb5 9.Rd1 Be2 10.Rd5 c4 11.Nfd2 Qh4 12.g3 Qh3 13.Na3 O-O-O {Zo kreeg KAANVAL de kans om nuttige adviezen te geven en vanaf hier volgde IGM ze op.} 14.Nb5 c6 15.Nxa7+ Kb7 16.Ra5 c5 17.Qa3 Nf6 18.Rb5+ Kc7 19.Qa5+ Kd7 20.Rb7+ Ke6 21.Qxd8 Ng4 22.Qe8+ Kf6 23.Qxf7+ Ke5 24.Nc6# 1-0
-[/pgn]
-
-Daarna ging het bergafwaarts met IGM. Mijn 6800-computer en IGM/Lisp waren te traag. De concurrenten met snellere computers haalden IGM links en rechts in. In 1983 stopte ik helemaal met IGM. Bij Lithp Systems programmeerde ik nog wel in LISP, Sinds 1990 programmeer ik niet meer in LISP.
-
------
-Om een lang verhaal kort te maken. IGM was toen een hobbyproject naast mijn gewone werk. Bij Hoogovens schreef ik een rapport over toepassingen van AI en
-
-1973 Computeroperator Hoogovens IJmuiden
-1974 Nieuw rekencentrum
-1975
-1976 BS 66/67
-1976 Cursus Univac Assembler
-1977 IGM
-1978 Programmeur Hoogovens IJmuiden
-1979 Cursus Cobol
-1979 IGM - BS 66/67 rekencentrum Hoogovens
-1980 IGM - BS 66/67 Utrecht
-1980 Cursus Simula
-1980 redacteur HCC Nieuwsbrief
-1981 CSVN 1e kampioenschap Maxboard Utrecht
-1982 CSVN 2e kampioenschap Maxboard Wageningen
-1983 CSVN 3e kampioenschap Maxboard Leiden
-1984-1989 Programmeur Lithp Systems Purmerend
-1984-1988 Hoofdredacteur HCC Nieuwsbrief
-1985-1991 Sysop HCC Fido
-1987 Schaken voor computers
-1989-1999 Bestuur 0-0-0
-1990-1994 Van Diepen Automatiseert
-2009-     Bestuur Waagtoren
------
-
-<strong>Over Fritz en StockFish NNUE.</strong>
-----
-titel is wel goed
-AI-winter geldt niet voor computerschaak. Kasparov
-
-<a href="https://www.chess.com/news/view/chessbase-fat-fritz-2-stockfish-leela-chess-zero" target="_blank">Fat Fritz</a>
-
-Samenvatting:
-Aanpak 1: Schaakkennis zoals in Expert systemen LISP werkt niet.
-Aanpak 2: Methode Belle en Deep Blue Speciale schaakchips veroorzaakte de doorbraak 1997
-Aanpak 3: Methode Frans Morsch / Fritz die snap ik nog wel
-Aanpak 4: AlphaZero aanpak
-
-In <a href="https://www.waagtoren.nl/2025/08/10/schaken-met-computers-3/" target="_blank">Schaken met computers 3</a> beschreef ik hoe een computer het schaakspel in theorie zou kunnen oplossen door middel van retrograde analyse vanuit stellingen die mat of pat zijn. De conclusie was dat dat niet kan, omdat het schaakspel te veel mogelijkheden heeft.
-
-Ook met AI zal dat (voorlopig?) niet lukken. In deze aflevering van de serie zal ik proberen te verklaren hoe het mogelijk is computers met AI wel al veel beter kunnen schaken dan alle menselijke schakers.
-
-Daarvoor moet ik wel het een en ander uitleggen over:
-- algoritme: Eratosthenes
-- evaluatie functie 1: Turing
-- snelheid van computers: Moore
-- evaluatie functie 2: Yu Nasu 那須悠
-
-<a href="https://github.com/ynasu87/nnue/blob/master/docs/nnue.pdf" target="_blank">NNUE</a>
-
-
-Geen echte vooruitgang
-
-In 1981 introduceerde IBM de IBM PC en in 1984 kwam Apple met de Apple Macintosh. Dat was het begin van de PC-revolutie in het bedrijfsleven. De IBM PC en de MS-DOS computers hadden in het begin geen grafische beeldschermen.
-
-<a href="https://www.chessprogramming.org/Frans_Morsch" target="_blank">Frans Morsch</a>
-
-<a href="https://www.game-ai-forum.org/icga-tournaments/tournament.php?id=7" target="_blank">WK's</a>
-
-<a href="https://www.computable.nl/2002/09/26/32-bit-op-64-velden/" target="_blank">Over Fritz</a>
-
-
-2 schaakprogramma's in 1977
-blz. 110: 8 schaakprogramma's in 1980
-blz. 112: 17 aanmeldingen en 13 deelnemers Utrecht 1981
-blz. 118: 12 deelnemers Wageningen 1982
-blz. 121: 14 deelnemers Leiden 1983
-
-Nona
-4/5 Leiden 1983
-2 Leiden 1984
-1 Leiden 1985
-1 Leiden 1986
-
-Quest
-
-<strong>Algoritme</strong>
-
-
-Ik zal mijn uitleg splitsen in een aantal aspecten.
-
-Ik zal dat weer doen aan de hand van de ontdekkingen uit de geschiedenis van computerschaak, maar niet helemaal chronologisch
-
-Een aantal aspecten heb ik hierboven al genoemd: computers zijn de afgelopen 70 jaar veel sneller geworden, AI is mogelijk door de snelheid van computers,
-
-
-
-Ik zal dat zo veel mogelijk doen doen zonder alle wiskunde, Daarvoor moet ik iets uitleggen over algoritmes, een evaluatiefunctie voor schaken, en hoe neurale netwerken leren.
-
-
-
-
-
-
-Dus voorlopig afkorten tot NNUE. De documentatie staat open source op <a href="https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md" target="_blank">GitHub</a> met uitleg, plaatjes en alle code van Stockfish en de software om NNUE te trainen. Veel wiskunde, veel code en onmogelijk om na te rekenen.
-
-Daarvoor moet ik iets uitleggen over algoritmes, een evaluatiefunctie voor schaken, computerhardware en hoe neurale netwerken leren.
-
-<img class="alignright size-full wp-image-41400" src="https://www.waagtoren.nl/wp-content/uploads/2022/12/icon_128x128@2x.png" alt="" width="256" height="256">Bij Stockfish gaat dat proces van trainen nog steeds door en elke nieuwe versie wordt daarom nog steeds beter. Alle code van Stockfish staat open source op GitHub inclusief de documentatie van <a href="https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md" target="_blank">NNUE</a>, het <em>Efficiently Updatable Neural Network</em>
-
-<img src="https://www.waagtoren.nl/wp-content/uploads/2026/02/Zeef-van-Eratosthenes.gif" alt="" width="445" height="369" class="alignright size-full wp-image-56777" />
-
-In In deze aflevering ga ik proberen te verklaren waarom die engines zo sterk schaken. Daarvoor moet ik iets uitleggen over AI, computers en een algoritme om te schaken.
-
-Zo'n uitleg is ambitieus, maar sinds een lezing van Bas Haring op 8 februari 2026 in de Alkenaer denk ik dat het mogelijk is.
-
-
-Ten eerste hoe een algoritme om te schaken werkt.
-Ten tweede hoe een computer werkt.
-
-- hoe en waarom een computer werkt en dat allemaal mogelijk is.
-
-Plaatje van broodrooster (misschien nog niet)
-
-<a href="https://en.wikipedia.org/wiki/The_Imitation_Game" target="_blank">The Imitation Game</a>
-
-
-
---->
-Mijn vorige artikel <a href="https://www.waagtoren.nl/2023/01/13/schaken-met-computers-2/" rel="noopener" target="_blank">Schaken met computers 2</a> ging over valsspelen met de computer en wereldkampioenen. Sindsdien is de zaak tussen Hans Niemann en Magnus Carlsen zonder rechtzaak geschikt. Je kunt dit allemaal nalezen in de <a href="https://en.wikipedia.org/wiki/Carlsen%E2%80%93Niemann_controversy" rel="noopener" target="_blank">Wikipedia</a>.
-
-Naar aanleiding van het vorige artikel kreeg ik vaak de vraag: hoe werkt dat valsspelen precies in de praktijk? Ik meende dat het voldoende zou zijn om uit te leggen wat in theorie mogelijk is met computers, maar veel lezers willen dus gewoon weten hoe je dat praktisch kunt aanpakken. In dit artikel zal ik dat enigszins toelichten. Niet met de bedoeling dat je dit tijdens een partij gaat doen, maar vooral hoe je computers kunt gebruiken om beter te leren schaken.
-
-
-uitleg over juiste vraag stellen
-
-uitleg over software / hardware
-
-uitleg over AlphaZero revolutie: neurale netwerk trainen met miljoenen partijen i.p.v. programmeren
-
-nu in Stockfish
-
-Aanbevelingen voor clubschakers
-
-Mensen denken dat ze tegenwoordig meer weten, omdat ze met Google alles kunnen opzoeken. Schakers denken dat ze beter kunnen schaken, omdat ze hun partijen kunnen analyseren met Stockfish. <over verschil tussen schakers toen en nu>
-
-    chess.com en lichess.com
-
-    --->
-    Mijn vorige artikel <a href="https://www.waagtoren.nl/2023/01/13/schaken-met-computers-2/" rel="noopener" target="_blank">Schaken met computers 2</a> ging over valsspelen met de computer en wereldkampioenen. Sindsdien is de zaak tussen Hans Niemann en Magnus Carlsen zonder rechtzaak geschikt. Je kunt dit allemaal nalezen in de <a href="https://en.wikipedia.org/wiki/Carlsen%E2%80%93Niemann_controversy" rel="noopener" target="_blank">Wikipedia</a>.
-
-    Naar aanleiding van het vorige artikel kreeg ik vaak de vraag: hoe werkt dat valsspelen precies in de praktijk? Ik meende dat het voldoende zou zijn om uit te leggen wat in theorie mogelijk is met computers, maar veel lezers willen dus gewoon weten hoe je dat praktisch kunt aanpakken. In dit artikel zal ik dat enigszins toelichten. Niet met de bedoeling dat je dit tijdens een partij gaat doen, maar vooral hoe je computers kunt gebruiken om beter te leren schaken.
-
-    Discussie met Dimitri Reinderman over opmerking van Anish Giri
-
-    Mat in 10 van Jac. Haring uit boek van Co Buisman niet op te lossen met Stockfish volgens Dimitri
-
-
-    Dimitri Reinderman constateerde op <a href="https://www.schaaksite.nl/2023/02/19/bug-in-stockfish-15-1/" target="_blank">zijn website</a> dat Stockfish 15 het mat in 10 niet kan vinden terwijl Stockfish 14 (en ouder) dat wel deed.
-    [pgn]
-    [Event "Jac. Haring wit geeft mat in 10 zetten"]
-    [FEN "4N3/8/8/6pR/4B3/3p2p1/3Pp1p1/4K1kb w - - 0 1"]
-    1.Rh8 {Zo moet je toch echt beginnen om mat in 10 te geven.}
-    ( { Maar Stockfish 17 geeft }Rh3 g4 Rxg3 Kh2 Rxg4 g1Q Rxg1 Bxe4 Rg5 {en mat in 23!})
-    g4
-    2.Bh7 Kh2
-    3.Bg6 Kg1
-    4.Bh5 Kh2
-    5.Bg4 Kg1
-    6.Bh3 Kh2
-    7.Nf6 Kg1
-    8.Nd7 Kh2
-    9.Ne5 Kg1
-    10.Nf3
-    *
-    [/pgn]

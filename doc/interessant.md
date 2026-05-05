@@ -51,6 +51,7 @@ Refresh Android cache
 - [Spread and rest ... erg leuke website](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
 - [map versus object](https://dev.to/gustavupp/5-reasons-to-choose-javascript-maps-over-objects-for-storing-key-value-pairswith-examples-39dd)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
+- [Office files](https://officeparser.harshankur.com/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
 - [VanJS UI Framework without React/JSX](https://vanjs.org/)

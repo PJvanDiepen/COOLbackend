@@ -9,8 +9,10 @@ import { o_o_o } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
+// TODO patch 26 september 2024 versie 0.8.66
+
 // dinsdag van 0:00 tot 19:00
-function kludge(welkeDag = 2, welkeUur = 19) {
+function kludgeAlg(welkeDag = 2, welkeUur = 19) {
     const nu = new Date();
     const dag = nu.getDay();        // 0 = zondag, 1 = maandag, 2 = dinsdag, ...
     const uur = nu.getHours();
@@ -21,13 +23,27 @@ function kludge(welkeDag = 2, welkeUur = 19) {
     }
 }
 
+function kludge() {
+    const nu = new Date();
+    const dag = nu.getDay(); // 0 = zondag, 1 = maandag, 2 = dinsdag, ...
+    const uur = nu.getHours();
+    console.log(`dag=${dag} uur=${uur}`);
+    if (dag === 2 && uur < 19) {
+        return -1; // dinsdag van 0:00 tot 19:00
+    } else {
+        return 0;
+    }
+}
+
+
 (async function() {
-    console.log(`kludge: ${kludge(4)}`); // donderdag
+    console.log(`kludge: ${kludge()}`);
     html.urlVerwerken({
         club: 0,
-        seizoen: "",
+        seizoen: "2526",
         competitie: db.INTERNE_COMPETITIE
     });
+    console.log(html.url);
     await server.eersteContact();
     const club = db.clubTak(html.url.club);
     const seizoenen = await club.alleSeizoenen();
