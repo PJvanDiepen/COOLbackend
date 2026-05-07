@@ -11,18 +11,6 @@ import * as zyq from "./zyq.js";
 
 // TODO patch 26 september 2024 versie 0.8.66
 
-// dinsdag van 0:00 tot 19:00
-function kludgeAlg(welkeDag = 2, welkeUur = 19) {
-    const nu = new Date();
-    const dag = nu.getDay();        // 0 = zondag, 1 = maandag, 2 = dinsdag, ...
-    const uur = nu.getHours();
-    if (dag === welkeDag && uur <= welkeUur) {
-        return -1;
-    } else {
-        return 0;
-    }
-}
-
 function kludge() {
     const nu = new Date();
     const dag = nu.getDay(); // 0 = zondag, 1 = maandag, 2 = dinsdag, ...
@@ -34,7 +22,6 @@ function kludge() {
         return 0;
     }
 }
-
 
 (async function() {
     console.log(`kludge: ${kludge()}`);
@@ -68,7 +55,7 @@ function kludge() {
         rondeNummer: 2,
         knsbNummer: 6212404
     };
-    debug(y);
+    await debug(y);
     console.log("klim 5", db.klim(y));
     console.log("groei 5", await db.groei(y));
 

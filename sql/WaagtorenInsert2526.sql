@@ -97,7 +97,7 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2526';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 27;
+set @ronde = 30;
 set @bord = 10;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
