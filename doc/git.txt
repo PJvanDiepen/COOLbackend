@@ -1,0 +1,64 @@
+Joris,
+
+Bij wijze van voorbereiding op dinsdag.
+
+0-0-0 versie 0.8.66 is van 26 september 2024 die op 0-0-0.nl draait.
+Daarnaast bestaat een testversie die 200-300 commits verder is.
+Ondertussen heb ik met bash toch het een en ander ge-patcht op 0-0-0.nl. Zie onderstaande lijst.
+
+Nu wil ik met git 2 versies maken: een productieversie en een testversie. Branches?
+Daarvoor moet ik terug naar versie 0.8.66, maar ik moet ook die patches in git verwerken.
+Die staan dus wel op 0-0-0.nl, maar nog niet in een branch.
+
+Het belangrijkste is dat ik mij een werkwijze wil eigen maken om met die 2 versies te werken.
+Dat wil ik van jou leren. Ik heb me uiteraard al in git verdiept, maar begrijp het toch niet goed.
+
+/public
+
+May  7 14:20 start.html
+Dec  5 17:56 teamleider.html
+Sep 17  2025 speler.html
+Aug 10  2025 pvdiepen.html
+
+Sep 26  2024 indelen.html
+Sep 26  2024 index.html
+Sep 26  2024 lid.html
+Sep 26  2024 localhost.html
+Sep 26  2024 paren.html
+Sep 26  2024 ranglijst.html
+Sep 26  2024 ronde.html
+Sep 26  2024 rondenlijst.html
+Sep 26  2024 team.html
+Sep 26  2024 test.html
+Sep 26  2024 tk.html
+Sep 26  2024 aanmelden.html
+Sep 26  2024 agenda.html
+Sep 26  2024 beheer.html
+Sep 26  2024 bestuur.html
+Sep 26  2024 email.html
+
+/public/js
+
+May  7 14:20 start.js
+May  6 15:51 o_o_o.js
+May  5 19:36 indelen.js
+Apr  9 14:44 speler.js
+Nov  6 21:47 teamleider.js
+Aug 28  2025 ranglijst.js
+Oct 31  2024 reglement.js
+
+Sep 26  2024 aanmelden.js
+Sep 26  2024 agenda.js
+Sep 26  2024 beheer.js
+Sep 26  2024 bestuur.js
+Sep 26  2024 db.js
+Sep 26  2024 email.js
+Sep 26  2024 html.js
+Sep 26  2024 lid.js
+Sep 26  2024 paren.js
+Sep 26  2024 ronde.js
+Sep 26  2024 rondenlijst.js
+Sep 26  2024 team.js
+Sep 26  2024 test.js
+Sep 26  2024 zwitsers.js
+Sep 26  2024 zyq.js

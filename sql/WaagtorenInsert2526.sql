@@ -311,6 +311,9 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0,"2526","nv1",6,"t","Castricum V",'2026-03-31');
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
+(0, "2526", "int", 33, "t", "", '2026-06-02');
+
+insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (0, "2526", "int", 1, "t", "", '2025-09-02'),
 (0, "2526", "int", 2, "t", "", '2025-09-09'),
 (0, "2526", "int", 3, "t", "", '2025-09-16'),
@@ -340,10 +343,10 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0, "2526", "int", 27, "t", "", '2026-04-07'),
 (0, "2526", "int", 28, "t", "", '2026-04-14'),
 (0, "2526", "int", 29, "t", "", '2026-04-21'),
-(0, "2526", "int", 30, "t", "", '2026-05-05'),
-(0, "2526", "int", 31, "t", "", '2026-05-12'),
-(0, "2526", "int", 32, "t", "", '2026-05-19'),
-(0, "2526", "int", 33, "t", "", '2026-05-26'),
+(0, "2526", "int", 30, "t", "", '2026-05-12'),
+(0, "2526", "int", 31, "t", "", '2026-05-19'),
+(0, "2526", "int", 32, "t", "", '2026-05-26'),
+(0, "2526", "int", 33, "t", "", '2026-06-02'),
 (0, "2526", "ira", 1, "t", "", '2025-10-21'),
 (0, "2526", "ira", 2, "t", "", '2025-10-21'),
 (0, "2526", "ira", 3, "t", "", '2025-10-21'),

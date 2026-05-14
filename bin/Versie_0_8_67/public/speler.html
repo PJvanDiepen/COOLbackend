@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Speler</title>
+    <link rel="stylesheet" type="text/css" href="css/o_o_o.css">
+    <style>
+        td:nth-child(1), td:nth-child(4), td:nth-child(5), td:nth-child(6) {
+            text-align: center; /* ronde, bord, kleur en resultaat */
+        }
+        td:nth-child(7), td:nth-child(8)  {
+            text-align: right; /* punten en totaal */
+        }
+        #ratings td:nth-child(1) {
+            text-align: left; /* maand en jaar */
+        }
+        #ratings td:nth-child(2) {
+            text-align: right; /* rating */
+        }
+    </style>
+</head>
+<body>
+    <select id="menu"></select>
+    <h1 id="competitie"></h1>
+    <h2 id="kop">Speler</h2>
+    <table id="tabel">
+        <tr>
+            <th>ronde</th>
+            <th>datum</th>
+            <th></th>
+            <th>bord</th>
+            <th>kleur</th>
+            <th></th>
+            <th>punten</th>
+            <th>totaal</th>
+        </tr>
+    </table>
+    <script type="module" src="js/speler.js"></script>
+</body>
+</html>
