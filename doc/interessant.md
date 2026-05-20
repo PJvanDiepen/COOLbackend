@@ -44,6 +44,7 @@ Refresh Android cache
 - [code conventions](https://www.crockford.com/code.html)
 - [JavaScript tutorial](https://javascript.info/)
 - [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
+- [recursie](https://blog.gaborkoos.com/posts/2026-05-09-Your-Recursion-Is-Lying-to-You/)
 - [temporal](https://bloomberg.github.io/js-blog/post/temporal/)
 - [undefined](https://dmitripavlutin.com/7-tips-to-handle-undefined-in-javascript/)
 - [Type support with plain JavaScript](https://www.pausly.app/blog/full-type-support-with-plain-javascript)

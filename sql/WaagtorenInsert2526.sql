@@ -97,8 +97,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer =
 set @seizoen = '2526';
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 30;
-set @bord = 10;
+set @ronde = 31;
+set @bord = 13;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -109,13 +109,13 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit   = 8950876; -- Jos
-set @zwart = 8350738; -- Ramon
+set @wit   = 7210137; -- Arjen Dibbets
+set @zwart = 7519930; -- John Norder
 
 select * from persoon where knsbNummer = @wit;
 
 set @oneven = 198; -- Thomas Hubers
-set @afwezig = 204; -- Patrick Decker
+set @afwezig = 8485059; -- Peter Duijs
 set @extern = 6572511; -- Bert Buitink
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer

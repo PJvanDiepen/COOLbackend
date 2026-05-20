@@ -43,7 +43,6 @@ zetStuk(restVelden, PAARD);
 zetStuk(restVelden, PAARD);
 
 restVelden.sort();
-console.log(restVelden);
 velden[restVelden[0]].textContent = TOREN;
 velden[restVelden[1]].textContent = KONING;
 velden[restVelden[2]].textContent = TOREN;
@@ -56,6 +55,7 @@ document.getElementById("rokades").textContent =
     `Bij 0-0 gaat koning ${veld(restVelden[1])} naar g en toren ${veld(restVelden[2])} naar f.
     Bij 0-0-0 gaat koning ${veld(restVelden[1])} naar c en toren ${veld(restVelden[0])} naar d.`;
 
+document.getElementById("beginstelling").scrollIntoView();
 /*
 TODO diagram met 64 velden
 
