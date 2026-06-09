@@ -428,7 +428,11 @@ de juiste `rol` hebben om die gegevens van de gebruiker te mogen zien.
 Alleen een systeembeheerder kan `rol` invullen. En alleen een ontwikkelaar kan een gebruiker
 de rol van systeembeheerder geven.
 
-Dit alles is nog niet in productie en in de paktijk zullen we nog meer toepassingen bedenken.
+Dit alles is nog niet in productie en in de praktijk zullen we nog meer toepassingen bedenken.
+
+## Kortere partijen
+
+Voorstellen seizoen 2026-2027:
 
 ## Synchroniseren
 

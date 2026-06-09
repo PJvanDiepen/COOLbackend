@@ -80,12 +80,14 @@ Refresh Android cache
 - [url as state](https://alfy.blog/2025/10/31/your-url-is-your-state.html)
 - [iterator instead of array](https://allthingssmitty.com/2026/01/12/stop-turning-everything-into-arrays-and-do-less-work-instead/)
 - [bookmarklets](https://css-tricks.com/a-complete-guide-to-bookmarklets/)
+- [Word document](https://docx.js.org/#/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
 - [nginx config](https://github.com/digitalocean/nginxconfig.io)
 
 # node.js
+- [node.js internals](https://www.thenodebook.com/)
 - [memory](https://www.trevorlasn.com/blog/common-causes-of-memory-leaks-in-javascript)
 - [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
 - [CORS](https://jakearchibald.com/2021/cors/)
@@ -100,7 +102,6 @@ Refresh Android cache
 - [node in 2025](https://kashw1n.com/blog/nodejs-2025/)
 
 # webscraping
-
 - [web scraping](https://blog.apify.com/best-javascript-web-scraping-libraries/)
 - [Axios + Cheerio tutorial](https://proxyway.com/guides/cheerio-web-scraping-a-tutorial)
 - [Axios + Cheerio step by step](https://oxylabs.io/blog/cheerio-web-scraping)
