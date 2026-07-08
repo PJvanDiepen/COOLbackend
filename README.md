@@ -13,6 +13,22 @@ npm start
 
 # Deploy to 0-0-0.nl
 
+Deployments lopen via GitHub Actions voor tags die op de `production` branch staan.
+De workflow heeft de repository secret `COOL_DEPLOY_SSH_KEY` nodig voor SSH-toegang tot `cool@0-0-0.nl`.
+
+Een nieuwe productieversie deployen kan met de Git CLI:
+
+```sh
+git switch production
+git pull --ff-only
+npm test
+git tag -a v0.8.68 -m "0-0-0.nl versie 0.8.68"
+git push origin v0.8.68
+```
+
+Na het pushen van de tag start GitHub Actions de deploy naar 0-0-0.nl.
+De deploy gaat alleen door als de tag op de `production` branch staat.
+
 # [Database](doc/database.md)
 De backend werkt met MySQL databases. In de database staan uitslagen, deelnemers en andere data per schaakvereniging.
 Bovendien is de logic van het wedstrijdreglement vastgelegd in de database.

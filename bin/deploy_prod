@@ -1,4 +1,6 @@
-ssh cool@0-0-0.nl 'bash -s' <<'ENDREMOTE'
+DEPLOY_REF=${DEPLOY_REF:-production}
+
+ssh cool@0-0-0.nl "DEPLOY_REF=$DEPLOY_REF bash -s" <<'ENDREMOTE'
 set -ex
 export VERSION=$(date +"%Y-%m-%d-%H%M%S")
 export DIR=~/cool/versions/$VERSION/
@@ -6,7 +8,7 @@ export NODE_ENV=production
 
 mkdir -p $DIR
 cd $DIR
-git clone --depth 1 --single-branch --branch $NODE_ENV git@github.com:PJvanDiepen/COOLbackend.git .
+git clone --depth 1 --single-branch --branch "$DEPLOY_REF" git@github.com:PJvanDiepen/COOLbackend.git .
 rm -f config/$NODE_ENV.json
 cp ~/cool/config/$NODE_ENV.json config/
 npm install

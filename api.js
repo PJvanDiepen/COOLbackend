@@ -375,14 +375,14 @@ module.exports = function (url) {
     Frontend: zyq.js
      */
     url.get("/api", async function (ctx) {
-        ctx.body = JSON.stringify(db.vragen); // zie app.js
+        ctx.body = JSON.stringify(db.synchroon.vragen); // zie app.js
     });
 
     /*
     Frontend: beheer.js
      */
     url.get("/server", async function (ctx) {
-        ctx.body = JSON.stringify(db.serverInformatie());
+        ctx.body = JSON.stringify(db.synchroon);
     });
 
     /*
