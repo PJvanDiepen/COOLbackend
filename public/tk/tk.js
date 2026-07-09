@@ -73,7 +73,7 @@ const tk = [
         hoog: 2451,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Biesheuvel_II"
     },
-    {jaar: 1972.1,
+    {jaar: 1973,
         zetels: "PvdA=43&KVP=27&VVD=22&ARP=14&PPR=7&CHU=7&CPN=7&D’66=6&DS'70=6&SGP=3&BP=3&GPV=2&PSP=2&RKPN=1",
         kabinet: "Den Uyl",
         coalitie: "PvdA, KVP, ARP, PPR, D'66",
@@ -169,7 +169,7 @@ const tk = [
         hoog: 637,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Balkenende_III"
     },
-    {jaar: 2006.1,
+    {jaar: 2007,
         zetels: "CDA=41&PvdA=33&SP=25&VVD=22&PVV=9&GL=7&CU=6&D66=3&PvdD=2&SGP=2",
         kabinet: "Balkenende 4",
         coalitie: "CDA, PvdA, CU",
@@ -201,29 +201,42 @@ const tk = [
         hoog: 553,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_III"
     },
-    {jaar: 2021,
+    {jaar: 2022,
         zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
         kabinet: "Rutte 4",
         coalitie: "VVD, D66, CDA, CU",
         breed: 1566,
         hoog: 505,
         link: "https://nl.wikipedia.org/wiki/Kabinet-Rutte_IV"
+    },
+    {jaar: 2024,
+        zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
+        kabinet: "Schoof",
+        coalitie: "PVV, VVD, NSC, BBB",
+        breed: 829,
+        hoog: 553,
+        link: "https://nl.wikipedia.org/wiki/Kabinet-Schoof"
+    } /*
+    {jaar: 2023,
+        zetels: "VVD=28&PVV=27&GL/PvdA=25&NSC=21&D66=10&BBB=6&SP=5&PvdD=5&CU=4&CDA=4&FvD=4&Denk=4&Volt=3&SGP=3&JA21=1",
+        kabinet: "Peilingwijzer op basis van peilingen I&O Research en Ipsos EenVandaag",
+        breed: 640,
+        hoog: 427,
+        link: "https://peilingwijzer.tomlouwerse.nl"
     }
-/*
-    {jaar: 2025,
-        zetels: "VVD=34&D66=24&PVV=17&CDA=15&SP=9&PvdA=9&FvD=8&GL=8&PvdD=6&CU=5&JA21=3&SGP=3&Volt=3&Denk=3&50plus=1&Bij1=1&BBB=1",
+    {jaar: 2023,
+        zetels: "PVV=37&GL/PvdA=25&VVD=24&NSC=20&D66=9&BBB=7&CDA=5&SP=5&FvD=3&PvdD=3&CU=3&SGP=3&Denk=3&Volt=2&JA21=1",
         kabinet: "Nog geen kabinet",
         breed: 600,
         hoog: 338,
         link: "https://www.verkiezingensite.nl"
-    }
- */
+    } */
 ]
 
 function jarenVerwerken(jaren) {
     const laatsteJaar = tk[tk.length - 1].jaar;
     for (const kabinet of tk) {
-        jaren.appendChild(htmlLink(
+        jaren.append(htmlLink(
             "index.html?jaar=" + kabinet.jaar,
             " " + Math.round(kabinet.jaar) + (kabinet.verkiezing ? "*" : "") + (kabinet.jaar < laatsteJaar ? "," : ".")));
     }
@@ -236,7 +249,6 @@ function parametersVerwerken() {
     const parameters = new URLSearchParams(pagina.search);
     const anderJaar = Number(parameters.get("jaar"));
     if (anderJaar) {
-        sessionStorage.clear();
         sessionStorage.setItem("jaar", anderJaar);
         jaar = anderJaar;
     }
@@ -252,9 +264,9 @@ function parametersVerwerken() {
 
 function kabinetVerwerken(kader, kop) {
     const i = jaarIndex(jaar);
-    kop.innerHTML = "Kabinet in " + Math.round(jaar);
-    kader.appendChild(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
-    kader.appendChild(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
+    kop.textContent = "Kabinet in " + Math.round(jaar);
+    kader.append(htmlTabblad(tk[i].link, htmlPlaatje("images/"+tk[i].kabinet+".jpg", DEEL, tk[i].breed, tk[i].hoog)));
+    kader.append(htmlParagraaf(tk[i].coalitie ? "Kabinet " + tk[i].kabinet + ": " + tk[i].coalitie : tk[i].kabinet));
 }
 
 const DEEL = 55; // plaatje als percentage van window
@@ -267,7 +279,7 @@ const kabinetten = [];
 
 function uitslagenVerwerken(kop, deLijsten) {
     const i = jaarIndex(jaar);
-    kop.innerHTML = "Zetels per partij in " + Math.round(jaar);
+    kop.textContent = "Zetels per partij in " + Math.round(jaar);
     const uitslagen = new URLSearchParams(tk[tk[i].verkiezing ? jaarIndex(tk[i].verkiezing) : i].zetels);
     for (const [partij, zetels] of uitslagen) {
         const wel = Number(zetels) > 1 && !sessionStorage.getItem(partij);
@@ -277,7 +289,7 @@ function uitslagenVerwerken(kop, deLijsten) {
     let kamer = 0;
     for (const lijst of lijsten) {
         kamer = kamer + lijst.zetels;
-        deLijsten.appendChild(htmlRij(
+        deLijsten.append(htmlRij(
             ++nummer,
             lijst.partij,
             lijst.zetels,
@@ -286,7 +298,7 @@ function uitslagenVerwerken(kop, deLijsten) {
                 : htmlLink("index.html?wel=" + lijst.partij +"#h2lijsten", STREEP)));
     }
     if (kamer < 150 || kamer > 150) {
-        deLijsten.appendChild(htmlRij("", "", kamer, "?"));
+        deLijsten.append(htmlRij("", "", kamer, "?"));
     }
 }
 
@@ -299,7 +311,7 @@ function jaarIndex(jaar) {
 }
 
 function kabinetFormeren(kop, deKabinetten) {
-    kop.innerHTML = "Meerderheidskabinetten in " + Math.round(jaar);
+    kop.textContent = "Meerderheidskabinetten in " + Math.round(jaar);
     kabinet(0, 0);
     let nummer = 0;
     while (kabinetten.length > 0) {
@@ -313,7 +325,7 @@ function kabinetFormeren(kop, deKabinetten) {
             }
             j++;
         }
-        deKabinetten.appendChild(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
+        deKabinetten.append(htmlRij(++nummer, kabinetten[i].partijenLijst, kabinetten[i].aantalPartijen, kabinetten[i].coalitieZetels));
         kabinetten.splice(i,1);
     }
 }
@@ -339,29 +351,25 @@ function kabinet(vanaf, coalitieZetels) {
     }
 }
 
-function htmlTekst(tekst) {
-    return tekst.nodeType === Node.ELEMENT_NODE ? tekst : document.createTextNode(tekst);
-}
-
 function htmlParagraaf(tekst) {
     const p = document.createElement("p");
-    p.appendChild(htmlTekst(tekst));
+    p.append(tekst);
     return p;
 }
 
 function htmlRij(...kolommen) {
     const tr = document.createElement("tr");
-    kolommen.map(function (kolom) {
+    for (const kolom of kolommen) {
         const td = document.createElement("td");
-        td.appendChild(htmlTekst(kolom));
-        tr.appendChild(td);
-    });
+        td.append(kolom);
+        tr.append(td);
+    }
     return tr;
 }
 
 function htmlTabblad(link, tekst) {
     const a = document.createElement("a");
-    a.appendChild(htmlTekst(tekst));
+    a.append(tekst);
     a.href = link;
     a.target = "_blank"; // https://www.jitbit.com/alexblog/256-targetblank---the-most-underestimated-vulnerability-ever/
     a.rel = "noopener noreferrer"
@@ -370,7 +378,7 @@ function htmlTabblad(link, tekst) {
 
 function htmlLink(link, tekst) {
     const a = document.createElement("a");
-    a.appendChild(htmlTekst(tekst));
+    a.append(tekst);
     a.href = link;
     return a;
 }

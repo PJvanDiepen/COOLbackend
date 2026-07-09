@@ -1,77 +1,77 @@
+
 "use strict";
+
+import * as db from "./db.js";
+import * as html from "./html.js";
+import { o_o_o, init, vorigeRonde, volgendeRonde, laatsteRonde } from "./o_o_o.js";
+
+import * as zyq from "./zyq.js";
 
 /*
     verwerk vereniging=[vereniging]
+    of
+    verwerk team=<teamCode>&competitie=<teamCode>
  */
 
 (async function() {
     await init();
-    const plaatje = document.getElementById("plaatje");
-    if (o_o_o.vereniging === "Waagtoren") {
-        plaatje.appendChild(htmlPlaatje("images/waagtoren.gif",60, 150, 123));
+    html.id("kop").textContent =
+        `${o_o_o.vereniging}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}${html.SCHEIDING}${db.teamVoluit(o_o_o.competitie)}`;
+    const plaatje = html.id("plaatje");
+    if (true) { // TODO (o_o_o.vereniging === "Waagtoren")
+        plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
-    document.getElementById("kop").innerHTML = o_o_o.vereniging + SCHEIDING + seizoenVoluit(o_o_o.seizoen);
-    document.getElementById("competitie").appendChild(
-        htmlLinkEnTerug("ranglijst.html", `Ranglijst ${teamVoluit(o_o_o.competitie)} na ronde ${o_o_o.vorigeRonde}`));
-    document.getElementById("ronde").appendChild(
-        htmlLinkEnTerug("ronde.html", `Uitslagen ronde ${o_o_o.vorigeRonde}`));
-    if (o_o_o.huidigeRonde && o_o_o.ronde[o_o_o.huidigeRonde].resultaten === 0) { // indeling zonder resultaten)
-        document.getElementById("indelen").appendChild(
-            htmlLinkEnTerug(`ronde.html?ronde=${o_o_o.huidigeRonde}`, `Definitieve indeling ronde ${o_o_o.huidigeRonde}`));
-    } else if (o_o_o.vorigeRonde < o_o_o.laatsteRonde) {
-        document.getElementById("indelen").appendChild(
-            htmlLinkEnTerug("indelen.html", `Voorlopige indeling ronde ${o_o_o.huidigeRonde}`));
+    const menuKeuzes = [];
+    if (o_o_o.competitie === db.RAPID_COMPETITIE && o_o_o.seizoen > "2324") {
+        menuKeuzes.push(
+            [db.IEDEREEN, "Ranglijst", `./Swiss/Rapid${o_o_o.seizoen}/`]);
+    } else {
+    menuKeuzes.push(
+        [db.IEDEREEN, `Ranglijst na ronde ${vorigeRonde()}`,"ranglijst.html"], // menu0
+        [db.IEDEREEN, `Uitslagen ronde ${vorigeRonde()}`,"ronde.html"]); // menu1
     }
-    seizoenSelecteren(INTERNE_COMPETITIE);
-    // o_o_o.competitie = SNELSCHAKEN; // TODO welke competitie is komende dinsdag?
-    // o_o_o.team = SNELSCHAKEN;
-    competitieSelecteren();
+    if (volgendeRonde()) { // menu2 TODO Definitieve indeling
+        menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
+    }
+    if (false && zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
+        menuKeuzes.push([db.IEDEREEN, "Aanmelden voor 0-0-0", "aanmelden.html"]);
+    }
+    menuKeuzes.push(
+        [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
+        [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
+        [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
+    for (let i = 0; i < menuKeuzes.length; i++) {
+        const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
+        if (minimumRechten <= zyq.gebruiker.mutatieRechten ) {
+            html.id(`menu${i}`).append(html.naarPaginaEnTerug(naarPagina,tekst)); // menu0..6 op deze pagina
+        }
+    }
+    menuKeuzes.push(
+        [db.IEDEREEN, db.MENU], // hier worden de menuKeuzes van andere pagina's tussengevoegd
+        [db.GEREGISTREERD, "systeembeheer", "beheer.html"]);
+    sessionStorage.setItem(db.MENU, JSON.stringify(menuKeuzes)); // algemeen menu voor de volgende pagina's
+    seizoenSelecteren(o_o_o.competitie);
+    await competitieSelecteren();
 })();
 
-
-function htmlPlaatje(plaatje, percentage, breed, hoog) {
-    const img = document.createElement("img");
-    img.src = plaatje;
-    const factor = (window.innerWidth * percentage / 100) / breed; // percentage maximale breedte
-    if (factor > 1.0) {
-        img.width = breed;
-        img.height = hoog;
-    } else {
-        img.width = Math.round(breed * factor);
-        img.height = Math.round(hoog * factor);
+function seizoenSelecteren(teamCode) {
+    const seizoenenSelectie = [];
+    for (const seizoen of db.tak(o_o_o.club).seizoen) {
+        seizoenenSelectie.push([seizoen.seizoen, seizoen.seizoenTekst]);
     }
-    return img;
+    html.selectie(html.id("seizoenSelecteren"), o_o_o.seizoen, seizoenenSelectie, function (seizoen) {
+        html.zelfdePagina(`seizoen=${seizoen}&competitie=${db.INTERNE_COMPETITIE}&team=${db.INTERNE_COMPETITIE}`);
+    });
 }
 
-async function seizoenSelecteren(teamCode) {
-    const seizoenen = document.getElementById("seizoenSelecteren");
-    (await localFetch("/seizoenen/" + teamCode)).forEach(
-        function (seizoen) {
-            seizoenen.appendChild(htmlOptie(seizoen, seizoenVoluit(seizoen)));
-        });
-    seizoenen.value = o_o_o.seizoen; // werkt uitsluitend na await
-    seizoenen.addEventListener("input",
-        function () {
-            sessionStorage.setItem("seizoen", seizoenen.value);
-            sessionStorage.setItem("competitie", INTERNE_COMPETITIE);
-            sessionStorage.setItem("team", INTERNE_COMPETITIE);
-            naarZelfdePagina();
-        });
-}
-
+// TODO zie o_o_o.js: teamSelecteren
 async function competitieSelecteren() {
-    const competities = document.getElementById("competitieSelecteren");
-    (await localFetch("/teams/" + o_o_o.seizoen)).forEach(
-        function (team) {
-            if (interneCompetitie(team.teamCode)) {
-                competities.appendChild(htmlOptie(team.teamCode, team.omschrijving));
-            }
-        });
-    competities.value = o_o_o.competitie; // werkt uitsluitend na await
-    competities.addEventListener("input",
-        function () {
-            sessionStorage.setItem("competitie", competities.value);
-            sessionStorage.setItem("team", competities.value);
-            naarZelfdePagina();
-        });
+    const competities = (await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`)).filter(function (team) {
+        return db.isCompetitie(team);
+    }).map(function (team) {
+        return [team.teamCode, team.omschrijving];
+    });
+    html.selectie(html.id("competitieSelecteren"), o_o_o.competitie, competities, function (competitie) {
+        html.zelfdePagina(`team=${competitie}&competitie=${competitie}`);
+    });
 }

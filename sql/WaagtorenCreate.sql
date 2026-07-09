@@ -1,7 +1,25 @@
 use waagtoren;
 
-CREATE DATABASE  IF NOT EXISTS `waagtoren`;
-USE `waagtoren`;
+-- planning:
+-- speler wijzigen
+-- team wijzigen
+-- gebruiker wijzigen
+-- mutatie vervangen door log
+
+drop table if exists rating; -- 0-0-0.nl versie 0.8.27
+create table rating (
+	knsbNummer int not null,
+    knsbNaam varchar(60),
+    titel varchar(3),
+    federatie varchar(3),
+    knsbRating int not null,
+    partijen int not null,
+    geboorteJaar int not null,
+    sekse char(1),
+    maand int not null,
+    jaar int not null,
+    PRIMARY KEY (maand, knsbNummer)
+);
 
 drop table if exists persoon; -- 0-0-0.nl versie 0.1
 create table persoon (
@@ -10,15 +28,20 @@ create table persoon (
     PRIMARY KEY (knsbNummer)
 );
 
-drop table if exists gebruiker; -- 0-0-0.nl versie 0.1
+drop table if exists gebruiker; -- 0-0-0.nl versie 0.8.58
+-- TODO mutatieRechten en datumEmail verwijderen
 create table gebruiker (
 	knsbNummer int not null,
     mutatieRechten int not null,
     uuidToken char(36),
     email varchar(100),
     datumEmail date,
+    telefoon char(15),
     primary key (uuidToken)
 );
+
+alter table gebruiker
+add constraint gebruiker_1_persoon unique (knsbNummer);
 
 alter table gebruiker
 add constraint fk_gebruiker_persoon
@@ -26,60 +49,62 @@ add constraint fk_gebruiker_persoon
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-    
-drop table if exists paring;  -- TODO lezen in WaagtorenRanglijst totalen of verwijderen?
-create table paring (
-	knsbNummer int not null,
-    tegenstanderNummer int not null,
-    voorkeur int,
-    primary key (knsbNummer, tegenstanderNummer)
-); 
-
-alter table paring
-add constraint fk_paring_persoon
-    foreign key (knsbNummer)
-    references persoon (knsbNummer)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;   
-    
-alter table paring
-add constraint fk_paring_tegenstander
-    foreign key (tegenstanderNummer)
-    references persoon (knsbNummer)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;       
-    
-drop table if exists team; -- 0-0-0.nl versie 0.5.2
+        
+drop table if exists team; -- 0-0-0.nl versie 0.8.60
+-- TODO bond, poule en teamleider verwijderen
+-- TODO verwijder fk_team_persoon
 create table team (
+    clubCode int not null,
 	seizoen char(4) not null,
     teamCode char(3) not null,
+    reglement int not null,
     bond char(1),
     poule char(2),
     omschrijving varchar(45),
     borden int not null,
     teamleider int not null,
-    PRIMARY KEY (seizoen, teamCode)
+    primary key (clubCode, seizoen, teamCode)
 );
+
+alter table team
+add column reglement int not null after teamCode;
 
 alter table team
 add constraint fk_team_persoon
     foreign key (teamleider)
     references persoon (knsbNummer)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;       
+    ON UPDATE CASCADE;
 
-DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.5.5
-CREATE TABLE speler ( -- TODO competities toevoegen
+DROP TABLE IF EXISTS speler; -- 0-0-0.nl versie 0.8.56
+-- TODO datum, nhsbTeam, knsbTeam, intern1..5 verwijderen
+CREATE TABLE speler (
+    clubCode int not null,
     seizoen char(4) not null,
+    teamCode char(3) not null,
 	nhsbTeam char(3) not null,
-    nhsbOpgegeven char(3) not null, -- TODO verwijderen
 	knsbTeam char(3) not null,
-    knsbOpgegeven char(3) not null, -- TODO verwijderen
     knsbNummer int not null,
     knsbRating int not null,
-    datumRating date not null,
-    PRIMARY KEY (seizoen, knsbNummer)
+    datum date not null,
+    interneRating int not null,
+    intern1 char(3) not null,
+	intern2 char(3) not null,
+    intern3 char(3) not null,
+    intern4 char(3) not null,
+    intern5 char(3) not null,
+    rol int not null,
+    emailZien int not null,
+    telefoonZien int not null,
+    PRIMARY KEY (clubCode, seizoen, teamCode, knsbNummer)
 );
+
+alter table speler
+add CONSTRAINT fk_speler_team
+    FOREIGN KEY (clubCode, seizoen, teamCode)
+    REFERENCES team (clubCode, seizoen, teamCode)
+    ON DELETE NO ACTION
+    ON UPDATE CASCADE;
 
 alter table speler
 add constraint fk_speler_persoon
@@ -87,56 +112,31 @@ add constraint fk_speler_persoon
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-    
-alter table speler
-add CONSTRAINT fk_speler_nhsb_team
-    FOREIGN KEY (seizoen, nhsbTeam)
-    REFERENCES team (seizoen, teamCode)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;
-    
-alter table speler
-add CONSTRAINT fk_speler_vast_nhsb_team
-    FOREIGN KEY (seizoen, nhsbOpgegeven)
-    REFERENCES team (seizoen, teamCode)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;
-        
-alter table speler
-add CONSTRAINT fk_speler_knsb_team
-    FOREIGN KEY (seizoen, knsbTeam)
-    REFERENCES team (seizoen, teamCode)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE; 
-    
-alter table speler
-add CONSTRAINT fk_speler_vast_knsb_team
-    FOREIGN KEY (seizoen, knsbOpgegeven)
-    REFERENCES team (seizoen, teamCode)
-    ON DELETE NO ACTION
-    ON UPDATE CASCADE;        
-    
-DROP TABLE IF EXISTS ronde; -- 0-0-0.nl versie 0.1
+      
+DROP TABLE IF EXISTS ronde; -- 0-0-0.nl versie 0.8.56
 CREATE TABLE ronde (
+    clubCode int not null,
     seizoen char(4) not null,
     teamCode char(3) not null,
     rondeNummer int not null,
     uithuis char(1) not null,
     tegenstander varchar(45),
-    plaats varchar(45),
     datum date not null,
-    PRIMARY KEY (seizoen, teamCode, rondeNummer)
+    PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer)
 );
 
 alter table ronde
 add CONSTRAINT fk_ronde_team
-    FOREIGN KEY (seizoen, teamCode)
-    REFERENCES team (seizoen, teamCode)
+    FOREIGN KEY (clubCode, seizoen, teamCode)
+    REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.6.8
+alter table uitslag drop column anderTeam;  
+    
+DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.59
 CREATE TABLE uitslag (
+    clubCode int not null,
     seizoen char(4) not null,
     teamCode char(3) not null,
     rondeNummer int not null,
@@ -147,23 +147,23 @@ CREATE TABLE uitslag (
     tegenstanderNummer int,
     resultaat char(1),
     datum date comment 'indien op een andere datum dan ronde',
-    anderTeam char(3),
-    PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
+    competitie char(3),
+    PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
 );
 
 alter table uitslag
 add CONSTRAINT fk_uitslag_team
-    FOREIGN KEY (seizoen, teamCode)
-    REFERENCES team (seizoen, teamCode)
+    FOREIGN KEY (clubCode, seizoen, teamCode)
+    REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-    
+     
 alter table uitslag
-add CONSTRAINT fk_uitslag_ander_team
-    FOREIGN KEY (seizoen, anderTeam)
-    REFERENCES team (seizoen, teamCode)
+add CONSTRAINT fk_uitslag_competitie
+    FOREIGN KEY (clubCode, seizoen, competitie)
+    REFERENCES team (clubCode, seizoen, teamCode)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;
+    ON UPDATE CASCADE;    
             
 alter table uitslag
 add constraint fk_uitslag_persoon
@@ -178,25 +178,16 @@ add constraint fk_uitslag_tegenstander
     references persoon (knsbNummer)
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
-    
+
 alter table uitslag
 add CONSTRAINT fk_uitslag_ronde
-    FOREIGN KEY (seizoen, teamCode, rondeNummer)
-    REFERENCES ronde (seizoen, teamCode, rondeNummer)
+    FOREIGN KEY (clubCode, seizoen, teamCode, rondeNummer)
+    REFERENCES ronde (clubCode, seizoen, teamCode, rondeNummer)
     ON DELETE NO ACTION
-    ON UPDATE CASCADE;        
-
-DROP TABLE IF EXISTS ranglijst; -- 0-0-0.nl versie 0.1
-CREATE TABLE ranglijst (
-    seizoen char(4) not null,
-    teamCode char(3) not null,
-    versie char(1) not null comment 'a = actueel',
-    startPunten int default 300 comment 'artikel 11',
-    berekening varchar(300) comment 'SQL function', 
-    PRIMARY KEY (seizoen, teamCode, versie)
-);
+    ON UPDATE CASCADE;
 
 drop table if exists mutatie; -- 0-0-0.nl versie 0.2
+-- TODO vervangen door log
 create table mutatie (
     tijdstip datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment 'geen tijdzone conversie',
     volgNummer int not null,

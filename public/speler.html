@@ -4,13 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Speler</title>
-    <link rel="stylesheet" type="text/css" href="css/aaappp.css">
+    <link rel="stylesheet" type="text/css" href="css/o_o_o.css">
     <style>
         td:nth-child(1), td:nth-child(4), td:nth-child(5), td:nth-child(6) {
             text-align: center; /* ronde, bord, kleur en resultaat */
         }
         td:nth-child(7), td:nth-child(8)  {
             text-align: right; /* punten en totaal */
+        }
+        #ratings td:nth-child(1) {
+            text-align: left; /* maand en jaar */
+        }
+        #ratings td:nth-child(2) {
+            text-align: right; /* rating */
         }
     </style>
 </head>
@@ -30,7 +36,6 @@
             <th>totaal</th>
         </tr>
     </table>
-    <script src="js/const.js"></script>
-    <script src="js/speler.js"></script>
+    <script type="module" src="js/speler.js"></script>
 </body>
 </html>

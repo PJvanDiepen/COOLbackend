@@ -1,5 +1,4 @@
-Nuttig
-
+# Client
 Verwijder localStorage op Android browser Chrome
 - 3 puntjes
 - Instellingen
@@ -9,58 +8,176 @@ Verwijder localStorage op Android browser Chrome
 - Wissen en opnieuw instellen
  
 Verwijder localStorage op iPhone
-- 
+- TODO
+
+Refresh Firefox cache
+- Hamburger
+- Settings
+- Privacy & Security
+- Cookies & Site Data 
+- Clear Data...
+- Niet aanvinken: Cookies and Site Data
+- Wel aanvinken: Cached Web Content
+- Clear
+
+Refresh Android cache
+- TODO
+
+# Browser
+- [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+
+# MySQL
 
 - [MySQL tutorial](https://www.mysqltutorial.org/)
-- [read local fil in browser](https://usefulangle.com/post/193/javascript-read-local-file)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
-- [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
-- [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
-- [DOM events](https://domevents.dev/)
-- [33 js concepts](https://github.com/leonardomso/33-js-concepts)
-- [js algorithms](https://github.com/trekhleb/javascript-algorithms)
-- [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
-- [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
-- [sort an array of objects](https://www.sitepoint.com/sort-an-array-of-objects-in-javascript/)
-- [async await node.js](https://nodejs.dev/learn/modern-asynchronous-javascript-with-async-and-await)
-- [async await json](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
-- [Modules](https://www.digitalocean.com/community/tutorials/understanding-modules-and-import-and-export-statements-in-javascript)
-- [JavaScript build tools](https://opensource.com/article/20/11/javascript-build-tools)
-- [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
-- [debugging javascript](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
-- [client hints](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/client-hints)
-- [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
-- [CORS](https://jakearchibald.com/2021/cors/)
-- [CSS display](https://bitsofco.de/how-display-contents-works/)
-- [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
-- [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
 - [Ubuntu MySQL](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-remote-database-to-optimize-site-performance-with-mysql-on-ubuntu-18-04)
+- [Fix corrupted tables](https://www.digitalocean.com/community/tutorials/how-to-fix-corrupted-tables-in-mysql)
 - [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
-- [IntelliJ](https://blog.jetbrains.com/idea/2021/08/most-popular-live-streams/)
-- [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
-- [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
-- [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
+- [database design](https://vertabelo.com/blog/database-design-principles/)
+- [database design example](https://blog.devart.com/sql-database-design-basics-with-example.html)
+
+# JavaScript
+
+- [ECMA JavaScript](https://262.ecma-international.org/)
+- [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
+- [undefined](https://dmitripavlutin.com/7-tips-to-handle-undefined-in-javascript/)
+- [Type support with plain JavaScript](https://www.pausly.app/blog/full-type-support-with-plain-javascript)
+- [JavaScript nieuwe mogelijkheden](https://betterprogramming.pub/all-javascript-and-typescript-features-of-the-last-3-years-629c57e73e42)
+- [Spread and rest ... erg leuke website](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
+- [map versus object](https://dev.to/gustavupp/5-reasons-to-choose-javascript-maps-over-objects-for-storing-key-value-pairswith-examples-39dd)
+- [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
+- [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
+- [33 js concepts](https://github.com/leonardomso/33-js-concepts)
+- [Vanilla JavaScript](https://vanjs.org/)
+- [js algorithms](https://github.com/trekhleb/javascript-algorithms)
+- [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
+- [Copy to clipboard](https://www.freecodecamp.org/news/copy-text-to-clipboard-javascript/)
+- [DOM events](https://domevents.dev/)
+- [DOM manipulation](https://phuoc.ng/collection/html-dom/)
+- [memory efficient DOM manipulation](https://frontendmasters.com/blog/patterns-for-memory-efficient-dom-manipulation/)
+- [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
+- [promises training](https://github.com/henriqueinonhe/promises-training)
+- [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
-- [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
+- [JavaScipt date & time](https://blog.openreplay.com/is-it-time-for-the-javascript-temporal-api/)
+- [Uitleg over modern frameworks](https://nolanlawson.com/2023/12/02/lets-learn-how-modern-javascript-frameworks-work-by-building-one/)
+- [6 ways to declare functions](https://dmitripavlutin.com/6-ways-to-declare-javascript-functions/)
+- [Wat een JavaScript programmeur moet begrijpen in 2024](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-in-2024-c1044bcb0dfb)
+- [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
+- [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
+
+# nginx
+- [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
+- [nginx config](https://github.com/digitalocean/nginxconfig.io)
+
+# node.js
+- [memory](https://www.trevorlasn.com/blog/common-causes-of-memory-leaks-in-javascript)
+- [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
+- [CORS](https://jakearchibald.com/2021/cors/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
+- [security best practices](https://nodejs.org/en/docs/guides/security/)
+- [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
 
-Objection / Knex
+# deno
+- [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
+- [verschillen node en deno](https://cult.honeypot.io/reads/deno-vs-node-main-differences/)
+- [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
+- [JSR i.p.v. npm](https://deno.com/blog/jsr_open_beta)
+
+# Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
 - [objection + knexx = painless](https://dev.to/aspittel/objection--knex--painless-postgresql-in-your-node-app--6n6)
 - [My first Node web app](https://dev.to/ekafyi/tribute-to-swissted-introduction-2c6i)
 - [Objection and Knex](https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f)
-- [Objection to orm hatred](https://www.jakso.me/blog/objection-to-orm-hatred)
 - [Multiple databases](https://blog.eperedo.com/2019/12/28/multiple-database-connection-objection-js-knex/)
+- [Uitleg over Objection models](https://medium.com/velotio-perspectives/a-step-towards-simplified-querying-in-nodejs-8bfd9bb4097f)
 - [Transactions](https://blog.eperedo.com/2020/01/11/objection-js-transactions/)
+- [Knex cheatsheet](https://devhints.io/knex)
+- [Knex probleem](https://evertpot.com/knex-sql-injection/)
+- [Best ORMs in 2024](https://www.sitepoint.com/javascript-typescript-orms/)
 
-Interessant 
+# HTML / CSS
 
+- [eerste website](http://info.cern.ch/hypertext/WWW/TheProject.html)
+- [html, css, JavaScript, etc.](https://learn-wcs.com/)
+- [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
+- [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
+- [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
+- [Modern css](https://frontendmasters.com/blog/what-you-need-to-know-about-modern-css-spring-2024-edition/)
+- [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
+- [CSS display](https://bitsofco.de/how-display-contents-works/)
+- [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
+- [Zeekat CSS!](https://zeekat.nl/index.html)
+- [HTML uitleg](https://www.patrickweaver.net/blog/a-blog-post-with-every-html-element/)
+- [Unicode](https://tonsky.me/blog/unicode/)
+- [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
+- [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
+
+# design patterns
+- [dependency injection to test functions](https://betterprogramming.pub/optional-di-in-javascript-2cb7f5bc68a)
+- [dependency injection and unittest](https://blog.appsignal.com/2022/02/16/dependency-injection-in-javascript-write-testable-code-easily.html)
+- [dependency injection class versus function](https://medium.com/geekculture/dependency-injection-in-javascript-2d2e4ad9df49)
+- [dependency injection and functional programming](https://jonbarnett.hashnode.dev/a-rollercoaster-ride-into-dependency-injection-and-functional-programming-in-javascript)
+- [server or browser](https://vercel.com/blog/how-to-choose-the-best-rendering-strategy-for-your-app)
+
+# software enigineering
+- [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
+- [Learn & practice Git](https://gitexercises.fracz.com/)
+- [Linus Torvalds on Git](https://www.youtube.com/watch?v=4XpnKHJAok8)
+- [Trunk based development](https://trunkbaseddevelopment.com/)
+- [Open source guides](https://opensource.guide/)
+- [GitFlow](https://www.endoflineblog.com/gitflow-considered-harmful)
+- [RexEgg](https://www.rexegg.com/)
+- [Wanneer Regular Expressions?](https://www.quora.com/Why-dont-more-programmers-use-regular-expressions-Somehow-most-of-the-programmers-I-know-prefer-to-use-split-substring-with-index-etc/answer/Christopher-F-Clark-1)
+- [Genereer Regular Expressions](https://github.com/devongovett/regexgen)
+- [History of Regular Expressions in JavaScript](https://www.smashingmagazine.com/2024/08/history-future-regular-expressions-javascript/)
+- [telefoonnummer regular expression](https://developerking.medium.com/how-to-integrate-international-phone-number-validation-in-input-field-with-javascript-55d8e4b432c4)
+- [Regular Expressions diagrammen](https://regexper.com/)
+- [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
+- [Git uitleg](https://github.com/readme/guides/configure-git-environment)
+- [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
+- [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
+- [Contributing to open source software: Creating a pull request](https://www.youtube.com/watch?v=xPOPjGbv_TY)
+- [How I Started Contributing to Open Source and Why You Should Too](https://www.youtube.com/watch?v=GAqfMNB-YBU)
+- [Issues, milestones and projects in GitHub](https://heardlibrary.github.io/digital-scholarship/manage/control/github/projects/)
+
+# schaken
+- [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
+- [FIDE Dutch System](https://estima.com/chess/wintdhelp/index.html?pairingsystemfidedutchsystem.html)
+- [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
+- [Uitleg door ChessManager](https://www.chessmanager.com/en/blog/swiss-system)
+- [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
+- [Sevilla](https://www.jbfsoftware.com/)
+- [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
+- [Schaken in HTML en JavaScript](https://www.chessengines.org/)
+- [betafish](https://github.com/Strryke/betafish)
+- [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
+- [CQL](http://www.gadycosteff.com/cql/index.html)
+- [CalvinBot](https://lichess.org/@/Calvin_Bot)
+- [Monte Carlo simulatie](https://en.wikipedia.org/wiki/Monte_Carlo_method)
+- [Monte Carlo simulatie schaken](https://medium.com/@ishaan.gupta0401/monte-carlo-tree-search-application-on-chess-5573fc0efb75)
+- [Monte Carlo simulatie investeren](https://www.investopedia.com/terms/m/montecarlosimulation.asp)
+- [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
+
+# marketing
+- [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
+- [SEO for beginners](https://moz.com/beginners-guide-to-seo)
+
+# Interessant 
+
+- [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
+- [Svelte by Example](https://sveltebyexample.com/)
+- [Svelte](https://svelte.dev/)
+- [verschillende frameworks](https://eugeneyan.com/writing/web-frameworks/)
+- [Progressively enhance HTML with lightweight JavaScript libraries](https://unsuckjs.com/)
 - [Vanilla JavaScript as framework](https://www.smashingmagazine.com/2022/02/web-frameworks-guide-part2/)
 - [TODO in verschillende frameworks](https://todomvc.com/)
+- [unit test met vitest](https://vitest.dev/)
 - [JSON in JavaScript](https://www.zhenghao.io/posts/json-oddities)
 - [type in JavaScript](https://github.com/tc39/proposal-type-annotations)
 - [TypeScript](https://codeascraft.com/2021/11/08/etsys-journey-to-typescript/)
@@ -68,6 +185,7 @@ Interessant
 - [resilient js ui](https://www.smashingmagazine.com/2021/08/build-resilient-javascript-ui/)
 - [SPA](http://singlepageappbook.com/index.html)
 - [Accelerate JS development](https://blog.techmagic.co/how-to-accelerate-js-development-with-the-right-approach-techmagic-case-studies/)
+- [cut and paste in JavaScript](https://alexharri.com/blog/clipboard)
 - [case against web frameworks](https://thenewstack.io/case-against-web-frameworks/)
 - [Symbols and why they're awesome](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/)
 - [Vanilla JavaScript snippets](https://www.smashingmagazine.com/2021/04/vanilla-javascript-code-snippets/)
@@ -83,7 +201,13 @@ Interessant
 - [JavaScript engines](https://blogg.bekk.no/how-javascript-engines-achieve-great-performance-fb0b36601557)
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
-Later:
+# Later
+- [clickable area on image](https://www.imagemaps.net/)
+- [interactieve kaarten](https://agafonkin.com/)
+- [3D in JavaScript](https://discoverthreejs.com/)
+- [IBM Carbon Design System](https://carbondesignsystem.com/)
+- [JavaScript frameworks](https://qr.ae/pvWvGt)
+- [IntelliJ on Chromebook](https://medium.com/@jeffrey.cardillo/using-intellij-and-other-linux-apps-on-your-chromebook-51fd7fadb9db)
 - [Flutter for web](https://dzone.com/articles/flutter-web-development-all-you-need-to-know)
 - [Optimaliseren DOM mutaties](https://gomakethings.com/testing-dom-injection-performance-with-vanilla-js/)
 - [Label Form](https://bitsofco.de/labelling-form-elements/)
@@ -108,25 +232,30 @@ Later:
 - [Uitleg over Grid Layout](https://bitsofco.de/github-contribution-graph-css-grid/)
 - [vertical alignment with css subgrid](https://www.lambdatest.com/blog/vertical-alignment-with-css-subgrid/)
 - [EM vs REM vs PX](https://engageinteractive.co.uk/blog/em-vs-rem-vs-px)
+- [bash in JavaScript](https://github.com/google/zx)
 
-
-Misschien:
+# Misschien
 
 - [Vlaggen van de wereld](https://codepen.io/raddevus/pen/WNQbOpK)
+- [Tekenen](https://developer.mozilla.org/en-US/blog/javascript-shape-drawing-function/)
 - [comic book speech bubbles with SVG and javascript](https://humaan.com/blog/creating-comic-book-speech-bubbles-with-svg-and-javascript/?ref=sidebar)
 - [vloeistof projecties](https://tympanus.net/codrops/2021/01/19/drawing-2d-metaballs-with-webgl2/)
 - [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/)
-- [Denon alternatief voor node.js](https://opensource.com/article/21/2/deno)
 - [Spaceinvaders](https://github.com/kubowania/space-invaders) 
 - [pipe](https://www.obvibase.com/dev-blog/i-ve-used-the-pipe-function-2-560-times-and-i-can-tell-you-it-s-good)
 - [Kaart met legenda](https://codepen.io/haakseth/pen/KQbjdO)
 - [TypeScript](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/)
-- [alle JavaScript events](https://www.perimeterx.com/tech-blog/2019/list-every-event-that-exists-in-the-browser/)
 - [IntelliJ klokje](https://www.jetbrains.com/company/contacts/#headquarters-international-sales)
-- [MongoDb](https://www.quora.com/Which-one-would-you-prefer-to-use-MongoDB-or-MySQL-Why/answer/MongoDB-15)
+- [PostgreSQL](https://www.red-gate.com/blog/database-development/what-is-postgresql-and-why-do-businesses-need-to-know-more-about-it)
+- [MongoDB](https://www.quora.com/Which-one-would-you-prefer-to-use-MongoDB-or-MySQL-Why/answer/MongoDB-15)
 - [@property CSS](https://css-tricks.com/exploring-property-and-its-animating-powers/)
 - [scroll-snap-stop CSS](https://css-tricks.com/almanac/properties/s/scroll-snap-stop/)
 - [CSS animation](https://www.joshwcomeau.com/animation/keyframe-animations/?utm_source=DigitalOcean_Newsletter&mkt_tok=MTEzLURUTi0yNjYAAAF_aoSFBy0NUtyxPkeZsVuCv6qE6f3fiyegEOSH6AEv-JiqCq_I1o3ISlI9DHKEXT6Or39kiNlTJKODn4CiPts327YIyvfQvhWKfEDOSELI)
 - [Nationaal Cyber Security Centrum](https://www.ncsc.nl/)
-- [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [Diagrammen in Markdown](https://github.blog/2022-02-14-include-diagrams-markdown-files-mermaid/)
+- [Latex in JavaScript](https://cortexjs.io/mathlive/)
+- [Processing in JavaScript](https://github.com/processing/p5.js)
+- [Turing Award](https://amturing.acm.org/byyear.cfm)
+- [wiskundige formules](https://runjs.app/blog/equations-that-changed-the-world-rewritten-in-javascript)
+- [OCR](https://simonwillison.net/2024/Mar/30/ocr-pdfs-images/)
+- [Structure and Interpretation of Computer Programs](https://sourceacademy.org/sicpjs/index)

@@ -1,0 +1,5 @@
+npm notice
+npm notice New major version of npm available! 8.19.4 -> 10.8.0
+npm notice Changelog: <https://github.com/npm/cli/releases/tag/v10.8.0>
+npm notice Run `npm install -g npm@10.8.0` to update!
+npm notice

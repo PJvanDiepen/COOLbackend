@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bestuur</title>
+    <link rel="stylesheet" type="text/css" href="css/o_o_o.css">
+    <style>
+         #competities td:nth-child(3), #tabel td:nth-child(3), #tabel td:nth-child(4) {
+            text-align: right; /* aantal, interne en KNSB rating */
+         }
+         #competities td:nth-child(2), #ratinglijsten td:nth-child(2), #tabel td:nth-child(5), #tabel td:nth-child(6) {
+            text-align: center; /* code, knsb en nhsb */
+         }
+    </style>
+</head>
+<body>
+    <select id="menu"></select>
+    <h1 id="kop"></h1>
+    <table id ="competities">
+        <tr>
+            <th></th>
+            <th>code</th>
+            <th>aantal</th>
+        </tr>
+    </table>
+    <details>
+        <summary>KNSB-ratinglijst verwerken</summary>
+        <p>
+            0-0-0 gebruikt vooral de KNSB-ratinglijst van 1 september.
+            Daarnaast staan de meest recente ratinglijsten per maand in de database. Dat zijn dus totaal 12 lijsten.
+            Hieronder staat een overzicht. Voor het inlezen van een ratinglijst heeft 0-0-0 (voorlopig) nog wat hulp nodig.
+            Een gebruiker moet de juiste ratinglijst downloaden van de KNSB-webside, het zip-bestand uitpakken en
+            het csv-bestand selecteren, zodat 0-0-0 die kan inlezen.
+        </p>
+        <table id ="ratinglijsten">
+            <tr>
+                <th>download</th>
+                <th>unzip</th>
+                <th>selecteren</th>
+                <th></th>
+            </tr>
+        </table>
+        <p>
+            Ratinglijst inlezen:
+            <input type="file" id="csvFile" accept=".csv" hidden/>
+            <label for="csvFile" id="bestand">Selecteer ratinglijst-bestand</label>
+        </p>
+        <p id="informeer"></p>
+    </details>
+    <table id="tabel">
+        <tr>
+            <th></th>
+            <th></th>
+            <th>rating</th>
+            <th>intern</th>
+            <th>knsb</th>
+            <th>nhsb</th>
+            <th>competities</th>
+            <th>gebruiker</th>
+        </tr>
+    </table>
+    <script type="module" src="js/bestuur.js"></script>
+</body>
+</html>

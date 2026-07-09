@@ -1,7 +1,12 @@
 use waagtoren;
 
+
 -- test Zwitsers toernooi gebaseerd op NK jeugd tot 18 jaar 2022
 set @ronde = 1; -- 7 ronden
+set @ronde = 2;
+set @ronde = 3;
+set @ronde = 4;
+set @ronde = 5;
 
 select * from uitslag where seizoen = '2122' and teamCode = 'izt' and rondeNummer = @ronde;
 
@@ -27,7 +32,7 @@ insert into uitslag (seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, par
 -- TODO spelers selecteren
 select naam, s.knsbNummer, knsbRating, knsbOpgegeven, nhsbOpgegeven
 from speler s join persoon p on p.knsbNummer = s.knsbNummer
-where seizoen = '2122' order by naam; -- knsbRating desc;
+where seizoen = '2122' order by knsbRating desc; -- naam; -- knsbRating desc;
 
 -- TODO afwezig wijzigen/toevoegen tijdens toernooi
 set @competitie = 'ira';

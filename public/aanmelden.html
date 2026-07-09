@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aanmelden</title>
+    <link rel="stylesheet" type="text/css" href="css/o_o_o.css">
+</head>
+<body>
+    <select id="menu"></select>
+    <h1>Aanmelden voor 0-0-0.nl</h1>
+    <p>
+        Je komt op deze webpagina als 0-0-0.nl je niet (meer) herkent als gebruiker.
+        Hieronder kan je je KNSB-nummer en KNSB-rating opzoeken door een deel van je naam in te toetsen.
+        Indien je niet bekend bent in 0-0-0 en de KNSB-ratinglijst moet je je voornaam, tussenvoegsels en achternaam helemaal invullen.
+        Je e-mailadres invullen is noodzakelijk, zodat de systeembeheerder je een e-mail kan sturen met een link om je registratie te activeren.
+        Bewaar die e-mail, zodat je eventueel je registratie opnieuw kunt activeren.
+        Opnieuw activeren is nodig met een nieuwe telefoon of tablet of als de local storage van je browser is gewist.
+    </p>
+    <label for="zoek">Zoek in 0-0-0 en KNSB-ratinglijst:</label>
+    <input type="text" id="zoek" name="zoek" size="42" onkeydown="return /[a-z, ]/i.test(event.key)">
+    <select id="selecteer"></select>
+    <select id="maand"></select>
+    <p id="informeer"></p>
+    <form action="" id="formulier">
+        <fieldset>
+            <legend>registratie formulier</legend>
+            <label for="naam">naam:</label>
+            <input type="text" id="naam" name="naam" size="40" required> <!–– TODO controleren op zinnige naam ––>
+            <label for="email">e-mail:</label>
+            <input type="email" id="email" name="email" size="40">
+            <label for="knsbNummer">KNSB nummer:</label>
+            <input type="number" id="knsbNummer" name="knsbNummer" disabled>
+            <label for="knsbRating" id="jaar">KNSB rating</label>
+            <input type="number" id="knsbRating" name="knsbRating" disabled>
+            <button type="submit" class="marge-boven">wijzigingen opslaan</button>
+        </fieldset>
+    </form>
+    <script type="module" src="js/aanmelden.js"></script>
+</body>
+</html>
