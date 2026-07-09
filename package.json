@@ -4,7 +4,8 @@
   "description": "Backend for 0-0-0.nl",
   "main": "app.js",
   "scripts": {
-    "start": "node app"
+    "start": "node app",
+    "test": "node test/test.js"
   },
   "repository": {
     "type": "git",
