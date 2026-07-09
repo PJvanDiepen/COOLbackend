@@ -144,13 +144,15 @@ function competitieBepalen() {
     while (i < o_o_o.ronde.length && !db.isCompetitie(o_o_o.ronde[i])) { // volgende competitie ronde
         i++;
     }
-    return o_o_o.ronde[i].teamCode;
+    return "int"; // PvD: geen rapid! o_o_o.ronde[i].teamCode;
 }
 
 function versieBepalen() { // TODO reglement in team i.p.v. versie
     if (o_o_o.competitie === db.INTERNE_COMPETITIE && o_o_o.versie === 0) {
         if (o_o_o.seizoen === "1819" || o_o_o.seizoen === "1920" || o_o_o.seizoen === "2021") {
             return 2;
+        } else if (o_o_o.seizoen === "2526") { // TODO en latere seizoenen?
+            return  8;
         } else {
             return 3; // vanaf seizoen 2021-2022
         }
@@ -161,6 +163,7 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
     } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
         return 6;
     }
+    return o_o_o.versie;
 }
 
 export function laatsteRonde() {
@@ -178,6 +181,17 @@ export function volgendeRonde() {
     const ronde = db.tak(o_o_o.club, o_o_o.seizoen, o_o_o.team).ronde;
     const i = indexRondeTotDatum(ronde);
     return i < 0 ? 0 : ronde[i].rondeNummer; // geen of volgende ronde
+}
+
+function kludge() {
+    const nu = new Date();
+    const dag = nu.getDay(); // 0 = zondag, 1 = maandag, 2 = dinsdag, ...
+    const uur = nu.getHours();
+    if (dag === 2 && uur < 19) {
+        return -1; // dinsdag van 0:00 tot 19:00
+    } else {
+        return 0;
+    }
 }
 
 /**
@@ -204,7 +218,7 @@ function indexRondeTotDatum(ronde, jsonDatum = null) {
     while (new Date(ronde[index].datum) < peilDatum) { // eerste ronde voor peildatum
         index++;
     }
-    return index;
+    return index + kludge();
 }
 
 export function rondeGegevens(teamCode, rondeNummer) {

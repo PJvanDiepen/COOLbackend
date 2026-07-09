@@ -18,7 +18,7 @@ import * as zyq from "./zyq.js";
                 `/${o_o_o.club}/${o_o_o.seizoen}/backup/speler/${o_o_o.speler}`));
         }]);
     uitslagenSpeler(html.id("kop"), html.id("tabel"));
-    await ratingPerMaandSpeler(html.id("ratings"), o_o_o.speler);
+    // await ratingPerMaandSpeler(html.id("ratings"), o_o_o.speler);
 })();
 
 /*
@@ -83,7 +83,7 @@ async function uitslagenSpeler(kop, lijst) {
         }
     }
     if (t.aftrek()) {
-        const tekst = t.aftrek() > 0 ? "bijtelling" : "aftrek";
+        const tekst = `${t.aftrek() / -4} x aftrek volgens reglement artikel 12`;
         lijst.append(html.rij("", "", tekst, "", "", "", t.aftrek(), totaal + t.aftrek()));
     }
     if (!t.intern() && t.afzeggingen()) {
