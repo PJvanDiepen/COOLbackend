@@ -131,7 +131,12 @@ add CONSTRAINT fk_ronde_team
     ON DELETE NO ACTION
     ON UPDATE CASCADE;
     
-DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.59
+DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.66
+alter table uitslag 
+ADD COLUMN resultaten VARCHAR(9) AFTER resultaat;
+describe uitslag; 
+
+-- TODO resultaat verwijderen
 CREATE TABLE uitslag (
     clubCode int not null,
     seizoen char(4) not null,
@@ -143,6 +148,7 @@ CREATE TABLE uitslag (
     witZwart char(1),
     tegenstanderNummer int,
     resultaat char(1),
+    resultaten varchar(9),
     datum date comment 'indien op een andere datum dan ronde',
     competitie char(3),
     PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)

@@ -62,10 +62,8 @@ naam VARCHAR(45)
 PRIMARY KEY (knsbNummer)
 ```
 In 0-0-0 willen we zo min mogelijk persoonsgegevens vastleggen.
-Het `knsbNummer` komt uit [OLA](https://www.schaakbond.nl/voor-clubs/ledenadministratie), 
-de Online Leden Administratie van de KNSB.
+Het `knsbNummer` komt uit de ratinglijst van de KNSB.
 Voor uitslagen en ranglijsten is `naam` voldoende. 
-Andere persoonsgegevens staan in OLA en worden beheerd door de secretaris en de penningmeester en niet door de wedstrijdleider.
 
 In `Persoon` staan voorlopig uitsluitend leden van de eigen schaakvereniging.
 0-0-0 kan daarom wel complete uitslagen lijsten produceren van de interne competitie, 
@@ -149,7 +147,8 @@ PRIMARY KEY (clubCode, seizoen, teamCode)
 
 Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
 
-Voorlopig is er 1 database namelijk van de Waagtoren vanaf seizoen 2018-2019. `ClubCode = 0` verwijst naar de Waagtoren.
+Voorlopig is er 1 database namelijk van de Waagtoren vanaf seizoen 2018-2019. 
+`ClubCode = 0` verwijst naar de Waagtoren.
 Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`.
 
 Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules
@@ -194,6 +193,7 @@ partij CHAR(1)
 witZwart CHAR(1)
 tegenstanderNummer INT
 resultaat CHAR(1)
+resultaten VARCHAR(9)
 datum DATE
 competitie CHAR(3)
 PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
@@ -210,7 +210,7 @@ Een uitslag doorloopt 3 fases: planning, indeling en uitslag.
 door een teamleider een speler voor een wedstrijd. Daarna kan de speler zich eventueel afmelden
 Meedoen kent 3 varianten: extern uit, extern thuis en (intern) meedoen.
 2. De indeling fase is als bekend wie de tegenstander wordt.
-3. De laatste fase is als het resultaat bekend is en de uitslag dus compleet is.
+3. De laatste fase is als de resultaten bekend zijn en de uitslag dus compleet is.
 
 De verschillende fases worden vooral vastgelegd in `partij`:
 - `e = EXTERNE_WEDSTRIJD`
@@ -237,7 +237,7 @@ staat de uitslag een keer in `Uitslag` met de `teamCode` bij welke team deze uit
 
 Voor elke externe partij staat in `Uitslag` bij `knsbNummer` de speler 
 van de eigen schaakvereniging en meestal `tegenstanderNummer = 0`.
-Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstijd 
+Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstrijd 
 tegen een team van de eigen schaakvereniging (of als alle tegenstanders in `Persoon` zijn vastgelegd).   
 Indien `competitie = int` telt deze uitslag mee voor de interne competitie.
 
@@ -246,6 +246,16 @@ De verschillende mogelijkheden voor `knsbNummer` en `tegenstanderNummer` zijn:
 - bordnummer 1..10 = geen tegenstander 
 - `TIJDELIJK_LID_NUMMER` > 100 < 1000000
 - `KNSB_NUMMER` > 1000000
+
+Een complete uitslag is voor een vereniging of toernooi met `clubCode`, een competitie of team 
+met `teamCode`, een ronde met `rondeNummer` op een bord met `bordNummer` op een `datum`.
+De `datum` kan verschillen van de `datum` van de ronde als de speler vooruit of later speelt.
+Een complete uitslag heeft 1 of meer `resultaten` van dezelfde speler met `knsbNummer` tegen
+dezelfde tegenstander met `tegenstanderNummer`, die afwisselend met wit en zwart tegen elkaar
+hebben gespeeld en de kleur van het eerste resultaat volgens `witZwart`: `w` of `z`.
+Elk resultaat is winst, remise of verlies: `1`, `½` of `0` voor die speler.
+
+Voorlopig maximaal 9 resultaten of `+99-99=99` voor maximaal 99 keer winst, verlies of remise.
 
 ## Mutatie
 ```
