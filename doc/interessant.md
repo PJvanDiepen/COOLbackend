@@ -81,6 +81,8 @@ Refresh Android cache
 - [iterator instead of array](https://allthingssmitty.com/2026/01/12/stop-turning-everything-into-arrays-and-do-less-work-instead/)
 - [bookmarklets](https://css-tricks.com/a-complete-guide-to-bookmarklets/)
 - [Word document](https://docx.js.org/#/)
+- [JSON is lying](https://blog.gaborkoos.com/posts/2026-08-03-Your-JSON-Is-Lying-to-You/)
+- [SCHEME in JavaScript](https://lips.js.org/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
@@ -194,6 +196,7 @@ Refresh Android cache
 # schaken
 - [Simpel schaken in JavaScript](https://sam-koblenski.blogspot.com/2017/06/a-barely-adequate-guide-to-displaying.html)
 - [Schaken in JavaScript](https://shaack.com/projekte/cm-chessboard/)
+- [imple chess ai](https://github.com/lhartikk/simple-chess-ai)
 - [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
 - [Sevilla](https://www.jbfsoftware.com/)
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
@@ -219,6 +222,7 @@ Refresh Android cache
 - [SEO for beginners](https://moz.com/beginners-guide-to-seo)
 
 # Interessant 
+- [Framework benchmarks](https://framework-benchmarks.as93.net/)
 - [AI van Microsoft](https://microsoft.github.io/genaiscript/)
 - [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)

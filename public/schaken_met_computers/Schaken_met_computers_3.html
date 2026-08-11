@@ -1,6 +1,6 @@
-<img src="https://www.waagtoren.nl/wp-content/uploads/2025/06/DeSchaakrevolutiePeterDoggers.jpg" alt="" width="261" height="400" class="alignright size-full wp-image-52192" />De serie Schaken met computers gaat over hoe computers het schaken hebben veranderd voor spelers en toeschouwers. Vroeger gingen we naar schaakverenigingen en toernooien en lazen we in kranten, tijdschriften en boeken over schaken. Dankzij computers kunnen we nu altijd en overal schaken, kunnen we bij alle toernooien in de hele wereld kijken en on line combinaties, eindspelen en openingen trainen. Veel toernooien zijn trouwens uitsluitend on line. Ondertussen verdwijnen de schaakrubrieken in kranten en zijn schaakboeken steeds vaker eerst content op een website en daarna te koop in boekvorm. Je kunt on line schaaklessen nemen bij allerlei schakers. En zo voort.
+<img src="https://www.waagtoren.nl/wp-content/uploads/2025/06/DeSchaakrevolutiePeterDoggers.jpg" alt="" width="261" height="400" class="alignright size-full wp-image-52192" />De serie Schaken met computers gaat over hoe computers het schaken hebben veranderd voor spelers en toeschouwers. Vroeger gingen we naar schaakverenigingen en toernooien en lazen we in kranten, tijdschriften en boeken over schaken. Dankzij computers kunnen we nu altijd en overal schaken, kunnen we bij alle toernooien in de hele wereld kijken en <em>on line</em> combinaties, eindspelen en openingen trainen. Veel toernooien zijn trouwens uitsluitend <em>on line</em>. Ondertussen verdwijnen de schaakrubrieken in kranten en zijn schaakboeken steeds vaker eerst content op een website en daarna te koop in boekvorm. Je kunt <em>on line</em> schaaklessen nemen bij allerlei schakers. En zo voort.
 
-Tegenwoordig zijn er zelfs schakers die nog nooit op een bord met stukken hebben gespeeld. Ze spelen uitsluitend met een tablet of een telefoon via het internet tegen iemand die ze nog nooit hebben ontmoet (of misschien toch tegen een computer?). Als ze eindelijk eens OTB (on the board) gaan schaken bij een schaakvereniging kunnen ze al goed schaken, maar kennen ze nog niet de schaaknotatie terwijl ze die toch al vaak hadden gezien. Ze waren gewend om hun zetten met hun vinger (of met een muis) in te voeren, maar ze hadden nog nooit goed gelet op de coördinaten bij de velden. Dit verzin ik niet!
+Tegenwoordig zijn er zelfs schakers die nog nooit op een bord met stukken hebben gespeeld. Ze spelen uitsluitend met een tablet of een telefoon via het internet tegen iemand die ze nog nooit hebben ontmoet (of misschien toch tegen een computer?). Als ze eindelijk eens OTB (<em>on the board</em>) gaan schaken bij een schaakvereniging kunnen ze al goed schaken, maar kennen ze nog niet de schaaknotatie terwijl ze die toch al vaak hadden gezien. Ze waren gewend om hun zetten met hun vinger (of met een muis) in te voeren, maar ze hadden nog nooit goed gelet op de coördinaten bij de velden. Dit verzin ik niet!
 
 In het New in Chess magazine gaat het tegenwoordig ook steeds minder over gewone OTB schaaktoernooien en steeds meer over <a href="https://www.youtube.com/channel/UCQHX6ViZmPsWiYSFAyS0a3Q" target="_blank">Levy Rozman</a>, <a href="https://www.youtube.com/GMHikaru" target="_blank">Hikaru Nakamura</a> en de <a href="https://www.youtube.com/c/BotezLive" target="_blank">Botez sisters</a>, die allerlei schaak-content produceren. Peter Doggers heeft gelijk: er is een schaakrevolutie aan de gang! Hij legt het allemaal goed uit in zijn boek. Ik kan daarom zijn boek van harte aanbevelen vooral voor oudere schakers die nog zijn begonnen zonder computers.
 
@@ -8,7 +8,7 @@ Moderne schakers vinden het heel normaal dat computers veel sterker schaken dan 
 
 Omdat het aantal mogelijkheden in het schaakspel zo ontzettend groot is en het dus sowieso onmogelijk is om alle varianten vooruit te berekenen, werden die eindspelen achteruit berekend. In theorie is het mogelijk om het hele schaakspel terug te rekenen tot de beginstelling. Deze aflevering van Schaken met computers gaat over die totaal andere benadering naar aanleiding van het toren tegen dame eindspel in de partij <a href="https://www.waagtoren.nl/2025/06/27/geen-bronzen-beker/">Casijn Jong - Gerrit Peereboom</a> Alkmaar 2025.
 
-<strong>Dame tegen toren</strong>
+<h4>Dame tegen toren</h4>
 Het onderzoek naar eindspelen begon natuurlijk al veel eerder zonder computers. De belangrijkste theorie over het dame tegen toren eindspel is al van drie eeuwen geleden!
 <a href="https://en.wikipedia.org/wiki/Fran%C3%A7ois-Andr%C3%A9_Danican_Philidor" target="_blank">François-André Danican Philidor</a> liet in <em>Analyse du jeu des Échecs</em> zien hoe je met de dame kunt winnen.
 
@@ -34,7 +34,8 @@ De toren moet dus van de koning gescheiden worden om die met een aantal schaakje
 ( 7.Kf6 Rg6+ )
 7...Rh7+ { Zwart maakt remise. } *
 [/pgn]
-<strong>Retrograde analyse</strong>
+
+<h4>Retrograde analyse</h4>
 Het onderzoek van eindspelen met computers gaat uit van een lijst van stellingen. In theorie zijn dat alle mogelijke stellingen. Maar in de praktijk moeten we ons natuurlijk beperken. We beginnen daarom met een lijst van alle stellingen met 1 dame en 2 koningen. Vervolgens laten we de computer die lijst verwerken in een aantal ronden.
 
 In ronde 0 zoekt de computer alle stellingen waarin de dame mat geeft en noteert bij die stellingen de kleur die mat geeft en een 0 voor het aantal zetten tot mat.
@@ -52,7 +53,7 @@ Het verwerken van alle stellingen voor het dame tegen toren eindspel duurde op d
 
 Het resultaat van zo'n verwerking noemen we tegenwoordig een <a href="https://en.wikipedia.org/wiki/Endgame_tablebase" target="_blank">eindspel tablebase</a>. De tablebase is dus die lijst met stellingen en per stelling de kleur die wint en aantal zetten tot mat. Impliciet is daarin theorie van eindspelen vastgelegd. De eerste tablebases waren voor eindspelen met 3 of 4 stukken op het bord. Inmiddels bestaan er tablebases voor eindspelen tot en met 7 stukken en kan je ze bijvoorbeeld op de <a href="https://www.shredderchess.com/online/endgame-database.html" target="_blank">Shredder</a> website raadplegen.
 
-<strong>Dame tegen toren tablebase</strong>
+<h4>Dame tegen toren tablebase</h4>
 Aan de hand van de partij <a href="https://www.waagtoren.nl/2025/06/27/geen-bronzen-beker/">Casijn Jong - Gerrit Peereboom</a> Alkmaar 2025 zal ik demonstreren hoe je de informatie uit de tablebase van <a href="https://www.shredderchess.com/online/endgame-database.html" target="_blank">Shredder</a> kunt gebruiken.
 
 Als je begint met te veel stukken op het bord, zegt Shredder: "No information available". Voor de demonstratie begon ik daarom vanaf zet 59. Toen gaf Shredder bij elke stelling een lijst van zetten in 2 kolommen Move en Value. Totaal 27 zetten na zet 59 van wit: "Qe2-f2 Win in 20, Qe2-e6 Win in 21, Qe2-f1 Win in 21, Qe2-e5 Win in 22, Qe2-d3 Win in 22, Qe2-c2 Win in 24, Qe2-h2 Win in 24, Qe2-e3 Win in 24, Qe2-d1 Win in 24, Qe2-d2 Win in 25, Qe2-e1 Win in 25, Qe2-e8 Win in 25, Qe2-b5 Win in 25, Qe2-b2 Win in 26, Qe2-a2 Win in 26, Qe2-e7 Win in 26, Qe2-a6 Win in 26, Kd4-c4 Win in 26, Kd4-d5 Win in 26, Kd4-c5 Win in 26, Kd4-d3 Win in 27, Kd4-c3 Win in 28, Qe2-e4 Draw, Qe2-c4 Draw, Qe2xg4 Draw, Qe2-f3 Lose in 14, Qe2-g2 Lose in 13".
@@ -119,7 +120,7 @@ Hieronder heb ik niet bij elke stelling de hele lijst van zetten vermeld, maar u
 [/pgn]
 Volgens de tablebase kon zwart in deze partij dus voortdurend winnen, maar mistte een aantal eenvoudige kansen op zet 64, 66, 85, 86, 87 en 88 (zie de Philidor stelling) en verloor alles bij elkaar te veel zetten tot mat, zodat zwart niet voor zet 109 kon winnen. Wit kon alleen op zet 101 remise forceren en had verder geen enkele kans. Bovendien speelde wit op meer momenten niet perfect; voor de volledigheid: op zet 63, 69, 70, 72, 74, 75, 77, 83, 84, 85, 86, 87, 98 en 103.
 
-<strong>Walter Browne tegen Belle</strong>
+<h4>Walter Browne tegen Belle</h4>
 Spelen grootmeesters het dame tegen toren eindspel beter? In de praktijk van grootmeesters won de dame in bijna <a href="https://www.365chess.com/search-endgames-list.php?id=62" target="_blank">84% van 180 partijen</a> en de andere partijen werden remise.
 Maar de winstvoering is beslist niet eenvoudig. Dat werd in 1978 aangetoond door <a href="https://en.wikipedia.org/wiki/Ken_Thompson" target="_blank">Ken Thompson</a> met <a href="https://en.wikipedia.org/wiki/Belle_(chess_machine)" target="_blank">Belle</a>.
 
@@ -203,7 +204,7 @@ De foutjes die Browne maakte, waren volgens de tablebase niet zo groot. Vanaf ze
 
 In die tijd konden gewone schakers nog niet beschikken over tablebases voor eindspelen. We hadden nog geen toegang tot het internet. We hadden zelfs geen computers. De IBM PC kwam pas in 1981 en de Apple Macintosh in 1984. Die immense lijsten van stellingen van zo'n tablebase op papier vastleggen was geen optie. Probeer je maar eens voor te stellen hoe hoog de stapel papier zou worden voor dame tegen toren!
 
-<strong>Twee lopers tegen paard</strong>
+<h4>Twee lopers tegen paard</h4>
 Ken Thompson werkte nog tientallen jaren verder aan tablebases en deed daarbij een aantal ontdekkingen voor de eindspeltheorie.
 
 De retrograde analyse van het twee lopers tegen paard eindspel duurde in 1983 drie weken op een <a href="https://en.wikipedia.org/wiki/VAX-11#VAX-11/750" target="_blank">VAX 11/750</a> computer. Toen was de tablebase compleet en ontdekte Thompson dat twee lopers altijd kunnen winnen van een paard tenzij in de beginstelling meteen een loper verloren gaat of wordt afgeruild.
@@ -252,7 +253,7 @@ Na de ontdekking van Thompson probeerde eindspel- en computerschaakspecialisten 
 
 Nog korter samengevat: je kunt de King-Horwitz stelling niet vermijden, maar je kunt er aan ontsnappen. Op welke momenten dat mogelijk is, is heel moeilijk uit te leggen en kost heel veel zetten.
 
-<strong>Timman- Speelman Linares 1992</strong>
+<h4>Timman- Speelman Linares 1992</h4>
 Jan Timman kende Jaap van den Herik en zijn werk. Bovendien wist Timman al veel over het twee lopers tegen paard eindspel. Timman eindigde namelijk gedeeld eerste met Korchnoi in <a href="https://www.365chess.com/tournaments/Sarajevo_1984/22764" target="_blank">Sarajevo 1984</a>, maar was ongedeeld eerste geworden als de partij <a href="https://www.365chess.com/game.php?gid=2377446&m=150" target="_blank">Popovich-Korchnoi</a> een andere uitslag had gehad. Korchnoi had in die partij bewust afgewikkeld naar paard tegen twee lopers, want dat eindspel was remise dacht Korchnoi! In de toernooizaal was Timman, dankzij Van den Herik, misschien de enige grootmeester die wist dat Popovich wel kon winnen. Hij analyseerde de partij met Eric Lobron, maar kon toen de winstvariant niet vinden. Popovich probeerde het 30 zetten en bood toen remise aan. Dat was een frustrerende ervaring voor Timman.
 
 Toen Jan Timman in <a href="https://www.365chess.com/tournaments/Linares_10th_1992/17851" target="_blank">Linares 1992</a> zelf het eindspel twee lopers tegen paard op het bord kon krijgen in zijn afgebroken partij tegen Jonathan Speelman, belde hij Jaap van den Herik.
@@ -322,7 +323,7 @@ Volgens Shredder was de stelling op zet 66 mat in 60. De zetten van Timman en Sp
 
 Twee lopers tegen een paard is dus een ongelofelijk complex eindspel en dankzij de computer is de eindspeltheorie verbeterd. Jan Timman kon deze nieuwe theorie, met een tablebase als secondant, in de praktijk toepassen. Helaas is het niet zo'n belangrijk eindspel, want het komt niet zo vaak voor. Ik vond slechts <a href="https://www.365chess.com/search-endgames-list.php?id=70" target="_blank">18 partijen</a> uit de praktijk van grootmeesters: 7 winstpartijen met de twee lopers en 11 partijen waarin het paard remise houdt.
 
-<strong>Eindspel tablebases op CD-ROM</strong>
+<h4>Eindspel tablebases op CD-ROM</h4>
 Het was de verdienste van Ken Thompson dat hij de eerste was die tablebases toegankelijk maakte voor schakers. Hij deed dat door vanaf 1991 zoveel mogelijk eindspelen op <a href="https://en.wikipedia.org/wiki/CD-ROM" target="_blank">CD-ROM</a> te zetten en te verkopen voor US $ 10 (inclusief verzendkosten). Uiteindelijk produceerde hij 4 CD-ROM's met vooral eindspelen met 5 stukken op het bord. In die tijd moest je wel computerprogrammeur zijn, want de CD-ROM moest je uitlezen met een C-programma dat je op je eigen computer aan de praat moest krijgen.
 
 <img src="https://www.waagtoren.nl/wp-content/uploads/2025/06/SecretsOfRookEndgames.jpg" alt="" width="261" height="408" class="alignright size-full wp-image-52366" />Het was de verdienste van <a href="https://en.wikipedia.org/wiki/John_Nunn" target="_blank">John Nunn</a> dat hij als eerste de CD-ROM van Thompson gebruikte om een totaal nieuw soort eindspelboek te maken vanuit het perspectief van een grootmeester. Hij behandelde in 320 propvolle bladzijden het toren en pion tegen toren eindspel. Heel uitputtend met hoofdstuk 1 voor de a-pion, hoofdstuk 2 voor de b-pion, hoofdstuk 3 voor de c-pion en hoofdstuk 4 voor de d-pion. En per hoofdstuk paragrafen: pion op rij 7, 6, 5, 4, 3 en 2 en subparagrafen over koning voor de pion, toren voor de pion, toren achter de pion, toren dekt de pion van opzij, koning is afgesneden langs een rij, koning is afgesneden langs een lijn, en zo voort. Verder moest je als lezer begrijpen dat voorbeelden met een f-pion in het c-pion hoofdstuk staan. Nunn had waarschijnlijk de complete eindspelliteratuur doorgespit en ook veel toernooipartijen om alles aan de hand van de tablebase te controleren.
@@ -333,7 +334,7 @@ Toren en pion tegen toren is een zogenaamd elementair toreneindspel, maar Nunn c
 
 Na <em>Secrets of Rook Endings</em> in 1992 schreef John Nunn nog twee boeken waarbij hij de CD-ROM's van Ken Thompson gebruikte: in 1994 <em>Secrets of Pawnless Endings</em> over eindspelen met 4 of 5 stukken zonder pionnen en in 1995 <em>Secrets of Minor-Piece Endings</em> over zogenaamde elementaire eindspelen zonder torens of dames. De eindspelen dame en pion tegen dame (onbegrijpelijk volgens Nunn!), twee paarden tegen pion (Troitsky had dit al "astonishing accurate" gedaan zonder computer!) en loper en paard tegen paard (niet belangrijk voor de praktijk) ontbreken in deze boeken. Het hierboven beschreven dame tegen toren eindspel wordt uitgebreid behandeld in zijn boek van 1994: 21 bladzijden. Het hierboven beschreven twee lopers tegen paard eindspel paste niet meer in de 320 bladzijden van zijn boek van 1994 en kwam daarom met 17 bladzijden in zijn boek van 1995 (totaal 288 bladzijden).
 
-<strong>Lomonosov</strong>
+<h4>Lomonosov</h4>
 Na Thomas Ströhlein en Ken Thomson zijn anderen verder gegaan met de retrograde analyse van eindspelen. Een goed overzicht staat in de <a href="https://en.wikipedia.org/wiki/Endgame_tablebase" target="_blank">Wikipedia</a>. Het lijkt echter alsof het onderzoek stagneert. Het belangrijkste probleem is natuurlijk dat het schaakspel te veel <a href="https://en.wikipedia.org/wiki/Shannon_number" target="_blank">mogelijkheden</a> heeft. Voor tablebases met meer stukken zijn steeds snellere computers en vooral steeds meer geheugen en opslagmedia noodzakelijk.
 
 Op de <a href="https://www.chessprogramming.org/Lomonosov_Supercomputer" target="_blank">Lomonosov supercomputer</a> (met Nvidia chips!) van de Staatsuniversiteit van Moskou is in 2012 een project afgerond om tablebases voor alle eindspelen met 7 stukken te berekenen. Je kunt het resultaat raadplegen op <a href="https://tb7.chessok.com/probe" target="_blank">ChessOK</a>. Vladimir Makhnychev and Victor Zakharov ontdekten tijdens dit project allerlei idioot lange perfecte zettenreeksen. Vooralsnog is het <a href="https://tb7.chessok.com/articles/Top8DTM_eng" target="_blank">wereldrecord</a>: 549 zetten tot mat in het dame en pion tegen toren, loper en paard eindspel.
@@ -345,5 +346,5 @@ Bf6 433.Qe3 Be7 434.Qh6+ Kg8 435.Qh1 Rh7 436.Qd5+ Kf8 437.Kf3 Nf6 438.Qe5 Ne8 43
 [/pgn]
 Dit is voorlopig wel even genoeg!
 
-<strong>Serie</strong>
+<h4>Serie</h4>
 De serie Schaken met computers begon in 2021 met <a href="https://www.waagtoren.nl/2021/03/06/schaken-met-computers/" rel="noopener" target="_blank">deel 1</a> over Wim Andriessen als pionier op het gebied van schaken met computers. In 2023 volgde <a href="https://www.waagtoren.nl/2023/01/13/schaken-met-computers-2/" rel="noopener" target="_blank">deel 2</a> over Over Deep Blue, Fritz en Stockfish en wereldkampioenen die hun tegenstanders beschuldigen van vals spelen. In deel 3 ging het over achteruit analyseren met computers. In deel 4 zal het weer gaan over vooruit analyseren.

@@ -132,10 +132,6 @@ add CONSTRAINT fk_ronde_team
     ON UPDATE CASCADE;
     
 DROP TABLE IF EXISTS uitslag; -- 0-0-0.nl versie 0.8.66
-alter table uitslag 
-ADD COLUMN resultaten VARCHAR(9) AFTER resultaat;
-describe uitslag; 
-
 -- TODO resultaat verwijderen
 CREATE TABLE uitslag (
     clubCode int not null,
