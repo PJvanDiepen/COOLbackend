@@ -64,7 +64,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             html.selectie(knop, 0, invallen, async function (rondeNummer){
                 const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
                 const mutaties = await zyq.serverFetch(
-                    `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/uitslag/toevoegen/${db.PLANNING}/${datum}/int`);
+                    `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/uitslag/toevoegen/${db.MEEDOEN}/${datum}/int`);
                 html.zelfdePagina(`teamleider=${teamCode}&invaller=${speler.knsbNummer}`);
             });
             inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
