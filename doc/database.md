@@ -54,7 +54,26 @@ Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de 
 - `totalen()` van punten en andere totalen per speler op basis van alle uitslagen van een seizoen.
 
 De `interneRating` is in principe gelijk aan de `knsbRating`van 1 september aan het begin van het seizoen.
- 
+
+## Rating
+```
+knsbNummer INT,
+knsbNaam VARCHAR(60),
+titel VARCHAR(3),
+federatie VARCHAR(3),
+knsbRating INT,
+partijen INT,
+geboorteJaar INT,
+sekse CHAR(1),
+maand INT,
+jaar INT,
+PRIMARY KEY (maand, knsbNummer)
+```
+Dit zijn de persoonsgegevens van de ratinglijsten van de KNSB, die iedereen kan downloaden.
+Omdat er elke maand een nieuwe ratinglijst verschijnt, voegt 0-0-0 voegt `jaar` en `maand` toe.
+In `Rating` staan ratinglijsten per `maand` en daarom uitsluitend de laatste 12 ratinglijsten,
+die zijn verwerkt door 0-0-0.
+
 ## Persoon
 ```
 knsbNummer INT
