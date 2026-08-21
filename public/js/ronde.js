@@ -58,8 +58,7 @@ async function uitslagenRonde(rondeNummer, lijst) {
                 uitslag.bordNummer,
                 zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
                 zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                resultaatKolom,
-                "")); // TODO revanche kolom
+                resultaatKolom));
         }
     } else {
         lijst.append(html.rij("nog", "geen", "uitslagen", ""));

@@ -45,7 +45,8 @@ const indeling = html.id("indeling");
         indeling.append(html.rij(nietIngedeeld || oneven ? "" : ++bordNummer,
             zyq.naarSpeler(r[wit]),
             nietIngedeeld ? "niet ingedeeld" : oneven ? "oneven" : zyq.naarSpeler(r[zwart]),
-            rangnummers ? `${wit + 1} - ${zwart + 1}` : ""));
+            rangnummers ? `${wit + 1} - ${zwart + 1}` : "",
+            "")); // revanche kolom
     }
 
     const uithuis = await zyq.serverFetch(
