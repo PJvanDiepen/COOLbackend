@@ -47,7 +47,8 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
         indeling.append(html.rij(nietIngedeeld || oneven ? "" : ++bordNummer,
             zyq.naarSpeler(r[wit]),
             nietIngedeeld ? "niet ingedeeld" : oneven ? "oneven" : zyq.naarSpeler(r[zwart]),
-            rangnummers ? `${wit + 1} - ${zwart + 1}` : ""));
+            rangnummers ? `${wit + 1} - ${zwart + 1}` : "",
+            "")); // revanche kolom
     }
 
     const uithuis = await zyq.serverFetch(
@@ -55,7 +56,7 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
     for (const speler of uithuis) {
         const bord = // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
             speler.partij === db.EXTERN_THUIS ? ++bordNummer : "";
-        indeling.append(html.rij(bord, zyq.naarSpeler(speler), "", "extern"));
+        indeling.append(html.rij(bord, zyq.naarSpeler(speler), "", "extern", ""));
     }
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"), rondeNummer);

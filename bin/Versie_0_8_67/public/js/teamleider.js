@@ -44,7 +44,6 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const teamGegevens = teams.find(function (team) {
         return team.teamCode === teamCode;
     });
-    html.id("vragen").textContent = `Invallers vragen door teamleider`; // TODO ${teamGegevens.naam}
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
         return speler.knsbNummer > db.KNSB_NUMMER
@@ -120,30 +119,30 @@ function rondeNummers(ronden) {
 
 // TODO uit speler
 function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
-    if (teamCode === "2") { // 40 + 2102 Nico Hauwert
-        return 2142;
-    } else if (teamCode === "3") { // 40 + 2006 Alberto Alvarez Alonso
-        return 2046;
-    } else if (teamCode === "4") { // 40 + 1861 Edward Schenkel
-        return 1901;
-    } else if (teamCode === "5") { // 40 + 1790 Jan Poland
-        return 1830;
-    } else if (teamCode === "6") { // 40 + 1661 Jan van Gijsen
-        return 1701;
+    if (teamCode === "2") { // 40 + 2103 Nico Hauwert
+        return 2143;
+    } else if (teamCode === "3") { // 40 + 1963 Fabio Pasti
+        return 2003;
+    } else if (teamCode === "4") { // 40 + 1823 Leonard Haakman
+        return 1863;
+    } else if (teamCode === "5") { // 40 + 1662 John Norder
+        return 1703;
     } else if (teamCode === "nbb") { // NHSB beker (brons)
         return 1750;
     } else if (teamCode === "nbz") { // NHSB beker (zilver)
         return 1950;
-    } else if (teamCode === "n2") { // 80 + 2102 Nico Hauwert
-        return 2182;
-    } else if (teamCode === "n3") { // 80 + 1902 Ernst Hoogenes
-        return 1982;
-    } else if (teamCode === "n4") { // 80 + 1861 Edward Schenkel
-        return 1941;
-    } else if (teamCode === "n5") { // 80 + 1757 Nico Mak
-        return 1837;
-    } else if (teamCode === "nv1") { // 80 + 1652 Theo de Bruijn
-        return 1732;
+    } else if (teamCode === "n2") { // 80 + 1937 Henk van der Hauw
+        return 2117;
+    } else if (teamCode === "n3") { // 80 + 1864 Leo van Steenoven
+        return 1944;
+    } else if (teamCode === "n4") { // 80 + 1802 Jan Meringa
+        return 1882;
+    } else if (teamCode === "n5") { // 80 + 1752 Theo Bakker
+        return 1832;
+    } else if (teamCode === "nv1") { // 80 + 1627 Theo de Bruijn
+        return 1707;
+    } else if (teamCode === "nv2") { // 80 + 1520 Marcello van 't Veen
+        return 1600;
     } else {
         return 3000;
     }
