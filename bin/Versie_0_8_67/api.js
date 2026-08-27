@@ -580,7 +580,8 @@ Frontend: o_o_o.js
                 {wit: ref("wit.naam")},
                 "uitslag.tegenstanderNummer",
                 {zwart: ref("zwart.naam")},
-                "resultaat")
+                "resultaat", // TODO verwijderen wegens resultaten
+                "resultaten")
             .join("persoon as wit", "uitslag.knsbNummer", "wit.knsbNummer")
             .join("persoon as zwart", "uitslag.tegenstanderNummer", "zwart.knsbNummer")
             .where("uitslag.clubCode", ctx.params.club)

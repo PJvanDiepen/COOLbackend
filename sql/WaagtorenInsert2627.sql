@@ -218,6 +218,71 @@ set @ronde = 1;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
+insert into uitslag (clubCode, seizoen, teamCode, rondeNummer, bordNummer, knsbNummer, partij, witZwart, tegenstanderNummer, resultaat, resultaten, datum, competitie) values
+(0, "2627", "int", 1, 0, 199, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 203, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 6212404, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 6565801, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7084022, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7101193, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7129991, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7504310, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7546506, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7582102, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7665834, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 7707832, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 8276752, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 8350738, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 8472530, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 8587337, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 8750093, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 0, 9023234, "a", "", 0, "", "", '2026-08-25', "int"),
+(0, "2627", "int", 1, 1, 7282033, "i", "w", 7428960, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 1, 7428960, "i", "z", 7282033, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 2, 5968611, "i", "w", 7535396, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 2, 7535396, "i", "z", 5968611, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 3, 7824674, "i", "w", 7613166, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 3, 7613166, "i", "z", 7824674, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 4, 7099950, "i", "w", 6930957, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 4, 6930957, "i", "z", 7099950, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 5, 7292043, "i", "w", 7529522, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 5, 7529522, "i", "z", 7292043, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 6, 8112654, "i", "w", 7731812, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 6, 7731812, "i", "z", 8112654, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 7, 7699010, "i", "w", 7269900, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 7, 7269900, "i", "z", 7699010, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 8, 7386060, "i", "w", 7210137, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 8, 7210137, "i", "z", 7386060, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 9, 8485059, "i", "w", 7904589, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 9, 7904589, "i", "z", 8485059, "½", "½", '2026-08-25', "int"),
+(0, "2627", "int", 1, 10, 7419621, "i", "w", 7399469, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 10, 7399469, "i", "z", 7419621, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 11, 7443172, "i", "w", 6214153, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 11, 6214153, "i", "z", 7443172, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 12, 6951362, "i", "w", 8539135, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 12, 8539135, "i", "z", 6951362, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 13, 8358966, "i", "w", 8224502, "0", "00", '2026-08-25', "int"),
+(0, "2627", "int", 1, 13, 8224502, "i", "z", 8358966, "1", "11", '2026-08-25', "int"),
+(0, "2627", "int", 1, 14, 7321534, "i", "w", 8950876, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 14, 8950876, "i", "z", 7321534, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 15, 8073978, "i", "w", 206, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 15, 206, "i", "z", 8073978, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 16, 7518203, "i", "w", 9175353, "1", "1", '2026-08-25', "int"),
+(0, "2627", "int", 1, 16, 9175353, "i", "z", 7518203, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 17, 9164639, "i", "w", 9077651, "0", "00", '2026-08-25', "int"),
+(0, "2627", "int", 1, 17, 9077651, "i", "z", 9164639, "1", "11", '2026-08-25', "int"),
+(0, "2627", "int", 1, 18, 8243312, "i", "w", 205, "1", "11", '2026-08-25', "int"),
+(0, "2627", "int", 1, 18, 205, "i", "z", 8243312, "0", "00", '2026-08-25', "int"),
+(0, "2627", "int", 1, 19, 6572511, "i", "w", 7544438, "0", "0", '2026-08-25', "int"),
+(0, "2627", "int", 1, 19, 7544438, "i", "z", 6572511, "1", "1", '2026-08-25', "int");
+
+-- ronde 2 TODO
+set @seizoen = "2627";
+set @team = "int";
+set @ronde = 2;
+select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
+
 -- Waagtoren KNSB beker
 set @seizoen = "2627";
 set @team = "kbe";
@@ -1024,20 +1089,26 @@ select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer whe
 delete from speler where clubCode = 0 and seizoen = "2627"; -- and knsbNummer = 103; -- 6212404;
 
 -- teamleiders
-describe gebruiker;
+describe speler; 
+describe gebruiker; -- 1 geregistreerd, 2 teamleider, 3 bestuur, 4 wedstrijdleider
 select p.naam, g.* from gebruiker g join persoon p on g.knsbNummer = p.knsbNummer where mutatieRechten > 1 order by p.naam; 
 
 update gebruiker set mutatieRechten = 2 where knsbNummer in(6420557, 6565801); -- Jasper Seelemeijer, Ernst Hoogenes
 
 -- speler toevoegen / verwijderen
-set @nieuw = 8795941; -- Guido van Hesselingen
-set @rating = 1961;
-select * from persoon where knsbNummer = @nieuw; 
-select * from speler where clubCode = 0 and knsbNummer = @nieuw;
-delete from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = @nieuw;
+set @speler = 7546506; -- Edward Schenkel
+set @rating = 1715;
+select * from persoon where knsbNummer = @speler; --  < 300;  
+select * from uitslag where knsbNummer = @speler;
+
+select * from speler where clubCode = 0 and knsbNummer = @speler;
+delete from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;
 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol) values
-(0, "2627", "int", "", "", @nieuw, coalesce(@Rating, 0), '2026-08-01', coalesce(nullif(@rating, 0), 1200), "int", "", "", "", "", "");
+(0, "2627", "int", "", "", @speler, coalesce(@Rating, 0), '2026-08-01', coalesce(nullif(@rating, 0), 1200), "int", "", "", "", "", "");
+
+-- interne rating wijzigen
+update speler set interneRating = @rating where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;
 
 -- knsbTeam invullen
 select p.naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer where s.clubCode = 0 and s.seizoen = "2627" and teamCode = "int" order by knsbTeam;
@@ -1095,11 +1166,7 @@ update speler set knsbTeam = "5" where clubCode = 0 and seizoen = "2627" and kns
 8350738, -- Ramon Witte
 9175353); -- Thomas Hubers
 
-
 -- TODO nhsbTeam invullen
-
-
-
 
 -- kopieer spelers van vorige seizoen met knsbRating van 1 augustus en zelfde rating voor interneRating of 1200 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol)
@@ -1112,7 +1179,28 @@ update speler s left join rating r on r.knsbNummer = s.knsbNummer and r.jaar = 2
 set s.knsbRating = coalesce(r.knsbRating, 0), s.datum = '2026-09-01', s.interneRating = coalesce(nullif(r.knsbRating, 0), 1200)
 where s.clubCode = 0 and s.seizoen = "2627" and s.knsbNummer = 6212404; -- 103;
 
--- TODO issue #66 Meer partijen per ronde tegen dezelfde tegenstander 
+-- TODO issue #66 Meer partijen per ronde tegen dezelfde tegenstander
+
+-- resultaat naar resultaten
+set @seizoen = "2627";
+select * from uitslag where clubCode = 0 and seizoen = @seizoen; -- and teamCode = "int" and rondeNummer = 1;
+update uitslag set resultaten = resultaat where clubCode = 0 and seizoen = @seizoen; -- and teamCode = "int" and rondeNummer = 1;
+
+-- naast resultaat 1, ½, 0 twee resultaten invullen 
+set @ronde = 1;
+set @wit   = 8358966; -- Ad van der Steur
+set @w1_z2 = "00"; -- wit 1e partij en zwart 2e partij 
+set @zwart = 8224502; -- Jan van Gijsen
+set @z1_2w = "11"; -- zwart 1e partij en wit 2e partij
+
+select naam, u.* from  uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and u.knsbNummer in(@wit, @zwart) order by witZwart;
+
+update uitslag set resultaten = @w1_z2
+where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and knsbNummer = @wit;
+update uitslag set resultaten = @z1_2w
+where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and knsbNummer = @zwart;
+
 -- TODO issue #65 Aanmelden voor competitie of toernooi
 -- TODO issue #64 Van HTML op 0-0-0.nl naar MD op GitHub.com
 -- TODO issue #63 speler met 1 teamCode in plaats van knsbTeam, nhsbTeam, intern1..5
@@ -1126,8 +1214,8 @@ where s.clubCode = 0 and s.seizoen = "2627" and s.knsbNummer = 6212404; -- 103;
 set @seizoen = "2627";
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 31;
-set @bord = 13;
+set @ronde = 1;
+set @bord = 15;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
@@ -1138,8 +1226,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
 
-set @wit   = 7210137; -- Arjen Dibbets
-set @zwart = 7519930; -- John Norder
+set @wit   = 8073978; -- Gerrit Peereboom
+set @zwart = 206; -- Albert Kramer
 
 select * from persoon where knsbNummer = @wit;
 
@@ -1151,10 +1239,7 @@ select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @oneven, @afwezig);
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @afwezig);
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @oneven, @afwezig, @extern);
 
 -- TODO afwezig maken
 
@@ -1177,8 +1262,6 @@ update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstande
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
 update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
-
-select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer in(193, 194);
 
 -- TODO wit / zwart wijzigen
 
