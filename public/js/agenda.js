@@ -1,5 +1,3 @@
-// agenda.js Versie 0_8_67 gelijk aan 0-0-0.nl versie 0.8.66
-
 "use strict";
 
 import * as html from "./html.js";
