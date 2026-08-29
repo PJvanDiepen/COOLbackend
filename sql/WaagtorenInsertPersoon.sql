@@ -15,7 +15,7 @@ insert into persoon (knsbNummer, naam) values
 (192, "Alexander van der Linden"),
 (7731812, "Alexander Versluis"),
 (9017690, "Alrick Jagersma"),
-(205, "Amit Roy"),
+(9176024, "Amit Roy"),
 (173, "Amyra Naganathar"),
 (8182416, "André Bremmers"),
 (7443172, "Anton Schermer"),

@@ -10,7 +10,7 @@ import * as zyq from "./zyq.js";
     verwerk ronde=<rondeNummer>
            &wit=<knsbNummer>
            &zwart=<knsbNummer>
-           &uitslag=<uitslag wit>
+           &uitslag=<uitslag wit> TODO waarom &uitslag ?
  */
 (async function() {
     await init();
@@ -47,22 +47,29 @@ import * as zyq from "./zyq.js";
 })();
 
 async function uitslagenRonde(rondeNummer, lijst) {
-    const gewijzigd = await uitslagMutatie(rondeNummer);
+    const mutatie = await uitslagMutatie(rondeNummer);
     const uitslagen = await zyq.serverFetch(
         `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
-            const resultaatKolom = resultaatSelecteren(rondeNummer, uitslag);
-            html.verwerkt(resultaatKolom, uitslag.knsbNummer === gewijzigd.wit && uitslag.tegenstanderNummer === gewijzigd.zwart);
-            lijst.append(html.rij(
+            const rij = html.rij(
                 uitslag.bordNummer,
                 zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
                 zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                resultaatKolom, "")); // revanche kolom
+                resultaatSelecteren(rondeNummer, uitslag),
+                resultatenInvullen(uitslag));
+            html.verwerkt(rij, uitslag.knsbNummer === mutatie.wit && uitslag.tegenstanderNummer === mutatie.zwart);
+            lijst.append(rij);
         }
     } else {
         lijst.append(html.rij("nog", "geen", "uitslagen", ""));
     }
+}
+
+function resultatenInvullen(uitslag) {
+    return uitslag.resultaten.length < 2
+        ? ""
+        : db.resultaatInvullen.get(uitslag.resultaten.substring(1,2));
 }
 
 /*
@@ -80,7 +87,9 @@ async function uitslagMutatie(rondeNummer) {
 }
 
 function resultaatSelecteren(rondeNummer, uitslag) {
-    if (uitslagWijzigen(uitslag)) {
+    if (uitslag.resultaten.length > 1) { // 2 uitslagen niet wijzigen
+        return db.resultaatInvullen.get(uitslag.resultaten.substring(0, 1));
+    } else if (uitslagWijzigen(uitslag)) {
         const knop = document.createElement("select");
         html.selectie(knop, uitslag.resultaat, db.resultaatSelecteren(uitslag), function (resultaat) {
             html.zelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${resultaat}`);
