@@ -10,7 +10,7 @@ import * as zyq from "./zyq.js";
     verwerk ronde=<rondeNummer>
            &wit=<knsbNummer>
            &zwart=<knsbNummer>
-           &uitslag=<uitslag wit> TODO waarom &uitslag ?
+           &uitslag=<uitslag wit> TODO waarom uitslag=<uitslag wit> ?
  */
 (async function() {
     await init();
@@ -52,14 +52,18 @@ async function uitslagenRonde(rondeNummer, lijst) {
         `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
     if (uitslagen.length > 0) {
         for (const uitslag of uitslagen) {
-            const rij = html.rij(
+            const partij1 = resultaatSelecteren(rondeNummer, uitslag);
+            // const uitslag2 = document.createTextNode(resultatenInvullen(uitslag));
+            if (uitslag.knsbNummer === mutatie.wit && uitslag.tegenstanderNummer === mutatie.zwart) {
+                html.verwerkt(partij1, true);
+                // html.verwerkt(uitslag2, true);
+            }
+            lijst.append(html.rij(
                 uitslag.bordNummer,
                 zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
                 zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                resultaatSelecteren(rondeNummer, uitslag),
-                resultatenInvullen(uitslag));
-            html.verwerkt(rij, uitslag.knsbNummer === mutatie.wit && uitslag.tegenstanderNummer === mutatie.zwart);
-            lijst.append(rij);
+                partij1,
+                resultatenInvullen(uitslag)));
         }
     } else {
         lijst.append(html.rij("nog", "geen", "uitslagen", ""));

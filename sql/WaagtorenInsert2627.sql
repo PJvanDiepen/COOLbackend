@@ -1028,14 +1028,14 @@ select p.naam, g.* from gebruiker g join persoon p on g.knsbNummer = p.knsbNumme
 update gebruiker set mutatieRechten = 2 where knsbNummer in(6420557, 6565801); -- Jasper Seelemeijer, Ernst Hoogenes
 
 -- speler toevoegen / verwijderen
-set @nieuw = 8795941; -- Guido van Hesselingen
+set @speler = 7879520; -- Vincent Pandelaar
 set @rating = 1961;
-select * from persoon where knsbNummer = @nieuw;
-select * from speler where clubCode = 0 and knsbNummer = @nieuw;
-delete from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = @nieuw;
+select * from persoon where knsbNummer = @speler;
+select * from speler where clubCode = 0 and knsbNummer = @speler;
+delete from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;
 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol) values
-(0, "2627", "int", "", "", @nieuw, coalesce(@Rating, 0), '2026-08-01', coalesce(nullif(@rating, 0), 1200), "int", "", "", "", "", "");
+(0, "2627", "int", "", "", @speler, coalesce(@Rating, 0), '2026-08-01', coalesce(nullif(@rating, 0), 1200), "int", "", "", "", "", "");
 
 -- knsbTeam invullen
 select p.naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer where s.clubCode = 0 and s.seizoen = "2627" and teamCode = "int" order by knsbTeam;
@@ -1095,10 +1095,7 @@ update speler set knsbTeam = "5" where clubCode = 0 and seizoen = "2627" and kns
 9175353, -- Thomas Hubers
 9176024); -- Amit Roy
 
-
 -- TODO nhsbTeam invullen
-
-
 
 
 -- kopieer spelers van vorige seizoen met knsbRating van 1 augustus en zelfde rating voor interneRating of 1200

@@ -7,10 +7,10 @@ import { o_o_o, init, vinkjeInvullen, perTeamRondenUitslagen } from "./o_o_o.js"
 import * as zyq from "./zyq.js";
 
 /*
-    verwerk teamleider=<teamCode>
+    verwerk teamleden=<teamCode>
            &invaller=<knsbNummer>
  */
-const teamleider = html.params.get("teamleider"); // teamCode
+const teamleden = html.params.get("teamleden"); // teamCode TODO geselecteerde team
 const invaller = Number(html.params.get("invaller")); // knsbNummer
 
 (async function() {
@@ -19,10 +19,12 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const teams = (await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isTeam(team);
     });
-    const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);
+    const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleden`);
+    const teamCode = teamleden
+        ? teamleden
+        : teamVoorkeur(spelers, invaller); // TODO zyq.gebruiker.knsbNummer);
     await teamSelecteren(teams, teamCode);
     const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
-    const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleider`);
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const vast = html.id("vast");
@@ -41,15 +43,11 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             team,
             ...(rondenPerSpeler(speler.knsbNummer, ronden))));
     }
-    const teamGegevens = teams.find(function (team) {
-        return team.teamCode === teamCode;
-    });
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
         return speler.knsbNummer > db.KNSB_NUMMER
             && speler.knsbRating < hoogsteRating
-            && !hogerTeam(teamCode, nhsbTeam ? speler.nhsbTeam : speler.knsbTeam)
-            && !jeugdCompetitie(speler);
+            && !hogerTeam(teamCode, nhsbTeam ? speler.nhsbTeam : speler.knsbTeam);
         // TODO niet meer dan 3 x invallen in hoger team
     });
     const wedstrijden = wedstrijdenLijst(ronden);
@@ -61,23 +59,52 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
         if (invallen.length > 0) {
             const knop = document.createElement("select");
             html.selectie(knop, 0, invallen, async function (rondeNummer){
+                /* TODO herstellen
                 const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
                 const mutaties = await zyq.serverFetch(
                     `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/uitslag/toevoegen/${db.MEEDOEN}/${datum}/int`);
-                html.zelfdePagina(`teamleider=${teamCode}&invaller=${speler.knsbNummer}`);
+                html.zelfdePagina(`teamleden=${teamCode}&invaller=${speler.knsbNummer}`);
+                 */
+                html.zelfdePagina(`teamleden=${teamVoorkeur(spelers, speler.knsbNummer)}&invaller=${speler.knsbNummer}`);
             });
             inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
         }
     }
 })();
 
-function teamVoorkeur(teams, teamleider) {
-    for (const team of teams) {
-        if (team.teamleider === teamleider) { // dit team indien de gebruiker is teamleider van dit team
-            return team.teamCode;
+// TODO naar tabel speler verplaatsen
+const teamLeiders = new Map([
+    ["1", 7970094], // Danny de Ruiter
+    ["2", 7129991], // Gerard de Geus
+    ["3", 6420557], // Jasper Seelemeijer
+    ["4", 6212404], // Peter van Diepen
+    ["5", 9077651], // Lennart van der Kraan
+    ["n1", 7129991], // Gerard de Geus
+    ["n2", 7758014], // Alex Albrecht
+    ["n3", 6565801], // Ernst Hoogenes
+    ["n4", 8485059], // Peter Duijs
+    ["n5", 7321534], // Ronald Kamps
+    ["v1", 8950876]]); // Jos Albers
+
+const andereTeamLeden = new Map([
+    [8587337, {knsbTeam: "2"}], // Max Hooijmans
+    [6930957, {knsbTeam: "3"}], // Leo van Steenoven
+    [7292043, {knsbTeam: "3"}], // Rob Freer
+    [7443172, {knsbTeam: "4"}], // Anton Schermer
+    [6214153, {knsbTeam: "4"}], // Jan Poland
+    [8882038, {knsbTeam: "5"}], // Sverre van de Bruinhorst
+    [9040801, {knsbTeam: "5"}]]); // Marcello van 't Veen
+
+function teamVoorkeur(spelers, gebruiker) {
+    if (andereTeamLeden.has(gebruiker)) {
+        return andereTeamLeden.get(gebruiker).knsbTeam || andereTeamLeden.get(gebruiker).nhsbTeam || "1";
+    }
+    for (const speler of spelers) {
+        if (gebruiker === speler.knsbNummer) {
+            return speler.knsbTeam || speler.nhsbTeam || "1";
         }
     }
-    return teams[0].teamCode; // anders eerste team uit lijst
+    return "1"; // anders eerste team
 }
 
 // TODO zie o_o_o.js: teamSelecteren
@@ -86,7 +113,7 @@ function teamSelecteren(teams, teamCode) {
         return [team.teamCode, db.teamVoluit(team.teamCode)];
     });
     html.selectie(html.id("teamSelecteren"), teamCode, teamsSelectie, function (team) {
-        html.zelfdePagina(`teamleider=${team}`);
+        html.zelfdePagina(`teamleden=${team}`);
     });
 }
 
@@ -209,14 +236,6 @@ function hogerTeam(teamCode, vasteTeam) {
     } else {
         return teamCode >= vasteTeam; // hogerTeam heeft lager nummer en in vallen voor vasteTeam mag ook niet
     }
-}
-
-function jeugdCompetitie(speler) {
-    return speler.intern1 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern2 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern3 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern4 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern1 === db.JEUGD_COMPETITIE || speler.intern5 === db.JEUGD_COMPETITIE_VOORJAAR;
 }
 
 function wedstrijdenLijst(ronden) {

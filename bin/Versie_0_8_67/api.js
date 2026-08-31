@@ -547,7 +547,7 @@ Frontend: o_o_o.js
     /*
     Frontend: teamleider.js
      */
-    url.get("/:club/:seizoen/teamleider", async function (ctx) {
+    url.get("/:club/:seizoen/teamleden", async function (ctx) {
         ctx.body = await Speler.query()
             .select("speler.*", "persoon.naam")
             .join("persoon", "speler.knsbNummer", "persoon.knsbNummer")
