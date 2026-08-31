@@ -123,15 +123,12 @@ function teamSelecteren(teams, teamCode) {
 function uitslagenTeam(ronden, teamCode, kop, rondenTabel) {
     kop.textContent = `Overzicht voor teamleider ${html.SCHEIDING} ${db.teamVoluit(teamCode)}`;
     for (let rondeNummer = 1; rondeNummer < ronden.length; ++rondeNummer) {
-        uitslagenTeamPerRonde(ronden[rondeNummer], rondeNummer, rondenTabel);
-    }
-}
-
-function uitslagenTeamPerRonde(uitslag, rondeNummer, rondenTabel) {
-    if (uitslag) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
-        const datumKolom = zyq.datumLeesbaar(uitslag.ronde);
-        const uitslagKolom = zyq.uitslagTeam(uitslag.ronde.uithuis, uitslag.winst, uitslag.verlies, uitslag.remise);
-        rondenTabel.append(html.rij(uitslag.ronde.rondeNummer, datumKolom, zyq.naarTeam(uitslag.ronde), uitslagKolom));
+        const uitslag = ronden[rondeNummer];
+        if (uitslag) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
+            const datumKolom = zyq.datumLeesbaar(uitslag.ronde);
+            const uitslagKolom = zyq.uitslagTeam(uitslag.ronde.uithuis, uitslag.winst, uitslag.verlies, uitslag.remise);
+            rondenTabel.append(html.rij(uitslag.ronde.rondeNummer, datumKolom, zyq.naarTeam(uitslag.ronde), uitslagKolom));
+        }
     }
 }
 
