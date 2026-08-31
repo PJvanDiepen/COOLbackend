@@ -20,11 +20,9 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
         return db.isTeam(team);
     });
     const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleden`);
-    const teamCode = teamleden
-        ? teamleden
-        : teamVoorkeur(spelers, invaller); // TODO zyq.gebruiker.knsbNummer);
+    const teamCode = teamleden ? teamleden : teamVoorkeur(spelers, zyq.gebruiker.knsbNummer);
     const gebruikerTeam =
-        teamCode !== teamVoorkeur(spelers, invaller, "0"); // TODO zyq.gebruiker.knsbNummer, "0");
+        teamCode !== teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0");
     await teamSelecteren(teams, teamCode);
     const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
     console.log(ronden); // TODO verwijderen
