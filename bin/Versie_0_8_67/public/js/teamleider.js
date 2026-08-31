@@ -21,18 +21,13 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     });
     const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleden`);
     const teamCode = teamleden ? teamleden : teamVoorkeur(spelers, zyq.gebruiker.knsbNummer);
-    console.log(zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER); // bestuur of teamleider
-    console.log(teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0")); // eigen team
-    console.log(zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER ||
-        teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0"));
-    console.log(!(zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER ||
-        teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0")));
     const geenPlanning = !(
         zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER || // bestuur of teamleider
         teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0")); // eigen team
     await teamSelecteren(teams, teamCode);
-    const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
+    const ronden = await perTeamRondenUitslagen(teamCode);
     console.log(ronden); // TODO verwijderen
+    uitslagenTeam(ronden, teamCode, html.id("hoofdkop"), html.id("ronden"));
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const vast = html.id("vast");
@@ -125,13 +120,11 @@ function teamSelecteren(teams, teamCode) {
     });
 }
 
-async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
+function uitslagenTeam(ronden, teamCode, kop, rondenTabel) {
     kop.textContent = `Overzicht voor teamleider ${html.SCHEIDING} ${db.teamVoluit(teamCode)}`;
-    const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
-    for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
-        uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
+    for (let rondeNummer = 1; rondeNummer < ronden.length; ++rondeNummer) {
+        uitslagenTeamPerRonde(ronden[rondeNummer], rondeNummer, rondenTabel);
     }
-    return rondeUitslagen;
 }
 
 function uitslagenTeamPerRonde(uitslag, rondeNummer, rondenTabel) {
