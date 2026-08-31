@@ -21,8 +21,15 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     });
     const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleden`);
     const teamCode = teamleden ? teamleden : teamVoorkeur(spelers, zyq.gebruiker.knsbNummer);
-    const gebruikerTeam =
-        teamCode !== teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0");
+    console.log(zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER); // bestuur of teamleider
+    console.log(teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0")); // eigen team
+    console.log(zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER ||
+        teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0"));
+    console.log(!(zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER ||
+        teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0")));
+    const geenPlanning = !(
+        zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER || // bestuur of teamleider
+        teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0")); // eigen team
     await teamSelecteren(teams, teamCode);
     const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
     console.log(ronden); // TODO verwijderen
@@ -42,7 +49,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             speler.knsbNummer,
             speler.knsbRating,
             team,
-            ...(rondenPerSpeler(speler.knsbNummer, ronden, gebruikerTeam))));
+            ...(rondenPerSpeler(speler.knsbNummer, ronden, geenPlanning))));
     }
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
@@ -205,7 +212,7 @@ function nietGevraagd(knsbNummer, ronden, rondeNummer) {
     return true;
 }
 
-function rondenPerSpeler(knsbNummer, ronden, gebruikerTeam) {
+function rondenPerSpeler(knsbNummer, ronden, geenPlanning) {
     const uitslagen = [];
     for (const ronde of ronden) {
         if (ronde) {
@@ -214,7 +221,7 @@ function rondenPerSpeler(knsbNummer, ronden, gebruikerTeam) {
             });
             if (uitslag) {
                 uitslagen.push(`${uitslag.bordNummer}${uitslag.witZwart} ${uitslag.resultaat}`);
-            } else if (gebruikerTeam) {
+            } else if (geenPlanning) {
                 uitslagen.push("");
             } else {
                 const geplandeUitslag = ronde.geplandeUitslagen.find(function (u) {
