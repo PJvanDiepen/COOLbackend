@@ -10,7 +10,7 @@ import * as zyq from "./zyq.js";
     verwerk teamleden=<teamCode>
            &invaller=<knsbNummer>
  */
-const teamleden = html.params.get("teamleden"); // teamCode TODO geselecteerde team
+const teamleden = html.params.get("teamleden"); // teamCode geselecteerde team
 const invaller = Number(html.params.get("invaller")); // knsbNummer
 
 (async function() {
@@ -23,8 +23,11 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const teamCode = teamleden
         ? teamleden
         : teamVoorkeur(spelers, invaller); // TODO zyq.gebruiker.knsbNummer);
+    const gebruikerTeam =
+        teamCode !== teamVoorkeur(spelers, invaller, "0"); // TODO zyq.gebruiker.knsbNummer, "0");
     await teamSelecteren(teams, teamCode);
     const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
+    console.log(ronden); // TODO verwijderen
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const vast = html.id("vast");
@@ -41,7 +44,7 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             speler.knsbNummer,
             speler.knsbRating,
             team,
-            ...(rondenPerSpeler(speler.knsbNummer, ronden))));
+            ...(rondenPerSpeler(speler.knsbNummer, ronden, gebruikerTeam))));
     }
     const inval = html.id("invallers");
     const invallers = spelers.filter(function (speler) {
@@ -95,16 +98,16 @@ const andereTeamLeden = new Map([
     [8882038, {knsbTeam: "5"}], // Sverre van de Bruinhorst
     [9040801, {knsbTeam: "5"}]]); // Marcello van 't Veen
 
-function teamVoorkeur(spelers, gebruiker) {
+function teamVoorkeur(spelers, gebruiker, anders = "1") { // anders eerste team
     if (andereTeamLeden.has(gebruiker)) {
-        return andereTeamLeden.get(gebruiker).knsbTeam || andereTeamLeden.get(gebruiker).nhsbTeam || "1";
+        return andereTeamLeden.get(gebruiker).knsbTeam || andereTeamLeden.get(gebruiker).nhsbTeam || anders;
     }
     for (const speler of spelers) {
         if (gebruiker === speler.knsbNummer) {
-            return speler.knsbTeam || speler.nhsbTeam || "1";
+            return speler.knsbTeam || speler.nhsbTeam || anders;
         }
     }
-    return "1"; // anders eerste team
+    return anders;
 }
 
 // TODO zie o_o_o.js: teamSelecteren
@@ -144,7 +147,7 @@ function rondeNummers(ronden) {
     return nummers;
 }
 
-// TODO uit speler
+// TODO uit tabel speler
 function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
     if (teamCode === "2") { // 40 + 2103 Nico Hauwert
         return 2143;
@@ -204,7 +207,7 @@ function nietGevraagd(knsbNummer, ronden, rondeNummer) {
     return true;
 }
 
-function rondenPerSpeler(knsbNummer, ronden) {
+function rondenPerSpeler(knsbNummer, ronden, gebruikerTeam) {
     const uitslagen = [];
     for (const ronde of ronden) {
         if (ronde) {
@@ -213,6 +216,8 @@ function rondenPerSpeler(knsbNummer, ronden) {
             });
             if (uitslag) {
                 uitslagen.push(`${uitslag.bordNummer}${uitslag.witZwart} ${uitslag.resultaat}`);
+            } else if (gebruikerTeam) {
+                uitslagen.push("");
             } else {
                 const geplandeUitslag = ronde.geplandeUitslagen.find(function (u) {
                     return u.knsbNummer === knsbNummer;
