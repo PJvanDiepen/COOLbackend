@@ -21,21 +21,20 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     });
     const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleden`);
     const teamCode = teamleden ? teamleden : teamVoorkeur(spelers, zyq.gebruiker.knsbNummer);
+    teamSelecteren(teams, teamCode);
     const geenPlanning = !(
         zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER || // bestuur of teamleider
         teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0")); // eigen team
-    await teamSelecteren(teams, teamCode);
     const ronden = await perTeamRondenUitslagen(teamCode);
     console.log(ronden); // TODO verwijderen
     uitslagenTeam(ronden, teamCode, html.id("hoofdkop"), html.id("ronden"));
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
-    const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
-    const vast = html.id("vast");
+    const vast = html.id("vast"); // Vaste spelers en invallers
     vast.append(html.bovenRij("naam", "nummer", "rating", "team", ...(rondeNummers(ronden))));
     const vasteSpelers = spelers.filter(function (speler) {
         return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode
             || isInvaller(speler.knsbNummer, ronden);
-    })
+    });
     for (const speler of vasteSpelers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         const link = zyq.naarSpeler(speler);
@@ -46,7 +45,8 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             team,
             ...(rondenPerSpeler(speler.knsbNummer, ronden, geenPlanning))));
     }
-    const inval = html.id("invallers");
+    const inval = html.id("invallers"); // Invallers door teamleider
+    const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const invallers = spelers.filter(function (speler) {
         return speler.knsbNummer > db.KNSB_NUMMER
             && speler.knsbRating < hoogsteRating
