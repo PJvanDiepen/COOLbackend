@@ -11,11 +11,12 @@ De documentatie beschrijft voorlopig alleen de [database](./doc/database.md) en 
 
 Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zijn opgelost:
 
-- 0-0-0 laat de correcte ronde zien voor de Voorlopige indeling en Uitslagen invullen
-- na definitief maken uitslagen van ronde synchroniseren
-- objecten boom synchroniseren met server issue #49
-- kolom rating in plaats van lijst met ratings
-- geen KNSB rating grafiek issue #44
+- Meer partijen per ronde tegen dezelfde tegenstander #66
+- Teamleider kan vaste speler of invaller aanmelden #62
+- Objecten boom synchroniseren met server #49
+- Database documentatie is niet compleet #43
+- zyq.js verwijderen #45
+- 0-0-0.nl versie 0.8.66 ---> Versie_0_8_67 #72
 
 Een meer uitgebreide [planning](https://github.com/users/PJvanDiepen/projects/1/views/1) staat op GitHub.
 

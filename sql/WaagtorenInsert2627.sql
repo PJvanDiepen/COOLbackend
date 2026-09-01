@@ -1028,14 +1028,17 @@ select p.naam, g.* from gebruiker g join persoon p on g.knsbNummer = p.knsbNumme
 update gebruiker set mutatieRechten = 2 where knsbNummer in(6420557, 6565801); -- Jasper Seelemeijer, Ernst Hoogenes
 
 -- speler toevoegen / verwijderen
-set @speler = 7879520; -- Vincent Pandelaar
-set @rating = 1961;
+set @speler = 9040801; -- Marcello van 't Veen
+set @rating = 1506;
 select * from persoon where knsbNummer = @speler;
 select * from speler where clubCode = 0 and knsbNummer = @speler;
 delete from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;
 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol) values
 (0, "2627", "int", "", "", @speler, coalesce(@Rating, 0), '2026-08-01', coalesce(nullif(@rating, 0), 1200), "int", "", "", "", "", "");
+
+-- rating bijwerken
+update speler set knsbRating = @rating, interneRating = @rating where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;  
 
 -- knsbTeam invullen
 select p.naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer where s.clubCode = 0 and s.seizoen = "2627" and teamCode = "int" order by knsbTeam;
@@ -1114,10 +1117,19 @@ where s.clubCode = 0 and s.seizoen = "2627" and s.knsbNummer = 6212404; -- 103;
 -- TODO issue #64 Van HTML op 0-0-0.nl naar MD op GitHub.com
 -- TODO issue #63 speler met 1 teamCode in plaats van knsbTeam, nhsbTeam, intern1..5
 -- TODO issue #62 Teamleider kan vaste speler of invaller aanmelden
+
+-- wedstrijd uit agenda speler verwijderen
+set @speler = 7535385; -- Marten Coerts
+set @team = "4";
+set @ronde = 2;
+
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer 
+where clubCode = 0 and seizoen = "2627" and teamCode = @team and u.knsbNummer = @speler;
+delete from uitslag where clubCode = 0 and seizoen = "2627" and teamCode = @team and rondeNummer = @ronde and knsbNummer = @speler;
+
 -- TODO issue #61 Signaleer gespeelde externe wedstrijden
 -- TODO issue #60 ISO datum in plaats van Date
 -- TODO issue #59 Meer mogelijkheden invaller voor viertal
-
 -- TODO ISSUE #58 Uitslag verbeteren
 
 set @seizoen = "2627";
