@@ -1117,6 +1117,10 @@ Frontend: o_o_o.js
         let aantal = 0;
         if (gebruiker.juisteRechten(db.TEAMLEIDER) || // agenda van andere gebruiker TODO alleen eigen team
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) { // alleen eigen agenda
+            let partij = ctx.params.partij;
+            if (partij === db.MEEDOEN) {
+
+            }
             if (await Uitslag.query().insert({
                     clubCode: ctx.params.club,
                     seizoen: ctx.params.seizoen,
@@ -1124,11 +1128,12 @@ Frontend: o_o_o.js
                     rondeNummer: ctx.params.ronde,
                     bordNummer: 0,
                     knsbNummer: ctx.params.speler,
-                    partij: ctx.params.partij, // TODO :partij overbodig indien uitsluitend PLANNING in plaats van PLANNING of AFWEZIG
+                    partij: partij,
                     witZwart: "",
                     tegenstanderNummer: 0,
                     resultaat: "",
-                    datum: ctx.params.datum,
+                    resultaten: "",
+                datum: ctx.params.datum,
                     competitie: ctx.params.competitie
             } )) {
                 aantal = 1;

@@ -1014,6 +1014,8 @@ delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @te
 
 -- lijst van issues met SQL oplossingen ------------------------------------------------------------------------------------------------------------- 
 
+-- TODO issue #73 Overzicht voor bestuur overzichtelijker maken
+-- TODO issue #72 0-0-0.nl versie 0.8.66 ---> Versie_0_8_67
 -- TODO issue #71 Teamindeling in 0-0-0 maken
 -- TODO issue #70 Jaarkalender in 0-0-0 maken
 -- TODO issue #69 Nieuwe speler aanmelden werkt niet meer
@@ -1116,6 +1118,19 @@ set s.knsbRating = coalesce(r.knsbRating, 0), s.datum = '2026-09-01', s.interneR
 where s.clubCode = 0 and s.seizoen = "2627"; -- and s.knsbNummer = 6212404; -- 103;
 
 -- TODO issue #66 Meer partijen per ronde tegen dezelfde tegenstander 
+set @ronde = 2;
+set @bord = 19;
+set @resultatenWitZwart = "11";
+set @resultatenZwartWit = "00";
+
+update uitslag set resultaten = @resultatenWitZwart
+where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and bordNummer = @bord and witZwart = "w";
+update uitslag set resultaten = @resultatenZwartWit
+where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and bordNummer = @bord and witZwart = "z";
+
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and bordNummer = @bord order by witZwart;
+
 -- TODO issue #65 Aanmelden voor competitie of toernooi
 -- TODO issue #64 Van HTML op 0-0-0.nl naar MD op GitHub.com
 -- TODO issue #63 speler met 1 teamCode in plaats van knsbTeam, nhsbTeam, intern1..5
@@ -1138,42 +1153,116 @@ delete from uitslag where clubCode = 0 and seizoen = "2627" and teamCode = @team
 set @seizoen = "2627";
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 31;
+set @ronde = 2;
+
+-- TODO partij wijzigen
+set @bord = 1;
+set @wit   = 7613166; -- Peter Kalisvaart 
+set @zwart = 6930957; -- Leo van Steenoven	6930957
+
+set @bord = 2;
+set @wit   = 7419621; -- Frits Leenart	7419621
+set @zwart = 8112654; -- Ton Fasel	8112654
+
+set @bord = 3;
+set @wit   = 8224502; -- Jan van Gijsen	8224502
+set @zwart = 6214153; -- Jan Poland	6214153
+
+set @bord = 4;
+set @wit   = 8073978; -- Gerrit Peereboom	8073978
+set @zwart = 7321534; -- Ronald Kamps	7321534
+
+set @bord = 5;
+set @wit   = 7699010; -- Ruud Niewenhuis	7699010
+set @zwart = 9077651; -- Lennart van der Kraan	9077651
+
+set @bord = 6;
+set @wit   = 7210137; -- Arjen Dibbets	7210137
+set @zwart = 8485059; -- Peter Duijs	8485059
+
+set @bord = 7;
+set @wit   = 7269900; -- Jan Ens	7269900
+set @zwart = 7386060; -- Jan Meringa	7386060
+
+set @bord = 8;
+set @wit   = 7904589; -- Wim Nieland	7904589
+set @zwart = 7129991; -- Gerard de Geus	7129991
+
+set @bord = 9;
+set @wit   = 9056674; -- Fabio Pasti	9056674
+set @zwart = 7707832; -- Ronald Groot	7707832
+
+set @bord = 10;
+set @wit   = 7546506; -- Edward Schenkel	7546506
+set @zwart = 6565801; -- Ernst Hoogenes	6565801
+
+set @bord = 11;
+set @wit   = 7101193; -- Jacob Bleijendaal	7101193
+set @zwart = 8750093; -- Martin Rep	8750093
+
+set @bord = 12;
+set @wit   = 8276752; -- Theo Bakker	8276752
+set @zwart = 7649213; -- Dick Bouma	7649213
+
 set @bord = 13;
+set @wit   = 7582102; -- Onno Vellinga	7582102
+set @zwart = 6212404; -- Peter van Diepen	6212404
+
+set @bord = 14;
+set @wit   = 199; -- Jasper Stam
+set @zwart = 8350738; -- Ramon Witte	8350738
+
+set @bord = 15;
+set @wit   = 7535396; -- John Leek	7535396
+set @zwart = 6572511; -- Bert Buitink	6572511
+
+set @bord = 16;
+set @wit   = 7731812; -- Alexander Versluis	7731812
+set @zwart = 7292043; -- Rob Freer	7292043
+
+set @bord = 17;
+set @wit   = 7443172; -- Anton Schermer	7443172
+set @zwart = 7099950; -- Jos Vlaming	7099950
+
+set @bord = 18;
+set @wit   = 9164639; -- Marnix Burgers	9164639
+set @zwart = 8358966; -- Ad van der Steur	8358966
+
+set @bord = 19;
+set @wit   = 9175353; -- Thomas Hubers	9175353
+set @zwart = 207; -- Henk Kox
+
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer 
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in(@wit, @zwart) order by witZwart;
+
+update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
+update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer = @bord;
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer > 0 order by bordNummer, witZwart;
 
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde;
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = "e";
-
-set @wit   = 7210137; -- Arjen Dibbets
-set @zwart = 7519930; -- John Norder
-
-select * from persoon where knsbNummer = @wit;
-
-set @oneven = 198; -- Thomas Hubers
-set @afwezig = 8485059; -- Peter Duijs
-set @extern = 6572511; -- Bert Buitink
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and partij = 'i' order by bordNummer, witZwart;
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @oneven, @afwezig);
-
-select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer in (@wit, @zwart, @afwezig);
+-- TODO wit / zwart wijzigen
+update uitslag set witZwart = 'w'
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
+update uitslag set witZwart = 'z'
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 -- TODO afwezig maken
+set @afwezig = 8485059; -- Peter Duijs
+
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer = @afwezig;
 
 update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNummer = 0, resultaat = ''
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
 
 -- TODO oneven maken
+set @oneven = 198; -- Thomas Hubers
+
+select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
+where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer = @oneven;
 
 update uitslag set bordNummer = 0, partij = 'o', witZwart = '', tegenstanderNummer = 0, resultaat = ''
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @oneven;
@@ -1182,22 +1271,6 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 
 update uitslag set bordNummer = 0, partij = 'e', witZwart = '', tegenstanderNummer = 0, resultaat = ''
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @extern;
-
--- TODO partij wijzigen
-
-update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'w', tegenstanderNummer = @zwart, resultaat = ''
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
-update uitslag set bordNummer = @bord, partij = 'i', witZwart = 'z', tegenstanderNummer = @wit, resultaat = ''
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
-
-select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer in(193, 194);
-
--- TODO wit / zwart wijzigen
-
-update uitslag set witZwart = 'w'
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
-update uitslag set witZwart = 'z'
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 -- TODO issue #56 Dinsdag 19:00 indeling automatisch definitief maken
 -- TODO issue #55 Automatisch uitslagen inlezen van KNSB en NHSB websites
