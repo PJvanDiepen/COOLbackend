@@ -1028,14 +1028,14 @@ select p.naam, g.* from gebruiker g join persoon p on g.knsbNummer = p.knsbNumme
 update gebruiker set mutatieRechten = 2 where knsbNummer in(6420557, 6565801); -- Jasper Seelemeijer, Ernst Hoogenes
 
 -- speler toevoegen / verwijderen
-set @speler = 9040801; -- Marcello van 't Veen
-set @rating = 1506;
+set @speler = 207; -- Henk Kox
+set @rating = 0;
 select * from persoon where knsbNummer = @speler;
-select * from speler where clubCode = 0 and knsbNummer = @speler;
+select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer where clubCode = 0 and s.knsbNummer = @speler;
 delete from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;
 
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol) values
-(0, "2627", "int", "", "", @speler, coalesce(@Rating, 0), '2026-08-01', coalesce(nullif(@rating, 0), 1200), "int", "", "", "", "", "");
+(0, "2627", "int", "", "", @speler, coalesce(@Rating, 0), '2026-09-01', coalesce(nullif(@rating, 0), 1200), "int", "", "", "", "", "");
 
 -- rating bijwerken
 update speler set knsbRating = @rating, interneRating = @rating where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;  
@@ -1107,10 +1107,13 @@ select s.clubCode, "2627", s.teamCode, "", "", s.knsbNummer, coalesce(r.knsbRati
 from speler s left join rating r on r.knsbNummer = s.knsbNummer and r.jaar = 2026 and r.maand = 8
 where s.clubCode = 0 and s.seizoen = "2526"; -- and s.knsbNummer = 6212404; -- 103;
 
+use waagtoren;
+select * from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = 6212404;
+
 -- bijwerken spelers dit seizoen met knsbRating van 1 september en zelfde rating voor interneRating of 1200
 update speler s left join rating r on r.knsbNummer = s.knsbNummer and r.jaar = 2026 and r.maand = 9
 set s.knsbRating = coalesce(r.knsbRating, 0), s.datum = '2026-09-01', s.interneRating = coalesce(nullif(r.knsbRating, 0), 1200)
-where s.clubCode = 0 and s.seizoen = "2627" and s.knsbNummer = 6212404; -- 103;
+where s.clubCode = 0 and s.seizoen = "2627"; -- and s.knsbNummer = 6212404; -- 103;
 
 -- TODO issue #66 Meer partijen per ronde tegen dezelfde tegenstander 
 -- TODO issue #65 Aanmelden voor competitie of toernooi
@@ -1208,7 +1211,7 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 -- TODO issue #46 Niets werkt na de laatste ronde van het seizoen
 -- TODO issue #45 zyq.js verwijderen
 -- TODO issue #44 KNSB rating kolom
--- TODO issue #43 Database documentatie is niet compleetdocumentationImprovements or additions to documentation
+-- TODO issue #43 Database documentatie is niet compleetdocumentation
 -- TODO issue #42 Indeling definitief maken gaat fout
 -- TODO issue #41 Maximum aantal keren invallen voor een hoger team
 -- TODO issue #40 Indelen gaat fout
