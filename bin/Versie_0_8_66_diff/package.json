@@ -1,0 +1,39 @@
+{
+  "name": "cool_backend",
+  "version": "0.8.66",
+  "description": "Backend for 0-0-0.nl",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/PJvanDiepen/COOLbackend.git"
+  },
+  "engines": {
+    "node": ">=14.16"
+  },
+  "keywords": [
+    "chess",
+    "schaken",
+    "schaakvereniging",
+    "api"
+  ],
+  "author": "Peter van Diepen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PJvanDiepen/COOLbackend/issues",
+    "email": "pvdiepen@gmail.com"
+  },
+  "homepage": "https://0-0-0.nl/",
+  "dependencies": {
+    "@koa/cors": "^5.0.0",
+    "config": "^3.3.12",
+    "knex": "^3.0.1",
+    "koa": "^2.15.3",
+    "koa-bodyparser": "^4.4.1",
+    "koa-router": "^12.0.1",
+    "mysql": "^2.18.1",
+    "objection": "^3.1.4"
+  }
+}

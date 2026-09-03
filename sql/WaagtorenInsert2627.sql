@@ -1172,9 +1172,9 @@ set @bord = 4;
 set @wit   = 8073978; -- Gerrit Peereboom	8073978
 set @zwart = 7321534; -- Ronald Kamps	7321534
 
-set @bord = 5;
-set @wit   = 7699010; -- Ruud Niewenhuis	7699010
-set @zwart = 9077651; -- Lennart van der Kraan	9077651
+set @bord = 5; -- fout!
+set @wit   = 9077651; -- Lennart van der Kraan	9077651
+set @zwart = 7699010; -- Ruud Niewenhuis	7699010
 
 set @bord = 6;
 set @wit   = 7210137; -- Arjen Dibbets	7210137
@@ -1242,12 +1242,6 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer > 0 order by bordNummer, witZwart;
-
--- TODO wit / zwart wijzigen
-update uitslag set witZwart = 'w'
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @wit;
-update uitslag set witZwart = 'z'
-where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @zwart;
 
 -- TODO afwezig maken
 set @afwezig = 8485059; -- Peter Duijs

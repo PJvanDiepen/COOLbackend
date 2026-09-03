@@ -1118,6 +1118,12 @@ Frontend: o_o_o.js
         if (gebruiker.juisteRechten(db.TEAMLEIDER) || // agenda van andere gebruiker TODO alleen eigen team
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) { // alleen eigen agenda
             let partij = ctx.params.partij;
+            /*
+             TODO lees uitslagen van speler voor teams tot datum
+             maak lijst van andere teams waar speler invaller was
+             indien op zelfde datum invaller bij ander team dan NIET_MEEDOEN
+
+             */
             if (partij === db.MEEDOEN) {
 
             }
@@ -1140,7 +1146,7 @@ Frontend: o_o_o.js
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }
         }
-        ctx.body = aantal;
+        ctx.body = aantal; // TODO was invaller bij andere teams
     });
 
     /*
