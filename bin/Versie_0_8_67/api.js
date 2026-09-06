@@ -1028,7 +1028,7 @@ Frontend: o_o_o.js
     url.get("/:uuid/:club/:seizoen/:competitie/speler/toevoegen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.BESTUUR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
+        if (gebruiker.juisteRechten(db.BESTUUR)) {
             const intern = teamCodes(ctx.params.competities);
             if (await Speler.query().insert({
                 clubCode: ctx.params.club,
@@ -1064,7 +1064,7 @@ Frontend: o_o_o.js
     url.get("/:uuid/:club/:seizoen/:competitie/speler/wijzigen/:knsbNummer/:knsbRating/:interneRating/:nhsb/:knsb/:competities/:datum", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.BESTUUR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.knsbNummer)) {
+        if (gebruiker.juisteRechten(db.BESTUUR)) {
             const intern = teamCodes(ctx.params.competities);
             if (await Speler.query().findById([Number(ctx.params.club), ctx.params.seizoen, ctx.params.competitie, ctx.params.knsbNummer])
                 .patch({knsbRating: ctx.params.knsbRating,
@@ -1109,23 +1109,50 @@ Frontend: o_o_o.js
     Database: uitslag insert
               mutatie insert
 
-    Frontend: agenda.js
-              teamleider.js
+    Frontend: teamleider.js
      */
-    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/uitslag/toevoegen/:partij/:datum/:competitie", async function (ctx) {
+    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/wedstrijd/toevoegen/:partij/:datum/:competitie", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.TEAMLEIDER) || // agenda van andere gebruiker TODO alleen eigen team
-            gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) { // alleen eigen agenda
+        if (gebruiker.juisteRechten(db.BESTUUR) || gebruiker.eigenTeam(db.TEAMLEIDER, ctx.params.team)) {
             let partij = ctx.params.partij;
-            /*
-             TODO lees uitslagen van speler voor teams tot datum
-             maak lijst van andere teams waar speler invaller was
-             indien op zelfde datum invaller bij ander team dan NIET_MEEDOEN
-
-             */
             if (partij === db.MEEDOEN) {
-
+                const uitslagen = await Uitslag.query()
+                    .select("teamCode", "partij", "datum")
+                    .where("clubCode", ctx.params.club)
+                    .where("seizoen", ctx.params.seizoen)
+                    .whereIn("teamCode", ctx.params.team.substring(0,1) === "n"
+                        ? ["n1","n2", "n3", "n4", "n5", "n6", "nv1", "nv2"] // TODO NHSB niet hardcoded
+                        : ["1","2", "3", "4", "5", "6"]) // TODO KNSB niet hardcoded
+                    .where("knsbNummer", ctx.params.speler)
+                    .where("datum", "<=", ctx.params.datum)
+                    .orderBy([{column: "teamCode", order: "desc"}, {column: "rondeNummer", order: "desc"}]);
+                if (uitslagen.length > 0) {
+                    const laagsteTeam = uitslagen[0].teamCode;
+                    let invallenVoorHogerTeam = 0;
+                    for (const uitslag of uitslagen) {
+                        if (uitslag.partij !== db.NIET_MEEDOEN && uitslag.teamCode < laagsteTeam) {
+                            invallenVoorHogerTeam++;
+                        }
+                        const datum = datumAmsterdam(uitslag.datum);
+                        if (uitslag.teamCode !== ctx.params.team
+                            && uitslag.partij !== db.NIET_MEEDOEN
+                            && datum === ctx.params.datum
+                        ) {
+                            partij = db.NIET_MEEDOEN;
+                            console.log(`${ctx.params.speler} speelt op ${datum} al bij team ${uitslag.teamCode}`);
+                        }
+                    }
+                    /*
+                    Zie reglement KNSB artikel 12.4 en NHSB artikel 19.2
+                    (in poule met minder dan 7 teams niet meer dan 2 x invallen bij hoger team)
+                     */
+                    if (invallenVoorHogerTeam >= 3) {
+                        partij = db.NIET_MEEDOEN;
+                        console.log(`${ctx.params.speler} was ${invallenVoorHogerTeam} keer invaller ` +
+                            `in hoger team dan team ${laagsteTeam}`);
+                    }
+                }
             }
             if (await Uitslag.query().insert({
                     clubCode: ctx.params.club,
@@ -1146,7 +1173,41 @@ Frontend: o_o_o.js
                 await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
             }
         }
-        ctx.body = aantal; // TODO was invaller bij andere teams
+        ctx.body = aantal;
+    });
+
+    /*
+    wedstrijd in agenda toevoegen
+
+    Database: uitslag insert
+              mutatie insert
+
+    Frontend: agenda.js
+    */
+    url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/uitslag/toevoegen/:partij/:datum/:competitie", async function (ctx) {
+        const gebruiker = await gebruikerRechten(ctx.params.uuid);
+        let aantal = 0;
+        if (gebruiker.juisteRechten(db.ONTWIKKELAAR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) {
+            if (await Uitslag.query().insert({
+                clubCode: ctx.params.club,
+                seizoen: ctx.params.seizoen,
+                teamCode: ctx.params.team,
+                rondeNummer: ctx.params.ronde,
+                bordNummer: 0,
+                knsbNummer: ctx.params.speler,
+                partij: ctx.params.partij,
+                witZwart: "",
+                tegenstanderNummer: 0,
+                resultaat: "",
+                resultaten: "",
+                datum: ctx.params.datum,
+                competitie: ctx.params.competitie
+            } )) {
+                aantal = 1;
+                await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
+            }
+        }
+        ctx.body = aantal;
     });
 
     /*
@@ -1180,7 +1241,7 @@ Frontend: o_o_o.js
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
                 .where("uitslag.knsbNummer", ctx.params.speler)
-                .where("uitslag.datum", ctx.params.datum)
+                .where("uitslag.datum", "<=", ctx.params.datum)
                 .orderBy(["uitslag.teamCode", "uitslag.rondeNummer"]);
             const rondeWijzigen = ronden.findIndex(function(ronde) {
                 return ronde.teamCode === ctx.params.team && ronde.rondeNummer === Number(ctx.params.ronde);
@@ -1710,6 +1771,20 @@ function resultaatWijzigen(eigenResultaat, tegenstanderResultaat, resultaat, all
     return false;
 }
 
+const teamLeiders = new Map([ // TODO synchroniseren met browser
+    ["1", 7970094], // Danny de Ruiter
+    ["2", 7129991], // Gerard de Geus
+    ["3", 6420557], // Jasper Seelemeijer
+    ["4", 6212404], // Peter van Diepen
+    ["5", 9077651], // Lennart van der Kraan
+    ["n1", 7129991], // Gerard de Geus
+    ["n2", 7758014], // Alex Albrecht
+    ["n3", 6565801], // Ernst Hoogenes
+    ["n4", 8485059], // Peter Duijs
+    ["n5", 7321534], // Ronald Kamps
+    ["v1", 8950876], // Jos Albers
+    ["v2", 97]]);    // wie o wie?
+
 async function gebruikerRechten(uuid) {
     const dader = await Gebruiker.query()
         .findById(uuid)
@@ -1724,7 +1799,18 @@ async function gebruikerRechten(uuid) {
         return juisteRechten(minimum) && dader.knsbNummer === Number(knsbNummer);
     }
 
-    return Object.freeze({dader, juisteRechten, eigenData});
+    function eigenTeam(minimum, teamCode) {
+        return juisteRechten(minimum) && dader.knsbNummer === teamLeiders.get(teamCode);
+    }
+
+    return Object.freeze({dader, juisteRechten, eigenData, eigenTeam});
 }
 
-geheugenGebruik();
+function datumAmsterdam(value) { // TODO zie issue #60 ISO datum in plaats van Date
+    return new Intl.DateTimeFormat("sv-SE", {
+        timeZone: "Europe/Amsterdam",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+    }).format(new Date(value));
+}

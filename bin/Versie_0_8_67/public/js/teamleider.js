@@ -12,19 +12,19 @@ import * as zyq from "./zyq.js";
  */
 const teamleden = html.params.get("teamleden"); // teamCode geselecteerde team
 const invaller = Number(html.params.get("invaller")); // knsbNummer
-const teamLeiders = new Map([
-    ["1", "Danny de Ruiter"],
-    ["2", "Gerard de Geus"],
-    ["3", "Jasper Seelemeijer"],
-    ["4", "Peter van Diepen"],
-    ["5", "Lennart van der Kraan"],
-    ["n1", "Gerard de Geus"],
-    ["n2", "Alex Albrecht"],
-    ["n3", "Ernst Hoogenes"],
-    ["n4", "Peter Duijs"],
-    ["n5", "Ronald Kamps"],
-    ["v1", "Jos Albers"],
-    ["v2", "wie o wie?"]]);
+const teamLeiders = new Map([ // TODO synchroniseren met server
+    ["1", "Danny de Ruiter"],       // 7970094
+    ["2", "Gerard de Geus"],        // 7129991
+    ["3", "Jasper Seelemeijer"],    // 6420557
+    ["4", "Peter van Diepen"],      // 6212404
+    ["5", "Lennart van der Kraan"], // 9077651
+    ["n1", "Gerard de Geus"],       // 7129991
+    ["n2", "Alex Albrecht"],        // 7758014
+    ["n3", "Ernst Hoogenes"],       // 6565801
+    ["n4", "Peter Duijs"],          // 8485059
+    ["n5", "Ronald Kamps"],         // 7321534
+    ["v1", "Jos Albers"],           // 8950876
+    ["v2", "wie o wie?"]]);         // 97 ?
 
 (async function() {
     await init();
@@ -77,7 +77,7 @@ const teamLeiders = new Map([
             html.selectie(knop, 0, invallen, async function (rondeNummer){
                 const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
                 const mutaties = await zyq.serverFetch(
-                    `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/uitslag/toevoegen/${db.MEEDOEN}/${datum}/int`);
+                    `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/wedstrijd/toevoegen/${db.MEEDOEN}/${datum}/int`);
                 html.zelfdePagina(`teamleden=${teamCode}&invaller=${speler.knsbNummer}`);
             });
             inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));

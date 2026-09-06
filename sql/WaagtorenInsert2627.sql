@@ -1012,8 +1012,15 @@ set @ronde = 6;
 select * from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 delete from uitslag where clubCode = 0 and seizoen = @seizoen and teamCode = @team and rondeNummer = @ronde;
 
--- lijst van issues met SQL oplossingen ------------------------------------------------------------------------------------------------------------- 
+-- complete lijst van issues met eventueel SQL oplossingen ------------------------------------------------------------------------------------------------------------- 
 
+set @speler = 6212404; -- Peter van Diepen	6212404
+
+select * from gebruiker where mutatieRechten > 1;
+update gebruiker set mutatieRechten = 2 where knsbNummer = @speler;
+
+-- TODO issue #75 Mutatie vervangen door log
+-- TODO issue #74 Gebruiker zonder mutatieRechten en speler met rol
 -- TODO issue #73 Overzicht voor bestuur overzichtelijker maken
 -- TODO issue #72 0-0-0.nl versie 0.8.66 ---> Versie_0_8_67
 -- TODO issue #71 Teamindeling in 0-0-0 maken
@@ -1030,8 +1037,8 @@ select p.naam, g.* from gebruiker g join persoon p on g.knsbNummer = p.knsbNumme
 update gebruiker set mutatieRechten = 2 where knsbNummer in(6420557, 6565801); -- Jasper Seelemeijer, Ernst Hoogenes
 
 -- speler toevoegen / verwijderen
-set @speler = 207; -- Henk Kox
-set @rating = 0;
+set @speler = 7926259; -- Robert Ris
+set @rating = 2441;
 select * from persoon where knsbNummer = @speler;
 select naam, s.* from speler s join persoon p on p.knsbNummer = s.knsbNummer where clubCode = 0 and s.knsbNummer = @speler;
 delete from speler where clubCode = 0 and seizoen = "2627" and knsbNummer = @speler;
@@ -1051,14 +1058,16 @@ update speler set knsbTeam = "0" where clubCode = 0 and seizoen = "2627" and kns
 
 -- TODO opstellingen inlezen van Netstand
 update speler set knsbTeam = "1" where clubCode = 0 and seizoen = "2627" and knsbNummer in(
+7926259, -- Robert Ris
 6938624, -- Manuel Bosboom
 7584566, -- Yong Hoon de Rover
 7657342, -- Frank van Tellingen
 7970094, -- Danny de Ruiter
 7428960, -- Frank Agter
 8096242, -- Michaël van Liempt
-7828183, -- Rob Konijn
-7468417); -- Daan Geerke
+7828183); -- Rob Konijn
+
+update speler set knsbTeam = "" where clubCode = 0 and seizoen = "2627" and knsbNummer = 7468417; -- Daan Geerke
 
 update speler set knsbTeam = "2" where clubCode = 0 and seizoen = "2627" and knsbNummer in(
 5968611, -- Nico Hauwert
@@ -1137,12 +1146,12 @@ where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @
 -- TODO issue #62 Teamleider kan vaste speler of invaller aanmelden
 
 -- wedstrijd uit agenda speler verwijderen
-set @speler = 7535385; -- Marten Coerts
-set @team = "4";
-set @ronde = 2;
+set @speler = 6212404; -- Peter van Diepen	6212404
+set @team = "2";
+set @ronde = 1;
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer 
-where clubCode = 0 and seizoen = "2627" and teamCode = @team and u.knsbNummer = @speler;
+where clubCode = 0 and seizoen = "2627" and u.knsbNummer = @speler; -- and teamCode = @team;
 delete from uitslag where clubCode = 0 and seizoen = "2627" and teamCode = @team and rondeNummer = @ronde and knsbNummer = @speler;
 
 -- TODO issue #61 Signaleer gespeelde externe wedstrijden
