@@ -1278,7 +1278,6 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 -- TODO issue #56 Dinsdag 19:00 indeling automatisch definitief maken
 -- TODO issue #55 Automatisch uitslagen inlezen van KNSB en NHSB websites
 -- TODO issue #54 Handmatige SQL vervangen door JavaScript
--- TODO issue #53 Teamleider kan agenda van speler muteren
 -- TODO issue #52 0-0-0 waarschuwt als team niet compleet is
 -- TODO issue #50 In gelijke puntengroepen Zwitsers indelen
 -- TODO issue #49 Objecten boom synchroniseren met server
@@ -1289,10 +1288,8 @@ where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNu
 -- TODO issue #44 KNSB rating kolom
 -- TODO issue #43 Database documentatie is niet compleetdocumentation
 -- TODO issue #42 Indeling definitief maken gaat fout
--- TODO issue #41 Maximum aantal keren invallen voor een hoger team
 -- TODO issue #40 Indelen gaat fout
 -- TODO issue #38 CSS voor select
-
 -- TODO issue #37 Afgezegd op dinsdagavond en externe wedstrijd op dezelfde avond
 
 set @seizoen = "1819"; -- TODO Han Rauws en Bob de Mon 26

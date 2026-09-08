@@ -1186,8 +1186,8 @@ Frontend: o_o_o.js
     */
     url.get("/:uuid/:club/:seizoen/:team/:ronde/:speler/uitslag/toevoegen/:partij/:datum/:competitie", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
-        let aantal = 0;
-        if (gebruiker.juisteRechten(db.ONTWIKKELAAR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) {
+        let aantal = 0; // TODO ONTWIKKELAAR in db.cjs
+        if (gebruiker.juisteRechten(db.ONTWIKKElAAR) || gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler)) {
             if (await Uitslag.query().insert({
                 clubCode: ctx.params.club,
                 seizoen: ctx.params.seizoen,
@@ -1241,7 +1241,7 @@ Frontend: o_o_o.js
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
                 .where("uitslag.knsbNummer", ctx.params.speler)
-                .where("uitslag.datum", "<=", ctx.params.datum)
+                .where("uitslag.datum", ctx.params.datum)
                 .orderBy(["uitslag.teamCode", "uitslag.rondeNummer"]);
             const rondeWijzigen = ronden.findIndex(function(ronde) {
                 return ronde.teamCode === ctx.params.team && ronde.rondeNummer === Number(ctx.params.ronde);
@@ -1625,7 +1625,7 @@ Frontend: o_o_o.js
     url.get("/:uuid/verwijder/mutaties", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) {
+        if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) { // TODO ONTWIKKELAAR in db.cjs
             aantal = await Mutatie.query().delete()
                 .where("knsbNummer", gebruiker.dader.knsbNummer);
             await mutatie(gebruiker, ctx, aantal, db.GEEN_INVLOED);
@@ -1643,7 +1643,7 @@ Frontend: o_o_o.js
     url.get("/:uuid/conversie", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
         let aantal = 0;
-        if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) {
+        if (gebruiker.juisteRechten(db.ONTWIKKElAAR)) { // TODO ONTWIKKELAAR in db.cjs
             const spelers = await Speler.query()
                 .where("clubCode", 0)
                 .where("seizoen", "2324")

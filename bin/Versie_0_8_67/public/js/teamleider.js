@@ -13,18 +13,18 @@ import * as zyq from "./zyq.js";
 const teamleden = html.params.get("teamleden"); // teamCode geselecteerde team
 const invaller = Number(html.params.get("invaller")); // knsbNummer
 const teamLeiders = new Map([ // TODO synchroniseren met server
-    ["1", "Danny de Ruiter"],       // 7970094
-    ["2", "Gerard de Geus"],        // 7129991
-    ["3", "Jasper Seelemeijer"],    // 6420557
-    ["4", "Peter van Diepen"],      // 6212404
-    ["5", "Lennart van der Kraan"], // 9077651
-    ["n1", "Gerard de Geus"],       // 7129991
-    ["n2", "Alex Albrecht"],        // 7758014
-    ["n3", "Ernst Hoogenes"],       // 6565801
-    ["n4", "Peter Duijs"],          // 8485059
-    ["n5", "Ronald Kamps"],         // 7321534
-    ["v1", "Jos Albers"],           // 8950876
-    ["v2", "wie o wie?"]]);         // 97 ?
+    ["1", {naam: "Danny de Ruiter", knsbNummer: 7970094}],
+    ["2", {naam: "Gerard de Geus", knsbNummer: 7129991}],
+    ["3", {naam: "Jasper Seelemeijer", knsbNummer: 6420557}],
+    ["4", {naam: "Peter van Diepen", knsbNummer: 6212404}],
+    ["5", {naam: "Lennart van der Kraan", knsbNummer: 9077651}],
+    ["n1", {naam: "Gerard de Geus", knsbNummer: 7129991}],
+    ["n2", {naam: "Alex Albrecht", knsbNummer: 7758014}],
+    ["n3", {naam: "Ernst Hoogenes", knsbNummer: 6565801}],
+    ["n4", {naam: "Peter Duijs", knsbNummer: 8485059}],
+    ["n5", {naam: "Ronald Kamps", knsbNummer: 7321534}],
+    ["v1", {naam: "Jos Albers", knsbNummer: 8950876}],
+    ["v2", {naam:"wie o wie?", knsbNummer: 97}]]);
 
 (async function() {
     await init();
@@ -57,15 +57,17 @@ const teamLeiders = new Map([ // TODO synchroniseren met server
             team,
             ...(rondenPerSpeler(speler.knsbNummer, ronden, geenPlanning))));
     }
-    html.id("teamleider").textContent = `Invallers vragen door ${teamLeiders.get(teamCode)}`;
+    html.id("teamleider").textContent = `Invallers vragen door ${teamLeiders.get(teamCode).naam}`;
     const inval = html.id("invallers");
     const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const invallers = spelers.filter(function (speler) {
         return speler.knsbNummer > db.KNSB_NUMMER
             && speler.knsbRating < hoogsteRating
             && !hogerTeam(teamCode, nhsbTeam ? speler.nhsbTeam : speler.knsbTeam);
-        // TODO niet meer dan 3 x invallen in hoger team
     });
+    const geenTeamleider = ! // indien niet bestuur en niet teamleider van dit team
+        (zyq.gebruiker.mutatieRechten >= db.BESTUUR ||
+        teamLeiders.get(teamCode).knsbNummer === zyq.gebruiker.knsbNummer);
     const wedstrijden = wedstrijdenLijst(ronden);
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
@@ -73,19 +75,24 @@ const teamLeiders = new Map([ // TODO synchroniseren met server
             return nietGevraagd(speler.knsbNummer, ronden, wedstrijd[0]);
         });
         if (invallen.length > 0) {
-            const knop = document.createElement("select");
-            html.selectie(knop, 0, invallen, async function (rondeNummer){
-                const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
-                const mutaties = await zyq.serverFetch(
-                    `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/wedstrijd/toevoegen/${db.MEEDOEN}/${datum}/int`);
-                html.zelfdePagina(`teamleden=${teamCode}&invaller=${speler.knsbNummer}`);
-            });
-            inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
+            if (geenTeamleider) { // geen select knop
+                inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, ""));
+            } else {
+                const knop = document.createElement("select");
+                html.selectie(knop, 0, invallen, async function (rondeNummer){
+                    const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
+                    const mutaties = await zyq.serverFetch(
+                        `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/wedstrijd/toevoegen/${db.MEEDOEN}/${datum}/int`);
+                    html.zelfdePagina(`teamleden=${teamCode}&invaller=${speler.knsbNummer}`);
+                });
+                inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
+            }
         }
     }
 })();
 
 const andereTeamLeden = new Map([
+    [7468417, {knsbTeam: "1"}], // Daan Geerke
     [8587337, {knsbTeam: "2"}], // Max Hooijmans
     [6930957, {knsbTeam: "3"}], // Leo van Steenoven
     [7292043, {knsbTeam: "3"}], // Rob Freer

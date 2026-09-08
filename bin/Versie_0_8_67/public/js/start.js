@@ -38,7 +38,7 @@ import * as zyq from "./zyq.js";
     }
     menuKeuzes.push(
         [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
-        [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
+        [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html?leden=int"],
         [db.GEREGISTREERD, "Overzicht voor teamleiders", "teamleider.html"]);
     for (let i = 0; i < menuKeuzes.length; i++) {
         const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
