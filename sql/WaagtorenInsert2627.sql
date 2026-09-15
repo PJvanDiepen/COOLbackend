@@ -1,8 +1,9 @@
 use waagtoren; -- ga naar SQL of TODO
 set @seizoen = "2627";
-set @team = "int";
+set @team = "n2";
 
 -- @team.csv
+select * from team where seizoen = @seizoen;
 select * from ronde where seizoen = @seizoen and teamCode = @team order by rondeNummer;
 select * from uitslag where seizoen = @seizoen and teamCode = @team order by rondeNummer, bordNummer;
 
@@ -87,19 +88,20 @@ insert into team (clubCode, seizoen, teamCode, reglement, maand, jaar, bond, pou
 (0, "2627", "5", 0, 0, 0, "k", "6f","KNSB 6F",8,0),
 (0, "2627", "int", 3, 0, 0, "i", "nt", "interne competitie", 0, 0);
 
--- TODO verwijderen
+-- TODO compleet maken
 insert into team (clubCode, seizoen, teamCode, reglement, maand, jaar, bond, poule, omschrijving, borden, teamleider) values
-(0, "2526", "ira", 4, 0, 0, "i", "ra", "rapid competitie", 0, 0),
-(0, "2526", "kbe", 0, 0, 0, "k", "be", "KNSB beker", 4, 0),
-(0, "2526", "n1", 0, 0, 0, "n", "t", "NHSB T", 8, 0),
-(0, "2526", "n2", 0, 0, 0, "n", "1a", "NHSB 1A", 8, 0),
-(0, "2526", "n3", 0, 0, 0, "n", "2a", "NHSB 2A", 6, 0),
-(0, "2526", "n4", 0, 0, 0, "n", "2b", "NHSB 2B", 6, 0),
-(0, "2526", "n5", 0, 0, 0, "n", "2a", "NHSB 2A", 6, 0),
-(0, "2526", "nbb", 0, 0, 0, "n", "b", "Brons", 4, 0),
-(0, "2526", "nbe", 0, 0, 0, "n", "b", "Goud", 4, 0),
-(0, "2526", "nbz", 0, 0, 0, "n", "b", "Zilver", 4, 0),
-(0, "2526", "nv1", 0, 0, 0, "n", "vf", "NHSB VF",4,0);
+(0, "2627", "n1", 0, 0, 0, "n", "t", "NHSB Top", 8, 0),
+(0, "2627", "n2", 0, 0, 0, "n", "1a", "NHSB 1A", 6, 0);
+-- (0, "2627", "n3", 0, 0, 0, "n", "2a", "NHSB 2A", 6, 0),
+-- (0, "2627", "n4", 0, 0, 0, "n", "2b", "NHSB 2B", 6, 0),
+-- (0, "2627", "n5", 0, 0, 0, "n", "2a", "NHSB 2A", 6, 0),
+-- (0, "2627", "nbb", 0, 0, 0, "n", "b", "Brons", 4, 0),
+-- (0, "2627", "nbe", 0, 0, 0, "n", "b", "Goud", 4, 0),
+-- (0, "2627", "nbz", 0, 0, 0, "n", "b", "Zilver", 4, 0),
+-- (0, "2627", "nv1", 0, 0, 0, "n", "vf", "NHSB VF",4,0);
+
+select * from team where clubCode = 0 and seizoen = "2627"and teamCode ="n2";
+update team set borden = 6 where clubCode = 0 and seizoen = "2627"and teamCode ="n2";
 
 -- ronden -------------------------------------------------------------------------------------------------------------------------------
 
@@ -182,6 +184,8 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0, "2627", "int", 32, "t", "", '2027-05-18'),
 (0, "2627", "int", 33, "t", "", '2027-05-25');
 
+-- TODO compleet maken
+
 select * from ronde where clubCode = 0 and seizoen = "2526" and teamCode = "kbe";
 update ronde set datum = '2025-12-14' where clubCode = 0 and seizoen = "2526" and teamCode = "kbe" and rondeNummer = 2;
 update ronde set datum = '2026-02-08' where clubCode = 0 and seizoen = "2526" and teamCode = "kbe" and rondeNummer = 3;
@@ -201,7 +205,23 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0,"2526","nbz",2,"t","Het Spaarne Z",'2026-02-17');
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-(0,"2526","nbz",3,"u","De Uil Z",'2026-03-09');
+(0,"2627","n1",1,"u","Opening 64 N1",'2026-09-25'),
+(0,"2627","n1",2,"t","Santpoort N1",'2026-10-06'),
+(0,"2627","n1",3,"u","Chess Society Zandvoort N1",'2026-11-13'),
+(0,"2627","n1",4,"t","HWP Haarlem N1",'2026-12-01'),
+(0,"2627","n1",5,"u","Aartswoud N1",'2027-01-08'),
+(0,"2627","n1",6,"t","Caïssa-Eenhoorn N1",'2027-02-02'),
+(0,"2627","n1",7,"t","Wijker Toren N1",'2027-03-16'),
+(0,"2627","n1",8,"u","Bloemendaal N1",'2027-04-07'),
+(0,"2627","n1",9,"t","'t Saense Paard N1",'2027-04-20'),
+(0,"2627","n2",1,"t","Aris de Heer N1",'2026-09-22'),
+(0,"2627","n2",2,"u","Krommenie N1",'2026-10-06'),
+(0,"2627","n2",3,"t","Schaakmat N1",'2026-11-10'),
+(0,"2627","n2",4,"u","Noordk. Comb. Magnus N1",'2026-12-04'),
+(0,"2627","n2",5,"u","Purmerend N1",'2027-02-04'),
+(0,"2627","n2",6,"t","En Passant N1",'2027-03-20'),
+(0,"2627","n2",7,"u","Volendam N1",'2027-04-08');
+
 
 -- spelers -------------------------------------------------------------------------------------------------------------------------------
 
@@ -1021,6 +1041,12 @@ update gebruiker set mutatieRechten = 2 where knsbNummer = @speler;
 
 -- TODO issue #75 Mutatie vervangen door log
 -- TODO issue #74 Gebruiker zonder mutatieRechten en speler met rol
+
+set @speler = 7926259; -- Robert Ris
+select * from gebruiker where knsbNummer = speler; 
+insert into gebruiker (knsbNummer, mutatieRechten, uuidToken, email, datumEmail, telefoon, voorkeur) values
+(@speler, 1, uuid(), "email", now(), "telefoon", "");
+
 -- TODO issue #73 Overzicht voor bestuur overzichtelijker maken
 -- TODO issue #72 0-0-0.nl versie 0.8.66 ---> Versie_0_8_67
 -- TODO issue #71 Teamindeling in 0-0-0 maken
@@ -1056,6 +1082,10 @@ update speler set knsbTeam = "0" where clubCode = 0 and seizoen = "2627" and kns
 7441346, -- Matthias van Zwet
 8539135); -- Devran Gulave
 
+select * from uitslag where clubCode = 0 and seizoen = "2627" and knsbNummer = 6335670;
+
+delete from uitslag where clubCode = 0 and seizoen = "2627" and teamCode = "3" and knsbNummer = 6335670;
+
 -- TODO opstellingen inlezen van Netstand
 update speler set knsbTeam = "1" where clubCode = 0 and seizoen = "2627" and knsbNummer in(
 7926259, -- Robert Ris
@@ -1086,8 +1116,8 @@ update speler set knsbTeam = "3" where clubCode = 0 and seizoen = "2627" and kns
 7758014, -- Alex Albrecht
 6420557, -- Jasper Seelemeijer
 7282033, -- Gerrit Lemmen
-6335670, -- Hebert Perez Garcia
-8484443); -- Chaim Bookelman
+8484443, -- Chaim Bookelman
+6930957); -- Leo van Steenoven
 
 update speler set knsbTeam = "4" where clubCode = 0 and seizoen = "2627" and knsbNummer in(
 7504310, -- Leonard Haakman
@@ -1111,6 +1141,23 @@ update speler set knsbTeam = "5" where clubCode = 0 and seizoen = "2627" and kns
 
 -- TODO nhsbTeam invullen
 
+update speler set nhsbTeam = "n1" where clubCode = 0 and seizoen = "2627" and knsbNummer in(
+7428960, -- Frank Agter
+8096242, -- Michaël van Liempt
+5968611, -- Nico Hauwert
+7129991, -- Gerard de Geus
+7099950, -- Jos Vlaming
+7529522, -- Willem Meyles
+7707832, -- Ronald Groot
+9056674); -- Fabio Pasti
+
+update speler set nhsbTeam = "n2" where clubCode = 0 and seizoen = "2627" and knsbNummer in(
+6207520, -- Henk van der Hauw
+8587337, -- Max Hooijmans
+7282033, -- Gerrit Lemmen
+8484443, -- Chaim Bookelman
+7758014, -- Alex Albrecht
+7824674); -- Guido Florijn
 
 -- kopieer spelers van vorige seizoen met knsbRating van 1 augustus en zelfde rating voor interneRating of 1200
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol)
@@ -1127,14 +1174,16 @@ set s.knsbRating = coalesce(r.knsbRating, 0), s.datum = '2026-09-01', s.interneR
 where s.clubCode = 0 and s.seizoen = "2627"; -- and s.knsbNummer = 6212404; -- 103;
 
 -- TODO issue #66 Meer partijen per ronde tegen dezelfde tegenstander 
-set @ronde = 2;
-set @bord = 19;
-set @resultatenWitZwart = "11";
-set @resultatenZwartWit = "00";
+set @ronde = 3;
+set @bord = 21;
+set @resultatenWitZwart = "00";
+set @resultaatWit = "0";
+set @resultatenZwartWit = "11";
+set @resultaatZwart = "1";
 
-update uitslag set resultaten = @resultatenWitZwart
+update uitslag set resultaten = @resultatenWitZwart, resultaat = @resultaatWit
 where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and bordNummer = @bord and witZwart = "w";
-update uitslag set resultaten = @resultatenZwartWit
+update uitslag set resultaten = @resultatenZwartWit, resultaat = @resultaatZwart
 where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and bordNummer = @bord and witZwart = "z";
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
@@ -1162,7 +1211,7 @@ delete from uitslag where clubCode = 0 and seizoen = "2627" and teamCode = @team
 set @seizoen = "2627";
 set @team = 'int';
 set @competitie = 'int';
-set @ronde = 2;
+set @ronde = 3;
 
 -- TODO partij wijzigen
 set @bord = 1;
@@ -1253,7 +1302,7 @@ select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and bordNummer > 0 order by bordNummer, witZwart;
 
 -- TODO afwezig maken
-set @afwezig = 8485059; -- Peter Duijs
+set @afwezig = 9176024; -- Amit Roy
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer = @afwezig;
@@ -1262,7 +1311,7 @@ update uitslag set bordNummer = 0, partij = 'a', witZwart = '', tegenstanderNumm
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and knsbNummer = @afwezig;
 
 -- TODO oneven maken
-set @oneven = 198; -- Thomas Hubers
+set @oneven = 8350738; -- Ramon Witte
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = @seizoen and teamCode = @competitie and rondeNummer = @ronde and u.knsbNummer = @oneven;

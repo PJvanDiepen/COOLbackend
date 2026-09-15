@@ -94,7 +94,7 @@ const teamLeiders = new Map([ // TODO synchroniseren met server
 const andereTeamLeden = new Map([
     [7468417, {knsbTeam: "1"}], // Daan Geerke
     [8587337, {knsbTeam: "2"}], // Max Hooijmans
-    [6930957, {knsbTeam: "3"}], // Leo van Steenoven
+    [6335670, {knsbTeam: "2"}], // Hebert Perez Garcia
     [7292043, {knsbTeam: "3"}], // Rob Freer
     [7443172, {knsbTeam: "4"}], // Anton Schermer
     [6214153, {knsbTeam: "4"}], // Jan Poland
@@ -160,7 +160,7 @@ function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
     } else if (teamCode === "nbz") { // NHSB beker (zilver)
         return 1950;
     } else if (teamCode === "n2") { // 80 + 1937 Henk van der Hauw
-        return 2117;
+        return 2017;
     } else if (teamCode === "n3") { // 80 + 1864 Leo van Steenoven
         return 1944;
     } else if (teamCode === "n4") { // 80 + 1802 Jan Meringa
