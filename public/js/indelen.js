@@ -2,7 +2,7 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import {o_o_o, init, competitieTitel, rondeGegevens} from "./o_o_o.js";
+import {o_o_o, init, competitieTitel, volgendeRonde, rondeGegevens} from "./o_o_o.js";
 import { ranglijst } from "./reglement.js";
 
 import * as zyq from "./zyq.js";
@@ -21,11 +21,12 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
 (async function() {
     await init();
     competitieTitel();
-    const rondeNummer = Number(html.params.get("ronde"));
+    const rondeNummer = Number(html.params.get("ronde")) || volgendeRonde();
+    const chess960 = rondeNummer === 6
+        ? " chess 960" : "";
     const rondeInfo = rondeGegevens(o_o_o.team, rondeNummer);
     html.id("subkop").textContent =
-        `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeInfo)}`;
-
+        `Indeling ronde ${rondeNummer}${chess960}${html.SCHEIDING}${zyq.datumLeesbaar(rondeInfo)}`;
     let laatsteBord = 0;
     const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(rondeInfo)}/paren`);
     for (const paar of paren) {
@@ -56,17 +57,17 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
     for (const speler of uithuis) {
         const bord = // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
             speler.partij === db.EXTERN_THUIS ? ++bordNummer : "";
-        indeling.append(html.rij(bord, zyq.naarSpeler(speler), "", "extern", ""));
+        indeling.append(html.rij(bord, zyq.naarSpeler(speler), "", "extern"));
     }
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"), rondeNummer);
     }
     await html.menu(zyq.gebruiker.mutatieRechten,
-        [db.WEDSTRIJDLEIDER_O, `handmatig indelen ronde ${rondeNummer}`, function () {
+        [db.WEDSTRIJDLEIDER, `handmatig indelen ronde ${rondeNummer}`, function () {
             html.anderePagina(`paren.html?ronde=${rondeNummer}`);
         }],
 
-        [db.WEDSTRIJDLEIDER_O, "indeling definitief maken", async function () {
+        [db.WEDSTRIJDLEIDER, "indeling definitief maken", async function () {
             let mutaties = 0;
             const planning = {
                 clubCode: o_o_o.club,
@@ -104,7 +105,7 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
 })();
 
 async function deelnemersRonde(rondeNummer) {
-    if (db.GEREGISTREERD_O <= zyq.gebruiker.mutatieRechten) {
+    if (db.GEREGISTREERD <= zyq.gebruiker.mutatieRechten) {
         return await zyq.serverFetch(
             `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/deelnemers`); // actuele situatie
     } else {
@@ -416,7 +417,8 @@ function laatsteNietIngedeeldeSpeler(nietIngedeeld, poging, volgnummer) {
 /**
  * Indien er een oneven aantal deelnemers is, is er een onevenSpeler.
  * De onevenSpeler is de laagste speler van de ranglijst met het grootste aantal gespeelde partijen
- * die niet eerder oneven was en die niet bij eerste 8 aanwezige spelers van de ranglijst staat.
+ * die niet eerder oneven was en
+ * die niet bij eerste 8 aanwezige spelers van de ranglijst staat.
  *
  * @param r ranglijst
  * @returns {number|number} 0 indien niemand oneven anders onevenSpeler

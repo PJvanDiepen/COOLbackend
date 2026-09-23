@@ -1116,13 +1116,13 @@ Frontend: o_o_o.js
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BESTUUR) || gebruiker.eigenTeam(db.TEAMLEIDER, ctx.params.team)) {
             let partij = ctx.params.partij;
-            if (partij === db.MEEDOEN) {
+            if (partij === db.EXTERN_THUIS || partij === db.EXTERN_UIT) {
                 const uitslagen = await Uitslag.query()
                     .select("teamCode", "partij", "datum")
                     .where("clubCode", ctx.params.club)
                     .where("seizoen", ctx.params.seizoen)
                     .whereIn("teamCode", ctx.params.team.substring(0,1) === "n"
-                        ? ["n1","n2", "n3", "n4", "n5", "n6", "nv1", "nv2"] // TODO NHSB niet hardcoded
+                        ? ["int", "n1","n2", "n3", "n4", "n5", "n6", "nv1", "nv2"] // TODO NHSB niet hardcoded
                         : ["1","2", "3", "4", "5", "6"]) // TODO KNSB niet hardcoded
                     .where("knsbNummer", ctx.params.speler)
                     .where("datum", "<=", ctx.params.datum)
@@ -1153,8 +1153,7 @@ Frontend: o_o_o.js
                             `in hoger team dan team ${laagsteTeam}`);
                     }
                 }
-            }
-            if (await Uitslag.query().insert({
+                if (await Uitslag.query().insert({
                     clubCode: ctx.params.club,
                     seizoen: ctx.params.seizoen,
                     teamCode: ctx.params.team,
@@ -1166,11 +1165,12 @@ Frontend: o_o_o.js
                     tegenstanderNummer: 0,
                     resultaat: "",
                     resultaten: "",
-                datum: ctx.params.datum,
+                    datum: ctx.params.datum,
                     competitie: ctx.params.competitie
-            } )) {
-                aantal = 1;
-                await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
+                } )) {
+                    aantal = 1;
+                    await mutatie(gebruiker, ctx, aantal, db.OPNIEUW_INDELEN);
+                }
             }
         }
         ctx.body = aantal;

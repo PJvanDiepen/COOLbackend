@@ -814,7 +814,7 @@ function gebruikerMaken(object) {
 
 // gebruiker.rol en speler.rol int TODO verwijderen
 const IEDEREEN_O = 0;
-const GEREGISTREERD_O = 1;
+const GEREGISTREERD = 1;
 const TEAMLEIDER_O = 2;
 const BESTUUR_O = 3;
 const WEDSTRIJDLEIDER_O = 4;
@@ -822,7 +822,7 @@ const BEHEERDER_O = 8;
 const ONTWIKKELAAR_O = 9;
 // gebruiker.rol en speler.rol char(1)
 const BESTUUR = "b";
-const GEREGISTREERD = "g";
+const GEREGISTREERD_N = "g"; // TODO GEREGISTREERD
 const IEDEREEN = "i";
 const KIJKER = "k";
 const ONTWIKKELAAR = "o";
@@ -837,7 +837,7 @@ const functieInvullen = new Map ([
     [WEDSTRIJDLEIDER_O, "wedstrijdleider"],
     [BESTUUR_O, "bestuur"],
     [TEAMLEIDER_O, "teamleider"],
-    [GEREGISTREERD_O, "geregistreerd"]]);
+    [GEREGISTREERD, "geregistreerd"]]);
 
 function gebruikerFunctie(speler) {
     if (functieInvullen.has(Number(speler.mutatieRechten))) {

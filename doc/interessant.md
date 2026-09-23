@@ -83,6 +83,7 @@ Refresh Android cache
 - [Word document](https://docx.js.org/#/)
 - [JSON is lying](https://blog.gaborkoos.com/posts/2026-08-03-Your-JSON-Is-Lying-to-You/)
 - [SCHEME in JavaScript](https://lips.js.org/)
+- [JavaScript in Windows](https://tinyjs.app/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)

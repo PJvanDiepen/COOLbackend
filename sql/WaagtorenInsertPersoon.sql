@@ -95,6 +95,7 @@ insert into persoon (knsbNummer, naam) values
 (8243312, "Harry Sluiter"),
 (6335670, "Hebert Perez Garcia"),
 (8314834, "Henk Kleijn"),
+(207, "Henk Kox"),
 (6207520, "Henk van der Hauw"),
 (6661721, "Herman Nijhuis"),
 (141, "Hijrat Abey"),
@@ -246,6 +247,7 @@ insert into persoon (knsbNummer, naam) values
 (7502143, "Rob Heijink"),
 (7828183, "Rob Konijn"),
 (7579154, "Robbert Waas"),
+(7926259, "Robert Ris"),
 (8827588, "Roel Boesenkool"),
 (187, "Rolando"),
 (109, "Ron van den Bogert"),
@@ -294,3 +296,4 @@ insert into persoon (knsbNummer, naam) values
 (7584566, "Yong Hoon de Rover"),
 (7771665, "Yvonne Schol"),
 (167, "Zeger Snip");
+

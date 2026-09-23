@@ -80,9 +80,10 @@ const teamLeiders = new Map([ // TODO synchroniseren met server
             } else {
                 const knop = document.createElement("select");
                 html.selectie(knop, 0, invallen, async function (rondeNummer){
+                    const uithuis = ronden[rondeNummer].ronde.uithuis;
                     const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
                     const mutaties = await zyq.serverFetch(
-                        `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/wedstrijd/toevoegen/${db.MEEDOEN}/${datum}/int`);
+                        `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/wedstrijd/toevoegen/${uithuis}/${datum}/int`);
                     html.zelfdePagina(`teamleden=${teamCode}&invaller=${speler.knsbNummer}`);
                 });
                 inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));

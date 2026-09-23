@@ -11,6 +11,8 @@ const versieIndelen = Number(html.params.get("indelen")) || 0;
 const indeling = html.id("indeling");
 
 /*
+TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor correct aantal borden
+
     verwerk ronde=<ronde>
            &rangnummers=aan
            &indelen=<versienummer indelen algoritme>
@@ -20,10 +22,11 @@ const indeling = html.id("indeling");
     await init();
     competitieTitel();
     const rondeNummer = Number(html.params.get("ronde")) || volgendeRonde();
+    const chess960 = rondeNummer === 6
+        ? " chess 960" : "";
     const rondeInfo = rondeGegevens(o_o_o.team, rondeNummer);
     html.id("subkop").textContent =
-        `Indeling ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeInfo)}`;
-
+        `Indeling ronde ${rondeNummer}${chess960}${html.SCHEIDING}${zyq.datumLeesbaar(rondeInfo)}`;
     let laatsteBord = 0;
     const paren = await zyq.serverFetch(`/${zyq.uuidToken}/${db.key(rondeInfo)}/paren`);
     for (const paar of paren) {
