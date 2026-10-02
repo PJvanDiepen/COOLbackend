@@ -1131,7 +1131,9 @@ Frontend: o_o_o.js
                     const laagsteTeam = uitslagen[0].teamCode;
                     let invallenVoorHogerTeam = 0;
                     for (const uitslag of uitslagen) {
-                        if (uitslag.partij !== db.NIET_MEEDOEN && uitslag.teamCode < laagsteTeam) {
+                        if (uitslag.partij !== db.NIET_MEEDOEN
+                            && uitslag.teamCode !== db.INTERNE_COMPETITIE
+                            && uitslag.teamCode < laagsteTeam) {
                             invallenVoorHogerTeam++;
                         }
                         const datum = datumAmsterdam(uitslag.datum);

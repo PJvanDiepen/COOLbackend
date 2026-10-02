@@ -95,7 +95,6 @@ const teamLeiders = new Map([ // TODO synchroniseren met server
 const andereTeamLeden = new Map([
     [7468417, {knsbTeam: "1"}], // Daan Geerke
     [8587337, {knsbTeam: "2"}], // Max Hooijmans
-    [6335670, {knsbTeam: "2"}], // Hebert Perez Garcia
     [7292043, {knsbTeam: "3"}], // Rob Freer
     [7443172, {knsbTeam: "4"}], // Anton Schermer
     [6214153, {knsbTeam: "4"}], // Jan Poland

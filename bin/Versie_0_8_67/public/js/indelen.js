@@ -57,7 +57,7 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
     for (const speler of uithuis) {
         const bord = // EXTERN_THUIS heeft extra bord nodig EXTERN_UIT niet
             speler.partij === db.EXTERN_THUIS ? ++bordNummer : "";
-        indeling.append(html.rij(bord, zyq.naarSpeler(speler), "", "extern"));
+        indeling.append(html.rij(bord, zyq.naarSpeler(speler), "", "extern", ""));
     }
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"), rondeNummer);
