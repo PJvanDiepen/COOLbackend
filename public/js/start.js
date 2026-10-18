@@ -9,10 +9,23 @@ import { o_o_o } from "./o_o_o.js";
 
 import * as zyq from "./zyq.js";
 
-// TODO patch 26 september 2024 versie 0.8.66
+// TODO patch o_o_o.js van 26 september 2024 versie 0.8.66
 
 function kludge() {
     const nu = new Date();
+    const datums= [
+        "2026-12-22", // snelschaken
+        "2026-12-29", // dicht
+        "2027-02-23", // rapid 5-8
+        "2027-04-20", // rapid 9-12
+        "2027-04-27", // koningsdag
+        "2027-05-04", // dodenherdenking
+        "2027-06-01"]; // snelschaken
+    for (const datum of datums) {
+        if (zelfdeDatum(nu, new Date(datum))) {
+            return 0; // dinsdag geen interne competitie
+        }
+    }
     const dag = nu.getDay(); // 0 = zondag, 1 = maandag, 2 = dinsdag, ...
     const uur = nu.getHours();
     console.log(`dag=${dag} uur=${uur}`);
@@ -21,6 +34,12 @@ function kludge() {
     } else {
         return 0;
     }
+}
+
+function zelfdeDatum(datum1, datum2) {
+    return datum1.getFullYear() === datum2.getFullYear()
+        && datum1.getMonth() === datum2.getMonth()
+        && datum1.getDate() === datum2.getDate();
 }
 
 (async function() {
@@ -55,6 +74,7 @@ function kludge() {
         rondeNummer: 2,
         knsbNummer: 6212404
     };
+    console.log("------------------------------------------------");
     await debug(y);
     console.log("klim 5", db.klim(y));
     console.log("groei 5", await db.groei(y));

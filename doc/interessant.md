@@ -109,6 +109,7 @@ Refresh Android cache
 - [Axios + Cheerio tutorial](https://proxyway.com/guides/cheerio-web-scraping-a-tutorial)
 - [Axios + Cheerio step by step](https://oxylabs.io/blog/cheerio-web-scraping)
 - [Axios + Cheerio guide](https://blog.apify.com/web-scraping-with-cheerio/)
+- [LightPanda](https://lightpanda.io/blog/posts/lightpanda-1-0)
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
@@ -170,7 +171,8 @@ Refresh Android cache
 - [server or browser](https://vercel.com/blog/how-to-choose-the-best-rendering-strategy-for-your-app)
 
 # software enigineering
-- [Rob Pike] (https://www.cs.unc.edu/~stotts/COMP590-059-f24/robsrules.html)
+- [Rob Pike 5 rules of programming](https://www.cs.unc.edu/~stotts/COMP590-059-f24/robsrules.html)
+- [Use the platform](https://nolanlawson.com/2026/10/03/why-dont-more-developers-use-the-platform/)
 - [SOLID](https://jsdev.space/solid-design-principles/)
 - [big O](https://samwho.dev/big-o/)
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
@@ -185,6 +187,7 @@ Refresh Android cache
 - [History of Regular Expressions in JavaScript](https://www.smashingmagazine.com/2024/08/history-future-regular-expressions-javascript/)
 - [telefoonnummer regular expression](https://developerking.medium.com/how-to-integrate-international-phone-number-validation-in-input-field-with-javascript-55d8e4b432c4)
 - [Regular Expressions diagrammen](https://regexper.com/)
+- [readable Regular Expressions in JavaScript](https://www.rahuljuliato.com/posts/emacs-rx-in-typescript)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [Git uitleg](https://github.com/readme/guides/configure-git-environment)
 - [Beej over git](https://beej.us/guide/bggit/)

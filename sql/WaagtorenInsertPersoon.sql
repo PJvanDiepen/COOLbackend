@@ -297,3 +297,4 @@ insert into persoon (knsbNummer, naam) values
 (7771665, "Yvonne Schol"),
 (167, "Zeger Snip");
 
+

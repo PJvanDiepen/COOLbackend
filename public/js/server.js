@@ -95,7 +95,7 @@ export async function eersteContact() {
     synchroniseren(await vraagServer(`/${db.synchroon.revisie}/${url.club}/synchroon`));
     db.boomOnderhoud(groeiFuncties());
     await db.alleClubs(); // 1 club
-    await db.alleGebruikers(); // 1 gebruiker
+    // await db.alleGebruikers(); // 1 gebruiker
 }
 
 /**
