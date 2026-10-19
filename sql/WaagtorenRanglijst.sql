@@ -24,6 +24,8 @@ delimiter ;
 -- versie 4 rapidPunten voor rapid competitie
 -- versie 5 zwitsersPunten voor Zwitsers systeem
 -- versie 6 jeugd competitie met barrière punten en drie keer afzeggen
+-- versie 7 externeAftrek voor alle externe wedstrijden niet op dinsdag
+-- versie 8 externeAftrek vanaf seizoen = 2526 
 
 drop function subgroep; -- 0-0-0.nl versie 0.8.59
 
@@ -102,6 +104,7 @@ $$
 delimiter ;
 
 drop function punten; -- 0-0-0.nl versie 0.8.59
+-- TODO resultaten in plaats van resultaat
 
 delimiter $$
 create function punten(clubCode int, seizoen char(4), teamCode char(3), versie int, knsbNummer int, eigenWaardeCijfer int, partij char(1), tegenstander int, resultaat char(1))
@@ -182,7 +185,12 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.8.59
+drop function totalen; -- 0-0-0.nl versie 0.8.66
+-- TODO resultaten in plaats van resultaat
+-- TODO witIntern en zwartIntern voor 2 resultaten
+-- TODO winstIntern, remiseIntern en verliesIntern voor 2 resultaten
+-- TODO internKleur voor 2 resultaten: 0 = wit, 1 = zwart, 2 = wit + zwart, 3 = zwart + wit 
+-- TODO internResultaat voor 2 resultaten: 0 = 00, 1 = ½½, 2 = 11, 3 = 0½, 4 = ½0, 5 = 01, 6 = 10, 7 = 1½, 8 = ½1 
 
 delimiter $$
 create function totalen(clubCode int, seizoen char(4), competitie char(3), ronde int, datum date, versie int, knsbNummer int)
@@ -211,6 +219,7 @@ begin
     declare tegenstanders varchar(500) default ''; -- 20
     declare reglementairGewonnen int default 0;
     declare externTijdensInterneRonde int default 0;
+    declare externePartijen int default 0;
     declare minimumInternePartijen int default 0;
     declare internKleur int; -- 0 = wit, 1 = zwart
     declare internResultaat int; -- 0 = verlies, 1 = remise, 2 = winst
@@ -229,7 +238,7 @@ begin
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
             and u.competitie = competitie;
     declare continue handler for not found set found = false;
-    if versie <= 4 then -- interne competitie
+    if versie <= 4 or versie >= 7 then -- interne competitie 
 		set minimumInternePartijen = 20; -- reglement artikel 2
 		set minimumPartijenGeleden = 7; -- reglement artikel 3
 	end if;
@@ -285,14 +294,15 @@ begin
         end while; 
     close uitslagen;
     set tegenstanders = concat(tegenstanders, ' 0'); -- rondeNummer = 0
+    set externePartijen = witExtern + zwartExtern;
     if witIntern = 0 and zwartIntern = 0 and oneven = 0 then
         set prijs = 0;
-        set sorteer = witExtern + zwartExtern;
+        set sorteer = externePartijen;
 	else
         if (witIntern + zwartIntern + oneven + reglementairGewonnen + externTijdensInterneRonde) < minimumInternePartijen then
 			set prijs = 0;
 		end if;
-        set aftrek = afzeggingenAftrek(versie, afzeggingen);
+        set aftrek = afzeggingenAftrek(versie, afzeggingen) + externeAftrek(versie, externePartijen, externTijdensInterneRonde);
         set sorteer = startPunten + totaal - aftrek;
     end if;
     return concat(
@@ -321,13 +331,13 @@ end;
 $$
 delimiter ;
 
-drop function extraPunten; -- 0-0-0.nl versie 0.8.41
+drop function extraPunten; -- 0-0-0.nl versie 0.8.66
 
 delimiter $$
 create function extraPunten(versie int, interneRating int)
     returns int deterministic
 begin
-    if versie <= 3 then -- interne competitie reglement artikel 11
+    if versie <= 3 or versie > 6 then -- interne competitie reglement artikel 11
         return 300;
 	elseif versie = 6 and interneRating < 1100 then -- barrière punten voor jeugd competitie
         return 270;
@@ -363,167 +373,19 @@ end;
 $$
 delimiter ;
 
-set @club = 0;
-set @seizoen = '2122';
-set @versie = 3;
-set @datum = '2022-04-11';
+drop function externeAftrek; -- 0-0-0.nl versie 0.8.66
 
-set @knsbNummer = 6212404; -- Peter van Diepen
-set @competitie = 'int';
-
--- ranglijst
-select
-  s.knsbNummer,
-  naam,
-  subgroep(@club, @seizoen, @versie, s.knsbNummer) as subgroep,
-  totalen(@club, @seizoen, @competitie, 0, @datum, @versie, s.knsbNummer) as totalen
-from speler s
-join persoon p on s.knsbNummer = p.knsbNummer
-where clubCode = @club and seizoen = @seizoen
-order by totalen desc;
-
--- punten van alle uitslagen per speler
-select u.datum,
-       u.rondeNummer,
-       u.bordNummer,
-       u.witZwart,
-       u.tegenstanderNummer,
-       p.naam,
-       u.resultaat,
-       u.teamCode,
-       u.partij,
-       r.uithuis,
-       r.tegenstander,
-       punten(
-          @club,
-          @seizoen,
-          u.teamCode,
-          @versie,
-          @knsbNummer,
-          waardeCijfer(@versie, rating(@club, @seizoen, @knsbNummer)),
-          u.partij,
-          u.tegenstanderNummer,
-          u.resultaat) as punten
-from uitslag u
-join persoon p on u.tegenstanderNummer = p.knsbNummer
-join ronde r on u.clubCode = r.clubCode and u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
-where u.clubCode = @club 
-    and u.seizoen = @seizoen
-    and u.knsbNummer = @knsbNummer
-    and u.competitie = @competitie
-order by u.datum, u.bordNummer;
-
--- aantal mutaties per gebruiker 
-select naam, m.knsbNummer, count(*) mutaties
-from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
-group by m.knsbNummer
-order by mutaties desc;
-
--- alle ratinglijsten (met correlated subqueries)
-select r.maand, r.jaar from rating as r
-where r.knsbNummer = (select een.knsbNummer from rating as een where een.maand = r.maand limit 1);
-
--- agenda voor alle interne en externe ronden per speler (met common table expressions)
-with
-  s as (select * from speler where clubCode = @club and seizoen = @seizoen and knsbNummer = @knsbNummer),
-  u as (select * from uitslag where clubCode = @club and seizoen = @seizoen and knsbNummer = @knsbNummer)
-select r.*, u.partij
-  from ronde r
-  join s on r.clubCode = s.clubCode and r.seizoen = s.seizoen
-  left join u on r.clubCode = u.clubCode and r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-where r.clubCode = @club and r.seizoen = @seizoen and r.teamCode in (s.knsbTeam, s.nhsbTeam, s.intern1, s.intern2, s.intern3, s.intern4, s.intern5)
-order by r.datum, r.rondeNummer;
-
-set @club = 0;
-set @seizoen = '2324';
-set @knsbNummer = 7428960; -- Frank Agter
-set @datum = '2023-10-17';
-
--- uitslagen / ronden op dezelfde datum
-select u.teamCode, u.rondeNummer, u.competitie, u.partij, r.uithuis
-  from uitslag u 
-  join ronde r on r.clubCode = u.clubCode and r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer  
-where u.clubCode = @club and  u.seizoen = @seizoen and u.knsbNummer = @knsbNummer and u.datum = @datum 
-order by u.teamCode, u.rondeNummer;
-
--- alle externe wedstrijden van het seizoen
-select r.*, bond, poule, omschrijving, borden, naam from ronde r
-join team t on r.clubCode = t.clubCode and r.seizoen = t.seizoen and r.teamCode = t.teamCode
-join persoon on teamleider = knsbNummer
-where r.clubCode = @club and r.seizoen = @seizoen and r.teamCode not in ('int', 'ira')
-order by r.datum, r.teamCode;
-
-set @club = 0;
-set @seizoen = '2223';
-set @teamCode = 'int';
-set @datum = '2022-03-01';
-
--- wie gaat extern spelen per datum
-select u.*, naam from uitslag u join persoon p on u.knsbNummer = p.knsbNummer   
-where clubCode = @club and seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
-
-update uitslag set partij = 'u' where knsbNummer = 7879520 and seizoen = @seizoen and partij in ('t', 'u') and datum = @datum;
-
--- interne ronden per seizoen van verschillende competities
-select * from ronde where clubCode = @club and seizoen = @seizoen and substring(teamCode, 1, 1) = 'i' order by datum;
-
--- ronden per seizoen en competitie met aantal uitslagen
-with u as 
-  (select clubCode, seizoen, teamCode, rondeNummer, count(resultaat) aantalResultaten 
-   from uitslag where clubCode = @club and seizoen = @seizoen and teamCode = @teamCode and resultaat in ('1', '0', '½') group by rondeNummer)   
-select r.*, ifnull(aantalResultaten, 0) resultaten from ronde r
-left join u on r.clubCode = u.clubCode and r.seizoen = u.seizoen and r.teamCode = u.teamCode and r.rondeNummer = u.rondeNummer
-where r.clubCode = @club and r.seizoen = @seizoen and r.teamCode = @teamCode
-order by r.rondeNummer;
-
--- zoek in naam
-select p.*, g.* from persoon p left join gebruiker g on g.knsbNummer = p.knsbNUmmer
-where p.naam regexp 'jan';
-
--- aantal uitslagen per seizoen per partij
-select clubCode, seizoen, teamCode, partij, count(partij) aantal from uitslag 
-group by clubCode, seizoen, teamCode, partij
-order by clubCode, seizoen, teamCode, partij;
-
--- aantal mutaties per gebruiker
-select naam, m.knsbNummer, count(*) mutaties
-from mutatie m join persoon p on m.knsbNummer = p.knsbNummer where invloed > 0
-group by m.knsbNummer
-order by mutaties desc;
-
--- wijzig mutatieRechten
-set @knsbNummer = 7101193; -- Jacob Bleijendaal
-set @knsbNummer = 6572511; -- Bert Buitink
-
-select * from gebruiker g join persoon p on p.knsbNummer = g.knsbNummer 
-where g.knsbNummer = @knsbNummer;
-
-update gebruiker set mutatieRechten = 4 where knsbNummer = @knsbNummer; -- systeembeheerder
-
--- laatste mutaties
-select * from mutatie order by tijdstip desc;
-
-select * from team where seizoen = @seizoen;
-
-set @club = 0;
-set @seizoen = '2223';
-set @knsbNummer = 7504310;
-set @datum = '2022-10-25';
-
--- de teamleiders
-select t.*, naam from team t join persoon p on p.knsbNummer = t.teamleider where seizoen = @seizoen;
-
--- voor teamleiders
-with u as 
-  (select * from uitslag where clubCode = @club and seizoen = @seizoen and not teamCode = competitie and datum = @datum)
-select s.nhsbTeam, s.knsbTeam, s.knsbNummer, s.knsbRating, naam, u.teamCode, u.partij
-from speler s
-  join persoon p on s.knsbNummer = p.knsbNummer
-  left join u on s.clubCode = @club and s.seizoen = @seizoen and s.knsbNummer = u.knsbNummer
-where s.seizoen = @seizoen 
-order by s.knsbRating desc, u.teamCode;
-
--- wijzig naam
-select * from persoon where knsbNummer = 106;
-
-update persoon set naam = 'Abdulrashid Ayobi' where knsbNummer = 106;
+delimiter $$
+create function externeAftrek(versie int, externePartijen int, externTijdensInterneRonde int)
+    returns int deterministic
+begin 
+    if versie = 7 then
+        return (externePartijen - externTijdensInterneRonde) * 4;
+    elseif versie = 8 and (externePartijen - externTijdensInterneRonde) > 4 then -- interne competitie reglement artikel 12
+        return (externePartijen - externTijdensInterneRonde - 4) * 4; -- 4 ronden tellen wel mee
+	else
+        return 0;
+    end if;
+end;
+$$
+delimiter ;

@@ -47,8 +47,6 @@ async function agenda(knsbNummer, lijst, informeer) {
     if (await agendaAanvullen(knsbNummer, wedstrijden)) {
         wedstrijden = await agendaLezen(knsbNummer);
     }
-    let vraagteken = false; // indien eerste wedstrijd van een team niet is aangevinkt
-    const geenVraagteken = new Set(); // reeds gecontroleerde teams
     for (const w of wedstrijden) { // verwerk ronde / uitslag
         if (db.planningInvullen.has(w.partij)) {
             const datum = zyq.datumSQL(w.datum);
@@ -59,22 +57,15 @@ async function agenda(knsbNummer, lijst, informeer) {
             lijst.append(html.rij(
                 zyq.datumLeesbaar(w),
                 db.isCompetitie(w) ? w.rondeNummer : "",
-                db.isCompetitie(w) ? db.teamVoluit(w.teamCode) : db.wedstrijdVoluit(w),
+                db.isCompetitie(w) ? chess960(w) : db.wedstrijdVoluit(w),
                 link));
-            if (w.partij === db.PLANNING && db.isTeam(w) && !geenVraagteken.has(w.teamCode)) {
-                vraagteken = true; // speler heeft voor komende wedstrijd van dit team niet aangevinkt
-            }
-            if (db.isTeam(w)) {
-                geenVraagteken.add(w.teamCode); // eerste wedstrijd van dit team is gecontroleerd
-            }
         }
     }
-    if (vraagteken) {
-        html.tekstToevoegen(informeer, "Teamleiders willen graag weten of hun teams compleet zijn. " +
-            "Dat kunnen ze zien als je de vraagtekens bij de komende wedstrijden aanvinkt. " +
-            "Een vinkje betekent dat je meedoet. " +
-            "Een streep betekent dat je niet meedoet en dat de teamleider een invaller moet vragen.");
-    }
+}
+
+function chess960(w) { // TODO verwijderen en teamVoluit aanpassen
+    return w.teamCode === db.INTERNE_COMPETITIE && w.rondeNummer === 6
+       ? "chess 960" : db.teamVoluit(w.teamCode);
 }
 
 async function agendaMutatie(knsbNummer) {
@@ -107,7 +98,7 @@ async function agendaAanvullen(knsbNummer, wedstrijden) {
             const datum = zyq.datumSQL(w.datum);
             const vanafVandaag = datum >= zyq.datumSQL();
             if (vanafVandaag || db.isCompetitie(w)) {
-                const partij = vanafVandaag ? db.PLANNING : db.AFWEZIG;  // voor interne competities voor vandaag afwezig invullen
+                const partij = vanafVandaag ? db.NIET_MEEDOEN : db.AFWEZIG;  // voor interne competities voor vandaag afwezig invullen
                 const competitie = db.isCompetitie(w) ? w.teamCode : db.INTERNE_COMPETITIE;
                 const mutaties = await zyq.serverFetch(
                     `/${zyq.uuidToken}/${db.key(w)}/${knsbNummer}/uitslag/toevoegen/${partij}/${datum}/${competitie}`);

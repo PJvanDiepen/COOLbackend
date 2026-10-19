@@ -1,6 +1,6 @@
 {
   "name": "cool_backend",
-  "version": "0.8.66",
+  "version": "0.8.67",
   "description": "Backend for 0-0-0.nl",
   "main": "app.js",
   "scripts": {
@@ -28,12 +28,12 @@
   "homepage": "https://0-0-0.nl/",
   "dependencies": {
     "@koa/cors": "^5.0.0",
-    "config": "^3.3.12",
-    "knex": "^3.0.1",
-    "koa": "^2.15.3",
+    "@koa/router": "^15.7.0",
+    "config": "^5.0.1",
+    "knex": "^3.3.0",
+    "koa": "^3.2.1",
     "koa-bodyparser": "^4.4.1",
-    "koa-router": "^12.0.1",
     "mysql": "^2.18.1",
-    "objection": "^3.1.4"
+    "objection": "^4.2.0"
   }
 }

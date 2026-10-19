@@ -1,11 +1,9 @@
 # Database
 Er is een MySQL database voor schaakverenigingen en toernooien met de volgende tabellen:
-- `Reglement` voor indelen en berekenen van de ranglijst van de interne competitie van een schaakvereniging
+- `Reglement` voor indelen en berekenen van de ranglijst van een toernooi of competitie van een schaakvereniging
 - `Persoon` namen van leden van schaakverenigingen en deelnemers in toernooien
 - `Gebruiker` personen, die gegevens in de database mogen wijzigen
-- `Rol` van personen bij een schaakvereniging of toernooi 
-- `Seizoen` seizoensgegevens van een schaakvereniging of toernooi 
-- `Speler` spelers per seizoen
+- `Speler` spelers per seizoen van een competitie of toernooi
 - `Team` teams of competities per seizoen
 - `Ronde` ronden per team of competitie per seizoen
 - `Uitslag` uitslagen per ronde per team per seizoen
@@ -16,10 +14,10 @@ De database heeft een tabel `Team` voor teams en competities.
 De eerste letter van `teamCode` in `Team` maakt het onderscheid tussen team en competitie.
 De `teamCode` van een interne competitie begint met de letter i.
 De `teamCode` van een externe competitie begint met een andere letter of cijfer.
-Bij de Waagtoren zijn dat teams, die meespelen voor de NHSB met de letter n en de NHSB met een cijfer.
+Bij de Waagtoren zijn dat teams, die meespelen voor de NHSB met de letter n en de KNSB met een cijfer.
 
 Bij de Waagtoren tellen de uitslagen van teamleden in de externe competities mee voor de interne competitie.
-Daarom staan ze in 0-0-0. 0-0-0 berekent echter geen ranglijsten van externe competities.
+Daarom staan ze in 0-0-0. 0-0-0 berekent geen ranglijsten van externe competities.
 0-0-0 berekent dus uitsluitend ranglijsten van interne competities. Zie `Reglement`.
 
 Het belangrijkste verschil tussen team en competitie is dus de verwerking door 0-0-0.
@@ -28,7 +26,7 @@ De specificaties voor competitie staan daarom bij `Team`.
 
 ## Reglement
 De ranglijst van de Waagtoren wordt berekend volgens het [Alkmaar Systeem](https://www.waagtoren.nl/historie/alksys.html) 
-door middel van stored procedures / functions in MySQL. 
+voorlopig door middel van stored procedures / functions in MySQL. 
 Omdat het reglement van de interne competitie per seizoen kan verschillen en 
 omdat het nuttig is om te kunnen experimenteren met aanpassingen van het reglement 
 willen we verschillende versies van parameters en formules voor de berekening van de ranglijst vastleggen in `Reglement`.
@@ -45,7 +43,7 @@ die per wedstrijdsysteem, per schaakvereniging en per seizoen kunnen verschillen
 Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van 0-0-0.
 
 Voor het opstellen van invallers in teams voor de externe competitie gelden allerlei regels,
-die per schaakbond en per seizoen junnen verschillen.
+die per schaakbond en per seizoen kunnen verschillen.
 Daarom willen we ook die vastleggen in `Reglement` en niet in de JavaScript code van de 0-0-0.
 
 De specificaties van de `Reglement` tabel ontbreken nog. 
@@ -56,19 +54,35 @@ Voorlopig staan de volgende stored functions voor het Alkmaar Systeem wel in de 
 - `totalen()` van punten en andere totalen per speler op basis van alle uitslagen van een seizoen.
 
 De `interneRating` is in principe gelijk aan de `knsbRating`van 1 september aan het begin van het seizoen.
- 
+
+## Rating
+```
+knsbNummer INT,
+knsbNaam VARCHAR(60),
+titel VARCHAR(3),
+federatie VARCHAR(3),
+knsbRating INT,
+partijen INT,
+geboorteJaar INT,
+sekse CHAR(1),
+maand INT,
+jaar INT,
+PRIMARY KEY (maand, knsbNummer)
+```
+Dit zijn de persoonsgegevens van de ratinglijsten van de KNSB, die iedereen kan downloaden.
+Omdat er elke maand een nieuwe ratinglijst verschijnt, voegt 0-0-0 voegt `jaar` en `maand` toe.
+In `Rating` staan ratinglijsten per `maand` en daarom uitsluitend de laatste 12 ratinglijsten,
+die zijn verwerkt door 0-0-0.
+
 ## Persoon
-Voorlopig zijn dit de specificaties van `Persoon`:
 ```
 knsbNummer INT
 naam VARCHAR(45)
 PRIMARY KEY (knsbNummer)
 ```
 In 0-0-0 willen we zo min mogelijk persoonsgegevens vastleggen.
-Het `knsbNummer` komt uit [OLA](https://www.schaakbond.nl/voor-clubs/ledenadministratie), 
-de Online Leden Administratie van de KNSB.
+Het `knsbNummer` komt uit de ratinglijst van de KNSB.
 Voor uitslagen en ranglijsten is `naam` voldoende. 
-Andere persoonsgegevens staan in OLA en worden beheerd door de secretaris en de penningmeester en niet door de wedstrijdleider.
 
 In `Persoon` staan voorlopig uitsluitend leden van de eigen schaakvereniging.
 0-0-0 kan daarom wel complete uitslagen lijsten produceren van de interne competitie, 
@@ -81,107 +95,106 @@ krijgen een tijdelijk nummer in de reeks vanaf `knsbNummer = 100` tot `knsbNumme
 
 ## Gebruiker
 ```
-knsbNummer INT`
-mutatieRechten INT
+knsbNummer INT
 uuidToken CHAR(36)
 email VARCHAR(100)
-datumEmail DATE
+telefoon CHAR(15)
+voorkeur CHAR(1)
+clubCode INT
+rol CHAR(1)
 PRIMARY KEY (uuidToken)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
 ```
-Leden van de schaakvereniging mogen gegevens in de database wijzigen afhankelijk van hun `mutatieRechten`. 
-Gewone leden kunnen zich aanmelden of afzeggen.
-Een wedstrijdleider kan uitslagen invoeren en ronden aanmaken.
 
-0-0-0 herkent een gebruiker aan het `uuidToken`, wat is opgeslagen op de computer van de gebruiker.
-Een lid van de schaakvereniging kan zich als gebruiker registreren met een `email`.
-Via die `email` ontvangt zo'n gebruiker een link om het `uuidToken` te activeren.
-Na het activeren wordt dit vastgelegd in `datumEmail`.
-In `fout` wordt eventueel vastgelegd als er iets misgaat tijdens het registreren of activeren.
-  
-## Seizoen
+De gebruikers van 0-0-0 staan in `Gebruiker`. 0-0-0 herkent een gebuiker aan het `uuidToken`, 
+dat is opgeslagen op de computer van de gebruiker.
+Een gebruiker van 0-0-0 kan zich aanmelden met een `email` en/of een `telefoon` en krijgt dan
+van de systeembeheerder een `uuidToken`.
+In `voorkeur` staat welk contact: email, WhasApp, Signal, enz. de gebruiker wil gebruiken 
+voor de teamleider, wedstrijdleider van een competitie en het bestuur van de schaakvereniging.
+
+## Speler
 ```
+clubCode INT
 seizoen CHAR(4)
-versie INT
-datumCompleet DATE
+teamCode CHAR(3)
+knsbNummer INT
+knsbRating INT
+interneRating INT
+rol char(1)
+PRIMARY KEY (clubCode, seizoen, teamCode, knsbNummer)
+FOREIGN KEY (clubCode, seizoen, teamCode) REFERENCES Team (clubCode, seizoen, teamCode)
+FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
+```
+
+Een deelnemer in een competitie of team staat in `Speler`. 
+Een speler krijgt per `seizoen` uit een KNSB ratinglijst een nieuwe `knsbRating`,
+die wordt gebruikt voor de indeling in een team van de KNSB en NHSB competitie.
+Volgens de reglementen geldt de `knsbRating` van 1 september aan het begin van het `seizoen`.
+De `interneRating` is hetzelfde als de `knsbRating` tenzij er geen `knsbRating` is.
+De `interneRating` wordt gebruikt voor de `subgroep` van de interne competitie.
+
+De verschillende rollen van spelers worden vastgelegd in `rol`:
+- `b = BESTUUR`
+- `g = GEREGISTREERD` gebruiker
+- `i = IEDEREEN`
+- `k = KIJKER` van andere schaakvereniging
+- `o = ONTWIKKELAAR`
+- `s = SYSTEEMBEHEER`
+- `t = TEAMLEIDER` van een team
+- `v = VASTE_SPELER` van een team
+- `w = WEDSTRIJDLEIDER` van competitie
+
+De `rol` van wedstrijdleider, teamleider of vaste speler in een team is vastgelegd in `Speler`
+in combinatie met `clubCode`, `seizoen` en de `teamCode` van competitie of team.
+Een speler kan namelijk spelen in meerdere competities en teams.
+De `rol` van ontwikkelaar, systeembeheerder of bestuurder geldt voor een schaakvereniging en
+is vastgelegd in `Speler` in combinatie met `clubCode`, `seizoen` en `teamCode = rol`.
+
+## Team
+```
+clubCode INT
+seizoen CHAR(4)
+teamCode CHAR(3)
+reglement INT
+maand INT
+jaar INT
+omschrijving VARCHAR(45)
+borden INT
+PRIMARY KEY (clubCode, seizoen, teamCode)
 ```
 
 Het seizoen van een schaakvereniging loopt meestal van eind augustus tot juni.
 
-Voorlopig is er 1 database namelijk van de Waagtoren vanaf seizoen 2018-2019.
+Voorlopig is er 1 database namelijk van de Waagtoren vanaf seizoen 2018-2019. 
+`ClubCode = 0` verwijst naar de Waagtoren.
 Deze seizoensgegevens zijn vastgelegd als `seizoen = '1819'`.
 
-Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules 
-voor de berekening van de ranglijst in `Reglement`. 
-Bij elk seizoen van een schaakvereniging hoort een aantal spelers en 
+Elk seizoen krijgt een verwijzing naar de juiste `versie` van parameters en formules
+voor de berekening van de ranglijst volgens `Reglement`.
+Bij elk seizoen van een schaakvereniging hoort een aantal spelers en
 een aantal teams in de interne en externe competitie.
-Zie verder bij `Speler` en `Team`.
-
-De specificaties van de `Seizoen` tabel zijn nog niet verder uitgewerkt.
- 
-## Speler
-```
-seizoen CHAR(4)
-nhsbTeam CHAR(3)
-knsbTeam CHAR(3)
-knsbNummer INT
-knsbRating INT
-datum DATE
-intern1 CHAR(3)
-intern2 CHAR(3)
-intern3 CHAR(3)
-intern4 CHAR(3)
-intern5 CHAR(3)
-PRIMARY KEY (seizoen, knsbNummer)
-FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
-FOREIGN KEY (seizoen, nhsbTeam) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, knsbTeam) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern1) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern2) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern3) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern4) REFERENCES Team (seizoen, teamCode)
-FOREIGN KEY (seizoen, intern5) REFERENCES Team (seizoen, teamCode)
-```
-
-Een `Speler` is een deelnemer in een competitie of team. 
-Een `Speler` krijgt per `seizoen` uit een KNSB ratinglijst een nieuwe `knsbRating`,
-die wordt gebruikt voor de indeling in een team van de KNSB competitie `knsbTeam`, 
-een team in een onderbond competitie `nhsbTeam` en in een `subgroep` van de interne competitie.
-Volgens de reglementen geldt de `knsbRating` van 1 september aan het begin van het `seizoen`.
-Daarom is ook de `datum` vastgelegd.
-
-Omdat de Waagtoren in de NHSB onderbond speelt heet het team in de onderbond voorlopig `nhsbTeam`.  
-
-## Team
-```
-seizoen CHAR(4)
-teamCode CHAR(3)
-bond CHAR(1)
-poule CHAR(2)
-omschrijving VARCHAR(45)
-borden INT
-PRIMARY KEY (seizoen, teamCode)
-```
 
 In elke seizoen heeft de schaakvereniging interne competities en teams die spelen in de externe competities van de KNSB en de regionale onderbond.
 0-0-0 berekent ranglijsten voor interne competities, maar niet voor teams in de externe competities. 
 De uitslagen van externe competities van de eigen teams de schaakvereniging staan wel in 0-0-0, omdat ze meetellen in de interne competitie. 
 
 Elk team heeft een unieke `teamCode` per `seizoen`.
-De Waagtoren heeft `teamCode = 'int'` voor de interne competitie, `teamCode = 'ira'` voor de rapid competitie,
-`teamCode = '1'` voor het eerste team in de KNSB, `teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = 'n1'` voor het eerste team in de NHSB enz.
-In `bond` staat een afkorting: i = intern, k = knsb en n = nhsb. Elk team speelt in een `poule` met een vast aantal `borden`.
+De Waagtoren heeft `teamCode = int` voor de interne competitie, `teamCode = ira` voor de rapid competitie,
+`teamCode = '1'` voor het eerste team in de KNSB, `teamCode = 'kbe'` voor het KNSB bekerteam, `teamCode = n1` voor het eerste team in de NHSB enz.
+Elk team heeft een vast aantal `borden`.
 
 ## Ronde
 ```
+clubCode INT
 seizoen CHAR(4)
 teamCode CHAR(3)
 rondeNummer INT
 uithuis CHAR(1)
 tegenstander VARCHAR(45)
 datum DATE
-PRIMARY KEY (seizoen, teamCode, rondeNummer)
-FOREIGN KEY (seizoen, teamCode) REFERENCES Team (seizoen, teamCode)
+PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer)
+FOREIGN KEY (clubCode, seizoen, teamCode) REFERENCES Team (clubCode, seizoen, teamCode)
 ```
 
 Elk team speelt een aantal ronden uit of thuis tegen een team van een tegenstander op een bepaalde datum.
@@ -189,6 +202,7 @@ Indien alle datums voor de ronden bekend zijn, kan 0-0-0 voor elke speler een ka
   
 ## Uitslag
 ```
+clubCode INT
 seizoen CHAR(4)
 teamCode CHAR(3)
 rondeNummer INT
@@ -198,58 +212,69 @@ partij CHAR(1)
 witZwart CHAR(1)
 tegenstanderNummer INT
 resultaat CHAR(1)
+resultaten VARCHAR(9)
 datum DATE
 competitie CHAR(3)
-PRIMARY KEY (seizoen, teamCode, rondeNummer, knsbNummer)
-FOREIGN KEY (seizoen, competitie) REFERENCES Team (seizoen, teamCode)
+PRIMARY KEY (clubCode, seizoen, teamCode, rondeNummer, knsbNummer)
+FOREIGN KEY (clubCode, seizoen, teamCode) REFERENCES Team (clubCode, seizoen, teamCode)
+FOREIGN KEY (clubCode, seizoen, teamCode, rondeNummer) REFERENCES Ronde (clubCode, seizoen, teamCode, rondeNummer)
 FOREIGN KEY (knsbNummer) REFERENCES Persoon (knsbNummer)
+FOREIGN KEY (tegenstanderNummer) REFERENCES Persoon (knsbNummer)
+FOREIGN KEY (clubCode, seizoen, competitie) REFERENCES Team (clubCode, seizoen, teamCode)
 ```
 
 Een uitslag doorloopt 3 fases: planning, indeling en uitslag.
 
-1. De planning fase begint met `partij ='p'`. 
-Dit betekent dat een teamleider een speler heeft aangemeld voor een wedstrijd of dat een gebruiker zich heeft aangemeld voor een competitie.
-Vervolgens kan de gebruiker aangeven of ie wil meedoen of juist niet wil meedoen. 
+1. In de planning fase heeft een speler zich voor een competitie of is aangemeld 
+door een teamleider een speler voor een wedstrijd. Daarna kan de speler zich eventueel afmelden
 Meedoen kent 3 varianten: extern uit, extern thuis en (intern) meedoen.
 2. De indeling fase is als bekend wie de tegenstander wordt.
-3. De laatste fase is als het resultaat bekend is en de uitslag dus compleet is.
+3. De laatste fase is als de resultaten bekend zijn en de uitslag dus compleet is.
 
 De verschillende fases worden vooral vastgelegd in `partij`:
-- a = AFGEZEGD
-- e = EXTERNE_WEDSTRIJD
-- i = INTERNE_PARTIJ
-- m = MEEDOEN na aanmelden
-- n = NIET_MEEDOEN na afzeggen
-- o = ONEVEN
-- p = PLANNING
-- r = REGLEMENTAIRE_REMISE of vrijgesteld
-- t = EXTERN_THUIS
-- u = EXTERN_UIT
-- v = REGLEMENTAIR_VERLIES
-- w = REGLEMENTAIRE_WINST
+- `e = EXTERNE_WEDSTRIJD`
+- `i = INTERNE_PARTIJ`
+- `m = MEEDOEN` na aanmelden
+- `n = NIET_MEEDOEN` na afzeggen
+- `o = ONEVEN`
+- `r = REGLEMENTAIRE_REMISE` of vrijgesteld
+- `t = EXTERN_THUIS`
+- `u = EXTERN_UIT`
+- `v = REGLEMENTAIR_VERLIES`
+- `w = REGLEMENTAIRE_WINST`
 
 Voor de interne competitie staat elke uitslag twee keer in `Uitslag` voor wit en voor zwart.
 Een keer is de witspeler vermeld in `knsbNummer` en de zwartspeler in `tegenstanderNummer` en
-een keer is de zwartspeler vermeld  in `knsbNummer` en de witspeler in `tegenstanderNummer`.
+een keer is de zwartspeler vermeld in `knsbNummer` en de witspeler in `tegenstanderNummer`.
 
 Voor de externe competitie zijn er twee mogelijkheden.
 1. Indien de externe partij wordt gespeeld in plaats van een interne partij 
-staat de uitslag twee keer in `Uitslag`: een keer met `teamCode = 'int'` 
+staat de uitslag twee keer in `Uitslag`: een keer met `teamCode = int` 
 en een keer met de `teamCode` bij welke team deze uitslag hoort.
 2. Indien de externe partij op een andere dag wordt gespeeld 
 staat de uitslag een keer in `Uitslag` met de `teamCode` bij welke team deze uitslag hoort.
 
 Voor elke externe partij staat in `Uitslag` bij `knsbNummer` de speler 
 van de eigen schaakvereniging en meestal `tegenstanderNummer = 0`.
-Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstijd 
+Het is mogelijk om `tegenstanderNummer` in te vullen bij een externe wedstrijd 
 tegen een team van de eigen schaakvereniging (of als alle tegenstanders in `Persoon` zijn vastgelegd).   
-Indien `competitie = 'int'` telt deze uitslag mee voor de interne competitie.
+Indien `competitie = int` telt deze uitslag mee voor de interne competitie.
 
-De verschillende mogelijkheden voor `tegenstanderNummer` zijn:
+De verschillende mogelijkheden voor `knsbNummer` en `tegenstanderNummer` zijn:
 - 0 = onbekend
 - bordnummer 1..10 = geen tegenstander 
-- TIJDELIJK_LID_NUMMER > 100 < 1000000
-- KNSB_NUMMER > 1000000
+- `TIJDELIJK_LID_NUMMER` > 100 < 1000000
+- `KNSB_NUMMER` > 1000000
+
+Een complete uitslag is voor een vereniging of toernooi met `clubCode`, een competitie of team 
+met `teamCode`, een ronde met `rondeNummer` op een bord met `bordNummer` op een `datum`.
+De `datum` kan verschillen van de `datum` van de ronde als de speler vooruit of later speelt.
+Een complete uitslag heeft 1 of meer `resultaten` van dezelfde speler met `knsbNummer` tegen
+dezelfde tegenstander met `tegenstanderNummer`, die afwisselend met wit en zwart tegen elkaar
+hebben gespeeld en de kleur van het eerste resultaat volgens `witZwart`: `w` of `z`.
+Elk resultaat is winst, remise of verlies: `1`, `½` of `0` voor die speler.
+
+Voorlopig maximaal 9 resultaten of `+99-99=99` voor maximaal 99 keer winst, verlies of remise.
 
 ## Mutatie
 ```
@@ -270,6 +295,6 @@ In `invloed` legt 0-0-0 vast hoeveel invloed de mutatie heeft,
 zodat de frontend kan vragen of er tijdens een sessie belangijke mutaties zijn geweest.  
 
 De verschillende mogelijkheden voor `invloed` zijn:
-- 0 = GEEN_INVLOED
-- 1 = OPNIEUW_INDELEN
-- 2 = NIEUWE_RANGLIJST
+- `0 = GEEN_INVLOED`
+- `1 = OPNIEUW_INDELEN`
+- `2 = NIEUWE_RANGLIJST`

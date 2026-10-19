@@ -1,3 +1,4 @@
+
 "use strict";
 
 import * as db from "./db.js";
@@ -20,19 +21,25 @@ import * as zyq from "./zyq.js";
     if (true) { // TODO (o_o_o.vereniging === "Waagtoren")
         plaatje.append(html.plaatje("images/waagtoren.gif",60, 150, 123));
     }
-    const menuKeuzes = [
+    const menuKeuzes = [];
+    if (o_o_o.competitie === db.RAPID_COMPETITIE && o_o_o.seizoen > "2324") {
+        menuKeuzes.push(
+            [db.IEDEREEN, "Ranglijst", `./Swiss/Rapid${o_o_o.seizoen}/`]);
+    } else {
+    menuKeuzes.push(
         [db.IEDEREEN, `Ranglijst na ronde ${vorigeRonde()}`,"ranglijst.html"], // menu0
-        [db.IEDEREEN, `Uitslagen ronde ${vorigeRonde()}`,"ronde.html"]]; // menu1
+        [db.IEDEREEN, `Uitslagen ronde ${vorigeRonde()}`,"ronde.html"]); // menu1
+    }
     if (volgendeRonde()) { // menu2 TODO Definitieve indeling
         menuKeuzes.push([db.GEREGISTREERD, `Voorlopige indeling ronde ${volgendeRonde()}`, "indelen.html"]); // menu2
     }
-    if (zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
+    if (false && zyq.gebruiker.mutatieRechten === db.IEDEREEN) { // indien niet geregistreerd
         menuKeuzes.push([db.IEDEREEN, "Aanmelden voor 0-0-0", "aanmelden.html"]);
     }
     menuKeuzes.push(
         [db.GEREGISTREERD, "Aanmelden / Afzeggen", "agenda.html"],
-        [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html"],
-        [db.TEAMLEIDER, "Overzicht voor teamleiders", "teamleider.html"]);
+        [db.BESTUUR, "Overzicht voor bestuur", "bestuur.html?leden=int"],
+        [db.GEREGISTREERD, "Overzicht voor teamleiders", "teamleider.html"]);
     for (let i = 0; i < menuKeuzes.length; i++) {
         const [minimumRechten, tekst, naarPagina] = menuKeuzes[i];
         if (minimumRechten <= zyq.gebruiker.mutatieRechten ) {

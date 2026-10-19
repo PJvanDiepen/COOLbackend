@@ -7,11 +7,25 @@ import { o_o_o, init, vinkjeInvullen, perTeamRondenUitslagen } from "./o_o_o.js"
 import * as zyq from "./zyq.js";
 
 /*
-    verwerk teamleider=<teamCode>
+    verwerk teamleden=<teamCode>
            &invaller=<knsbNummer>
  */
-const teamleider = html.params.get("teamleider"); // teamCode
+const teamleden = html.params.get("teamleden"); // teamCode geselecteerde team
 const invaller = Number(html.params.get("invaller")); // knsbNummer
+const teamLeiders = new Map([ // TODO synchroniseren met server
+    ["1", {naam: "Danny de Ruiter", knsbNummer: 7970094}],
+    ["2", {naam: "Gerard de Geus", knsbNummer: 7129991}],
+    ["3", {naam: "Jasper Seelemeijer", knsbNummer: 6420557}],
+    ["4", {naam: "Peter van Diepen", knsbNummer: 6212404}],
+    ["5", {naam: "Lennart van der Kraan", knsbNummer: 9077651}],
+    ["kbe", {naam: "Danny de Ruiter", knsbNummer: 7970094}],
+    ["n1", {naam: "Gerard de Geus", knsbNummer: 7129991}],
+    ["n2", {naam: "Alex Albrecht", knsbNummer: 7758014}],
+    ["n3", {naam: "Ernst Hoogenes", knsbNummer: 6565801}],
+    ["n4", {naam: "Peter Duijs", knsbNummer: 8485059}],
+    ["n5", {naam: "Ronald Kamps", knsbNummer: 7321534}],
+    ["v1", {naam: "Jos Albers", knsbNummer: 8950876}],
+    ["v2", {naam:"wie o wie?", knsbNummer: 97}]]);
 
 (async function() {
     await init();
@@ -19,18 +33,21 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
     const teams = (await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`)).filter(function (team) {
         return db.isTeam(team);
     });
-    const teamCode = teamleider ? teamleider : teamVoorkeur(teams, zyq.gebruiker.knsbNummer);
-    await teamSelecteren(teams, teamCode);
-    const ronden = await uitslagenTeam(teams, teamCode, html.id("hoofdkop"), html.id("ronden"));
-    const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleider`);
+    const spelers = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teamleden`);
+    const teamCode = teamleden ? teamleden : teamVoorkeur(spelers, zyq.gebruiker.knsbNummer);
+    teamSelecteren(teams, teamCode);
+    const geenPlanning = !( // indien niet bestuur of teamleider en niet eigen team
+        zyq.gebruiker.mutatieRechten >= db.TEAMLEIDER ||
+        teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0"));
+    const ronden = await perTeamRondenUitslagen(teamCode);
+    uitslagenTeam(ronden, teamCode, html.id("hoofdkop"), html.id("ronden"));
     const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
-    const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
-    const vast = html.id("vast");
+    const vast = html.id("vast"); // Vaste spelers en invallers
     vast.append(html.bovenRij("naam", "nummer", "rating", "team", ...(rondeNummers(ronden))));
     const vasteSpelers = spelers.filter(function (speler) {
         return speler.knsbTeam === teamCode || speler.nhsbTeam === teamCode
             || isInvaller(speler.knsbNummer, ronden);
-    })
+    });
     for (const speler of vasteSpelers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
         const link = zyq.naarSpeler(speler);
@@ -39,20 +56,19 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             speler.knsbNummer,
             speler.knsbRating,
             team,
-            ...(rondenPerSpeler(speler.knsbNummer, ronden))));
+            ...(rondenPerSpeler(speler.knsbNummer, ronden, geenPlanning))));
     }
-    const teamGegevens = teams.find(function (team) {
-        return team.teamCode === teamCode;
-    });
-    html.id("vragen").textContent = `Invallers vragen door ${teamGegevens.naam}`;
+    html.id("teamleider").textContent = `Invallers vragen door ${teamLeiders.get(teamCode).naam}`;
     const inval = html.id("invallers");
+    const hoogsteRating = hoogsteRatingInvaller(spelers, teamCode, nhsbTeam);
     const invallers = spelers.filter(function (speler) {
         return speler.knsbNummer > db.KNSB_NUMMER
             && speler.knsbRating < hoogsteRating
-            && !hogerTeam(teamCode, nhsbTeam ? speler.nhsbTeam : speler.knsbTeam)
-            && !jeugdCompetitie(speler);
-        // TODO niet meer dan 3 x invallen in hoger team
+            && !hogerTeam(teamCode, nhsbTeam ? speler.nhsbTeam : speler.knsbTeam);
     });
+    const geenTeamleider = ! // indien niet bestuur en niet teamleider van dit team
+        (zyq.gebruiker.mutatieRechten >= db.BESTUUR ||
+        teamLeiders.get(teamCode).knsbNummer === zyq.gebruiker.knsbNummer);
     const wedstrijden = wedstrijdenLijst(ronden);
     for (const speler of invallers) {
         const team = nhsbTeam ? speler.nhsbTeam : speler.knsbTeam;
@@ -60,25 +76,42 @@ const invaller = Number(html.params.get("invaller")); // knsbNummer
             return nietGevraagd(speler.knsbNummer, ronden, wedstrijd[0]);
         });
         if (invallen.length > 0) {
-            const knop = document.createElement("select");
-            html.selectie(knop, 0, invallen, async function (rondeNummer){
-                const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
-                const mutaties = await zyq.serverFetch(
-                    `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/uitslag/toevoegen/${db.PLANNING}/${datum}/int`);
-                html.zelfdePagina(`teamleider=${teamCode}&invaller=${speler.knsbNummer}`);
-            });
-            inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
+            if (geenTeamleider) { // geen select knop
+                inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, ""));
+            } else {
+                const knop = document.createElement("select");
+                html.selectie(knop, 0, invallen, async function (rondeNummer){
+                    const uithuis = ronden[rondeNummer].ronde.uithuis;
+                    const datum = zyq.datumSQL(ronden[rondeNummer].ronde.datum);
+                    const mutaties = await zyq.serverFetch(
+                        `/${zyq.uuidToken}/${db.key(ronden[rondeNummer].ronde)}/${speler.knsbNummer}/wedstrijd/toevoegen/${uithuis}/${datum}/int`);
+                    html.zelfdePagina(`teamleden=${teamCode}&invaller=${speler.knsbNummer}`);
+                });
+                inval.append(html.rij(zyq.naarSpeler(speler), speler.knsbNummer, speler.knsbRating, team, knop));
+            }
         }
     }
 })();
 
-function teamVoorkeur(teams, teamleider) {
-    for (const team of teams) {
-        if (team.teamleider === teamleider) { // dit team indien de gebruiker is teamleider van dit team
-            return team.teamCode;
+const andereTeamLeden = new Map([
+    [7468417, {knsbTeam: "1"}], // Daan Geerke
+    [8587337, {knsbTeam: "2"}], // Max Hooijmans
+    [7292043, {knsbTeam: "3"}], // Rob Freer
+    [7443172, {knsbTeam: "4"}], // Anton Schermer
+    [6214153, {knsbTeam: "4"}], // Jan Poland
+    [8882038, {knsbTeam: "5"}], // Sverre van de Bruinhorst
+    [9040801, {knsbTeam: "5"}]]); // Marcello van 't Veen
+
+function teamVoorkeur(spelers, gebruiker, anders = "1") { // anders eerste team
+    if (andereTeamLeden.has(gebruiker)) {
+        return andereTeamLeden.get(gebruiker).knsbTeam || andereTeamLeden.get(gebruiker).nhsbTeam || anders;
+    }
+    for (const speler of spelers) {
+        if (gebruiker === speler.knsbNummer) {
+            return speler.knsbTeam || speler.nhsbTeam || anders;
         }
     }
-    return teams[0].teamCode; // anders eerste team uit lijst
+    return anders;
 }
 
 // TODO zie o_o_o.js: teamSelecteren
@@ -87,24 +120,19 @@ function teamSelecteren(teams, teamCode) {
         return [team.teamCode, db.teamVoluit(team.teamCode)];
     });
     html.selectie(html.id("teamSelecteren"), teamCode, teamsSelectie, function (team) {
-        html.zelfdePagina(`teamleider=${team}`);
+        html.zelfdePagina(`teamleden=${team}`);
     });
 }
 
-async function uitslagenTeam(teams, teamCode, kop, rondenTabel) {
+function uitslagenTeam(ronden, teamCode, kop, rondenTabel) {
     kop.textContent = `Overzicht voor teamleider ${html.SCHEIDING} ${db.teamVoluit(teamCode)}`;
-    const rondeUitslagen = await perTeamRondenUitslagen(teamCode);
-    for (let rondeNummer = 1; rondeNummer < rondeUitslagen.length; ++rondeNummer) {
-        uitslagenTeamPerRonde(rondeUitslagen[rondeNummer], rondeNummer, rondenTabel);
-    }
-    return rondeUitslagen;
-}
-
-function uitslagenTeamPerRonde(uitslag, rondeNummer, rondenTabel) {
-    if (uitslag) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
-        const datumKolom = zyq.datumLeesbaar(uitslag.ronde);
-        const uitslagKolom = zyq.uitslagTeam(uitslag.ronde.uithuis, uitslag.winst, uitslag.verlies, uitslag.remise);
-        rondenTabel.append(html.rij(uitslag.ronde.rondeNummer, datumKolom, zyq.naarTeam(uitslag.ronde), uitslagKolom));
+    for (let rondeNummer = 1; rondeNummer < ronden.length; ++rondeNummer) {
+        const uitslag = ronden[rondeNummer];
+        if (uitslag) { // eventueel ronde overslaan, wegens oneven aantal teams in een poule
+            const datumKolom = zyq.datumLeesbaar(uitslag.ronde);
+            const uitslagKolom = zyq.uitslagTeam(uitslag.ronde.uithuis, uitslag.winst, uitslag.verlies, uitslag.remise);
+            rondenTabel.append(html.rij(uitslag.ronde.rondeNummer, datumKolom, zyq.naarTeam(uitslag.ronde), uitslagKolom));
+        }
     }
 }
 
@@ -118,18 +146,32 @@ function rondeNummers(ronden) {
     return nummers;
 }
 
+// TODO uit tabel speler
 function hoogsteRatingInvaller(spelers, teamCode, nhsbTeam) {
-    for (const speler of spelers) {
-        if (nhsbTeam && speler.nhsbTeam === teamCode) {
-            return speler.knsbRating + 80; // NHSB reglement artikel 20
-        } else if (speler.knsbTeam === teamCode) {
-            return speler.knsbRating + 40; // KNSB reglement artikel 13.2
-        }
-    }
-    if (teamCode === "nbb") { // NHSB beker (brons)
-        return 1600;
+    if (teamCode === "2") { // 40 + 2103 Nico Hauwert
+        return 2143;
+    } else if (teamCode === "3") { // 40 + 1963 Fabio Pasti
+        return 2003;
+    } else if (teamCode === "4") { // 40 + 1823 Leonard Haakman
+        return 1863;
+    } else if (teamCode === "5") { // 40 + 1662 John Norder
+        return 1703;
+    } else if (teamCode === "nbb") { // NHSB beker (brons)
+        return 1750;
     } else if (teamCode === "nbz") { // NHSB beker (zilver)
-        return 1900;
+        return 1950;
+    } else if (teamCode === "n2") { // 80 + 1937 Henk van der Hauw
+        return 2017;
+    } else if (teamCode === "n3") { // 80 + 1864 Leo van Steenoven
+        return 1944;
+    } else if (teamCode === "n4") { // 80 + 1802 Jan Meringa
+        return 1882;
+    } else if (teamCode === "n5") { // 80 + 1752 Theo Bakker
+        return 1832;
+    } else if (teamCode === "nv1") { // 80 + 1627 Theo de Bruijn
+        return 1707;
+    } else if (teamCode === "nv2") { // 80 + 1520 Marcello van 't Veen
+        return 1600;
     } else {
         return 3000;
     }
@@ -164,7 +206,7 @@ function nietGevraagd(knsbNummer, ronden, rondeNummer) {
     return true;
 }
 
-function rondenPerSpeler(knsbNummer, ronden) {
+function rondenPerSpeler(knsbNummer, ronden, geenPlanning) {
     const uitslagen = [];
     for (const ronde of ronden) {
         if (ronde) {
@@ -173,6 +215,8 @@ function rondenPerSpeler(knsbNummer, ronden) {
             });
             if (uitslag) {
                 uitslagen.push(`${uitslag.bordNummer}${uitslag.witZwart} ${uitslag.resultaat}`);
+            } else if (geenPlanning) {
+                uitslagen.push("");
             } else {
                 const geplandeUitslag = ronde.geplandeUitslagen.find(function (u) {
                     return u.knsbNummer === knsbNummer;
@@ -196,14 +240,6 @@ function hogerTeam(teamCode, vasteTeam) {
     } else {
         return teamCode >= vasteTeam; // hogerTeam heeft lager nummer en in vallen voor vasteTeam mag ook niet
     }
-}
-
-function jeugdCompetitie(speler) {
-    return speler.intern1 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern2 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern3 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern4 === db.JEUGD_COMPETITIE || speler.intern1 === db.JEUGD_COMPETITIE_VOORJAAR ||
-           speler.intern1 === db.JEUGD_COMPETITIE || speler.intern5 === db.JEUGD_COMPETITIE_VOORJAAR;
 }
 
 function wedstrijdenLijst(ronden) {

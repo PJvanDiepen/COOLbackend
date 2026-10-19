@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chess 960</title>
+    <link rel="stylesheet" type="text/css" href="../css/o_o_o.css">
+    <style>
+        td h1 {
+            text-align: center;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chess 960</h1>
+    <p>
+        <a href="https://en.wikipedia.org/wiki/Chess960">Chess 960</a> is een variant van schaken met
+        andere beginstellingen voor de stukken dan het gewone schaken. De pionnen staan wel op rij 2/7 en
+        de stukken van wit op rij 1 staan tegenover dezelfde stukken van zwart op rij 8: koning tegenover koning,
+        dame tegenover dame, torens tegenover torens, en zo voort.
+    </p>
+    <p>
+        De spelregels zijn hetzelfde als bij het gewone schaken, behalve voor rokeren.
+        Bij 0-0 gaat de koning wel naar g1/8, maar de koning hoeft niet op e1/8 te staan.
+        Bij 0-0 staat de toren wel aan de h-kant van de koning en gaat naar f1/8, maar hoeft niet op h1/8 te staan.
+        Bij 0-0-0 gaat de koning wel naar c1/8, maar de koning hoeft niet op e1/8 te staan.
+        Bij 0-0-0 staat de toren wel aan de a-kant van de koning en gaat naar d1/8, maar hoeft niet op a1/8 te staan.
+    </p>
+    <p>
+        Er zijn dus beginstellingen waarbij de koning en de toren bij rokeren niet allebei naar een ander veld gaan!
+    </p>
+    <p>
+        Voor de beginstellingen staat de loper voor de witte velden op b1/8, d1/8, f1/8 of h1/8
+        en de loper voor de zwarte velden op a1/8, c1/8, e1/8 of g1/8.
+        Als de lopers in rij 1/8 op het bord staan blijven nog 6 velden over voor de dame.
+        Daarna zijn er nog 5 velden voor twee paarden oftewel 10 verschillende mogelijkheden
+        (4 met paarden naast elkaar, 3 met 1 veld tussen de paarden, 2 met 2 velden tussen de paarden
+        en 1 met 3 velden tussen de paarden op die 5 velden).
+        Tenslotte blijven 3 velden over voor de koning en de torens,
+        maar daarvoor bestaat slechts 1 mogelijkheid, omdat de koning tussen de torens moet staan om te kunnen rokeren.
+    </p>
+    <p>
+        Het totaal aantal beginstellingen is daarom 4 x 4 x 6 x 10 x 1 = 960.
+    </p>
+    <h2 id="beginstelling">Beginstelling</h2>
+    <table>
+        <tr>
+            <th>a</th>
+            <th>b</th>
+            <th>c</th>
+            <th>d</th>
+            <th>e</th>
+            <th>f</th>
+            <th>g</th>
+            <th>h</th>
+        </tr>
+        <tr>
+            <td><h1 id="a1"></h1></td>
+            <td><h1 id="b1"></h1></td>
+            <td><h1 id="c1"></h1></td>
+            <td><h1 id="d1"></h1></td>
+            <td><h1 id="e1"></h1></td>
+            <td><h1 id="f1"></h1></td>
+            <td><h1 id="g1"></h1></td>
+            <td><h1 id="h1"></h1></td>
+        </tr>
+    </table>
+    <p id="rokades"></p>
+    <p></p>
+    <button>
+        <a href="">genereer een andere beginstelling</a>
+    </button>
+    <script src="fischer.js"></script>
+</body>
+</html>

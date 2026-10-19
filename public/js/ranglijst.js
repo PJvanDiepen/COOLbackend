@@ -24,7 +24,9 @@ import * as zyq from "./zyq.js";
     const versies = [
         [0, "versie 0 volgens reglement interne competitie van het seizoen"],
         [2, "versie 2 met afzeggingenaftrek zoals in seizoen = 1819, 1920, 2021"],
-        [3, "versie 3 zonder afzeggingenaftrek vanaf seizoen = 2122"]];
+        [3, "versie 3 zonder afzeggingenaftrek vanaf seizoen = 2122"],
+        [7, "versie 7 zonder externe wedstrijden niet op dinsdag"],
+        [8, "versie 8 met 4 externe wedstrijden niet op dinsdag vanaf seizoen = 2526"]];
     html.selectie(html.id("versies"), o_o_o.versie, versies, function (versie) {
         html.zelfdePagina(`versie=${versie}`);
     });

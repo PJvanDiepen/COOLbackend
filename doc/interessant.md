@@ -25,9 +25,11 @@ Refresh Android cache
 
 # Browser
 - [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+- [Chrome 17](https://addyosmani.com/blog/chrome-17th/)
+- [Chrome API](https://anchorbrowser.io/blog/top-chrome-apis-every-developer-should-try)
+- [Firefox DevTools](https://developer.mozilla.org/en-US/docs/Tools)
 
 # MySQL
-
 - [MySQL tutorial](https://www.mysqltutorial.org/)
 - [subquery versus CTE](https://learnsql.com/blog/sql-subquery-cte-difference/)
 - [Datatypes MySQL](http://mysql.rjweb.org/doc.php/schema_best_practices_mysql)
@@ -38,55 +40,88 @@ Refresh Android cache
 - [database design example](https://blog.devart.com/sql-database-design-basics-with-example.html)
 
 # JavaScript
-
 - [ECMA JavaScript](https://262.ecma-international.org/)
-- [JavaScript tutorial](https://www.javascripttutorial.net/)
+- [code conventions](https://www.crockford.com/code.html)
+- [JavaScript tutorial](https://javascript.info/)
 - [Modern JavaScript sheatsheet](https://mbeaudru.github.io/modern-js-cheatsheet/)
+- [recursie](https://blog.gaborkoos.com/posts/2026-05-09-Your-Recursion-Is-Lying-to-You/)
+- [temporal](https://bloomberg.github.io/js-blog/post/temporal/)
 - [undefined](https://dmitripavlutin.com/7-tips-to-handle-undefined-in-javascript/)
 - [Type support with plain JavaScript](https://www.pausly.app/blog/full-type-support-with-plain-javascript)
 - [JavaScript nieuwe mogelijkheden](https://betterprogramming.pub/all-javascript-and-typescript-features-of-the-last-3-years-629c57e73e42)
 - [Spread and rest ... erg leuke website](https://www.amitmerchant.com/rest-vs-spread-syntax-in-javascript/)
 - [map versus object](https://dev.to/gustavupp/5-reasons-to-choose-javascript-maps-over-objects-for-storing-key-value-pairswith-examples-39dd)
 - [write file to download in browser](http://jsfiddle.net/UselessCode/qm5AG/)
+- [Office files](https://officeparser.harshankur.com/)
 - [Web Worker](https://medium.com/young-coder/a-simple-introduction-to-web-workers-in-javascript-b3504f9d9d1c)
 - [33 js concepts](https://github.com/leonardomso/33-js-concepts)
-- [Vanilla JavaScript](https://vanjs.org/)
+- [VanJS UI Framework without React/JSX](https://vanjs.org/)
 - [js algorithms](https://github.com/trekhleb/javascript-algorithms)
 - [browser storage](https://blog.openreplay.com/the-ultimate-guide-to-browser-side-storage)
 - [Copy to clipboard](https://www.freecodecamp.org/news/copy-text-to-clipboard-javascript/)
 - [DOM events](https://domevents.dev/)
 - [DOM manipulation](https://phuoc.ng/collection/html-dom/)
 - [memory efficient DOM manipulation](https://frontendmasters.com/blog/patterns-for-memory-efficient-dom-manipulation/)
+- [GrowField](https://growfield.js.org/)
+- [promises](https://www.joshwcomeau.com/javascript/promises/)
 - [async await](https://www.learnwithjason.dev/blog/keep-async-await-from-blocking-execution/)
+- [async to array](https://allthingssmitty.com/2025/07/14/modern-async-iteration-in-javascript-with-array-fromasync/)
 - [promises training](https://github.com/henriqueinonhe/promises-training)
 - [10 priceless resources for JavaScript learners!](https://medium.com/javascript-scene/10-priceless-resources-for-javascript-learners-bbf2f7d7f84e)
+- [Logical assigments](https://allthingssmitty.com/2025/07/28/logical-assignment-operators-in-javascript-small-syntax-big-wins/)
 - [JavaScript operators](https://www.joshwcomeau.com/operator-lookup/)
 - [JavaScipt date & time](https://blog.openreplay.com/is-it-time-for-the-javascript-temporal-api/)
+- [Intl](https://polypane.app/blog/the-intl-api-the-best-browser-api-youre-not-using/)
 - [Uitleg over modern frameworks](https://nolanlawson.com/2023/12/02/lets-learn-how-modern-javascript-frameworks-work-by-building-one/)
 - [6 ways to declare functions](https://dmitripavlutin.com/6-ways-to-declare-javascript-functions/)
 - [Wat een JavaScript programmeur moet begrijpen in 2024](https://medium.com/javascript-scene/10-interview-questions-every-javascript-developer-should-know-in-2024-c1044bcb0dfb)
-- [Genereer code](https://github.com/devongovett/unplugin-parcel-macros?tab=readme-ov-file#example)
 - [chaining](https://dev.to/sundarbadagala081/javascript-chaining-3h6g)
+- [optional chaining and default](https://allthingssmitty.com/2025/06/02/write-more-reliable-javascript-with-optional-chaining/)
+- [url as state](https://alfy.blog/2025/10/31/your-url-is-your-state.html)
+- [iterator instead of array](https://allthingssmitty.com/2026/01/12/stop-turning-everything-into-arrays-and-do-less-work-instead/)
+- [bookmarklets](https://css-tricks.com/a-complete-guide-to-bookmarklets/)
+- [Word document](https://docx.js.org/#/)
+- [JSON is lying](https://blog.gaborkoos.com/posts/2026-08-03-Your-JSON-Is-Lying-to-You/)
+- [SCHEME in JavaScript](https://lips.js.org/)
+- [JavaScript in Windows](https://tinyjs.app/)
 
 # nginx
 - [Bad gateway 502](https://www.redswitches.com/blog/nginx-502-bad-gateway-error/)
 - [nginx config](https://github.com/digitalocean/nginxconfig.io)
 
 # node.js
+- [node.js internals](https://www.thenodebook.com/)
 - [memory](https://www.trevorlasn.com/blog/common-causes-of-memory-leaks-in-javascript)
 - [Overview node.js](https://exploringjs.com/nodejs-shell-scripting/ch_nodejs-overview.html)
 - [CORS](https://jakearchibald.com/2021/cors/)
 - [npm in bash](https://localcoder.org/npm-warn-requires-a-peer-of-but-none-is-installed-you-must-install-peer)
 - [npm](https://css-tricks.com/a-complete-beginners-guide-to-npm/)
+- [npm security](https://github.com/bodadotsh/npm-security-best-practices)
 - [node best practices](https://www.useanvil.com/blog/engineering/node-package-best-practices/)
 - [security best practices](https://nodejs.org/en/docs/guides/security/)
 - [debugging](https://blog.openreplay.com/an-introduction-to-debugging-in-nodejs/)
+- [node audit](https://www.niraj.life/blog/understanding-npm-audit-fixing-vulnerabilities-nodejs/)
+- [node streams](https://pavel-romanov.com/building-a-mental-model-of-nodejs-streams)
+- [node in 2025](https://kashw1n.com/blog/nodejs-2025/)
+
+# webscraping
+- [web scraping](https://blog.apify.com/best-javascript-web-scraping-libraries/)
+- [Axios + Cheerio tutorial](https://proxyway.com/guides/cheerio-web-scraping-a-tutorial)
+- [Axios + Cheerio step by step](https://oxylabs.io/blog/cheerio-web-scraping)
+- [Axios + Cheerio guide](https://blog.apify.com/web-scraping-with-cheerio/)
+- [LightPanda](https://lightpanda.io/blog/posts/lightpanda-1-0)
 
 # deno
 - [Deno alternatief voor node.js](https://opensource.com/article/21/2/deno)
-- [verschillen node en deno](https://cult.honeypot.io/reads/deno-vs-node-main-differences/)
 - [Ryan Dahl over deno](https://www.sequoiacap.com/article/deno-spotlight/)
 - [JSR i.p.v. npm](https://deno.com/blog/jsr_open_beta)
+- [History of JavaScript](https://deno.com/blog/history-of-javascript)
+
+# Node-RED
+-[Low-code programming](https://nodered.org/)
+
+# Nvidia
+- [Workbench](https://docs.nvidia.com/ai-workbench/user-guide/latest/overview/introduction.html)
 
 # Objection / Knex
 - [Express to Koa](https://stackoverflow.com/questions/45632214/expressjs-to-koajs-routing-and-templates)
@@ -101,21 +136,32 @@ Refresh Android cache
 - [Best ORMs in 2024](https://www.sitepoint.com/javascript-typescript-orms/)
 
 # HTML / CSS
-
 - [eerste website](http://info.cern.ch/hypertext/WWW/TheProject.html)
 - [html, css, JavaScript, etc.](https://learn-wcs.com/)
+- [Form validation](https://expressionstatement.com/html-form-validation-is-heavily-underused)
 - [Form in 2022](https://css-tricks.com/whats-new-with-forms-in-2022/)
+- [output tag](https://denodell.com/blog/html-best-kept-secret-output-tag)
+- [output tag example](https://rud.is/drop/output.html)
 - [Style select lezen!](https://moderncss.dev/custom-select-styles-with-pure-css/)
 - [css / JavaScript](https://christianheilmann.com/2021/02/08/sharing-data-between-css-and-javascript-using-custom-properties/)
 - [Modern css](https://frontendmasters.com/blog/what-you-need-to-know-about-modern-css-spring-2024-edition/)
+- [CSS in 2026](https://blog.gitbutler.com/the-great-css-expansion)
 - [Click](https://css-tricks.com/when-a-click-is-not-just-a-click/)
 - [CSS display](https://bitsofco.de/how-display-contents-works/)
 - [Using :has()](https://webkit.org/blog/13096/css-has-pseudo-class/#styling-form-states-without-js)
 - [Zeekat CSS!](https://zeekat.nl/index.html)
 - [HTML uitleg](https://www.patrickweaver.net/blog/a-blog-post-with-every-html-element/)
+- [about the internet connection](https://csswizardry.com/Obs.js/demo/)
 - [Unicode](https://tonsky.me/blog/unicode/)
 - [You do not need JavaScript for that](https://www.htmhell.dev/adventcalendar/2023/2/)
+- [You no longer need JavaScript](https://lyra.horse/blog/2025/08/you-dont-need-js/)
+- [CSS kills SPA](https://www.jonoalderson.com/conjecture/its-time-for-modern-css-to-kill-the-spa/)
 - [HTMX](https://htmx.org/essays/is-htmx-another-javascript-framework/)
+- [website load faster!](https://www.docuseal.com/blog/make-any-website-load-faster-with-6-lines-html)
+- [introduction to svg](https://www.joshwcomeau.com/svg/friendly-introduction-to-svg/)
+
+# unix
+-[Linux and Unix](https://www.quora.com/How-can-the-Linux-Kernel-be-free-and-open-source-while-Unix-is-not-Isnt-Linux-built-on-Unix)
 
 # design patterns
 - [dependency injection to test functions](https://betterprogramming.pub/optional-di-in-javascript-2cb7f5bc68a)
@@ -125,6 +171,10 @@ Refresh Android cache
 - [server or browser](https://vercel.com/blog/how-to-choose-the-best-rendering-strategy-for-your-app)
 
 # software enigineering
+- [Rob Pike 5 rules of programming](https://www.cs.unc.edu/~stotts/COMP590-059-f24/robsrules.html)
+- [Use the platform](https://nolanlawson.com/2026/10/03/why-dont-more-developers-use-the-platform/)
+- [SOLID](https://jsdev.space/solid-design-principles/)
+- [big O](https://samwho.dev/big-o/)
 - [Does you web app needs a framework](https://stackoverflow.blog/2020/02/03/is-it-time-for-a-front-end-framework/)
 - [Learn & practice Git](https://gitexercises.fracz.com/)
 - [Linus Torvalds on Git](https://www.youtube.com/watch?v=4XpnKHJAok8)
@@ -137,8 +187,10 @@ Refresh Android cache
 - [History of Regular Expressions in JavaScript](https://www.smashingmagazine.com/2024/08/history-future-regular-expressions-javascript/)
 - [telefoonnummer regular expression](https://developerking.medium.com/how-to-integrate-international-phone-number-validation-in-input-field-with-javascript-55d8e4b432c4)
 - [Regular Expressions diagrammen](https://regexper.com/)
+- [readable Regular Expressions in JavaScript](https://www.rahuljuliato.com/posts/emacs-rx-in-typescript)
 - [Git detached head](https://www.howtogeek.com/devops/how-do-you-fix-a-detached-head-in-a-git-repository/)
 - [Git uitleg](https://github.com/readme/guides/configure-git-environment)
+- [Beej over git](https://beej.us/guide/bggit/)
 - [Hard reload in browser](https://code-boxx.com/force-browsers-reload-javascript-css/)
 - [Hard reload in any browser mobile/pc](https://techwiser.com/hard-refresh-any-browser-mobile-pc/)
 - [Contributing to open source software: Creating a pull request](https://www.youtube.com/watch?v=xPOPjGbv_TY)
@@ -146,29 +198,36 @@ Refresh Android cache
 - [Issues, milestones and projects in GitHub](https://heardlibrary.github.io/digital-scholarship/manage/control/github/projects/)
 
 # schaken
-- [FIDE Swiss](https://spp.fide.com/2019/03/23/fide-swiss-rules/)
-- [FIDE Dutch System](https://estima.com/chess/wintdhelp/index.html?pairingsystemfidedutchsystem.html)
-- [How does a Swiss system tournament work?](https://www.ccfworld.com/Chess/Junior%20Home%20Page/swiss_system.htm)
-- [Uitleg door ChessManager](https://www.chessmanager.com/en/blog/swiss-system)
+- [Simpel schaken in JavaScript](https://sam-koblenski.blogspot.com/2017/06/a-barely-adequate-guide-to-displaying.html)
+- [Schaken in JavaScript](https://shaack.com/projekte/cm-chessboard/)
+- [imple chess ai](https://github.com/lhartikk/simple-chess-ai)
 - [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
 - [Sevilla](https://www.jbfsoftware.com/)
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
+- [Olga chessviewer](https://www.chessgames.com/olgahelp.html)
 - [Schaken in HTML en JavaScript](https://www.chessengines.org/)
 - [betafish](https://github.com/Strryke/betafish)
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
+- [nnue in Stockfish](https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md)
+- [nnue paper](https://github.com/asdfjkl/nnue/blob/main/nnue_en.pdf)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
 - [CalvinBot](https://lichess.org/@/Calvin_Bot)
 - [Monte Carlo simulatie](https://en.wikipedia.org/wiki/Monte_Carlo_method)
 - [Monte Carlo simulatie schaken](https://medium.com/@ishaan.gupta0401/monte-carlo-tree-search-application-on-chess-5573fc0efb75)
 - [Monte Carlo simulatie investeren](https://www.investopedia.com/terms/m/montecarlosimulation.asp)
 - [Berger tabel JavaScript](https://github.com/sasatatar/berger-table-generator)
+- [Sosonko trekt zich terug Zwitsers](https://www.365chess.com/tournaments/OHRA_1984/22805)
+- [Arlette van Weersel](https://issuu.com/schaakbond/docs/schaakmagazine_2007-2)
+- [Hein Veldhuis](https://www.schaakcomputers.nl/hein_veldhuis/database/)
+- [Reglementen](https://schaakbond.nl/de-knsb/reglementen/)
 
 # marketing
 - [SEO checklist](https://imu.nl/internet-marketing-kennisbank/seo/seo-checklist/)
 - [SEO for beginners](https://moz.com/beginners-guide-to-seo)
 
 # Interessant 
-
+- [Framework benchmarks](https://framework-benchmarks.as93.net/)
+- [AI van Microsoft](https://microsoft.github.io/genaiscript/)
 - [api voor frontend](https://www.smashingmagazine.com/2022/09/javascript-api-guide/)
 - [Stored procedures as a backend](https://gnuhost.medium.com/stored-procedures-as-a-backend-c5d2db452fc2)
 - [Svelte by Example](https://sveltebyexample.com/)
@@ -202,6 +261,7 @@ Refresh Android cache
 - [How to read the JavaScript specification](https://timothygu.me/es-howto/)
 
 # Later
+- [form verwerken](https://css-tricks.com/how-to-create-multi-step-forms-with-vanilla-javascript-and-css/)
 - [clickable area on image](https://www.imagemaps.net/)
 - [interactieve kaarten](https://agafonkin.com/)
 - [3D in JavaScript](https://discoverthreejs.com/)
@@ -242,6 +302,7 @@ Refresh Android cache
 - [vloeistof projecties](https://tympanus.net/codrops/2021/01/19/drawing-2d-metaballs-with-webgl2/)
 - [jsPDF](http://raw.githack.com/MrRio/jsPDF/master/)
 - [Spaceinvaders](https://github.com/kubowania/space-invaders) 
+- [Spelletjes](https://gist.github.com/straker/)
 - [pipe](https://www.obvibase.com/dev-blog/i-ve-used-the-pipe-function-2-560-times-and-i-can-tell-you-it-s-good)
 - [Kaart met legenda](https://codepen.io/haakseth/pen/KQbjdO)
 - [TypeScript](https://www.metachris.com/2021/04/starting-a-typescript-project-in-2021/)
