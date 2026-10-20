@@ -226,14 +226,17 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 (0, "2627", "n5", 7, "u", "Koedijk N1", '2027-04-13');
 
 -- TODO beker
+set @seizoen = "2627";
+set @beker = "kbe";
+select * from ronde where clubCode = 0 and seizoen = @seizoen and teamCode = @beker;
 
-select * from ronde where clubCode = 0 and seizoen = "2526" and teamCode = "kbe";
-update ronde set datum = '2025-12-14' where clubCode = 0 and seizoen = "2526" and teamCode = "kbe" and rondeNummer = 2;
-update ronde set datum = '2026-02-08' where clubCode = 0 and seizoen = "2526" and teamCode = "kbe" and rondeNummer = 3;
-update ronde set datum = '2026-03-17' where clubCode = 0 and seizoen = "2526" and teamCode = "kbe" and rondeNummer = 4;
+update ronde set datum = '2026-10-27' where clubCode = 0 and seizoen = "2627" and teamCode = "kbe" and rondeNummer = 1;
+
+select * from ronde where clubCode = 0 and seizoen = @seizoen and teamCode in ("nbb", "nbz", "nbe");
+delete from ronde where clubCode = 0 and seizoen = @seizoen and teamCode in ("nbb", "nbz", "nbe");
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
-(0,"2526","kbe",4,"u","HWP Haarlem",'2026-03-17');
+(0, "2627", "kbe", 1, "t", "Zukertort Amstelveen", '2026-11-01');
 
 insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstander, datum) values
 (0,"2526","nbb",1,"u","Vredeburg B",'2025-11-14'),
@@ -247,12 +250,6 @@ insert into ronde (clubCode, seizoen, teamCode, rondeNummer, uithuis, tegenstand
 
 -- spelers -------------------------------------------------------------------------------------------------------------------------------
 
--- TODO insert local
-
-select * from speler where clubCode = 0 and seizoen = "2627" and teamCode = "int";
-
-delete from speler where clubCode = 0 and seizoen = "2627" and teamCode = "int";
-
 insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol) values
 (0, "2627", "int", "", "", 103, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 121, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
@@ -263,18 +260,11 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 (0, "2627", "int", "", "", 194, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 195, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 197, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
-(0, "2627", "int", "", "", 199, 0, '2026-09-01', 1200, "int", "", "", "", "", "");
-
-insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol) values
-
+(0, "2627", "int", "", "", 199, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 202, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
-(0, "2627", "int", "", "", 203, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 204, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 206, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
-(0, "2627", "int", "", "", 207, 0, '2026-09-01', 1200, "int", "", "", "", "", "");
-
-insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer, knsbRating, datum, interneRating, intern1, intern2, intern3, intern4, intern5, rol) values
-
+(0, "2627", "int", "", "", 207, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "n1", "2", 5968611, 2103, '2026-09-01', 2103, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 6187885, 1598, '2026-09-01', 1598, "int", "", "", "", "", ""),
 (0, "2627", "int", "n2", "3", 6207520, 1937, '2026-09-01', 1937, "int", "", "", "", "", ""),
@@ -368,13 +358,12 @@ insert into speler (clubCode, seizoen, teamCode, nhsbTeam, knsbTeam, knsbNummer,
 (0, "2627", "int", "n1", "3", 9056674, 1963, '2026-09-01', 1963, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 9058555, 1474, '2026-09-01', 1474, "int", "", "", "", "", ""),
 (0, "2627", "int", "n5", "5", 9077651, 1580, '2026-09-01', 1580, "int", "", "", "", "", ""),
+(0, "2627", "int", "", "", 9102896, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 9157841, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 9158875, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "", 9164639, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "5", 9175353, 0, '2026-09-01', 1200, "int", "", "", "", "", ""),
 (0, "2627", "int", "", "5", 9176024, 0, '2026-09-01', 1200, "int", "", "", "", "", "");
-
-
 
 -- interne competitie -------------------------------------------------------------------------------------------------------------------------------
 
