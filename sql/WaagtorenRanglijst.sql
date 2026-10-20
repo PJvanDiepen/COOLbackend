@@ -279,9 +279,15 @@ begin
         if partij = 'i' and witZwart = 'w' then
             set internKleur = 0;
             set witIntern = witIntern + 1;
+            if char_length(resultaten) > 1 then
+                set zwartIntern = zwartIntern + 1;
+            end if;
         elseif partij = 'i' and witZwart = 'z' then
             set internKleur = 1;
             set zwartIntern = zwartIntern + 1;
+            if char_length(resultaten) > 1 then
+                set witIntern = witIntern + 1;
+            end if;
         elseif partij = 'e' and witZwart = 'w' then
             set witExtern = witExtern + 1;
         elseif partij = 'e' and witZwart = 'z' then
