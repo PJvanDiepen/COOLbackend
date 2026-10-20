@@ -185,7 +185,7 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.8.66
+drop function totalen; -- 0-0-0.nl versie 0.8.67
 -- TODO resultaten in plaats van resultaat
 -- TODO witIntern en zwartIntern voor 2 resultaten
 -- TODO winstIntern, remiseIntern en verliesIntern voor 2 resultaten
@@ -229,69 +229,71 @@ begin
     declare tegenstander int;
     declare witZwart char(1);
     declare resultaat char(1);
-    declare found boolean default true;
+    declare resultaten varchar(9);
+    declare done boolean default false;
     declare uitslagen cursor for
-        select u.clubCode, u.teamCode, u.rondeNummer, u.partij, u.tegenstanderNummer, u.witZwart, u.resultaat
+        select u.clubCode, u.teamCode, u.rondeNummer, u.partij, u.tegenstanderNummer, u.witZwart, u.resultaat, u.resultaten
         from uitslag u
         where u.clubCode = clubCode and u.seizoen = seizoen and u.knsbNummer = knsbNummer
             -- uitslagen van interne competitie tot en met deze ronde of uitslagen van externe competitie tot deze datum
             and ((u.teamCode = competitie and u.rondeNummer <= ronde) or (u.teamCode <> competitie and u.datum < datum))
             and u.competitie = competitie;
-    declare continue handler for not found set found = false;
+    declare continue handler for not found set done = true;
     if versie <= 4 or versie >= 7 then -- interne competitie 
-		set minimumInternePartijen = 20; -- reglement artikel 2
-		set minimumPartijenGeleden = 7; -- reglement artikel 3
-	end if;
+        set minimumInternePartijen = 20; -- reglement artikel 2
+        set minimumPartijenGeleden = 7; -- reglement artikel 3
+    end if;
     set interneRating = rating(clubCode, seizoen, knsbNummer);
     set startPunten = extraPunten(versie, interneRating);
     set eigenWaardeCijfer = waardeCijfer(versie, interneRating);
     open uitslagen;
-    fetch uitslagen into clubCode, teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
-    while found
-        do
-            if partij = 'i' and resultaat = '1' then
-                set internResultaat = 2;
-                set winstIntern = winstIntern + 1;
-            elseif partij = 'i' and resultaat = '½' then
-                set internResultaat = 1;
-                set remiseIntern = remiseIntern + 1;
-            elseif partij = 'i' and resultaat = '0' then
-                set internResultaat = 0;
-                set verliesIntern = verliesIntern + 1;
-            elseif partij = 'a' then
-                set afzeggingen = afzeggingen + 1;
-            elseif partij = 'o' then
-                set oneven = oneven + 1;
-            elseif partij = 'w' then
-                set reglementairGewonnen = reglementairGewonnen + 1;
-            elseif partij = 'e' and teamCode = 'int' then
-                set externTijdensInterneRonde = externTijdensInterneRonde + 1;
-            elseif partij = 'e' and resultaat = '1' then
-                set winstExtern = winstExtern + 1;
-            elseif partij = 'e' and resultaat = '½' then
-                set remiseExtern = remiseExtern + 1;
-            elseif partij = 'e' and resultaat = '0' then
-                set verliesExtern = verliesExtern + 1;
-            end if;
-            if partij = 'i' and witZwart = 'w' then
-                set internKleur = 0;
-                set witIntern = witIntern + 1;
-            elseif partij = 'i' and witZwart = 'z' then
-                set internKleur = 1;
-                set zwartIntern = zwartIntern + 1;
-            elseif partij = 'e' and witZwart = 'w' then
-                set witExtern = witExtern + 1;
-            elseif partij = 'e' and witZwart = 'z' then
-                set zwartExtern = zwartExtern + 1;
-            end if;
-            if partij = 'i' then 
-                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' ', internKleur, ' ', tegenstander, ' ', internResultaat);
-            elseif partij = 'o' then
-                set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 0 0'); -- verliest met wit indien geen tegenstander
-            end if;
-            set totaal = totaal + punten(clubCode, seizoen, teamCode, versie, knsbNummer, eigenWaardeCijfer, partij, tegenstander, resultaat);
-            fetch uitslagen into clubCode, teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat;
-        end while; 
+    uitslagen_loop: loop
+        fetch uitslagen into clubCode, teamCode, rondeNummer, partij, tegenstander, witZwart, resultaat, resultaten;
+        if done then
+            leave uitslagen_loop;
+        end if;
+        if partij = 'i' and resultaat = '1' then
+            set internResultaat = 2;
+            set winstIntern = winstIntern + 1;
+        elseif partij = 'i' and resultaat = '½' then
+            set internResultaat = 1;
+            set remiseIntern = remiseIntern + 1;
+        elseif partij = 'i' and resultaat = '0' then
+            set internResultaat = 0;
+            set verliesIntern = verliesIntern + 1;
+        elseif partij = 'a' then
+            set afzeggingen = afzeggingen + 1;
+        elseif partij = 'o' then
+            set oneven = oneven + 1;
+        elseif partij = 'w' then
+            set reglementairGewonnen = reglementairGewonnen + 1;
+        elseif partij = 'e' and teamCode = 'int' then
+            set externTijdensInterneRonde = externTijdensInterneRonde + 1;
+        elseif partij = 'e' and resultaat = '1' then
+            set winstExtern = winstExtern + 1;
+        elseif partij = 'e' and resultaat = '½' then
+            set remiseExtern = remiseExtern + 1;
+        elseif partij = 'e' and resultaat = '0' then
+            set verliesExtern = verliesExtern + 1;
+        end if;
+        if partij = 'i' and witZwart = 'w' then
+            set internKleur = 0;
+            set witIntern = witIntern + 1;
+        elseif partij = 'i' and witZwart = 'z' then
+            set internKleur = 1;
+            set zwartIntern = zwartIntern + 1;
+        elseif partij = 'e' and witZwart = 'w' then
+            set witExtern = witExtern + 1;
+        elseif partij = 'e' and witZwart = 'z' then
+            set zwartExtern = zwartExtern + 1;
+        end if;
+        if partij = 'i' then 
+            set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' ', internKleur, ' ', tegenstander, ' ', internResultaat);
+        elseif partij = 'o' then
+            set tegenstanders = concat(tegenstanders, ' ', rondeNummer, ' 0 0 0'); -- verliest met wit indien geen tegenstander
+        end if;
+        set totaal = totaal + punten(clubCode, seizoen, teamCode, versie, knsbNummer, eigenWaardeCijfer, partij, tegenstander, resultaat);
+    end loop;
     close uitslagen;
     set tegenstanders = concat(tegenstanders, ' 0'); -- rondeNummer = 0
     set externePartijen = witExtern + zwartExtern;
