@@ -33,5 +33,5 @@ app.use(router.routes());
 app.use(router.allowedMethods());
 
 const server = app.listen(3000, function() {
-  console.log(`0-0-0 luistert op localhost:${server.address().port}`)
+  console.log(`0-0-0 luistert op localhost:${server.address().port}`);
 });

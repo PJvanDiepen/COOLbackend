@@ -185,11 +185,10 @@ end;
 $$
 delimiter ;
 
-drop function totalen; -- 0-0-0.nl versie 0.8.67
+drop function totalen; -- 0-0-0.nl versie 0.8.67 TODO on line!
 -- TODO resultaten in plaats van resultaat
--- TODO witIntern en zwartIntern voor 2 resultaten
 -- TODO winstIntern, remiseIntern en verliesIntern voor 2 resultaten
--- TODO internKleur voor 2 resultaten: 0 = wit, 1 = zwart, 2 = wit + zwart, 3 = zwart + wit 
+-- TODO internKleur voor 2 resultaten: 0 = wit, 1 = zwart, 2 = wit + zwart, 3 = zwart + wit ?
 -- TODO internResultaat voor 2 resultaten: 0 = 00, 1 = ½½, 2 = 11, 3 = 0½, 4 = ½0, 5 = 01, 6 = 10, 7 = 1½, 8 = ½1 
 
 delimiter $$

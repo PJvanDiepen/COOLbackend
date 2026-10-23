@@ -22,16 +22,14 @@ const synchroon = {
 
 const os = require("os");
 
-const geheugen = process.memoryUsage();
-
-function geheugenGebruik() {
-    console.log("--- geheugenGebruik ---");
-    console.log(`os.totalmem: ${os.totalmem()}`);
-    console.log(`os.freemem: ${os.freemem()}`);
-    console.log(geheugen); // https://www.trevorlasn.com/blog/common-causes-of-memory-leaks-in-javascript
-}
-
-geheugenGebruik();
+console.log({
+    node: process.versions.node,
+    platform: os.platform(),
+        type: os.type(),
+        versie: os.version(),
+        release: os.release(),
+        arch: os.arch()
+});
 
 const db = require("./modules/db.cjs");
 

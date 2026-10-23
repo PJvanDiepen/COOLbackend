@@ -19,13 +19,16 @@ const teamLeiders = new Map([ // TODO synchroniseren met server
     ["4", {naam: "Peter van Diepen", knsbNummer: 6212404}],
     ["5", {naam: "Lennart van der Kraan", knsbNummer: 9077651}],
     ["kbe", {naam: "Danny de Ruiter", knsbNummer: 7970094}],
+    ["nbe", {naam: "Gerard de Geus", knsbNummer: 7129991}],
+    ["nbz", {naam: "Alex Albrecht", knsbNummer: 7758014}],
+    ["nbb", {naam: "Ronald Kamps", knsbNummer: 7321534}],
     ["n1", {naam: "Gerard de Geus", knsbNummer: 7129991}],
     ["n2", {naam: "Alex Albrecht", knsbNummer: 7758014}],
     ["n3", {naam: "Ernst Hoogenes", knsbNummer: 6565801}],
     ["n4", {naam: "Peter Duijs", knsbNummer: 8485059}],
     ["n5", {naam: "Ronald Kamps", knsbNummer: 7321534}],
     ["v1", {naam: "Jos Albers", knsbNummer: 8950876}],
-    ["v2", {naam:"wie o wie?", knsbNummer: 97}]]);
+    ["v2", {naam:"???", knsbNummer: 97}]]);
 
 (async function() {
     await init();
