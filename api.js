@@ -428,6 +428,7 @@ Frontend: o_o_o.js
         u.tegenstanderNummer,
         p.naam,
         u.resultaat,
+        u.resultaten,
         u.teamCode,
         u.partij,
         r.uithuis,
@@ -453,13 +454,14 @@ Frontend: o_o_o.js
      */
     url.get("/:club/:seizoen/:competitie/uitslagen/:knsbNummer/:versie", async function (ctx) {
         ctx.body = await Uitslag.query()
-            .select("uitslag.datum",
+            .select("uitslag.datum", // TODO gewoon alle velden van uitslag?
                 "uitslag.rondeNummer",
                 "uitslag.bordNummer",
                 "uitslag.witZwart",
                 "uitslag.tegenstanderNummer",
                 "persoon.naam",
                 "uitslag.resultaat",
+                "uitslag.resultaten",
                 "uitslag.teamCode",
                 "uitslag.partij",
                 "ronde.uithuis",

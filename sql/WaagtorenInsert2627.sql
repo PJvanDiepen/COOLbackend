@@ -1,4 +1,4 @@
-use waagtoren; -- ga naar SQL of TODO
+use waagtoren; -- ga naar issue of TODO
 set @seizoen = "2627";
 set @team = "n3";
 set @datum = '2026-10-06';
@@ -1658,6 +1658,15 @@ where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @
 
 select naam, u.* from uitslag u join persoon p on p.knsbNummer = u.knsbNummer
 where clubCode = 0 and seizoen = "2627" and teamCode = "int" and rondeNummer = @ronde and bordNummer = @bord order by witZwart;
+
+-- dubbele uitslagen
+select * from uitslag where char_length(rtrim(resultaten)) > 1;
+
+-- resultaat <> resultaten
+select * from uitslag where resultaat <> substring(resultaten, 1, 1);
+
+-- TODO
+update uitslag set resultaten = resultaat where resultaat <> substring(resultaten, 1, 1);
 
 -- TODO issue #65 Aanmelden voor competitie of toernooi
 -- TODO issue #64 Van HTML op 0-0-0.nl naar MD op GitHub.com

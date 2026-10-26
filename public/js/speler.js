@@ -49,10 +49,11 @@ async function uitslagenSpeler(kop, lijst) {
     kop.textContent = `${t.naam}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}`;
     let totaal = t.intern() ? t.startPunten() : "";
     if (t.intern() && t.eigenWaardeCijfer()) {
-        lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", "", totaal, totaal));
+        lijst.append(html.rij("", "", `waardecijfer: ${t.eigenWaardeCijfer()}, rating: ${t.rating()}`, "", "", totaal, totaal));
     }
     const uitslagen = await zyq.localFetch(
         `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/uitslagen/${o_o_o.speler}/${o_o_o.versie}`);
+    console.log(uitslagen);
     let samenvoegen = -1; // niet samengevoegd
     for (let i = 0; i < uitslagen.length; i++) {
         if (samenvoegen < i && !db.planningInvullen.has(uitslagen[i].partij)) { // verwerken indien niet samengevoegd en geen planning
@@ -108,34 +109,37 @@ kolommen in lijst
 2. datum + link naar interne ronde indien interne ronde
 3. link naar interne tegenstander of link naar externe wedstrijd of andere tekst
 4. externe bord
-5. kleur
-6. resultaat
-7. punten
-8. voortschrijdend totaal
+5. resultaten
+6. punten
+7. voortschrijdend totaal
+8. TODO rating
  */
 function internePartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
     const tegenstanderKolom = zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.naam});
-    return html.rij(uitslag.rondeNummer, datumKolom, tegenstanderKolom, "", uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
+    const resultatenKolom = uitslag.resultaten.length > 1
+        ? `${uitslag.witZwart} ${uitslag.resultaten.substring(0,1)} ${uitslag.witZwart === "w" ? "z" : "w"} ${uitslag.resultaten.substring(1,2)}`
+        : `${uitslag.witZwart} ${uitslag.resultaat}`
+    return html.rij(uitslag.rondeNummer, datumKolom, tegenstanderKolom, "", resultatenKolom, uitslag.punten, totaal);
 }
 
 function externePartijTijdensInterneRonde(uitslag, totaal, interneRonde) {
     const datumKolom = naarRonde(uitslag);
     const tegenstanderKolom = zyq.naarTeam(uitslag);
     const puntenKolom = interneRonde.punten + uitslag.punten;
-    return html.rij(interneRonde.rondeNummer, datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, puntenKolom, totaal);
+    return html.rij(interneRonde.rondeNummer, datumKolom, tegenstanderKolom, uitslag.bordNummer, `${uitslag.witZwart} ${uitslag.resultaat}`, puntenKolom, totaal);
 }
 
 function externePartij(uitslag, totaal) {
     const datumKolom = zyq.datumLeesbaar(uitslag);
     const tegenstanderKolom = zyq.naarTeam(uitslag);
-    return html.rij("", datumKolom, tegenstanderKolom, uitslag.bordNummer, uitslag.witZwart, uitslag.resultaat, uitslag.punten, totaal);
+    return html.rij("", datumKolom, tegenstanderKolom, uitslag.bordNummer, `${uitslag.witZwart} ${uitslag.resultaat}`, uitslag.punten, totaal);
 }
 
 function geenPartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
     const omschrijving = geenPartijInvullen.get(uitslag.partij);
-    return html.rij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", "", uitslag.punten, totaal);
+    return html.rij(uitslag.rondeNummer, datumKolom, omschrijving, "", "", uitslag.punten, totaal);
 }
 
 function naarRonde(uitslag) {

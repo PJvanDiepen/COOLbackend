@@ -38,6 +38,7 @@ Refresh Android cache
 - [MySQL remote](https://www.digitalocean.com/community/tutorial_series/how-to-troubleshoot-issues-in-mysql)
 - [database design](https://vertabelo.com/blog/database-design-principles/)
 - [database design example](https://blog.devart.com/sql-database-design-basics-with-example.html)
+- [SQL style guide](https://www.sqlstyle.guide/)
 
 # JavaScript
 - [ECMA JavaScript](https://262.ecma-international.org/)
