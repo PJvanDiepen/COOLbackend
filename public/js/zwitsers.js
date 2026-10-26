@@ -179,7 +179,7 @@ const indelenFun = [
 })();
 
 function zwitsers(teamCode) {
-    return teamCode.substring(1,2) === "z";
+    return teamCode[1] === "z";
 }
 
 async function deelnemersRonde(rondeNummer) {

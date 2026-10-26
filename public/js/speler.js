@@ -118,7 +118,7 @@ function internePartij(uitslag, totaal) {
     const datumKolom = naarRonde(uitslag);
     const tegenstanderKolom = zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.naam});
     const resultatenKolom = uitslag.resultaten.length > 1
-        ? `${uitslag.witZwart} ${uitslag.resultaten.substring(0,1)} ${uitslag.witZwart === "w" ? "z" : "w"} ${uitslag.resultaten.substring(1,2)}`
+        ? `${uitslag.witZwart} ${uitslag.resultaten[0]} ${uitslag.witZwart === "w" ? "z" : "w"} ${uitslag.resultaten[1]}`
         : `${uitslag.witZwart} ${uitslag.resultaat}`
     return html.rij(uitslag.rondeNummer, datumKolom, tegenstanderKolom, "", resultatenKolom, uitslag.punten, totaal);
 }

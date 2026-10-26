@@ -430,16 +430,17 @@ function teamMaken(compleet, object) {
 }
 
 function isCompetitie(team) {
-    return team.teamCode === "" ? false : team.teamCode.substring(0,1) === "i";
+    return team.teamCode === "" ? false : team.teamCode[0] === "i";
 }
 
 function isBekerCompetitie(team) {
-    return team.teamCode === "" ? false : team.teamCode.substring(1,2) === "b";
+    return team.teamCode === "" ? false : team.teamCode[1] === "b";
 }
 
 function isTeam(team) {
-    return team.teamCode === "" || team.teamCode === "0" || team.teamCode === "n0" ? false
-        : team.teamCode.substring(0,1) !== "i";
+    return team.teamCode === "" || team.teamCode === "0" || team.teamCode === "n0"
+        ? false
+        : team.teamCode[0] !== "i";
 }
 
 function teamVoluit(teamCode) { // TODO omschrijving uit database
@@ -463,11 +464,11 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database
         return "Waagtoren NHSB beker (zilver)";
     } else if (teamCode === "nbb") {
         return "Waagtoren NHSB beker (brons)";
-    } else if (teamCode === "" || teamCode.substring(0,1) === " ") {
+    } else if (teamCode === "" || teamCode[0] === " ") {
         return "geen";
     } else if (teamCode.substring(0,2) === "nv") {
         return "Waagtoren v" + teamCode.substring(2);
-    } else if (teamCode.substring(0,1) === "n") {
+    } else if (teamCode[0] === "n") {
         return "Waagtoren n" + teamCode.substring(1);
     } else {
         return "Waagtoren " + teamCode;

@@ -158,7 +158,7 @@ function versieBepalen() { // TODO reglement in team i.p.v. versie
         }
     } else if (o_o_o.competitie === db.RAPID_COMPETITIE && o_o_o.versie === 0) {
         return 4;
-    } else if (o_o_o.competitie.substring(1,2) === "z" && o_o_o.versie === 0) {
+    } else if (o_o_o.competitie[1] === "z" && o_o_o.versie === 0) {
         return 5; // Zwitsers systeem
     } else if (o_o_o.competitie === db.JEUGD_COMPETITIE && o_o_o.versie === 0) {
         return 6;
@@ -371,7 +371,7 @@ export async function teamSelecteren(teamCode) {
         return [team.teamCode, db.teamVoluit(team.teamCode)];
     });
     html.selectie(html.id("teamSelecteren"), teamCode, teams, function (teamCode) {
-        if (teamCode === "" ? false : teamCode.substring(0,1) === "i") {
+        if (teamCode === "" ? false : teamCode[0] === "i") {
             html.anderePagina(`ranglijst.html?competitie=${teamCode}`);
         } else {
             html.anderePagina(`team.html?team=${teamCode}`);

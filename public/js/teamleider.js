@@ -44,7 +44,7 @@ const teamLeiders = new Map([ // TODO synchroniseren met server
         teamCode === teamVoorkeur(spelers, zyq.gebruiker.knsbNummer, "0"));
     const ronden = await perTeamRondenUitslagen(teamCode);
     uitslagenTeam(ronden, teamCode, html.id("hoofdkop"), html.id("ronden"));
-    const nhsbTeam = teamCode.substring(0,1) === "n"; // anders is het een KNSB-team
+    const nhsbTeam = teamCode[0] === "n"; // anders is het een KNSB-team
     const vast = html.id("vast"); // Vaste spelers en invallers
     vast.append(html.bovenRij("naam", "nummer", "rating", "team", ...(rondeNummers(ronden))));
     const vasteSpelers = spelers.filter(function (speler) {
@@ -236,7 +236,7 @@ function rondenPerSpeler(knsbNummer, ronden, geenPlanning) {
 }
 
 function hogerTeam(teamCode, vasteTeam) {
-    if (vasteTeam === "" || teamCode.substring(1,2) === "b") {
+    if (vasteTeam === "" || teamCode[1] === "b") {
         return false; // indien geen vastTeam of beker
     } else if (vasteTeam.substring(0,2) !== "nv" && teamCode.substring(0,2) === "nv") {
         return true; // niet viertal is hogerTeam dan viertal

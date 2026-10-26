@@ -71,9 +71,7 @@ async function uitslagenRonde(rondeNummer, lijst) {
 }
 
 function resultatenInvullen(uitslag) {
-    return uitslag.resultaten.length < 2
-        ? ""
-        : db.resultaatInvullen.get(uitslag.resultaten.substring(1,2));
+    return uitslag.resultaten.length < 2 ? "" : db.resultaatInvullen.get(uitslag.resultaten[1]);
 }
 
 /*
@@ -92,7 +90,7 @@ async function uitslagMutatie(rondeNummer) {
 
 function resultaatSelecteren(rondeNummer, uitslag) {
     if (uitslag.resultaten.length > 1) { // 2 uitslagen niet wijzigen
-        return db.resultaatInvullen.get(uitslag.resultaten.substring(0, 1));
+        return db.resultaatInvullen.get(uitslag.resultaten[0]);
     } else if (uitslagWijzigen(uitslag)) {
         const knop = document.createElement("select");
         html.selectie(knop, uitslag.resultaat, db.resultaatSelecteren(uitslag), function (resultaat) {
