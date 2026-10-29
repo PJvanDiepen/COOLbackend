@@ -620,14 +620,6 @@ const resultaatInvullen = new Map([
     [REMISE, "½-½"],
     [VERLIES, "0-1"]]);
 
-function isResultaat(uitslag) {
-    return resultaatInvullen.has(uitslag.resultaat);
-}
-
-function resultaatSelecteren(uitslag) {
-    return uitslag.resultaat === "" ? [...resultaatInvullen] : [...resultaatInvullen].slice(1); // met of zonder blanko resultaat
-}
-
 const planningInvullen = new Map([
     [PLANNING, MEEDOEN],
     [NIET_MEEDOEN, MEEDOEN],
@@ -750,7 +742,7 @@ export { // ES6 voor browser,
     // uitslag.witZwart char(1)
     WIT,
     ZWART,
-    // uitslag.resultaat char(1)
+    // uitslag.resultaten varchar(9)
     REMISE,
     WINST,
     VERLIES,
@@ -759,8 +751,6 @@ export { // ES6 voor browser,
     UIT,
     wedstrijdVoluit,       // (ronde)
     resultaatInvullen,
-    isResultaat,           // (uitslag)
-    resultaatSelecteren,   // (uitslag)
     planningInvullen,
     isPlanning,            // (uitslag)
     isPaar,                // (uitslag)

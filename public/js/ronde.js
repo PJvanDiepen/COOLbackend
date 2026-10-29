@@ -62,16 +62,23 @@ async function uitslagenRonde(rondeNummer, lijst) {
                 uitslag.bordNummer,
                 zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
                 zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                partij1,
-                resultatenInvullen(uitslag)));
+                partij1));
+            if (uitslag.resultaten.length > 1) {
+                lijst.append(html.rij(
+                    "",
+                    zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
+                    zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
+                    resultaatRevanche(uitslag.resultaten[1])));
+            }
         }
     } else {
         lijst.append(html.rij("nog", "geen", "uitslagen", ""));
     }
 }
 
-function resultatenInvullen(uitslag) {
-    return uitslag.resultaten.length < 2 ? "" : db.resultaatInvullen.get(uitslag.resultaten[1]);
+function resultaatRevanche(resultaat) {
+    return db.resultaatInvullen.get(
+        resultaat === db.WINST ? db.VERLIES : resultaat === db.VERLIES ? db.WINST : db.REMISE);
 }
 
 /*
@@ -93,7 +100,10 @@ function resultaatSelecteren(rondeNummer, uitslag) {
         return db.resultaatInvullen.get(uitslag.resultaten[0]);
     } else if (uitslagWijzigen(uitslag)) {
         const knop = document.createElement("select");
-        html.selectie(knop, uitslag.resultaat, db.resultaatSelecteren(uitslag), function (resultaat) {
+        const opties = uitslag.resultaat === "" // met of zonder blanko resultaat
+            ? [...db.resultaatInvullen]
+            : [...db.resultaatInvullen].slice(1);
+        html.selectie(knop, uitslag.resultaat, opties, function (resultaat) {
             html.zelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${resultaat}`);
         });
         return knop;

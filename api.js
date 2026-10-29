@@ -210,6 +210,7 @@ Frontend: o_o_o.js
             .where("uitslag.teamCode", ctx.params.competitie)
             .where("uitslag.rondeNummer", ctx.params.ronde)
             .where("uitslag.partij", db.INTERNE_PARTIJ)
+            // TODO resultaten niet ingevuld
             .whereNotIn("uitslag.resultaat", [db.WINST, db.VERLIES, db.REMISE])
             .limit(1);
         ctx.body = uitslagen.length; // 1 = indeling zonder uitslagen, 0 = geen indeling
@@ -364,6 +365,7 @@ Frontend: o_o_o.js
                         "uitslag.teamCode",
                         "uitslag.rondeNummer",
                         {aantalResultaten: fn("count", "uitslag.resultaat")})
+                    // TODO resultaten ingevuld
                     .whereIn("uitslag.resultaat", [db.WINST, db.VERLIES, db.REMISE])
                     .where("uitslag.clubCode", ctx.params.club)
                     .where("uitslag.seizoen", ctx.params.seizoen)
@@ -427,7 +429,7 @@ Frontend: o_o_o.js
         u.witZwart,
         u.tegenstanderNummer,
         p.naam,
-        u.resultaat,
+        u.resultaat, TODO resultaten i.p.v. van resultaat
         u.resultaten,
         u.teamCode,
         u.partij,
@@ -441,7 +443,7 @@ Frontend: o_o_o.js
           u.teamCode,
           u.partij,
           u.tegenstanderNummer,
-          u.resultaat) as punten
+          u.resultaat) as punten TODO resultaten i.p.v. van resultaat
     from uitslag u
     join persoon p on u.tegenstanderNummer = p.knsbNummer
     join ronde r on u.clubCode = r.clubCode and u.seizoen = r.seizoen and u.teamCode = r.teamCode and u.rondeNummer = r.rondeNummer
@@ -460,7 +462,7 @@ Frontend: o_o_o.js
                 "uitslag.witZwart",
                 "uitslag.tegenstanderNummer",
                 "persoon.naam",
-                "uitslag.resultaat",
+                "uitslag.resultaat", // TODO resultaten i.p.v. van resultaat
                 "uitslag.resultaten",
                 "uitslag.teamCode",
                 "uitslag.partij",
@@ -477,7 +479,7 @@ Frontend: o_o_o.js
                             fn("rating", ctx.params.club, ctx.params.seizoen, ctx.params.knsbNummer)),
                         ref("uitslag.partij"),
                         ref("uitslag.tegenstanderNummer"),
-                        ref("uitslag.resultaat"))})
+                        ref("uitslag.resultaat"))}) // TODO resultaten i.p.v. van resultaat
             .join("persoon", "persoon.knsbNummer", "uitslag.tegenstanderNummer")
             .join("ronde", function(join) {
                 join.on("uitslag.clubCode", "ronde.clubCode")
@@ -564,7 +566,7 @@ Frontend: o_o_o.js
         wit.naam,
         uitslag.tegenstanderNummer,
         zwart.naam,
-        uitslag.resultaat
+        uitslag.resultaat TODO resultaten i.p.v. van resultaat
     from uitslag
     join persoon as wit on uitslag.knsbNummer = wit.knsbNummer
     join persoon as zwart on uitslag.tegenstanderNummer = zwart.knsbNummer
@@ -597,7 +599,7 @@ Frontend: o_o_o.js
     select uitslag.rondeNummer,
         uitslag.bordNummer,
         uitslag.witZwart,
-        uitslag.resultaat,
+        uitslag.resultaat, TODO resultaten i.p.v. van resultaat
         uitslag.partij,
         uitslag.knsbNummer,
         persoon.naam,
@@ -613,7 +615,7 @@ Frontend: o_o_o.js
             .select("uitslag.rondeNummer",
                 "uitslag.bordNummer",
                 "uitslag.witZwart",
-                "uitslag.resultaat",
+                "uitslag.resultaat", // TODO resultaten i.p.v. van resultaat
                 "uitslag.partij",
                 "uitslag.knsbNummer",
                 "persoon.naam")
@@ -1480,7 +1482,7 @@ Frontend: o_o_o.js
     Database: uitslag update
               mutatie insert
 
-    Frontend: ronde.js
+    Frontend: indelen.js
      */
     url.get("/:uuid/:club/:seizoen/:competitie/:ronde/verwijder/indeling", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
@@ -1521,6 +1523,8 @@ Frontend: o_o_o.js
               mutatie insert
 
     Frontend: ronde.js
+
+    TODO :resultaten i.p.v. van :resultaat
      */
     url.get("/:uuid/:club/:seizoen/:competitie/:ronde/:speler/uitslag/:tegenstander/:resultaat", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
@@ -1530,23 +1534,23 @@ Frontend: o_o_o.js
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler) || // eigen uitslag wijzigen
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.tegenstander)) {
             const eigenUitslag = await Uitslag.query()
-                .select("uitslag.resultaat")
+                .select("uitslag.resultaat") // TODO resultaten i.p.v. van resultaat
                 .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler]);
             const tegenstanderUitslag = await Uitslag.query()
-                .select("uitslag.resultaat")
+                .select("uitslag.resultaat") // TODO resultaten i.p.v. van resultaat
                 .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander]);
+            // TODO resultaten i.p.v. van eigenUitslag en tegenstanderUitslag.resultaat
             if (resultaatWijzigen(eigenUitslag.resultaat, tegenstanderUitslag.resultaat, ctx.params.resultaat, allesWijzigen)) {
                 if (await Uitslag.query().findById(
                     [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
                     .patch(
-                        {resultaat: ctx.params.resultaat})) {
+                        {resultaat: ctx.params.resultaat})) { //TODO resultaten i.p.v. van resultaat
                     aantal++;
                 }
                 if (Number(ctx.params.tegenstander) > 0) {
                     if (await Uitslag.query().findById(
                         [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander])
-                        .patch(
-                            {resultaat: resultaatTegenstander(ctx.params.resultaat)})) {
+                        .patch({resultaat: resultaatTegenstander(ctx.params.resultaat)})) { // TODO resultaten i.p.v. van resultaat
                         aantal++;
                     }
                 }
@@ -1567,6 +1571,7 @@ Frontend: o_o_o.js
         let aantal = 0;
         if (gebruiker.juisteRechten(db.BEHEERDER)) {
             const resultaten = await Uitslag.query()
+                // TODO resultaten ingevuld
                 .whereIn("uitslag.resultaat", [db.WINST, db.VERLIES, db.REMISE])
                 .where("uitslag.clubCode", ctx.params.club)
                 .where("uitslag.seizoen", ctx.params.seizoen)
