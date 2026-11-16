@@ -39,6 +39,7 @@ Refresh Android cache
 - [database design](https://vertabelo.com/blog/database-design-principles/)
 - [database design example](https://blog.devart.com/sql-database-design-basics-with-example.html)
 - [SQL style guide](https://www.sqlstyle.guide/)
+- [DuckDB](https://duckdb.org/)
 
 # JavaScript
 - [ECMA JavaScript](https://262.ecma-international.org/)
@@ -203,6 +204,7 @@ Refresh Android cache
 - [Schaken in JavaScript](https://shaack.com/projekte/cm-chessboard/)
 - [imple chess ai](https://github.com/lhartikk/simple-chess-ai)
 - [Keizer systeem](https://www.htenbos.nl/systeemkeizer/)
+- [Keizer app](https://htenbos.nl/keizer-app)
 - [Sevilla](https://www.jbfsoftware.com/)
 - [Rokade](http://home.kpn.nl/hjdt_nijhuis/rokade.htm)
 - [Olga chessviewer](https://www.chessgames.com/olgahelp.html)
@@ -211,6 +213,7 @@ Refresh Android cache
 - [StockFish in JavaScript](https://github.com/nmrugg/stockfish.js)
 - [nnue in Stockfish](https://github.com/official-stockfish/nnue-pytorch/blob/master/docs/nnue.md)
 - [nnue paper](https://github.com/asdfjkl/nnue/blob/main/nnue_en.pdf)
+- [Chess Cloud Database](https://chessdb.cn/queryc_en/)
 - [CQL](http://www.gadycosteff.com/cql/index.html)
 - [CalvinBot](https://lichess.org/@/Calvin_Bot)
 - [Monte Carlo simulatie](https://en.wikipedia.org/wiki/Monte_Carlo_method)

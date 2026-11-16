@@ -1523,8 +1523,6 @@ Frontend: o_o_o.js
               mutatie insert
 
     Frontend: ronde.js
-
-    TODO :resultaten i.p.v. van :resultaat
      */
     url.get("/:uuid/:club/:seizoen/:competitie/:ronde/:speler/uitslag/:tegenstander/:resultaat", async function (ctx) {
         const gebruiker = await gebruikerRechten(ctx.params.uuid);
@@ -1534,23 +1532,31 @@ Frontend: o_o_o.js
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.speler) || // eigen uitslag wijzigen
             gebruiker.eigenData(db.GEREGISTREERD, ctx.params.tegenstander)) {
             const eigenUitslag = await Uitslag.query()
-                .select("uitslag.resultaat") // TODO resultaten i.p.v. van resultaat
+                .select("uitslag.resultaat", "uitslag.resultaten")
                 .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler]);
+            if (eigenUitslag.resultaat !== eigenUitslag.resultaten) {
+                console.log(`eigen ${ctx.params.speler} resultaten <> resultaat r${ctx.params.ronde}`);
+            }
             const tegenstanderUitslag = await Uitslag.query()
-                .select("uitslag.resultaat") // TODO resultaten i.p.v. van resultaat
+                .select("uitslag.resultaat", "uitslag.resultaten")
                 .findById([ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander]);
-            // TODO resultaten i.p.v. van eigenUitslag en tegenstanderUitslag.resultaat
+            if (tegenstanderUitslag.resultaat !== tegenstanderUitslag.resultaten) {
+                console.log(`tegenstander ${ctx.params.tegenstander} resultaten <> resultaat r${ctx.params.ronde}`);
+            }
             if (resultaatWijzigen(eigenUitslag.resultaat, tegenstanderUitslag.resultaat, ctx.params.resultaat, allesWijzigen)) {
                 if (await Uitslag.query().findById(
                     [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.speler])
-                    .patch(
-                        {resultaat: ctx.params.resultaat})) { //TODO resultaten i.p.v. van resultaat
+                    .patch({
+                        resultaat: ctx.params.resultaat,
+                        resultaten: ctx.params.resultaat})) {
                     aantal++;
                 }
                 if (Number(ctx.params.tegenstander) > 0) {
                     if (await Uitslag.query().findById(
                         [ctx.params.club, ctx.params.seizoen, ctx.params.competitie, ctx.params.ronde, ctx.params.tegenstander])
-                        .patch({resultaat: resultaatTegenstander(ctx.params.resultaat)})) { // TODO resultaten i.p.v. van resultaat
+                        .patch({
+                            resultaat: resultaatTegenstander(ctx.params.resultaat),
+                            resultaten: resultaatTegenstander(ctx.params.resultaat)})) {
                         aantal++;
                     }
                 }

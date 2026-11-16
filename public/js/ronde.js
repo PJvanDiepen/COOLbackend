@@ -10,13 +10,14 @@ import * as zyq from "./zyq.js";
     verwerk ronde=<rondeNummer>
            &wit=<knsbNummer>
            &zwart=<knsbNummer>
-           &uitslag=<uitslag wit> TODO waarom uitslag=<uitslag wit> ?
+           &uitslag=<resultaten wit>
  */
 (async function() {
     await init();
     competitieTitel();
     o_o_o.team = o_o_o.competitie;
     const rondeNummer = Number(html.params.get("ronde")) || vorigeRonde() || 1;
+    const mutatie = await uitslagMuteren(rondeNummer);
     await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
@@ -41,50 +42,12 @@ import * as zyq from "./zyq.js";
             }
         }]);
     await rondeSelecteren(o_o_o.competitie, rondeNummer);
-    await uitslagenRonde(rondeNummer, html.id("uitslagen"));
+    await uitslagenRonde(rondeNummer, mutatie, html.id("uitslagen"));
     html.id("kop").textContent =
         `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeGegevens(o_o_o.team, rondeNummer))}`;
 })();
 
-async function uitslagenRonde(rondeNummer, lijst) {
-    const mutatie = await uitslagMutatie(rondeNummer);
-    const uitslagen = await zyq.serverFetch(
-        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
-    if (uitslagen.length > 0) {
-        for (const uitslag of uitslagen) {
-            const partij1 = resultaatSelecteren(rondeNummer, uitslag);
-            // const uitslag2 = document.createTextNode(resultatenInvullen(uitslag));
-            if (uitslag.knsbNummer === mutatie.wit && uitslag.tegenstanderNummer === mutatie.zwart) {
-                html.verwerkt(partij1, true);
-                // html.verwerkt(uitslag2, true);
-            }
-            lijst.append(html.rij(
-                uitslag.bordNummer,
-                zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
-                zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                partij1));
-            if (uitslag.resultaten.length > 1) {
-                lijst.append(html.rij(
-                    "",
-                    zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                    zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
-                    resultaatRevanche(uitslag.resultaten[1])));
-            }
-        }
-    } else {
-        lijst.append(html.rij("nog", "geen", "uitslagen", ""));
-    }
-}
-
-function resultaatRevanche(resultaat) {
-    return db.resultaatInvullen.get(
-        resultaat === db.WINST ? db.VERLIES : resultaat === db.VERLIES ? db.WINST : db.REMISE);
-}
-
-/*
-    verwerk &ronde=<rondeNummer>&wit=<wit>&zwart=<zwart>&uitslag=<uitslag>
- */
-async function uitslagMutatie(rondeNummer) {
+async function uitslagMuteren(rondeNummer) {
     const wit = html.params.get("wit");
     const zwart = html.params.get("zwart");
     const uitslag = html.params.get("uitslag");
@@ -93,6 +56,62 @@ async function uitslagMutatie(rondeNummer) {
             `/${zyq.uuidToken}/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/${wit}/uitslag/${zwart}/${uitslag}`);
     }
     return {wit: Number(wit), zwart: Number(zwart)};
+}
+
+async function uitslagenRonde(rondeNummer, mutatie, lijst) {
+    const uitslagen = await zyq.serverFetch(
+        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
+    if (uitslagen.length === 0) {
+        lijst.append(html.rij("nog", "geen", "uitslagen", ""));
+    } else {
+        for (const uitslag of uitslagen) {
+            const partij = resultaatSelecteren(rondeNummer, uitslag);
+            if (uitslag.knsbNummer === mutatie.wit && uitslag.tegenstanderNummer === mutatie.zwart) {
+                html.verwerkt(partij, true);
+            }
+            lijst.append(html.rij(
+                uitslag.bordNummer,
+                zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
+                zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
+                partij));
+            if (uitslag.resultaten.length > 1) {
+                lijst.append(html.rij(
+                    "",
+                    zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
+                    zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
+                    resultaatRevanche(uitslag.resultaten[1])));
+            }
+        }
+        // Matheus de Boer, Peter van Diepen, Anton Schermer, Ton Fasel, Joris Hartog
+        if ([100, 6212404, 7443172, 8112654, 8744494].includes(zyq.gebruiker.knsbNummer)) {
+            lijst.append(html.rij("", "----- 0-0-0 issues ------", "", ""));
+            const uitslag = eenUitslag(uitslagen, zyq.gebruiker.knsbNummer);
+            lijst.append(html.rij(
+                uitslag.bordNummer,
+                zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
+                zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
+                html.naarPaginaEnTerug(
+                    `uitslag.html?bord=${uitslag.bordNummer}` +
+                    `&wit=${uitslag.knsbNummer}` +
+                    `&zwart=${uitslag.tegenstanderNummer}` +
+                    `&resultaten${uitslag.resultaten}`,
+                    db.resultaatInvullen.get(uitslag.resultaten[0]))));
+        }
+    }
+}
+
+function eenUitslag(uitslagen, knsbNummer) {
+    for (const uitslag of uitslagen) {
+        if (uitslag.knsbNummer === knsbNummer || uitslag.tegenstanderNummer.knsbNummer === knsbNummer) {
+            return uitslag;
+        }
+        return uitslagen[0];
+    }
+}
+
+function resultaatRevanche(resultaat) {
+    return db.resultaatInvullen.get(
+        resultaat === db.WINST ? db.VERLIES : resultaat === db.VERLIES ? db.WINST : db.REMISE);
 }
 
 function resultaatSelecteren(rondeNummer, uitslag) {

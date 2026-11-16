@@ -1,4 +1,4 @@
-# 0-0-0 versie 0.8.66
+# 0-0-0 versie 0.8.68
 
 Dit is de actuele versie van 0-0-0, die voorlopig uitsluitend de [interne competitie](https://www.waagtoren.nl/4-senioren/interne-competitie/interne-informatie/) 
 van schaakvereniging de Waagtoren verwerkt.
@@ -7,12 +7,11 @@ Problemen of vragen kan je melden in een e-mail naar pvdiepen@gmail.com
 of als [issue](https://github.com/PJvanDiepen/COOLbackend/issues) op GitHub.
 De documentatie beschrijft voorlopig alleen de [database](./doc/database.md) en [ontwerpbeslissingen](./doc/ontstaan.md).
 
-# 0-0-0 versie 0.8.67
+# 0-0-0 versie 0.8.69
 
 Het is de bedoeling dat in de volgende versie van 0-0-0 de volgende problemen zijn opgelost:
 
 - Meer partijen per ronde tegen dezelfde tegenstander #66
-- Teamleider kan vaste speler of invaller aanmelden #62
 - Objecten boom synchroniseren met server #49
 - Database documentatie is niet compleet #43
 - zyq.js verwijderen #45
