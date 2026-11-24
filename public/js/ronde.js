@@ -18,7 +18,7 @@ import * as zyq from "./zyq.js";
     o_o_o.team = o_o_o.competitie;
     const rondeNummer = Number(html.params.get("ronde")) || vorigeRonde() || 1;
     const mutatie = await uitslagMuteren(rondeNummer);
-    await html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
+    html.menu(zyq.gebruiker.mutatieRechten,[db.BEHEERDER, `ranglijst na ronde ${rondeNummer}`, function() {
             html.anderePagina(`ranglijst.html?ronde=${rondeNummer}`);
         }],
         [db.ONTWIKKElAAR, `backup uitslagen ronde ${rondeNummer}` , async function () {
@@ -90,11 +90,8 @@ async function uitslagenRonde(rondeNummer, mutatie, lijst) {
                 uitslag.bordNummer,
                 zyq.naarSpeler({knsbNummer: uitslag.knsbNummer, naam: uitslag.wit}),
                 zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
-                html.naarPaginaEnTerug(
-                    `uitslag.html?bord=${uitslag.bordNummer}` +
-                    `&wit=${uitslag.knsbNummer}` +
-                    `&zwart=${uitslag.tegenstanderNummer}` +
-                    `&resultaten${uitslag.resultaten}`,
+                html.naarPaginaEnTerug(`uitslag.html?` +
+                    `ronde=${rondeNummer}&resultaten=${uitslag.resultaten}&wit=${uitslag.knsbNummer}`,
                     db.resultaatInvullen.get(uitslag.resultaten[0]))));
         }
     }
@@ -111,7 +108,7 @@ function eenUitslag(uitslagen, knsbNummer) {
 
 function resultaatRevanche(resultaat) {
     return db.resultaatInvullen.get(
-        resultaat === db.WINST ? db.VERLIES : resultaat === db.VERLIES ? db.WINST : db.REMISE);
+        resultaat === db.WINST ? db.VERLIES : resultaat === db.VERLIES ? db.WINST : resultaat);
 }
 
 function resultaatSelecteren(rondeNummer, uitslag) {
@@ -119,9 +116,9 @@ function resultaatSelecteren(rondeNummer, uitslag) {
         return db.resultaatInvullen.get(uitslag.resultaten[0]);
     } else if (uitslagWijzigen(uitslag)) {
         const knop = document.createElement("select");
-        const opties = uitslag.resultaat === "" // met of zonder blanko resultaat
-            ? [...db.resultaatInvullen]
-            : [...db.resultaatInvullen].slice(1);
+        const opties = uitslag.resultaten === ""
+            ? [...db.resultaatInvullen].slice(1) // met 1 blanko resultaat
+            : [...db.resultaatInvullen].slice(2); // zonder 2 blanko resultaten
         html.selectie(knop, uitslag.resultaat, opties, function (resultaat) {
             html.zelfdePagina(`ronde=${rondeNummer}&wit=${uitslag.knsbNummer}&zwart=${uitslag.tegenstanderNummer}&uitslag=${resultaat}`);
         });

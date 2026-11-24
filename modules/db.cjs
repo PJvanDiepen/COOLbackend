@@ -457,13 +457,13 @@ function teamVoluit(teamCode) { // TODO omschrijving uit database
     } else if (teamCode === "n0") {
         return "NHSB bij andere schaakvereniging";
     } else if (teamCode === "kbe") {
-        return "Waagtoren KNSB beker";
+        return "Waagtoren beker";
     } else if (teamCode === "nbe") {
-        return "Waagtoren NHSB beker";
+        return "Waagtoren goud";
     } else if (teamCode === "nbz") {
-        return "Waagtoren NHSB beker (zilver)";
+        return "Waagtoren zilver";
     } else if (teamCode === "nbb") {
-        return "Waagtoren NHSB beker (brons)";
+        return "Waagtoren brons";
     } else if (teamCode === "" || teamCode[0] === " ") {
         return "geen";
     } else if (teamCode.substring(0,2) === "nv") {
@@ -616,6 +616,7 @@ function wedstrijdVoluit(ronde) {
 
 const resultaatInvullen = new Map([
     ["",""],
+    [" ",""],
     [WINST, "1-0"],
     [REMISE, "½-½"],
     [VERLIES, "0-1"]]);

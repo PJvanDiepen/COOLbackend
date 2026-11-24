@@ -175,7 +175,7 @@ function rangnummersToggle(rangnummers, rondeNummer) {
     if (rangnummersAan) {
         rangnummers.open = true;
     } else {
-        rangnummers.addEventListener("toggle",function () {
+        rangnummers.addEventListener("toggle", function () {
             html.zelfdePagina(`ronde=${rondeNummer}&indelen=${versieIndelen}&rangnummers=aan`);
         });
     }

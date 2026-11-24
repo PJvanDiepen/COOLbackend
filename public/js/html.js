@@ -94,7 +94,7 @@ export function selectie(knop, optieActueel, opties, optieVerwerken = function (
             knop.value = volgnummer;
         }
     }
-    knop.addEventListener("input",function () {
+    knop.addEventListener("input", function () {
         // TODO event.preventDefault(); toevoegen?
         functies[knop.value](waardes[knop.value]);
     });

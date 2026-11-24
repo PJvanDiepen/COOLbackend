@@ -2,171 +2,104 @@
 
 import * as html from "./html.js";
 import * as db from "./db.js";
-import { o_o_o, init } from "./o_o_o.js";
+import { o_o_o, init, competitieTitel, rondeGegevens } from "./o_o_o.js"
 
 import * as zyq from "./zyq.js";
-
 /*
-    verwerk lid=<knsbNummer>
-           &knsb=wijzigen
+    verwerk ronde=<rondeNummer>
+           &resultaten=<resultaten> TODO uit database
+           &wit=<knsbNummer>
 
-    terug naar agenda.html of bestuur.html
+    terug naar ronde.html
  */
-const jaar = 2000 + Number(o_o_o.seizoen.substring(0,2));
-const lidNummer = Number(html.params.get("lid"));
-const knsbWijzigen = html.params.get("knsb") === "wijzigen";
+const rondeNummer = Number(html.params.get("ronde"));
+const resultaten = html.params.get("resultaten").split("");
+console.log(resultaten);
+const speler = Number(html.params.get("wit"));
+
 
 (async function() {
     await init();
+    competitieTitel();
     html.id("kop").textContent =
-        `${o_o_o.vereniging}${html.SCHEIDING}${db.seizoenVoluit(o_o_o)}`;
-    const persoon = await zyq.serverFetch(`/${o_o_o.club}/${o_o_o.seizoen}/persoon/${lidNummer}`);
-    const septemberRating = await ratingLezen();
-    await html.menu(zyq.gebruiker.mutatieRechten, [db.BEHEERDER, "wijzig KNSB gegevens (let op!)", function () {
-            html.zelfdePagina(`lid=${lidNummer}&knsb=wijzigen`);
-        }],
-        [db.BEHEERDER, `${persoon.naam} verwijderen`, async function () {
-            const mutaties = await zyq.serverFetch(`/${zyq.uuidToken}/verwijder/persoon/${lidNummer}`);
-            if (mutaties) {
-                html.anderePagina("bestuur.html");
+        `Ronde ${rondeNummer}${html.SCHEIDING}${zyq.datumLeesbaar(rondeGegevens(o_o_o.team, rondeNummer))}`;
+    const lijst = html.id("uitslagen");
+    const uitslagen = await zyq.serverFetch(
+        `/${o_o_o.club}/${o_o_o.seizoen}/${o_o_o.competitie}/${rondeNummer}/ronde`); // actuele situatie
+    const uitslag = eenUitslag(uitslagen, speler);
+    if (uitslagen.length === 0) {
+        lijst.append(html.rij("nog", "geen", "uitslagen", ""));
+    } else {
+        let metWit = true; // speler met wit en tegenstander met zwart
+        for (let i = 0; i < resultaten.length; i++) {
+            if (metWit) {
+                lijst.append(html.rij(
+                    i ? "" : uitslag.bordNummer,
+                    zyq.naarSpeler({knsbNummer: speler, naam: uitslag.wit}),
+                    zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
+                    db.resultaatInvullen.get(resultaten[i])));
             } else {
-                console.log(`${persoon.naam} is niet verwijderd`);
+                lijst.append(html.rij(
+                    "",
+                    zyq.naarSpeler({knsbNummer: uitslag.tegenstanderNummer, naam: uitslag.zwart}),
+                    zyq.naarSpeler({knsbNummer: speler, naam: uitslag.wit}),
+                    resultaatRevanche(resultaten[i])));
             }
-        }],
-        [db.WEDSTRIJDLEIDER, `agenda van ${persoon.naam}`, function () {
-            html.anderePagina(`agenda.html?gebruiker=${lidNummer}`);
-        }]);
-    await lidFormulier(persoon, septemberRating);
+            metWit = !metWit; // speler met zwart en tegenstander met wit
+        }
+        html.id("wit").addEventListener("click", function () {
+            wijzigResultaat(db.WINST);
+        });
+        html.id("remise").addEventListener("click", function() {
+            wijzigResultaat(db.REMISE);
+        });
+        html.id("zwart").addEventListener("click", function () {
+            wijzigResultaat(db.VERLIES);
+        });
+        if (resultaten[resultaten.length - 1] === " " || resultaten.length > 5) {
+            html.id("revanche").disabled = true; // geen revanche
+        } else {
+            html.id("revanche").addEventListener("click", function () {
+                resultaten.push(" "); // blanco revanche toevoegen
+                wijzigResultaten();
+            });
+        }
+        html.id("wissen").addEventListener("click", function () {
+            if (resultaten.length === 1) {
+                wijzigResultaat(" "); // resultaat wissen
+            } else {
+                resultaten.pop(); // revanche wissen
+                wijzigResultaten();
+            }
+        });
+    }
+    html.id("opslaan").addEventListener("click", async function () {
+        // Send the changed results to the server.
+        html.anderePagina(
+            `ronde.html?ronde=${rondeNummer}&wit=${speler}&zwart=${uitslag.tegenstanderNummer}`);
+    });
 })();
 
-async function ratingLezen() {
-    const rating = await zyq.serverFetch(`/rating/9/${lidNummer}`); // 1 september dit seizoen
-    if (Number(rating.knsbNummer) === lidNummer && Number(rating.jaar) === jaar) {
-        return rating;
+function eenUitslag(uitslagen, knsbNummer) {
+    for (const uitslag of uitslagen) {
+        if (uitslag.knsbNummer === knsbNummer) {
+            return uitslag;
+        }
+        return uitslagen[0];
     }
-    return false;
 }
 
-/*
-Bij aanmelden zijn persoon en gebruiker toegevoegd door een nieuwe gebruiker
-of bestuur heeft persoon toegevoegd en die persoon kan gebruiker toevoegen.
+function resultaatRevanche(resultaat) {
+    return db.resultaatInvullen.get(
+        resultaat === db.WINST ? db.VERLIES : resultaat === db.VERLIES ? db.WINST : resultaat);
+}
 
-lidFormulier     MySQL tabel
------------------------------------------------------
-naam             persoon, rating
-email            gebruiker
-gebruikerSoort   gebruiker
-knsbNummer       persoon, rating, speler, gebruiker
-interneRating    speler
-knsbRating       speler, rating
-knsbTeam         speler
-nhsbTeam         speler
-competities      speler
+function wijzigResultaat(resultaat) {
+    resultaten[resultaten.length - 1] = resultaat;
+    wijzigResultaten();
+}
 
-De knsbRating komt uit de rating lijst van 1 september van dit seizoen.
-
-In het lidFormulier
-- kan beheerder naam en ksnbNummer van persoon en knsbRating van speler wijzigen
-- kan bestuur knsbTeam, nhsbTeam en competities van speler wijzigen en indien nodig speler toevoegen
-- kan een geregistreerd gebruiker competities van speler wijzigen en indien nodig speler toevoegen
- */
-async function lidFormulier(persoon, septemberRating) {
-    // formulier invullen
-    const knsbNummer = html.id("knsbNummer");
-    knsbNummer.value = lidNummer;
-    const naam = html.id("naam");
-    naam.value = persoon.naam;
-    html.id("gebruiker").value = db.gebruikerFunctie(persoon);
-    html.id("jaar").append(` op 1 september ${jaar}`);
-    const knsbRating = html.id("knsbRating");
-    knsbRating.value = septemberRating ? septemberRating.knsbRating : 0;
-    const interneRating = html.id("interneRating");
-    if (knsbRating.value > 0) {
-        interneRating.append(html.optie(knsbRating.value, "zie KNSB rating"));
-    }
-    for (let ratingOptie = zyq.LAAGSTE_RATING; ratingOptie <= zyq.HOOGSTE_RATING; ratingOptie += 100) {
-        if (ratingOptie > knsbRating.value) {
-            interneRating.append(html.optie(ratingOptie, ratingOptie));
-        }
-    }
-    if (persoon.interneRating !== null && persoon.interneRating > knsbRating.value) {
-        interneRating.value = persoon.interneRating;
-    } else if (knsbRating.value > 0) {
-        interneRating.value = knsbRating.value;
-    } else {
-        interneRating.value = zyq.LAAGSTE_RATING;
-    }
-    const nhsbTeam = html.id("nhsbTeam");
-    const knsbTeam = html.id("knsbTeam");
-    const competities = html.id("competities");
-    const competitie = [];
-    let competitieNummer = 0;
-    const teams = await zyq.localFetch(`/${o_o_o.club}/${o_o_o.seizoen}/teams`);
-    for (const team of teams) {
-        if (!db.isCompetitie(team) && !db.isTeam(team)) { // TODO wat gebeurt hier?
-            nhsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
-            knsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
-        } else if (team.bond === "n") {
-            nhsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
-            if (persoon && persoon.nhsbTeam === team.teamCode) { // speelt persoon in dit nhsbTeam?
-                nhsbTeam.value = team.teamCode;
-            }
-        } else if (team.bond === "k") {
-            knsbTeam.append(html.optie(team.teamCode, db.teamVoluit(team.teamCode)));
-            if (persoon && persoon.knsbTeam === team.teamCode) { // speelt persoon in dit knsbTeam?
-                knsbTeam.value = team.teamCode;
-            }
-        } else if (db.isCompetitie(team)) {
-            const id = `intern${competitieNummer + 1}`;
-            competities.append(html.checkbox(id, team.teamCode, db.teamVoluit(team.teamCode)));
-            competitie[competitieNummer] = html.id(id);
-            if (db.inCompetitie(persoon, team.teamCode)) {
-                competitie[competitieNummer].checked = true;
-            }
-            competitieNummer++;
-        }
-    }
-    if (knsbWijzigen) {
-        naam.disabled = false; // enable input
-        knsbNummer.disabled = false; // enable input
-        knsbRating.disabled = false; // enable input
-    }
-    if (db.BESTUUR <= zyq.gebruiker.mutatieRechten) {
-        interneRating.disabled = false; // enable input
-        knsbTeam.disabled = false; // enable input
-        nhsbTeam.disabled = false; // enable input
-    }
-    // formulier verwerken
-    html.id("formulier").addEventListener("submit", async function (event) {
-        event.preventDefault();
-        let mutaties = 0;
-        const intern = []; // speeltIntern volgens lidformulier
-        let internNummer = 0;
-        let vinkjes = "";
-        for (let i = 0; i < competitie.length; i++) {
-            if (competitie[i].checked) {
-                intern[internNummer] = competitie[i].value;
-                internNummer++;
-                vinkjes += competitie[i].value;
-            }
-        }
-        vinkjes += " "; // minstens 1 vinkje voor blanko teamCode${
-        const uuid = zyq.uuidToken;
-        const key = `${o_o_o.club}/${o_o_o.seizoen}/int`; // TODO voorlopig interne competitie
-        const muteren = persoon.datum === null ? "speler/toevoegen" : "speler/wijzigen";
-        const rating = knsbRating.value;
-        const ratingIntern = interneRating.value;
-        const nhsb = nhsbTeam.value === "" ? " " : nhsbTeam.value;
-        const knsb = knsbTeam.value === "" ? " " : knsbTeam.value;
-        if (await zyq.serverFetch(`/${uuid}/${key}/${muteren}/${lidNummer}/${rating}/${ratingIntern}/${nhsb}/${knsb}/${vinkjes}/${jaar}-09-01`)) {
-            mutaties++;
-        }
-        if (knsbWijzigen && (Number(knsbNummer.value) !== lidNummer || naam.value !== persoon.naam) &&
-            await zyq.serverFetch(`/${uuid}/persoon/wijzigen/${lidNummer}/${knsbNummer.value}/${naam.value}`)) {
-            mutaties++;
-        }
-        if (mutaties > 0) {
-            html.anderePagina(`bestuur.html?lid=${knsbNummer.value}`);
-        }
-    });
+function wijzigResultaten() {
+    html.zelfdePagina(
+        `ronde=${rondeNummer}&resultaten=${resultaten.join("")}&wit=${speler}`);
 }

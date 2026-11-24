@@ -64,7 +64,7 @@ async function agenda(knsbNummer, lijst, informeer) {
 }
 
 function chess960(w) { // TODO verwijderen en teamVoluit aanpassen
-    return w.teamCode === db.INTERNE_COMPETITIE && w.rondeNummer === 6
+    return w.teamCode === db.INTERNE_COMPETITIE && w.rondeNummer === 16
        ? "chess 960" : db.teamVoluit(w.teamCode);
 }
 
