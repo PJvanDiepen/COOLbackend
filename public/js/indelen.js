@@ -48,8 +48,7 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
         indeling.append(html.rij(nietIngedeeld || oneven ? "" : ++bordNummer,
             zyq.naarSpeler(r[wit]),
             nietIngedeeld ? "niet ingedeeld" : oneven ? "oneven" : zyq.naarSpeler(r[zwart]),
-            rangnummers ? `${wit + 1} - ${zwart + 1}` : "",
-            "")); // revanche kolom
+            rangnummers ? `${wit + 1} - ${zwart + 1}` : ""));
     }
 
     const uithuis = await zyq.serverFetch(
@@ -62,7 +61,7 @@ TODO in lijst voor externe wedstrijden ontbrekende namen vullen met ??? voor cor
     if (rangnummers) {
         deelnemersLijst(r, html.id("lijst"), rondeNummer);
     }
-    await html.menu(zyq.gebruiker.mutatieRechten,
+    html.menu(zyq.gebruiker.mutatieRechten,
         [db.WEDSTRIJDLEIDER, `handmatig indelen ronde ${rondeNummer}`, function () {
             html.anderePagina(`paren.html?ronde=${rondeNummer}`);
         }],
